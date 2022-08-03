@@ -4,11 +4,11 @@
     {
         public TResult Visit(TContext context, ScalarNode node);
 
-        public TResult Visit(TContext context, UnaryExpression node);
+        public TResult Visit(TContext context, UnaryNode node);
 
-        public TResult Visit(TContext context, BinaryExpression node);
+        public TResult Visit(TContext context, BinaryNode node);
 
-        public TResult Visit(TContext context, FunctionExpression node);
+        public TResult Visit(TContext context, FunctionNode node);
 
         public TResult Visit(TContext context, EmptyArgumentNode node);
 

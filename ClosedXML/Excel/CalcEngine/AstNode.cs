@@ -47,9 +47,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Unary expression, e.g. +123
     /// </summary>
-    internal class UnaryExpression : ValueNode
+    internal class UnaryNode : ValueNode
     {
-        public UnaryExpression(UnaryOp operation, ValueNode expr)
+        public UnaryNode(UnaryOp operation, ValueNode expr)
         {
             Operation = operation;
             Expression = expr;
@@ -88,9 +88,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Binary expression, e.g. 1+2
     /// </summary>
-    internal class BinaryExpression : ValueNode
+    internal class BinaryNode : ValueNode
     {
-        public BinaryExpression(BinaryOp operation, ValueNode exprLeft, ValueNode exprRight)
+        public BinaryNode(BinaryOp operation, ValueNode exprLeft, ValueNode exprRight)
         {
             Operation = operation;
             LeftExpression = exprLeft;
@@ -109,13 +109,13 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// A function call, e.g. sin(0.5).
     /// </summary>
-    internal class FunctionExpression : ValueNode
+    internal class FunctionNode : ValueNode
     {
-        public FunctionExpression(string name, List<ValueNode> parms) : this(null, name, parms)
+        public FunctionNode(string name, List<ValueNode> parms) : this(null, name, parms)
         {
         }
 
-        public FunctionExpression(PrefixNode prefix, string name, List<ValueNode> parms)
+        public FunctionNode(PrefixNode prefix, string name, List<ValueNode> parms)
         {
             Prefix = prefix;
             Name = name;

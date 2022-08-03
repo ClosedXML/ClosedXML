@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using BinaryExpression = ClosedXML.Excel.CalcEngine.BinaryExpression;
-using UnaryExpression = ClosedXML.Excel.CalcEngine.UnaryExpression;
+using BinaryNode = ClosedXML.Excel.CalcEngine.BinaryNode;
+using UnaryNode = ClosedXML.Excel.CalcEngine.UnaryNode;
 using ScalarNode = ClosedXML.Excel.CalcEngine.ScalarNode;
 using NotSupportedNode = ClosedXML.Excel.CalcEngine.NotSupportedNode;
 using ReferenceNode = ClosedXML.Excel.CalcEngine.ReferenceNode;
@@ -12,7 +12,7 @@ using PrefixNode = ClosedXML.Excel.CalcEngine.PrefixNode;
 using FileNode = ClosedXML.Excel.CalcEngine.FileNode;
 using FormulaParser = ClosedXML.Excel.CalcEngine.FormulaParser;
 using StructuredReferenceNode = ClosedXML.Excel.CalcEngine.StructuredReferenceNode;
-using FunctionExpression = ClosedXML.Excel.CalcEngine.FunctionExpression;
+using FunctionNode = ClosedXML.Excel.CalcEngine.FunctionNode;
 using EmptyArgumentNode = ClosedXML.Excel.CalcEngine.EmptyArgumentNode;
 using ErrorNode = ClosedXML.Excel.CalcEngine.ErrorNode;
 using static XLParser.GrammarNames;
@@ -82,7 +82,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "=A1,B5",
                 new[] { MultiRangeFormula, "=", null, Union, Reference, Cell, TokenCell, null, null, null, Reference, Cell, TokenCell },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // ArrayFormula.Rule = OpenCurlyParen + eqop + Formula + CloseCurlyParen;
             yield return new TestCaseData(
@@ -94,7 +94,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "=FirstRange,A1B1",
                 new[] { MultiRangeFormula, "=", null, Union, Reference, NamedRange, TokenName, null, null, null, Reference, NamedRange, TokenNamedRangeCombination },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // FormulaWithEq.Rule = eqop + Formula;
             yield return new TestCaseData(
@@ -118,7 +118,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "+1",
                 new[] { Formula, FunctionCall, "+", null, Formula, Constant, Number, TokenNumber },
-                new[] { typeof(UnaryExpression), typeof(ScalarNode) });
+                new[] { typeof(UnaryNode), typeof(ScalarNode) });
 
             // Formula.Rule = ConstantArray
             yield return new TestCaseData(
@@ -202,31 +202,31 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "SUM(1)",
                 new[] { Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments, Argument, Formula, Constant, Number, TokenNumber },
-                new[] { typeof(FunctionExpression), typeof(ScalarNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode) });
 
             // FunctionCall.Rule = PrefixOp + Formula
             yield return new TestCaseData(
                 "-1",
                 new[] { Formula, FunctionCall, "-", null, Formula, Constant, Number, TokenNumber },
-                new[] { typeof(UnaryExpression), typeof(ScalarNode) });
+                new[] { typeof(UnaryNode), typeof(ScalarNode) });
 
             // FunctionCall.Rule = Formula + PostfixOp
             yield return new TestCaseData(
                 "1%",
                 new[] { Formula, FunctionCall, Formula, Constant, Number, TokenNumber, null, null, null, null, "%" },
-                new[] { typeof(UnaryExpression), typeof(ScalarNode) });
+                new[] { typeof(UnaryNode), typeof(ScalarNode) });
 
             // FunctionCall.Rule = Formula + InfixOp + Formula
             yield return new TestCaseData(
                 "1+2",
                 new[] { Formula, FunctionCall, Formula, Constant, Number, TokenNumber, null, null, null, null, "+", null, Formula, Constant, Number, TokenNumber },
-                new[] { typeof(BinaryExpression), typeof(ScalarNode), null, typeof(ScalarNode) });
+                new[] { typeof(BinaryNode), typeof(ScalarNode), null, typeof(ScalarNode) });
 
             // FunctionName.Rule = ExcelFunction;
             yield return new TestCaseData(
                 "RAND()",
                 new[] { Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments },
-                new[] { typeof(FunctionExpression) });
+                new[] { typeof(FunctionNode) });
 
             // Arguments.Rule = MakeStarRule(Arguments, comma, Argument);
             yield return new TestCaseData(
@@ -234,7 +234,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments,
                     Argument, Formula, Constant, Text, TokenText, null, null, null, null, null,
                     Argument, Formula, Constant, Bool, TokenBool },
-                new[] { typeof(FunctionExpression), typeof(ScalarNode), null, typeof(ScalarNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode), null, typeof(ScalarNode) });
 
             // EmptyArgument.Rule = EmptyArgumentToken;
             yield return new TestCaseData(
@@ -242,7 +242,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments,
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionExpression), typeof(EmptyArgumentNode), null, typeof(EmptyArgumentNode) });
+                new[] { typeof(FunctionNode), typeof(EmptyArgumentNode), null, typeof(EmptyArgumentNode) });
 
             // Argument.Rule = Formula | EmptyArgument;
             yield return new TestCaseData(
@@ -251,13 +251,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, Formula, Constant, Number, TokenNumber , null, null, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionExpression), typeof(EmptyArgumentNode), null, typeof(ScalarNode), null, typeof(EmptyArgumentNode) });
+                new[] { typeof(FunctionNode), typeof(EmptyArgumentNode), null, typeof(ScalarNode), null, typeof(EmptyArgumentNode) });
 
             // PrefixOp.Rule = ImplyPrecedenceHere(Precedence.UnaryPreFix) + plusop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + minop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + at;
             yield return new TestCaseData(
                 "@A1",
                 new[] { Formula, FunctionCall, "@", null, Formula, Reference, Cell, TokenCell },
-                new[] { typeof(UnaryExpression), typeof(ReferenceNode) });
+                new[] { typeof(UnaryNode), typeof(ReferenceNode) });
 
             // InfixOp.Rule = expop | mulop | divop | plusop | minop | concatop | gtop | eqop | ltop | neqop | gteop | lteop;
             yield return new TestCaseData(
@@ -266,13 +266,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Formula, Reference, Cell, TokenCell, null, null, null, null,
                     "^", null,
                     Formula, Constant, Number, TokenNumber },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ScalarNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ScalarNode) });
 
             // PostfixOp.Rule = PreferShiftHere() + percentop;
             yield return new TestCaseData(
                 "A1%",
                 new[] { Formula, FunctionCall, Formula, Reference, Cell, TokenCell, null, null, null, null, "%" },
-                new[] { typeof(UnaryExpression), typeof(ReferenceNode) });
+                new[] { typeof(UnaryNode), typeof(ReferenceNode) });
 
             // Reference.Rule = ReferenceItem
             yield return new TestCaseData(
@@ -284,19 +284,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "A1:D5",
                 new[] { Formula, Reference, ReferenceFunctionCall, Reference, Cell, TokenCell, null, null, null, ":", null, Reference, Cell, TokenCell },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // ReferenceFunctionCall.Rule = Reference + intersectop + Reference
             yield return new TestCaseData(
                 "A1 D5",
                 new[] { Formula, Reference, ReferenceFunctionCall, Reference, Cell, TokenCell, null, null, null, TokenIntersect, null, Reference, Cell, TokenCell },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // ReferenceFunctionCall.Rule = OpenParen + Union + CloseParen
             yield return new TestCaseData(
                 "(A1,A2)",
                 new[] { Formula, Reference, ReferenceFunctionCall, Union, Reference, Cell, TokenCell, null, null, null, Reference, Cell, TokenCell },
-                new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // XLParser considers the 5 functions that can return reference to be special.
             // ReferenceFunctionCall.Rule = RefFunctionName + Arguments + CloseParen
@@ -306,13 +306,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Argument, Formula, Constant, Bool, TokenBool, null, null, null, null, null,
                     Argument, Formula, Reference, Cell, TokenCell, null, null, null, null, null,
                     Argument, Formula, Reference, Cell, TokenCell },
-                new[] { typeof(FunctionExpression), typeof(ScalarNode), null, typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode), null, typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // ReferenceFunctionCall.Rule = Reference + hash
             yield return new TestCaseData(
                 "A1#",
                 new[] { Formula, Reference, ReferenceFunctionCall, Reference, Cell, TokenCell, null, null, null, "#" },
-                new[] { typeof(UnaryExpression), typeof(ReferenceNode) });
+                new[] { typeof(UnaryNode), typeof(ReferenceNode) });
 
             // RefFunctionName.Rule = ExcelRefFunctionToken | ExcelConditionalRefFunctionToken;
             yield return new TestCaseData(
@@ -321,7 +321,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Argument, Formula, Reference, Cell, TokenCell, null, null, null, null, null,
                     Argument, Formula, Constant, Number, TokenNumber, null, null, null, null, null,
                     Argument, Formula, Constant, Number, TokenNumber },
-                new[] { typeof(FunctionExpression), typeof(ReferenceNode), null, typeof(ScalarNode), null, typeof(ScalarNode) });
+                new[] { typeof(FunctionNode), typeof(ReferenceNode), null, typeof(ScalarNode), null, typeof(ScalarNode) });
 
             // Union.Rule = MakePlusRule(Union, comma, Reference);
             yield return new TestCaseData(
@@ -330,7 +330,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Reference, Cell, TokenCell, null, null, null,
                     Reference, Cell, TokenCell, null, null, null,
                     Reference, Cell, TokenCell },
-                new[] { typeof(BinaryExpression), typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode), null, null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode), null, null, typeof(ReferenceNode) });
 
             // ReferenceItem.Rule = Cell
             yield return new TestCaseData(
@@ -366,7 +366,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "Fun()",
                 new[] { Formula, Reference, UDFunctionCall, UDFName, TokenUDF, null, null, Arguments },
-                new[] { typeof(FunctionExpression) });
+                new[] { typeof(FunctionNode) });
 
             // ReferenceItem.Rule = StructuredReference
             yield return new TestCaseData(
@@ -378,13 +378,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "CustomUdfFunction(TRUE)",
                 new[] { Formula, Reference, UDFunctionCall, UDFName, TokenUDF, null, null, Arguments, Argument, Formula, Constant, Bool, TokenBool },
-                new[] { typeof(FunctionExpression), typeof(ScalarNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode) });
 
             // UDFName.Rule = UDFToken;
             yield return new TestCaseData(
                 "_xll.CustomFunc()",
                 new[] { Formula, Reference, UDFunctionCall, UDFName, TokenUDF, null, null, Arguments },
-                new[] { typeof(FunctionExpression) });
+                new[] { typeof(FunctionNode) });
 
             // VRange.Rule = VRangeToken;
             // BUG in XLParser 1.5.2, it considers A:XFD as A:XF union D (named token)
@@ -688,9 +688,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                                     Argument, Formula, Constant, Number, TokenNumber /* 2 */, null, null, null, null, null,
                                 null, null, null, null, null, null, null, null, null,
                         Argument, Formula, Constant, Number, TokenNumber /* 3 */ },
-                new[] { typeof(FunctionExpression), /* SUM */
-                            typeof(FunctionExpression), /* SIN */
-                                typeof(FunctionExpression), /* IF */
+                new[] { typeof(FunctionNode), /* SUM */
+                            typeof(FunctionNode), /* SIN */
+                                typeof(FunctionNode), /* IF */
                                     typeof(ReferenceNode), null, /* A1 */
                                     typeof(ScalarNode), null, /* 1 */
                                     typeof(ScalarNode), null, /* 2 */
@@ -709,7 +709,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                             Reference, Cell, TokenCell, null, null, null, null, null, null,
                         "*", null,
                         Formula, Constant, Number, TokenNumber },
-                new[] { typeof(BinaryExpression), typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode), null, null, typeof(ScalarNode) });
+                new[] { typeof(BinaryNode), typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode), null, null, typeof(ScalarNode) });
         }
 
         private static LinkedList<string> LinearizeCst(ParseTree tree)
@@ -749,14 +749,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             public override AstNode Visit(LinkedList<Type> context, ScalarNode node)
                 => LinearizeNode(context, typeof(ScalarNode), () => base.Visit(context, node));
 
-            public override AstNode Visit(LinkedList<Type> context, UnaryExpression node)
-                => LinearizeNode(context, typeof(UnaryExpression), () => base.Visit(context, node));
+            public override AstNode Visit(LinkedList<Type> context, UnaryNode node)
+                => LinearizeNode(context, typeof(UnaryNode), () => base.Visit(context, node));
 
-            public override AstNode Visit(LinkedList<Type> context, BinaryExpression node)
-                => LinearizeNode(context, typeof(BinaryExpression), () => base.Visit(context, node));
+            public override AstNode Visit(LinkedList<Type> context, BinaryNode node)
+                => LinearizeNode(context, typeof(BinaryNode), () => base.Visit(context, node));
 
-            public override AstNode Visit(LinkedList<Type> context, FunctionExpression node)
-                => LinearizeNode(context, typeof(FunctionExpression), () => base.Visit(context, node));
+            public override AstNode Visit(LinkedList<Type> context, FunctionNode node)
+                => LinearizeNode(context, typeof(FunctionNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, EmptyArgumentNode node)
                 => LinearizeNode(context, typeof(EmptyArgumentNode), () => base.Visit(context, node));

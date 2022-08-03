@@ -7,28 +7,28 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, AstNode>
     {
-        public virtual AstNode Visit(TContext context, UnaryExpression node)
+        public virtual AstNode Visit(TContext context, UnaryNode node)
         {
             var acceptedArgument = (ValueNode)node.Expression.Accept(context, this);
             return !ReferenceEquals(acceptedArgument, node.Expression)
-                ? new UnaryExpression(node.Operation, acceptedArgument)
+                ? new UnaryNode(node.Operation, acceptedArgument)
                 : node;
         }
 
-        public virtual AstNode Visit(TContext context, BinaryExpression node)
+        public virtual AstNode Visit(TContext context, BinaryNode node)
         {
             var acceptedLeftArgument = (ValueNode)node.LeftExpression.Accept(context, this);
             var acceptedRightArgument = (ValueNode)node.RightExpression.Accept(context, this);
             return !ReferenceEquals(acceptedLeftArgument, node.LeftExpression) || !ReferenceEquals(acceptedRightArgument, node.RightExpression)
-                ? new BinaryExpression(node.Operation, acceptedLeftArgument, acceptedRightArgument)
+                ? new BinaryNode(node.Operation, acceptedLeftArgument, acceptedRightArgument)
                 : node;
         }
 
-        public virtual AstNode Visit(TContext context, FunctionExpression node)
+        public virtual AstNode Visit(TContext context, FunctionNode node)
         {
             var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<ValueNode>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
-                ? new FunctionExpression(node.Prefix, node.Name, acceptedParameters)
+                ? new FunctionNode(node.Prefix, node.Name, acceptedParameters)
                 : node;
         }
 

@@ -142,7 +142,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(null, node.Address));
             }
 
-            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, BinaryExpression node)
+            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, BinaryNode node)
             {
                 var leftArg = node.LeftExpression.Accept(ctx, this);
 
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error.CellReference;
             }
 
-            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, UnaryExpression node)
+            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, UnaryNode node)
             {
                 var value = node.Expression.Accept(ctx, this);
                 if (!value.TryPickT0(out var reference, out var error))
@@ -192,7 +192,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error.CellReference;
             }
 
-            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, FunctionExpression node)
+            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, FunctionNode node)
             {
                 foreach (var param in node.Parameters)
                 {

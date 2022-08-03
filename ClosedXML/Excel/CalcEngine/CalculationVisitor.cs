@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
             return node.Error;
         }
 
-        public AnyValue Visit(CalcContext context, UnaryExpression node)
+        public AnyValue Visit(CalcContext context, UnaryNode node)
         {
             var arg = node.Expression.Accept(context, this);
 
@@ -37,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public AnyValue Visit(CalcContext context, BinaryExpression node)
+        public AnyValue Visit(CalcContext context, BinaryNode node)
         {
             var leftArg = node.LeftExpression.Accept(context, this);
             var rightArg = node.RightExpression.Accept(context, this);
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public AnyValue Visit(CalcContext context, FunctionExpression node)
+        public AnyValue Visit(CalcContext context, FunctionNode node)
         {
             if (!_functions.TryGetFunc(node.Name, out FunctionDefinition fn))
                 return Error.NameNotRecognized;
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
             return fn.CallFunction(context, args);
         }
 
-        private AnyValue?[] GetArgs(CalcContext context, FunctionDefinition fn, FunctionExpression node)
+        private AnyValue?[] GetArgs(CalcContext context, FunctionDefinition fn, FunctionNode node)
         {
             var args = new AnyValue?[node.Parameters.Count];
             for (var argIndex = 0; argIndex < node.Parameters.Count; ++argIndex)
