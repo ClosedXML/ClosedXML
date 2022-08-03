@@ -44,21 +44,21 @@ namespace ClosedXML.Excel.CalcEngine
 
             return node.Operation switch
             {
-                BinaryOp.Range => leftArg.ReferenceRange(rightArg, context),
-                BinaryOp.Union => leftArg.ReferenceUnion(rightArg),
+                BinaryOp.Range => AnyValue.ReferenceRange(leftArg, rightArg, context),
+                BinaryOp.Union => AnyValue.ReferenceUnion(leftArg, rightArg),
                 BinaryOp.Intersection => throw new NotImplementedException("Evaluation of range intersection operator is not implemented."),
-                BinaryOp.Concat => leftArg.Concat(rightArg, context),
-                BinaryOp.Add => leftArg.BinaryPlus(rightArg, context),
-                BinaryOp.Sub => leftArg.BinaryMinus(rightArg, context),
-                BinaryOp.Mult => leftArg.BinaryMult(rightArg, context),
-                BinaryOp.Div => leftArg.BinaryDiv(rightArg, context),
-                BinaryOp.Exp => leftArg.BinaryExp(rightArg, context),
-                BinaryOp.Lt => leftArg.IsLessThan(rightArg, context),
-                BinaryOp.Lte => leftArg.IsLessThanOrEqual(rightArg, context),
-                BinaryOp.Eq => leftArg.IsEqual(rightArg, context),
-                BinaryOp.Neq => leftArg.IsNotEqual(rightArg, context),
-                BinaryOp.Gte => leftArg.IsGreaterThanOrEqual(rightArg, context),
-                BinaryOp.Gt => leftArg.IsGreaterThan(rightArg, context),
+                BinaryOp.Concat => AnyValue.Concat(leftArg, rightArg, context),
+                BinaryOp.Add => AnyValue.BinaryPlus(leftArg, rightArg, context),
+                BinaryOp.Sub => AnyValue.BinaryMinus(leftArg, rightArg, context),
+                BinaryOp.Mult => AnyValue.BinaryMult(leftArg, rightArg, context),
+                BinaryOp.Div => AnyValue.BinaryDiv(leftArg, rightArg, context),
+                BinaryOp.Exp => AnyValue.BinaryExp(leftArg, rightArg, context),
+                BinaryOp.Lt => AnyValue.IsLessThan(leftArg, rightArg, context),
+                BinaryOp.Lte => AnyValue.IsLessThanOrEqual(leftArg, rightArg, context),
+                BinaryOp.Eq => AnyValue.IsEqual(leftArg, rightArg, context),
+                BinaryOp.Neq => AnyValue.IsNotEqual(leftArg, rightArg, context),
+                BinaryOp.Gte => AnyValue.IsGreaterThanOrEqual(leftArg, rightArg, context),
+                BinaryOp.Gt => AnyValue.IsGreaterThan(leftArg, rightArg, context),
                 _ => throw new NotSupportedException($"Unknown operator {node.Operation}.")
             };
         }

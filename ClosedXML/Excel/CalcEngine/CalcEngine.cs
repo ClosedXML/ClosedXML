@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.CalcEngine
                     reference => reference);
             }
 
-            return result.ToCellContentValue(ctx);
+            return ToCellContentValue(result, ctx);
         }
 
         internal AnyValue EvaluateExpression(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
@@ -124,6 +124,51 @@ namespace ClosedXML.Excel.CalcEngine
             Financial.Register(fr);
 
             return fr;
+        }
+
+
+        /// <summary>
+        /// Convert any kind of formula value to value returned as a content of a cell.
+        /// <list type="bullet">
+        ///    <item><c>bool</c> - represents a logical value.</item>
+        ///    <item><c>double</c> - represents a number and also date/time as serial date-time.</item>
+        ///    <item><c>string</c> - represents a text value.</item>
+        ///    <item><see cref="Error" /> - represents a formula calculation error.</item>
+        /// </list>
+        /// </summary>
+        private static object ToCellContentValue(AnyValue value, CalcContext ctx)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return ToCellContentValue(scalar);
+
+            return collection.Match(
+                array => ToCellContentValue(array[0, 0]),
+                reference =>
+                {
+                    if (reference.TryGetSingleCellValue(out var cellValue, ctx))
+                        return ToCellContentValue(cellValue);
+
+                    return reference
+                        .ImplicitIntersection(ctx.FormulaAddress)
+                        .Match<object>(
+                            singleCellReference =>
+                            {
+                                if (!singleCellReference.TryGetSingleCellValue(out var cellValue, ctx))
+                                    throw new InvalidOperationException();
+
+                                return ToCellContentValue(cellValue);
+                            },
+                            error => error);
+                });
+        }
+
+        private static object ToCellContentValue(ScalarValue value)
+        {
+            return value.Match<object>(
+                logical => logical,
+                number => number,
+                text => text,
+                error => error);
         }
     }
 

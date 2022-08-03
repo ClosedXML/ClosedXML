@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
+    [SetCulture("cs-CZ")]
     [TestFixture]
     public class OperatorsScalarTests
     {
@@ -29,7 +30,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
         }
 
-        [SetCulture("cs-CZ")]
         [TestCase("1 & \" to text\"", "1 to text")]
         [TestCase("1 & 0", "10")]
         [TestCase("1.5 & 0.78", "1,50,78")]

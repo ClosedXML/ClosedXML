@@ -43,6 +43,33 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
         }
+
+        public Array Apply(Func<ScalarValue, ScalarValue> op)
+        {
+            var data = new ScalarValue[Height, Width];
+            for (int y = 0; y < Height; ++y)
+                for (int x = 0; x < Width; ++x)
+                    data[y, x] = op(this[y, x]);
+
+            return new ConstArray(data);
+        }
+
+        public Array Apply(Array rightArray, BinaryFunc func)
+        {
+            var leftArray = this;
+            if (leftArray.Width != rightArray.Width || leftArray.Height != rightArray.Height)
+                throw new ArgumentException("Array dimensions differ.");
+
+            var data = new ScalarValue[leftArray.Height, leftArray.Width];
+            for (int y = 0; y < leftArray.Height; ++y)
+                for (int x = 0; x < leftArray.Width; ++x)
+                {
+                    var leftItem = leftArray[y, x];
+                    var rightItem = rightArray[y, x];
+                    data[y, x] = func(leftItem, rightItem);
+                }
+            return new ConstArray(data);
+        }
     }
 
     /// <summary>

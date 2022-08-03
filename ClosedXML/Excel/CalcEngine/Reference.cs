@@ -178,5 +178,40 @@ namespace ClosedXML.Excel.CalcEngine
             value = ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber);
             return true;
         }
+
+        internal OneOf<Array, Error> ToArray(CalcContext context)
+        {
+            if (Areas.Count != 1)
+                throw new NotImplementedException();
+
+            var area = Areas.Single();
+
+            return new ReferenceArray(area, context);
+        }
+
+        public OneOf<Array, Error> Apply(Func<ScalarValue, ScalarValue> op, CalcContext context)
+        {
+            if (Areas.Count != 1)
+                return Error.CellValue;
+
+            var area = Areas.Single();
+            var width = area.ColumnSpan;
+            var height = area.RowSpan;
+            var startColumn = area.FirstAddress.ColumnNumber;
+            var startRow = area.FirstAddress.RowNumber;
+            var data = new ScalarValue[height, width];
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
+                {
+                    var row = startRow + y;
+                    var column = startColumn + x;
+                    var cellValue = context.GetCellValue(area.Worksheet, row, column);
+                    data[y, x] = op(cellValue);
+                }
+            }
+
+            return new ConstArray(data);
+        }
     }
 }
