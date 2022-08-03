@@ -2,6 +2,7 @@
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using static ClosedXML.Excel.CalcEngine.ErrorNode;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -423,7 +424,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcEngine = new XLCalcEngine(wb);
+            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
             var astNode = calcEngine.Parse(formula);
             Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => ws.Evaluate(formula, "A1"));
         }

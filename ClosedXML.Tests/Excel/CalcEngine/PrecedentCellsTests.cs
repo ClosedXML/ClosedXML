@@ -9,27 +9,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     public class PrecedentCellsTests
     {
         [Test]
-        public void GetPrecedentRangesPreventsDuplication()
-        {
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
-                var sheet2 = wb.AddWorksheet("Sheet2");
-                var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
-
-                var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula, sheet1).ToList();
-
-                Assert.AreEqual(6, ranges.Count);
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "A2:E2"));
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "B1:C3"));
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet2" && r.ToString() == "B1:C3"));
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "A2:A2"));
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "B$2:B$2"));
-                Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "$C$2:$C$2"));
-            }
-        }
-
-        [Test]
         public void GetPrecedentCellsDealsWithNamedRanges()
         {
             using (XLWorkbook wb = new XLWorkbook())
@@ -50,7 +29,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2",
             new[] { "A2", "B2", "C2", "D2", "E2", "B1", "C1", "B3", "C3" },
             new[] { "B1", "C1", "B2", "C2", "B3", "C3" })]
-        public void GetPrecedentCells(string formula, string[] expectedAtSheet1, string[] expectedAtSheet2)
+        public void GetPrecedentCellsPreventsDuplication(string formula, string[] expectedAtSheet1, string[] expectedAtSheet2)
         {
             using (XLWorkbook wb = new XLWorkbook())
             {

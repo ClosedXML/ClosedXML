@@ -1,48 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class XLCalcEngine : CalcEngine
     {
-        private readonly IXLWorksheet _ws;
-        private readonly XLWorkbook _wb;
-
-        public XLCalcEngine()
+        public XLCalcEngine(CultureInfo culture) : base(culture)
         { }
-
-        public XLCalcEngine(XLWorkbook wb)
-        {
-            _wb = wb;
-        }
-
-        public XLCalcEngine(IXLWorksheet ws) : this(ws.Workbook)
-        {
-            _ws = ws;
-        }
-
-        /// <summary>
-        /// Get a best guess of collection of cell ranges in the formula. Order is not preserved.
-        /// </summary>
-        /// <remarks>Doesn't work for ranges determined by reference functions and reference operators, e.g. <c>A1:IF(SomeCondition,B1,C1)</c>.</remarks>
-        /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
-        /// <param name="expression">Formula to analyze.</param>
-        /// <returns>Collection of range addresses that are referenced in the formula. All addresses have specified worksheet.</returns>
-        public IEnumerable<IXLRangeAddress> GetPrecedentRanges(string expression, XLWorksheet worksheet)
-        {
-            // TODO: Unused function... delete?
-            var remotelyReliable = TryGetPrecedentAreas(expression, worksheet, out var referencedAreas);
-            var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
-            foreach (var referenceArea in referencedAreas)
-            {
-                if (!visitedRanges.Contains(referenceArea))
-                {
-                    visitedRanges.Add(referenceArea);
-                    yield return referenceArea;
-                }
-            }
-        }
 
         /// <summary>
         /// Get cells that could be used as input of a formula, that could affect the calculated value.

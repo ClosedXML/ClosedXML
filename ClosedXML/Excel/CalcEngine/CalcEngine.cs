@@ -21,9 +21,9 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly FormulaParser _parser;
         private readonly FunctionRegistry _funcRegistry;      // table with constants and functions (pi, sin, etc)
 
-        public CalcEngine()
+        public CalcEngine(CultureInfo culture)
         {
-            _culture = CultureInfo.CurrentCulture;
+            _culture = culture;
             _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
             _parser = new FormulaParser(_funcRegistry);

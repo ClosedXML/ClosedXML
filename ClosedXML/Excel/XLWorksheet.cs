@@ -1735,12 +1735,7 @@ namespace ClosedXML.Excel
 
         public IXLCell ActiveCell { get; set; }
 
-        private XLCalcEngine _calcEngine;
-
-        internal XLCalcEngine CalcEngine
-        {
-            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
-        }
+        internal XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
         public Object Evaluate(String expression, string formulaAddress = null)
         {

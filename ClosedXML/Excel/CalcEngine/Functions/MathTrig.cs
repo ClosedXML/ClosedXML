@@ -4,6 +4,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
@@ -926,7 +927,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sumRangeValues = sumRange.Cast<object>().ToList();
 
             // compute total
-            var ce = new CalcEngine();
+            var ce = new CalcEngine(CultureInfo.CurrentCulture);
             var tally = new Tally();
             for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
             {
@@ -953,7 +954,7 @@ namespace ClosedXML.Excel.CalcEngine
                 sumRangeValues.Add(value);
             }
 
-            var ce = new CalcEngine();
+            var ce = new CalcEngine(CultureInfo.CurrentCulture);
             var tally = new Tally();
 
             int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
