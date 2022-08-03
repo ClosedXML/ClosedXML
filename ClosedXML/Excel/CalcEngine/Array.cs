@@ -54,20 +54,24 @@ namespace ClosedXML.Excel.CalcEngine
             return new ConstArray(data);
         }
 
+        /// <summary>
+        /// Perform an operation on two arrasy and return a result. Arrays can have different size. Missing values are replaced by <c>#N/A</c>.
+        /// </summary>
         public Array Apply(Array rightArray, BinaryFunc func)
         {
             var leftArray = this;
-            if (leftArray.Width != rightArray.Width || leftArray.Height != rightArray.Height)
-                throw new ArgumentException("Array dimensions differ.");
-
-            var data = new ScalarValue[leftArray.Height, leftArray.Width];
-            for (int y = 0; y < leftArray.Height; ++y)
-                for (int x = 0; x < leftArray.Width; ++x)
+            var width = Math.Max(leftArray.Width, rightArray.Width);
+            var height = Math.Max(leftArray.Height, rightArray.Height);
+            var data = new ScalarValue[height, width];
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
                 {
-                    var leftItem = leftArray[y, x];
-                    var rightItem = rightArray[y, x];
+                    var leftItem = x < leftArray.Width && y < leftArray.Height ? leftArray[y, x] : Error.NoValueAvailable;
+                    var rightItem = x < rightArray.Width && y < rightArray.Height ? rightArray[y, x] : Error.NoValueAvailable;
                     data[y, x] = func(leftItem, rightItem);
                 }
+            }
             return new ConstArray(data);
         }
     }
@@ -170,39 +174,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Width => _data.GetLength(1);
 
         public override int Height => _data.GetLength(0);
-    }
-
-    /// <summary>
-    /// An array that is resized to a different size. Items outside of original array have a value of <c>#N/A</c>.
-    /// </summary>
-    internal class ResizedArray : Array
-    {
-        private readonly Array _original;
-
-        public ResizedArray(Array original, int width, int height)
-        {
-            if (width < 1 || height < 1)
-                throw new ArgumentException();
-
-            _original = original;
-            Width = width;
-            Height = height;
-        }
-
-        public override int Width { get; }
-
-        public override int Height { get; }
-
-        public override ScalarValue this[int y, int x]
-        {
-            get
-            {
-                if (x >= _original.Width || y >= _original.Height)
-                    return Error.NoValueAvailable;
-
-                return _original[y, x];
-            }
-        }
     }
 
     /// <summary>

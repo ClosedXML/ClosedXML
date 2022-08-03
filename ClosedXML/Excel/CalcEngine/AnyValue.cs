@@ -421,12 +421,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Both are aggregates
             return leftCollection.Match(
                 leftArray => rightCollection.Match(
-                        rightArray =>
-                        {
-                            var width = Math.Max(leftArray.Width, rightArray.Width);
-                            var height = Math.Max(leftArray.Height, rightArray.Height);
-                            return new ResizedArray(leftArray, width, height).Apply(new ResizedArray(rightArray, width, height), func);
-                        },
+                        rightArray => leftArray.Apply(rightArray, func),
                         rightReference =>
                         {
                             if (rightReference.TryGetSingleCellValue(out var rightCellValue, context))
@@ -435,9 +430,7 @@ namespace ClosedXML.Excel.CalcEngine
                             if (rightReference.Areas.Count == 1)
                             {
                                 var area = rightReference.Areas[0];
-                                var width = Math.Max(leftArray.Width, area.ColumnSpan);
-                                var height = Math.Max(leftArray.Height, area.RowSpan);
-                                return new ResizedArray(leftArray, width, height).Apply(new ResizedArray(new ReferenceArray(area, context), width, height), func);
+                                return leftArray.Apply(new ReferenceArray(area, context), func);
                             }
 
                             return leftArray.Apply(new ScalarArray(Error.CellValue, leftArray.Width, leftArray.Height), func);
@@ -451,10 +444,7 @@ namespace ClosedXML.Excel.CalcEngine
                             if (leftReference.Areas.Count == 1)
                             {
                                 var area = leftReference.Areas[0];
-                                var width = Math.Max(area.ColumnSpan, rightArray.Width);
-                                var height = Math.Max(area.RowSpan, rightArray.Height);
-                                var leftRefArray = new ResizedArray(new ReferenceArray(area, context), width, height);
-                                return leftRefArray.Apply(new ResizedArray(rightArray, width, height), func);
+                                return new ReferenceArray(area, context).Apply(rightArray, func);
                             }
 
                             var errorArray = new ScalarArray(Error.CellValue, rightArray.Width, rightArray.Height);
@@ -473,17 +463,15 @@ namespace ClosedXML.Excel.CalcEngine
 
                             var leftArea = leftReference.Areas.Single();
                             var rightArea = rightReference.Areas.Single();
-                            var colSpan = Math.Max(leftArea.ColumnSpan, rightArea.ColumnSpan);
-                            var rowSpan = Math.Max(leftArea.RowSpan, rightArea.RowSpan);
-                            if (colSpan == 1 && rowSpan == 1)
+                            if (leftArea.IsSingleCell() && rightArea.IsSingleCell())
                             {
                                 var leftCellValue = context.GetCellValue(leftArea.Worksheet, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber);
                                 var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
                                 return func(leftCellValue, rightCellValue).ToAnyValue();
                             }
 
-                            var leftRefArray = new ResizedArray(new ReferenceArray(leftArea, context), colSpan, rowSpan);
-                            var rightRefArray = new ResizedArray(new ReferenceArray(rightArea, context), colSpan, rowSpan);
+                            var leftRefArray = new ReferenceArray(leftArea, context);
+                            var rightRefArray = new ReferenceArray(rightArea, context);
                             return leftRefArray.Apply(rightRefArray, func);
                         }));
         }
