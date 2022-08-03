@@ -110,7 +110,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)
         {
-            XLWorksheet worksheet;
+            XLWorksheet worksheet = null;
             if (node.Prefix is not null)
             {
                 if (node.Prefix.File is not null)
@@ -124,14 +124,11 @@ namespace ClosedXML.Excel.CalcEngine
                     return Error.CellReference;
                 worksheet = (XLWorksheet)worksheet1;
             }
-            else
-            {
-                worksheet = null;
-            }
 
             if (node.Type == ReferenceItemType.Cell || node.Type == ReferenceItemType.HRange || node.Type == ReferenceItemType.VRange)
                 return new Reference(new XLRangeAddress(worksheet, node.Address));
 
+            // Only reference of type range left
             var rangeName = node.Address;
             worksheet ??= context.Worksheet;
             if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
@@ -142,8 +139,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (!namedRange.IsValid)
                 return Error.CellReference;
 
-            // union is one of nodes that can't be in the root. Enclose in braces to make parser happy
-            // TODO: Shoudl it always start with equal or never?
+            // Union (can easily be in the range) is one of the nodes that can't be in the root. Enclose in braces to make parser happy
+            // Range can be something like 1+2, not just a reference to some area.
             var namedRangeFormula = namedRange.ToString();
             namedRangeFormula = !namedRangeFormula.StartsWith("=") ? "=(" + namedRange.ToString() + ")" : namedRangeFormula;
             var rangeResult = context.CalcEngine.EvaluateExpression(namedRangeFormula, context.Workbook, context.Worksheet);

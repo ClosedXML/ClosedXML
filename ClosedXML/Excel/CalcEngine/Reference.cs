@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// List of areas of the range. All areas are valid and normalized. Some areas have worksheet and some don't.
+        /// List of areas of the range (at least one). All areas are valid and normalized. Some areas have worksheet and some don't.
         /// </summary>
         internal IReadOnlyList<XLRangeAddress> Areas { get; }
 
@@ -37,7 +37,6 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public IEnumerable<ScalarValue> GetCellsValues(CalcContext ctx)
         {
-            // TODO: Optimize to return only nonblank through CellCollection
             foreach (var area in Areas)
             {
                 for (var row = area.FirstAddress.RowNumber; row <= area.LastAddress.RowNumber; ++row)

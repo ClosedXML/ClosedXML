@@ -154,7 +154,7 @@ namespace ClosedXML.Excel.CalcEngine
                             singleCellReference =>
                             {
                                 if (!singleCellReference.TryGetSingleCellValue(out var cellValue, ctx))
-                                    throw new InvalidOperationException();
+                                    throw new InvalidOperationException("Got multi cell reference insted of single cell reference.");
 
                                 return ToCellContentValue(cellValue);
                             },

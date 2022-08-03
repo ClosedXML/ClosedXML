@@ -114,21 +114,14 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     if (range.Areas.Count != 1)
                     {
-                        // This sucks. Who ever though it was a good idea to not have reasonable typing system?
                         var references = range.Areas.Select(area =>
-                            new CellRangeReference((area.Worksheet ?? context.Worksheet).Range(area)));
+                            new CellRangeReference((area.Worksheet ?? context.Worksheet).Range(area))).ToList();
                         return new XObjectExpression(references);
                     }
 
                     var area = range.Areas.Single();
-                    if (area.Worksheet is not null)
-                    {
-                        return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area)));
-                    }
-                    else
-                    {
-                        return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area)));
-                    }
+                    var ws = area.Worksheet ?? context.Worksheet;
+                    return new XObjectExpression(new CellRangeReference(ws.Range(area)));
                 });
         }
     }
