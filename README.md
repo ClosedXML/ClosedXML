@@ -4,7 +4,7 @@
 
 ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying [OpenXML](https://github.com/OfficeDev/Open-XML-SDK) API.
 
-This fork of  adds linux support.
+This fork of [ClosedXML](https://wiki.rubicon.eu/display/~stefan.seeland/WIP+-+Setup+LDAP) adds Linux and MacOs support.
 
 [For more information see the wiki](https://github.com/closedxml/closedxml/wiki)
 
