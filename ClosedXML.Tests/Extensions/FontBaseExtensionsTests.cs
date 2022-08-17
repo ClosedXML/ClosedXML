@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Extensions
         }
 
         [Test]
-        [TestCase(20, 25.5, 1)]
+        [TestCase(20, 27.5, 3)]
         [TestCase(200, 249.75d, 10)]
         public void ShouldGetHeightUsingOsAgnosticFriendlyFont(int fontSize, double expectedHeight, int toleratedDiff)
         {
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Extensions
         [TestCase(200, "X", 36.29, 2)]
         [TestCase(20, "Very Wide Column", 34.29, 2)]
         [TestCase(72, "BigText", 51.29, 5)]
-        [TestCase(8, "SmallText", 6.86, 2)]
+        [TestCase(8, "SmallText", 8.9, 2)]
         [TestCase(11, "LongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLong", 228.43, 12)]
         public void ShouldGetWidthUsingOsAgnosticFriendlyFont(int fontSize, string text, double expectedFontSize, int tolerance)
         {
