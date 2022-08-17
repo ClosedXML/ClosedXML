@@ -4,7 +4,7 @@
 
 ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying [OpenXML](https://github.com/OfficeDev/Open-XML-SDK) API.
 
-This fork adds linux support.
+This fork of  adds linux support.
 
 [For more information see the wiki](https://github.com/closedxml/closedxml/wiki)
 
@@ -35,15 +35,6 @@ using (var workbook = new XLWorkbook())
 ### Frequent answers
 
 - ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
-
-## Extensions
-
-Be sure to check out our `ClosedXML` extension projects
-
-- <https://github.com/ClosedXML/ClosedXML.Report>
-- <https://github.com/ClosedXML/ClosedXML.Extensions.AspNet>
-- <https://github.com/ClosedXML/ClosedXML.Extensions.Mvc>
-- <https://github.com/ClosedXML/ClosedXML.Extensions.WebApi>
 
 ## Developer guidelines
 

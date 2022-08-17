@@ -59,7 +59,7 @@ namespace ClosedXML.Extensions
         private static double SystemSpecificHeightCalculator(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache, double systemSpecificHeightScalingFactor)
         {
             var font = GetCachedFont(fontBase, fontCache);
-            // textHeight seems to vary between systems,
+            // textHeight vary between systems,
             // A linear factor that is calculated by a known combination text size and known height looked up in ms excel in GetCachedHeightCalibration
             var textHeight = GraphicsUtils.MeasureString("X", font).Height;
             var height = Math.Round(textHeight * systemSpecificHeightScalingFactor, 2);

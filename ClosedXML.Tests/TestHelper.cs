@@ -75,7 +75,7 @@ namespace ClosedXML.Tests
                 using var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath);
                 using var streamActual = File.OpenRead(filePath2);
                 var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out var message, ignoreColumnFormats);
-                var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
+                var formattedMessage = $"Actual file '{filePath2}' is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
                 if (success)
                 {
@@ -87,7 +87,7 @@ namespace ClosedXML.Tests
 
                 if (string.IsNullOrEmpty(expectedDiff))
                 {
-                    Assert.Fail(formattedMessage);
+                    Assert.Fail($"Actual file '{filePath2}' is different than the expected file. {formattedMessage}");
                 }
 
                 Assert.That(message, Is.EqualTo(expectedDiff), $"Actual diff '{message}' differs to expected diff '{expectedDiff}', file '{resourcePath}'");
