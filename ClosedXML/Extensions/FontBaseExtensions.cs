@@ -35,8 +35,8 @@ namespace ClosedXML.Extensions
         {
             var systemSpecificWidthScalingFactor = GetCachedHeightCalibration(fontCache);
             var height = SystemSpecificHeightCalculator(fontBase, fontCache, systemSpecificWidthScalingFactor);
-
-            return height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+            var heightLimitedToMaxExcelValue = height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+            return Math.Round(heightLimitedToMaxExcelValue, 1);
         }
 
         private static double GetCachedHeightCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
@@ -63,7 +63,7 @@ namespace ClosedXML.Extensions
             // textHeight vary between systems,
             // A linear factor that is calculated by a known combination text size and known height looked up in ms excel in GetCachedHeightCalibration
             var textHeight = GraphicsUtils.MeasureString("X", font).Height;
-            var height = Math.Round(textHeight * systemSpecificHeightScalingFactor, 2);
+            var height = textHeight * systemSpecificHeightScalingFactor;
             return height;
         }
 
@@ -75,8 +75,8 @@ namespace ClosedXML.Extensions
             }
             var systemSpecificWidthScalingFactor = GetCachedWidthCalibration(fontCache);
             var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificWidthScalingFactor);
-
-            return width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
+            var widhtLimitedToMaxWidhPossibleInExcel = width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
+            return Math.Round(widhtLimitedToMaxWidhPossibleInExcel, 1);
         }
 
         private static double GetCachedWidthCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
