@@ -405,7 +405,7 @@ namespace ClosedXML.Excel
                 colMaxWidth = Worksheet.ColumnWidth;
             }
 
-            Width = colMaxWidth;
+            Width = Math.Round(colMaxWidth, 1);
 
             foreach (IDisposable font in fontCache.Values)
             {

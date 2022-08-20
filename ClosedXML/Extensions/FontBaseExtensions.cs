@@ -36,7 +36,7 @@ namespace ClosedXML.Extensions
             var systemSpecificWidthScalingFactor = GetCachedHeightCalibration(fontCache);
             var height = SystemSpecificHeightCalculator(fontBase, fontCache, systemSpecificWidthScalingFactor);
             var heightLimitedToMaxExcelValue = height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
-            return Math.Round(heightLimitedToMaxExcelValue, 1);
+            return heightLimitedToMaxExcelValue;
         }
 
         private static double GetCachedHeightCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
@@ -76,7 +76,7 @@ namespace ClosedXML.Extensions
             var systemSpecificWidthScalingFactor = GetCachedWidthCalibration(fontCache);
             var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificWidthScalingFactor);
             var widhtLimitedToMaxWidhPossibleInExcel = width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
-            return Math.Round(widhtLimitedToMaxWidhPossibleInExcel, 1);
+            return widhtLimitedToMaxWidhPossibleInExcel;
         }
 
         private static double GetCachedWidthCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
