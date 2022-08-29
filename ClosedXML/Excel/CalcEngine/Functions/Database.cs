@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Database
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("DAVERAGE", 3, Daverage); // Returns the average of selected database entries
             //ce.RegisterFunction("DCOUNT", 1, Dcount); // Counts the cells that contain numbers in a database

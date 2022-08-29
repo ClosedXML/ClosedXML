@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         protected ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
         private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
-        private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
+        private FunctionRegistry _fnTbl;      // table with constants and functions (pi, sin, etc)
 
         public CalcEngine()
         {
@@ -77,29 +77,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Registers a function that can be evaluated by this <see cref="CalcEngine"/>.
-        /// </summary>
-        /// <param name="functionName">Function name.</param>
-        /// <param name="parmMin">Minimum parameter count.</param>
-        /// <param name="parmMax">Maximum parameter count.</param>
-        /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
-        {
-            _fnTbl.Add(functionName, new FunctionDefinition(parmMin, parmMax, fn));
-        }
-
-        /// <summary>
-        /// Registers a function that can be evaluated by this <see cref="CalcEngine"/>.
-        /// </summary>
-        /// <param name="functionName">Function name.</param>
-        /// <param name="parmCount">Parameter count.</param>
-        /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmCount, CalcEngineFunction fn)
-        {
-            RegisterFunction(functionName, parmCount, parmCount, fn);
-        }
-
-        /// <summary>
         /// Gets an external object based on an identifier.
         /// </summary>
         /// <remarks>
@@ -114,23 +91,23 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // build/get static keyword table
-        private Dictionary<string, FunctionDefinition> GetFunctionTable()
+        private FunctionRegistry GetFunctionTable()
         {
             if (_fnTbl == null)
             {
                 // create table
-                _fnTbl = new Dictionary<string, FunctionDefinition>(StringComparer.InvariantCultureIgnoreCase);
+                _fnTbl = new FunctionRegistry();
 
                 // register built-in functions (and constants)
-                Engineering.Register(this);
-                Information.Register(this);
-                Logical.Register(this);
-                Lookup.Register(this);
-                MathTrig.Register(this);
-                Text.Register(this);
-                Statistical.Register(this);
-                DateAndTime.Register(this);
-                Financial.Register(this);
+                Engineering.Register(_fnTbl);
+                Information.Register(_fnTbl);
+                Logical.Register(_fnTbl);
+                Lookup.Register(_fnTbl);
+                MathTrig.Register(_fnTbl);
+                Text.Register(_fnTbl);
+                Statistical.Register(_fnTbl);
+                DateAndTime.Register(_fnTbl);
+                Financial.Register(_fnTbl);
             }
             return _fnTbl;
         }
@@ -142,5 +119,5 @@ namespace ClosedXML.Excel.CalcEngine
     /// <param name="parms">List of <see cref="Expression"/> objects that represent the
     /// parameters to be used in the function call.</param>
     /// <returns>The function result.</returns>
-    internal delegate object CalcEngineFunction(List<Expression> parms);
+    internal delegate object LegacyCalcEngineFunction(List<Expression> parms);
 }

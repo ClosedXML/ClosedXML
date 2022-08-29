@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class DateAndTime
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, Month); // Converts a serial number to a month
-            ce.RegisterFunction("NETWORKDAYS", 2, 3, Networkdays); // Returns the number of whole workdays between two dates
+            ce.RegisterFunction("NETWORKDAYS", 2, 3, Networkdays, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, Second); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, Time); // Returns the serial number of a particular time
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, Weekday); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
-            ce.RegisterFunction("WORKDAY", 2, 3, Workday); // Returns the serial number of the date before or after a specified number of workdays
+            ce.RegisterFunction("WORKDAY", 2, 3, Workday, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, Year); // Converts a serial number to a year
             ce.RegisterFunction("YEARFRAC", 2, 3, Yearfrac); // Returns the year fraction representing the number of whole days between start_date and end_date
         }

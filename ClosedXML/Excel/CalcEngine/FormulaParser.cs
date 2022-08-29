@@ -62,9 +62,9 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly Parser _parser;
-        private readonly Dictionary<string, FunctionDefinition> _fnTbl; // table with constants and functions (pi, sin, etc)
+        private readonly FunctionRegistry _fnTbl; // table with constants and functions (pi, sin, etc)
 
-        public FormulaParser(Dictionary<string, FunctionDefinition> fnTbl)
+        public FormulaParser(FunctionRegistry fnTbl)
         {
             _parser = new Parser(GetGrammar());
             _fnTbl = fnTbl;
@@ -456,7 +456,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            var udfFunction = new FunctionDefinition(-1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."));
+            var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."), AllowRange.All, Array.Empty<int>());
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
             parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
         }
@@ -464,19 +464,19 @@ namespace ClosedXML.Excel.CalcEngine
         private FunctionExpression CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
-            var foundFunction = _fnTbl.TryGetValue(functionName, out FunctionDefinition functionDefinition);
+            var foundFunction = _fnTbl.TryGetFunc(functionName, out FunctionDefinition functionDefinition);
             if (!foundFunction && functionName.StartsWith($"{defaultFunctionNameSpace}."))
-                foundFunction = _fnTbl.TryGetValue(functionName.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
+                foundFunction = _fnTbl.TryGetFunc(functionName.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
 
             if (!foundFunction)
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");
 
             var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
-            if (functionDefinition.ParmMin != -1 && arguments.Count < functionDefinition.ParmMin)
-                throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
+            if (functionDefinition.MinParams != -1 && arguments.Count < functionDefinition.MinParams)
+                throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {functionDefinition.MinParams} and a maximum of {functionDefinition.MaxParams}.");
 
-            if (functionDefinition.ParmMax != -1 && arguments.Count > functionDefinition.ParmMax)
-                throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
+            if (functionDefinition.MaxParams != -1 && arguments.Count > functionDefinition.MaxParams)
+                throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.MinParams} and a maximum of {functionDefinition.MaxParams}.");
 
             return new FunctionExpression(functionDefinition, arguments);
         }

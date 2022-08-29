@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region Register
 
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ABS", 1, Abs);
             ce.RegisterFunction("ACOS", 1, Acos);
@@ -53,9 +53,9 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LN", 1, Ln);
             ce.RegisterFunction("LOG", 1, 2, Log);
             ce.RegisterFunction("LOG10", 1, Log10);
-            ce.RegisterFunction("MDETERM", 1, MDeterm);
-            ce.RegisterFunction("MINVERSE", 1, MInverse);
-            ce.RegisterFunction("MMULT", 2, MMult);
+            ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
+            ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
+            ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
             ce.RegisterFunction("MOD", 2, Mod);
             ce.RegisterFunction("MROUND", 2, MRound);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
@@ -73,17 +73,17 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
             ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SECH", 1, Sech);
-            ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
+            ce.RegisterFunction("SERIESSUM", 4, SeriesSum, AllowRange.Only, 3);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, Sqrt);
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
-            ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal);
-            ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
-            ce.RegisterFunction("SUMIF", 2, 3, SumIf);
-            ce.RegisterFunction("SUMIFS", 3, 255, SumIfs);
-            ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct);
+            ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal, AllowRange.Except, 0);
+            ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, AllowRange.All);
+            ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
+            ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
+            ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct, AllowRange.All);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
@@ -875,7 +875,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Skip cells that already evaluate a SUBTOTAL
             bool hasSubtotalInFormula(Expression e)
             {
-                if (e is FunctionExpression fe && (fe.FunctionDefinition.Function.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
+                if (e is FunctionExpression fe && (fe.FunctionDefinition.LegacyFunction.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
                     return true;
 
                 if (e is BinaryExpression be)

@@ -411,7 +411,7 @@ namespace ClosedXML.Excel.CalcEngine
         // ** object model
         override public object Evaluate()
         {
-            return FunctionDefinition.Function(Parameters);
+            return FunctionDefinition.LegacyFunction(Parameters);
         }
 
         public PrefixNode Prefix { get; }
