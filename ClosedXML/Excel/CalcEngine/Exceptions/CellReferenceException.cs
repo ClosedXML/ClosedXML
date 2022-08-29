@@ -8,7 +8,6 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// formula.
     /// Corresponds to the #REF! error in Excel
     /// </summary>
-    /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
     public class CellReferenceException : CalcEngineException
     {
         internal CellReferenceException()

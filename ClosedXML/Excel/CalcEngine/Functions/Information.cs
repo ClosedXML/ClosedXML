@@ -27,23 +27,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
+        static IDictionary<Error, int> errorTypes = new Dictionary<Error, int>()
         {
-            [ErrorExpression.ExpressionErrorType.NullValue] = 1,
-            [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,
-            [ErrorExpression.ExpressionErrorType.CellValue] = 3,
-            [ErrorExpression.ExpressionErrorType.CellReference] = 4,
-            [ErrorExpression.ExpressionErrorType.NameNotRecognized] = 5,
-            [ErrorExpression.ExpressionErrorType.NumberInvalid] = 6,
-            [ErrorExpression.ExpressionErrorType.NoValueAvailable] = 7
+            [Error.NullValue] = 1,
+            [Error.DivisionByZero] = 2,
+            [Error.CellValue] = 3,
+            [Error.CellReference] = 4,
+            [Error.NameNotRecognized] = 5,
+            [Error.NumberInvalid] = 6,
+            [Error.NoValueAvailable] = 7
         };
 
         static object ErrorType(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
-            if (v is ErrorExpression.ExpressionErrorType)
-                return errorTypes[(ErrorExpression.ExpressionErrorType)v];
+            if (v is Error error)
+                return errorTypes[error];
             else
                 throw new NoValueAvailableException();
         }
@@ -66,15 +66,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
 
-            return v is ErrorExpression.ExpressionErrorType
-                && ((ErrorExpression.ExpressionErrorType)v) != ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            return v is Error error && error != Error.NoValueAvailable;
         }
 
         static object IsError(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
-            return v is ErrorExpression.ExpressionErrorType;
+            return v is Error;
         }
 
         static object IsEven(List<Expression> p)
@@ -106,8 +105,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
 
-            return v is ErrorExpression.ExpressionErrorType
-                && ((ErrorExpression.ExpressionErrorType)v) == ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            return v is Error.NoValueAvailable;
         }
 
         static object IsNonText(List<Expression> p)
@@ -185,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object NA(List<Expression> p)
         {
-            return ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            return Error.NoValueAvailable;
         }
 
         static object Type(List<Expression> p)

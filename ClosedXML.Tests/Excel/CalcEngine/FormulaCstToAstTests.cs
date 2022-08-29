@@ -154,7 +154,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Constant.Rule = Error
             yield return new TestCaseData(
                 "#DIV/0!",
-                new[] { Formula, Constant, Error, TokenError },
+                new[] { Formula, Constant, GrammarNames.Error, TokenError },
                 new[] { typeof(ErrorExpression) });
 
             // Text.Rule = TextToken;
@@ -178,7 +178,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Error.Rule = ErrorToken;
             yield return new TestCaseData(
                 "#VALUE!",
-                new[] { Formula, Constant, Error, TokenError },
+                new[] { Formula, Constant, GrammarNames.Error, TokenError },
                 new[] { typeof(ErrorExpression) });
 
             // RefError.Rule = RefErrorToken;
@@ -641,7 +641,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { Formula, ConstantArray, ArrayColumns,
                     ArrayRows, ArrayConstant, Constant, Number, TokenNumber, null, null, null, null, null,
                     ArrayRows, ArrayConstant, Constant, Bool, TokenBool, null, null, null, null, null,
-                    ArrayRows, ArrayConstant, Constant, Error, TokenError },
+                    ArrayRows, ArrayConstant, Constant, GrammarNames.Error, TokenError },
                 new[] { typeof(NotSupportedNode) });
 
             // ArrayRows.Rule = MakePlusRule(ArrayRows, comma, ArrayConstant);
@@ -650,14 +650,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { Formula, ConstantArray, ArrayColumns, ArrayRows,
                     ArrayConstant, Constant, Number, TokenNumber, null, null, null, null,
                     ArrayConstant, Constant, Bool, TokenBool, null, null, null, null,
-                    ArrayConstant, Constant, Error, TokenError },
+                    ArrayConstant, Constant, GrammarNames.Error, TokenError },
                 new[] { typeof(NotSupportedNode) });
 
             // ArrayConstant.Rule = Constant | PrefixOp + Number | RefError;
             yield return new TestCaseData(
                 "{#DIV/0!,-1,#REF!}",
                 new[] { Formula, ConstantArray, ArrayColumns, ArrayRows,
-                    ArrayConstant, Constant, Error, TokenError, null, null, null, null,
+                    ArrayConstant, Constant, GrammarNames.Error, TokenError, null, null, null, null,
                     ArrayConstant, "-", null, Number, TokenNumber, null, null, null,
                     ArrayConstant, RefError, TokenRefError },
                 new[] { typeof(NotSupportedNode) });

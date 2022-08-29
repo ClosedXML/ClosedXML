@@ -484,47 +484,36 @@ namespace ClosedXML.Excel.CalcEngine
 
     internal class ErrorExpression : Expression
     {
-        internal enum ExpressionErrorType
-        {
-            CellReference,
-            CellValue,
-            DivisionByZero,
-            NameNotRecognized,
-            NoValueAvailable,
-            NullValue,
-            NumberInvalid
-        }
+        private readonly Error _error;
 
-        private readonly ExpressionErrorType _errorType;
-
-        internal ErrorExpression(ExpressionErrorType errorType)
+        internal ErrorExpression(Error error)
         {
-            _errorType = errorType;
+            _error = error;
         }
 
         public override object Evaluate()
         {
-            return _errorType;
+            return _error;
         }
 
         public void ThrowApplicableException()
         {
-            switch (_errorType)
+            switch (_error)
             {
                 // TODO: include last token in exception message
-                case ExpressionErrorType.CellReference:
+                case Error.CellReference:
                     throw new CellReferenceException();
-                case ExpressionErrorType.CellValue:
+                case Error.CellValue:
                     throw new CellValueException();
-                case ExpressionErrorType.DivisionByZero:
+                case Error.DivisionByZero:
                     throw new DivisionByZeroException();
-                case ExpressionErrorType.NameNotRecognized:
+                case Error.NameNotRecognized:
                     throw new NameNotRecognizedException();
-                case ExpressionErrorType.NoValueAvailable:
+                case Error.NoValueAvailable:
                     throw new NoValueAvailableException();
-                case ExpressionErrorType.NullValue:
+                case Error.NullValue:
                     throw new NullValueException();
-                case ExpressionErrorType.NumberInvalid:
+                case Error.NumberInvalid:
                     throw new NumberException();
             }
         }
