@@ -1846,18 +1846,31 @@ namespace ClosedXML.Excel
         /// <returns>Current value of the specified cell. Empty string for non-initialized cells.</returns>
         internal object GetCellValue(int ro, int co)
         {
-            if (Internals.CellsCollection.MaxRowUsed < ro ||
-                Internals.CellsCollection.MaxColumnUsed < co ||
-                !Internals.CellsCollection.Contains(ro, co))
+            var cell = GetCell(ro, co);
+            if (cell is null)
+
                 return string.Empty;
 
-            var cell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+            // LEGACY: This is deeply suspicious, this only exists so the legacy formulas can get cell value
             if (cell.IsEvaluating)
                 return string.Empty;
 
             return cell.Value;
         }
 
+        /// <summary>
+        /// Get cell or null, if cell doesn't exist.
+        /// </summary>
+        internal XLCell GetCell(int ro, int co)
+        {
+            if (Internals.CellsCollection.MaxRowUsed < ro ||
+                Internals.CellsCollection.MaxColumnUsed < co ||
+                !Internals.CellsCollection.Contains(ro, co))
+                return null;
+
+            return Worksheet.Internals.CellsCollection.GetCell(ro, co);
+        }
+        
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
         {
             var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);

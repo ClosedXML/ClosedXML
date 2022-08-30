@@ -467,7 +467,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."), AllowRange.All, Array.Empty<int>());
+            var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."), AllowRange.All, System.Array.Empty<int>());
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
             parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
         }

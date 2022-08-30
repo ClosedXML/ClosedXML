@@ -224,6 +224,13 @@ namespace ClosedXML.Excel
                 LastAddress.WithoutWorksheet());
         }
 
+        internal XLRangeAddress WithWorksheet(XLWorksheet worksheet)
+        {
+            return new XLRangeAddress(
+                FirstAddress.WithWorksheet(worksheet),
+                LastAddress.WithWorksheet(worksheet));
+        }
+
         internal bool Contains(in XLAddress address)
         {
             return FirstAddress.RowNumber <= address.RowNumber &&
@@ -375,6 +382,13 @@ namespace ClosedXML.Excel
             return ReferenceEquals(Worksheet, other.Worksheet) &&
                    FirstAddress == other.FirstAddress &&
                    LastAddress == other.LastAddress;
+        }
+
+        public bool IsSingleCell()
+        {
+            return IsValid
+                   && FirstAddress.RowNumber == LastAddress.RowNumber
+                   && FirstAddress.ColumnNumber == LastAddress.ColumnNumber;
         }
 
         public bool IsEntireColumn()
