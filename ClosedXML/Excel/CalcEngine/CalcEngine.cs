@@ -34,9 +34,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Expression Parse(string expression)
         {
-            var cstTree = _parser.Parse(expression);
-            var root = (Expression)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-            return (Expression)root.Accept(null, _compatibilityVisitor);
+            var cst = _parser.ParseCst(expression);
+            var ast = _parser.ConvertToAst(cst);
+            return (Expression)ast.AstRoot.Accept(null, _compatibilityVisitor);
         }
 
         /// <summary>

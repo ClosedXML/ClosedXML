@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using XLParser;
-using static ClosedXML.Excel.CalcEngine.ErrorExpression;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -62,27 +61,40 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly Parser _parser;
-        private readonly FunctionRegistry _fnTbl; // table with constants and functions (pi, sin, etc)
+        private readonly FunctionRegistry _fnTbl;
 
-        public FormulaParser(FunctionRegistry fnTbl)
+        public FormulaParser(FunctionRegistry functionRegistry)
         {
             _parser = new Parser(GetGrammar());
-            _fnTbl = fnTbl;
+            _fnTbl = functionRegistry;
+        }
+
+        internal ParseTree ParseCst(string formulaText)
+        {
+            try
+            {
+                return _parser.Parse(formulaText);
+            }
+            catch (NullReferenceException ex) when (ex.StackTrace.StartsWith("   at Irony.Ast.AstBuilder.BuildAst(ParseTreeNode parseNode)"))
+            {
+                throw new InvalidOperationException($"Unable to parse formula '{formulaText}'. Some Irony grammar term is missing AST configuration.");
+            }
         }
 
         /// <summary>
         /// Parse a tree into a CSt that also has AST.
         /// </summary>
-        public ParseTree Parse(string formula)
+        public Formula ConvertToAst(ParseTree cst)
         {
-            try
-            {
-                return _parser.Parse(formula);
-            }
-            catch (NullReferenceException ex) when (ex.StackTrace.StartsWith("   at Irony.Ast.AstBuilder.BuildAst(ParseTreeNode parseNode)"))
-            {
-                throw new InvalidOperationException($"Unable to parse formula '{formula}'. Some Irony grammar term is missing AST configuration.");
-            }
+            var astContext = new AstContext(_parser.Language);
+            if (cst.HasErrors())
+                throw new ExpressionParseException($"Unable to parse formula '{cst.SourceText}':\n" + string.Join("\n", cst.ParserMessages.Select(c => $"Location {c.Location.Line}:{c.Location.Column} - {c.Message}")));
+
+            var astBuilder = new AstBuilder(astContext);
+            astBuilder.BuildAst(cst);
+            var root = (Expression)cst.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
+
+            return new Formula(cst.SourceText, root, FormulaFlags.None);
         }
 
         private ExcelFormulaGrammar GetGrammar()
@@ -148,7 +160,6 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.File.AstConfig.NodeCreator = CreateFileNodeFactory();
             grammar.File.SetFlag(TermFlags.AstDelayChildren);
 
-            grammar.LanguageFlags |= LanguageFlags.CreateAst;
             return grammar;
         }
 

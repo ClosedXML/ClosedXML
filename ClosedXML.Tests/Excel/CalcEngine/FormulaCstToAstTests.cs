@@ -1,9 +1,22 @@
-﻿using ClosedXML.Excel.CalcEngine;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using XLParser;
+using BinaryExpression = ClosedXML.Excel.CalcEngine.BinaryExpression;
+using UnaryExpression = ClosedXML.Excel.CalcEngine.UnaryExpression;
+using ScalarNode = ClosedXML.Excel.CalcEngine.ScalarNode;
+using NotSupportedNode = ClosedXML.Excel.CalcEngine.NotSupportedNode;
+using ReferenceNode = ClosedXML.Excel.CalcEngine.ReferenceNode;
+using AstNode = ClosedXML.Excel.CalcEngine.AstNode;
+using PrefixNode = ClosedXML.Excel.CalcEngine.PrefixNode;
+using FileNode = ClosedXML.Excel.CalcEngine.FileNode;
+using FormulaParser = ClosedXML.Excel.CalcEngine.FormulaParser;
+using StructuredReferenceNode = ClosedXML.Excel.CalcEngine.StructuredReferenceNode;
+using FunctionExpression = ClosedXML.Excel.CalcEngine.FunctionExpression;
+using EmptyValueExpression = ClosedXML.Excel.CalcEngine.EmptyValueExpression;
+using ErrorExpression = ClosedXML.Excel.CalcEngine.ErrorExpression;
+using XObjectExpression = ClosedXML.Excel.CalcEngine.XObjectExpression;
 using static XLParser.GrammarNames;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -19,7 +32,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCaseSource(nameof(FormulaWithCstAndAst))]
         public void FormulaProducesCorrectCstAndAst(string formula, string[] expectedCst, Type[] expectedAst)
         {
-            var dummyFunctions = new FunctionRegistry();
+            var dummyFunctions = new ClosedXML.Excel.CalcEngine.FunctionRegistry();
             dummyFunctions.RegisterFunction("SUM", 0, 255, x => throw new InvalidOperationException());
             dummyFunctions.RegisterFunction("SIN", 1, 1, x => throw new InvalidOperationException());
             dummyFunctions.RegisterFunction("RAND", 0, 0, x => throw new InvalidOperationException());
@@ -27,12 +40,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             dummyFunctions.RegisterFunction("INDEX", 1, 3, x => throw new InvalidOperationException());
             var parser = new FormulaParser(dummyFunctions);
 
-            var cst = parser.Parse(formula);
+            var cst = parser.ParseCst(formula);
             var linearizedCst = LinearizeCst(cst);
             CollectionAssert.AreEqual(expectedCst, linearizedCst);
 
-            var ast = (AstNode)cst.Root.AstNode;
-            var linearizedAst = LinearizeAst(ast);
+            var ast = parser.ConvertToAst(cst);
+            var linearizedAst = LinearizeAst(ast.AstRoot);
             CollectionAssert.AreEqual(expectedAst, linearizedAst);
         }
 
@@ -733,7 +746,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 list.RemoveLast();
         }
 
-        private class LinearizeVisitor : DefaultFormulaVisitor<LinkedList<Type>>
+        private class LinearizeVisitor : ClosedXML.Excel.CalcEngine.DefaultFormulaVisitor<LinkedList<Type>>
         {
             public override AstNode Visit(LinkedList<Type> context, ScalarNode node)
                 => LinearizeNode(context, typeof(ScalarNode), () => base.Visit(context, node));
