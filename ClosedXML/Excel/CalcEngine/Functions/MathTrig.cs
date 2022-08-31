@@ -875,13 +875,13 @@ namespace ClosedXML.Excel.CalcEngine
             // Skip cells that already evaluate a SUBTOTAL
             bool hasSubtotalInFormula(Expression e)
             {
-                if (e is FunctionExpression fe && (fe.FunctionDefinition.LegacyFunction.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
+                if (e is FunctionNode fe && (fe.FunctionDefinition.LegacyFunction.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
                     return true;
 
-                if (e is BinaryExpression be)
+                if (e is BinaryNode be)
                     return hasSubtotalInFormula(be.LeftExpression) || hasSubtotalInFormula(be.RightExpression);
 
-                if (e is UnaryExpression ue)
+                if (e is UnaryNode ue)
                     return hasSubtotalInFormula(ue.Expression);
 
                 return false;

@@ -7,38 +7,38 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, AstNode>
     {
-        public virtual AstNode Visit(TContext context, UnaryExpression node)
+        public virtual AstNode Visit(TContext context, UnaryNode node)
         {
             var acceptedArgument = (Expression)node.Expression.Accept(context, this);
             return !ReferenceEquals(acceptedArgument, node.Expression)
-                ? new UnaryExpression(node.Operation, acceptedArgument)
+                ? new UnaryNode(node.Operation, acceptedArgument)
                 : node;
         }
 
-        public virtual AstNode Visit(TContext context, BinaryExpression node)
+        public virtual AstNode Visit(TContext context, BinaryNode node)
         {
             var acceptedLeftArgument = (Expression)node.LeftExpression.Accept(context, this);
             var acceptedRightArgument = (Expression)node.RightExpression.Accept(context, this);
             return !ReferenceEquals(acceptedLeftArgument, node.LeftExpression) || !ReferenceEquals(acceptedRightArgument, node.RightExpression)
-                ? new BinaryExpression(node.Operation, acceptedLeftArgument, acceptedRightArgument)
+                ? new BinaryNode(node.Operation, acceptedLeftArgument, acceptedRightArgument)
                 : node;
         }
 
-        public virtual AstNode Visit(TContext context, FunctionExpression node)
+        public virtual AstNode Visit(TContext context, FunctionNode node)
         {
             var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<Expression>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
-                ? new FunctionExpression(node.Prefix, node.FunctionDefinition, acceptedParameters)
+                ? new FunctionNode(node.Prefix, node.FunctionDefinition, acceptedParameters)
                 : node;
         }
 
         public virtual AstNode Visit(TContext context, XObjectExpression node) => node;
 
-        public virtual AstNode Visit(TContext context, EmptyValueExpression node) => node;
+        public virtual AstNode Visit(TContext context, EmptyArgumentNode node) => node;
 
         public virtual AstNode Visit(TContext context, ScalarNode node) => node;
 
-        public virtual AstNode Visit(TContext context, ErrorExpression node) => node;
+        public virtual AstNode Visit(TContext context, ErrorNode node) => node;
 
         public virtual AstNode Visit(TContext context, NotSupportedNode node) => node;
 

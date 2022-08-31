@@ -183,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
         {
             var errorType = ErrorMap[parseNode.ChildNodes.Single().Token.Text];
-            parseNode.AstNode = new ErrorExpression(errorType);
+            parseNode.AstNode = new ErrorNode(errorType);
         }
 
         private AstNodeFactory GetFunctionCallNodeFactory()
@@ -192,11 +192,11 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 {
                     For(PrefixOpMap.Keys.ToArray(), GrammarNames.Formula),
-                    node => new UnaryExpression(PrefixOpMap[node.ChildNodes[0].Term.Name], (Expression)node.ChildNodes[1].AstNode)
+                    node => new UnaryNode(PrefixOpMap[node.ChildNodes[0].Term.Name], (Expression)node.ChildNodes[1].AstNode)
                 },
                 {
                     For(GrammarNames.Formula, "%"),
-                    node => new UnaryExpression(UnaryOp.Percentage, (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryNode(UnaryOp.Percentage, (Expression)node.ChildNodes[0].AstNode)
                 },
                 {
                     For(GrammarNames.FunctionName, GrammarNames.Arguments),
@@ -204,7 +204,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.Formula, BinaryOpMap.Keys.ToArray(), GrammarNames.Formula),
-                    node => new BinaryExpression(BinaryOpMap[node.ChildNodes[1].Term.Name], (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryNode(BinaryOpMap[node.ChildNodes[1].Term.Name], (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
                 }
             };
         }
@@ -225,16 +225,16 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // ReferenceItem:RefError. #REF! error is not grouped with other errors, but is a part of Reference term.
-                    For(typeof(ErrorExpression)),
-                    node => (ErrorExpression)node.ChildNodes[0].AstNode
+                    For(typeof(ErrorNode)),
+                    node => (ErrorNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // ReferenceItem:UDFunctionCall
                     For(GrammarNames.UDFunctionCall),
                     node =>
                     {
-                        var fn = (FunctionExpression)node.ChildNodes[0].AstNode;
-                        return new FunctionExpression(null, fn.FunctionDefinition, fn.Parameters);
+                        var fn = (FunctionNode)node.ChildNodes[0].AstNode;
+                        return new FunctionNode(null, fn.FunctionDefinition, fn.Parameters);
                     }
                 },
                 {
@@ -246,18 +246,18 @@ namespace ClosedXML.Excel.CalcEngine
                     // ReferenceFunctionCall - Reference + colon + Reference
                     // ReferenceFunctionCall - Reference + intersectop + Reference
                     // ReferenceFunctionCall - Reference + Union + Reference
-                    For(typeof(BinaryExpression)),
-                    node => (BinaryExpression)node.ChildNodes[0].AstNode
+                    For(typeof(BinaryNode)),
+                    node => (BinaryNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // ReferenceFunctionCall - RefFunctionName + Arguments + CloseParen
-                    For(typeof(FunctionExpression)),
-                    node => (FunctionExpression)node.ChildNodes[0].AstNode
+                    For(typeof(FunctionNode)),
+                    node => (FunctionNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // ReferenceFunctionCall - Reference + hash
-                    For(typeof(UnaryExpression)),
-                    node => (UnaryExpression)node.ChildNodes[0].AstNode
+                    For(typeof(UnaryNode)),
+                    node => (UnaryNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // OpenParen + Reference + CloseParen
@@ -271,11 +271,11 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // Prefix + ReferenceItem:RefError
-                    For(typeof(PrefixNode), typeof(ErrorExpression)),
+                    For(typeof(PrefixNode), typeof(ErrorNode)),
                     node =>
                     {
                         // I think =#REF!#REF! was evaluated to #REF! in Excel 2021.
-                        return (ErrorExpression)node.ChildNodes[1].AstNode;
+                        return (ErrorNode)node.ChildNodes[1].AstNode;
                     }
                 },
                 {
@@ -284,8 +284,8 @@ namespace ClosedXML.Excel.CalcEngine
                     node =>
                     {
                         var prefix = (PrefixNode)node.ChildNodes[0].AstNode;
-                        var fn = (FunctionExpression)node.ChildNodes[1].AstNode;
-                        return new FunctionExpression(prefix, fn.FunctionDefinition, fn.Parameters);
+                        var fn = (FunctionNode)node.ChildNodes[1].AstNode;
+                        return new FunctionNode(prefix, fn.FunctionDefinition, fn.Parameters);
                     }
                 },
                 {
@@ -307,11 +307,11 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 {
                     For(GrammarNames.Reference, ":", GrammarNames.Reference),
-                    node => new BinaryExpression(BinaryOp.Range, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryNode(BinaryOp.Range, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
                 },
                 {
                     For(GrammarNames.Reference, GrammarNames.TokenIntersect, GrammarNames.Reference),
-                    node => new BinaryExpression(BinaryOp.Intersection, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryNode(BinaryOp.Intersection, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
                 },
                 {
                     For(GrammarNames.Union),
@@ -323,7 +323,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.Reference, "#"),
-                    node => new UnaryExpression(UnaryOp.SpillRange, (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryNode(UnaryOp.SpillRange, (Expression)node.ChildNodes[0].AstNode)
                 }
             };
         }
@@ -469,10 +469,10 @@ namespace ClosedXML.Excel.CalcEngine
 
             var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."), AllowRange.All, System.Array.Empty<int>());
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
-            parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
+            parseNode.AstNode = new FunctionNode(udfFunction, arguments); ;
         }
 
-        private FunctionExpression CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
+        private FunctionNode CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
             var foundFunction = _fnTbl.TryGetFunc(functionName, out FunctionDefinition functionDefinition);
@@ -489,7 +489,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (functionDefinition.MaxParams != -1 && arguments.Count > functionDefinition.MaxParams)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.MinParams} and a maximum of {functionDefinition.MaxParams}.");
 
-            return new FunctionExpression(functionDefinition, arguments);
+            return new FunctionNode(functionDefinition, arguments);
         }
 
         private static AstNodeCreator CreateCopyNode(int childIndex)
@@ -510,14 +510,14 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var unionRangeNode = (Expression)parseNode.ChildNodes[0].AstNode;
             foreach (var referenceNode in parseNode.ChildNodes.Skip(1))
-                unionRangeNode = new BinaryExpression(BinaryOp.Union, unionRangeNode, (Expression)referenceNode.AstNode);
+                unionRangeNode = new BinaryNode(BinaryOp.Union, unionRangeNode, (Expression)referenceNode.AstNode);
             parseNode.AstNode = unionRangeNode;
         }
 
         private void CreateEmptyArgumentNode(AstContext context, ParseTreeNode parseNode)
         {
             // TODO: This is useless for AST, but kept for compatibility reasons with old parser and some function that use it.
-            parseNode.AstNode = new EmptyValueExpression();
+            parseNode.AstNode = new EmptyArgumentNode();
         }
 
         public void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)

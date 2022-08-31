@@ -1,5 +1,4 @@
 using ClosedXML.Excel.CalcEngine.Functions;
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -93,23 +92,20 @@ namespace ClosedXML.Excel.CalcEngine
         // build/get static keyword table
         private FunctionRegistry GetFunctionTable()
         {
-            if (_fnTbl == null)
-            {
-                // create table
-                _fnTbl = new FunctionRegistry();
+            var fr = new FunctionRegistry();
 
-                // register built-in functions (and constants)
-                Engineering.Register(_fnTbl);
-                Information.Register(_fnTbl);
-                Logical.Register(_fnTbl);
-                Lookup.Register(_fnTbl);
-                MathTrig.Register(_fnTbl);
-                Text.Register(_fnTbl);
-                Statistical.Register(_fnTbl);
-                DateAndTime.Register(_fnTbl);
-                Financial.Register(_fnTbl);
-            }
-            return _fnTbl;
+            // register built-in functions (and constants)
+            Engineering.Register(fr);
+            Information.Register(fr);
+            Logical.Register(fr);
+            Lookup.Register(fr);
+            MathTrig.Register(fr);
+            Text.Register(fr);
+            Statistical.Register(fr);
+            DateAndTime.Register(fr);
+            Financial.Register(fr);
+
+            return fr;
         }
     }
 

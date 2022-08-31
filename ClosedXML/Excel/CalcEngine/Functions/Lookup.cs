@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var range = ExtractRange(p[1]);
             var row_index_num = (int)p[2];
             var range_lookup = p.Count < 4
-                               || p[3] is EmptyValueExpression
+                               || p[3] is EmptyArgumentNode
                                || (bool)(p[3]);
 
             if (row_index_num < 1)
@@ -124,10 +124,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 int column_num = 1;
                 int row_num = 1;
 
-                if (!(p[1] is EmptyValueExpression))
+                if (!(p[1] is EmptyArgumentNode))
                     row_num = (int)p[1];
 
-                if (!(p[2] is EmptyValueExpression))
+                if (!(p[2] is EmptyArgumentNode))
                     column_num = (int)p[2];
 
                 var rangeIsRow = range.RowCount() == 1;
@@ -221,7 +221,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var range = ExtractRange(p[1]);
             var col_index_num = (int)p[2];
             var range_lookup = p.Count < 4
-                               || p[3] is EmptyValueExpression
+                               || p[3] is EmptyArgumentNode
                                || (bool)(p[3]);
 
             if (col_index_num < 1)

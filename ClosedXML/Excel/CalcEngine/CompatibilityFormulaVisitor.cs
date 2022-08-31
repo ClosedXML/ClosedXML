@@ -31,7 +31,7 @@
             return base.Visit(context, referenceNode);
         }
 
-        public override AstNode Visit(object context, BinaryExpression binaryNode)
+        public override AstNode Visit(object context, BinaryNode binaryNode)
         {
             if (binaryNode.Operation == BinaryOp.Range
                 && binaryNode.LeftExpression is ReferenceNode leftReference

@@ -31,8 +31,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorNode)
+                (x as ErrorNode).ThrowApplicableException();
 
             var v = x.Evaluate();
 
@@ -47,8 +47,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator double(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorNode)
+                (x as ErrorNode).ThrowApplicableException();
 
             // evaluate
             var v = x.Evaluate();
@@ -95,8 +95,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorNode)
+                (x as ErrorNode).ThrowApplicableException();
 
             // evaluate
             var v = x.Evaluate();
@@ -125,8 +125,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorNode)
+                (x as ErrorNode).ThrowApplicableException();
 
             // evaluate
             var v = x.Evaluate();
@@ -239,9 +239,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Unary expression, e.g. +123
     /// </summary>
-    internal class UnaryExpression : Expression
+    internal class UnaryNode : Expression
     {
-        public UnaryExpression(UnaryOp operation, Expression expr)
+        public UnaryNode(UnaryOp operation, Expression expr)
         {
             Operation = operation;
             Expression = expr;
@@ -303,7 +303,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Binary expression, e.g. 1+2
     /// </summary>
-    internal class BinaryExpression : Expression
+    internal class BinaryNode : Expression
     {
         private static readonly HashSet<BinaryOp> _comparisons = new HashSet<BinaryOp>
         {
@@ -317,7 +317,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private readonly bool _isComparison;
 
-        public BinaryExpression(BinaryOp operation, Expression exprLeft, Expression exprRight)
+        public BinaryNode(BinaryOp operation, Expression exprLeft, Expression exprRight)
         {
             _isComparison = _comparisons.Contains(operation);
             Operation = operation;
@@ -396,12 +396,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Function call expression, e.g. sin(0.5)
     /// </summary>
-    internal class FunctionExpression : Expression
+    internal class FunctionNode : Expression
     {
-        public FunctionExpression(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
+        public FunctionNode(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
         { }
 
-        public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<Expression> parms)
+        public FunctionNode(PrefixNode prefix, FunctionDefinition function, List<Expression> parms)
         {
             Prefix = prefix;
             FunctionDefinition = function;
@@ -475,18 +475,18 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Expression that represents an omitted parameter.
     /// </summary>
-    internal class EmptyValueExpression : Expression
+    internal class EmptyArgumentNode : Expression
     {
         public override object Evaluate() => null;
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
-    internal class ErrorExpression : Expression
+    internal class ErrorNode : Expression
     {
         private readonly Error _error;
 
-        internal ErrorExpression(Error error)
+        internal ErrorNode(Error error)
         {
             _error = error;
         }

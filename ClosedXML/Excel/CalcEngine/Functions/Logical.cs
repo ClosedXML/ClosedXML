@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             else if (p.Count > 2)
             {
-                if (p[2] is EmptyValueExpression)
+                if (p[2] is EmptyArgumentNode)
                     return false;
                 else
                     return p[2].Evaluate();
