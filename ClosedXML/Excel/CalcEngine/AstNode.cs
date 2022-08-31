@@ -18,6 +18,10 @@ namespace ClosedXML.Excel.CalcEngine
         public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
     }
 
+    internal abstract class ValueNode : Expression
+    {
+    }
+
     /// <summary>
     /// A base class for all AST nodes that can be evaluated to produce a value.
     /// </summary>
@@ -210,7 +214,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// AST node that contains a number, text or a bool.
     /// </summary>
-    internal class ScalarNode : Expression
+    internal class ScalarNode : ValueNode
     {
         private readonly object _value;
 
@@ -239,7 +243,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Unary expression, e.g. +123
     /// </summary>
-    internal class UnaryNode : Expression
+    internal class UnaryNode : ValueNode
     {
         public UnaryNode(UnaryOp operation, Expression expr)
         {
@@ -303,7 +307,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Binary expression, e.g. 1+2
     /// </summary>
-    internal class BinaryNode : Expression
+    internal class BinaryNode : ValueNode
     {
         private static readonly HashSet<BinaryOp> _comparisons = new HashSet<BinaryOp>
         {
@@ -396,7 +400,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Function call expression, e.g. sin(0.5)
     /// </summary>
-    internal class FunctionNode : Expression
+    internal class FunctionNode : ValueNode
     {
         public FunctionNode(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
         { }
@@ -475,30 +479,31 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Expression that represents an omitted parameter.
     /// </summary>
-    internal class EmptyArgumentNode : Expression
+    internal class EmptyArgumentNode : ValueNode
     {
         public override object Evaluate() => null;
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
-    internal class ErrorNode : Expression
+    // TODO: Merge with ScalarNode
+    internal class ErrorNode : ValueNode
     {
-        private readonly Error _error;
-
         internal ErrorNode(Error error)
         {
-            _error = error;
+            Error = error;
         }
+
+        public Error Error { get; }
 
         public override object Evaluate()
         {
-            return _error;
+            return Error;
         }
 
         public void ThrowApplicableException()
         {
-            switch (_error)
+            switch (Error)
             {
                 // TODO: include last token in exception message
                 case Error.CellReference:
@@ -524,18 +529,18 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
     /// </summary>
-    internal class NotSupportedNode : Expression
+    internal class NotSupportedNode : ValueNode
     {
-        private readonly string _featureText;
-
-        public NotSupportedNode(string featureText)
+        public NotSupportedNode(string featureName)
         {
-            _featureText = featureText;
+            FeatureName = featureName;
         }
+
+        public string FeatureName { get; }
 
         public override object Evaluate()
         {
-            throw new NotImplementedException($"Evaluation of {_featureText} is not implemented.");
+            throw new NotImplementedException($"Evaluation of {FeatureName} is not implemented.");
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
@@ -614,7 +619,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// AST node for a reference of an area in some sheet.
     /// </summary>
-    internal class ReferenceNode : Expression
+    internal class ReferenceNode : ValueNode
     {
         public ReferenceNode(PrefixNode prefix, ReferenceItemType type, string address)
         {
@@ -631,7 +636,7 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceItemType Type { get; }
 
         /// <summary>
-        /// An address of a reference that corresponds to <see cref="Type"/>.
+        /// An address of a reference that corresponds to <see cref="Type"/> or a name of named range.
         /// </summary>
         public string Address { get; }
 
@@ -644,7 +649,7 @@ namespace ClosedXML.Excel.CalcEngine
 
     // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet suported and
     // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
-    internal class StructuredReferenceNode : Expression
+    internal class StructuredReferenceNode : ValueNode
     {
         public StructuredReferenceNode(PrefixNode prefix)
         {
