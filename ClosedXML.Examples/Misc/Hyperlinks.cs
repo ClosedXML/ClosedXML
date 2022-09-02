@@ -93,9 +93,8 @@ namespace ClosedXML.Examples.Misc
             ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(ws.Range("B1:C2")));
             
             // Hyperlink via formula
-            ws.Cell( ++ro, 1 ).SetValue( "Send Email" )
-                .SetFormulaA1( "=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")" )
-                .SetHyperlink(new XLHyperlink( "mailto:test@test.com", "'Send Email'" ));
+            ws.Cell( ++ro, 1 )
+                .SetFormulaA1("=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")");
 
             // List all hyperlinks in a worksheet:
             var hyperlinksInWorksheet = ws.Hyperlinks;

@@ -81,7 +81,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTBLANK(A1)").CastTo<int>();
             Assert.AreEqual(1, value);
 
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
+            Assert.Throws<MissingContextException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
         }

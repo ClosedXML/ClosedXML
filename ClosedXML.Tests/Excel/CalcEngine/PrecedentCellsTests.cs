@@ -9,76 +9,46 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     public class PrecedentCellsTests
     {
         [Test]
-        public void GetPrecedentRangesPreventsDuplication()
+        public void GetPrecedentCellsDealsWithNamedRanges()
         {
-            using (var ms = new MemoryStream())
+            using (XLWorkbook wb = new XLWorkbook())
             {
-                using (XLWorkbook wb = new XLWorkbook())
-                {
-                    var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
-                    var sheet2 = wb.AddWorksheet("Sheet2");
-                    var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
+                var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
+                sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
+                var formula = "=SUM(NAMED_RANGE)";
 
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
+                var reliable = sheet1.CalcEngine.TryGetPrecedentCells(formula, sheet1, out var cells);
 
-                    Assert.AreEqual(6, ranges.Count());
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "A2:E2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "B1:C3"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet2" && r.RangeAddress.ToString() == "B1:C3"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "A2:A2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "B$2:B$2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "$C$2:$C$2"));
-                }
+                Assert.AreEqual(4, cells.Count);
+                Assert.AreEqual(new[] { "A2", "B2", "A3", "B3" }, cells.Select(x => x.Address.ToString()));
             }
         }
 
-        [Test]
-        public void GetPrecedentRangesDealsWithNamedRanges()
+        [TestCase("=A1", new[] { "A1" }, new string[] { })]
+        [TestCase(
+            "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2",
+            new[] { "A2", "B2", "C2", "D2", "E2", "B1", "C1", "B3", "C3" },
+            new[] { "B1", "C1", "B2", "C2", "B3", "C3" })]
+        public void GetPrecedentCellsPreventsDuplication(string formula, string[] expectedAtSheet1, string[] expectedAtSheet2)
         {
-            using (var ms = new MemoryStream())
+            using (XLWorkbook wb = new XLWorkbook())
             {
-                using (XLWorkbook wb = new XLWorkbook())
+                var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
+                var sheet2 = wb.AddWorksheet("Sheet2");
+
+                var remotelyReliable = sheet1.CalcEngine.TryGetPrecedentCells(formula, sheet1, out var cells);
+
+                Assert.True(remotelyReliable);
+                Assert.AreEqual(expectedAtSheet1.Length + expectedAtSheet2.Length, cells.Count());
+                foreach (var address in expectedAtSheet1)
                 {
-                    var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
-                    sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
-                    var formula = "=SUM(NAMED_RANGE)";
-
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
-
-                    Assert.AreEqual(1, ranges.Count());
-                    Assert.AreEqual("$A$2:$B$3", ranges.First().RangeAddress.ToString());
+                    Assert.IsTrue(cells.Any(cell => cell.Address.Worksheet.Name == sheet1.Name && cell.Address.ToString() == address),
+                        string.Format("Address {0}!{1} is not presented", sheet1.Name, address));
                 }
-            }
-        }
-
-        [Test]
-        public void GetPrecedentCells()
-        {
-            using (var ms = new MemoryStream())
-            {
-                using (XLWorkbook wb = new XLWorkbook())
+                foreach (var address in expectedAtSheet2)
                 {
-                    var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
-                    var sheet2 = wb.AddWorksheet("Sheet2");
-                    var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
-                    var expectedAtSheet1 = new string[]
-                        { "A2", "B2", "C2", "D2", "E2", "B1", "C1", "B3", "C3" };
-                    var expectedAtSheet2 = new string[]
-                        { "B1", "C1", "B2", "C2", "B3", "C3" };
-
-                    var cells = sheet1.CalcEngine.GetPrecedentCells(formula);
-
-                    Assert.AreEqual(15, cells.Count());
-                    foreach (var address in expectedAtSheet1)
-                    {
-                        Assert.IsTrue(cells.Any(cell => cell.Address.Worksheet.Name == sheet1.Name && cell.Address.ToString() == address),
-                            string.Format("Address {0}!{1} is not presented", sheet1.Name, address));
-                    }
-                    foreach (var address in expectedAtSheet2)
-                    {
-                        Assert.IsTrue(cells.Any(cell => cell.Address.Worksheet.Name == sheet2.Name && cell.Address.ToString() == address),
-                            string.Format("Address {0}!{1} is not presented", sheet2.Name, address));
-                    }
+                    Assert.IsTrue(cells.Any(cell => cell.Address.Worksheet.Name == sheet2.Name && cell.Address.ToString() == address),
+                        string.Format("Address {0}!{1} is not presented", sheet2.Name, address));
                 }
             }
         }
@@ -92,9 +62,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var ws2 = wb.AddWorksheet("Worksheet!");
                 var expectedCell = ws2.Cell("B2");
 
-                var cells = ws1.CalcEngine.GetPrecedentCells("='Worksheet!'!B2*2");
+                var remotelyReliable = ws1.CalcEngine.TryGetPrecedentCells("='Worksheet!'!B2*2", ws1, out var cells);
+                Assert.True(remotelyReliable);
                 Assert.AreSame(expectedCell, cells.Single());
             }
+        }
+
+        [Test]
+        public void NonexistentSheetsMeanUnreliablePrecednetCells()
+        {
+            using var wb = new XLWorkbook();
+            var ws = (XLWorksheet)wb.AddWorksheet();
+            var remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=Sheet2!A1", ws, out var cells);
+            Assert.False(remotelyReliable);
         }
     }
 }

@@ -22,9 +22,13 @@ namespace ClosedXML.Excel.CalcEngine
             return _isT0;
         }
 
-        public static implicit operator OneOf<T0, T1>(T0 t0) => new(true, t0, default);
+        public static OneOf<T0, T1> FromT0(T0 t0) => new(true, t0, default);
 
-        public static implicit operator OneOf<T0, T1>(T1 t1) => new(false, default, t1);
+        public static OneOf<T0, T1> FromT1(T1 t1) => new(false, default, t1);
+
+        public static implicit operator OneOf<T0, T1>(T0 t0) => FromT0(t0);
+
+        public static implicit operator OneOf<T0, T1>(T1 t1) => FromT1(t1);
 
         public TResult Match<TResult>(Func<T0, TResult> transformT0, Func<T1, TResult> transformT1)
         {

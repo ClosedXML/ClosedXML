@@ -103,9 +103,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsNa(List<Expression> p)
         {
-            var v = p[0].Evaluate();
-
-            return v is Error.NoValueAvailable;
+            try
+            {
+                var v = p[0].Evaluate();
+                return v is Error error && error == Error.NoValueAvailable;
+            }
+            catch (NoValueAvailableException)
+            {
+                return true;
+            }
+            catch (CalcEngineException)
+            {
+                return false;
+            }
         }
 
         static object IsNonText(List<Expression> p)

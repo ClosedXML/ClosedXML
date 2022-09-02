@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
-    [SetCulture("cs-CZ")]
     [TestFixture]
     public class ArithmeticOperatorsTests
     {
@@ -37,7 +36,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("1.5 & 0.78", "1,50,78")]
         public void Concat_ConvertsNumberToStringUsingCulture(string formula, object expectedResult)
         {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
+            var wb = new XLWorkbook();
+            Assert.AreEqual(expectedResult, wb.Evaluate(formula));
         }
 
         [TestCase("#DIV/0! & 1", Error.DivisionByZero)]
@@ -345,19 +345,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         // TODO: Replace with XLWorkbook.Evaluate once we switch calculation method.
         private static object Evaluate(string formulaText)
         {
-            var parser = new FormulaParser(new FunctionRegistry());
-            var cst = parser.ParseCst(formulaText);
-            var formula = parser.ConvertToAst(cst);
-
-            var visitor = new CalculationVisitor();
-            var result = formula.AstRoot.Accept(new CalcContext(null, CultureInfo.CurrentCulture, null, null, null), visitor);
-            return result.Match<object>(
-                logical => logical,
-                number => number,
-                text => text,
-                error => error,
-                _ => throw new InvalidOperationException("Array not expected."),
-                _ => throw new InvalidOperationException("Reference not expected."));
+            return XLWorkbook.EvaluateExpr(formulaText);
         }
     }
 }

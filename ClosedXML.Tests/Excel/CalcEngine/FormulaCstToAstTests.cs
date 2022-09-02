@@ -12,14 +12,13 @@ using PrefixNode = ClosedXML.Excel.CalcEngine.PrefixNode;
 using FileNode = ClosedXML.Excel.CalcEngine.FileNode;
 using FormulaParser = ClosedXML.Excel.CalcEngine.FormulaParser;
 using StructuredReferenceNode = ClosedXML.Excel.CalcEngine.StructuredReferenceNode;
-using XObjectExpression = ClosedXML.Excel.CalcEngine.XObjectExpression;
 using static XLParser.GrammarNames;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     /// <summary>
     /// Tests checking conversion from concrete syntax tree produced by XLParser to abstract syntax tree used by CalcEngine.
-    /// Only shape of CST and AST is checked. This is protection againts changes of the grammar and verification that AST if correctly created from CST.
+    /// Only shape of CST and AST is checked. This is protection against changes of the grammar and verification that AST if correctly created from CST.
     /// </summary>
     [TestFixture]
     public class FormulaCstToAstTests
@@ -28,7 +27,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCaseSource(nameof(FormulaWithCstAndAst))]
         public void FormulaProducesCorrectCstAndAst(string formula, string[] expectedCst, Type[] expectedAst)
         {
-            var dummyFunctions = new ClosedXML.Excel.CalcEngine.FunctionRegistry();
+            var dummyFunctions = new FunctionRegistry();
             dummyFunctions.RegisterFunction("SUM", 0, 255, x => throw new InvalidOperationException());
             dummyFunctions.RegisterFunction("SIN", 1, 1, x => throw new InvalidOperationException());
             dummyFunctions.RegisterFunction("RAND", 0, 0, x => throw new InvalidOperationException());
@@ -742,7 +741,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 list.RemoveLast();
         }
 
-        private class LinearizeVisitor : ClosedXML.Excel.CalcEngine.DefaultFormulaVisitor<LinkedList<Type>>
+        private class LinearizeVisitor : DefaultFormulaVisitor<LinkedList<Type>>
         {
             public override AstNode Visit(LinkedList<Type> context, ScalarNode node)
                 => LinearizeNode(context, typeof(ScalarNode), () => base.Visit(context, node));
@@ -755,9 +754,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             public override AstNode Visit(LinkedList<Type> context, FunctionNode node)
                 => LinearizeNode(context, typeof(FunctionNode), () => base.Visit(context, node));
-
-            public override AstNode Visit(LinkedList<Type> context, XObjectExpression node)
-                => LinearizeNode(context, typeof(XObjectExpression), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, EmptyArgumentNode node)
                 => LinearizeNode(context, typeof(EmptyArgumentNode), () => base.Visit(context, node));

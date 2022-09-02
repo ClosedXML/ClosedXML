@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("MCMLXXXIII ", 1983)]
         public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
             Assert.AreEqual(arabic, actual);
         }
 
@@ -582,7 +582,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [Theory]
@@ -613,7 +613,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 number.ToString(CultureInfo.InvariantCulture),
                 chosen.ToString(CultureInfo.InvariantCulture)));
 
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [TestCase(0, 1)]
@@ -875,9 +875,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-1, -2)]
         [TestCase(0, 0)]
         [TestCase(Math.PI, 4)]
-        public void Even_ReturnsCorrectResults(double input, int expectedResult)
+        public void Even_ReturnsCorrectResults(double input, double expectedResult)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actual);
         }
 
@@ -1576,10 +1576,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalAverage()
         {
-            object actual = XLWorkbook.EvaluateExpr("Subtotal(1,2,3)");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 2;
+            ws.Cell("A2").Value = 3;
+            ws.Cell("A3").Value = "A";
+
+            object actual = ws.Evaluate("SUBTOTAL(1,A1,A2)");
             Assert.AreEqual(2.5, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(1,""A"",3, 2)");
+            actual = ws.Evaluate(@"SUBTOTAL(1,A1,A2,A3)");
             Assert.AreEqual(2.5, actual);
         }
 
@@ -1654,94 +1660,106 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalCount()
         {
-            object actual = XLWorkbook.EvaluateExpr("Subtotal(2,2,3)");
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
+
+            var actual = ws.Evaluate("SUBTOTAL(2,A1:A2)");
             Assert.AreEqual(2, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(2,""A"",3)");
+            actual = ws.Evaluate(@"SUBTOTAL(2,A2:A3)");
             Assert.AreEqual(1, actual);
         }
 
         [Test]
         public void SubtotalCountA()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "");
 
-            actual = XLWorkbook.EvaluateExpr("Subtotal(3,2,3)");
+            var actual = ws.Evaluate("SUBTOTAL(3,A1,A2)");
             Assert.AreEqual(2.0, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(3,"""",3)");
+            actual = ws.Evaluate(@"SUBTOTAL(3,A3,A2)");
             Assert.AreEqual(1.0, actual);
         }
 
         [Test]
         public void SubtotalMax()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(4,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(4,A1:A3)");
             Assert.AreEqual(3.0, actual);
         }
 
         [Test]
         public void SubtotalMin()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(5,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(5,A1:A3)");
             Assert.AreEqual(2.0, actual);
         }
 
         [Test]
         public void SubtotalProduct()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(6,2,3,""A"")");
+            var actual = ws.Evaluate(@"Subtotal(6,A1,A2,A3)");
             Assert.AreEqual(6.0, actual);
         }
 
         [Test]
         public void SubtotalStDev()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(7,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(7,A1:A3)");
             Assert.IsTrue(Math.Abs(0.70710678118654757 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
         public void SubtotalStDevP()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(8,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(8,A1:A3)");
             Assert.AreEqual(0.5, actual);
         }
 
         [Test]
         public void SubtotalSum()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(9,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(9,A1:A3)");
             Assert.AreEqual(5.0, actual);
         }
 
         [Test]
         public void SubtotalVar()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 5, 4, "A", 8, 5);
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(10,2,3,""A"")");
-            Assert.IsTrue(Math.Abs(0.5 - (double)actual) < XLHelper.Epsilon);
+            var actual = ws.Evaluate(@"SUBTOTAL(10,A1:A5)");
+            Assert.AreEqual(3, actual);
         }
 
         [Test]
         public void SubtotalVarP()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = AddWorksheetWithCellValues(wb, 2, 3, "A");
 
-            actual = XLWorkbook.EvaluateExpr(@"Subtotal(11,2,3,""A"")");
+            var actual = ws.Evaluate(@"SUBTOTAL(11,A1:A3)");
             Assert.AreEqual(0.25, actual);
         }
 
@@ -2083,6 +2101,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var actual = (double)XLWorkbook.EvaluateExpr($"TRUNC({input.ToString(CultureInfo.InvariantCulture)}, {digits})");
             Assert.AreEqual(expectedResult, actual);
+        }
+
+        private static IXLWorksheet AddWorksheetWithCellValues(XLWorkbook wb, params object[] values)
+        {
+            var ws = wb.AddWorksheet();
+            for (var row = 1; row <= values.Length; ++row)
+                ws.Cell(row, 1).Value = values[row - 1];
+
+            return ws;
         }
     }
 }

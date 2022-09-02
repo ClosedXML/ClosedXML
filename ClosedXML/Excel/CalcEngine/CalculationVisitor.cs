@@ -1,21 +1,20 @@
 ﻿using System;
+using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalculationVisitor : IFormulaVisitor<CalcContext, AnyValue>
     {
+        private readonly FunctionRegistry _functions;
+
+        public CalculationVisitor(FunctionRegistry functions)
+        {
+            _functions = functions;
+        }
+
         public AnyValue Visit(CalcContext context, ScalarNode node)
         {
-            // TODO: Refactor ScalarNode to a typed value instead of object value.
-            return node.Evaluate() switch
-            {
-                bool logical => logical,
-                int number => number,
-                double number => number,
-                string text => text,
-                Error error => error,
-                _ => throw new InvalidOperationException("Not a scalar value type")
-            };
+            return node.Value;
         }
 
         public AnyValue Visit(CalcContext context, ErrorNode node)
@@ -45,8 +44,8 @@ namespace ClosedXML.Excel.CalcEngine
 
             return node.Operation switch
             {
-                BinaryOp.Range => throw new NotImplementedException("Evaluation of range operator is not implemented."),
-                BinaryOp.Union => throw new NotImplementedException("Evaluation of range union operator is not implemented."),
+                BinaryOp.Range => AnyValue.ReferenceRange(leftArg, rightArg, context),
+                BinaryOp.Union => AnyValue.ReferenceUnion(leftArg, rightArg),
                 BinaryOp.Intersection => throw new NotImplementedException("Evaluation of range intersection operator is not implemented."),
                 BinaryOp.Concat => AnyValue.Concat(leftArg, rightArg, context),
                 BinaryOp.Add => AnyValue.BinaryPlus(leftArg, rightArg, context),
@@ -64,19 +63,96 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public AnyValue Visit(CalcContext context, XObjectExpression node)
-        {
-            throw new NotImplementedException($"Evaluation of a reference is not implemented.");
-        }
-
         public AnyValue Visit(CalcContext context, FunctionNode node)
         {
-            throw new NotImplementedException($"Evaluation of a reference is not implemented.");
+            if (!_functions.TryGetFunc(node.Name, out FunctionDefinition fn))
+                return Error.NameNotRecognized;
+
+            var args = GetArgs(context, fn, node);
+            return fn.CallFunction(context, args);
+        }
+
+        private AnyValue?[] GetArgs(CalcContext context, FunctionDefinition fn, FunctionNode node)
+        {
+            var args = new AnyValue?[node.Parameters.Count];
+            for (var argIndex = 0; argIndex < node.Parameters.Count; ++argIndex)
+            {
+                var paramNode = node.Parameters[argIndex];
+                var arg = paramNode is not EmptyArgumentNode ? node.Parameters[argIndex].Accept(context, this) : default(AnyValue?);
+
+                if (context.UseImplicitIntersection && fn.AllowRanges != AllowRange.All && arg.HasValue)
+                {
+                    switch (fn.AllowRanges)
+                    {
+                        case AllowRange.None:
+                            arg = arg.Value.ImplicitIntersection(context);
+                            break;
+                        case AllowRange.Except:
+                            if (fn.MarkedParams.Contains(argIndex))
+                                arg = arg.Value.ImplicitIntersection(context);
+
+                            break;
+                        case AllowRange.Only:
+                            if (!fn.MarkedParams.Contains(argIndex))
+                                arg = arg.Value.ImplicitIntersection(context);
+
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                }
+
+                args[argIndex] = arg;
+            }
+
+            return args;
         }
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)
         {
-            throw new NotImplementedException($"Evaluation of a reference is not implemented.");
+            XLWorksheet worksheet = null;
+            if (node.Prefix is not null)
+            {
+                if (node.Prefix.File is not null)
+                    throw new NotImplementedException("References from other files are not yet implemented.");
+
+                if (node.Prefix.FirstSheet is not null || node.Prefix.LastSheet is not null)
+                    throw new NotImplementedException("3D references are not yet implemented.");
+
+                var sheet = node.Prefix.Sheet;
+                if (!context.Workbook.TryGetWorksheet(sheet, out var worksheet1))
+                    return Error.CellReference;
+                worksheet = (XLWorksheet)worksheet1;
+            }
+
+            if (node.Type == ReferenceItemType.Cell || node.Type == ReferenceItemType.HRange || node.Type == ReferenceItemType.VRange)
+                return new Reference(new XLRangeAddress(worksheet, node.Address));
+
+            // Only reference of type range left
+            var rangeName = node.Address;
+            worksheet ??= context.Worksheet;
+            if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
+                return Error.NameNotRecognized;
+
+            // This is rather horrible, but basically copy from XLCalcEngine.GetExternalObject
+            // It's hard to count all things that are wrong with this, from hand parsing operator range union by XLNamedRange to recursion.
+            if (!namedRange.IsValid)
+                return Error.CellReference;
+
+            // Union (can easily be in the range) is one of the nodes that can't be in the root. Enclose in braces to make parser happy
+            // Range can be something like 1+2, not just a reference to some area.
+            var namedRangeFormula = namedRange.ToString();
+            namedRangeFormula = !namedRangeFormula.StartsWith("=") ? "=(" + namedRange + ")" : namedRangeFormula;
+            var rangeResult = context.CalcEngine.EvaluateExpression(namedRangeFormula, context.Workbook, context.Worksheet);
+            return rangeResult;
+
+            static bool TryGetNamedRange(IXLWorksheet ws, string name, out XLNamedRange range)
+            {
+                var found = ws.NamedRanges.TryGetValue(name, out var namedRange)
+                                    || ws.Workbook.NamedRanges.TryGetValue(name, out namedRange);
+                range = (XLNamedRange)namedRange;
+                return found;
+            }
         }
 
         public AnyValue Visit(CalcContext context, NotSupportedNode node)

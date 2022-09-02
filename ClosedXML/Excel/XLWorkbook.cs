@@ -870,14 +870,14 @@ namespace ClosedXML.Excel
 
         private XLCalcEngine _calcEngine;
 
-        private XLCalcEngine CalcEngine
+        internal XLCalcEngine CalcEngine
         {
-            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+            get { return _calcEngine ??= new XLCalcEngine(CultureInfo.CurrentCulture); }
         }
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression);
+            return CalcEngine.Evaluate(expression, this);
         }
 
         /// <summary>
@@ -894,9 +894,12 @@ namespace ClosedXML.Excel
 
         private static XLCalcEngine CalcEngineExpr
         {
-            get { return _calcEngineExpr ?? (_calcEngineExpr = new XLCalcEngine()); }
+            get { return _calcEngineExpr ??= new XLCalcEngine(CultureInfo.InvariantCulture); }
         }
 
+        /// <summary>
+        /// Evaluate a formula and return a value. Formulas with references don't work and culture used for conversion is invariant.
+        /// </summary>
         public static Object EvaluateExpr(String expression)
         {
             return CalcEngineExpr.Evaluate(expression);

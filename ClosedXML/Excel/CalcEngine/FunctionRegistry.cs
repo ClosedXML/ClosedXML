@@ -28,6 +28,11 @@ namespace ClosedXML.Excel.CalcEngine
             return _func.TryGetValue(name, out func);
         }
 
+        public void RegisterFunction(string functionName, int minParams, int maxParams, CalcEngineFunction fn, FunctionFlags flags, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
+        {
+            _func.Add(functionName, new FunctionDefinition(functionName, minParams, maxParams, fn, flags, allowRanges, markedParams));
+        }
+
         public void RegisterFunction(string functionName, int paramCount, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
             RegisterFunction(functionName, paramCount, paramCount, fn, allowRanges, markedParams);

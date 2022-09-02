@@ -2,6 +2,7 @@
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using static ClosedXML.Excel.CalcEngine.ErrorNode;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -37,7 +38,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             // Root of a formula string is pretty much the only place where reference union can be without parenthesis. Elsewhere it must have
             // parthesis to avoid misusing union op (coma) with a separation of arguments in a function call.
-            AssertCanParseButNotEvaluate("=A1,A3", "Evaluation of range union operator is not implemented.");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Evaluate("=A1,A3", "Z100");
         }
 
         #endregion
@@ -121,7 +124,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#NUM!", Error.NumberInvalid)]
         public void Constant_can_be_error(string formula, object expectedError)
         {
-            Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
+            var error = (Error)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedError, error);
         }
         #endregion
 
@@ -246,7 +250,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_function_call_can_be_binary_range_of_two_references()
         {
-            AssertCanParseButNotEvaluate("=A1:A3:C2", "Evaluation of binary range operator is not implemented.");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Evaluate("A1:A3:C2", "Z100");
         }
 
         [TestCase]
@@ -258,7 +264,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_function_call_can_be_union_in_parenthesis()
         {
-            AssertCanParseButNotEvaluate("=(A1:A3,A2:B2,B1:B4)", "Evaluation of range union operator is not implemented.");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Evaluate("=(A1:A3,A2:B2,B1:B4)", "Z100");
         }
 
         [TestCase]
@@ -353,7 +361,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_item_can_be_user_defined_function_call()
         {
-            AssertCanParseButNotEvaluate("=CustomFunction(1)", "Evaluation of custom functions is not implemented.");
+            Assert.AreEqual(Error.NameNotRecognized, XLWorkbook.EvaluateExpr("CustomFunction(1)"));
         }
 
         [TestCase]
@@ -400,14 +408,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=Jan:Dec!A1")]
         public void Prefix_can_be_sheets_for_3d_reference(string formula)
         {
-            AssertCanParseButNotEvaluate(formula, "Evaluation of reference is not implemented.");
+            AssertCanParseButNotEvaluate(formula, "3D references are not yet implemented.");
         }
 
         [TestCase("=[1]Sheet4!A1")]
         [TestCase("=[C:\\file.xlsx]Sheet1!A1")]
         public void Prefix_can_be_file_and_sheet_token(string formula)
         {
-            AssertCanParseButNotEvaluate(formula, "Evaluation of reference is not implemented.");
+            AssertCanParseButNotEvaluate(formula, "References from other files are not yet implemented.");
         }
 
         #endregion
@@ -415,9 +423,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         private static void AssertCanParseButNotEvaluate(string formula, string notSupportedMessage)
         {
             using var wb = new XLWorkbook();
-            var calcEngine = new XLCalcEngine(wb);
+            var ws = wb.AddWorksheet();
+            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
             var astNode = calcEngine.Parse(formula);
-            Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => astNode.Evaluate());
+            Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => ws.Evaluate(formula, "A1"));
         }
     }
 }

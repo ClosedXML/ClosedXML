@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (x is IEnumerable enumerable)
                 {
                     foreach (var i in enumerable)
-                        sb.Append((string)(new ScalarNode(i)));
+                        sb.Append((string)(new Expression(i)));
                 }
                 else
                     sb.Append((string)x);

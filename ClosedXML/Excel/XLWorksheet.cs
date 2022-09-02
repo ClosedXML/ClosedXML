@@ -1735,16 +1735,12 @@ namespace ClosedXML.Excel
 
         public IXLCell ActiveCell { get; set; }
 
-        private XLCalcEngine _calcEngine;
+        internal XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
-        internal XLCalcEngine CalcEngine
+        public Object Evaluate(String expression, string formulaAddress = null)
         {
-            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
-        }
-
-        public Object Evaluate(String expression)
-        {
-            return CalcEngine.Evaluate(expression);
+            IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
+            return CalcEngine.Evaluate(expression, Workbook, this, address);
         }
 
         /// <summary>
@@ -1848,7 +1844,6 @@ namespace ClosedXML.Excel
         {
             var cell = GetCell(ro, co);
             if (cell is null)
-
                 return string.Empty;
 
             // LEGACY: This is deeply suspicious, this only exists so the legacy formulas can get cell value
@@ -1870,7 +1865,7 @@ namespace ClosedXML.Excel
 
             return Worksheet.Internals.CellsCollection.GetCell(ro, co);
         }
-        
+
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
         {
             var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);

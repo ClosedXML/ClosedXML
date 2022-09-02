@@ -1,5 +1,7 @@
 using ClosedXML.Excel.CalcEngine.Functions;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -13,17 +15,19 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     internal class CalcEngine
     {
-        protected ExpressionCache _cache;               // cache with parsed expressions
+        private readonly CultureInfo _culture;
+        private ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
-        private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
-        private FunctionRegistry _fnTbl;      // table with constants and functions (pi, sin, etc)
+        private readonly FunctionRegistry _funcRegistry;      // table with constants and functions (pi, sin, etc)
+        private readonly CalculationVisitor _visitor;
 
-        public CalcEngine()
+        public CalcEngine(CultureInfo culture)
         {
-            _fnTbl = GetFunctionTable();
+            _culture = culture;
+            _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
-            _parser = new FormulaParser(_fnTbl);
-            _compatibilityVisitor = new CompatibilityFormulaVisitor(this);
+            _parser = new FormulaParser(_funcRegistry);
+            _visitor = new CalculationVisitor(_funcRegistry);
         }
 
         /// <summary>
@@ -31,17 +35,19 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">String to parse.</param>
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
-        public Expression Parse(string expression)
+        public Formula Parse(string expression)
         {
             var cst = _parser.ParseCst(expression);
-            var ast = _parser.ConvertToAst(cst);
-            return (Expression)ast.AstRoot.Accept(null, _compatibilityVisitor);
+            return _parser.ConvertToAst(cst);
         }
 
         /// <summary>
         /// Evaluates an expression.
         /// </summary>
         /// <param name="expression">Expression to evaluate.</param>
+        /// <param name="wb">Workbook where is formula being evaluated.</param>
+        /// <param name="ws">Worksheet where is formula being evaluated.</param>
+        /// <param name="address">Address of formula.</param>
         /// <returns>The value of the expression.</returns>
         /// <remarks>
         /// If you are going to evaluate the same expression several times,
@@ -49,12 +55,38 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public object Evaluate(string expression)
+        public object Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
         {
+            var x = _cache != null
+                ? _cache[expression]
+                : Parse(expression);
+
+            var ctx = new CalcContext(this, _culture, wb, ws, address);
+            var result = x.AstRoot.Accept(ctx, _visitor);
+            if (ctx.UseImplicitIntersection)
+            {
+                result = result.Match(
+                    logical => logical,
+                    number => number,
+                    text => text,
+                    error => error,
+                    array => array[0,0].ToAnyValue(),
+                    reference => reference);
+            }
+
+            return ToCellContentValue(result, ctx);
+        }
+
+        internal AnyValue EvaluateExpression(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        {
+            // Yay, copy pasta.
             var x = _cache != null
                     ? _cache[expression]
                     : Parse(expression);
-            return x.Evaluate();
+
+            var ctx = new CalcContext(this, _culture, wb, ws, address);
+            var calculatingVisitor = new CalculationVisitor(_funcRegistry);
+            return x.AstRoot.Accept(ctx, calculatingVisitor);
         }
 
         /// <summary>
@@ -75,20 +107,6 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        /// <summary>
-        /// Gets an external object based on an identifier.
-        /// </summary>
-        /// <remarks>
-        /// This method is useful when the engine needs to create objects dynamically.
-        /// For example, a spreadsheet calc engine would use this method to dynamically create cell
-        /// range objects based on identifiers that cannot be enumerated at design time
-        /// (such as "AB12", "A1:AB12", etc.)
-        /// </remarks>
-        public virtual object GetExternalObject(string identifier)
-        {
-            return null;
-        }
-
         // build/get static keyword table
         private FunctionRegistry GetFunctionTable()
         {
@@ -107,7 +125,53 @@ namespace ClosedXML.Excel.CalcEngine
 
             return fr;
         }
+
+        /// <summary>
+        /// Convert any kind of formula value to value returned as a content of a cell.
+        /// <list type="bullet">
+        ///    <item><c>bool</c> - represents a logical value.</item>
+        ///    <item><c>double</c> - represents a number and also date/time as serial date-time.</item>
+        ///    <item><c>string</c> - represents a text value.</item>
+        ///    <item><see cref="Error" /> - represents a formula calculation error.</item>
+        /// </list>
+        /// </summary>
+        private static object ToCellContentValue(AnyValue value, CalcContext ctx)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return ToCellContentValue(scalar);
+
+            return collection.Match(
+                array => ToCellContentValue(array[0, 0]),
+                reference =>
+                {
+                    if (reference.TryGetSingleCellValue(out var cellValue, ctx))
+                        return ToCellContentValue(cellValue);
+
+                    return reference
+                        .ImplicitIntersection(ctx.FormulaAddress)
+                        .Match<object>(
+                            singleCellReference =>
+                            {
+                                if (!singleCellReference.TryGetSingleCellValue(out var cellValue, ctx))
+                                    throw new InvalidOperationException("Got multi cell reference insted of single cell reference.");
+
+                                return ToCellContentValue(cellValue);
+                            },
+                            error => error);
+                });
+        }
+
+        private static object ToCellContentValue(ScalarValue value)
+        {
+            return value.Match<object>(
+                logical => logical,
+                number => number,
+                text => text,
+                error => error);
+        }
     }
+
+    internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue?> arg);
 
     /// <summary>
     /// Delegate that represents CalcEngine functions.

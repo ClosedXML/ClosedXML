@@ -9,7 +9,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public virtual AstNode Visit(TContext context, UnaryNode node)
         {
-            var acceptedArgument = (Expression)node.Expression.Accept(context, this);
+            var acceptedArgument = (ValueNode)node.Expression.Accept(context, this);
             return !ReferenceEquals(acceptedArgument, node.Expression)
                 ? new UnaryNode(node.Operation, acceptedArgument)
                 : node;
@@ -17,8 +17,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public virtual AstNode Visit(TContext context, BinaryNode node)
         {
-            var acceptedLeftArgument = (Expression)node.LeftExpression.Accept(context, this);
-            var acceptedRightArgument = (Expression)node.RightExpression.Accept(context, this);
+            var acceptedLeftArgument = (ValueNode)node.LeftExpression.Accept(context, this);
+            var acceptedRightArgument = (ValueNode)node.RightExpression.Accept(context, this);
             return !ReferenceEquals(acceptedLeftArgument, node.LeftExpression) || !ReferenceEquals(acceptedRightArgument, node.RightExpression)
                 ? new BinaryNode(node.Operation, acceptedLeftArgument, acceptedRightArgument)
                 : node;
@@ -26,13 +26,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public virtual AstNode Visit(TContext context, FunctionNode node)
         {
-            var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<Expression>().ToList();
+            var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<ValueNode>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
-                ? new FunctionNode(node.Prefix, node.FunctionDefinition, acceptedParameters)
+                ? new FunctionNode(node.Prefix, node.Name, acceptedParameters)
                 : node;
         }
-
-        public virtual AstNode Visit(TContext context, XObjectExpression node) => node;
 
         public virtual AstNode Visit(TContext context, EmptyArgumentNode node) => node;
 

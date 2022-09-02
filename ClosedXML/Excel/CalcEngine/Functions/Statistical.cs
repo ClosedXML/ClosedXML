@@ -1,6 +1,7 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -135,7 +136,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CountIf(List<Expression> p)
         {
-            CalcEngine ce = new CalcEngine();
+            CalcEngine ce = new CalcEngine(CultureInfo.CurrentCulture);
             var cnt = 0.0;
             long processedCount = 0;
             if (p[0] is XObjectExpression ienum)
@@ -160,7 +161,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object CountIfs(List<Expression> p)
         {
             // get parameters
-            var ce = new CalcEngine();
+            var ce = new CalcEngine(CultureInfo.CurrentCulture);
             long count = 0;
 
             int numberOfCriteria = p.Count / 2;

@@ -4,8 +4,10 @@ using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -17,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("ABS", 1, Abs);
+            ce.RegisterFunction("ABS", 1, 1, Adapt(Abs), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
@@ -79,7 +81,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, Sqrt);
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
-            ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal, AllowRange.Except, 0);
+            ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
@@ -130,9 +132,9 @@ namespace ClosedXML.Excel.CalcEngine
             return radians / Math.PI * 200.0;
         }
 
-        private static object Abs(List<Expression> p)
+        private static AnyValue Abs(double number)
         {
-            return Math.Abs(p[0]);
+            return Math.Abs(number);
         }
 
         private static object Acos(List<Expression> p)
@@ -870,53 +872,20 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static object Subtotal(List<Expression> p)
+        private static AnyValue Subtotal(CalcContext ctx, double number, List<Reference> p)
         {
-            // Skip cells that already evaluate a SUBTOTAL
-            bool hasSubtotalInFormula(Expression e)
-            {
-                if (e is FunctionNode fe && (fe.FunctionDefinition.LegacyFunction.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
-                    return true;
+            var cellsWitoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
+                .Where(cell =>
+                {
+                    if (!cell.HasFormula)
+                        return true;
 
-                if (e is BinaryNode be)
-                    return hasSubtotalInFormula(be.LeftExpression) || hasSubtotalInFormula(be.RightExpression);
+                    return !ctx.CalcEngine.Parse(cell.FormulaA1).Flags.HasFlag(FormulaFlags.HasSubtotal);
+                })
+                .Select(cell => new Expression(cell.Value));
 
-                if (e is UnaryNode ue)
-                    return hasSubtotalInFormula(ue.Expression);
-
-                return false;
-            }
-
-            IEnumerable<Expression> extractExpressionsWithoutSubtotal(CellRangeReference crr)
-            {
-                var ce = crr.CalcEngine as XLCalcEngine;
-
-                return crr.Range
-                    .CellsUsed()
-                    .Where(c =>
-                    {
-                        if (c.HasFormula)
-                        {
-                            var expression = ce.ExpressionCache[c.FormulaA1];
-                            return !hasSubtotalInFormula(expression);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .Select(c => new XObjectExpression(new CellRangeReference(c.AsRange(), (XLCalcEngine)crr.CalcEngine)) as Expression);
-            }
-
-            var expressions = p.Skip(1)
-                .SelectMany(e =>
-                    e is XObjectExpression xoe && xoe.Value is CellRangeReference crr
-                        ? extractExpressionsWithoutSubtotal(crr)
-                        : new[] { e })
-                .ToArray();
-
-            var fId = (int)(Double)p[0];
-            var tally = new Tally(expressions);
+            var fId = (int)number;
+            var tally = new Tally(cellsWitoutSubtotal);
 
             return fId switch
             {
@@ -958,7 +927,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sumRangeValues = sumRange.Cast<object>().ToList();
 
             // compute total
-            var ce = new CalcEngine();
+            var ce = new CalcEngine(CultureInfo.CurrentCulture);
             var tally = new Tally();
             for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
             {
@@ -985,7 +954,7 @@ namespace ClosedXML.Excel.CalcEngine
                 sumRangeValues.Add(value);
             }
 
-            var ce = new CalcEngine();
+            var ce = new CalcEngine(CultureInfo.CurrentCulture);
             var tally = new Tally();
 
             int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
