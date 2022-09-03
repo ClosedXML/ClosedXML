@@ -43,10 +43,10 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     for (var column = area.FirstAddress.ColumnNumber; column <= area.LastAddress.ColumnNumber; ++column)
                     {
-                        var cellValue = ctx.GetCellValueOrBlank(area.Worksheet, row, column);
-                        if (cellValue is not null)
+                        var cellValue = ctx.GetCellValue(area.Worksheet, row, column);
+                        if (!cellValue.IsBlank)
                         {
-                            yield return cellValue.Value;
+                            yield return cellValue;
                         }
                     }
                 }

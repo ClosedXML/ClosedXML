@@ -9,12 +9,13 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal readonly struct AnyValue
     {
-        private const int LogicalValue = 0;
-        private const int NumberValue = 1;
-        private const int TextValue = 2;
-        private const int ErrorValue = 3;
-        private const int ArrayValue = 4;
-        private const int ReferenceValue = 5;
+        private const int BlankValue = 0;
+        private const int LogicalValue = 1;
+        private const int NumberValue = 2;
+        private const int TextValue = 3;
+        private const int ErrorValue = 4;
+        private const int ArrayValue = 5;
+        private const int ReferenceValue = 6;
 
         private readonly byte _index;
         private readonly bool _logical;
@@ -34,6 +35,11 @@ namespace ClosedXML.Excel.CalcEngine
             _array = array;
             _reference = reference;
         }
+
+        /// <summary>
+        /// A value of a blank cell or missing argument. Conversion methods mostly treat blank like 0 or an empty string.
+        /// </summary>
+        public static readonly AnyValue Blank = new(BlankValue, default, default, default, default, default, default);
 
         public static AnyValue From(bool logical) => new(LogicalValue, logical, default, default, default, default, default);
 
@@ -81,6 +87,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             scalar = _index switch
             {
+                BlankValue => ScalarValue.Blank,
                 LogicalValue => _logical,
                 NumberValue => _number,
                 TextValue => _text,
@@ -108,10 +115,11 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        public TResult Match<TResult>(Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
+        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
         {
             return _index switch
             {
+                BlankValue => transformBlank(),
                 LogicalValue => transformLogical(_logical),
                 NumberValue => transformNumber(_number),
                 TextValue => transformText(_text),
@@ -131,6 +139,7 @@ namespace ClosedXML.Excel.CalcEngine
         public AnyValue ImplicitIntersection(CalcContext context)
         {
             return Match(
+                () => Blank,
                 logical => logical,
                 number => number,
                 text => text,
@@ -185,13 +194,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static OneOf<Reference, Error> ConvertToReference(in AnyValue value)
         {
-            return value.Match<OneOf<Reference, Error>>(
-                logical => Error.CellValue,
-                number => Error.CellValue,
-                text => Error.CellValue,
-                error => error,
-                array => Error.CellValue,
-                reference => reference);
+            return value._index switch
+            {
+                ReferenceValue => value._reference,
+                ErrorValue => value._error,
+                _ => Error.CellValue
+            };
         }
 
         #endregion
@@ -501,17 +509,26 @@ namespace ClosedXML.Excel.CalcEngine
         private static OneOf<int, Error> CompareValues(ScalarValue left, ScalarValue right, CultureInfo culture)
         {
             return left.Match(culture,
+                _ => right.Match<OneOf<int, Error>, CultureInfo>(culture,
+                        _ => 0,
+                        (rightLogical, _) => false.CompareTo(rightLogical),
+                        (rightNumber, _) => 0.0.CompareTo(rightNumber),
+                        (rightText, culture) => string.Compare(string.Empty, rightText, culture, CompareOptions.IgnoreCase),
+                        (rightError, _) => rightError),
                 (leftLogical, _) => right.Match<OneOf<int, Error>, bool>(leftLogical,
+                        leftLogical => leftLogical.CompareTo(false),
                         (rightLogical, leftLogical) => leftLogical.CompareTo(rightLogical),
                         (rightNumber, _) => 1,
                         (rightText, _) => 1,
                         (rightError, _) => rightError),
                 (leftNumber, _) => right.Match<OneOf<int, Error>, double>(leftNumber,
+                        leftNumber => leftNumber.CompareTo(0.0),
                         (rightLogical, _) => -1,
                         (rightNumber, leftNumber) => leftNumber.CompareTo(rightNumber),
                         (rightText, _) => -1,
                         (rightError, _) => rightError),
                 (leftText, culture) => right.Match<OneOf<int, Error>, string, CultureInfo>(leftText, culture,
+                        (leftText, culture) => string.Compare(leftText, string.Empty, culture, CompareOptions.IgnoreCase),
                         (rightLogical, _, _) => -1,
                         (rightNumber, _, _) => 1,
                         (rightText, leftText, culture) => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),

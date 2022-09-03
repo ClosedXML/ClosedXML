@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 
@@ -17,6 +15,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"\" & \"\"", "")]
         public void Concat_ConcatenateText(string formula, object expectedResult)
         {
+            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
+        }
+
+        [TestCase("A1 & \"\"", "")]
+        [TestCase("\"\" & A1", "")]
+        [TestCase("A1 & A1", "")]
+        public void Concat_ConcatenateBlank(string formula, object expectedResult)
+        {
             Assert.AreEqual(expectedResult, Evaluate(formula));
         }
 
@@ -27,7 +33,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("TRUE & FALSE", "TRUEFALSE")]
         public void Concat_ConvertsLogicalToString(string formula, object expectedResult)
         {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
+            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
         }
 
         [SetCulture("cs-CZ")]
@@ -46,7 +52,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("1 & #NAME?", Error.NameNotRecognized)]
         public void Concat_WithErrorAsOperandReturnsTheError(string formula, Error expectedError)
         {
-            Assert.AreEqual(expectedError, Evaluate(formula));
+            Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
         }
 
         [Ignore("Arrays are not implemented")]
@@ -54,9 +60,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("{\"A\",2} & \"B\"", "AB")]
         [TestCase("{TRUE,2} & \"B\"", "TRUEB")]
         [TestCase("{#REF!,5} & 1", Error.CellReference)]
-        public void Concat_UsesFirstElementOfArray(string formula, Error expectedError)
+        public void Concat_UsesFirstElementOfArray(string formula, object expected)
         {
-            Assert.AreEqual(expectedError, Evaluate(formula));
+            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr(formula));
         }
 
         #endregion
@@ -68,6 +74,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("+TRUE", true)]
         [TestCase("+FALSE", false)]
         [TestCase("+#DIV/0!", Error.DivisionByZero)]
+        [TestCase("+A1", 0)]
         public void UnaryPlus_IsNonOpThatKeepsValueAndType(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -83,6 +90,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("-TRUE", -1)]
         [TestCase("-FALSE", 0)]
         [TestCase("-#DIV/0!", Error.DivisionByZero)]
+        [TestCase("-A1", 0.0)]
         public void UnaryMinus_ConvertsArgumentBeforeNegating(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -101,7 +109,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("FALSE%", 0)]
         [TestCase("#NAME?%", Error.NameNotRecognized)]
         [TestCase("(1/0)%", Error.DivisionByZero)]
-        public void UnaryPercent_ConvertsArgumentBeforePercenting(string formula, object expectedValue)
+        [TestCase("A1%", 0.0)]
+        public void UnaryPercent_ConvertsArgumentBeforePercentOperator(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
         }
@@ -122,6 +131,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#VALUE!^1", Error.CellValue)]
         [TestCase("1^#REF!", Error.CellReference)]
         [TestCase("#DIV/0!^#REF!", Error.DivisionByZero)]
+        [TestCase("5^A1", 1.0)]
+        [TestCase("A1^4", 0.0)]
         public void Exponentiation_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.That(Evaluate(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
@@ -143,6 +154,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#VALUE!*1", Error.CellValue)]
         [TestCase("1*#REF!", Error.CellReference)]
         [TestCase("#DIV/0!*#REF!", Error.DivisionByZero)]
+        [TestCase("10*A1", 0.0)]
+        [TestCase("A1*10", 0.0)]
         public void Multiplication_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.That(Evaluate(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
@@ -164,6 +177,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#VALUE!/1", Error.CellValue)]
         [TestCase("1/#REF!", Error.CellReference)]
         [TestCase("#DIV/0!/#REF!", Error.DivisionByZero)]
+        [TestCase("A1/5", 0.0)]
+        [TestCase("5/A1", Error.DivisionByZero)]
         public void Division_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -182,6 +197,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#VALUE! + 1", Error.CellValue)]
         [TestCase("1 + #REF!", Error.CellReference)]
         [TestCase("#DIV/0! + #REF!", Error.DivisionByZero)]
+        [TestCase("A1 + 7", 7)]
         public void Addition_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -200,6 +216,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#VALUE! - 1", Error.CellValue)]
         [TestCase("1 - #REF!", Error.CellReference)]
         [TestCase("#DIV/0! - #REF!", Error.DivisionByZero)]
+        [TestCase("A1 - 5", -5)]
         public void Subtraction_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -207,145 +224,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
-        #region Comparison
-
-        [TestCase("1=1", true)]
-        [TestCase("1=0", false)]
-        [TestCase("0.0=0", true)]
-        [TestCase("TRUE=TRUE", true)]
-        [TestCase("FALSE=FALSE", true)]
-        [TestCase("TRUE=FALSE", false)]
-        [TestCase("\"text\"=\"text\"", true)]
-        [TestCase("\"tExT\"=\"TeXt\"", true)]
-        [TestCase("\"text\"=\"text\"", true)]
-        [TestCase("\"\"=\"\"", true)]
-        [TestCase("#VALUE!=#VALUE!", Error.CellValue)]
-        public void EqualTo_WithSameType(string formula, object expectedValue)
+        private static object Evaluate(string formula)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-
-        [TestCase("1<>1", false)]
-        [TestCase("1<>0", true)]
-        [TestCase("0.0<>0", false)]
-        [TestCase("TRUE<>TRUE", false)]
-        [TestCase("FALSE<>FALSE", false)]
-        [TestCase("TRUE<>FALSE", true)]
-        [TestCase("\"texty\"<>\"text\"", true)]
-        [TestCase("\"tExT\"<>\"TeXt\"", false)]
-        [TestCase("\"text\"<>\"text\"", false)]
-        [TestCase("\"\"<>\"\"", false)]
-        [TestCase("#VALUE!<>#VALUE!", Error.CellValue)]
-        public void NotEqualTo_WithSameType(string formula, object expectedValue)
-        {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-        [TestCase("1>1", false)]
-        [TestCase("1>0", true)]
-        [TestCase("0.0>0", false)]
-        [TestCase("TRUE>TRUE", false)]
-        [TestCase("FALSE>FALSE", false)]
-        [TestCase("TRUE>FALSE", true)]
-        [TestCase("\"text\">\"text\"", false)]
-        [TestCase("\"texu\">\"text\"", true)]
-        [TestCase("#VALUE!>#REF!", Error.CellValue)]
-        public void GreaterThen_WithSameType(string formula, object expectedValue)
-        {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-        [TestCase("1>=1", true)]
-        [TestCase("1>=0", true)]
-        [TestCase("0.0>=0", true)]
-        [TestCase("TRUE>=TRUE", true)]
-        [TestCase("FALSE>=FALSE", true)]
-        [TestCase("TRUE>=FALSE", true)]
-        [TestCase("\"text\">=\"text\"", true)]
-        [TestCase("\"texu\">=\"text\"", true)]
-        [TestCase("#VALUE!>=#REF!", Error.CellValue)]
-        public void GreaterThenOrEqual_WithSameType(string formula, object expectedValue)
-        {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-        [TestCase("-5<5", true)]
-        [TestCase("1<1", false)]
-        [TestCase("1<0", false)]
-        [TestCase("0.0<0", false)]
-        [TestCase("TRUE<TRUE", false)]
-        [TestCase("FALSE<FALSE", false)]
-        [TestCase("TRUE<FALSE", false)]
-        [TestCase("FALSE<TRUE", true)]
-        [TestCase("\"text\"<\"text\"", false)]
-        [TestCase("\"text\"<\"texu\"", true)]
-        [TestCase("#VALUE!<#REF!", Error.CellValue)]
-        public void LessThen_WithSameType(string formula, object expectedValue)
-        {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-        [TestCase("-5<=5", true)]
-        [TestCase("1<=1", true)]
-        [TestCase("1<=0", false)]
-        [TestCase("0.0<=0", true)]
-        [TestCase("TRUE<=TRUE", true)]
-        [TestCase("FALSE<=FALSE", true)]
-        [TestCase("TRUE<=FALSE", false)]
-        [TestCase("FALSE<=TRUE", true)]
-        [TestCase("\"text\"<=\"text\"", true)]
-        [TestCase("\"text\"<=\"texu\"", true)]
-        [TestCase("#VALUE!<=#REF!", Error.CellValue)]
-        public void LessThenOrEqual_WithSameType(string formula, object expectedValue)
-        {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
-        }
-
-        [TestCase("TRUE>-1", true)]
-        [TestCase("TRUE>1", true)]
-        [TestCase("TRUE>100", true)]
-        [TestCase("FALSE>-1", true)]
-        [TestCase("FALSE>1", true)]
-        [TestCase("FALSE>100", true)]
-        [TestCase("TRUE>\"100\"", true)]
-        [TestCase("FALSE>\"100\"", true)]
-        [TestCase("FALSE>\"\"", true)]
-        [TestCase("\"\">FALSE", false)]
-        [TestCase("10>FALSE", false)]
-        [TestCase("10>TRUE", false)]
-        [TestCase("-1<TRUE", true)]
-        [TestCase("1<TRUE", true)]
-        [TestCase("100<TRUE", true)]
-        [TestCase("-1<FALSE", true)]
-        [TestCase("1<FALSE", true)]
-        [TestCase("100<FALSE", true)]
-        [TestCase("\"100\"<TRUE", true)]
-        [TestCase("\"100\"<FALSE", true)]
-        [TestCase("\"\"<FALSE", true)]
-        [TestCase("FALSE<\"\"", false)]
-        [TestCase("FALSE<10", false)]
-        [TestCase("TRUE<10", false)]
-        public void Comparison_LogicalIsAlwaysGreaterThanAnyTextOrNumber(string formula, bool expectedResult)
-        {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
-        }
-
-        [TestCase("\"\">10", true)]
-        [TestCase("\"1\">10", true)]
-        [TestCase("10<\"\"", true)]
-        [TestCase("10<\"1\"", true)]
-        public void Comparison_TextIsAlwaysGreaterThanAnyNumber(string formula, bool expectedResult)
-        {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
-        }
-
-        #endregion
-
-        // TODO: Replace with XLWorkbook.Evaluate once we switch calculation method.
-        private static object Evaluate(string formulaText)
-        {
-            return XLWorkbook.EvaluateExpr(formulaText);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            return ws.Evaluate(formula);
         }
     }
 }

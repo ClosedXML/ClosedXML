@@ -53,15 +53,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal ScalarValue GetCellValue(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {
-            return GetCellValueOrBlank(worksheet, rowNumber, columnNumber) ?? ScalarValue.From((double)0);
-        }
-
-        internal ScalarValue? GetCellValueOrBlank(XLWorksheet worksheet, int rowNumber, int columnNumber)
-        {
             worksheet ??= Worksheet;
             var cell = worksheet.GetCell(rowNumber, columnNumber);
             if (cell is null)
-                return null;
+                return ScalarValue.Blank;
 
             if (cell.IsEvaluating)
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
@@ -100,7 +95,7 @@ namespace ClosedXML.Excel.CalcEngine
                 bool logical => ScalarValue.From(logical),
                 double number => ScalarValue.From(number),
                 string text => text == string.Empty && !cell.HasFormula
-                    ? ScalarValue.From((double)0)
+                    ? ScalarValue.Blank
                     : ScalarValue.From(text),
                 DateTime date => ScalarValue.From(date.ToOADate()),
                 Error errorType => ScalarValue.From(errorType),

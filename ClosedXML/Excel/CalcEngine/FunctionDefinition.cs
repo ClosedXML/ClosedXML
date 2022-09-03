@@ -97,22 +97,24 @@ namespace ClosedXML.Excel.CalcEngine
                 return new EmptyValueExpression();
 
             return arg.Value.Match(
+                () => new EmptyValueExpression(),
                 logical => new Expression(logical),
                 number => new Expression(number),
                 text => new Expression(text),
                 error => new Expression(error),
                 array =>
                 {
-                    var castedArray = new double[array.Height, array.Width];
+                    var convertedArray = new double[array.Height, array.Width];
                     for (var row = 0; row < array.Height; ++row)
                         for (var col = 0; col < array.Width; ++col)
-                            castedArray[row, col] = array[row, col].Match(
+                            convertedArray[row, col] = array[row, col].Match(
+                                () => 0.0,
                                 logical => logical ? 1.0 : 0.0,
                                 number => number,
                                 text => throw new NotImplementedException(),
                                 error => throw new NotImplementedException());
 
-                    return new XObjectExpression(castedArray);
+                    return new XObjectExpression(convertedArray);
                 },
                 range =>
                 {

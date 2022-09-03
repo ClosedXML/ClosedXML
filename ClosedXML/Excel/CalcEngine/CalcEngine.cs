@@ -66,6 +66,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (ctx.UseImplicitIntersection)
             {
                 result = result.Match(
+                    () => AnyValue.Blank,
                     logical => logical,
                     number => number,
                     text => text,
@@ -161,6 +162,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object ToCellContentValue(ScalarValue value)
         {
             return value.Match<object>(
+                () => 0,
                 logical => logical,
                 number => number,
                 text => text,

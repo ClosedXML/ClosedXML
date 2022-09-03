@@ -16,10 +16,11 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     internal readonly struct ScalarValue
     {
-        private const int LogicalValue = 0;
-        private const int NumberValue = 1;
-        private const int TextValue = 2;
-        private const int ErrorValue = 3;
+        private const int BlankValue = 0;
+        private const int LogicalValue = 1;
+        private const int NumberValue = 2;
+        private const int TextValue = 3;
+        private const int ErrorValue = 4;
 
         private readonly byte _index;
         private readonly bool _logical;
@@ -35,6 +36,14 @@ namespace ClosedXML.Excel.CalcEngine
             _text = text;
             _error = error;
         }
+
+        /// <summary>
+        /// A blank value of a scalar. It can behave as a 0 or empty string, depending on context.
+        /// </summary>
+        /// <example><c>A1+5</c> is a number 5, blank behaves as 0, <c>A1 &amp; "text"</c> is a "text", blank behaves as empty string.</example>
+        public static readonly ScalarValue Blank = new(BlankValue, default, default, default, default);
+
+        public bool IsBlank => _index == BlankValue;
 
         public static ScalarValue From(bool logical) => new(LogicalValue, logical, default, default, default);
 
@@ -58,10 +67,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator ScalarValue(Error error) => From(error);
 
-        public TResult Match<TResult>(Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError)
+        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError)
         {
             return _index switch
             {
+                BlankValue => transformBlank(),
                 LogicalValue => transformLogical(_logical),
                 NumberValue => transformNumber(_number),
                 TextValue => transformText(_text),
@@ -70,10 +80,11 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public TResult Match<TResult, TParam1>(TParam1 param, Func<bool, TParam1, TResult> transformLogical, Func<double, TParam1, TResult> transformNumber, Func<string, TParam1, TResult> transformText, Func<Error, TParam1, TResult> transformError)
+        public TResult Match<TResult, TParam1>(TParam1 param, Func<TParam1, TResult> transformBlank, Func<bool, TParam1, TResult> transformLogical, Func<double, TParam1, TResult> transformNumber, Func<string, TParam1, TResult> transformText, Func<Error, TParam1, TResult> transformError)
         {
             return _index switch
             {
+                BlankValue => transformBlank(param),
                 LogicalValue => transformLogical(_logical, param),
                 NumberValue => transformNumber(_number, param),
                 TextValue => transformText(_text, param),
@@ -82,10 +93,11 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public TResult Match<TResult, TParam1, TParam2>(TParam1 param1, TParam2 param2, Func<bool, TParam1, TParam2, TResult> transformLogical, Func<double, TParam1, TParam2, TResult> transformNumber, Func<string, TParam1, TParam2, TResult> transformText, Func<Error, TParam1, TParam2, TResult> transformError)
+        public TResult Match<TResult, TParam1, TParam2>(TParam1 param1, TParam2 param2, Func<TParam1, TParam2, TResult> transformBlank, Func<bool, TParam1, TParam2, TResult> transformLogical, Func<double, TParam1, TParam2, TResult> transformNumber, Func<string, TParam1, TParam2, TResult> transformText, Func<Error, TParam1, TParam2, TResult> transformError)
         {
             return _index switch
             {
+                BlankValue => transformBlank(param1, param2),
                 LogicalValue => transformLogical(_logical, param1, param2),
                 NumberValue => transformNumber(_number, param1, param2),
                 TextValue => transformText(_text, param1, param2),
@@ -94,34 +106,11 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public bool TryPickNumber(out double number)
-        {
-            if (_index == NumberValue)
-            {
-                number = _number;
-                return true;
-            }
-
-            number = default;
-            return false;
-        }
-
-        public bool TryPickError(out Error error)
-        {
-            if (_index == ErrorValue)
-            {
-                error = _error;
-                return true;
-            }
-
-            error = default;
-            return false;
-        }
-
         public AnyValue ToAnyValue()
         {
             return _index switch
             {
+                BlankValue => AnyValue.Blank,
                 LogicalValue => _logical,
                 NumberValue => _number,
                 TextValue => _text,
@@ -137,6 +126,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return _index switch
             {
+                BlankValue => string.Empty,
                 LogicalValue => _logical ? "TRUE" : "FALSE",
                 NumberValue => _number.ToString(culture),
                 TextValue => _text,
@@ -152,6 +142,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return _index switch
             {
+                BlankValue => 0,
                 LogicalValue => _logical ? 1.0 : 0.0,
                 NumberValue => _number,
                 TextValue => TextToNumber(_text, culture),
