@@ -70,7 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
                     number => number,
                     text => text,
                     error => error,
-                    array => array[0,0].ToAnyValue(),
+                    array => array[0, 0].ToAnyValue(),
                     reference => reference);
             }
 
@@ -140,25 +140,22 @@ namespace ClosedXML.Excel.CalcEngine
             if (value.TryPickScalar(out var scalar, out var collection))
                 return ToCellContentValue(scalar);
 
-            return collection.Match(
-                array => ToCellContentValue(array[0, 0]),
-                reference =>
-                {
-                    if (reference.TryGetSingleCellValue(out var cellValue, ctx))
-                        return ToCellContentValue(cellValue);
+            if (collection.TryPickT0(out var array, out var reference))
+            {
+                return ToCellContentValue(array[0, 0]);
+            }
 
-                    return reference
-                        .ImplicitIntersection(ctx.FormulaAddress)
-                        .Match<object>(
-                            singleCellReference =>
-                            {
-                                if (!singleCellReference.TryGetSingleCellValue(out var cellValue, ctx))
-                                    throw new InvalidOperationException("Got multi cell reference insted of single cell reference.");
+            if (reference.TryGetSingleCellValue(out var cellValue, ctx))
+                return ToCellContentValue(cellValue);
 
-                                return ToCellContentValue(cellValue);
-                            },
-                            error => error);
-                });
+            var intersected = reference.ImplicitIntersection(ctx.FormulaAddress);
+            if (!intersected.TryPickT0(out var singleCellReference, out var error))
+                return error;
+
+            if (!singleCellReference.TryGetSingleCellValue(out var singleCellValue, ctx))
+                throw new InvalidOperationException("Got multi cell reference instead of single cell reference.");
+
+            return ToCellContentValue(singleCellValue);
         }
 
         private static object ToCellContentValue(ScalarValue value)
