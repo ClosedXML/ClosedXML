@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public void RegisterFunction(string functionName, int minParams, int maxParams, CalcEngineFunction fn, FunctionFlags flags, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
-            _func.Add(functionName, new FunctionDefinition(functionName, minParams, maxParams, fn, flags, allowRanges, markedParams));
+            _func.Add(functionName, new FunctionDefinition(minParams, maxParams, fn, flags, allowRanges, markedParams));
         }
 
         public void RegisterFunction(string functionName, int paramCount, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public void RegisterFunction(string functionName, int minParams, int maxParams, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
-            _func.Add(functionName, new FunctionDefinition(functionName, minParams, maxParams, fn, allowRanges, markedParams));
+            _func.Add(functionName, new FunctionDefinition(minParams, maxParams, fn, allowRanges, markedParams));
         }
 
         public bool TryGetFunc(string name, out int paramMin, out int paramMax)

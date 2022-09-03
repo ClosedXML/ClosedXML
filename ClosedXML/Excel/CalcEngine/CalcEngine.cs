@@ -170,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
     }
 
-    internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue?> arg);
+    internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue> arg);
 
     /// <summary>
     /// Delegate that represents CalcEngine functions.

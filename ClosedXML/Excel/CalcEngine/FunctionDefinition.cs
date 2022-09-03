@@ -9,69 +9,89 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FunctionDefinition
     {
-        public FunctionDefinition(string name, int minParams, int maxParams, CalcEngineFunction function, FunctionFlags flags, AllowRange allowRanges, IReadOnlyCollection<int> markedParams)
-        {
-            if (allowRanges == AllowRange.None && markedParams.Any())
-                throw new ArgumentException(nameof(markedParams));
+        /// <summary>
+        /// Only the <see cref="_function"/> or <see cref="_legacyFunction"/> is set.
+        /// </summary>
+        private readonly CalcEngineFunction _function;
 
-            Name = name;
-            MinParams = minParams;
-            MaxParams = maxParams;
-            AllowRanges = allowRanges;
-            MarkedParams = markedParams;
-            Function = function;
-            Flags = flags;
-        }
+        /// <summary>
+        /// Only the <see cref="_function"/> or <see cref="_legacyFunction"/> is set.
+        /// </summary>
+        private readonly LegacyCalcEngineFunction _legacyFunction;
 
-        public FunctionDefinition(string name, int minParams, int maxParams, LegacyCalcEngineFunction function, AllowRange allowRanges, IReadOnlyCollection<int> markedParams)
-        {
-            if (allowRanges == AllowRange.None && markedParams.Any())
-                throw new ArgumentException(nameof(markedParams));
+        private readonly FunctionFlags _flags;
 
-            Name = name;
-            MinParams = minParams;
-            MaxParams = maxParams;
-            AllowRanges = allowRanges;
-            MarkedParams = markedParams;
-            LegacyFunction = function;
-        }
-
-        public string Name { get; }
-
-        public int MinParams { get; }
-
-        public int MaxParams { get; }
-
-        public FunctionFlags Flags { get; }
-
-        public AllowRange AllowRanges { get; }
+        private readonly AllowRange _allowRanges;
 
         /// <summary>
         /// Which parameters of the function are marked. The values are indexes of the function parameters, starting from 0.
         /// Used to determine which arguments allow ranges and which don't.
         /// </summary>
-        public IReadOnlyCollection<int> MarkedParams { get; }
+        private readonly IReadOnlyCollection<int> _markedParams;
 
-        /// <summary>Only the <see cref="Function"/> or <see cref="LegacyFunction"/> is set.</summary>
-        public CalcEngineFunction Function { get; }
-
-        /// <summary>Only the <see cref="Function"/> or <see cref="LegacyFunction"/> is set.</summary>
-        public LegacyCalcEngineFunction LegacyFunction { get; }
-
-        public AnyValue CallFunction(CalcContext ctx, params AnyValue?[] args)
+        public FunctionDefinition(int minParams, int maxParams, CalcEngineFunction function, FunctionFlags flags, AllowRange allowRanges, IReadOnlyCollection<int> markedParams)
         {
-            if (LegacyFunction is not null)
+            if (allowRanges == AllowRange.None && markedParams.Any())
+                throw new ArgumentException(nameof(markedParams));
+
+            MinParams = minParams;
+            MaxParams = maxParams;
+            _allowRanges = allowRanges;
+            _markedParams = markedParams;
+            _function = function;
+            _flags = flags;
+        }
+
+        public FunctionDefinition(int minParams, int maxParams, LegacyCalcEngineFunction function, AllowRange allowRanges, IReadOnlyCollection<int> markedParams)
+        {
+            if (allowRanges == AllowRange.None && markedParams.Any())
+                throw new ArgumentException(nameof(markedParams));
+
+            MinParams = minParams;
+            MaxParams = maxParams;
+            _allowRanges = allowRanges;
+            _markedParams = markedParams;
+            _legacyFunction = function;
+        }
+
+        public int MinParams { get; }
+
+        public int MaxParams { get; }
+
+        public AnyValue CallFunction(CalcContext ctx, params AnyValue[] args)
+        {
+            if (ctx.UseImplicitIntersection)
+                IntersectArguments(ctx, args);
+
+            if (_legacyFunction is not null)
             {
                 // This creates a some of overhead, but all legacy functions will be migrated in near future
                 var adaptedArgs = new List<Expression>(args.Length);
                 foreach (var arg in args)
                     adaptedArgs.Add(ConvertAnyValueToLegacyExpression(ctx, arg));
 
-                var result = LegacyFunction(adaptedArgs);
+                var result = _legacyFunction(adaptedArgs);
                 return ConvertLegacyFormulaValueToAnyValue(result);
             }
 
-            return Function(ctx, args);
+            return _function(ctx, args);
+        }
+
+        private void IntersectArguments(CalcContext ctx, AnyValue[] args)
+        {
+            for (var i = 0; i < args.Length; ++i)
+            {
+                var intersectArgument = _allowRanges switch
+                {
+                    AllowRange.None => true,
+                    AllowRange.Except => _markedParams.Contains(i),
+                    AllowRange.Only => !_markedParams.Contains(i),
+                    AllowRange.All => false,
+                    _ => throw new InvalidOperationException($"Unexpected value {_allowRanges}")
+                };
+                if (intersectArgument)
+                    args[i] = args[i].ImplicitIntersection(ctx);
+            }
         }
 
         public static AnyValue ConvertLegacyFormulaValueToAnyValue(object result)
@@ -91,12 +111,9 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        private static Expression ConvertAnyValueToLegacyExpression(CalcContext context, AnyValue? arg)
+        private static Expression ConvertAnyValueToLegacyExpression(CalcContext context, AnyValue arg)
         {
-            if (!arg.HasValue)
-                return new EmptyValueExpression();
-
-            return arg.Value.Match(
+            return arg.Match(
                 () => new EmptyValueExpression(),
                 logical => new Expression(logical),
                 number => new Expression(number),

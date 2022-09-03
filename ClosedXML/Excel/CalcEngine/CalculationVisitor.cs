@@ -68,40 +68,16 @@ namespace ClosedXML.Excel.CalcEngine
             if (!_functions.TryGetFunc(node.Name, out FunctionDefinition fn))
                 return Error.NameNotRecognized;
 
-            var args = GetArgs(context, fn, node);
+            var args = GetArgs(context, node);
             return fn.CallFunction(context, args);
         }
 
-        private AnyValue?[] GetArgs(CalcContext context, FunctionDefinition fn, FunctionNode node)
+        private AnyValue[] GetArgs(CalcContext context, FunctionNode node)
         {
-            var args = new AnyValue?[node.Parameters.Count];
+            var args = new AnyValue[node.Parameters.Count];
             for (var argIndex = 0; argIndex < node.Parameters.Count; ++argIndex)
             {
-                var paramNode = node.Parameters[argIndex];
-                var arg = paramNode is not EmptyArgumentNode ? node.Parameters[argIndex].Accept(context, this) : default(AnyValue?);
-
-                if (context.UseImplicitIntersection && fn.AllowRanges != AllowRange.All && arg.HasValue)
-                {
-                    switch (fn.AllowRanges)
-                    {
-                        case AllowRange.None:
-                            arg = arg.Value.ImplicitIntersection(context);
-                            break;
-                        case AllowRange.Except:
-                            if (fn.MarkedParams.Contains(argIndex))
-                                arg = arg.Value.ImplicitIntersection(context);
-
-                            break;
-                        case AllowRange.Only:
-                            if (!fn.MarkedParams.Contains(argIndex))
-                                arg = arg.Value.ImplicitIntersection(context);
-
-                            break;
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                }
-
+                var arg = node.Parameters[argIndex].Accept(context, this);
                 args[argIndex] = arg;
             }
 
@@ -155,24 +131,19 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        public AnyValue Visit(CalcContext context, EmptyArgumentNode node)
+            => AnyValue.Blank;
+
         public AnyValue Visit(CalcContext context, NotSupportedNode node)
-        {
-            throw new NotImplementedException($"Evaluation of {node.FeatureName} is not implemented.");
-        }
+            => throw new NotImplementedException($"Evaluation of {node.FeatureName} is not implemented.");
 
         public AnyValue Visit(CalcContext context, StructuredReferenceNode node)
-        {
-            throw new NotImplementedException($"Evaluation of structured references is not implemented.");
-        }
+            => throw new NotImplementedException($"Evaluation of structured references is not implemented.");
 
-        #region Never visited nodes
+        public AnyValue Visit(CalcContext context, PrefixNode node)
+            => throw new InvalidOperationException("Node should never be visited.");
 
-        public AnyValue Visit(CalcContext context, PrefixNode node) => throw new InvalidOperationException();
-
-        public AnyValue Visit(CalcContext context, FileNode node) => throw new InvalidOperationException();
-
-        public AnyValue Visit(CalcContext context, EmptyArgumentNode node) => throw new InvalidOperationException();
-
-        #endregion
+        public AnyValue Visit(CalcContext context, FileNode node)
+            => throw new InvalidOperationException("Node should never be visited.");
     }
 }

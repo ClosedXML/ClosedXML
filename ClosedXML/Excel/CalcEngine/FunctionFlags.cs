@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
         Scalar = 0,
 
         /// <summary>
-        /// At least one of arguments of the function accepts a range. It means that
+        /// Non-scalar function. At least one of arguments of the function accepts a range. It means that
         /// implicit intersection works differently.
         /// </summary>
         Range = 1,
