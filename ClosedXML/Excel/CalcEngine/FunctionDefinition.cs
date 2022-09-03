@@ -58,7 +58,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public int MaxParams { get; }
 
-        public AnyValue CallFunction(CalcContext ctx, params AnyValue[] args)
+        public AnyValue CallFunction(CalcContext ctx, Span<AnyValue> args)
         {
             if (ctx.UseImplicitIntersection)
                 IntersectArguments(ctx, args);
@@ -77,7 +77,7 @@ namespace ClosedXML.Excel.CalcEngine
             return _function(ctx, args);
         }
 
-        private void IntersectArguments(CalcContext ctx, AnyValue[] args)
+        private void IntersectArguments(CalcContext ctx, Span<AnyValue> args)
         {
             for (var i = 0; i < args.Length; ++i)
             {

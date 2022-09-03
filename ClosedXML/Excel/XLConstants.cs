@@ -6,6 +6,8 @@ namespace ClosedXML.Excel
     {
         internal const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
 
+        internal const int MaxFunctionArguments = 255; // To keep allocation sane
+
         #region Pivot Table constants
 
         public static class PivotTable

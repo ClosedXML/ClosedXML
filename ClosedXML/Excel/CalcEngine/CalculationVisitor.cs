@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Linq;
+using System.Buffers;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalculationVisitor : IFormulaVisitor<CalcContext, AnyValue>
     {
         private readonly FunctionRegistry _functions;
-
+        private readonly ArrayPool<AnyValue> _argsPool;
         public CalculationVisitor(FunctionRegistry functions)
         {
             _functions = functions;
+            _argsPool = ArrayPool<AnyValue>.Create(XLConstants.MaxFunctionArguments, 100);
         }
 
         public AnyValue Visit(CalcContext context, ScalarNode node)
@@ -63,25 +64,25 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public AnyValue Visit(CalcContext context, FunctionNode node)
+        public AnyValue Visit(CalcContext context, FunctionNode functionNode)
         {
-            if (!_functions.TryGetFunc(node.Name, out FunctionDefinition fn))
+            if (!_functions.TryGetFunc(functionNode.Name, out var fn))
                 return Error.NameNotRecognized;
 
-            var args = GetArgs(context, node);
-            return fn.CallFunction(context, args);
-        }
-
-        private AnyValue[] GetArgs(CalcContext context, FunctionNode node)
-        {
-            var args = new AnyValue[node.Parameters.Count];
-            for (var argIndex = 0; argIndex < node.Parameters.Count; ++argIndex)
+            var parameters = functionNode.Parameters;
+            var pool = _argsPool.Rent(parameters.Count);
+            var args = new Span<AnyValue>(pool,0, parameters.Count);
+            try
             {
-                var arg = node.Parameters[argIndex].Accept(context, this);
-                args[argIndex] = arg;
-            }
+                for (var i = 0; i < parameters.Count; ++i)
+                    args[i] = parameters[i].Accept(context, this);
 
-            return args;
+                return fn.CallFunction(context, args);
+            }
+            finally
+            {
+                _argsPool.Return(pool);
+            }
         }
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)
