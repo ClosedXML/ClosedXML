@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -145,8 +144,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var formulaSheet = wb.AddWorksheet("Current");
             wb.AddWorksheet("Other");
 
-            // SUM is still legacy, so exception galore!
-            Assert.Throws<CellValueException>(() => formulaSheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.AreEqual(Error.CellValue, formulaSheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         [TestCase("A1:IF(TRUE,1,)")]
@@ -158,8 +156,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var sheet = wb.AddWorksheet();
 
-            // SUM is still legacy, so exception galore!
-            Assert.Throws<CellValueException>(() => sheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.AreEqual(Error.CellValue, sheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         #endregion

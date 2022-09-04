@@ -82,7 +82,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SQRT", 1, Sqrt);
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
             ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
-            ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, AllowRange.All);
+            ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
             ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct, AllowRange.All);
@@ -904,14 +904,36 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        private static object Sum(List<Expression> p)
+        private static AnyValue Sum(CalcContext ctx, Span<AnyValue> args)
         {
-            var tally = new Tally();
-            foreach (var e in p)
+            var sum = 0.0;
+            foreach (var arg in args)
             {
-                tally.Add(e);
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    var conversionResult = scalar.ToNumber(ctx.Culture);
+                    if (!conversionResult.TryPickT0(out var number, out var error))
+                        return error;
+
+                    sum += number;
+                }
+                else
+                {
+                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
+                        ? array
+                        : reference.GetCellsValues(ctx);
+                    foreach (var value in valuesIterator)
+                    {
+                        // collections ignore strings and logical, only numbers (and errors) allowed
+                        if (value.TryPickNumber(out var number))
+                            sum += number;
+                        else if (value.TryPickError(out var error))
+                            return error;
+                    }
+                }
             }
-            return tally.Sum();
+
+            return sum;
         }
 
         private static object SumIf(List<Expression> p)

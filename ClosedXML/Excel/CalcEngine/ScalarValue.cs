@@ -157,5 +157,29 @@ namespace ClosedXML.Excel.CalcEngine
                 ? number
                 : Error.CellValue;
         }
+
+        public bool TryPickNumber(out double number)
+        {
+            if (_index == NumberValue)
+            {
+                number = _number;
+                return true;
+            }
+
+            number = default;
+            return false;
+        }
+
+        public bool TryPickError(out Error error)
+        {
+            if (_index == ErrorValue)
+            {
+                error = _error;
+                return true;
+            }
+
+            error = default;
+            return false;
+        }
     }
 }
