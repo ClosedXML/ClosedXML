@@ -163,7 +163,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#DIV/0!",
                 new[] { GrammarNames.Formula, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(ErrorNode) });
+                new[] { typeof(ScalarNode) });
 
             // Text.Rule = TextToken;
             yield return new TestCaseData(
@@ -187,13 +187,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#VALUE!",
                 new[] { GrammarNames.Formula, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(ErrorNode) });
+                new[] { typeof(ScalarNode) });
 
             // RefError.Rule = RefErrorToken;
             yield return new TestCaseData(
                 "#REF!",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorNode) });
+                new[] { typeof(ScalarNode) });
 
             // FunctionCall.Rule = FunctionName + Arguments + CloseParen
             yield return new TestCaseData(
@@ -357,7 +357,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#REF!",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorNode) });
+                new[] { typeof(ScalarNode) });
+
+            yield return new TestCaseData(
+                "A1:(#REF!)",
+                new[] { GrammarNames.Formula, GrammarNames.Reference, ReferenceFunctionCall, GrammarNames.Reference, Cell, TokenCell, null, null, null, ":", null, GrammarNames.Reference, GrammarNames.Reference, RefError, TokenRefError },
+                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ScalarNode) });
 
             // ReferenceItem.Rule = UDFunctionCall
             yield return new TestCaseData(
@@ -497,7 +502,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#REF!",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorNode) });
+                new[] { typeof(ScalarNode) });
 
             // StructuredReferenceElement.Rule = OpenSquareParen + SRColumnToken + CloseSquareParen
             // BUG in XLParser 1.5.2, FileNameEnclosedInBracketsToken will always take preference, this can never happen. Square parenthesis are transient
@@ -754,9 +759,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             public override AstNode Visit(LinkedList<Type> context, FunctionNode node)
                 => LinearizeNode(context, typeof(FunctionNode), () => base.Visit(context, node));
-
-            public override AstNode Visit(LinkedList<Type> context, ErrorNode node)
-                => LinearizeNode(context, typeof(ErrorNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, NotSupportedNode node)
                 => LinearizeNode(context, typeof(NotSupportedNode), () => base.Visit(context, node));

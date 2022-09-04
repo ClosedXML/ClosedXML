@@ -15,7 +15,14 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FormulaParser
     {
-        private const string defaultFunctionNameSpace = "_xlfn";
+        /// <summary>
+        /// A prefix is that is used for functions that are present in a version of Excel, but aren't present in older versions.
+        /// </summary>
+        /// <example>
+        /// If you write <c>CONCAT(A1,B1)</c> in Excel 2021 (not present in Excel 2013), it is saved to the worksheet file as
+        /// <c>_xlfn.CONCAT(A1,B1)</c>, but the Excel GUI will show only <c>CONCAT(A1,B1)</c>, without the <c>_xlfn</c>.
+        /// </example>
+        private const string DefaultFunctionNameSpace = "_xlfn";
 
         // Names for unary/binary op terms don't have a const names in the grammar
         private static readonly Dictionary<string, UnaryOp> PrefixOpMap = new(StringComparer.Ordinal)
@@ -58,6 +65,8 @@ namespace ClosedXML.Excel.CalcEngine
             { GrammarNames.VerticalRange, ReferenceItemType.VRange },
             { GrammarNames.HorizontalRange, ReferenceItemType.HRange }
         };
+
+        private static readonly Func<AstNode, bool> IsErrorNode = static node => node is ScalarNode scalarNode && scalarNode.Value.TryPickError(out _);
 
         private readonly Parser _parser;
         private readonly FunctionRegistry _fnTbl;
@@ -185,7 +194,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
         {
             var errorType = ErrorMap[parseNode.ChildNodes.Single().Token.Text];
-            parseNode.AstNode = new ErrorNode(errorType);
+            parseNode.AstNode = new ScalarNode(errorType);
         }
 
         private AstNodeFactory GetFunctionCallNodeFactory()
@@ -231,8 +240,8 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // ReferenceItem:RefError. #REF! error is not grouped with other errors, but is a part of Reference term.
-                    For(typeof(ErrorNode)),
-                    node => (ErrorNode)node.ChildNodes[0].AstNode
+                    For(IsErrorNode),
+                    node => (ScalarNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // ReferenceItem:UDFunctionCall
@@ -283,11 +292,11 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // Prefix + ReferenceItem:RefError
-                    For(typeof(PrefixNode), typeof(ErrorNode)),
+                    For(typeof(PrefixNode), IsErrorNode),
                     node =>
                     {
                         // I think =#REF!#REF! was evaluated to #REF! in Excel 2021.
-                        return (ErrorNode)node.ChildNodes[1].AstNode;
+                        return (ScalarNode)node.ChildNodes[1].AstNode;
                     }
                 },
                 {
@@ -473,7 +482,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var functionName = parseNode.ChildNodes[0].ChildNodes.Single().Token.Text.WithoutLast(1);
 
-            if (functionName.StartsWith($"{defaultFunctionNameSpace}."))
+            if (functionName.StartsWith($"{DefaultFunctionNameSpace}."))
             {
                 parseNode.AstNode = CreateExcelFunctionCallExpression(context, parseNode.ChildNodes[0], parseNode.ChildNodes[1]);
                 return;
@@ -487,9 +496,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
             var foundFunction = _fnTbl.TryGetFunc(functionName, out var parmMin, out var parmMax);
-            if (!foundFunction && functionName.StartsWith($"{defaultFunctionNameSpace}."))
+            if (!foundFunction && functionName.StartsWith($"{DefaultFunctionNameSpace}."))
             {
-                functionName = functionName.Substring(defaultFunctionNameSpace.Length + 1);
+                functionName = functionName.Substring(DefaultFunctionNameSpace.Length + 1);
                 foundFunction = _fnTbl.TryGetFunc(functionName, out parmMin, out parmMax);
             }
 
@@ -594,13 +603,14 @@ namespace ClosedXML.Excel.CalcEngine
 
         private class NodePredicate
         {
-            public NodePredicate(Func<ParseTreeNode, bool> func) => Func = func;
+            private NodePredicate(Func<ParseTreeNode, bool> func) => Func = func;
 
             public Func<ParseTreeNode, bool> Func { get; }
 
             public static implicit operator NodePredicate(string termName) => new(x => x.Term.Name == termName);
             public static implicit operator NodePredicate(string[] termNames) => new(x => termNames.Contains(x.Term.Name));
             public static implicit operator NodePredicate(Type astNodeType) => new(x => x.AstNode?.GetType() == astNodeType);
+            public static implicit operator NodePredicate(Func<AstNode, bool> cond) => new(x => x.AstNode is ValueNode astNode && cond(astNode));
         }
     }
 }

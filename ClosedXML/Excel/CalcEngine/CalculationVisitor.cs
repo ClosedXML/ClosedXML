@@ -18,11 +18,6 @@ namespace ClosedXML.Excel.CalcEngine
             return node.Value;
         }
 
-        public AnyValue Visit(CalcContext context, ErrorNode node)
-        {
-            return node.Error;
-        }
-
         public AnyValue Visit(CalcContext context, UnaryNode node)
         {
             var arg = node.Expression.Accept(context, this);

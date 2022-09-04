@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     /// <summary>
-    /// AST node that contains a number, text or a bool or a blank value.
+    /// AST node that contains a blank, logical, number, text or an error value.
     /// </summary>
     internal class ScalarNode : ValueNode
     {
@@ -135,19 +135,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
     
-    // TODO: Merge with ScalarNode
-    internal class ErrorNode : ValueNode
-    {
-        internal ErrorNode(Error error)
-        {
-            Error = error;
-        }
-
-        public Error Error { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
     /// <summary>
     /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
     /// </summary>

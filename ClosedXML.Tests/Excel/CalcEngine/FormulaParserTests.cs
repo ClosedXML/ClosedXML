@@ -3,7 +3,6 @@ using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Globalization;
-using static ClosedXML.Excel.CalcEngine.ErrorNode;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -37,7 +36,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Root_formula_string_can_be_union_without_parenthesis()
         {
             // Root of a formula string is pretty much the only place where reference union can be without parenthesis. Elsewhere it must have
-            // parthesis to avoid misusing union op (coma) with a separation of arguments in a function call.
+            // parentheses to avoid misusing union op (coma) with a separation of arguments in a function call.
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Evaluate("=A1,A3", "Z100");
@@ -67,7 +66,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=SUM(1,2)", 3)]
         [TestCase("=2+3", 5)]
         [TestCase("=-3", -3)]
-        // TODO:[TestCase("=150%", 1.5)]
+        [TestCase("=150%", 1.5)]
         public void Formula_can_be_function_call(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
@@ -115,7 +114,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedBool, XLWorkbook.EvaluateExpr(formula));
         }
 
-        // #REF! is coverted by a different rule, so it is not here.
+        // #REF! is converted by a different rule, so it is not here.
         [TestCase("#VALUE!", Error.CellValue)]
         [TestCase("#DIV/0!", Error.DivisionByZero)]
         [TestCase("#NAME?", Error.NameNotRecognized)]
@@ -425,7 +424,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
-            var astNode = calcEngine.Parse(formula);
+            _ = calcEngine.Parse(formula);
             Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => ws.Evaluate(formula, "A1"));
         }
     }
