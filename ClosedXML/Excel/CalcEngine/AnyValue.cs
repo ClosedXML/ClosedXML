@@ -103,6 +103,18 @@ namespace ClosedXML.Excel.CalcEngine
             return _index <= ErrorValue;
         }
 
+        public bool TryPickError(out Error error)
+        {
+            if (_index == ErrorValue)
+            {
+                error = _error;
+                return true;
+            }
+
+            error = default;
+            return false;
+        }
+
         public bool TryPickReference(out Reference reference)
         {
             if (_index == ReferenceValue)

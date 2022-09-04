@@ -55,7 +55,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static readonly Dictionary<string, ReferenceItemType> RangeTermMap = new(StringComparer.Ordinal)
         {
             { GrammarNames.Cell, ReferenceItemType.Cell },
-            { GrammarNames.NamedRange, ReferenceItemType.NamedRange },
             { GrammarNames.VerticalRange, ReferenceItemType.VRange },
             { GrammarNames.HorizontalRange, ReferenceItemType.HRange }
         };
@@ -222,9 +221,13 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 {
                     // ReferenceItem is transient, so its rules are basically merged with Reference - Cell, NamedRange, VRange, HRange
-                    // Named range can be NameToken or NamedRangeCombinationToken. The second one is there only to detect names like A1A1.
-                    For(new[] { GrammarNames.Cell, GrammarNames.NamedRange, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
+                    For(new[] { GrammarNames.Cell, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
                     node => new ReferenceNode(null, RangeTermMap[node.ChildNodes[0].Term.Name], node.ChildNodes[0].ChildNodes.Single().Token.Text)
+                },
+                {
+                    // Named range can be NameToken or NamedRangeCombinationToken. The combination token is there only to detect names like A1A1.
+                    For(GrammarNames.NamedRange),
+                    node => new NameNode(null, node.ChildNodes[0].ChildNodes.Single().Token.Text)
                 },
                 {
                     // ReferenceItem:RefError. #REF! error is not grouped with other errors, but is a part of Reference term.
@@ -269,8 +272,14 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // Prefix + ReferenceItem:Cell|NamedRange|VRange|HRange
-                    For(typeof(PrefixNode), new[] { GrammarNames.Cell, GrammarNames.NamedRange, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
+                    // Split into two branches, because named range is not actually range, but an alias for a formula
+                    For(typeof(PrefixNode), new[] { GrammarNames.Cell, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
                     node => new ReferenceNode((PrefixNode)node.ChildNodes[0].AstNode, RangeTermMap[node.ChildNodes[1].Term.Name], node.ChildNodes[1].ChildNodes.Single().Token.Text)
+                },
+                {
+                    // Prefix + ReferenceItem:Cell|NamedRange|VRange|HRange
+                    For(typeof(PrefixNode), GrammarNames.NamedRange),
+                    node => new NameNode((PrefixNode)node.ChildNodes[0].AstNode, node.ChildNodes[1].ChildNodes.Single().Token.Text)
                 },
                 {
                     // Prefix + ReferenceItem:RefError

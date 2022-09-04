@@ -48,6 +48,14 @@ namespace ClosedXML.Excel.CalcEngine
                 : referenceNode;
         }
 
+        public virtual AstNode Visit(TContext context, NameNode nameNode)
+        {
+            var acceptedPrefix = nameNode.Prefix?.Accept(context, this);
+            return !ReferenceEquals(acceptedPrefix, nameNode.Prefix)
+                ? new NameNode((PrefixNode)acceptedPrefix, nameNode.Name)
+                : nameNode;
+        }
+
         public virtual AstNode Visit(TContext context, StructuredReferenceNode node) => node;
 
         public virtual AstNode Visit(TContext context, PrefixNode prefix)

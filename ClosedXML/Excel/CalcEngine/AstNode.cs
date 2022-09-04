@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -8,7 +9,7 @@ namespace ClosedXML.Excel.CalcEngine
     internal abstract class AstNode
     {
         /// <summary>
-        /// Method to accept a vistor (=call a method of visitor with correct type of the node).
+        /// Method to accept a visitor (=call a method of visitor with correct type of the node).
         /// </summary>
         public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
     }
@@ -238,6 +239,20 @@ namespace ClosedXML.Excel.CalcEngine
         public string LastSheet { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+
+        internal OneOf<IXLWorksheet, Error> GetWorksheet(XLWorkbook wb)
+        {
+            if (File is not null)
+                throw new NotImplementedException("References from other files are not yet implemented.");
+
+            if (FirstSheet is not null || LastSheet is not null)
+                throw new NotImplementedException("3D references are not yet implemented.");
+
+            if (!wb.TryGetWorksheet(Sheet, out var worksheet))
+                return Error.CellReference;
+
+            return OneOf<IXLWorksheet, Error>.FromT0(worksheet);
+        }
     }
 
     /// <summary>
@@ -260,16 +275,80 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceItemType Type { get; }
 
         /// <summary>
-        /// An address of a reference that corresponds to <see cref="Type"/> or a name of named range.
+        /// An address of a reference that corresponds to <see cref="Type"/>. Always without sheet (that is in the prefix).
         /// </summary>
         public string Address { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+
+        public AnyValue GetReference(CalcContext ctx)
+        {
+            if (Prefix is null)
+                return new Reference(new XLRangeAddress(null, Address));
+
+            if (!Prefix.GetWorksheet(ctx.Workbook).TryPickT0(out var ws, out var err))
+                return err;
+
+            // TODO: XLRangeAddress can parse all types of reference item type, utilize known type for faster parsing + cache
+            return new Reference(new XLRangeAddress((XLWorksheet)ws, Address));
+        }
     }
 
-    internal enum ReferenceItemType { Cell, NamedRange, VRange, HRange }
+    internal enum ReferenceItemType { Cell, VRange, HRange }
 
-    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet suported and
+    /// <summary>
+    /// A name node in the formula. Name can refers to a generic formula, in most cases a reference, but it can be any kind of calculation (e.g. <c>A1+7</c>).
+    /// </summary>
+    internal class NameNode : ValueNode
+    {
+        public NameNode(PrefixNode prefix, string name)
+        {
+            Prefix = prefix;
+            Name = name;
+        }
+
+        /// <summary>
+        /// An optional prefix for reference item.
+        /// </summary>
+        public PrefixNode Prefix { get; }
+
+        public string Name { get; }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+
+        public AnyValue GetValue(XLWorksheet ctxWs, CalcEngine engine)
+        {
+            var worksheet = ctxWs;
+            if (Prefix is not null)
+            {
+                if (!Prefix.GetWorksheet(ctxWs.Workbook).TryPickT0(out var ws, out var err))
+                    return err;
+
+                worksheet = (XLWorksheet)ws;
+            }
+
+            if (!TryGetNameRange(worksheet, out var namedRange))
+                return Error.NameNotRecognized;
+
+            // Parser needs an equal sign for a union of ranges (or braces around formula)
+            var nameFormula = namedRange.RefersTo;
+            nameFormula = nameFormula.StartsWith("=") ? nameFormula : "=" + nameFormula;
+            return engine.EvaluateExpression(nameFormula, ctxWs.Workbook, ctxWs);
+        }
+
+        internal bool TryGetNameRange(IXLWorksheet ws, out IXLNamedRange range)
+        {
+            if (ws.NamedRanges.TryGetValue(Name, out range))
+                return true;
+
+            if (ws.Workbook.NamedRanges.TryGetValue(Name, out range))
+                return true;
+
+            return false;
+        }
+    }
+
+    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet supported and
     // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
     internal class StructuredReferenceNode : ValueNode
     {

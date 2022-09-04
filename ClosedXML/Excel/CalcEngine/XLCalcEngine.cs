@@ -87,6 +87,9 @@ namespace ClosedXML.Excel.CalcEngine
 
             public List<Reference> FoundReferences { get; }
 
+            /// <summary>
+            /// Unable to determine all references, e.g. sheet doesn't exist.
+            /// </summary>
             public bool HasReferenceErrors { get; set; }
 
             public bool UsesNamedRanges { get; set; }
@@ -101,45 +104,36 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         private class FormulaRangesVisitor : IFormulaVisitor<PrecedentAreasContext, OneOf<Reference, Error>>
         {
-            public readonly static FormulaRangesVisitor Default = new();
+            public static readonly FormulaRangesVisitor Default = new();
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, ReferenceNode node)
             {
-                if (node.Type == ReferenceItemType.NamedRange)
-                {
-                    ctx.UsesNamedRanges = true;
+                if (node.Prefix is null)
+                    return new Reference(new XLRangeAddress(null, node.Address));
 
-                    // TODO: Cleanup and error checking
-                    if (!TryGetNamedRange(node.Address, ctx.Worksheet, out var namedRange))
-                    {
-                        return Error.NameNotRecognized;
-                    }
-
-                    if (!namedRange.IsValid)
-                    {
-                        ctx.HasReferenceErrors = true;
-                        return Error.CellReference;
-                    }
-
-                    var rangeAddresses = namedRange.Ranges.Select(r => r.RangeAddress).Cast<XLRangeAddress>().ToList();
-                    if (rangeAddresses.Count < 1)
-                        throw new NotImplementedException("I guess return error?");
-                    return new Reference(rangeAddresses);
-                }
-
-                var sheetName = node.Prefix?.Sheet;
-                if (sheetName is not null)
-                {
-                    if (!ctx.Worksheet.Workbook.TryGetWorksheet(sheetName, out var ws))
-                    {
-                        ctx.HasReferenceErrors = true;
-                        return Error.CellReference;
-                    }
-
+                if (ctx.Worksheet.Workbook.TryGetWorksheet(node.Prefix?.Sheet, out var ws))
                     return new Reference(new XLRangeAddress((XLWorksheet)ws, node.Address));
+
+                ctx.HasReferenceErrors = true;
+                return Error.CellReference;
+            }
+
+            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, NameNode node)
+            {
+                ctx.UsesNamedRanges = true;
+
+                if (!node.TryGetNameRange(ctx.Worksheet, out var range))
+                    return Error.NameNotRecognized;
+
+                // TODO: This ignores all other ways a name could reference other cells, like A1+5
+                if (!range.IsValid)
+                {
+                    ctx.HasReferenceErrors = true;
+                    return Error.CellReference;
                 }
 
-                return new Reference(new XLRangeAddress(null, node.Address));
+                return new Reference(range.Ranges);
+
             }
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, BinaryNode node)
@@ -166,16 +160,14 @@ namespace ClosedXML.Excel.CalcEngine
                     return leftError;
                 }
 
-                // Only result store the place where reference would change to error. Some ranges have many operations A1:B5:C3
-                switch (node.Operation)
+                // Don't add resulting reference into the ctx here, because it still might be turned into an error later (some ranges have many operations A1:B5:C3)
+                return node.Operation switch
                 {
-                    case BinaryOp.Range: return Reference.RangeOp(leftReference, rightReference, ctx.Worksheet);
-                    case BinaryOp.Union: return Reference.UnionOp(leftReference, rightReference);
-                    case BinaryOp.Intersection: throw new NotImplementedException();
+                    BinaryOp.Range => Reference.RangeOp(leftReference, rightReference, ctx.Worksheet),
+                    BinaryOp.Union => Reference.UnionOp(leftReference, rightReference),
+                    BinaryOp.Intersection => throw new NotImplementedException("Range intersection not implemented."),
+                    _ => Error.CellReference // Binary operation on reference arguments
                 };
-
-                // Binary operation on reference arguments
-                return Error.CellReference;
             }
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, ScalarNode node)
@@ -197,7 +189,7 @@ namespace ClosedXML.Excel.CalcEngine
                 foreach (var param in node.Parameters)
                 {
                     var paramResult = param.Accept(ctx, this);
-                    if (paramResult.TryPickT0(out var reference, out var _))
+                    if (paramResult.TryPickT0(out var reference, out _))
                         ctx.AddReference(reference);
                 }
                 return Error.CellReference;
@@ -220,23 +212,17 @@ namespace ClosedXML.Excel.CalcEngine
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, StructuredReferenceNode node)
             {
-                throw new NotImplementedException("Shouldn't be visited.");
+                throw new NotImplementedException("Structured references are not implemented.");
             }
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, PrefixNode node)
             {
-                throw new InvalidOperationException("Shouldn't be visited.");
+                throw new InvalidOperationException("PrefixNode shouldn't be visited.");
             }
 
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, FileNode node)
             {
-                throw new InvalidOperationException("Shouldn't be visited.");
-            }
-
-            private static bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
-            {
-                return worksheet.NamedRanges.TryGetValue(identifier, out namedRange) ||
-                       worksheet.Workbook.NamedRanges.TryGetValue(identifier, out namedRange);
+                throw new InvalidOperationException("FileNode shouldn't be visited.");
             }
         }
     }

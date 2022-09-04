@@ -18,10 +18,25 @@ namespace ClosedXML.Excel.CalcEngine
             Areas = new List<XLRangeAddress>(1) { area };
         }
 
+        /// <summary>
+        /// Ctor that reuses parameter to keep allocations low - don't modify the collection after it is passed to ctor.
+        /// </summary>
         public Reference(List<XLRangeAddress> areas)
         {
             if (areas.Count < 1)
                 throw new ArgumentException();
+
+            Areas = areas;
+        }
+
+        public Reference(IXLRanges ranges)
+        {
+            if (ranges.Count < 1)
+                throw new ArgumentException();
+
+            var areas = new List<XLRangeAddress>(ranges.Count);
+            foreach (var range in ranges)
+                areas.Add((XLRangeAddress)range.RangeAddress);
 
             Areas = areas;
         }

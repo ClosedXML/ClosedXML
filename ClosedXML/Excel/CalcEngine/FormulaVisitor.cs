@@ -1,6 +1,6 @@
 ﻿namespace ClosedXML.Excel.CalcEngine
 {
-    internal interface IFormulaVisitor<TContext, TResult>
+    internal interface IFormulaVisitor<in TContext, out TResult>
     {
         public TResult Visit(TContext context, ScalarNode node);
 
@@ -17,6 +17,8 @@
         public TResult Visit(TContext context, NotSupportedNode node);
 
         public TResult Visit(TContext context, ReferenceNode node);
+
+        public TResult Visit(TContext context, NameNode node);
 
         public TResult Visit(TContext context, StructuredReferenceNode node);
 

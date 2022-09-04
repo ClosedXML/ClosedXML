@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal struct XLRangeAddress : IXLRangeAddress, IEquatable<XLRangeAddress>
+    internal readonly struct XLRangeAddress : IXLRangeAddress, IEquatable<XLRangeAddress>
     {
         #region Static members
 

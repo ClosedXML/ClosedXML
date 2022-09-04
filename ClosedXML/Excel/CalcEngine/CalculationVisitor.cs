@@ -71,7 +71,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             var parameters = functionNode.Parameters;
             var pool = _argsPool.Rent(parameters.Count);
-            var args = new Span<AnyValue>(pool,0, parameters.Count);
+            var args = new Span<AnyValue>(pool, 0, parameters.Count);
             try
             {
                 for (var i = 0; i < parameters.Count; ++i)
@@ -87,53 +87,18 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)
         {
-            XLWorksheet worksheet = null;
-            if (node.Prefix is not null)
-            {
-                if (node.Prefix.File is not null)
-                    throw new NotImplementedException("References from other files are not yet implemented.");
+            return node.GetReference(context);
+        }
 
-                if (node.Prefix.FirstSheet is not null || node.Prefix.LastSheet is not null)
-                    throw new NotImplementedException("3D references are not yet implemented.");
-
-                var sheet = node.Prefix.Sheet;
-                if (!context.Workbook.TryGetWorksheet(sheet, out var worksheet1))
-                    return Error.CellReference;
-                worksheet = (XLWorksheet)worksheet1;
-            }
-
-            if (node.Type == ReferenceItemType.Cell || node.Type == ReferenceItemType.HRange || node.Type == ReferenceItemType.VRange)
-                return new Reference(new XLRangeAddress(worksheet, node.Address));
-
-            // Only reference of type range left
-            var rangeName = node.Address;
-            worksheet ??= context.Worksheet;
-            if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
-                return Error.NameNotRecognized;
-
-            // This is rather horrible, but basically copy from XLCalcEngine.GetExternalObject
-            // It's hard to count all things that are wrong with this, from hand parsing operator range union by XLNamedRange to recursion.
-            if (!namedRange.IsValid)
-                return Error.CellReference;
-
-            // Union (can easily be in the range) is one of the nodes that can't be in the root. Enclose in braces to make parser happy
-            // Range can be something like 1+2, not just a reference to some area.
-            var namedRangeFormula = namedRange.ToString();
-            namedRangeFormula = !namedRangeFormula.StartsWith("=") ? "=(" + namedRange + ")" : namedRangeFormula;
-            var rangeResult = context.CalcEngine.EvaluateExpression(namedRangeFormula, context.Workbook, context.Worksheet);
-            return rangeResult;
-
-            static bool TryGetNamedRange(IXLWorksheet ws, string name, out XLNamedRange range)
-            {
-                var found = ws.NamedRanges.TryGetValue(name, out var namedRange)
-                                    || ws.Workbook.NamedRanges.TryGetValue(name, out namedRange);
-                range = (XLNamedRange)namedRange;
-                return found;
-            }
+        public AnyValue Visit(CalcContext context, NameNode node)
+        {
+            return node.GetValue(context.Worksheet, context.CalcEngine);
         }
 
         public AnyValue Visit(CalcContext context, EmptyArgumentNode node)
-            => AnyValue.Blank;
+        {
+            return AnyValue.Blank;
+        }
 
         public AnyValue Visit(CalcContext context, NotSupportedNode node)
             => throw new NotImplementedException($"Evaluation of {node.FeatureName} is not implemented.");

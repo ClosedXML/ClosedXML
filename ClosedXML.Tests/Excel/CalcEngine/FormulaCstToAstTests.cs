@@ -91,7 +91,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "=FirstRange,A1B1",
                 new[] { MultiRangeFormula, "=", null, Union, GrammarNames.Reference, NamedRange, TokenName, null, null, null, GrammarNames.Reference, NamedRange, TokenNamedRangeCombination },
-                new[] { typeof(BinaryNode), typeof(ReferenceNode), null, typeof(ReferenceNode) });
+                new[] { typeof(BinaryNode), typeof(NameNode), null, typeof(NameNode) });
 
             // FormulaWithEq.Rule = eqop + Formula;
             yield return new TestCaseData(
@@ -339,7 +339,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "SomeRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode) });
+                new[] { typeof(NameNode) });
 
             // ReferenceItem.Rule = VRange
             yield return new TestCaseData(
@@ -406,25 +406,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "[1]!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, File, TokenFileNameNumeric, null, null, "!", null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode), typeof(FileNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode), typeof(FileNode) });
 
             // File.Rule = FileNameEnclosedInBracketsToken
             yield return new TestCaseData(
                 "[file with space.xlsx]!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, File, TokenFileNameEnclosedInBrackets, null, null, "!", null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode), typeof(FileNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode), typeof(FileNode) });
 
             // File.Rule = FilePathToken + FileNameEnclosedInBracketsToken
             yield return new TestCaseData(
                 @"C:\temp\[file with space.xlsx]!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, File, TokenFilePath, null, TokenFileNameEnclosedInBrackets, null, null, "!", null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode), typeof(FileNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode), typeof(FileNode) });
 
             // File.Rule = FilePathToken + FileName
             yield return new TestCaseData(
                 @"C:\temp\file.xlsx!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, File, TokenFilePath, null, TokenFileName, null, null, "!", null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode), typeof(FileNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode), typeof(FileNode) });
 
             // DDX - Windows only interprocess communication standard that uses a shared memory - that is the future :)
             // DynamicDataExchange.Rule = File + exclamationMark + SingleQuotedStringToken;
@@ -437,7 +437,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "A1Z5",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, NamedRange, TokenNamedRangeCombination },
-                new[] { typeof(ReferenceNode) });
+                new[] { typeof(NameNode) });
 
             // Prefix.Rule = SheetToken
             yield return new TestCaseData(
@@ -449,7 +449,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "'Name with space'!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, "'", null, TokenSheetQuoted, null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode) });
 
             // Prefix.Rule = File + SheetToken
             yield return new TestCaseData(
@@ -467,7 +467,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "[file.xlsx]!NamedRange",
                 new[] { GrammarNames.Formula, GrammarNames.Reference, Prefix, File, TokenFileNameEnclosedInBrackets, null, null, "!", null, null, NamedRange, TokenName },
-                new[] { typeof(ReferenceNode), typeof(PrefixNode), typeof(FileNode) });
+                new[] { typeof(NameNode), typeof(PrefixNode), typeof(FileNode) });
 
             // Prefix.Rule = MultipleSheetsToken
             yield return new TestCaseData(
@@ -766,6 +766,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             public override AstNode Visit(LinkedList<Type> context, ReferenceNode node)
                 => LinearizeNode(context, typeof(ReferenceNode), () => base.Visit(context, node));
+
+            public override AstNode Visit(LinkedList<Type> context, NameNode node)
+                => LinearizeNode(context, typeof(NameNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, StructuredReferenceNode node)
                 => LinearizeNode(context, typeof(StructuredReferenceNode), () => base.Visit(context, node));
