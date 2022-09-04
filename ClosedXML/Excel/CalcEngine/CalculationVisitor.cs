@@ -95,11 +95,6 @@ namespace ClosedXML.Excel.CalcEngine
             return node.GetValue(context.Worksheet, context.CalcEngine);
         }
 
-        public AnyValue Visit(CalcContext context, EmptyArgumentNode node)
-        {
-            return AnyValue.Blank;
-        }
-
         public AnyValue Visit(CalcContext context, NotSupportedNode node)
             => throw new NotImplementedException($"Evaluation of {node.FeatureName} is not implemented.");
 

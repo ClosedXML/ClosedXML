@@ -32,8 +32,6 @@ namespace ClosedXML.Excel.CalcEngine
                 : node;
         }
 
-        public virtual AstNode Visit(TContext context, EmptyArgumentNode node) => node;
-
         public virtual AstNode Visit(TContext context, ScalarNode node) => node;
 
         public virtual AstNode Visit(TContext context, ErrorNode node) => node;

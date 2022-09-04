@@ -195,11 +195,6 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error.CellReference;
             }
 
-            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, EmptyArgumentNode node)
-            {
-                return Error.CellReference;
-            }
-
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, ErrorNode node)
             {
                 return Error.CellReference;

@@ -239,7 +239,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { GrammarNames.Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments,
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionNode), typeof(EmptyArgumentNode), null, typeof(EmptyArgumentNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode), null, typeof(ScalarNode) });
 
             // Argument.Rule = Formula | EmptyArgument;
             yield return new TestCaseData(
@@ -248,7 +248,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, GrammarNames.Formula, Constant, Number, TokenNumber , null, null, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionNode), typeof(EmptyArgumentNode), null, typeof(ScalarNode), null, typeof(EmptyArgumentNode) });
+                new[] { typeof(FunctionNode), typeof(ScalarNode), null, typeof(ScalarNode), null, typeof(ScalarNode) });
 
             // PrefixOp.Rule = ImplyPrecedenceHere(Precedence.UnaryPreFix) + plusop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + minop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + at;
             yield return new TestCaseData(
@@ -754,9 +754,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             public override AstNode Visit(LinkedList<Type> context, FunctionNode node)
                 => LinearizeNode(context, typeof(FunctionNode), () => base.Visit(context, node));
-
-            public override AstNode Visit(LinkedList<Type> context, EmptyArgumentNode node)
-                => LinearizeNode(context, typeof(EmptyArgumentNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, ErrorNode node)
                 => LinearizeNode(context, typeof(ErrorNode), () => base.Visit(context, node));

@@ -533,8 +533,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void CreateEmptyArgumentNode(AstContext context, ParseTreeNode parseNode)
         {
-            // TODO: This is useless for AST, but kept for compatibility reasons with old parser and some function that use it.
-            parseNode.AstNode = new EmptyArgumentNode();
+            parseNode.AstNode = new ScalarNode(ScalarValue.Blank);
         }
 
         public void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)

@@ -22,13 +22,13 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     /// <summary>
-    /// AST node that contains a number, text or a bool.
+    /// AST node that contains a number, text or a bool or a blank value.
     /// </summary>
     internal class ScalarNode : ValueNode
     {
-        public ScalarNode(AnyValue value)
+        public ScalarNode(ScalarValue value)
         {
-            Value = value;
+            Value = value.ToAnyValue();
         }
 
         public AnyValue Value { get; }
@@ -134,15 +134,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
-
-    /// <summary>
-    /// Expression that represents an omitted parameter.
-    /// </summary>
-    internal class EmptyArgumentNode : ValueNode
-    {
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
+    
     // TODO: Merge with ScalarNode
     internal class ErrorNode : ValueNode
     {
