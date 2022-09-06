@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Extensions
         }
 
         [Test]
-        [TestCase(200, "X", 36.29, 2)]
+        [TestCase(200, "X", 38.29, 4)]
         [TestCase(20, "Very Wide Column", 36.8, 2)]
         [TestCase(72, "BigText", 51.29, 5)]
         [TestCase(8, "SmallText", 8.9, 2)]

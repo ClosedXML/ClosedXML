@@ -1,7 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Utils;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Extensions
@@ -109,7 +108,7 @@ namespace ClosedXML.Extensions
             // textWidthPoints vary between systems,
             // A linear factor that is calculated by a known combination of text, text size and known width looked up in ms excel in GetCachedWidthCalibration
             var columnWidth = (textWidthPoints + marginPoints) * systemSpecificScalingFactor;
-            return Math.Round(columnWidth, 6);
+            return columnWidth;
         }
 
         private static SKFont GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)

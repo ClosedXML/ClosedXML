@@ -181,7 +181,7 @@ namespace ClosedXML.Excel
             set
             {
                 ColumnWidthChanged = true;
-                _columnWidth = Math.Round(value, 6);
+                _columnWidth = value;
             }
         }
 

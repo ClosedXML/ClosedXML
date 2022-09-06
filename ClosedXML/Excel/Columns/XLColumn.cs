@@ -13,7 +13,6 @@ namespace ClosedXML.Excel
         #region Private fields
 
         private int _outlineLevel;
-        private double width;
 
         #endregion Private fields
 
@@ -65,7 +64,7 @@ namespace ClosedXML.Excel
 
         #region IXLColumn Members
 
-        public double Width { get => width; set => width = Math.Round(value, 6); }
+        public double Width { get; set; }
 
         public void Delete()
         {
@@ -406,7 +405,7 @@ namespace ClosedXML.Excel
                 colMaxWidth = Worksheet.ColumnWidth;
             }
 
-            Width = Math.Round(colMaxWidth, 6);
+            Width = colMaxWidth;
 
             foreach (IDisposable font in fontCache.Values)
             {
