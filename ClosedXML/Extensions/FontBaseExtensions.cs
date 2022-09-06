@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using ClosedXML.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ClosedXML.Extensions
 {
@@ -11,7 +12,7 @@ namespace ClosedXML.Extensions
         private const int maxExcelColumnWidth = 255;
         private const double knownExcelCellHeightForFontAvaliableOnMostOs150Pt = 188;
         private const double knownExcelCellWidthForVeryWideTextWithFontAvaliableOnMostOs20Pt = 36.8d;
-        private const string FontAvaliableOnMostOs = "DejaVu Serif";
+        private const string EmbeddedFont = "DejaVu Serif";
         private static double? CachedWidthCalibrationFactor;
         private static double? CachedHeightCalibrationFactor;
 
@@ -48,7 +49,7 @@ namespace ClosedXML.Extensions
             var xLFont = new XLFont
             {
                 FontSize = 150,
-                FontName = FontAvaliableOnMostOs
+                FontName = EmbeddedFont
             };
 
             var SystemSpecificWidthOfKnownWidth = SystemSpecificHeightCalculator(xLFont, fontCache, 1);
@@ -90,7 +91,7 @@ namespace ClosedXML.Extensions
             var xLFont = new XLFont
             {
                 FontSize = 20,
-                FontName = FontAvaliableOnMostOs
+                FontName = EmbeddedFont
             };
 
             var systemSpecificWidthOfKnownWidth = SystemSpecificWidthCalculator(xLFont, text, fontCache, 1);
@@ -116,7 +117,17 @@ namespace ClosedXML.Extensions
             if (!fontCache.TryGetValue(fontBase, out var font))
             {
                 using var fontManager = SKFontManager.CreateDefault();
-                var typeface = fontManager.MatchFamily(fontBase.FontName);
+
+                SKTypeface typeface = null;
+                if (fontBase.FontName == EmbeddedFont)
+                {
+                    using var embeddedFont = new MemoryStream(Properties.Resources.DejaVuSerif);
+                    typeface = fontManager.CreateTypeface(embeddedFont);
+                }
+                else
+                {
+                    typeface = fontManager.MatchFamily(fontBase.FontName);
+                }
                 font = new SKFont(typeface, (float)fontBase.FontSize);
                 fontCache.Add(fontBase, font);
             }

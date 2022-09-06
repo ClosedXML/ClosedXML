@@ -21,6 +21,8 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void BooleanValueSavesAsLowerCase()
         {
+            var expectedFilePath = @"Other\Formulas\BooleanFormulaValues.xlsx";
+
             using var wb = new XLWorkbook();
 
             // When a cell evaluates to a boolean value, the text in the XML has to be true/false (lowercase only) or 0/1
@@ -28,8 +30,9 @@ namespace ClosedXML.Tests.Excel.Saving
             {
                 var ws = wb.AddWorksheet();
                 ws.FirstCell().FormulaA1 = "=TRUE";
+
                 return wb;
-            }, @"Other\Formulas\BooleanFormulaValues.xlsx", evaluateFormulae: true);
+            }, expectedFilePath, evaluateFormulae: true);
         }
 
         [Test]
