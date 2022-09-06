@@ -48,6 +48,7 @@ namespace ClosedXML.Tests.Extensions
         }
 
         [Test]
+        [Platform("Win", Reason = "Expectation only fits windows system because the font calibri isn't available on other OSs")]
         [TestCase(200, "X", 29.57)]
         [TestCase(20, "Very Wide Column", 30.43)]
         [TestCase(72, "BigText", 43)]
@@ -75,7 +76,7 @@ namespace ClosedXML.Tests.Extensions
             var typeface = fontManager.MatchFamily(xLFont.FontName);
             if (typeface == null)
             {
-                Assert.Inconclusive("Could not find font Calibre on test host");
+                Assert.Inconclusive("Could not find font Calibri on test host, skipping test");
             }
         }
 
