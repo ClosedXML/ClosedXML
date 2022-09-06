@@ -40,7 +40,6 @@ using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
 using Outline = DocumentFormat.OpenXml.Drawing.Outline;
 using Path = System.IO.Path;
 using PatternFill = DocumentFormat.OpenXml.Spreadsheet.PatternFill;
-using Properties = DocumentFormat.OpenXml.ExtendedProperties.Properties;
 using RightBorder = DocumentFormat.OpenXml.Spreadsheet.RightBorder;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
@@ -545,7 +544,7 @@ namespace ClosedXML.Excel
         {
             if (extendedFilePropertiesPart.Properties == null)
             {
-                extendedFilePropertiesPart.Properties = new Properties();
+                extendedFilePropertiesPart.Properties = new DocumentFormat.OpenXml.ExtendedProperties.Properties();
             }
 
             var properties = extendedFilePropertiesPart.Properties;

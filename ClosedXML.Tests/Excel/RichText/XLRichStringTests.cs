@@ -718,6 +718,8 @@ namespace ClosedXML.Tests.Excel.RichText
         [Test]
         public void ClearInlineRichTextWhenRelevant()
         {
+            var expectedFilePath = @"Other\InlinedRichText\ChangeRichTextToFormula\output.xlsx";
+
             using var ms = new MemoryStream();
             TestHelper.CreateAndCompare(() =>
             {
@@ -745,8 +747,11 @@ namespace ClosedXML.Tests.Excel.RichText
 
                 ms.Seek(0, SeekOrigin.Begin);
 
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                //File.WriteAllBytes(expectedFileInVsSolution, ms.ToArray());
+
                 return wb2;
-            }, @"Other\InlinedRichText\ChangeRichTextToFormula\output.xlsx");
+            }, expectedFilePath);
         }
     }
 }

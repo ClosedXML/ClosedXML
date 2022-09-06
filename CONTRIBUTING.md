@@ -39,6 +39,34 @@ Now, to compare 2 similar, but not exact Excel files:
 * In Total Commander, you can also navigate to specific files in the left-hand and right-hand panes and select `File > Compare by Content...`. This will open WinMerge directly.
 * Note that since WinMerge reformats the XML, it does so in a temporary file. If you make changes to the contents of any of the 2 panes in WinMerge and save the file, it will not be saved back into the Excel file.
 
+#### Scripted diff preperation
+
+Powershell script to recursive extract and delete every xlsx in a directory.
+
+``` Powershell
+foreach ($file in Get-ChildItem -Recurse -Filter *.xlsx)
+  {
+  cp "$($file.FullName)" "$($file.FullName).zip"
+  Expand-Archive "$($file.FullName).zip" -DestinationPath "$($file.FullName).unzipped"
+  rm "$($file.FullName).zip"
+  rm "$($file.FullName)"
+  }
+```
+
+Commands to remove irrelevant XML format before comparing
+
+``` npm
+npm install -g prettier
+npm install -g prettier @prettier/plugin-xml
+prettier --write '**/*.xml'
+```
+
+On windows you can call winmerge using
+
+``` powershell
+& "C:\Program Files\WinMerge\WinMergeU.exe" .\Actual\ .\Expected\
+```
+
 ## Code conventions
 
 ClosedXML has a fairly large codebase and we therefore want to keep code revisions as clean and tidy as possible. It is therefore important not to introduce unnecessary whitespace changes in your commits.
