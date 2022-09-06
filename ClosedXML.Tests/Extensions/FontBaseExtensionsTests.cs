@@ -24,6 +24,8 @@ namespace ClosedXML.Tests.Extensions
                 FontName = "Calibri"
             };
 
+            MissingCalibriTestGuard(xLFont);
+
             var actualHeight = xLFont.GetHeight(fontCache);
             Assert.AreEqual(expectedHeight, actualHeight, toleratedDiff);
         }
@@ -46,7 +48,6 @@ namespace ClosedXML.Tests.Extensions
         }
 
         [Test]
-        [Platform("Win", Reason = "Expectation only fits windows system because the font calibri isn't available on other OSs")]
         [TestCase(200, "X", 29.57)]
         [TestCase(20, "Very Wide Column", 30.43)]
         [TestCase(72, "BigText", 43)]
@@ -62,8 +63,20 @@ namespace ClosedXML.Tests.Extensions
                 FontName = "Calibri"
             };
 
+            MissingCalibriTestGuard(xLFont);
+
             var actualWidth = xLFont.GetWidth(text, fontCache);
             Assert.AreEqual(expectedWidth, actualWidth, 3);
+        }
+
+        private static void MissingCalibriTestGuard(XLFont xLFont)
+        {
+            using var fontManager = SKFontManager.CreateDefault();
+            var typeface = fontManager.MatchFamily(xLFont.FontName);
+            if (typeface == null)
+            {
+                Assert.Inconclusive("Could not find font Calibre on test host");
+            }
         }
 
         [Test]
