@@ -318,7 +318,7 @@ namespace ClosedXML.Excel
                 rowMaxHeight = Worksheet.RowHeight;
             }
 
-            Height = Math.Round(rowMaxHeight, 1);
+            Height = rowMaxHeight;
 
             foreach (IDisposable font in fontCache.Values)
             {

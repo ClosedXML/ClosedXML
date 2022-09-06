@@ -102,14 +102,22 @@ namespace ClosedXML.Tests.Excel.Styles
         [Test]
         public void LoadAndSaveTransparentBackgroundFill()
         {
+            var expectedFilePath = @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx";
+
             using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx"));
             using var ms = new MemoryStream();
+
             TestHelper.CreateAndCompare(() =>
             {
                 var wb = new XLWorkbook(stream);
+
                 wb.SaveAs(ms);
+
+                //Uncomment to replace expectation running.net6.0,
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                //wb.SaveAs(expectedFileInVsSolution);
                 return wb;
-            }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
+            }, expectedFilePath);
         }
     }
 }

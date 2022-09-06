@@ -169,7 +169,13 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void InsertingData()
         {
-            TestHelper.RunTestExample<InsertingData>(@"Misc\InsertingData.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
+            var exepectation = @"Misc\InsertingData.xlsx";
+
+#if NETFRAMEWORK
+             exepectation = @"Misc\InsertingDataNetFramework.xlsx";
+#endif
+
+            TestHelper.RunTestExample<InsertingData>(exepectation, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]

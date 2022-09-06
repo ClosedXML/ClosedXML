@@ -11,7 +11,7 @@ namespace ClosedXML.Extensions
         private const int maxExcelColumnHeight = 409;
         private const int maxExcelColumnWidth = 255;
         private const double knownExcelCellHeightForFontAvaliableOnMostOs150Pt = 188;
-        private const double knownExcelCellWidthForVeryWideTextWithFontAvaliableOnMostOs20Pt = 34.29d;
+        private const double knownExcelCellWidthForVeryWideTextWithFontAvaliableOnMostOs20Pt = 36.8d;
         private const string FontAvaliableOnMostOs = "DejaVu Serif";
         private static double? CachedWidthCalibrationFactor;
         private static double? CachedHeightCalibrationFactor;
@@ -106,11 +106,10 @@ namespace ClosedXML.Extensions
             var marginPoints = ((font.Size * 0.4) + 8) / 1.326;
             var textWidthPoints = GraphicsUtils.MeasureString(text, font).Width;
 
-            // textWidthPoints seems to vary between systems,
+            // textWidthPoints vary between systems,
             // A linear factor that is calculated by a known combination of text, text size and known width looked up in ms excel in GetCachedWidthCalibration
             var columnWidth = (textWidthPoints + marginPoints) * systemSpecificScalingFactor;
-            var width = Math.Round(columnWidth, 2);
-            return width;
+            return Math.Round(columnWidth, 6);
         }
 
         private static SKFont GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)

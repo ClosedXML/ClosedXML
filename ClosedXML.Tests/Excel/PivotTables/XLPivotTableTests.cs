@@ -32,6 +32,8 @@ namespace ClosedXML.Tests.Excel.PivotTables
         [Test]
         public void TestPivotTableVersioningAttributes()
         {
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\VersioningAttributes\outputfile.xlsx";
+
             // Pivot table definitions in input file has created and refreshed versioning attributes = 3
             using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\VersioningAttributes\inputfile.xlsx"));
             TestHelper.CreateAndCompare(() =>
@@ -46,9 +48,13 @@ namespace ClosedXML.Tests.Excel.PivotTables
                 pt.RowLabels.Add("FullName");
                 pt.Values.Add("Id", "Count of Id").SetSummaryFormula(XLPivotSummary.Count);
 
+                //Uncomment to replace expectation running.net6.0,
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                //wb.SaveAs(expectedFileInVsSolution);
+
                 return wb;
                 // Pivot table definitions in output file has created and refreshed versioning attributes = 5
-            }, @"Other\PivotTableReferenceFiles\VersioningAttributes\outputfile.xlsx");
+            }, expectedFilePath);
         }
 
         [Test]
@@ -439,7 +445,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
                     ptSheet.Columns().AdjustToContents();
                 }
 
-                // Uncomment to replace expectation running .net6.0,
+                //Uncomment to replace expectation running.net6.0,
                 //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
                 //wb.SaveAs(expectedFileInVsSolution);
 
@@ -511,6 +517,9 @@ namespace ClosedXML.Tests.Excel.PivotTables
                 // Uncomment to replace expectation running .net6.0,
                 //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
                 //wb.SaveAs(expectedFileInVsSolution);
+                // Uncomment to replace expectation running .net4.8,
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("ClosedXML.Tests", "Resource", expectedFilePath));
+                //wb.SaveAs(expectedFileInVsSolution);
 
                 return wb;
             }, expectedFilePath, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
@@ -519,14 +528,23 @@ namespace ClosedXML.Tests.Excel.PivotTables
         [Test]
         public void PivotTableWithNoneTheme()
         {
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx";
+
             using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx"));
             using var ms = new MemoryStream();
+
             TestHelper.CreateAndCompare(() =>
             {
                 var wb = new XLWorkbook(stream);
+
                 wb.SaveAs(ms);
+
+                // Uncomment to replace expectation running .net6.0,
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                //wb.SaveAs(expectedFileInVsSolution);
+
                 return wb;
-            }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
+            }, expectedFilePath);
         }
 
         [Test]
@@ -744,6 +762,8 @@ namespace ClosedXML.Tests.Excel.PivotTables
         [Test]
         public void TwoPivotWithOneSourceTest()
         {
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx";
+
             using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx"));
             TestHelper.CreateAndCompare(() =>
             {
@@ -755,8 +775,12 @@ namespace ClosedXML.Tests.Excel.PivotTables
                     pt.SourceRange = srcRange;
                 }
 
+                //Uncomment to replace expectation running.net6.0,
+                //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                //wb.SaveAs(expectedFileInVsSolution);
+
                 return wb;
-            }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
+            }, expectedFilePath);
         }
 
         [Test]
