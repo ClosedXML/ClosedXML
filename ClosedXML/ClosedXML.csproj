@@ -47,7 +47,7 @@
 		<None Include="Product.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="2.17.1" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
 		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
 		  <PrivateAssets>all</PrivateAssets>
