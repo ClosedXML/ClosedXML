@@ -47,7 +47,7 @@
 		<None Include="Product.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.17.1" />
 		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
 		  <PrivateAssets>all</PrivateAssets>
@@ -55,7 +55,7 @@
 		</PackageReference>
 		<PackageReference Include="SkiaSharp" Version="2.80.2" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.40.0.48530">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.44.0.52574">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -63,5 +63,20 @@
 
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
 		<PackageReference Include="System.IO.Packaging" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 </Project>

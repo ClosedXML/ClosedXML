@@ -66,7 +66,10 @@ namespace ClosedXML.Tests
             }
 
             // Uncomment to replace expectation running .net6.0,
-            //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", "Examples", filePartName.Replace("\\", "/")));
+            //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "resource", "examples", filePartName.Replace("\\", "/")));
+            //File.Copy(filePath2, expectedFileInVsSolution, true);
+            // Uncomment to replace expectation running .net4.8,
+            //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("ClosedXML.Tests", "Resource", "Examples", filePartName.Replace("\\", "/")));
             //File.Copy(filePath2, expectedFileInVsSolution, true);
 
             if (CompareWithResources)
@@ -75,7 +78,7 @@ namespace ClosedXML.Tests
                 using var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath);
                 using var streamActual = File.OpenRead(filePath2);
                 var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out var message, ignoreColumnFormats);
-                var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
+                var formattedMessage = $"Actual file '{filePath2}' is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
                 if (success)
                 {

@@ -65,7 +65,7 @@ jobs:
           ./ClosedXML/bin/Release/*.snupkg
 
   deployTest:
-    if: github.ref != 'refs/heads/main'
+    if: github.ref == 'refs/heads/develop'
     runs-on: windows-latest
     needs: build
     steps:

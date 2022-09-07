@@ -21,9 +21,9 @@ namespace ClosedXML.Tests.Utils
         }
 
         //Exclude service data
-        private static bool ExcludeMethod(Uri uri) =>
-            uri.OriginalString.EndsWith(".rels") ||
-                uri.OriginalString.EndsWith(".psmdcp") ||
-                uri.OriginalString.EndsWith("app.xml");
+        private static bool ExcludeMethod(Uri uri)
+        {
+            return uri.OriginalString.EndsWith(".rels") || uri.OriginalString.EndsWith(".psmdcp") || uri.OriginalString.EndsWith("app.xml");
+        }
     }
 }

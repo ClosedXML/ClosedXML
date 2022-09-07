@@ -1,8 +1,8 @@
 using ClosedXML.Excel;
 using ClosedXML.Utils;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ClosedXML.Extensions
 {
@@ -10,8 +10,9 @@ namespace ClosedXML.Extensions
     {
         private const int maxExcelColumnHeight = 409;
         private const int maxExcelColumnWidth = 255;
-        private const int knownExcelCellHeightForVerdana200Pt = 288;
-        private const double knownExcelCellWidthForVeryWideTextVerdana20Pt = 36.535187641402715d;
+        private const double knownExcelCellHeightForFontAvaliableOnMostOs150Pt = 188;
+        private const double knownExcelCellWidthForVeryWideTextWithFontAvaliableOnMostOs20Pt = 36.8d;
+        private const string EmbeddedFont = "DejaVu Serif";
         private static double? CachedWidthCalibrationFactor;
         private static double? CachedHeightCalibrationFactor;
 
@@ -34,8 +35,8 @@ namespace ClosedXML.Extensions
         {
             var systemSpecificWidthScalingFactor = GetCachedHeightCalibration(fontCache);
             var height = SystemSpecificHeightCalculator(fontBase, fontCache, systemSpecificWidthScalingFactor);
-
-            return height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+            var heightLimitedToMaxExcelValue = height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+            return heightLimitedToMaxExcelValue;
         }
 
         private static double GetCachedHeightCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
@@ -47,22 +48,22 @@ namespace ClosedXML.Extensions
 
             var xLFont = new XLFont
             {
-                FontSize = 200,
-                FontName = "Verdana"
+                FontSize = 150,
+                FontName = EmbeddedFont
             };
 
             var SystemSpecificWidthOfKnownWidth = SystemSpecificHeightCalculator(xLFont, fontCache, 1);
-            CachedHeightCalibrationFactor = knownExcelCellHeightForVerdana200Pt / SystemSpecificWidthOfKnownWidth;
+            CachedHeightCalibrationFactor = knownExcelCellHeightForFontAvaliableOnMostOs150Pt / SystemSpecificWidthOfKnownWidth;
             return CachedHeightCalibrationFactor.Value;
         }
 
         private static double SystemSpecificHeightCalculator(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache, double systemSpecificHeightScalingFactor)
         {
             var font = GetCachedFont(fontBase, fontCache);
-            // textHeight seems to vary between systems,
+            // textHeight vary between systems,
             // A linear factor that is calculated by a known combination text size and known height looked up in ms excel in GetCachedHeightCalibration
             var textHeight = GraphicsUtils.MeasureString("X", font).Height;
-            var height = Math.Round(textHeight * systemSpecificHeightScalingFactor, 2);
+            var height = textHeight * systemSpecificHeightScalingFactor;
             return height;
         }
 
@@ -74,8 +75,8 @@ namespace ClosedXML.Extensions
             }
             var systemSpecificWidthScalingFactor = GetCachedWidthCalibration(fontCache);
             var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificWidthScalingFactor);
-
-            return width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
+            var widhtLimitedToMaxWidhPossibleInExcel = width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
+            return widhtLimitedToMaxWidhPossibleInExcel;
         }
 
         private static double GetCachedWidthCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
@@ -90,11 +91,11 @@ namespace ClosedXML.Extensions
             var xLFont = new XLFont
             {
                 FontSize = 20,
-                FontName = "Verdana"
+                FontName = EmbeddedFont
             };
 
             var systemSpecificWidthOfKnownWidth = SystemSpecificWidthCalculator(xLFont, text, fontCache, 1);
-            CachedWidthCalibrationFactor = knownExcelCellWidthForVeryWideTextVerdana20Pt / systemSpecificWidthOfKnownWidth;
+            CachedWidthCalibrationFactor = knownExcelCellWidthForVeryWideTextWithFontAvaliableOnMostOs20Pt / systemSpecificWidthOfKnownWidth;
 
             return CachedWidthCalibrationFactor.Value;
         }
@@ -104,11 +105,11 @@ namespace ClosedXML.Extensions
             var font = GetCachedFont(fontBase, fontCache);
             var marginPoints = ((font.Size * 0.4) + 8) / 1.326;
             var textWidthPoints = GraphicsUtils.MeasureString(text, font).Width;
-            // textWidthPoints seems to vary between systems,
+
+            // textWidthPoints vary between systems,
             // A linear factor that is calculated by a known combination of text, text size and known width looked up in ms excel in GetCachedWidthCalibration
             var columnWidth = (textWidthPoints + marginPoints) * systemSpecificScalingFactor;
-            var width = Math.Round(columnWidth, 2);
-            return width;
+            return columnWidth;
         }
 
         private static SKFont GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
@@ -116,7 +117,17 @@ namespace ClosedXML.Extensions
             if (!fontCache.TryGetValue(fontBase, out var font))
             {
                 using var fontManager = SKFontManager.CreateDefault();
-                var typeface = fontManager.MatchFamily(fontBase.FontName);
+
+                SKTypeface typeface = null;
+                if (fontBase.FontName == EmbeddedFont)
+                {
+                    using var embeddedFont = new MemoryStream(Properties.Resources.DejaVuSerif);
+                    typeface = fontManager.CreateTypeface(embeddedFont);
+                }
+                else
+                {
+                    typeface = fontManager.MatchFamily(fontBase.FontName);
+                }
                 font = new SKFont(typeface, (float)fontBase.FontSize);
                 fontCache.Add(fontBase, font);
             }
