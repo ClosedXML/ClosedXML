@@ -34,7 +34,6 @@ Now, to compare 2 similar, but not exact Excel files:
 * In Total Commander, navigate to the 1st file in the left-hand pane and the 2nd file in the right-hand pane.
 * Press `Ctrl+PageDown` to "enter" the package. You should see, among others, a `[Content_Types].xml` file in both panes.
 * You can now compare all package parts by selecting `Commands > Synchronize Dirs...`. Press `Compare`. This will do a full, recursive comparison. You can filter out parts that are identical.
-
 * You can select an item that differs and press `Ctrl+F3` to open the two parts in WinMerge and see the exact comparison of the part's contents. The XML files should automatically reformat/reindent to ease the comparison instead of showing the entire XML contents on a single line. This is the reason for requiring the `DisplayXMLFiles.dll` plugin.
 * In Total Commander, you can also navigate to specific files in the left-hand and right-hand panes and select `File > Compare by Content...`. This will open WinMerge directly.
 * Note that since WinMerge reformats the XML, it does so in a temporary file. If you make changes to the contents of any of the 2 panes in WinMerge and save the file, it will not be saved back into the Excel file.
