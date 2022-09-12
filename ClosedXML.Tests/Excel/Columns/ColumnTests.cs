@@ -247,5 +247,45 @@ namespace ClosedXML.Tests.Excel
 
             Assert.IsFalse(column.RangeAddress.IsValid);
         }
+
+        [Test]
+        public void AssignWorksheetColumnWidthWhenAllColumnsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            var columns = ws.Columns();
+
+            columns.Width = 100;
+
+            Assert.AreEqual(100, ws.Column("G").Width, XLHelper.Epsilon);
+            Assert.AreEqual(100, ws.ColumnWidth, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void PreserveWorksheetColumnWidthWhenNotAllColumnsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            var defaultColumnWidth = ws.ColumnWidth;
+            var columns = ws.Columns(1, XLHelper.MaxColumnNumber);
+
+            columns.Width = 100;
+
+            Assert.AreEqual(100, ws.Column("G").Width, XLHelper.Epsilon);
+            Assert.AreEqual(defaultColumnWidth, ws.ColumnWidth, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void PreserveWorksheetColumnWidthWhenUsedColumnsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            ws.Cells("A1:E5").Value = "Not empty";
+            var defaultColumnWidth = ws.ColumnWidth;
+            var columns = ws.ColumnsUsed(XLCellsUsedOptions.Contents);
+
+            columns.Width = 100;
+
+            Assert.AreEqual(100, ws.Column("C").Width, XLHelper.Epsilon);
+            Assert.AreEqual(defaultColumnWidth, ws.Column("G").Width, XLHelper.Epsilon);
+            Assert.AreEqual(defaultColumnWidth, ws.ColumnWidth, XLHelper.Epsilon);
+        }
     }
 }

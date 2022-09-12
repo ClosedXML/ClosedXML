@@ -972,7 +972,7 @@ namespace ClosedXML.Excel
 
         public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null)
         {
-            var rows = new XLRows(Worksheet, StyleValue);
+            var rows = new XLRows(worksheet: null, StyleValue);
             var rowsUsed = new HashSet<Int32>();
             Internals.RowsCollection.Keys.ForEach(r => rowsUsed.Add(r));
             Internals.CellsCollection.RowsUsed.Keys.ForEach(r => rowsUsed.Add(r));
@@ -1001,7 +1001,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null)
         {
-            var columns = new XLColumns(Worksheet, StyleValue);
+            var columns = new XLColumns(worksheet: null, StyleValue);
             var columnsUsed = new HashSet<Int32>();
             Internals.ColumnsCollection.Keys.ForEach(r => columnsUsed.Add(r));
             Internals.CellsCollection.ColumnsUsed.Keys.ForEach(r => columnsUsed.Add(r));
