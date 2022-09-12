@@ -303,5 +303,45 @@ namespace ClosedXML.Tests.Excel
             ws.Column(1).Width = 100;
             Assert.DoesNotThrow(() => ws.Row(1).Delete());
         }
+
+        [Test]
+        public void AssignWorksheetRowHeightWhenAllRowsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            var rows = ws.Rows();
+
+            rows.Height = 30;
+
+            Assert.AreEqual(30, ws.Row(11).Height, XLHelper.Epsilon);
+            Assert.AreEqual(30, ws.RowHeight, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void PreserveWorksheetRowHeightWhenNotAllRowsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            var defaultRowHeight = ws.RowHeight;
+            var rows = ws.Rows(1, XLHelper.MaxRowNumber);
+
+            rows.Height = 30;
+
+            Assert.AreEqual(30, ws.Row(11).Height, XLHelper.Epsilon);
+            Assert.AreEqual(defaultRowHeight, ws.RowHeight, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void PreserveWorksheetRowHeightWhenUsedRowsChanged()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            ws.Cells("A1:E5").Value = "Not empty";
+            var defaultRowHeight = ws.RowHeight;
+            var rows = ws.RowsUsed(XLCellsUsedOptions.Contents);
+
+            rows.Height = 30;
+
+            Assert.AreEqual(30, ws.Row(3).Height, XLHelper.Epsilon);
+            Assert.AreEqual(defaultRowHeight, ws.Row(11).Height, XLHelper.Epsilon);
+            Assert.AreEqual(defaultRowHeight, ws.RowHeight, XLHelper.Epsilon);
+        }
     }
 }
