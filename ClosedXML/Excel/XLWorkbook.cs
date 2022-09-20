@@ -667,6 +667,60 @@ namespace ClosedXML.Excel
             LoadSheetsFromTemplate(file);
         }
 
+        /// <summary>
+        ///   Opens an existing workbook from a file.
+        /// </summary>
+        /// <param name = "file">The file to open.</param>
+        public XLWorkbook(String file)
+            : this(file, XLEventTracking.Enabled)
+        {
+        }
+
+        public XLWorkbook(String file, LoadOptions loadOptions)
+            : this(file, loadOptions.EventTracking)
+        {
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
+        }
+
+        public XLWorkbook(String file, XLEventTracking eventTracking)
+            : this(eventTracking)
+        {
+            _loadSource = XLLoadSource.File;
+            _originalFile = file;
+            _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
+            Load(file);
+        }
+
+        /// <summary>
+        ///   Opens an existing workbook from a stream.
+        /// </summary>
+        /// <param name = "stream">The stream to open.</param>
+        public XLWorkbook(Stream stream)
+            : this(stream, XLEventTracking.Enabled)
+        {
+        }
+
+        public XLWorkbook(Stream stream, LoadOptions loadOptions)
+            : this(stream, loadOptions.EventTracking)
+        {
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
+        }
+
+        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
+            : this(eventTracking)
+        {
+            _loadSource = XLLoadSource.Stream;
+            _originalStream = stream;
+            Load(stream);
+        }
+
+        public XLWorkbook(LoadOptions loadOptions)
+            : this(loadOptions.EventTracking)
+        {
+        }
+
         public XLWorkbook(XLEventTracking eventTracking)
         {
             EventTracking = eventTracking;
@@ -695,60 +749,6 @@ namespace ClosedXML.Excel
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;
-        }
-
-        public XLWorkbook(LoadOptions loadOptions)
-            : this(loadOptions.EventTracking)
-        {
-        }
-
-        /// <summary>
-        ///   Opens an existing workbook from a file.
-        /// </summary>
-        /// <param name = "file">The file to open.</param>
-        public XLWorkbook(String file)
-            : this(file, XLEventTracking.Enabled)
-        {
-        }
-
-        public XLWorkbook(String file, XLEventTracking eventTracking)
-            : this(eventTracking)
-        {
-            _loadSource = XLLoadSource.File;
-            _originalFile = file;
-            _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
-            Load(file);
-        }
-
-        public XLWorkbook(String file, LoadOptions loadOptions)
-            : this(file, loadOptions.EventTracking)
-        {
-            if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
-        }
-
-        /// <summary>
-        ///   Opens an existing workbook from a stream.
-        /// </summary>
-        /// <param name = "stream">The stream to open.</param>
-        public XLWorkbook(Stream stream)
-            : this(stream, XLEventTracking.Enabled)
-        {
-        }
-
-        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
-            : this(eventTracking)
-        {
-            _loadSource = XLLoadSource.Stream;
-            _originalStream = stream;
-            Load(stream);
-        }
-
-        public XLWorkbook(Stream stream, LoadOptions loadOptions)
-            : this(stream, loadOptions.EventTracking)
-        {
-            if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
         }
 
         #endregion Constructor
