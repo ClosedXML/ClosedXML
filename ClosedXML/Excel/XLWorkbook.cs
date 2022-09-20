@@ -701,29 +701,30 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLWorkbook(Stream stream, LoadOptions loadOptions)
-            : this(stream, loadOptions.EventTracking)
+        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
+            : this(stream, new LoadOptions { EventTracking = eventTracking })
         {
-            if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
         }
 
-        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
-            : this(eventTracking)
+        public XLWorkbook(Stream stream, LoadOptions loadOptions)
+            : this(loadOptions)
         {
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
             Load(stream);
-        }
 
-        public XLWorkbook(LoadOptions loadOptions)
-            : this(loadOptions.EventTracking)
-        {
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
         }
 
         public XLWorkbook(XLEventTracking eventTracking)
+            : this(new LoadOptions { EventTracking = eventTracking })
         {
-            EventTracking = eventTracking;
+        }
+
+        public XLWorkbook(LoadOptions loadOptions)
+        {
+            EventTracking = loadOptions.EventTracking;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
