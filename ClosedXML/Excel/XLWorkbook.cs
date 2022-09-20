@@ -667,6 +667,11 @@ namespace ClosedXML.Excel
             LoadSheetsFromTemplate(file);
         }
 
+        public XLWorkbook(XLEventTracking eventTracking)
+            : this(new LoadOptions { EventTracking = eventTracking })
+        {
+        }
+
         /// <summary>
         ///   Opens an existing workbook from a file.
         /// </summary>
@@ -676,20 +681,21 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLWorkbook(String file, LoadOptions loadOptions)
-            : this(file, loadOptions.EventTracking)
+        public XLWorkbook(String file, XLEventTracking eventTracking)
+            : this(file, new LoadOptions { EventTracking = eventTracking })
         {
-            if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
         }
 
-        public XLWorkbook(String file, XLEventTracking eventTracking)
-            : this(eventTracking)
+        public XLWorkbook(String file, LoadOptions loadOptions)
+            : this(loadOptions)
         {
             _loadSource = XLLoadSource.File;
             _originalFile = file;
             _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
             Load(file);
+
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
         }
 
         /// <summary>
@@ -715,11 +721,6 @@ namespace ClosedXML.Excel
 
             if (loadOptions.RecalculateAllFormulas)
                 this.RecalculateAllFormulas();
-        }
-
-        public XLWorkbook(XLEventTracking eventTracking)
-            : this(new LoadOptions { EventTracking = eventTracking })
-        {
         }
 
         public XLWorkbook(LoadOptions loadOptions)
