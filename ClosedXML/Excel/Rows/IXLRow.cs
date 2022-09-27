@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         /// Gets or sets the height of this row.
         /// </summary>
         /// <value>
-        /// The width of this row.
+        /// The width of this row in points.
         /// </value>
         Double Height { get; set; }
 

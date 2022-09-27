@@ -15,6 +15,9 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         XLPictureFormat Format { get; }
 
+        /// <summary>
+        /// Current height of the picture in pixels.
+        /// </summary>
         Int32 Height { get; set; }
 
         Int32 Id { get; }
@@ -25,8 +28,14 @@ namespace ClosedXML.Excel.Drawings
 
         String Name { get; set; }
 
+        /// <summary>
+        /// Original height of the picture in pixels.
+        /// </summary>
         Int32 OriginalHeight { get; }
 
+        /// <summary>
+        /// Original width of the picture in pixels.
+        /// </summary>
         Int32 OriginalWidth { get; }
 
         XLPicturePlacement Placement { get; set; }
@@ -35,6 +44,9 @@ namespace ClosedXML.Excel.Drawings
 
         IXLCell TopLeftCell { get; }
 
+        /// <summary>
+        /// Current width of the picture in pixels.
+        /// </summary>
         Int32 Width { get; set; }
 
         IXLWorksheet Worksheet { get; }

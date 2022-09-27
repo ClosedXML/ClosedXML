@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         /// Gets or sets the width of this column.
         /// </summary>
         /// <value>
-        /// The width of this column.
+        /// The width the column as multiple of 0-9 digit character with maximum width.
         /// </value>
         Double Width { get; set; }
 
