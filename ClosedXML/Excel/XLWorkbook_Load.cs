@@ -1244,31 +1244,35 @@ namespace ClosedXML.Excel
 
         // This may be part of XLHelper or XLColor
         // Leaving it here for now. Can't decide what to call it and where to put it.
-        private XLColor ExtractColor(String color)
+        /// <summary>
+        /// Parse VML ST_ColorType type from ECMA-376, Part 4 §20.1.2.3.
+        /// </summary>
+        private XLColor ExtractVmlSimpleColor(String color)
         {
-            if (color.IndexOf("[") >= 0)
+            var isPaletteEntry = color.IndexOf("[") >= 0;
+            if (isPaletteEntry)
             {
                 int start = color.IndexOf("[") + 1;
                 int end = color.IndexOf("]", start);
                 return XLColor.FromIndex(Int32.Parse(color.Substring(start, end - start)));
             }
-            else
-            {
-                return XLColor.FromHtml(color);
-            }
+
+            return color.StartsWith("#", StringComparison.Ordinal)
+                ? XLColor.FromHtml(color)
+                : XLColor.FromName(color);
         }
 
         private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)
         {
             var strokeColor = shape.Attribute("strokecolor");
-            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = ExtractColor(strokeColor.Value);
+            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = ExtractVmlSimpleColor(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
             if (strokeWeight != null && TryGetPtValue(strokeWeight.Value, out var lineWeight))
                 drawing.Style.ColorsAndLines.LineWeight = lineWeight;
 
             var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = ExtractColor(fillColor.Value);
+            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = ExtractVmlSimpleColor(fillColor.Value);
 
             var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)
@@ -2715,7 +2719,7 @@ namespace ClosedXML.Excel
                 if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
                 if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
 
-                if (slg.AxisColor != null) xlSparklineGroup.HorizontalAxis.Color = ExtractColor(slg.AxisColor.Rgb.Value);
+                if (slg.AxisColor != null) xlSparklineGroup.HorizontalAxis.Color = XLColor.FromHtml(slg.AxisColor.Rgb.Value);
                 if (slg.DisplayXAxis != null) xlSparklineGroup.HorizontalAxis.IsVisible = slg.DisplayXAxis;
                 if (slg.RightToLeft != null) xlSparklineGroup.HorizontalAxis.RightToLeft = slg.RightToLeft;
 

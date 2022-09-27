@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NUnit.Framework;
+using System.Globalization;
+using System.Threading;
 using Color = System.Drawing.Color;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
@@ -169,6 +171,17 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColorType.Theme, xlColor4.ColorType);
             Assert.AreEqual(XLThemeColor.Accent1, xlColor4.ThemeColor);
             Assert.AreEqual(0.4, xlColor4.ThemeTint, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void CanParseColorWithHashAsCultureLineSeparator()
+        {
+            // https://github.com/ClosedXML/ClosedXML/issues/675
+            var culture = CultureInfo.CreateSpecificCulture("en-US");
+            culture.TextInfo.ListSeparator = "#";
+            Thread.CurrentThread.CurrentCulture = culture;
+            var color = XLColor.FromHtml("#FF008000");
+            Assert.AreEqual(XLColor.Green, color);
         }
     }
 }

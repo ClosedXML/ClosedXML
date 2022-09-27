@@ -57,7 +57,7 @@ namespace ClosedXML.Excel
 
         public static XLColor FromHtml(String htmlColor)
         {
-            return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
+            return FromColor(ColorStringParser.ParseFromArgb(htmlColor));
         }
 
         public static XLColor FromIndex(Int32 index)

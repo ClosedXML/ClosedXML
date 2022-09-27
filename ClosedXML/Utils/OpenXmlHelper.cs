@@ -100,7 +100,7 @@ namespace ClosedXML.Utils
                     String htmlColor = "#" + openXMLColor.Rgb.Value;
                     if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
                     {
-                        thisColor = ColorStringParser.ParseFromHtml(htmlColor);
+                        thisColor = ColorStringParser.ParseFromArgb(htmlColor);
                         colorCache?.Add(htmlColor, thisColor);
                     }
 
