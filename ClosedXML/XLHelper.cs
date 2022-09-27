@@ -21,8 +21,8 @@ namespace ClosedXML.Excel
 
         public static String LastCell { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
 
-        private static readonly Lazy<Graphics> graphics = new Lazy<Graphics>(() => Graphics.FromImage(new Bitmap(200, 200)));
-        internal static Graphics Graphics { get => graphics.Value; }
+        private static readonly Lazy<System.Drawing.Graphics> graphics = new Lazy<System.Drawing.Graphics>(() => System.Drawing.Graphics.FromImage(new Bitmap(200, 200)));
+        internal static System.Drawing.Graphics Graphics { get => graphics.Value; }
         internal static Double DpiX { get => Graphics.DpiX; }
 
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;

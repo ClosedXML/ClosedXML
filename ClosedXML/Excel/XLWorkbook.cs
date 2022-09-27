@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Graphics;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -125,6 +126,8 @@ namespace ClosedXML.Excel
         /// has to be recalculated.
         /// </summary>
         internal long RecalculationCounter { get; private set; }
+
+        internal IXLGraphicEngine GraphicEngine { get; }
 
         internal double DpiX { get; }
 
@@ -732,6 +735,7 @@ namespace ClosedXML.Excel
             EventTracking = loadOptions.EventTracking;
             DpiX = loadOptions.Dpi.X;
             DpiY = loadOptions.Dpi.Y;
+            GraphicEngine = loadOptions.GraphicEngine ?? LoadOptions.DefaultGraphicsEngine ?? DefaultGraphicEngine.Instance.Value;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;

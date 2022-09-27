@@ -1,6 +1,7 @@
 ﻿// Keep this file CodeMaid organized and cleaned
 using System;
 using System.Drawing;
+using ClosedXML.Graphics;
 
 namespace ClosedXML.Excel
 {
@@ -11,12 +12,22 @@ namespace ClosedXML.Excel
     {
         private Point _dpi = new(96, 96);
 
+        /// <summary>
+        /// A graphics engine that will be used for workbooks without explicitely set engine.
+        /// </summary>
+        public static IXLGraphicEngine DefaultGraphicsEngine { internal get; set; }
+
         public XLEventTracking EventTracking { get; set; } = XLEventTracking.Enabled;
 
         /// <summary>
         /// Should all formulas in a workbook be recalculated during load? Default value is <c>false</c>.
         /// </summary>
         public Boolean RecalculateAllFormulas { get; set; } = false;
+
+        /// <summary>
+        /// Graphic engine used by the workbook.
+        /// </summary>
+        public IXLGraphicEngine GraphicEngine { get; set; }
 
         /// <summary>
         /// DPI for the workbook. Default is 96.
