@@ -126,6 +126,10 @@ namespace ClosedXML.Excel
         /// </summary>
         internal long RecalculationCounter { get; private set; }
 
+        internal double DpiX { get; }
+
+        internal double DpiY { get; }
+
         /// <summary>
         /// Notify that workbook data has been changed which means that cached formula values
         /// need to be re-evaluated.
@@ -726,6 +730,8 @@ namespace ClosedXML.Excel
         public XLWorkbook(LoadOptions loadOptions)
         {
             EventTracking = loadOptions.EventTracking;
+            DpiX = loadOptions.Dpi.X;
+            DpiY = loadOptions.Dpi.Y;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
