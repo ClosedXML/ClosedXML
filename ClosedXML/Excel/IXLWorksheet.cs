@@ -1,7 +1,6 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using ClosedXML.Excel.Drawings;
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel
@@ -480,10 +479,6 @@ namespace ClosedXML.Excel
         IXLPicture AddPicture(Stream stream, XLPictureFormat format);
 
         IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
-
-        IXLPicture AddPicture(Bitmap bitmap);
-
-        IXLPicture AddPicture(Bitmap bitmap, String name);
 
         IXLPicture AddPicture(String imageFile);
 

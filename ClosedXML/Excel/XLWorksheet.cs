@@ -4,7 +4,6 @@ using ClosedXML.Excel.Drawings;
 using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
@@ -1792,16 +1791,6 @@ namespace ClosedXML.Excel
         public IXLPicture AddPicture(Stream stream, XLPictureFormat format, string name)
         {
             return Pictures.Add(stream, format, name);
-        }
-
-        public IXLPicture AddPicture(Bitmap bitmap)
-        {
-            return Pictures.Add(bitmap);
-        }
-
-        public IXLPicture AddPicture(Bitmap bitmap, string name)
-        {
-            return Pictures.Add(bitmap, name);
         }
 
         public IXLPicture AddPicture(string imageFile)

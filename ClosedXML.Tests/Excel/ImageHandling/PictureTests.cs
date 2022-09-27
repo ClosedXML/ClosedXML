@@ -14,28 +14,6 @@ namespace ClosedXML.Tests
     public class PictureTests
     {
         [Test]
-        public void CanAddPictureFromBitmap()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-
-                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
-                {
-                    var picture = ws.AddPicture(bitmap, "MyPicture")
-                        .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50)
-                        .WithSize(200, 200);
-
-                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                    Assert.AreEqual(200, picture.Width);
-                    Assert.AreEqual(200, picture.Height);
-                }
-            }
-        }
-
-        [Test]
         public void CanAddPictureFromStream()
         {
             using (var wb = new XLWorkbook())

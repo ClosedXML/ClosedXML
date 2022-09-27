@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -53,21 +52,6 @@ namespace ClosedXML.Excel.Drawings
         public IXLPicture Add(Stream stream, XLPictureFormat format, string name)
         {
             var picture = Add(stream, format);
-            picture.Name = name;
-            return picture;
-        }
-
-        public IXLPicture Add(Bitmap bitmap)
-        {
-            var picture = new XLPicture(_worksheet, bitmap);
-            _pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
-        }
-
-        public IXLPicture Add(Bitmap bitmap, string name)
-        {
-            var picture = Add(bitmap);
             picture.Name = name;
             return picture;
         }

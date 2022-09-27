@@ -304,13 +304,12 @@ namespace ClosedXML.Tests.Excel.Saving
         {
             using (var ms = new MemoryStream())
             using (var wb = new XLWorkbook())
-            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
-            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            using (var imageStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("D4").Value = "Hello world.";
 
-                ws.AddPicture(bitmap, "MyPicture")
+                ws.AddPicture(imageStream, "MyPicture")
                     .WithPlacement(XLPicturePlacement.FreeFloating)
                     .MoveTo(50, 50)
                     .WithSize(200, 200);
