@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Graphics\NotoSansDisplay.fon" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\resources\logo\nuget-logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
@@ -25,7 +29,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="System.Buffers" Version="4.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
     <PackageReference Include="System.IO.Packaging" Version="4.7.0" />
     <PackageReference Include="System.Memory" Version="4.5.0" />
     <PackageReference Include="XLParser" Version="1.5.2" />
