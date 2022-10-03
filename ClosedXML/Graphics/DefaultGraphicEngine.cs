@@ -68,13 +68,13 @@ namespace ClosedXML.Graphics
         public double GetAscent(IXLFontBase fontBase)
         {
             var fontMetric = _fontMetric.Value;
-            return (fontMetric.UnitsPerEm - fontMetric.Descent) / (double)fontMetric.UnitsPerEm;
+            return (fontMetric.UnitsPerEm - fontMetric.Descent) * fontBase.FontSize / fontMetric.UnitsPerEm;
         }
 
         public double GetDescent(IXLFontBase fontBase)
         {
             var fontMetric = _fontMetric.Value;
-            return fontMetric.Descent / (double)fontMetric.UnitsPerEm;
+            return fontMetric.Descent * fontBase.FontSize / fontMetric.UnitsPerEm;
         }
 
         private static FontMetric ReadEmbeddedFont(string embeddedFontName)
