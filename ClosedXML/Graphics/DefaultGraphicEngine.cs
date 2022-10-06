@@ -5,17 +5,30 @@ using ClosedXML.Excel.Drawings;
 
 namespace ClosedXML.Graphics
 {
-    internal partial class DefaultGraphicEngine : IXLGraphicEngine
+    public class DefaultGraphicEngine : IXLGraphicEngine
     {
-        public static readonly Lazy<DefaultGraphicEngine> Instance = new();
+        /// <summary>
+        /// An engine that contains an embedded Noto Sans Display font that is used for all text measurements.
+        /// </summary>
+        public static readonly Lazy<DefaultGraphicEngine> Embedded = new(() => new DefaultGraphicEngine(() => ReadEmbeddedFont("NotoSansDisplay.fon")));
 
-        private readonly Lazy<FontMetric> _fontMetric = new(() => ReadFontMetric("NotoSansDisplay.fon"));
+        /// <summary>
+        /// An engine that uses external font file (%SystemRoot%/Fonts/calibri.ttf) for all text measurements. If not found (non-Windows environments), an exception will be thrown.
+        /// </summary>
+        public static readonly Lazy<DefaultGraphicEngine> External = new(() => new DefaultGraphicEngine(() => ReadSystemFont("calibri.ttf")));
+
+        private readonly Lazy<FontMetric> _fontMetric;
         private readonly ImageMetadataReader[] _imageReaders =
         {
             new PngMetadataReader(),
             new JpegMetadataReader(),
             new EmfMetadataReader(),
         };
+
+        private DefaultGraphicEngine(Func<FontMetric> createFont)
+        {
+            _fontMetric = new Lazy<FontMetric>(createFont);
+        }
 
         public XLPictureMetadata GetPictureMetadata(Stream stream, XLPictureFormat expectedFormat)
         {
@@ -64,10 +77,17 @@ namespace ClosedXML.Graphics
             return fontMetric.Descent / (double)fontMetric.UnitsPerEm;
         }
 
-        private static FontMetric ReadFontMetric(string embeddedFontName)
+        private static FontMetric ReadEmbeddedFont(string embeddedFontName)
         {
             using var stream = typeof(DefaultGraphicEngine).Assembly.GetManifestResourceStream($"ClosedXML.Graphics.{embeddedFontName}");
-            return new FontMetric(stream);
+            return FontMetric.LoadFromEmbedded(stream);
+        }
+
+        private static FontMetric ReadSystemFont(string fontFileName)
+        {
+            var fontPath = Environment.ExpandEnvironmentVariables(FormattableString.Invariant($"%SystemRoot%/Fonts/{fontFileName}"));
+            using var stream = File.OpenRead(fontPath);
+            return FontMetric.LoadTrueType(stream);
         }
     }
 }
