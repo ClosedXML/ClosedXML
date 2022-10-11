@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         /// Gets or sets the width of this column.
         /// </summary>
         /// <value>
-        /// The width the column as multiple of 0-9 digit character with maximum width.
+        /// The width of the column as multiple of maximum digit width (MDW). MDW is a maximum width of a 0-9 digit character.
         /// </value>
         Double Width { get; set; }
 

@@ -586,8 +586,7 @@ namespace ClosedXML.Excel
                 return 0;
             var wb = Worksheet.Workbook;
             var engine = wb.GraphicEngine;
-            var widthInPt = engine.GetTextWidth(text, font);
-            var widthInPx = widthInPt / 72d * wb.DpiX;
+            var widthInPx = engine.GetTextWidth(text, font, wb.DpiX);
 
             var width = (widthInPx / 7d * 256 - 128 / 7) / 256;
             width = Math.Round(width + 0.2, 2);

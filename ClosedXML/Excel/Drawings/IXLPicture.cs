@@ -16,6 +16,11 @@ namespace ClosedXML.Excel.Drawings
         XLPictureFormat Format { get; }
 
         /// <summary>
+        /// Current width of the picture in pixels.
+        /// </summary>
+        Int32 Width { get; set; }
+
+        /// <summary>
         /// Current height of the picture in pixels.
         /// </summary>
         Int32 Height { get; set; }
@@ -43,11 +48,6 @@ namespace ClosedXML.Excel.Drawings
         Int32 Top { get; set; }
 
         IXLCell TopLeftCell { get; }
-
-        /// <summary>
-        /// Current width of the picture in pixels.
-        /// </summary>
-        Int32 Width { get; set; }
 
         IXLWorksheet Worksheet { get; }
 

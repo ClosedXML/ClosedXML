@@ -10,14 +10,26 @@ namespace ClosedXML.Graphics
         /// <summary>
         /// An engine that contains an embedded Noto Sans Display font that is used for all text measurements.
         /// </summary>
-        public static readonly Lazy<DefaultGraphicEngine> Embedded = new(() => new DefaultGraphicEngine(() => ReadEmbeddedFont("NotoSansDisplay.fon")));
+        public static readonly Lazy<DefaultGraphicEngine> Embedded = new(() => new DefaultGraphicEngine(ReadEmbeddedFont("NotoSansDisplay.fon")));
 
         /// <summary>
         /// An engine that uses external font file (%SystemRoot%/Fonts/calibri.ttf) for all text measurements. If not found (non-Windows environments), an exception will be thrown.
         /// </summary>
-        public static readonly Lazy<DefaultGraphicEngine> External = new(() => new DefaultGraphicEngine(() => ReadSystemFont("calibri.ttf")));
+        public static readonly Lazy<DefaultGraphicEngine> External = new(() => new DefaultGraphicEngine(ReadSystemFont("calibri.ttf")));
 
-        private readonly Lazy<FontMetric> _fontMetric;
+        internal static Lazy<DefaultGraphicEngine> Instance { get; } = new(() =>
+        {
+            try
+            {
+                return External.Value;
+            }
+            catch
+            {
+                return Embedded.Value;
+            }
+        });
+
+        private readonly FontMetric _fontMetric;
         private readonly ImageMetadataReader[] _imageReaders =
         {
             new PngMetadataReader(),
@@ -25,9 +37,9 @@ namespace ClosedXML.Graphics
             new EmfMetadataReader(),
         };
 
-        private DefaultGraphicEngine(Func<FontMetric> createFont)
+        private DefaultGraphicEngine(FontMetric fontMetric)
         {
-            _fontMetric = new Lazy<FontMetric>(createFont);
+            _fontMetric = fontMetric;
         }
 
         public XLPictureMetadata GetPictureMetadata(Stream stream, XLPictureFormat expectedFormat)
@@ -41,40 +53,34 @@ namespace ClosedXML.Graphics
             throw new ArgumentException("Unable to determine the format of the image.");
         }
 
-        public double GetTextHeight(IXLFontBase textFont)
+        public double GetTextHeight(IXLFontBase textFont, double dpiY)
         {
-            var fontMetric = _fontMetric.Value;
+            var fontMetric = _fontMetric;
             var heightInFontUnits = fontMetric.Ascent + 2 * fontMetric.Descent;
             var pointsPerFontUnits = textFont.FontSize / fontMetric.UnitsPerEm;
-            return heightInFontUnits * pointsPerFontUnits;
+            return XLHelper.PointsToPixels(heightInFontUnits * pointsPerFontUnits, dpiY);
         }
 
-        public double GetTextWidth(string text, IXLFontBase textFont)
+        public double GetTextWidth(string text, IXLFontBase textFont, double dpiX)
         {
-            var fontMetric = _fontMetric.Value;
+            var fontMetric = _fontMetric;
             var widthInFontUnits = 0;
             foreach (var textCharacter in text)
                 widthInFontUnits += fontMetric.GetAdvanceWidth(textCharacter);
 
-            return widthInFontUnits * textFont.FontSize / fontMetric.UnitsPerEm;
+            return XLHelper.PointsToPixels(widthInFontUnits * textFont.FontSize / fontMetric.UnitsPerEm, dpiX);
         }
 
-        public double GetMaxDigitWidth(IXLFontBase textFont)
+        public double GetMaxDigitWidth(IXLFontBase textFont, double dpiX)
         {
-            var fontMetric = _fontMetric.Value;
-            return fontMetric.MaxDigitWidth * textFont.FontSize / fontMetric.UnitsPerEm;
+            var fontMetric = _fontMetric;
+            return XLHelper.PointsToPixels(fontMetric.MaxDigitWidth * textFont.FontSize / fontMetric.UnitsPerEm, dpiX);
         }
 
-        public double GetAscent(IXLFontBase fontBase)
+        public double GetDescent(IXLFontBase fontBase, double dpiY)
         {
-            var fontMetric = _fontMetric.Value;
-            return (fontMetric.UnitsPerEm - fontMetric.Descent) * fontBase.FontSize / fontMetric.UnitsPerEm;
-        }
-
-        public double GetDescent(IXLFontBase fontBase)
-        {
-            var fontMetric = _fontMetric.Value;
-            return fontMetric.Descent * fontBase.FontSize / fontMetric.UnitsPerEm;
+            var fontMetric = _fontMetric;
+            return XLHelper.PointsToPixels(fontMetric.Descent * fontBase.FontSize / fontMetric.UnitsPerEm, dpiY);
         }
 
         private static FontMetric ReadEmbeddedFont(string embeddedFontName)
@@ -85,9 +91,19 @@ namespace ClosedXML.Graphics
 
         private static FontMetric ReadSystemFont(string fontFileName)
         {
-            var fontPath = Environment.ExpandEnvironmentVariables(FormattableString.Invariant($"%SystemRoot%/Fonts/{fontFileName}"));
-            using var stream = File.OpenRead(fontPath);
-            return FontMetric.LoadTrueType(stream);
+            FormattableString nonExpandedFontPath = $"%SystemRoot%/Fonts/{fontFileName}";
+            var fontPath = Environment.ExpandEnvironmentVariables(FormattableString.Invariant(nonExpandedFontPath));
+            try
+            {
+                using var stream = File.OpenRead(fontPath);
+                return FontMetric.LoadTrueType(stream);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Unable to get font metrics for {fontPath} ({nonExpandedFontPath}). " +
+                                            $"On non-windows environments, try to use {nameof(DefaultGraphicEngine)}.{nameof(Embedded)} graphical engine " +
+                                            $"or install a graphical engine from NuGet.", e);
+            }
         }
     }
 }

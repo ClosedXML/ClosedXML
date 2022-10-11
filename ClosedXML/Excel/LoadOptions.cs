@@ -13,9 +13,9 @@ namespace ClosedXML.Excel
         private Point _dpi = new(96, 96);
 
         /// <summary>
-        /// A graphics engine that will be used for workbooks without explicitely set engine.
+        /// A graphics engine that will be used for workbooks without explicitly set engine.
         /// </summary>
-        public static IXLGraphicEngine DefaultGraphicsEngine { internal get; set; }
+        public static IXLGraphicEngine DefaultGraphicEngine { internal get; set; }
 
         public XLEventTracking EventTracking { get; set; } = XLEventTracking.Enabled;
 
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
         public Point Dpi
         {
             get => _dpi;
-            set => _dpi = _dpi.X > 0 && _dpi.Y > 0 ? value : throw new ArgumentException("DPI must be positive");
+            set => _dpi = value.X > 0 && value.Y > 0 ? value : throw new ArgumentException("DPI must be positive");
         }
     }
 }

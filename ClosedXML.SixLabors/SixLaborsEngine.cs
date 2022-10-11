@@ -20,7 +20,7 @@ namespace ClosedXML.Graphics
     public class SixLaborsEngine : IXLGraphicEngine
     {
         private const float fontMetricSize = 16f;
-        private readonly static Lazy<SixLaborsEngine> _instance = new(() => new SixLaborsEngine());
+        private static readonly Lazy<SixLaborsEngine> _instance = new(() => new SixLaborsEngine());
         private static readonly Dictionary<string, XLPictureFormat> _mimeToFormat = new()
         {
             { "image/png", XLPictureFormat.Png },
@@ -109,32 +109,26 @@ namespace ClosedXML.Graphics
                 imageInfo.Metadata.HorizontalResolution, imageInfo.Metadata.VerticalResolution);
         }
 
-        public double GetAscent(IXLFontBase font)
+        public double GetDescent(IXLFontBase font, double dpiY)
         {
             var metrics = GetMetrics(font);
-            return metrics.Ascender * font.FontSize / metrics.UnitsPerEm;
+            return PointsToPixels(-metrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
-        public double GetDescent(IXLFontBase font)
-        {
-            var metrics = GetMetrics(font);
-            return -metrics.Descender * font.FontSize / metrics.UnitsPerEm;
-        }
-
-        public double GetMaxDigitWidth(IXLFontBase fontBase)
+        public double GetMaxDigitWidth(IXLFontBase fontBase, double dpiX)
         {
             var metricId = new MetricId(fontBase);
             var maxDigitWidth = _maxDigitWidths.GetOrAdd(metricId, _calculateMaxDigitWidth);
-            return maxDigitWidth * fontBase.FontSize;
+            return PointsToPixels(maxDigitWidth * fontBase.FontSize, dpiX);
         }
 
-        public double GetTextHeight(IXLFontBase font)
+        public double GetTextHeight(IXLFontBase font, double dpiY)
         {
             var metrics = GetMetrics(font);
-            return (metrics.Ascender - 2 * metrics.Descender) * font.FontSize / metrics.UnitsPerEm;
+            return PointsToPixels((metrics.Ascender - 2 * metrics.Descender) * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
-        public double GetTextWidth(string text, IXLFontBase fontBase)
+        public double GetTextWidth(string text, IXLFontBase fontBase, double dpiX)
         {
             var font = GetFont(fontBase);
             var dimensionsPx = TextMeasurer.Measure(text, new TextOptions(font)
@@ -142,7 +136,7 @@ namespace ClosedXML.Graphics
                 Dpi = 72, // Normalize DPI, so 1px is 1pt
                 KerningMode = KerningMode.None
             });
-            return dimensionsPx.Width / fontMetricSize * fontBase.FontSize;
+            return PointsToPixels(dimensionsPx.Width / fontMetricSize * fontBase.FontSize, dpiX);
         }
 
         private FontMetrics GetMetrics(IXLFontBase fontBase)
@@ -186,6 +180,8 @@ namespace ClosedXML.Graphics
             }
             return maxWidth / (double)metrics.UnitsPerEm;
         }
+
+        private static double PointsToPixels(double points, double dpi) => points / 72d * dpi;
 
         private readonly struct MetricId : IEquatable<MetricId>
         {

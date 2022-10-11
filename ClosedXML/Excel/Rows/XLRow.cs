@@ -209,6 +209,7 @@ namespace ClosedXML.Excel
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
             var engine = Worksheet.Workbook.GraphicEngine;
+            var dpiY = Worksheet.Workbook.DpiY;
             Double rowMaxHeight = minHeight;
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
             {
@@ -248,7 +249,7 @@ namespace ClosedXML.Excel
                     }
 
                     Double maxLongCol = kpList.Max(kp => kp.Value.Length);
-                    Double maxHeightCol = kpList.Max(kp => engine.GetTextHeight(kp.Key));
+                    Double maxHeightCol = XLHelper.PixelsToPoints(kpList.Max(kp => engine.GetTextHeight(kp.Key, dpiY)), dpiY);
                     Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
                     if (textRotation == 0)
                         thisHeight = maxHeightCol * lineCount;
@@ -269,7 +270,7 @@ namespace ClosedXML.Excel
                     }
                 }
                 else
-                    thisHeight = engine.GetTextHeight(c.Style.Font);
+                    thisHeight = XLHelper.PixelsToPoints(engine.GetTextHeight(c.Style.Font, dpiY), dpiY);
 
                 if (thisHeight >= maxHeight)
                 {

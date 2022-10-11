@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resource\ReadImage.emf" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resource\*.*" />
   </ItemGroup>
 

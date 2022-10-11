@@ -13,8 +13,8 @@ namespace ClosedXML.Graphics
 
         private int[] MagicBytes { get; } = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
-        private static readonly int HeaderType = TypeToNumber("IHDR");
-        private static readonly int PhysicalDimensionType = TypeToNumber("pHYs");
+        private const int HeaderType = 0x49484452; // IHDR
+        private const int PhysicalDimensionType = 0x70485973; // pHYs
 
         protected override bool CheckHeader(Stream stream)
         {
@@ -68,13 +68,7 @@ namespace ClosedXML.Graphics
         private static uint ReadType(Stream stream) => stream.ReadU32BE();
 
         private static ArgumentException CorruptedException(string text) => new($"PNG is corrupted. {text}");
-
-        private static int TypeToNumber(string type)
-        {
-            var bytes = Encoding.ASCII.GetBytes(type);
-            return bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
-        }
-
+        
         private static double PixelsPerMeterToDpi(uint ppm)
         {
             // Conversion from the common integer dots-per-inch to pixels-per-meter is lossy, so instead of 96 we get 95.9866

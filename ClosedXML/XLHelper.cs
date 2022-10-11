@@ -352,5 +352,9 @@ namespace ClosedXML.Excel
 
             return true;
         }
+
+        internal static double PixelsToPoints(double pixels, double dpi) => pixels * 72d / dpi;
+
+        internal static double PointsToPixels(double points, double dpi) => points * dpi / 72d;
     }
 }

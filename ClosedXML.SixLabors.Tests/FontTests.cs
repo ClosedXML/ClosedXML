@@ -14,42 +14,32 @@ namespace ClosedXML.SixLabors.Tests
         public void CalculatedTextWidth()
         {
             var textFont = new DummyFont("Calibri", 20);
-            var textWidthPt = _engine.GetTextWidth("Lorem ipsum dolor sit amet", textFont);
-            Assert.That(textWidthPt, Is.EqualTo(225));
+            var textWidthPt = _engine.GetTextWidth("Lorem ipsum dolor sit amet", textFont, 96);
+            Assert.That(textWidthPt, Is.EqualTo(300));
         }
 
         [TestCase]
         public void CalculatedTextHeight()
         {
-            var textFont = new DummyFont("Calibri", 100);
-            var textHeight = _engine.GetTextHeight(textFont);
-            Assert.That(textHeight, Is.EqualTo(125));
+            var textFont = new DummyFont("Calibri", 300);
+            var textHeightPx = _engine.GetTextHeight(textFont, 96);
+            Assert.That(textHeightPx, Is.EqualTo(500));
         }
 
         [TestCase]
         public void GetMaxDigitWidth()
         {
             var textFont = new DummyFont("Calibri", 11);
-            var textWidthPt = _engine.GetMaxDigitWidth(textFont);
-            Assert.That(textWidthPt, Is.EqualTo(5.5751953125d));
-            Assert.That(Math.Ceiling(textWidthPt / 72d * 96d), Is.EqualTo(8)); // Calibri,11 has a max digit width of 8 per spec
-        }
-
-        [TestCase]
-        public void AscentPlusDescentIsFontSize()
-        {
-            var fontSize = 20;
-            var textFont = new DummyFont("Calibri", fontSize);
-            var emSquareSize = _engine.GetAscent(textFont) + _engine.GetDescent(textFont);
-            Assert.That(fontSize, Is.EqualTo(emSquareSize));
+            var textWidthPx = _engine.GetMaxDigitWidth(textFont, 96);
+            Assert.That(textWidthPx, Is.EqualTo(7.43359375d)); // Calibri,11 has a max digit width of 7 per spec 18.3.1.13
         }
 
         [TestCase]
         public void DescentIsPositive()
         {
             var textFont = new DummyFont("Calibri", 11);
-            var textWidthPt = _engine.GetDescent(textFont);
-            Assert.That(textWidthPt, Is.EqualTo(2.75));
+            var textWidthPt = _engine.GetDescent(textFont, 96);
+            Assert.That(textWidthPt, Is.EqualTo(3.666666666666667d));
         }
 
         [TestCase]
@@ -58,12 +48,12 @@ namespace ClosedXML.SixLabors.Tests
             var nonExistentFont = new DummyFont("NonExistentFont", 100);
             var fallbackFont = new DummyFont("Microsoft Sans Serif", 100);
 
-            var nonExistentFontWidth = _engine.GetTextWidth("ABCDEF text", nonExistentFont);
-            var fallbackFontWidth = _engine.GetTextWidth("ABCDEF text", fallbackFont);
+            var nonExistentFontWidth = _engine.GetTextWidth("ABCDEF text", nonExistentFont, 96);
+            var fallbackFontWidth = _engine.GetTextWidth("ABCDEF text", fallbackFont, 96);
             Assert.That(nonExistentFontWidth, Is.EqualTo(fallbackFontWidth));
 
-            var nonExistentFontHeight = _engine.GetTextHeight(nonExistentFont);
-            var fallbackFontHeight = _engine.GetTextHeight(fallbackFont);
+            var nonExistentFontHeight = _engine.GetTextHeight(nonExistentFont, 96);
+            var fallbackFontHeight = _engine.GetTextHeight(fallbackFont, 96);
             Assert.That(nonExistentFontHeight, Is.EqualTo(fallbackFontHeight));
         }
 
