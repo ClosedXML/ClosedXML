@@ -30,11 +30,11 @@ namespace ClosedXML.Graphics
         });
 
         private readonly FontMetric _fontMetric;
-        private readonly ImageMetadataReader[] _imageReaders =
+        private readonly ImageInfoReader[] _imageReaders =
         {
-            new PngMetadataReader(),
-            new JpegMetadataReader(),
-            new EmfMetadataReader(),
+            new PngInfoReader(),
+            new JpegInfoReader(),
+            new EmfInfoReader(),
         };
 
         private DefaultGraphicEngine(FontMetric fontMetric)
@@ -42,11 +42,11 @@ namespace ClosedXML.Graphics
             _fontMetric = fontMetric;
         }
 
-        public XLPictureMetadata GetPictureMetadata(Stream stream, XLPictureFormat expectedFormat)
+        public XLPictureInfo GetPictureInfo(Stream stream, XLPictureFormat expectedFormat)
         {
             foreach (var imageReader in _imageReaders)
             {
-                if (imageReader.TryGetDimensions(stream, out var dimensions))
+                if (imageReader.TryGetInfo(stream, out var dimensions))
                     return dimensions;
             }
 

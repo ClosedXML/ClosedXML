@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Utils;
 
 namespace ClosedXML.Graphics
 {
-    internal class PngMetadataReader : ImageMetadataReader
+    internal class PngInfoReader : ImageInfoReader
     {
         private const int CrcLength = 4;
         private const int SkippedHeaderLength = 5;
@@ -27,7 +26,7 @@ namespace ClosedXML.Graphics
             return true;
         }
 
-        protected override XLPictureMetadata ReadDimensions(Stream stream)
+        protected override XLPictureInfo ReadInfo(Stream stream)
         {
             stream.Position += MagicBytes.Length;
             var hdrLength = stream.ReadU32BE();
@@ -62,7 +61,7 @@ namespace ClosedXML.Graphics
 
             var dpiX = PixelsPerMeterToDpi(pixelsPerUnitX);
             var dpiY = PixelsPerMeterToDpi(pixelsPerUnitY);
-            return new XLPictureMetadata(XLPictureFormat.Png, width, height, dpiX, dpiY);
+            return new XLPictureInfo(XLPictureFormat.Png, width, height, dpiX, dpiY);
         }
 
         private static uint ReadType(Stream stream) => stream.ReadU32BE();

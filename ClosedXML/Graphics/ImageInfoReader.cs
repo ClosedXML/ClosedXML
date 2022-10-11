@@ -2,11 +2,11 @@
 
 namespace ClosedXML.Graphics
 {
-    internal abstract class ImageMetadataReader
+    internal abstract class ImageInfoReader
     {
-        public bool TryGetDimensions(Stream stream, out XLPictureMetadata metadata)
+        public bool TryGetInfo(Stream stream, out XLPictureInfo info)
         {
-            metadata = default;
+            info = default;
             stream.Position = 0;
             if (!CheckHeader(stream))
             {
@@ -15,12 +15,12 @@ namespace ClosedXML.Graphics
             }
 
             stream.Position = 0;
-            metadata = ReadDimensions(stream);
+            info = ReadInfo(stream);
             return true;
         }
 
         protected abstract bool CheckHeader(Stream stream);
 
-        protected abstract XLPictureMetadata ReadDimensions(Stream stream);
+        protected abstract XLPictureInfo ReadInfo(Stream stream);
     }
 }

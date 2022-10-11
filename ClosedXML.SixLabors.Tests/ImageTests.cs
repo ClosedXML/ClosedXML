@@ -74,10 +74,10 @@ namespace ClosedXML.SixLabors.Tests
             Assert.That(picture.SizePhys, Is.EqualTo(new Size(28844, 28938)));
         }
 
-        private XLPictureMetadata GetMetadata(string resourceImage)
+        private XLPictureInfo GetMetadata(string resourceImage)
         {
             using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ClosedXML.SixLabors.Tests.Resource.{resourceImage}");
-            return _engine.GetPictureMetadata(stream, XLPictureFormat.Unknown);
+            return _engine.GetPictureInfo(stream, XLPictureFormat.Unknown);
         }
     }
 }

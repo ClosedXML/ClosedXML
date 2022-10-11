@@ -28,8 +28,8 @@ namespace ClosedXML.Excel.Drawings
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            var metadata = worksheet.Workbook.GraphicEngine.GetPictureMetadata(stream, format);
-            Init(metadata);
+            var info = worksheet.Workbook.GraphicEngine.GetPictureInfo(stream, format);
+            Init(info);
 
             this.ImageStream = new MemoryStream();
             stream.Position = 0;
@@ -350,10 +350,10 @@ namespace ClosedXML.Excel.Drawings
             _name = value;
         }
 
-        private void Init(XLPictureMetadata metadata)
+        private void Init(XLPictureInfo info)
         {
-            Format = metadata.Format;
-            var size = metadata.GetSizePx(Worksheet.Workbook.DpiX, Worksheet.Workbook.DpiY);
+            Format = info.Format;
+            var size = info.GetSizePx(Worksheet.Workbook.DpiX, Worksheet.Workbook.DpiY);
             _width = OriginalWidth = size.Width;
             _height = OriginalHeight = size.Height;
         }

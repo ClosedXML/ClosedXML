@@ -11,7 +11,7 @@ namespace ClosedXML.Graphics
     /// <summary>
     /// Read <a href="https://www.w3.org/Graphics/JPEG/jfif3.pdf">JFIF</a> or EXIF.
     /// </summary>
-    internal class JpegMetadataReader : ImageMetadataReader
+    internal class JpegInfoReader : ImageInfoReader
     {
         private static readonly byte[] APP0Identifer = Encoding.ASCII.GetBytes("JFIF\0");
         private static readonly byte[] APP1Identifer = Encoding.ASCII.GetBytes("Exif\0\0");
@@ -51,7 +51,7 @@ namespace ClosedXML.Graphics
             }
         }
 
-        protected override XLPictureMetadata ReadDimensions(Stream stream)
+        protected override XLPictureInfo ReadInfo(Stream stream)
         {
             stream.Position += 2;
             double xDpi = 0, yDpi = 0;
@@ -81,7 +81,7 @@ namespace ClosedXML.Graphics
                     var width = stream.ReadU16BE();
 
                     // End here, before we get to SOS segment that doesn't contain explicit segment length
-                    return new XLPictureMetadata(XLPictureFormat.Jpeg, new Size(width, height), Size.Empty, xDpi, yDpi);
+                    return new XLPictureInfo(XLPictureFormat.Jpeg, new Size(width, height), Size.Empty, xDpi, yDpi);
                 }
                 else
                 {

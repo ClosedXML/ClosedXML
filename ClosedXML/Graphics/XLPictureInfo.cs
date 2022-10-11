@@ -5,9 +5,9 @@ using System.Drawing;
 namespace ClosedXML.Graphics
 {
     /// <summary>
-    /// A metadata about a picture. At least one of the sizes (pixels/physical) must be set.
+    /// Metadata info about a picture. At least one of the sizes (pixels/physical) must be set.
     /// </summary>
-    public readonly struct XLPictureMetadata
+    public readonly struct XLPictureInfo
     {
         /// <summary>
         /// Detected format of the image.
@@ -34,7 +34,7 @@ namespace ClosedXML.Graphics
         /// </summary>
         public double DpiY { get; }
 
-        public XLPictureMetadata(XLPictureFormat format, uint width, uint height, double dpiX, double dpiY)
+        public XLPictureInfo(XLPictureFormat format, uint width, uint height, double dpiX, double dpiY)
         {
             if (width > int.MaxValue || height > int.MaxValue)
                 throw new ArgumentException("Size of picture too large.");
@@ -44,11 +44,11 @@ namespace ClosedXML.Graphics
             DpiY = dpiY;
         }
 
-        public XLPictureMetadata(XLPictureFormat format, Size sizePx, Size sizePhys) : this(format, sizePx, sizePhys, 0, 0)
+        public XLPictureInfo(XLPictureFormat format, Size sizePx, Size sizePhys) : this(format, sizePx, sizePhys, 0, 0)
         {
         }
 
-        public XLPictureMetadata(XLPictureFormat format, Size sizePx, Size sizePhys, double dpiX, double dpiY)
+        public XLPictureInfo(XLPictureFormat format, Size sizePx, Size sizePhys, double dpiX, double dpiY)
         {
             if (sizePx.IsEmpty && sizePhys.IsEmpty)
                 throw new ArgumentException("Both sizes can't be empty.");

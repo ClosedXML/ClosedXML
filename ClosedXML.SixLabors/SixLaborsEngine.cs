@@ -83,7 +83,7 @@ namespace ClosedXML.Graphics
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
         }
 
-        public XLPictureMetadata GetPictureMetadata(Stream imageStream, XLPictureFormat expectedFormat)
+        public XLPictureInfo GetPictureInfo(Stream imageStream, XLPictureFormat expectedFormat)
         {
             var imageFormat = Image.DetectFormat(_configuration, imageStream);
             if (imageFormat is null)
@@ -99,12 +99,12 @@ namespace ClosedXML.Graphics
             if (imageFormat == EmfFormat.Instance)
             {
                 var metadata = imageInfo.Metadata.GetFormatMetadata(EmfFormat.Instance);
-                return new XLPictureMetadata(pictureFormat,
+                return new XLPictureInfo(pictureFormat,
                     new System.Drawing.Size(imageInfo.Width, imageInfo.Height), new System.Drawing.Size(metadata.Frame.Width, metadata.Frame.Height),
                     imageInfo.Metadata.HorizontalResolution, imageInfo.Metadata.VerticalResolution);
             }
 
-            return new XLPictureMetadata(pictureFormat,
+            return new XLPictureInfo(pictureFormat,
                 new System.Drawing.Size(imageInfo.Width, imageInfo.Height), System.Drawing.Size.Empty,
                 imageInfo.Metadata.HorizontalResolution, imageInfo.Metadata.VerticalResolution);
         }

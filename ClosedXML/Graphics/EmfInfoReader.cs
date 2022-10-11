@@ -8,7 +8,7 @@ namespace ClosedXML.Graphics
     /// <summary>
     /// Metadata read of a vector EMF file. Specification: https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-emf/
     /// </summary>
-    internal class EmfMetadataReader : ImageMetadataReader
+    internal class EmfInfoReader : ImageInfoReader
     {
         private const uint EmfSignature = 0x464D4520; // ' EMF'
 
@@ -25,11 +25,11 @@ namespace ClosedXML.Graphics
             return true;
         }
 
-        protected override XLPictureMetadata ReadDimensions(Stream stream)
+        protected override XLPictureInfo ReadInfo(Stream stream)
         {
             stream.Position += 24;
             var frame = ReadRectL(stream);
-            return new XLPictureMetadata(XLPictureFormat.Emf, Size.Empty, frame.Size);
+            return new XLPictureInfo(XLPictureFormat.Emf, Size.Empty, frame.Size);
         }
 
         private static Rectangle ReadRectL(Stream stream)
