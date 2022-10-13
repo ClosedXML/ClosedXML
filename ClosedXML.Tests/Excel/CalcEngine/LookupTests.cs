@@ -8,6 +8,7 @@ using System;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class LookupTests
     {
         private IXLWorksheet ws;
@@ -23,8 +24,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [SetUp]
         public void Init()
         {
-            // Make sure tests run on a deterministic culture
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             ws = SetupWorkbook();
         }
 
