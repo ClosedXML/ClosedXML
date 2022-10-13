@@ -83,6 +83,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator AnyValue(Reference reference) => From(reference);
 
+        public bool IsBlank => _index == BlankValue;
+
         public bool TryPickScalar(out ScalarValue scalar, out CollectionValue collection)
         {
             scalar = _index switch
@@ -115,15 +117,17 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        public bool TryPickReference(out Reference reference)
+        public bool TryPickReference(out Reference reference, out Error error)
         {
             if (_index == ReferenceValue)
             {
                 reference = _reference;
+                error = default;
                 return true;
             }
 
             reference = default;
+            error = _index == ErrorValue ? _error : Error.CellValue;
             return false;
         }
 

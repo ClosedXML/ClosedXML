@@ -59,8 +59,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var argsLoop = new List<Reference>();
                 for (var i = 1; i < args.Length; ++i)
                 {
-                    if (!args[i].TryPickReference(out var reference))
-                        return Error.CellValue;
+                    if (!args[i].TryPickReference(out var reference, out var error))
+                        return error;
 
                     argsLoop.Add(reference);
                 }

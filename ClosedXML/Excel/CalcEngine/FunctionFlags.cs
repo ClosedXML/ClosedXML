@@ -11,6 +11,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         /// <summary>
         /// Function that takes an input and returns an output. It is designed for a single value arguments.
+        /// If scalar function is used for array formula or dynamic array formula, the function is called for each element separately.
         /// </summary>
         Scalar = 0,
 
