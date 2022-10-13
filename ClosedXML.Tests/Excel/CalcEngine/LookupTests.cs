@@ -1,9 +1,9 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
-using System.Linq;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -87,6 +87,43 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion Setup and teardown
+
+        [Test]
+        public void Column()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            wb.AddWorksheet("Other");
+
+            // If no argument, function uses the address of the cell that contains the formula
+            Assert.AreEqual(4, ws.Cell("D1").SetFormulaA1("COLUMN()").Value);
+
+            // With a reference, it returns the column number
+            Assert.AreEqual(26, ws.Cell("A1").SetFormulaA1("COLUMN(Z14)").Value);
+
+            // If a single column is used, return the column number 
+            Assert.AreEqual(3, ws.Cell("A2").SetFormulaA1("COLUMN(C:C)").Value);
+
+            // Return a horizontal array for multiple columns. Use sum to verify content of an array.
+            Assert.AreEqual(3 + 4, ws.Cell("A3").SetFormulaA1("SUM(COLUMN(C:D))").Value);
+            Assert.AreEqual(5 + 6 + 7, ws.Cell("A3").SetFormulaA1("SUM(COLUMN(E1:G10))").Value);
+
+            // Not contiguous range (multiple areas) returns #REF!
+            Assert.AreEqual(Error.CellReference, ws.Cell("A4").SetFormulaA1("COLUMN((D5:G10,I8:K12))").Value);
+
+            // Invalid references return #REF!
+            Assert.AreEqual(Error.CellReference, ws.Cell("A5").SetFormulaA1("COLUMN(NonExistent!F10)").Value);
+
+            // Return column number even for different worksheet
+            Assert.AreEqual(5, ws.Cell("A6").SetFormulaA1("COLUMN(Other!E7)").Value);
+
+            // Unexpected types return error
+            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("COLUMN(TRUE)").Value);
+            Assert.AreEqual(Error.CellValue, ws.Cell("A7").SetFormulaA1("COLUMN(5)").Value);
+            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("COLUMN(\"C5\")").Value);
+            Assert.AreEqual(Error.DivisionByZero, ws.Cell("A9").SetFormulaA1("COLUMN(#DIV/0!)").Value);
+            Assert.AreEqual(Error.CellValue, ws.Cell("A10").SetFormulaA1("COLUMN(\"C5\")").Value);
+        }
 
         [Test]
         public void Hlookup()

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// Reference to a single cell in a workbook. Reference can be absolute, relative or mixed.
+    /// Reference can be with or without a worksheet.
+    /// </summary>
     public interface IXLAddress : IEqualityComparer<IXLAddress>, IEquatable<IXLAddress>
     {
         String ColumnLetter { get; }
@@ -11,6 +15,10 @@ namespace ClosedXML.Excel
         Boolean FixedRow { get; }
         Int32 RowNumber { get; }
         String UniqueId { get; }
+
+        /// <summary>
+        /// Worksheet of the reference. Value is null for address without a worksheet.
+        /// </summary>
         IXLWorksheet Worksheet { get; }
 
         String ToString(XLReferenceStyle referenceStyle);
@@ -24,7 +32,6 @@ namespace ClosedXML.Excel
         String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet);
 
         String ToStringRelative();
-
 
         String ToStringRelative(Boolean includeSheet);
     }

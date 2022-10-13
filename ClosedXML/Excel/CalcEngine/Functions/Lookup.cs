@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("ADDRESS", , Address); // Returns a reference as text to a single cell in a worksheet
             //ce.RegisterFunction("AREAS", , Areas); // Returns the number of areas in a reference
             //ce.RegisterFunction("CHOOSE", , Choose); // Chooses a value from a list of values
-            //ce.RegisterFunction("COLUMN", , Column); // Returns the column number of a reference
+            ce.RegisterFunction("COLUMN", 0, 1, Column, FunctionFlags.Range, AllowRange.All); // Returns the column number of a reference
             //ce.RegisterFunction("COLUMNS", , Columns); // Returns the number of columns in a reference
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
@@ -30,6 +30,31 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
             ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
+        }
+
+        private static AnyValue Column(CalcContext ctx, Span<AnyValue> p)
+        {
+            if (p.Length == 0 || p[0].IsBlank)
+                return ctx.FormulaAddress.ColumnNumber;
+
+            if (!p[0].TryPickReference(out var reference, out var error))
+                return error;
+
+            if (reference.Areas.Count > 1)
+                return Error.CellReference;
+
+            var area = reference.Areas[0];
+            var firstColumn = area.FirstAddress.ColumnNumber;
+            var lastColumn = area.LastAddress.ColumnNumber;
+            if (firstColumn == lastColumn)
+                return firstColumn;
+
+            var span = lastColumn - firstColumn + 1;
+            var array = new ScalarValue[1, span];
+            for (var col = firstColumn; col <= lastColumn; col++)
+                array[0, col - firstColumn] = col;
+
+            return new ConstArray(array);
         }
 
         private static IXLRange ExtractRange(Expression expression)
