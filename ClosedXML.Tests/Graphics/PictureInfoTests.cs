@@ -33,7 +33,19 @@ namespace ClosedXML.Tests.Graphics
         [Test]
         public void CanReadBmpV1()
         {
-            AssertRasterImage("SampleImageBmpV1.bmp", XLPictureFormat.Bmp, new Size(150, 5), 0, 0);
+            AssertRasterImage("SampleImageBmpV1.bmp", XLPictureFormat.Bmp, new Size(150, 50), 0, 0);
+        }
+
+        [Test]
+        public void CanReadTiffWithBigEndianEncoding()
+        {
+            AssertRasterImage("SampleImageTiffBigEndian.tiff", XLPictureFormat.Tiff, new Size(130, 45), 96, 96);
+        }
+
+        [Test]
+        public void CanReadTiffWithLittleEndianEncoding()
+        {
+            AssertRasterImage("SampleImageTiffLittleEndian.tiff", XLPictureFormat.Tiff, new Size(130, 45), 96, 96);
         }
 
         private static void AssertRasterImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, double expectedDpiX, double expectedDpiY)
@@ -43,8 +55,8 @@ namespace ClosedXML.Tests.Graphics
 
             Assert.AreEqual(expectedFormat, info.Format);
             Assert.AreEqual(expectedPxSize, info.SizePx);
-            Assert.AreEqual(expectedDpiX, info.DpiX);
-            Assert.AreEqual(expectedDpiY, info.DpiY);
+            Assert.AreEqual(expectedDpiX, info.DpiX, 0.01);
+            Assert.AreEqual(expectedDpiY, info.DpiY, 0.01);
             Assert.AreEqual(Size.Empty, info.SizePhys);
         }
     }
