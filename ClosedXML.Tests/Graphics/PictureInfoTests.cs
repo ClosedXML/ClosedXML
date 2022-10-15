@@ -10,15 +10,30 @@ namespace ClosedXML.Tests.Graphics
     public class PictureInfoTests
     {
         [Test]
-        public void CanAddGif87Image()
+        public void CanReadGif87Image()
         {
             AssertRasterImage("SampleImageGif87a.gif", XLPictureFormat.Gif, new Size(500, 200), 0, 0);
         }
 
         [Test]
-        public void CanAddGif89Image()
+        public void CanReadGif89Image()
         {
             AssertRasterImage("SampleImageGif89a.gif", XLPictureFormat.Gif, new Size(500, 200), 0, 0);
+        }
+
+        [TestCase("SampleImageBmpWin24bit.bmp")]
+        [TestCase("SampleImageBmpWin8bit.bmp")]
+        [TestCase("SampleImageBmpWin4bit.bmp")]
+        [TestCase("SampleImageBmpWin24bit.bmp")]
+        public void CanReadBmpImageV3AndFurther(string imageName)
+        {
+            AssertRasterImage(imageName, XLPictureFormat.Bmp, new Size(167, 51), 80.645d, 80.645d);
+        }
+
+        [Test]
+        public void CanReadBmpV1()
+        {
+            AssertRasterImage("SampleImageBmpV1.bmp", XLPictureFormat.Bmp, new Size(150, 5), 0, 0);
         }
 
         private static void AssertRasterImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, double expectedDpiX, double expectedDpiY)

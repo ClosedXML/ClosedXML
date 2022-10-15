@@ -44,6 +44,13 @@ namespace ClosedXML.Utils
             return number;
         }
 
+        public static uint ReadU32LE(this Stream stream)
+        {
+            if (!TryReadU32LE(stream, out var number))
+                throw EndOfStreamException();
+            return number;
+        }
+
         public static bool TryReadU32LE(this Stream stream, out uint number)
         {
             if (!TryReadLE(stream, 4, out var result))
