@@ -131,6 +131,33 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
+        /// <summary>
+        /// Try to get a reference that is a one area from the value.
+        /// </summary>
+        /// <param name="area">The found area.</param>
+        /// <param name="error">Original error, if the value is error, <c>#VALUE!</c> if type is not a reference or #REF! if more than one area in the reference.</param>
+        /// <returns>True if area could be determined, false otherwise.</returns>
+        public bool TryPickArea(out XLRangeAddress area, out Error error)
+        {
+            if (_index != ReferenceValue)
+            {
+                area = default;
+                error = _index == ErrorValue ? _error : Error.CellValue;
+                return false;
+            }
+
+            if (_reference.Areas.Count > 1)
+            {
+                area = default;
+                error = Error.CellReference;
+                return false;
+            }
+
+            area = _reference.Areas[0];
+            error = default;
+            return true;
+        }
+
         public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
         {
             return _index switch

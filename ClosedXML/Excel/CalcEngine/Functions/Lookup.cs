@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
             ce.RegisterFunction("MATCH", 2, 3, Match, AllowRange.Only, 1); // Looks up values in a reference or array
             //ce.RegisterFunction("OFFSET", , Offset); // Returns a reference offset from a given reference
-            //ce.RegisterFunction("ROW", , Row); // Returns the row number of a reference
+            ce.RegisterFunction("ROW", 0, 1, Row, FunctionFlags.Range, AllowRange.All); // Returns the row number of a reference
             //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
@@ -37,13 +37,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (p.Length == 0 || p[0].IsBlank)
                 return ctx.FormulaAddress.ColumnNumber;
 
-            if (!p[0].TryPickReference(out var reference, out var error))
+            if (!p[0].TryPickArea(out var area, out var error))
                 return error;
 
-            if (reference.Areas.Count > 1)
-                return Error.CellReference;
-
-            var area = reference.Areas[0];
             var firstColumn = area.FirstAddress.ColumnNumber;
             var lastColumn = area.LastAddress.ColumnNumber;
             if (firstColumn == lastColumn)
@@ -240,6 +236,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var firstCell = range.FirstCell();
 
             return (foundCell.Address.ColumnNumber - firstCell.Address.ColumnNumber + 1) * (foundCell.Address.RowNumber - firstCell.Address.RowNumber + 1);
+        }
+
+        private static AnyValue Row(CalcContext ctx, Span<AnyValue> p)
+        {
+            if (p.Length == 0 || p[0].IsBlank)
+                return ctx.FormulaAddress.RowNumber;
+
+            if (!p[0].TryPickArea(out var area, out var error))
+                return error;
+
+            var firstRow = area.FirstAddress.RowNumber;
+            var lastRow = area.LastAddress.RowNumber;
+            if (firstRow == lastRow)
+                return firstRow;
+
+            var span = lastRow - firstRow + 1;
+            var array = new ScalarValue[span, 1];
+            for (var row = firstRow; row <= lastRow; row++)
+                array[row - firstRow, 0] = row;
+
+            return new ConstArray(array);
         }
 
         private static object Vlookup(List<Expression> p)
