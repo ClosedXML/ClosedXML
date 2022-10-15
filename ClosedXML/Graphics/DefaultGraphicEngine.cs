@@ -34,6 +34,7 @@ namespace ClosedXML.Graphics
         {
             new PngInfoReader(),
             new JpegInfoReader(),
+            new GifInfoReader(),
             new EmfInfoReader(),
         };
 
