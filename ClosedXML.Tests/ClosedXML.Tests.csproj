@@ -10,8 +10,7 @@
   <ItemGroup>
     <EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
     <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
-    <EmbeddedResource Include="Resource\Images\*.png" />
-    <EmbeddedResource Include="Resource\Images\*.jpg" />
+    <EmbeddedResource Include="Resource\Images\*.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +20,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
   </ItemGroup>
-
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

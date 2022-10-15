@@ -55,6 +55,13 @@ namespace ClosedXML.Utils
             return true;
         }
 
+        public static ushort ReadU16LE(this Stream stream)
+        {
+            if (!TryReadU16LE(stream, out var number))
+                throw EndOfStreamException();
+            return number;
+        }
+
         public static bool TryReadU16LE(this Stream stream, out ushort number)
         {
             if (!TryReadLE(stream, 2, out var result))
