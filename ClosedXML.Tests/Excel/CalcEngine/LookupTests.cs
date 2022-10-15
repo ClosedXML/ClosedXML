@@ -103,7 +103,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // If a single column is used, return the column number 
             Assert.AreEqual(3, ws.Cell("A2").SetFormulaA1("COLUMN(C:C)").Value);
 
-            // Return a horizontal array for multiple columns. Use sum to verify content of an array.
+            // Return a horizontal array for multiple columns. Use SUM to verify content of an array since ROWS/COLUMNS don't work yet.
             Assert.AreEqual(3 + 4, ws.Cell("A3").SetFormulaA1("SUM(COLUMN(C:D))").Value);
             Assert.AreEqual(5 + 6 + 7, ws.Cell("A3").SetFormulaA1("SUM(COLUMN(E1:G10))").Value);
 
@@ -236,6 +236,42 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.Throws<CellValueException>(() => ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
             Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
             Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
+        }
+
+        [Test]
+        public void Row()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            wb.AddWorksheet("Other");
+
+            // If no argument, function uses the address of the cell that contains the formula
+            Assert.AreEqual(60, ws.Cell("M60").SetFormulaA1("ROW()").Value);
+
+            // With a reference, it returns the row number
+            Assert.AreEqual(12, ws.Cell("A1").SetFormulaA1("ROW(C12)").Value);
+
+            // If a full row reference to a single row is used, return the row number 
+            Assert.AreEqual(40, ws.Cell("A2").SetFormulaA1("ROW(40:40)").Value);
+
+            // Return a vertical array for multiple rows. Use SUM to verify content of an array since ROWS/COLUMNS don't work yet.
+            Assert.AreEqual(4 + 5 + 6 + 7, ws.Cell("A3").SetFormulaA1("SUM(ROW(4:7))").Value);
+            Assert.AreEqual(2 + 3 + 4, ws.Cell("A4").SetFormulaA1("SUM(ROW(C2:Z4))").Value);
+
+            // Not contiguous range (multiple areas) returns #REF!
+            Assert.AreEqual(Error.CellReference, ws.Cell("A5").SetFormulaA1("ROW((D5:G10,I8:K12))").Value);
+
+            // Invalid references return #REF!
+            Assert.AreEqual(Error.CellReference, ws.Cell("A6").SetFormulaA1("ROW(NonExistent!F10)").Value);
+
+            // Return row number even for different worksheet
+            Assert.AreEqual(14, ws.Cell("A7").SetFormulaA1("ROW(Other!E14)").Value);
+
+            // Unexpected types return error
+            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("ROW(IF(TRUE,TRUE))").Value);
+            Assert.AreEqual(Error.CellValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
+            Assert.AreEqual(Error.CellValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
+            Assert.AreEqual(Error.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
         }
 
         [Test]
