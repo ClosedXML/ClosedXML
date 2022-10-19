@@ -21,6 +21,13 @@ namespace ClosedXML.Utils
             return (short)((b1 << 8) | b2);
         }
 
+        public static short ReadS16LE(this Stream stream)
+        {
+            var b1 = stream.ReadU8();
+            var b2 = stream.ReadU8();
+            return (short)((b2 << 8) | b1);
+        }
+
         public static int ReadS32BE(this Stream stream)
         {
             var b1 = stream.ReadU8();
