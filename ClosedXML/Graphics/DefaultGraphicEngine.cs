@@ -38,6 +38,7 @@ namespace ClosedXML.Graphics
             new TiffInfoReader(),
             new BmpInfoReader(),
             new EmfInfoReader(),
+            new WmfInfoReader(),
             new PcxInfoReader() // Due to poor magic detection, keep last
         };
 

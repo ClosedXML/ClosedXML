@@ -54,7 +54,29 @@ namespace ClosedXML.Tests.Graphics
             AssertRasterImage("SampleImagePcx.pcx", XLPictureFormat.Pcx, new Size(100, 50), 96, 96);
         }
 
+        [Test]
+        public void CanReadWmfWithPlaceableHeader()
+        {
+            AssertVectorImage("SampleImagePlaceableWmf.wmf", XLPictureFormat.Wmf, new Size(1000, 500));
+        }
+
+        [Test]
+        public void CanReadWmfWithOriginalHeader()
+        {
+            AssertVectorImage("SampleImageOriginalWmf.wmf", XLPictureFormat.Wmf, new Size(12496, 6247));
+        }
+
         private static void AssertRasterImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, double expectedDpiX, double expectedDpiY)
+        {
+            AssertImage(imageName, expectedFormat, expectedPxSize, Size.Empty, expectedDpiX, expectedDpiY);
+        }
+
+        private static void AssertVectorImage(string imageName, XLPictureFormat expectedFormat, Size expectedHiMetricSize)
+        {
+            AssertImage(imageName, expectedFormat, Size.Empty, expectedHiMetricSize, 0, 0);
+        }
+
+        private static void AssertImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, Size expectedHiMetricSize, double expectedDpiX, double expectedDpiY)
         {
             using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ClosedXML.Tests.Resource.Images.{imageName}");
             var info = DefaultGraphicEngine.Instance.Value.GetPictureInfo(stream, XLPictureFormat.Unknown);
@@ -63,7 +85,7 @@ namespace ClosedXML.Tests.Graphics
             Assert.AreEqual(expectedPxSize, info.SizePx);
             Assert.AreEqual(expectedDpiX, info.DpiX, 0.01);
             Assert.AreEqual(expectedDpiY, info.DpiY, 0.01);
-            Assert.AreEqual(Size.Empty, info.SizePhys);
+            Assert.AreEqual(expectedHiMetricSize, info.SizePhys);
         }
     }
 }
