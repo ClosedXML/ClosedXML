@@ -52,6 +52,7 @@ Please read the [full developer guidelines](CONTRIBUTING.md).
 
 ## Credits
 * Project originally created by Manuel de Leon
-* Current maintainer: [Francois Botha](https://github.com/igitur)
+* Current maintainer: [Jan Havlíček](https://github.com/jahav)
+* Former maintainer and lead developer: [Francois Botha](https://github.com/igitur)
 * Master of Computing Patterns: [Aleksei Pankratev](https://github.com/Pankraty)
 * Logo design by [@Tobaloidee](https://github.com/Tobaloidee)

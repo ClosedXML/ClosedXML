@@ -9,6 +9,11 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- NU5104 - SixLabors.Fonts is available only as a prerelease -->
+    <NoWarn>$(NoWarn);NU1605;NU5104;CS1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\resources\logo\nuget-logo.png" Pack="true" PackagePath="\" />
