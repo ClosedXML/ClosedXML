@@ -116,7 +116,9 @@ namespace ClosedXML.Graphics
         {
             if (!SystemFonts.TryGet(metricId.Name, out var fontFamily) &&
                 !SystemFonts.TryGet(_fallbackFont, out fontFamily))
-                throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}.");
+                throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}. " +
+                                            "Install missing fonts or specify a different fallback font through " +
+                                            "'LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(\"Fallback font name\")'.");
 
             return fontFamily.CreateFont(FontMetricSize); // Size is irrelevant for metric
         }
