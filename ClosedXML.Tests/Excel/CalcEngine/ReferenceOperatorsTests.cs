@@ -63,7 +63,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D5").FormulaA1 = "ABS(B1:B4)";
 
-            Assert.AreEqual(Error.CellValue, ws.Cell("D5").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("D5").Value);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D3").FormulaA1 = "ABS((B1:B2,B3:B5))"; // A continous range made of two areas
 
-            Assert.AreEqual(Error.CellValue, ws.Cell("D3").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("D3").Value);
         }
 
         [Test]
@@ -85,11 +85,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             var horizontalIntersectionCell = ws.Cell("D3");
             horizontalIntersectionCell.FormulaA1 = "ABS(A1:B5)";
-            Assert.AreEqual(Error.CellValue, horizontalIntersectionCell.Value);
+            Assert.AreEqual(Error.IncompatibleValue, horizontalIntersectionCell.Value);
 
             var verticalIntersectionCell = ws.Cell("B5");
             verticalIntersectionCell.FormulaA1 = "ABS(A3:C4)";
-            Assert.AreEqual(Error.CellValue, verticalIntersectionCell.Value);
+            Assert.AreEqual(Error.IncompatibleValue, verticalIntersectionCell.Value);
         }
 
         #endregion
@@ -144,7 +144,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var formulaSheet = wb.AddWorksheet("Current");
             wb.AddWorksheet("Other");
 
-            Assert.AreEqual(Error.CellValue, formulaSheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.AreEqual(Error.IncompatibleValue, formulaSheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         [TestCase("A1:IF(TRUE,1,)")]
@@ -156,7 +156,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var sheet = wb.AddWorksheet();
 
-            Assert.AreEqual(Error.CellValue, sheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.AreEqual(Error.IncompatibleValue, sheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         #endregion

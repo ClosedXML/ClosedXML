@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             [Error.NullValue] = 1,
             [Error.DivisionByZero] = 2,
-            [Error.CellValue] = 3,
+            [Error.IncompatibleValue] = 3,
             [Error.CellReference] = 4,
             [Error.NameNotRecognized] = 5,
             [Error.NumberInvalid] = 6,

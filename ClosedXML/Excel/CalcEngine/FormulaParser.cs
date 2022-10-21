@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static readonly Dictionary<string, Error> ErrorMap = new(StringComparer.OrdinalIgnoreCase)
         {
             ["#REF!"] = Error.CellReference,
-            ["#VALUE!"] = Error.CellValue,
+            ["#VALUE!"] = Error.IncompatibleValue,
             ["#DIV/0!"] = Error.DivisionByZero,
             ["#NAME?"] = Error.NameNotRecognized,
             ["#N/A"] = Error.NoValueAvailable,

@@ -115,7 +115,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         // #REF! is converted by a different rule, so it is not here.
-        [TestCase("#VALUE!", Error.CellValue)]
+        [TestCase("#VALUE!", Error.IncompatibleValue)]
         [TestCase("#DIV/0!", Error.DivisionByZero)]
         [TestCase("#NAME?", Error.NameNotRecognized)]
         [TestCase("#N/A", Error.NoValueAvailable)]

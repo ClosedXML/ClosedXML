@@ -155,7 +155,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return double.TryParse(text, NumberStyles.Float, culture, out var number)
                 ? number
-                : Error.CellValue;
+                : Error.IncompatibleValue;
         }
 
         public bool TryPickNumber(out double number)

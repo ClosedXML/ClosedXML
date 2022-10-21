@@ -117,11 +117,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(5, ws.Cell("A6").SetFormulaA1("COLUMN(Other!E7)").Value);
 
             // Unexpected types return error
-            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("COLUMN(TRUE)").Value);
-            Assert.AreEqual(Error.CellValue, ws.Cell("A7").SetFormulaA1("COLUMN(5)").Value);
-            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("COLUMN(\"C5\")").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(TRUE)").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A7").SetFormulaA1("COLUMN(5)").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(\"C5\")").Value);
             Assert.AreEqual(Error.DivisionByZero, ws.Cell("A9").SetFormulaA1("COLUMN(#DIV/0!)").Value);
-            Assert.AreEqual(Error.CellValue, ws.Cell("A10").SetFormulaA1("COLUMN(\"C5\")").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A10").SetFormulaA1("COLUMN(\"C5\")").Value);
         }
 
         [Test]
@@ -268,9 +268,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(14, ws.Cell("A7").SetFormulaA1("ROW(Other!E14)").Value);
 
             // Unexpected types return error
-            Assert.AreEqual(Error.CellValue, ws.Cell("A8").SetFormulaA1("ROW(IF(TRUE,TRUE))").Value);
-            Assert.AreEqual(Error.CellValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
-            Assert.AreEqual(Error.CellValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("ROW(IF(TRUE,TRUE))").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
+            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
             Assert.AreEqual(Error.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
         }
 

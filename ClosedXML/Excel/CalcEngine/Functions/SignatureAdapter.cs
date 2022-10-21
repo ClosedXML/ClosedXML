@@ -114,7 +114,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (reference.TryGetSingleCellValue(out var referenceScalar, ctx))
                 return referenceScalar;
 
-            return OneOf<ScalarValue, Error>.FromT1(Error.CellValue);
+            return OneOf<ScalarValue, Error>.FromT1(Error.IncompatibleValue);
         }
 
         #endregion

@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.CalcEngine
                 ? lhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
                 : lhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
             if (lhsWorksheets.Count() > 1)
-                return Error.CellValue;
+                return Error.IncompatibleValue;
 
             var lhsWorksheet = lhsWorksheets.SingleOrDefault();
 
@@ -82,14 +82,14 @@ namespace ClosedXML.Excel.CalcEngine
                 ? rhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
                 : rhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
             if (rhsWorksheets.Count() > 1)
-                return Error.CellValue;
+                return Error.IncompatibleValue;
 
             var rhsWorksheet = rhsWorksheets.SingleOrDefault();
 
             if (rhsWorksheet is not null)
             {
                 if ((lhsWorksheet ?? contextWorksheet) != rhsWorksheet)
-                    return Error.CellValue;
+                    return Error.IncompatibleValue;
             }
 
             var minCol = XLHelper.MaxColumnNumber;
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine
                 .Concat(rhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet))
                 .Distinct().ToList();
             if (sheets.Count != 1)
-                return Error.CellValue;
+                return Error.IncompatibleValue;
 
             var sheet = sheets.Single();
             var intersections = new List<XLRangeAddress>();
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel.CalcEngine
         public OneOf<Reference, Error> ImplicitIntersection(IXLAddress formulaAddress)
         {
             if (Areas.Count != 1)
-                return Error.CellValue;
+                return Error.IncompatibleValue;
 
             var area = Areas.Single();
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(intersection, intersection));
             }
 
-            return Error.CellValue;
+            return Error.IncompatibleValue;
         }
 
         internal bool IsSingleCell()
@@ -206,7 +206,7 @@ namespace ClosedXML.Excel.CalcEngine
         public OneOf<Array, Error> Apply(Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (Areas.Count != 1)
-                return Error.CellValue;
+                return Error.IncompatibleValue;
 
             var area = Areas.Single();
             var width = area.ColumnSpan;

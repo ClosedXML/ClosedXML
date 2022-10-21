@@ -216,7 +216,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 case Error.CellReference:
                     throw new CellReferenceException();
-                case Error.CellValue:
+                case Error.IncompatibleValue:
                     throw new CellValueException();
                 case Error.DivisionByZero:
                     throw new DivisionByZeroException();

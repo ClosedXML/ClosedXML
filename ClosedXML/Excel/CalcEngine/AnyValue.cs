@@ -127,7 +127,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             reference = default;
-            error = _index == ErrorValue ? _error : Error.CellValue;
+            error = _index == ErrorValue ? _error : Error.IncompatibleValue;
             return false;
         }
 
@@ -142,7 +142,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (_index != ReferenceValue)
             {
                 area = default;
-                error = _index == ErrorValue ? _error : Error.CellValue;
+                error = _index == ErrorValue ? _error : Error.IncompatibleValue;
                 return false;
             }
 
@@ -241,7 +241,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 ReferenceValue => value._reference,
                 ErrorValue => value._error,
-                _ => Error.CellValue
+                _ => Error.IncompatibleValue
             };
         }
 
@@ -468,7 +468,7 @@ namespace ClosedXML.Excel.CalcEngine
                     if (rightReference.Areas.Count == 1)
                         return leftArray.Apply(new ReferenceArray(rightReference.Areas[0], context), func, context);
 
-                    return leftArray.Apply(new ScalarArray(Error.CellValue, leftArray.Width, leftArray.Height), func, context);
+                    return leftArray.Apply(new ScalarArray(Error.IncompatibleValue, leftArray.Width, leftArray.Height), func, context);
                 }
 
                 if (isRightArray)
@@ -479,18 +479,18 @@ namespace ClosedXML.Excel.CalcEngine
                     if (leftReference.Areas.Count == 1)
                         return new ReferenceArray(leftReference.Areas[0], context).Apply(rightArray, func, context);
 
-                    return new ScalarArray(Error.CellValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
+                    return new ScalarArray(Error.IncompatibleValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
                 }
 
                 // Both are references
                 if (leftReference.Areas.Count > 1 && rightReference.Areas.Count > 1)
-                    return Error.CellValue;
+                    return Error.IncompatibleValue;
 
                 if (leftReference.Areas.Count > 1)
-                    return new ScalarArray(Error.CellValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
+                    return new ScalarArray(Error.IncompatibleValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
 
                 if (rightReference.Areas.Count > 1)
-                    return new ScalarArray(Error.CellValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
+                    return new ScalarArray(Error.IncompatibleValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
 
                 var leftArea = leftReference.Areas[0];
                 var rightArea = rightReference.Areas[0];
