@@ -1,14 +1,13 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Graphics;
 using NUnit.Framework;
-using System;
 
-namespace ClosedXML.SixLabors.Tests
+namespace ClosedXML.Tests.Graphics
 {
     [TestFixture]
     public class FontTests
     {
-        private readonly IXLGraphicEngine _engine = SixLaborsEngine.Instance;
+        private readonly IXLGraphicEngine _engine = DefaultGraphicEngine.Instance.Value;
 
         [TestCase]
         public void CalculatedTextWidth()
@@ -75,41 +74,17 @@ namespace ClosedXML.SixLabors.Tests
 
             public bool Strikethrough { get; set; }
 
-            public XLFontUnderlineValues Underline
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public XLFontUnderlineValues Underline { get; set; } = XLFontUnderlineValues.None;
 
-            public XLFontVerticalTextAlignmentValues VerticalAlignment
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
 
-            public bool Shadow
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public bool Shadow { get; set; }
 
-            public XLColor FontColor
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public XLColor FontColor { get; set; } = XLColor.Black;
 
-            public XLFontFamilyNumberingValues FontFamilyNumbering
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; } = XLFontFamilyNumberingValues.NotApplicable;
 
-            public XLFontCharSet FontCharSet
-            {
-                get => throw new NotSupportedException();
-                set => throw new NotSupportedException();
-            }
+            public XLFontCharSet FontCharSet { get; set; } = XLFontCharSet.Default;
         }
     }
 }

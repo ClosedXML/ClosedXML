@@ -10,6 +10,24 @@ namespace ClosedXML.Tests.Graphics
     public class PictureInfoTests
     {
         [Test]
+        public void CanReadPng()
+        {
+            AssertRasterImage("SampleImagePng.png", XLPictureFormat.Png, new Size(252, 152), 96, 96);
+        }
+
+        [Test]
+        public void CanReadJfif()
+        {
+            AssertRasterImage("SampleImageJfif.jpg", XLPictureFormat.Jpeg, new Size(176, 270), 96, 96);
+        }
+
+        [Test]
+        public void CanReadExif()
+        {
+            AssertRasterImage("SampleImageExif.jpg", XLPictureFormat.Jpeg, new Size(252, 152), 0, 0);
+        }
+
+        [Test]
         public void CanReadGif87Image()
         {
             AssertRasterImage("SampleImageGif87a.gif", XLPictureFormat.Gif, new Size(500, 200), 0, 0);
@@ -66,6 +84,12 @@ namespace ClosedXML.Tests.Graphics
             AssertVectorImage("SampleImageOriginalWmf.wmf", XLPictureFormat.Wmf, new Size(12496, 6247));
         }
 
+        [Test]
+        public void CanReadEmf()
+        {
+            AssertVectorImage("SampleImageEmf.emf", XLPictureFormat.Emf, new Size(28844, 28938));
+        }
+
         private static void AssertRasterImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, double expectedDpiX, double expectedDpiY)
         {
             AssertImage(imageName, expectedFormat, expectedPxSize, Size.Empty, expectedDpiX, expectedDpiY);
@@ -83,9 +107,11 @@ namespace ClosedXML.Tests.Graphics
 
             Assert.AreEqual(expectedFormat, info.Format);
             Assert.AreEqual(expectedPxSize, info.SizePx);
-            Assert.AreEqual(expectedDpiX, info.DpiX, 0.01);
-            Assert.AreEqual(expectedDpiY, info.DpiY, 0.01);
             Assert.AreEqual(expectedHiMetricSize, info.SizePhys);
+
+            // Some DPI is stored as pixels per meter, causing a rounding errors.
+            Assert.AreEqual(expectedDpiX, info.DpiX, 0.02);
+            Assert.AreEqual(expectedDpiY, info.DpiY, 0.02);
         }
     }
 }

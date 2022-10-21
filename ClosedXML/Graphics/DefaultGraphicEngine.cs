@@ -1,35 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using SixLabors.Fonts;
 
 namespace ClosedXML.Graphics
 {
     public class DefaultGraphicEngine : IXLGraphicEngine
     {
-        /// <summary>
-        /// An engine that contains an embedded Noto Sans Display font that is used for all text measurements.
-        /// </summary>
-        public static readonly Lazy<DefaultGraphicEngine> Embedded = new(() => new DefaultGraphicEngine(ReadEmbeddedFont("NotoSansDisplay.fon")));
-
-        /// <summary>
-        /// An engine that uses external font file (%SystemRoot%/Fonts/calibri.ttf) for all text measurements. If not found (non-Windows environments), an exception will be thrown.
-        /// </summary>
-        public static readonly Lazy<DefaultGraphicEngine> External = new(() => new DefaultGraphicEngine(ReadSystemFont("calibri.ttf")));
-
-        internal static Lazy<DefaultGraphicEngine> Instance { get; } = new(() =>
-        {
-            try
-            {
-                return External.Value;
-            }
-            catch
-            {
-                return Embedded.Value;
-            }
-        });
-
-        private readonly FontMetric _fontMetric;
+        private const float FontMetricSize = 16f;
         private readonly ImageInfoReader[] _imageReaders =
         {
             new PngInfoReader(),
@@ -42,9 +22,37 @@ namespace ClosedXML.Graphics
             new PcxInfoReader() // Due to poor magic detection, keep last
         };
 
-        private DefaultGraphicEngine(FontMetric fontMetric)
+        private readonly string _fallbackFont;
+
+        /// <summary>
+        /// A font loaded font in the size <see cref="FontMetricSize"/>. There is no benefit in having multiple allocated instances, everything is just scaled at the moment.
+        /// </summary>
+        private readonly ConcurrentDictionary<MetricId, Font> _fonts = new();
+        private readonly Func<MetricId, Font> _loadFont;
+
+        /// <summary>
+        /// Max digit width as a fraction of Em square. Multiply by font size to get pt size.
+        /// </summary>
+        private readonly ConcurrentDictionary<MetricId, double> _maxDigitWidths = new();
+        private readonly Func<MetricId, double> _calculateMaxDigitWidth;
+
+        /// <summary>
+        /// Get a singleton instance of the engine that uses <c>Microsoft Sans Serif</c> as a fallback font.
+        /// </summary>
+        public static Lazy<DefaultGraphicEngine> Instance { get; } = new(() => new DefaultGraphicEngine("Microsoft Sans Serif"));
+
+        /// <summary>
+        /// Initialize a new instance of the engine.
+        /// </summary>
+        /// <param name="fallbackFont">A name of a font that is used when a font in a workbook is not available.</param>
+        public DefaultGraphicEngine(string fallbackFont)
         {
-            _fontMetric = fontMetric;
+            if (string.IsNullOrWhiteSpace(fallbackFont))
+                throw new ArgumentException(nameof(fallbackFont));
+
+            _fallbackFont = fallbackFont;
+            _loadFont = LoadFont;
+            _calculateMaxDigitWidth = CalculateMaxDigitWidth;
         }
 
         public XLPictureInfo GetPictureInfo(Stream stream, XLPictureFormat expectedFormat)
@@ -58,56 +66,107 @@ namespace ClosedXML.Graphics
             throw new ArgumentException("Unable to determine the format of the image.");
         }
 
-        public double GetTextHeight(IXLFontBase textFont, double dpiY)
+        public double GetDescent(IXLFontBase font, double dpiY)
         {
-            var fontMetric = _fontMetric;
-            var heightInFontUnits = fontMetric.Ascent + 2 * fontMetric.Descent;
-            var pointsPerFontUnits = textFont.FontSize / fontMetric.UnitsPerEm;
-            return XLHelper.PointsToPixels(heightInFontUnits * pointsPerFontUnits, dpiY);
+            var metrics = GetMetrics(font);
+            return PointsToPixels(-metrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
-        public double GetTextWidth(string text, IXLFontBase textFont, double dpiX)
+        public double GetMaxDigitWidth(IXLFontBase fontBase, double dpiX)
         {
-            var fontMetric = _fontMetric;
-            var widthInFontUnits = 0;
-            foreach (var textCharacter in text)
-                widthInFontUnits += fontMetric.GetAdvanceWidth(textCharacter);
-
-            return XLHelper.PointsToPixels(widthInFontUnits * textFont.FontSize / fontMetric.UnitsPerEm, dpiX);
+            var metricId = new MetricId(fontBase);
+            var maxDigitWidth = _maxDigitWidths.GetOrAdd(metricId, _calculateMaxDigitWidth);
+            return PointsToPixels(maxDigitWidth * fontBase.FontSize, dpiX);
         }
 
-        public double GetMaxDigitWidth(IXLFontBase textFont, double dpiX)
+        public double GetTextHeight(IXLFontBase font, double dpiY)
         {
-            var fontMetric = _fontMetric;
-            return XLHelper.PointsToPixels(fontMetric.MaxDigitWidth * textFont.FontSize / fontMetric.UnitsPerEm, dpiX);
+            var metrics = GetMetrics(font);
+            return PointsToPixels((metrics.Ascender - 2 * metrics.Descender) * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
-        public double GetDescent(IXLFontBase fontBase, double dpiY)
+        public double GetTextWidth(string text, IXLFontBase fontBase, double dpiX)
         {
-            var fontMetric = _fontMetric;
-            return XLHelper.PointsToPixels(fontMetric.Descent * fontBase.FontSize / fontMetric.UnitsPerEm, dpiY);
-        }
-
-        private static FontMetric ReadEmbeddedFont(string embeddedFontName)
-        {
-            using var stream = typeof(DefaultGraphicEngine).Assembly.GetManifestResourceStream($"ClosedXML.Graphics.{embeddedFontName}");
-            return FontMetric.LoadFromEmbedded(stream);
-        }
-
-        private static FontMetric ReadSystemFont(string fontFileName)
-        {
-            FormattableString nonExpandedFontPath = $"%SystemRoot%/Fonts/{fontFileName}";
-            var fontPath = Environment.ExpandEnvironmentVariables(FormattableString.Invariant(nonExpandedFontPath));
-            try
+            var font = GetFont(fontBase);
+            var dimensionsPx = TextMeasurer.Measure(text, new TextOptions(font)
             {
-                using var stream = File.OpenRead(fontPath);
-                return FontMetric.LoadTrueType(stream);
+                Dpi = 72, // Normalize DPI, so 1px is 1pt
+                KerningMode = KerningMode.None
+            });
+            return PointsToPixels(dimensionsPx.Width / FontMetricSize * fontBase.FontSize, dpiX);
+        }
+
+        private FontMetrics GetMetrics(IXLFontBase fontBase)
+        {
+            var font = GetFont(fontBase);
+            return font.FontMetrics;
+        }
+
+        private Font GetFont(IXLFontBase fontBase)
+        {
+            return GetFont(new MetricId(fontBase));
+        }
+
+        private Font GetFont(MetricId metricId)
+        {
+            return _fonts.GetOrAdd(metricId, _loadFont);
+        }
+
+        private Font LoadFont(MetricId metricId)
+        {
+            if (!SystemFonts.TryGet(metricId.Name, out var fontFamily) &&
+                !SystemFonts.TryGet(_fallbackFont, out fontFamily))
+                throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}.");
+
+            return fontFamily.CreateFont(FontMetricSize); // Size is irrelevant for metric
+        }
+
+        private double CalculateMaxDigitWidth(MetricId metricId)
+        {
+            var font = GetFont(metricId);
+            var metrics = font.FontMetrics;
+            var maxWidth = int.MinValue;
+            for (var c = '0'; c <= '9'; ++c)
+            {
+                var glyphMetrics = metrics.GetGlyphMetrics(new SixLabors.Fonts.Unicode.CodePoint(c), ColorFontSupport.None);
+                var glyphAdvance = 0;
+                foreach (var glyphMetric in glyphMetrics)
+                    glyphAdvance += glyphMetric.AdvanceWidth;
+
+                maxWidth = Math.Max(maxWidth, glyphAdvance);
             }
-            catch (Exception e)
+            return maxWidth / (double)metrics.UnitsPerEm;
+        }
+
+        private static double PointsToPixels(double points, double dpi) => points / 72d * dpi;
+
+        private readonly struct MetricId : IEquatable<MetricId>
+        {
+            private readonly FontStyle _style;
+
+            public MetricId(IXLFontBase fontBase)
             {
-                throw new ArgumentException($"Unable to get font metrics for {fontPath} ({nonExpandedFontPath}). " +
-                                            $"On non-windows environments, try to use {nameof(DefaultGraphicEngine)}.{nameof(Embedded)} graphical engine " +
-                                            $"or install a graphical engine from NuGet.", e);
+                Name = fontBase.FontName;
+                _style = GetFontStyle(fontBase);
+            }
+
+            public string Name { get; }
+
+            public bool Equals(MetricId other) => Name == other.Name && _style == other._style;
+
+            public override bool Equals(object obj) => obj is MetricId other && Equals(other);
+
+            public override int GetHashCode() => (Name.GetHashCode() * 397) ^ (int)_style;
+
+            private static FontStyle GetFontStyle(IXLFontBase fontBase)
+            {
+                return fontBase switch
+                {
+                    { Bold: true, Italic: true } => FontStyle.BoldItalic,
+                    { Bold: true } => FontStyle.Bold,
+                    { Italic: true } => FontStyle.Italic,
+                    _ => FontStyle.Regular
+                };
             }
         }
     }
