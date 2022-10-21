@@ -98,7 +98,7 @@ namespace ClosedXML.Excel.CalcEngine
                     ? ScalarValue.Blank
                     : ScalarValue.From(text),
                 DateTime date => ScalarValue.From(date.ToOADate()),
-                Error errorType => ScalarValue.From(errorType),
+                XLError errorType => ScalarValue.From(errorType),
                 _ => throw new NotImplementedException($"Not sure how to get convert value {value} (type {value?.GetType().Name}) to AnyValue.")
             };
         }

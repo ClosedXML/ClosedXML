@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
         public AnyValue Visit(CalcContext context, FunctionNode functionNode)
         {
             if (!_functions.TryGetFunc(functionNode.Name, out var fn))
-                return Error.NameNotRecognized;
+                return XLError.NameNotRecognized;
 
             var parameters = functionNode.Parameters;
             var pool = _argsPool.Rent(parameters.Count);

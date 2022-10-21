@@ -71,8 +71,8 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    var leftItem = x < leftArray.Width && y < leftArray.Height ? leftArray[y, x] : Error.NoValueAvailable;
-                    var rightItem = x < rightArray.Width && y < rightArray.Height ? rightArray[y, x] : Error.NoValueAvailable;
+                    var leftItem = x < leftArray.Width && y < leftArray.Height ? leftArray[y, x] : XLError.NoValueAvailable;
+                    var rightItem = x < rightArray.Width && y < rightArray.Height ? rightArray[y, x] : XLError.NoValueAvailable;
                     data[y, x] = func(leftItem, rightItem, ctx);
                 }
             }

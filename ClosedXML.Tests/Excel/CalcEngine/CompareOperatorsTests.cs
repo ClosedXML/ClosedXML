@@ -17,7 +17,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"tExT\"=\"TeXt\"", true)]
         [TestCase("\"text\"=\"text\"", true)]
         [TestCase("\"\"=\"\"", true)]
-        [TestCase("#VALUE!=#VALUE!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!=#VALUE!", XLError.IncompatibleValue)]
         [TestCase("A1=B1", true)] // blanks are equal
         public void EqualTo_WithSameType(string formula, object expectedValue)
         {
@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"tExT\"<>\"TeXt\"", false)]
         [TestCase("\"text\"<>\"text\"", false)]
         [TestCase("\"\"<>\"\"", false)]
-        [TestCase("#VALUE!<>#VALUE!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!<>#VALUE!", XLError.IncompatibleValue)]
         [TestCase("A1<>B1", false)] // blanks are equal
         public void NotEqualTo_WithSameType(string formula, object expectedValue)
         {
@@ -49,7 +49,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("TRUE>FALSE", true)]
         [TestCase("\"text\">\"text\"", false)]
         [TestCase("\"texu\">\"text\"", true)]
-        [TestCase("#VALUE!>#REF!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!>#REF!", XLError.IncompatibleValue)]
         [TestCase("A1>A2", false)]
         public void GreaterThen_WithSameType(string formula, object expectedValue)
         {
@@ -64,7 +64,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("TRUE>=FALSE", true)]
         [TestCase("\"text\">=\"text\"", true)]
         [TestCase("\"texu\">=\"text\"", true)]
-        [TestCase("#VALUE!>=#REF!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!>=#REF!", XLError.IncompatibleValue)]
         [TestCase("A1>=A2", true)]
         public void GreaterThenOrEqual_WithSameType(string formula, object expectedValue)
         {
@@ -81,7 +81,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("FALSE<TRUE", true)]
         [TestCase("\"text\"<\"text\"", false)]
         [TestCase("\"text\"<\"texu\"", true)]
-        [TestCase("#VALUE!<#REF!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!<#REF!", XLError.IncompatibleValue)]
         [TestCase("A1<A2", false)]
         public void LessThen_WithSameType(string formula, object expectedValue)
         {
@@ -98,7 +98,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("FALSE<=TRUE", true)]
         [TestCase("\"text\"<=\"text\"", true)]
         [TestCase("\"text\"<=\"texu\"", true)]
-        [TestCase("#VALUE!<=#REF!", Error.IncompatibleValue)]
+        [TestCase("#VALUE!<=#REF!", XLError.IncompatibleValue)]
         [TestCase("A1<=A2", true)]
         public void LessThenOrEqual_WithSameType(string formula, object expectedValue)
         {

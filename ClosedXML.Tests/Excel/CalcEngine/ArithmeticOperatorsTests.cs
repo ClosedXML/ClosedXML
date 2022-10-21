@@ -46,11 +46,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, wb.Evaluate(formula));
         }
 
-        [TestCase("#DIV/0! & 1", Error.DivisionByZero)]
-        [TestCase("#DIV/0! & \"1\"", Error.DivisionByZero)]
-        [TestCase("#REF! & #DIV/0!", Error.CellReference)]
-        [TestCase("1 & #NAME?", Error.NameNotRecognized)]
-        public void Concat_WithErrorAsOperandReturnsTheError(string formula, Error expectedError)
+        [TestCase("#DIV/0! & 1", XLError.DivisionByZero)]
+        [TestCase("#DIV/0! & \"1\"", XLError.DivisionByZero)]
+        [TestCase("#REF! & #DIV/0!", XLError.CellReference)]
+        [TestCase("1 & #NAME?", XLError.NameNotRecognized)]
+        public void Concat_WithErrorAsOperandReturnsTheError(string formula, XLError expectedError)
         {
             Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
         }
@@ -59,7 +59,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("{1,2} & \"A\"", "1A")]
         [TestCase("{\"A\",2} & \"B\"", "AB")]
         [TestCase("{TRUE,2} & \"B\"", "TRUEB")]
-        [TestCase("{#REF!,5} & 1", Error.CellReference)]
+        [TestCase("{#REF!,5} & 1", XLError.CellReference)]
         public void Concat_UsesFirstElementOfArray(string formula, object expected)
         {
             Assert.AreEqual(expected, XLWorkbook.EvaluateExpr(formula));
@@ -73,7 +73,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("+\"1\"", "1")]
         [TestCase("+TRUE", true)]
         [TestCase("+FALSE", false)]
-        [TestCase("+#DIV/0!", Error.DivisionByZero)]
+        [TestCase("+#DIV/0!", XLError.DivisionByZero)]
         [TestCase("+A1", 0)]
         public void UnaryPlus_IsNonOpThatKeepsValueAndType(string formula, object expectedValue)
         {
@@ -89,7 +89,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("-\"1\"", -1)]
         [TestCase("-TRUE", -1)]
         [TestCase("-FALSE", 0)]
-        [TestCase("-#DIV/0!", Error.DivisionByZero)]
+        [TestCase("-#DIV/0!", XLError.DivisionByZero)]
         [TestCase("-A1", 0.0)]
         public void UnaryMinus_ConvertsArgumentBeforeNegating(string formula, object expectedValue)
         {
@@ -107,8 +107,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"1\"%", 0.01)]
         [TestCase("TRUE%", 0.01)]
         [TestCase("FALSE%", 0)]
-        [TestCase("#NAME?%", Error.NameNotRecognized)]
-        [TestCase("(1/0)%", Error.DivisionByZero)]
+        [TestCase("#NAME?%", XLError.NameNotRecognized)]
+        [TestCase("(1/0)%", XLError.DivisionByZero)]
         [TestCase("A1%", 0.0)]
         public void UnaryPercent_ConvertsArgumentBeforePercentOperator(string formula, object expectedValue)
         {
@@ -120,7 +120,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region Exponentiation
 
         [TestCase("1^1", 1.0)]
-        [TestCase("0^0", Error.NumberInvalid)]
+        [TestCase("0^0", XLError.NumberInvalid)]
         [TestCase("10^0", 1.0)]
         [TestCase("4^0.5", 2.0)]
         [TestCase("2^0.5", 1.4142135623730951)]
@@ -128,9 +128,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"5\"^\"3\"", 125)]
         [TestCase("5^TRUE", 5)]
         [TestCase("5^FALSE", 1)]
-        [TestCase("#VALUE!^1", Error.IncompatibleValue)]
-        [TestCase("1^#REF!", Error.CellReference)]
-        [TestCase("#DIV/0!^#REF!", Error.DivisionByZero)]
+        [TestCase("#VALUE!^1", XLError.IncompatibleValue)]
+        [TestCase("1^#REF!", XLError.CellReference)]
+        [TestCase("#DIV/0!^#REF!", XLError.DivisionByZero)]
         [TestCase("5^A1", 1.0)]
         [TestCase("A1^4", 0.0)]
         public void Exponentiation_CanWorkWithScalars(string formula, object expectedValue)
@@ -151,9 +151,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"5\" * \"3\"", 15)]
         [TestCase("5*TRUE", 5)]
         [TestCase("5*FALSE", 0)]
-        [TestCase("#VALUE!*1", Error.IncompatibleValue)]
-        [TestCase("1*#REF!", Error.CellReference)]
-        [TestCase("#DIV/0!*#REF!", Error.DivisionByZero)]
+        [TestCase("#VALUE!*1", XLError.IncompatibleValue)]
+        [TestCase("1*#REF!", XLError.CellReference)]
+        [TestCase("#DIV/0!*#REF!", XLError.DivisionByZero)]
         [TestCase("10*A1", 0.0)]
         [TestCase("A1*10", 0.0)]
         public void Multiplication_CanWorkWithScalars(string formula, object expectedValue)
@@ -168,17 +168,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("1/1", 1.0)]
         [TestCase("5/2", 2.5)]
         [TestCase("14.5/2.5", 5.8)]
-        [TestCase("10/0", Error.DivisionByZero)]
-        [TestCase("0/0", Error.DivisionByZero)]
+        [TestCase("10/0", XLError.DivisionByZero)]
+        [TestCase("0/0", XLError.DivisionByZero)]
         [TestCase("2.5/-0.5", -5)]
         [TestCase("\"10\" / \"4\"", 2.5)]
         [TestCase("5/TRUE", 5)]
-        [TestCase("5/FALSE", Error.DivisionByZero)]
-        [TestCase("#VALUE!/1", Error.IncompatibleValue)]
-        [TestCase("1/#REF!", Error.CellReference)]
-        [TestCase("#DIV/0!/#REF!", Error.DivisionByZero)]
+        [TestCase("5/FALSE", XLError.DivisionByZero)]
+        [TestCase("#VALUE!/1", XLError.IncompatibleValue)]
+        [TestCase("1/#REF!", XLError.CellReference)]
+        [TestCase("#DIV/0!/#REF!", XLError.DivisionByZero)]
         [TestCase("A1/5", 0.0)]
-        [TestCase("5/A1", Error.DivisionByZero)]
+        [TestCase("5/A1", XLError.DivisionByZero)]
         public void Division_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -194,9 +194,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"10\" + \"4\"", 14.0)]
         [TestCase("5+TRUE", 6.0)]
         [TestCase("5+FALSE", 5.0)]
-        [TestCase("#VALUE! + 1", Error.IncompatibleValue)]
-        [TestCase("1 + #REF!", Error.CellReference)]
-        [TestCase("#DIV/0! + #REF!", Error.DivisionByZero)]
+        [TestCase("#VALUE! + 1", XLError.IncompatibleValue)]
+        [TestCase("1 + #REF!", XLError.CellReference)]
+        [TestCase("#DIV/0! + #REF!", XLError.DivisionByZero)]
         [TestCase("A1 + 7", 7)]
         public void Addition_CanWorkWithScalars(string formula, object expectedValue)
         {
@@ -213,9 +213,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"10\" - \"4\"", 6.0)]
         [TestCase("5-TRUE", 4.0)]
         [TestCase("5-FALSE", 5.0)]
-        [TestCase("#VALUE! - 1", Error.IncompatibleValue)]
-        [TestCase("1 - #REF!", Error.CellReference)]
-        [TestCase("#DIV/0! - #REF!", Error.DivisionByZero)]
+        [TestCase("#VALUE! - 1", XLError.IncompatibleValue)]
+        [TestCase("1 - #REF!", XLError.CellReference)]
+        [TestCase("#DIV/0! - #REF!", XLError.DivisionByZero)]
         [TestCase("A1 - 5", -5)]
         public void Subtraction_CanWorkWithScalars(string formula, object expectedValue)
         {

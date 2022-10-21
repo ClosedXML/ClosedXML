@@ -219,7 +219,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
-        internal OneOf<IXLWorksheet, Error> GetWorksheet(XLWorkbook wb)
+        internal OneOf<IXLWorksheet, XLError> GetWorksheet(XLWorkbook wb)
         {
             if (File is not null)
                 throw new NotImplementedException("References from other files are not yet implemented.");
@@ -228,9 +228,9 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NotImplementedException("3D references are not yet implemented.");
 
             if (!wb.TryGetWorksheet(Sheet, out var worksheet))
-                return Error.CellReference;
+                return XLError.CellReference;
 
-            return OneOf<IXLWorksheet, Error>.FromT0(worksheet);
+            return OneOf<IXLWorksheet, XLError>.FromT0(worksheet);
         }
     }
 
@@ -307,7 +307,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             if (!TryGetNameRange(worksheet, out var namedRange))
-                return Error.NameNotRecognized;
+                return XLError.NameNotRecognized;
 
             // Parser needs an equal sign for a union of ranges (or braces around formula)
             var nameFormula = namedRange.RefersTo;

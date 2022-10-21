@@ -21,11 +21,11 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly bool _logical;
         private readonly double _number;
         private readonly string _text;
-        private readonly Error _error;
+        private readonly XLError _error;
         private readonly Array _array;
         private readonly Reference _reference;
 
-        private AnyValue(byte index, bool logical, double number, string text, Error error, Array array, Reference reference)
+        private AnyValue(byte index, bool logical, double number, string text, XLError error, Array array, Reference reference)
         {
             _index = index;
             _logical = logical;
@@ -53,7 +53,7 @@ namespace ClosedXML.Excel.CalcEngine
             return new AnyValue(TextValue, default, default, text, default, default, default);
         }
 
-        public static AnyValue From(Error error) => new(ErrorValue, default, default, default, error, default, default);
+        public static AnyValue From(XLError error) => new(ErrorValue, default, default, default, error, default, default);
 
         public static AnyValue From(Array array)
         {
@@ -77,7 +77,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator AnyValue(string text) => From(text);
 
-        public static implicit operator AnyValue(Error error) => From(error);
+        public static implicit operator AnyValue(XLError error) => From(error);
 
         public static implicit operator AnyValue(Array array) => From(array);
 
@@ -105,7 +105,7 @@ namespace ClosedXML.Excel.CalcEngine
             return _index <= ErrorValue;
         }
 
-        public bool TryPickError(out Error error)
+        public bool TryPickError(out XLError error)
         {
             if (_index == ErrorValue)
             {
@@ -117,7 +117,7 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        public bool TryPickReference(out Reference reference, out Error error)
+        public bool TryPickReference(out Reference reference, out XLError error)
         {
             if (_index == ReferenceValue)
             {
@@ -127,7 +127,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             reference = default;
-            error = _index == ErrorValue ? _error : Error.IncompatibleValue;
+            error = _index == ErrorValue ? _error : XLError.IncompatibleValue;
             return false;
         }
 
@@ -137,19 +137,19 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="area">The found area.</param>
         /// <param name="error">Original error, if the value is error, <c>#VALUE!</c> if type is not a reference or #REF! if more than one area in the reference.</param>
         /// <returns>True if area could be determined, false otherwise.</returns>
-        public bool TryPickArea(out XLRangeAddress area, out Error error)
+        public bool TryPickArea(out XLRangeAddress area, out XLError error)
         {
             if (_index != ReferenceValue)
             {
                 area = default;
-                error = _index == ErrorValue ? _error : Error.IncompatibleValue;
+                error = _index == ErrorValue ? _error : XLError.IncompatibleValue;
                 return false;
             }
 
             if (_reference.Areas.Count > 1)
             {
                 area = default;
-                error = Error.CellReference;
+                error = XLError.CellReference;
                 return false;
             }
 
@@ -158,7 +158,7 @@ namespace ClosedXML.Excel.CalcEngine
             return true;
         }
 
-        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
+        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<XLError, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
         {
             return _index switch
             {
@@ -235,13 +235,13 @@ namespace ClosedXML.Excel.CalcEngine
             return Reference.UnionOp(leftReference, rightReference);
         }
 
-        private static OneOf<Reference, Error> ConvertToReference(in AnyValue value)
+        private static OneOf<Reference, XLError> ConvertToReference(in AnyValue value)
         {
             return value._index switch
             {
                 ReferenceValue => value._reference,
                 ErrorValue => value._error,
-                _ => Error.IncompatibleValue
+                _ => XLError.IncompatibleValue
             };
         }
 
@@ -316,7 +316,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return BinaryOperation(in left, in right, static (in ScalarValue leftItem, in ScalarValue rightItem, CalcContext ctx) =>
             {
-                return BinaryArithmeticOp(in leftItem, in rightItem, static (lhs, rhs) => rhs == 0.0 ? Error.DivisionByZero : lhs / rhs, ctx);
+                return BinaryArithmeticOp(in leftItem, in rightItem, static (lhs, rhs) => rhs == 0.0 ? XLError.DivisionByZero : lhs / rhs, ctx);
             }, context);
         }
 
@@ -324,7 +324,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return BinaryOperation(in left, in right, static (in ScalarValue leftItem, in ScalarValue rightItem, CalcContext ctx) =>
             {
-                return BinaryArithmeticOp(in leftItem, in rightItem, static (lhs, rhs) => lhs == 0 && rhs == 0 ? Error.NumberInvalid : Math.Pow(lhs, rhs), ctx);
+                return BinaryArithmeticOp(in leftItem, in rightItem, static (lhs, rhs) => lhs == 0 && rhs == 0 ? XLError.NumberInvalid : Math.Pow(lhs, rhs), ctx);
             }, context);
         }
 
@@ -468,7 +468,7 @@ namespace ClosedXML.Excel.CalcEngine
                     if (rightReference.Areas.Count == 1)
                         return leftArray.Apply(new ReferenceArray(rightReference.Areas[0], context), func, context);
 
-                    return leftArray.Apply(new ScalarArray(Error.IncompatibleValue, leftArray.Width, leftArray.Height), func, context);
+                    return leftArray.Apply(new ScalarArray(XLError.IncompatibleValue, leftArray.Width, leftArray.Height), func, context);
                 }
 
                 if (isRightArray)
@@ -479,18 +479,18 @@ namespace ClosedXML.Excel.CalcEngine
                     if (leftReference.Areas.Count == 1)
                         return new ReferenceArray(leftReference.Areas[0], context).Apply(rightArray, func, context);
 
-                    return new ScalarArray(Error.IncompatibleValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
+                    return new ScalarArray(XLError.IncompatibleValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
                 }
 
                 // Both are references
                 if (leftReference.Areas.Count > 1 && rightReference.Areas.Count > 1)
-                    return Error.IncompatibleValue;
+                    return XLError.IncompatibleValue;
 
                 if (leftReference.Areas.Count > 1)
-                    return new ScalarArray(Error.IncompatibleValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
+                    return new ScalarArray(XLError.IncompatibleValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
 
                 if (rightReference.Areas.Count > 1)
-                    return new ScalarArray(Error.IncompatibleValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
+                    return new ScalarArray(XLError.IncompatibleValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
 
                 var leftArea = leftReference.Areas[0];
                 var rightArea = rightReference.Areas[0];
@@ -549,28 +549,28 @@ namespace ClosedXML.Excel.CalcEngine
         ///     Return 1 (positive) if left greater than left
         ///     Return 0 if both operands are considered equal.
         /// </returns>
-        private static OneOf<int, Error> CompareValues(ScalarValue left, ScalarValue right, CultureInfo culture)
+        private static OneOf<int, XLError> CompareValues(ScalarValue left, ScalarValue right, CultureInfo culture)
         {
             return left.Match(culture,
-                _ => right.Match<OneOf<int, Error>, CultureInfo>(culture,
+                _ => right.Match<OneOf<int, XLError>, CultureInfo>(culture,
                         _ => 0,
                         (rightLogical, _) => false.CompareTo(rightLogical),
                         (rightNumber, _) => 0.0.CompareTo(rightNumber),
                         (rightText, culture) => string.Compare(string.Empty, rightText, culture, CompareOptions.IgnoreCase),
                         (rightError, _) => rightError),
-                (leftLogical, _) => right.Match<OneOf<int, Error>, bool>(leftLogical,
+                (leftLogical, _) => right.Match<OneOf<int, XLError>, bool>(leftLogical,
                         leftLogical => leftLogical.CompareTo(false),
                         (rightLogical, leftLogical) => leftLogical.CompareTo(rightLogical),
                         (rightNumber, _) => 1,
                         (rightText, _) => 1,
                         (rightError, _) => rightError),
-                (leftNumber, _) => right.Match<OneOf<int, Error>, double>(leftNumber,
+                (leftNumber, _) => right.Match<OneOf<int, XLError>, double>(leftNumber,
                         leftNumber => leftNumber.CompareTo(0.0),
                         (rightLogical, _) => -1,
                         (rightNumber, leftNumber) => leftNumber.CompareTo(rightNumber),
                         (rightText, _) => -1,
                         (rightError, _) => rightError),
-                (leftText, culture) => right.Match<OneOf<int, Error>, string, CultureInfo>(leftText, culture,
+                (leftText, culture) => right.Match<OneOf<int, XLError>, string, CultureInfo>(leftText, culture,
                         (leftText, culture) => string.Compare(leftText, string.Empty, culture, CompareOptions.IgnoreCase),
                         (rightLogical, _, _) => -1,
                         (rightNumber, _, _) => 1,
@@ -579,7 +579,7 @@ namespace ClosedXML.Excel.CalcEngine
                 (leftError, _) => leftError);
         }
 
-        private delegate OneOf<double, Error> BinaryNumberFunc(double lhs, double rhs);
+        private delegate OneOf<double, XLError> BinaryNumberFunc(double lhs, double rhs);
     }
 
     internal delegate ScalarValue BinaryFunc(in ScalarValue lhs, in ScalarValue rhs, CalcContext ctx);

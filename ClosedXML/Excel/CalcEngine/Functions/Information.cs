@@ -27,22 +27,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<Error, int> errorTypes = new Dictionary<Error, int>()
+        static IDictionary<XLError, int> errorTypes = new Dictionary<XLError, int>()
         {
-            [Error.NullValue] = 1,
-            [Error.DivisionByZero] = 2,
-            [Error.IncompatibleValue] = 3,
-            [Error.CellReference] = 4,
-            [Error.NameNotRecognized] = 5,
-            [Error.NumberInvalid] = 6,
-            [Error.NoValueAvailable] = 7
+            [XLError.NullValue] = 1,
+            [XLError.DivisionByZero] = 2,
+            [XLError.IncompatibleValue] = 3,
+            [XLError.CellReference] = 4,
+            [XLError.NameNotRecognized] = 5,
+            [XLError.NumberInvalid] = 6,
+            [XLError.NoValueAvailable] = 7
         };
 
         static object ErrorType(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
-            if (v is Error error)
+            if (v is XLError error)
                 return errorTypes[error];
             else
                 throw new NoValueAvailableException();
@@ -66,14 +66,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
 
-            return v is Error error && error != Error.NoValueAvailable;
+            return v is XLError error && error != XLError.NoValueAvailable;
         }
 
         static object IsError(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
-            return v is Error;
+            return v is XLError;
         }
 
         static object IsEven(List<Expression> p)
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             try
             {
                 var v = p[0].Evaluate();
-                return v is Error error && error == Error.NoValueAvailable;
+                return v is XLError error && error == XLError.NoValueAvailable;
             }
             catch (NoValueAvailableException)
             {
@@ -193,7 +193,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object NA(List<Expression> p)
         {
-            return Error.NoValueAvailable;
+            return XLError.NoValueAvailable;
         }
 
         static object Type(List<Expression> p)

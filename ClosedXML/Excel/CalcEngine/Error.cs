@@ -3,7 +3,7 @@
     /// <summary>
     /// A formula error.
     /// </summary>
-    public enum Error
+    public enum XLError
     {
         /// <summary>
         /// <c>#REF!</c> - a formula refers to a cell that's not valid.

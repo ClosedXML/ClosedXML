@@ -99,10 +99,10 @@ namespace ClosedXML.Tests.Excel
                 ws = wb.AddWorksheet("Sheet2");
 
                 ws.Cell("A1").FormulaA1 = "=SUM(Sheet1!A1:Sheet2!A50)";
-                Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A1").Value);
+                Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A1").Value);
 
                 ws.Cell("B1").FormulaA1 = "=SUM(UnknownSheet!A50)";
-                Assert.AreEqual(Error.CellReference, ws.Cell("B1").Value);
+                Assert.AreEqual(XLError.CellReference, ws.Cell("B1").Value);
             }
         }
 

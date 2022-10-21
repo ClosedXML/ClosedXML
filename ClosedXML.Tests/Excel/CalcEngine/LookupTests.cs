@@ -108,20 +108,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(5 + 6 + 7, ws.Cell("A3").SetFormulaA1("SUM(COLUMN(E1:G10))").Value);
 
             // Not contiguous range (multiple areas) returns #REF!
-            Assert.AreEqual(Error.CellReference, ws.Cell("A4").SetFormulaA1("COLUMN((D5:G10,I8:K12))").Value);
+            Assert.AreEqual(XLError.CellReference, ws.Cell("A4").SetFormulaA1("COLUMN((D5:G10,I8:K12))").Value);
 
             // Invalid references return #REF!
-            Assert.AreEqual(Error.CellReference, ws.Cell("A5").SetFormulaA1("COLUMN(NonExistent!F10)").Value);
+            Assert.AreEqual(XLError.CellReference, ws.Cell("A5").SetFormulaA1("COLUMN(NonExistent!F10)").Value);
 
             // Return column number even for different worksheet
             Assert.AreEqual(5, ws.Cell("A6").SetFormulaA1("COLUMN(Other!E7)").Value);
 
             // Unexpected types return error
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(TRUE)").Value);
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A7").SetFormulaA1("COLUMN(5)").Value);
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(\"C5\")").Value);
-            Assert.AreEqual(Error.DivisionByZero, ws.Cell("A9").SetFormulaA1("COLUMN(#DIV/0!)").Value);
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A10").SetFormulaA1("COLUMN(\"C5\")").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(TRUE)").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A7").SetFormulaA1("COLUMN(5)").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A8").SetFormulaA1("COLUMN(\"C5\")").Value);
+            Assert.AreEqual(XLError.DivisionByZero, ws.Cell("A9").SetFormulaA1("COLUMN(#DIV/0!)").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A10").SetFormulaA1("COLUMN(\"C5\")").Value);
         }
 
         [Test]
@@ -259,19 +259,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(2 + 3 + 4, ws.Cell("A4").SetFormulaA1("SUM(ROW(C2:Z4))").Value);
 
             // Not contiguous range (multiple areas) returns #REF!
-            Assert.AreEqual(Error.CellReference, ws.Cell("A5").SetFormulaA1("ROW((D5:G10,I8:K12))").Value);
+            Assert.AreEqual(XLError.CellReference, ws.Cell("A5").SetFormulaA1("ROW((D5:G10,I8:K12))").Value);
 
             // Invalid references return #REF!
-            Assert.AreEqual(Error.CellReference, ws.Cell("A6").SetFormulaA1("ROW(NonExistent!F10)").Value);
+            Assert.AreEqual(XLError.CellReference, ws.Cell("A6").SetFormulaA1("ROW(NonExistent!F10)").Value);
 
             // Return row number even for different worksheet
             Assert.AreEqual(14, ws.Cell("A7").SetFormulaA1("ROW(Other!E14)").Value);
 
             // Unexpected types return error
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A8").SetFormulaA1("ROW(IF(TRUE,TRUE))").Value);
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
-            Assert.AreEqual(Error.IncompatibleValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
-            Assert.AreEqual(Error.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A8").SetFormulaA1("ROW(IF(TRUE,TRUE))").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
+            Assert.AreEqual(XLError.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
         }
 
         [Test]

@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
         ///    <item><c>bool</c> - represents a logical value.</item>
         ///    <item><c>double</c> - represents a number and also date/time as serial date-time.</item>
         ///    <item><c>string</c> - represents a text value.</item>
-        ///    <item><see cref="Error" /> - represents a formula calculation error.</item>
+        ///    <item><see cref="XLError" /> - represents a formula calculation error.</item>
         /// </list>
         /// </summary>
         private static object ToCellContentValue(AnyValue value, CalcContext ctx)

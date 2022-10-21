@@ -26,9 +26,9 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly bool _logical;
         private readonly double _number;
         private readonly string _text;
-        private readonly Error _error;
+        private readonly XLError _error;
 
-        private ScalarValue(byte index, bool logical, double number, string text, Error error)
+        private ScalarValue(byte index, bool logical, double number, string text, XLError error)
         {
             _index = index;
             _logical = logical;
@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
             return new ScalarValue(TextValue, default, default, text, default);
         }
 
-        public static ScalarValue From(Error error) => new(ErrorValue, default, default, default, error);
+        public static ScalarValue From(XLError error) => new(ErrorValue, default, default, default, error);
 
         public static implicit operator ScalarValue(bool logical) => From(logical);
 
@@ -65,9 +65,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator ScalarValue(string text) => From(text);
 
-        public static implicit operator ScalarValue(Error error) => From(error);
+        public static implicit operator ScalarValue(XLError error) => From(error);
 
-        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError)
+        public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<XLError, TResult> transformError)
         {
             return _index switch
             {
@@ -80,7 +80,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public TResult Match<TResult, TParam1>(TParam1 param, Func<TParam1, TResult> transformBlank, Func<bool, TParam1, TResult> transformLogical, Func<double, TParam1, TResult> transformNumber, Func<string, TParam1, TResult> transformText, Func<Error, TParam1, TResult> transformError)
+        public TResult Match<TResult, TParam1>(TParam1 param, Func<TParam1, TResult> transformBlank, Func<bool, TParam1, TResult> transformLogical, Func<double, TParam1, TResult> transformNumber, Func<string, TParam1, TResult> transformText, Func<XLError, TParam1, TResult> transformError)
         {
             return _index switch
             {
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public TResult Match<TResult, TParam1, TParam2>(TParam1 param1, TParam2 param2, Func<TParam1, TParam2, TResult> transformBlank, Func<bool, TParam1, TParam2, TResult> transformLogical, Func<double, TParam1, TParam2, TResult> transformNumber, Func<string, TParam1, TParam2, TResult> transformText, Func<Error, TParam1, TParam2, TResult> transformError)
+        public TResult Match<TResult, TParam1, TParam2>(TParam1 param1, TParam2 param2, Func<TParam1, TParam2, TResult> transformBlank, Func<bool, TParam1, TParam2, TResult> transformLogical, Func<double, TParam1, TParam2, TResult> transformNumber, Func<string, TParam1, TParam2, TResult> transformText, Func<XLError, TParam1, TParam2, TResult> transformError)
         {
             return _index switch
             {
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Convert value to text. Error is not convertible.
         /// </summary>
-        public OneOf<string, Error> ToText(CultureInfo culture)
+        public OneOf<string, XLError> ToText(CultureInfo culture)
         {
             return _index switch
             {
@@ -138,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Convert value to number. Error is not convertible.
         /// </summary>
-        public OneOf<double, Error> ToNumber(CultureInfo culture)
+        public OneOf<double, XLError> ToNumber(CultureInfo culture)
         {
             return _index switch
             {
@@ -151,11 +151,11 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        private static OneOf<double, Error> TextToNumber(string text, CultureInfo culture)
+        private static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
         {
             return double.TryParse(text, NumberStyles.Float, culture, out var number)
                 ? number
-                : Error.IncompatibleValue;
+                : XLError.IncompatibleValue;
         }
 
         public bool TryPickNumber(out double number)
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        public bool TryPickError(out Error error)
+        public bool TryPickError(out XLError error)
         {
             if (_index == ErrorValue)
             {

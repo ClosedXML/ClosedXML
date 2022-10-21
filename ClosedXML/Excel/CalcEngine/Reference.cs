@@ -68,13 +68,13 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public static OneOf<Reference, Error> RangeOp(Reference lhs, Reference rhs, XLWorksheet contextWorksheet)
+        public static OneOf<Reference, XLError> RangeOp(Reference lhs, Reference rhs, XLWorksheet contextWorksheet)
         {
             var lhsWorksheets = lhs.Areas.Count == 1
                 ? lhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
                 : lhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
             if (lhsWorksheets.Count() > 1)
-                return Error.IncompatibleValue;
+                return XLError.IncompatibleValue;
 
             var lhsWorksheet = lhsWorksheets.SingleOrDefault();
 
@@ -82,14 +82,14 @@ namespace ClosedXML.Excel.CalcEngine
                 ? rhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
                 : rhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
             if (rhsWorksheets.Count() > 1)
-                return Error.IncompatibleValue;
+                return XLError.IncompatibleValue;
 
             var rhsWorksheet = rhsWorksheets.SingleOrDefault();
 
             if (rhsWorksheet is not null)
             {
                 if ((lhsWorksheet ?? contextWorksheet) != rhsWorksheet)
-                    return Error.IncompatibleValue;
+                    return XLError.IncompatibleValue;
             }
 
             var minCol = XLHelper.MaxColumnNumber;
@@ -116,13 +116,13 @@ namespace ClosedXML.Excel.CalcEngine
             return new Reference(lhs.Areas.Concat(rhs.Areas).ToList());
         }
 
-        public static OneOf<Reference, Error> Intersect(Reference lhs, Reference rhs, CalcContext ctx)
+        public static OneOf<Reference, XLError> Intersect(Reference lhs, Reference rhs, CalcContext ctx)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet)
                 .Concat(rhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet))
                 .Distinct().ToList();
             if (sheets.Count != 1)
-                return Error.IncompatibleValue;
+                return XLError.IncompatibleValue;
 
             var sheet = sheets.Single();
             var intersections = new List<XLRangeAddress>();
@@ -140,7 +140,7 @@ namespace ClosedXML.Excel.CalcEngine
                     intersections.Add(intersectedArea);
             }
 
-            return intersections.Any() ? new Reference(intersections) : Error.NullValue;
+            return intersections.Any() ? new Reference(intersections) : XLError.NullValue;
         }
 
         /// <summary>
@@ -148,10 +148,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="formulaAddress"></param>
         /// <returns>An address of the intersection or error if intersection failed.</returns>
-        public OneOf<Reference, Error> ImplicitIntersection(IXLAddress formulaAddress)
+        public OneOf<Reference, XLError> ImplicitIntersection(IXLAddress formulaAddress)
         {
             if (Areas.Count != 1)
-                return Error.IncompatibleValue;
+                return XLError.IncompatibleValue;
 
             var area = Areas.Single();
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(intersection, intersection));
             }
 
-            return Error.IncompatibleValue;
+            return XLError.IncompatibleValue;
         }
 
         internal bool IsSingleCell()
@@ -193,7 +193,7 @@ namespace ClosedXML.Excel.CalcEngine
             return true;
         }
 
-        internal OneOf<Array, Error> ToArray(CalcContext context)
+        internal OneOf<Array, XLError> ToArray(CalcContext context)
         {
             if (Areas.Count != 1)
                 throw new NotImplementedException();
@@ -203,10 +203,10 @@ namespace ClosedXML.Excel.CalcEngine
             return new ReferenceArray(area, context);
         }
 
-        public OneOf<Array, Error> Apply(Func<ScalarValue, ScalarValue> op, CalcContext context)
+        public OneOf<Array, XLError> Apply(Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (Areas.Count != 1)
-                return Error.IncompatibleValue;
+                return XLError.IncompatibleValue;
 
             var area = Areas.Single();
             var width = area.ColumnSpan;

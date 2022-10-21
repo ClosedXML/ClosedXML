@@ -115,15 +115,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         // #REF! is converted by a different rule, so it is not here.
-        [TestCase("#VALUE!", Error.IncompatibleValue)]
-        [TestCase("#DIV/0!", Error.DivisionByZero)]
-        [TestCase("#NAME?", Error.NameNotRecognized)]
-        [TestCase("#N/A", Error.NoValueAvailable)]
-        [TestCase("#NULL!", Error.NullValue)]
-        [TestCase("#NUM!", Error.NumberInvalid)]
+        [TestCase("#VALUE!", XLError.IncompatibleValue)]
+        [TestCase("#DIV/0!", XLError.DivisionByZero)]
+        [TestCase("#NAME?", XLError.NameNotRecognized)]
+        [TestCase("#N/A", XLError.NoValueAvailable)]
+        [TestCase("#NULL!", XLError.NullValue)]
+        [TestCase("#NUM!", XLError.NumberInvalid)]
         public void Constant_can_be_error(string formula, object expectedError)
         {
-            var error = (Error)XLWorkbook.EvaluateExpr(formula);
+            var error = (XLError)XLWorkbook.EvaluateExpr(formula);
             Assert.AreEqual(expectedError, error);
         }
         #endregion
@@ -354,13 +354,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_item_can_be_ref_error()
         {
-            Assert.AreEqual(Error.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
         }
 
         [TestCase]
         public void Reference_item_can_be_user_defined_function_call()
         {
-            Assert.AreEqual(Error.NameNotRecognized, XLWorkbook.EvaluateExpr("CustomFunction(1)"));
+            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("CustomFunction(1)"));
         }
 
         [TestCase]

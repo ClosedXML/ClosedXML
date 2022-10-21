@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         // Each method is named ToSomething and it converts an argument into a desired type (e.g. for ToSomething it should be type Something).
         // Return value is always OneOf<Something, Error>, if there is an error, return it as an error.
 
-        private static OneOf<double, Error> ToNumber(in AnyValue value, CalcContext ctx)
+        private static OneOf<double, XLError> ToNumber(in AnyValue value, CalcContext ctx)
         {
             if (value.TryPickScalar(out var scalar, out var collection))
                 return scalar.ToNumber(ctx.Culture);
@@ -89,7 +89,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             throw new NotImplementedException("Array formulas not implemented.");
         }
 
-        private static OneOf<string, Error> ToText(in AnyValue value, CalcContext ctx)
+        private static OneOf<string, XLError> ToText(in AnyValue value, CalcContext ctx)
         {
             if (value.TryPickScalar(out var scalar, out var collection))
                 return scalar.ToText(ctx.Culture);
@@ -103,7 +103,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             throw new NotImplementedException("Array formulas not implemented.");
         }
 
-        private static OneOf<ScalarValue, Error> ToScalarValue(in AnyValue value, CalcContext ctx)
+        private static OneOf<ScalarValue, XLError> ToScalarValue(in AnyValue value, CalcContext ctx)
         {
             if (value.TryPickScalar(out var scalar, out var collection))
                 return scalar;
@@ -114,7 +114,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (reference.TryGetSingleCellValue(out var referenceScalar, ctx))
                 return referenceScalar;
 
-            return OneOf<ScalarValue, Error>.FromT1(Error.IncompatibleValue);
+            return OneOf<ScalarValue, XLError>.FromT1(XLError.IncompatibleValue);
         }
 
         #endregion

@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
             try
             {
                 var value = p[0].Evaluate();
-                if (value is Error)
+                if (value is XLError)
                     return p[1].Evaluate();
 
                 return value;

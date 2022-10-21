@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public virtual object Evaluate()
         {
-            if (_value is Error error)
+            if (_value is XLError error)
                 ThrowApplicableException(error);
             return _value;
         }
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x._value is Error error)
+            if (x._value is XLError error)
                 ThrowApplicableException(error);
 
             var v = x.Evaluate();
@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator double(Expression x)
         {
-            if (x._value is Error error)
+            if (x._value is XLError error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -98,7 +98,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
-            if (x._value is Error error)
+            if (x._value is XLError error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -128,7 +128,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x._value is Error error)
+            if (x._value is XLError error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -210,23 +210,23 @@ namespace ClosedXML.Excel.CalcEngine
         #endregion ** IComparable<Expression>
 
 
-        private static void ThrowApplicableException(Error errorType)
+        private static void ThrowApplicableException(XLError errorType)
         {
             switch (errorType)
             {
-                case Error.CellReference:
+                case XLError.CellReference:
                     throw new CellReferenceException();
-                case Error.IncompatibleValue:
+                case XLError.IncompatibleValue:
                     throw new CellValueException();
-                case Error.DivisionByZero:
+                case XLError.DivisionByZero:
                     throw new DivisionByZeroException();
-                case Error.NameNotRecognized:
+                case XLError.NameNotRecognized:
                     throw new NameNotRecognizedException();
-                case Error.NoValueAvailable:
+                case XLError.NoValueAvailable:
                     throw new NoValueAvailableException();
-                case Error.NullValue:
+                case XLError.NullValue:
                     throw new NullValueException();
-                case Error.NumberInvalid:
+                case XLError.NumberInvalid:
                     throw new NumberException();
             }
         }

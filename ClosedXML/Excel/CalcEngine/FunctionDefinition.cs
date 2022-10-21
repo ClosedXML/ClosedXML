@@ -105,7 +105,7 @@ namespace ClosedXML.Excel.CalcEngine
                 long number => AnyValue.From(number),
                 DateTime date => AnyValue.From(date.ToOADate()),
                 TimeSpan time => AnyValue.From(time.ToSerialDateTime()),
-                Error errorType => AnyValue.From(errorType),
+                XLError errorType => AnyValue.From(errorType),
                 double[,] array => AnyValue.From(new NumberArray(array)),
                 _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
             };
