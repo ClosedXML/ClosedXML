@@ -11,6 +11,7 @@
     <EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
     <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
     <EmbeddedResource Include="Resource\Images\*.*" />
+    <EmbeddedResource Include="Resource\Fonts\*.*" />
   </ItemGroup>
 
   <ItemGroup>
