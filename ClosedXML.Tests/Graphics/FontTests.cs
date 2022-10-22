@@ -56,6 +56,32 @@ namespace ClosedXML.Tests.Graphics
             Assert.That(nonExistentFontHeight, Is.EqualTo(fallbackFontHeight));
         }
 
+        [TestCase]
+        public void CanSpecifyFallbackFontWithoutFileSystem()
+        {
+            using var fallbackFontStream = TestHelper.GetStreamFromResource("Fonts.TestFontA.ttf");
+            var engine = new DefaultGraphicEngine(fallbackFontStream);
+
+            var nonExistentFont = new DummyFont("Nonexistent Font", 20);
+            var widthOfLetterA = engine.GetTextWidth("A", nonExistentFont, 120);
+
+            const double expectedWidthOfLetterA = 31.25d;
+            Assert.AreEqual(expectedWidthOfLetterA, widthOfLetterA, 0.0001);
+        }
+
+        [TestCase]
+        public void CanSpecifyExtraFontsAsStreamsWithoutFileSystem()
+        {
+            using var fallbackFontStream = TestHelper.GetStreamFromResource("Fonts.TestFontA.ttf");
+            var fontBStream = TestHelper.GetStreamFromResource("Fonts.TestFontB.ttf");
+            var engine = new DefaultGraphicEngine(fallbackFontStream, fontBStream);
+
+            var widthOfLetterB = engine.GetTextWidth("B", new DummyFont("TestFontB", 30), 96);
+
+            const double expectedWidthOfLetterB = 25d;
+            Assert.AreEqual(expectedWidthOfLetterB, widthOfLetterB, 0.0001);
+        }
+
         private class DummyFont : IXLFontBase
         {
             public DummyFont(string name, double size)

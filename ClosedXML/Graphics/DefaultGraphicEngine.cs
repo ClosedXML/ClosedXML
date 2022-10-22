@@ -22,6 +22,7 @@ namespace ClosedXML.Graphics
             new PcxInfoReader() // Due to poor magic detection, keep last
         };
 
+        private readonly Lazy<IReadOnlyFontCollection> _fontCollection;
         private readonly string _fallbackFont;
 
         /// <summary>
@@ -50,7 +51,33 @@ namespace ClosedXML.Graphics
             if (string.IsNullOrWhiteSpace(fallbackFont))
                 throw new ArgumentException(nameof(fallbackFont));
 
+            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => SystemFonts.Collection);
             _fallbackFont = fallbackFont;
+            _loadFont = LoadFont;
+            _calculateMaxDigitWidth = CalculateMaxDigitWidth;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of the engine. The engine will be able to use system fonts and fonts loaded from external sources.
+        /// </summary>
+        /// <remarks>Useful/necessary for environments without an access to filesystem.</remarks>
+        /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
+        /// <param name="fontStreams">Extra fonts that should be loaded to the engine.</param>
+        public DefaultGraphicEngine(Stream fallbackFontStream, params Stream[] fontStreams)
+        {
+            if (fallbackFontStream is null)
+                throw new ArgumentNullException(nameof(fallbackFontStream));
+
+            if (fontStreams is null)
+                throw new ArgumentNullException(nameof(fontStreams));
+
+            var fontCollection = new FontCollection();
+            var fallbackFamily = fontCollection.Add(fallbackFontStream);
+            foreach (var fontStream in fontStreams)
+                fontCollection.Add(fontStream);
+
+            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts());
+            _fallbackFont = fallbackFamily.Name;
             _loadFont = LoadFont;
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
         }
@@ -114,8 +141,8 @@ namespace ClosedXML.Graphics
 
         private Font LoadFont(MetricId metricId)
         {
-            if (!SystemFonts.TryGet(metricId.Name, out var fontFamily) &&
-                !SystemFonts.TryGet(_fallbackFont, out fontFamily))
+            if (!_fontCollection.Value.TryGet(metricId.Name, out var fontFamily) &&
+                !_fontCollection.Value.TryGet(_fallbackFont, out fontFamily))
                 throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}. " +
                                             "Install missing fonts or specify a different fallback font through " +
                                             "'LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(\"Fallback font name\")'.");
