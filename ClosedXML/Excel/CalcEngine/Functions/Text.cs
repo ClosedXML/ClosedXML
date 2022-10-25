@@ -388,7 +388,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Value(List<Expression> p)
         {
-            return double.Parse(p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+            return string.IsNullOrEmpty( p[0] ) ? 0d : double.Parse(p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private static object NumberValue(List<Expression> p)
