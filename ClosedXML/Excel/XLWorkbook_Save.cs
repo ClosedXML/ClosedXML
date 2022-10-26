@@ -222,8 +222,6 @@ namespace ClosedXML.Excel
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document, SaveOptions options)
         {
-            this.SuspendEvents();
-
             var context = new SaveContext();
 
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
@@ -382,8 +380,6 @@ namespace ClosedXML.Excel
 
             // Clear list of deleted worksheets to prevent errors on multiple saves
             worksheets.Deleted.Clear();
-
-            this.ResumeEvents();
         }
 
         private bool DeleteExistingComments(WorksheetPart worksheetPart, XLWorksheet worksheet, WorksheetCommentsPart commentsPart, VmlDrawingPart vmlDrawingPart)

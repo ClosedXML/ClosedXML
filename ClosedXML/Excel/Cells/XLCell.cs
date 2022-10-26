@@ -2465,15 +2465,12 @@ namespace ClosedXML.Excel
 
         private void CopyDataValidationFrom(XLCell otherCell)
         {
-            var eventTracking = Worksheet.EventTrackingEnabled;
-            Worksheet.EventTrackingEnabled = false;
             if (otherCell.HasDataValidation)
                 CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
                 Worksheet.DataValidations.Delete(AsRange());
             }
-            Worksheet.EventTrackingEnabled = eventTracking;
         }
 
         internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)

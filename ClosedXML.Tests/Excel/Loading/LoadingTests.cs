@@ -4,6 +4,7 @@ using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -373,8 +374,8 @@ namespace ClosedXML.Tests.Excel
                 Assert.DoesNotThrow(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false }));
                 Assert.Throws<NotImplementedException>(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true }));
 
-                Assert.AreEqual(XLEventTracking.Disabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Disabled }).EventTracking);
-                Assert.AreEqual(XLEventTracking.Enabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Enabled }).EventTracking);
+                Assert.AreEqual(30, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiX);
+                Assert.AreEqual(14, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiY);
             }
         }
 

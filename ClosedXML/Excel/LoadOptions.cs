@@ -17,8 +17,6 @@ namespace ClosedXML.Excel
         /// </summary>
         public static IXLGraphicEngine DefaultGraphicEngine { internal get; set; }
 
-        public XLEventTracking EventTracking { get; set; } = XLEventTracking.Enabled;
-
         /// <summary>
         /// Should all formulas in a workbook be recalculated during load? Default value is <c>false</c>.
         /// </summary>

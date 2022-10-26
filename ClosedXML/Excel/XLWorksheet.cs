@@ -26,7 +26,6 @@ namespace ClosedXML.Excel
         private Double _rowHeight;
         private Boolean _tabActive;
         private XLSheetProtection _protection;
-        internal Boolean EventTrackingEnabled;
 
         /// <summary>
         /// Fake address to be used everywhere the invalid address is needed.
@@ -44,8 +43,6 @@ namespace ClosedXML.Excel
                     new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)),
                 (workbook.Style as XLStyle).Value)
         {
-            EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
-
             Workbook = workbook;
             InvalidAddress = new XLAddress(this, 0, 0, false, false);
 
@@ -1483,64 +1480,46 @@ namespace ClosedXML.Excel
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
         {
-            try
+            var rangesToShift = _rangeRepository
+                .Where(r => r.RangeAddress.IsValid)
+                .OrderBy(r => r.RangeAddress.FirstAddress.RowNumber * -Math.Sign(rowsShifted))
+                .ToList();
+
+            WorksheetRangeShiftedRows(range, rowsShifted);
+
+            foreach (var storedRange in rangesToShift)
             {
-                SuspendEvents();
+                if (storedRange.IsEntireColumn())
+                    continue;
 
-                var rangesToShift = _rangeRepository
-                    .Where(r => r.RangeAddress.IsValid)
-                    .OrderBy(r => r.RangeAddress.FirstAddress.RowNumber * -Math.Sign(rowsShifted))
-                    .ToList();
+                if (ReferenceEquals(range, storedRange))
+                    continue;
 
-                WorksheetRangeShiftedRows(range, rowsShifted);
-
-                foreach (var storedRange in rangesToShift)
-                {
-                    if (storedRange.IsEntireColumn())
-                        continue;
-
-                    if (ReferenceEquals(range, storedRange))
-                        continue;
-
-                    storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
-                }
-                range.WorksheetRangeShiftedRows(range, rowsShifted);
+                storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
             }
-            finally
-            {
-                ResumeEvents();
-            }
+            range.WorksheetRangeShiftedRows(range, rowsShifted);
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
         {
-            try
+            var rangesToShift = _rangeRepository
+                .Where(r => r.RangeAddress.IsValid)
+                .OrderBy(r => r.RangeAddress.FirstAddress.ColumnNumber * -Math.Sign(columnsShifted))
+                .ToList();
+
+            WorksheetRangeShiftedColumns(range, columnsShifted);
+
+            foreach (var storedRange in rangesToShift)
             {
-                SuspendEvents();
+                if (storedRange.IsEntireRow())
+                    continue;
 
-                var rangesToShift = _rangeRepository
-                    .Where(r => r.RangeAddress.IsValid)
-                    .OrderBy(r => r.RangeAddress.FirstAddress.ColumnNumber * -Math.Sign(columnsShifted))
-                    .ToList();
+                if (ReferenceEquals(range, storedRange))
+                    continue;
 
-                WorksheetRangeShiftedColumns(range, columnsShifted);
-
-                foreach (var storedRange in rangesToShift)
-                {
-                    if (storedRange.IsEntireRow())
-                        continue;
-
-                    if (ReferenceEquals(range, storedRange))
-                        continue;
-
-                    storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
-                }
-                range.WorksheetRangeShiftedColumns(range, columnsShifted);
+                storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
             }
-            finally
-            {
-                ResumeEvents();
-            }
+            range.WorksheetRangeShiftedColumns(range, columnsShifted);
         }
 
         public XLRow Row(Int32 rowNumber, Boolean pingCells)
@@ -1703,19 +1682,6 @@ namespace ClosedXML.Excel
         public IXLConditionalFormats ConditionalFormats { get; private set; }
 
         public IXLSparklineGroups SparklineGroups { get; private set; }
-
-        private Boolean _eventTracking;
-
-        public void SuspendEvents()
-        {
-            _eventTracking = EventTrackingEnabled;
-            EventTrackingEnabled = false;
-        }
-
-        public void ResumeEvents()
-        {
-            EventTrackingEnabled = _eventTracking;
-        }
 
         private IXLRanges _selectedRanges;
 

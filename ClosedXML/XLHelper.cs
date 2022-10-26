@@ -221,17 +221,12 @@ namespace ClosedXML.Excel
                                                              Boolean expandTable)
         {
             var ws = tableRange.Worksheet;
-            var tracking = ws.EventTrackingEnabled;
-            ws.EventTrackingEnabled = false;
-
             var rows = new XLTableRows(ws.Style);
             var inserted = insertFunc(numberOfRows, false);
             inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, r as XLRangeRow)));
 
             if (expandTable)
                 tableRange.Table.ExpandTableRows(numberOfRows);
-
-            ws.EventTrackingEnabled = tracking;
 
             return rows;
         }

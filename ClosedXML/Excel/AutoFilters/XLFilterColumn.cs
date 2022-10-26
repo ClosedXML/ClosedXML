@@ -77,10 +77,6 @@ namespace ClosedXML.Excel
             }
 
             _autoFilter.Column(_column).FilterType = XLFilterType.DateTimeGrouping;
-
-            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
-            ws.SuspendEvents();
-
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
             foreach (IXLRangeRow row in rows)
@@ -90,7 +86,6 @@ namespace ClosedXML.Excel
                 else
                     row.WorksheetRow().Hide();
             }
-            ws.ResumeEvents();
 
             return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
         }
@@ -239,8 +234,6 @@ namespace ClosedXML.Excel
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
-            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
-            ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
             foreach (IXLRangeRow row in rows)
             {
@@ -269,7 +262,6 @@ namespace ClosedXML.Excel
 
                 addToList = false;
             }
-            ws.ResumeEvents();
         }
 
         private IEnumerable<double> GetValues(int value, XLTopBottomType type, bool takeTop)
@@ -312,8 +304,6 @@ namespace ClosedXML.Excel
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
-            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
-            ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
             foreach (IXLRangeRow row in rows)
@@ -344,8 +334,6 @@ namespace ClosedXML.Excel
 
                 addToList = false;
             }
-
-            ws.ResumeEvents();
         }
 
         private IEnumerable<double> GetAverageValues(bool aboveAverage)

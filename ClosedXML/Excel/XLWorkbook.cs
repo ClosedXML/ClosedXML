@@ -11,8 +11,6 @@ using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
-    public enum XLEventTracking { Enabled, Disabled }
-
     public enum XLCalculateMode
     {
         Auto,
@@ -118,8 +116,6 @@ namespace ClosedXML.Excel
 
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
-
-        public XLEventTracking EventTracking { get; set; }
 
         /// <summary>
         /// Counter increasing at workbook data change. Serves to determine if the cell formula
@@ -664,19 +660,14 @@ namespace ClosedXML.Excel
         ///   Creates a new Excel workbook.
         /// </summary>
         public XLWorkbook()
-            : this(XLEventTracking.Enabled)
+            : this(new LoadOptions())
         {
         }
 
         internal XLWorkbook(String file, Boolean asTemplate)
-            : this(XLEventTracking.Enabled)
+            : this(new LoadOptions())
         {
             LoadSheetsFromTemplate(file);
-        }
-
-        public XLWorkbook(XLEventTracking eventTracking)
-            : this(new LoadOptions { EventTracking = eventTracking })
-        {
         }
 
         /// <summary>
@@ -684,12 +675,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name = "file">The file to open.</param>
         public XLWorkbook(String file)
-            : this(file, XLEventTracking.Enabled)
-        {
-        }
-
-        public XLWorkbook(String file, XLEventTracking eventTracking)
-            : this(file, new LoadOptions { EventTracking = eventTracking })
+            : this(file, new LoadOptions())
         {
         }
 
@@ -710,12 +696,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
         public XLWorkbook(Stream stream)
-            : this(stream, XLEventTracking.Enabled)
-        {
-        }
-
-        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
-            : this(stream, new LoadOptions { EventTracking = eventTracking })
+            : this(stream, new LoadOptions())
         {
         }
 
@@ -732,7 +713,9 @@ namespace ClosedXML.Excel
 
         public XLWorkbook(LoadOptions loadOptions)
         {
-            EventTracking = loadOptions.EventTracking;
+            if (loadOptions is null)
+                throw new ArgumentNullException(nameof(loadOptions));
+
             DpiX = loadOptions.Dpi.X;
             DpiY = loadOptions.Dpi.Y;
             GraphicEngine = loadOptions.GraphicEngine ?? LoadOptions.DefaultGraphicEngine ?? DefaultGraphicEngine.Instance.Value;
@@ -1075,22 +1058,6 @@ namespace ClosedXML.Excel
 
                 default:
                     throw new NotImplementedException();
-            }
-        }
-
-        public void SuspendEvents()
-        {
-            foreach (var ws in WorksheetsInternal)
-            {
-                ws.SuspendEvents();
-            }
-        }
-
-        public void ResumeEvents()
-        {
-            foreach (var ws in WorksheetsInternal)
-            {
-                ws.ResumeEvents();
             }
         }
     }
