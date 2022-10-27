@@ -170,6 +170,20 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
+        public bool TryPickText(out string text, out XLError error)
+        {
+            if (_index == TextValue)
+            {
+                text = _text;
+                error = default;
+                return true;
+            }
+
+            text = default;
+            error = _index == ErrorValue ? _error : XLError.IncompatibleValue;
+            return false;
+        }
+
         public bool TryPickError(out XLError error)
         {
             if (_index == ErrorValue)

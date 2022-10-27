@@ -3,21 +3,13 @@ using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
-using System.Globalization;
-using System.Threading;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class TextTests
     {
-        [SetUp]
-        public void Init()
-        {
-            // Make sure tests run on a deterministic culture
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-        }
-
         [Test]
         public void Char_Empty_Input_String()
         {
@@ -687,17 +679,68 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Value_Input_String_Is_Not_A_Number()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Value(""asdf"")"), Throws.TypeOf<FormatException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"VALUE(""asdf"")"));
+        }
+
+        [Test]
+        public void Value_FromBlankIsZero()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(0d, ws.Evaluate("VALUE(A1)"));
+        }
+
+        [Test]
+        public void Value_FromEmptyStringIsError()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("VALUE(\"\")"));
+        }
+
+        [Test]
+        public void Value_PassingUnexpectedTypes()
+        {
+            Assert.AreEqual(14d, XLWorkbook.EvaluateExpr(@"VALUE(14)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"VALUE(TRUE)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"VALUE(FALSE)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"VALUE(#DIV/0!)"));
         }
 
         [Test]
         public void Value_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Value(""123.54"")");
-            Assert.AreEqual(123.54, actual);
+            using var wb = new XLWorkbook();
 
-            actual = XLWorkbook.EvaluateExpr(@"Value(654.32)");
-            Assert.AreEqual(654.32, actual);
+            // Examples from spec
+            Assert.AreEqual(123.456d, wb.Evaluate("VALUE(\"123.456\")"));
+            Assert.AreEqual(1000d, wb.Evaluate("VALUE(\"$1,000\")"));
+            Assert.AreEqual(new DateTime(2002, 3, 23).ToOADate(), wb.Evaluate("VALUE(\"23-Mar-2002\")"));
+            Assert.AreEqual(0.188056d, (double)wb.Evaluate("VALUE(\"16:48:00\")-VALUE(\"12:17:12\")"), 0.000001d);
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Value_NonEnglish()
+        {
+            using var wb = new XLWorkbook();
+
+            // Examples from spec
+            Assert.AreEqual(123.456d, wb.Evaluate("VALUE(\"123,456\")"));
+            Assert.AreEqual(1000d, wb.Evaluate("VALUE(\"1 000 Kč\")"));
+            Assert.AreEqual(37338d, wb.Evaluate("VALUE(\"23-bře-2002\")"));
+            Assert.AreEqual(0.188056d, (double)wb.Evaluate("VALUE(\"16:48:00\")-VALUE(\"12:17:12\")"), 0.000001d);
+
+            // Various number/currency formats
+            Assert.AreEqual(-1d, wb.Evaluate("VALUE(\"(1)\")"));
+            Assert.AreEqual(-1d, wb.Evaluate("VALUE(\"(100%)\")"));
+            Assert.AreEqual(-1d, wb.Evaluate("VALUE(\"(100%)\")"));
+            Assert.AreEqual(-15d, wb.Evaluate("VALUE(\"(1,5e1 Kč)\")"));
+            Assert.AreEqual(-15d, wb.Evaluate("VALUE(\"(1,5e3%)\")"));
+            Assert.AreEqual(-15d, wb.Evaluate("VALUE(\"(1,5e3)%\")"));
+
+            var expectedSerialDate = new DateTime(2022, 3, 5).ToOADate();
+            Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"5-březen-22\")"));
+            Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"5-březen\")"));
+            Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"05.03.2022\")"));
         }
     }
 }
