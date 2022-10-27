@@ -269,14 +269,7 @@ namespace ClosedXML.Excel
             worksheets.Deleted.ToList().ForEach(ws => DeleteSheetAndDependencies(workbookPart, ws));
 
             // Ensure all RelId's have been added to the context
-            context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal
-                .Cast<XLWorksheet>()
-                .SelectMany(ws => ws.Tables.Cast<XLTable>())
-                .Where(t => !String.IsNullOrWhiteSpace(t.RelId))
-                .Select(t => t.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddExistingValues(workbookPart, this);
 
             var extendedFilePropertiesPart = document.ExtendedFilePropertiesPart ??
                                              document.AddNewPart<ExtendedFilePropertiesPart>(
@@ -318,11 +311,6 @@ namespace ClosedXML.Excel
                     worksheetPart = (WorksheetPart)workbookPart.GetPartById(wsRelId);
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
-
-                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id), RelType.Workbook);
-                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
-                if (worksheetPart.DrawingsPart != null)
-                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
 
                 var worksheetHasComments = worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any();
 

@@ -1,3 +1,6 @@
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,9 +62,32 @@ namespace ClosedXML.Excel
                 list.AddRange(values.Where(v => !list.Contains(v)));
             }
 
-            public String GetNext()
+            /// <summary>
+            /// Add all existing rel ids present on the parts or workbook to the generator, so they are not duplicated again.
+            /// </summary>
+            public void AddExistingValues(WorkbookPart workbookPart, XLWorkbook xlWorkbook)
             {
-                return GetNext(RelType.Workbook);
+                AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
+                AddValues(xlWorkbook.WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+                AddValues(xlWorkbook.WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
+                AddValues(xlWorkbook.WorksheetsInternal
+                    .Cast<XLWorksheet>()
+                    .SelectMany(ws => ws.Tables.Cast<XLTable>())
+                    .Where(t => !String.IsNullOrWhiteSpace(t.RelId))
+                    .Select(t => t.RelId), RelType.Workbook);
+
+                foreach (var xlWorksheet in xlWorkbook.WorksheetsInternal.Cast<XLWorksheet>())
+                {
+                    // if the worksheet is a new one, it doesn't have RelId yet.
+                    if (string.IsNullOrEmpty(xlWorksheet.RelId) || !workbookPart.TryGetPartById(xlWorksheet.RelId, out var part))
+                        continue;
+
+                    var worksheetPart = (WorksheetPart)part;
+                    AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id), RelType.Workbook);
+                    AddValues(worksheetPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
+                    if (worksheetPart.DrawingsPart != null)
+                        AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
+                }
             }
 
             public String GetNext(RelType relType)
