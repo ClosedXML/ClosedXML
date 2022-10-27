@@ -10,20 +10,22 @@ namespace ClosedXML.Tests.Excel.Comments
     public class CommentsTests
     {
         [Test]
-        public void CanGetColorFromIndex81()
+        public void CanConvertVmlPaletteEntriesToColors()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentsWithIndexedColor81.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentsWithColorNamesAndIndexes.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();
                 var c = ws.FirstCellUsed();
 
-                var xlColor = c.GetComment().Style.ColorsAndLines.LineColor;
-                Assert.AreEqual(XLColorType.Indexed, xlColor.ColorType);
-                Assert.AreEqual(81, xlColor.Indexed);
+                // None indicates an absence of a color
+                var lineColor = c.GetComment().Style.ColorsAndLines.LineColor;
+                Assert.AreEqual(XLColorType.Color, lineColor.ColorType);
+                Assert.AreEqual("00000000", lineColor.Color.ToHex());
 
-                var color = xlColor.Color.ToHex();
-                Assert.AreEqual("FF000000", color);
+                var bgColor = c.GetComment().Style.ColorsAndLines.FillColor;
+                Assert.AreEqual(XLColorType.Color, bgColor.ColorType);
+                Assert.AreEqual("FFFFFFE1", bgColor.Color.ToHex());
             }
         }
 

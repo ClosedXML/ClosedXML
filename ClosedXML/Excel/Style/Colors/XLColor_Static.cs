@@ -9,9 +9,43 @@ namespace ClosedXML.Excel
     public partial class XLColor
     {
         private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
-
-        private static readonly Dictionary<Color, XLColor> ByColor = new Dictionary<Color, XLColor>();
-        private static readonly Object ByColorLock = new Object();
+        
+        /// <summary>
+        /// VML palette entries from MS-OI29500. Excel uses Windows system color scheme to determine the actual colors of a palette
+        /// entry, but we have no way to get them. Win10 doesn't even have a tool, use Classic Color Panel. We will use the default
+        /// values that are default on Windows.
+        /// </summary>
+        private static readonly Lazy<Dictionary<String, XLColor>> _paletteEntries = new(() => new Dictionary<String, XLColor>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "ButtonFace", FromRgb(0xF0F0F0) },
+            { "WindowText", FromRgb(0x000000) },
+            { "Menu", FromRgb(0xF0F0F0) },
+            { "Highlight", FromRgb(0x0078D7) },
+            { "HighlightText", FromRgb(0xFFFFFF) },
+            { "CaptionText", FromRgb(0x000000) },
+            { "ActiveCaption", FromRgb(0x99B4D1) },
+            { "ButtonHighlight", FromRgb(0xFFFFFF) },
+            { "ButtonShadow", FromRgb(0xA0A0A0) },
+            { "ButtonText", FromRgb(0x000000) },
+            { "GrayText", FromRgb(0x6D6D6D) },
+            { "InactiveCaption", FromRgb(0xBFCDDB) },
+            { "InactiveCaptionText", FromRgb(0x000000) },
+            { "InfoBackground", FromRgb(0xFFFFE1) },
+            { "InfoText", FromRgb(0x000000) },
+            { "MenuText", FromRgb(0x000000) },
+            { "Scrollbar", FromRgb(0xC8C8C8) },
+            { "Window", FromRgb(0xFFFFFF) },
+            { "WindowFrame", FromRgb(0x646464) },
+            { "ThreeDLightShadow", FromRgb(0x000000) },
+            { "ThreeDDarkShadow", FromRgb(0x696969) },
+            { "ActiveBorder", FromRgb(0xB4B4B4) },
+            { "InactiveBorder", FromRgb(0xF4F7FC) },
+            { "Background", FromRgb(0x000000) },
+            { "AppWorkspace", FromRgb(0xABABAB) },
+            { "ThreeDFace", FromRgb(0xF0F0F0) },
+            { "ThreeDShadow", FromRgb(0xA0A0A0) },
+            { "ThreeDHighlight", FromRgb(0xFFFFFF) }
+        });
 
         internal static XLColor FromKey(ref XLColorKey key)
         {
@@ -43,12 +77,16 @@ namespace ClosedXML.Excel
             return FromColor(Color.FromArgb(a, r, g, b));
         }
 
-#if NETFRAMEWORK
-        public static XLColor FromKnownColor(KnownColor color)
+        /// <summary>
+        /// Create a color from RBG hexa number. Alpha will be always set to full opacity.
+        /// </summary>
+        internal static XLColor FromRgb(Int32 rgb)
         {
-            return FromColor(Color.FromKnownColor(color));
+            unchecked
+            {
+                return FromColor(Color.FromArgb(rgb | (int)0xFF000000));
+            }
         }
-#endif
 
         public static XLColor FromName(String name)
         {
@@ -89,6 +127,26 @@ namespace ClosedXML.Excel
                 ThemeTint = themeTint
             };
             return FromKey(ref key);
+        }
+
+        /// <summary>
+        /// Parse VML ST_ColorType type from ECMA-376, Part 4 §20.1.2.3.
+        /// </summary>
+        internal static XLColor FromVmlColor(String colorType)
+        {
+            // ST_ColorType can have an *optional* index to a palette (*system* palette, not indexed colors),
+            // but it only brings trouble because VML is used pretty much only for unusual features like notes,
+            // form controls ect. Ignore the palette entry completely, it is a legacy feature from times of 256 colors.
+            var paletteIndexStart = colorType.IndexOf("[", StringComparison.Ordinal);
+            var hasPaletteEntry = paletteIndexStart >= 0;
+            colorType = hasPaletteEntry ? colorType.Substring(0, paletteIndexStart).Trim() : colorType;
+            if (colorType.StartsWith("#", StringComparison.Ordinal))
+                return FromHtml(colorType);
+
+            if (_paletteEntries.Value.TryGetValue(colorType, out var xlColor))
+                return xlColor;
+
+            return FromName(colorType);
         }
 
         private static Dictionary<Int32, XLColor> _indexedColors;
