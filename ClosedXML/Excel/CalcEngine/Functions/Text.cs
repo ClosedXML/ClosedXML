@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -45,7 +46,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
-            ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
+            ce.RegisterFunction("VALUE", 1, 1, Adapt(Value), FunctionFlags.Scalar); // Converts a text argument to a number
         }
 
         private static object _Char(List<Expression> p)
@@ -386,9 +387,48 @@ namespace ClosedXML.Excel.CalcEngine
             return ((string)p[0]).ToUpper();
         }
 
-        private static object Value(List<Expression> p)
+        private static AnyValue Value(CalcContext ctx, ScalarValue arg)
         {
-            return double.Parse(p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+            // Specification is vague/misleading:
+            // * function accepts significantly more diverse range of inputs e.g. result of "($100)" is -100
+            //   despite braces not being part of any default number format.
+            // * Different cultures work weird, e.g. 7:30 PM is detected as 19:30 in cs locale despite "PM" designator being "odp."
+            // * Formats 14 and 22 differ depending on the locale (that is why in dialogue are with a '*' sign)
+            if (arg.IsBlank)
+                return 0;
+
+            if (arg.TryPickNumber(out var number))
+                return number;
+
+            if (!arg.TryPickText(out var text, out var error))
+                return error;
+
+            const string percentSign = "%";
+            var isPercent = text.IndexOf(percentSign, StringComparison.Ordinal) >= 0;
+            var textWithoutPercent = isPercent ? text.Replace(percentSign, string.Empty) : text;
+            if (double.TryParse(textWithoutPercent, NumberStyles.Any, ctx.Culture, out var parsedNumber))
+                return isPercent ? parsedNumber / 100d : parsedNumber;
+
+            // fraction not parsed, maybe in the future
+            // No idea how Date/Time parsing works, good enough for initial approach
+            var dateTimeFormats = new[]
+            {
+                ctx.Culture.DateTimeFormat.ShortDatePattern,
+                ctx.Culture.DateTimeFormat.YearMonthPattern,
+                ctx.Culture.DateTimeFormat.ShortTimePattern,
+                ctx.Culture.DateTimeFormat.LongTimePattern,
+                @"mm-dd-yy", // format 14
+                @"d-MMMM-yy", // format 15
+                @"d-MMMM", // format 16
+                @"d-MMM-yyyy",
+                @"H:mm", // format 20
+                @"H:mm:ss" // format 21
+            };
+            const DateTimeStyles dateTimeStyle = DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.NoCurrentDateDefault;
+            if (DateTime.TryParseExact(text, dateTimeFormats, ctx.Culture, dateTimeStyle, out var parsedDate))
+                return parsedDate.ToOADate();
+
+            return XLError.IncompatibleValue;
         }
 
         private static object NumberValue(List<Expression> p)

@@ -48,6 +48,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, ScalarValue, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToScalarValue(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                return f(ctx, arg0);
+            };
+        }
+
         public static CalcEngineFunction Adapt(Func<CalcContext, double, List<Reference>, AnyValue> f)
         {
             return (ctx, args) =>
