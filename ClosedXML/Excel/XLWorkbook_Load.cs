@@ -242,9 +242,7 @@ namespace ClosedXML.Excel
                                                        sheetFormatProperties.CustomHeight.Value);
 
                                 if (sheetFormatProperties.DefaultColumnWidth != null)
-                                {
-                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
-                                }
+                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth - ColumnWidthOffset;
                             }
                         }
                         else if (reader.ElementType == typeof(SheetViews))
