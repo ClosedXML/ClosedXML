@@ -1252,7 +1252,7 @@ namespace ClosedXML.Excel
                 drawing.Style.ColorsAndLines.LineWeight = lineWeight;
 
             var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromVmlColor(fillColor.Value);
+            if (fillColor != null) drawing.Style.ColorsAndLines.FillColor = XLColor.FromVmlColor(fillColor.Value);
 
             var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)
