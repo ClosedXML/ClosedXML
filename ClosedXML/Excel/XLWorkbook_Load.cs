@@ -1242,37 +1242,17 @@ namespace ClosedXML.Excel
             return name.Replace("_x000a_", Environment.NewLine).Replace("_x005f_x000a_", "_x000a_");
         }
 
-        // This may be part of XLHelper or XLColor
-        // Leaving it here for now. Can't decide what to call it and where to put it.
-        /// <summary>
-        /// Parse VML ST_ColorType type from ECMA-376, Part 4 §20.1.2.3.
-        /// </summary>
-        private XLColor ExtractVmlSimpleColor(String color)
-        {
-            var isPaletteEntry = color.IndexOf("[") >= 0;
-            if (isPaletteEntry)
-            {
-                int start = color.IndexOf("[") + 1;
-                int end = color.IndexOf("]", start);
-                return XLColor.FromIndex(Int32.Parse(color.Substring(start, end - start)));
-            }
-
-            return color.StartsWith("#", StringComparison.Ordinal)
-                ? XLColor.FromHtml(color)
-                : XLColor.FromName(color);
-        }
-
         private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)
         {
             var strokeColor = shape.Attribute("strokecolor");
-            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = ExtractVmlSimpleColor(strokeColor.Value);
+            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromVmlColor(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
             if (strokeWeight != null && TryGetPtValue(strokeWeight.Value, out var lineWeight))
                 drawing.Style.ColorsAndLines.LineWeight = lineWeight;
 
             var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = ExtractVmlSimpleColor(fillColor.Value);
+            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromVmlColor(fillColor.Value);
 
             var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)

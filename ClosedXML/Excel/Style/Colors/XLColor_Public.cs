@@ -28,14 +28,6 @@ namespace ClosedXML.Excel
 
     public partial class XLColor : IEquatable<XLColor>
     {
-        /// <summary>
-        /// Usually indexed colors are limited to max 63
-        /// Index 81 is some special case.
-        /// Some people claim it's the index for tooltip color.
-        /// We'll return normal black when index 81 is found.
-        /// </summary>
-        private const Int32 TOOLTIPCOLORINDEX = 81;
-
         public Boolean HasValue { get; private set; }
 
         public XLColorType ColorType
@@ -51,10 +43,7 @@ namespace ClosedXML.Excel
                     throw new InvalidOperationException("Cannot convert theme color to Color.");
 
                 if (ColorType == XLColorType.Indexed)
-                    if (Indexed == TOOLTIPCOLORINDEX)
-                        return Color.FromArgb(255, Color.Black);
-                    else
-                        return IndexedColors[Indexed].Color;
+                    return IndexedColors[Indexed].Color;
 
                 return Key.Color;
             }
