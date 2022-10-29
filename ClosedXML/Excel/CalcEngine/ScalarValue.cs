@@ -153,10 +153,23 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
         {
-            if (double.TryParse(text, NumberStyles.Float, culture, out var number))
+            // Numbers. The parsing method recognizes braces as negative number, includes currency parsing.
+            // Format 1 '0'
+            //        2 '0.00'
+            //        3 '#,##0'
+            //        4 '#,##0.00'
+            //       11 '0.00E+00'
+            //       48 '##0.0E+0'
+            if (double.TryParse(text, NumberStyles.Any, culture, out var number))
                 return number;
+
+            // Time span uses a different parser from time within a day.
+            // Format 20 'h:mm'
+            //        21 'h:mm:ss'
+            //        47 'mm:ss.0'
             if (TimeSpanParser.TryParseTime(text, culture, out var timeSpan))
                 return timeSpan.ToSerialDateTime();
+
             return XLError.IncompatibleValue;
         }
 
