@@ -5,8 +5,11 @@ using NUnit.Framework;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class TextToNumberCoercionTests
     {
+        private const double Tolerance = 0.000001;
+
         [Test]
         public void TimeSpan_MaximumResolutionIsOneMs()
         {
@@ -27,11 +30,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("23:300", 1.166666667)] // Minute part over limit
         public void TimeSpan_Format20(string timeSpan, double? expectedValue) // 'h:mm'
         {
-            var parsedValue = XLWorkbook.EvaluateExpr($"\"{timeSpan}\"*1");
-            if (expectedValue is null)
-                Assert.AreEqual(XLError.IncompatibleValue, parsedValue);
-            else
-                Assert.AreEqual(expectedValue.Value, (double)parsedValue, 0.000001);
+            AssertCoercion(timeSpan, expectedValue, Tolerance);
         }
 
         [TestCase("0:01:01", 0.000706019)]
@@ -48,11 +47,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(":0:0", null)] // First part can't be omitted
         public void TimeSpan_Format21(string timeSpan, double? expectedValue) // 'h:mm:ss'
         {
-            var parsedValue = XLWorkbook.EvaluateExpr($"\"{timeSpan}\"*1");
-            if (expectedValue is null)
-                Assert.AreEqual(XLError.IncompatibleValue, parsedValue);
-            else
-                Assert.AreEqual(expectedValue.Value, (double)parsedValue, 0.000001);
+            AssertCoercion(timeSpan, expectedValue, Tolerance);
         }
 
         [TestCase("14:30.0", 0.010069444)] // Happy case, can be over 12 (to differ from AM/PM times)
@@ -66,12 +61,63 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("00:57.180", 0.000661806)] // Can specify 3 digit ms
         public void TimeSpan_Format47(string timeSpan, double? expectedValue) // 'mm:ss.0'
         {
-            var parsedValue = XLWorkbook.EvaluateExpr($"\"{timeSpan}\"*1");
+            AssertCoercion(timeSpan, expectedValue, Tolerance);
+        }
+
+        [TestCase("1,000", 1000)]
+        [TestCase("1,00", null, Ignore = ".NET parse methods ignores thousands separator, but excel enforces them.")]
+        [TestCase("1,000,000", 1000000)]
+        [TestCase("1,00,000", null, Ignore = ".NET parse methods ignores thousands separator, but excel enforces them.")]
+        [TestCase("(1,000)", -1000)]
+        [TestCase("(100)", -100)]
+        [TestCase("(-1)", null)]
+        public void Number_Format37_38(string number, double? expectedValue) // Format 37+38 '#,##0 ;(#,##0)' '#,##0 ;[Red](#,##0)'
+        {
+            AssertCoercion(number, expectedValue);
+        }
+
+        [TestCase("1,000.15", 1000.15)]
+        [TestCase("(1,000.54)", -1000.54)]
+        [TestCase("  (   1,000.54  )  ", -1000.54, Ignore = "Excel can parse spaces within braces, but .NET parse method can't.")]
+        public void Number_Format39_40(string number, double? expectedValue) // Format 39+40 '#,##0.00;(#,##0.00)'  '#,##0.00;[Red](#,##0.00)'
+        {
+            AssertCoercion(number, expectedValue);
+        }
+
+        [TestCase("1e3", 1000)]
+        [TestCase("1e+3", 1000)]
+        [TestCase("1e-5", 0.00001)]
+        [TestCase("1e0", 1)]
+        [TestCase("1.5e2", 150)]
+        [TestCase("1e2.5", null)] // Exponent can't be a fraction
+        [TestCase("1.52e1", 15.2)]
+        [TestCase("-1e2", -100)]
+        [TestCase("1E2", 100)]
+        public void Number_Format48_11(string number, double? expectedValue) // Format 48+11 '##0.0E+0' '0.00E+00'
+        {
+            AssertCoercion(number, expectedValue);
+        }
+
+        [TestCase("$1", 1)]
+        [TestCase("1$", null, Ignore = ".NET parser allows currency symbol at the start or end, but Excel requires correct placement.")]
+        [TestCase("($1)", -1)]
+        [TestCase("-($1)", null)]
+        [TestCase("$100.5", 100.5)]
+        [TestCase("$100%", null)]
+        [TestCase("($100%)", null)]
+        public void Currency(string currency, double? expectedValue) // Currency doesn't have a format in ECMA-376, Part 1, §18.8.30, but VALUE includes currency formats
+        {
+            AssertCoercion(currency, expectedValue);
+        }
+
+        private static void AssertCoercion(string text, double? expectedValue, double tolerance = 0)
+        {
+            using var wb = new XLWorkbook();
+            var parsedValue = wb.Evaluate($"\"{text}\"*1");
             if (expectedValue is null)
                 Assert.AreEqual(XLError.IncompatibleValue, parsedValue);
             else
-                Assert.AreEqual(expectedValue.Value, (double)parsedValue, 0.000001);
+                Assert.AreEqual(expectedValue.Value, (double)parsedValue, tolerance);
         }
-
     }
 }
