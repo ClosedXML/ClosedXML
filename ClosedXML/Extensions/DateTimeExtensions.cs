@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
 
         public static double ToSerialDateTime(this TimeSpan time)
         {
-            return ((time.Hours % 24) + (time.Minutes % 60) / 60.0 + (time.Seconds % 60) / 3600.0) / 24.0;
+            return time.TotalMilliseconds / (24 * 60 * 60 * 1000);
         }
     }
 }

@@ -153,9 +153,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
         {
-            return double.TryParse(text, NumberStyles.Float, culture, out var number)
-                ? number
-                : XLError.IncompatibleValue;
+            if (double.TryParse(text, NumberStyles.Float, culture, out var number))
+                return number;
+            if (TimeSpanParser.TryParseTime(text, culture, out var timeSpan))
+                return timeSpan.ToSerialDateTime();
+            return XLError.IncompatibleValue;
         }
 
         public bool TryPickNumber(out double number)
