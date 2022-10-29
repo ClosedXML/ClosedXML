@@ -166,13 +166,63 @@ namespace ClosedXML.Excel.CalcEngine
             if (double.TryParse(text, NumberStyles.Any, culture, out var number))
                 return number;
 
+            // Percents. Percent sign can be at both sides.
+            // Format 9 '0%'
+            //       10 '0.00%'
+            var textSpan = text.AsSpan(); // Avoid extra allocations for trimming/substrings if not match
+            var textSpanTrimmedEnd = textSpan.TrimEnd();
+            var percentSymbol = culture.NumberFormat.PercentSymbol.AsSpan();
+            if (textSpanTrimmedEnd.EndsWith(percentSymbol))
+                return ParsePercent(text, 0, textSpanTrimmedEnd.Length - percentSymbol.Length, culture);
+
+            var textSpanTrimmedStart = textSpan.TrimStart();
+            if (textSpanTrimmedStart.StartsWith(percentSymbol))
+            {
+                var newStart = text.Length - textSpanTrimmedStart.Length + percentSymbol.Length;
+                return ParsePercent(text, newStart, text.Length - newStart, culture);
+            }
+
             // Fractions
             // Format 12 '# ?/?'
             //        13 '# ??/??'
             if (FractionParser.TryParse(text, out var fraction))
                 return fraction;
 
-            // Time span uses a different parser from time within a day.
+            const DateTimeStyles dateStyle = DateTimeStyles.NoCurrentDateDefault | DateTimeStyles.AllowInnerWhite | DateTimeStyles.AllowTrailingWhite;
+
+            // This date varies by the culture. Keep first before other standard patterns. Must be for both yy and yyyy.
+            // Format 14 : short date (for en 'm/d/yyyy')
+            // Format 22 : short date + hours (for en 'm/d/yyyy h:mm')
+            if (DateTimeParser.TryParseCultureDate(text, culture, out var dateFormat14Or22))
+                return ToSerialDate(dateFormat14Or22);
+
+            // Date with names of months. The names of months differ across cultures.
+            // Format 15 'd-mmm-yy'
+            if (DateTime.TryParseExact(text, new[] { "d-MMM-yyyy", "d-MMMM-yyyy", "d-MMM-yy", "d-MMMM-yy" }, culture, dateStyle, out var dateFormat15))
+                return ToSerialDate(dateFormat15);
+
+            // Since format doesn't have a year, it uses current year 
+            // Format 16 'd-mmm'
+            if (DateTime.TryParseExact(text, new[] { "d-MMM", "d-MMMM" }, culture, dateStyle, out var dateFormat16))
+                return ToSerialDate(dateFormat16);
+
+            // Month and a number. In some cultures, the culture date parsing will interpret this pattern as MMM-dd, but
+            // that depends on culture date patterns above. Use MMM and MMMM to encompass both abbreviation and full name.
+            // Format 17 'mmm-yy'
+            if (DateTime.TryParseExact(text, new[] { "MMM-y", "MMMM-y" }, culture, dateStyle, out var dateFormat17))
+            {
+                if (dateFormat17.Year != DateTime.Now.Year && dateFormat17.Year >= 2030)
+                    dateFormat17 = dateFormat17.AddYears(-100);
+
+                return ToSerialDate(dateFormat17);
+            }
+
+            // Format 18 'h:mm AM/PM', works for both localized and AM/PM literal
+            // Format 19 'h:mm:ss AM/PM'
+            if (DateTimeParser.TryParseTimeOfDay(text, culture, out var dateFormat18Or19))
+                return dateFormat18Or19.ToOADate();
+
+            // Time span uses a different parser from time of a day.
             // Format 20 'h:mm'
             //        21 'h:mm:ss'
             //        47 'mm:ss.0'
@@ -180,6 +230,30 @@ namespace ClosedXML.Excel.CalcEngine
                 return timeSpan.ToSerialDateTime();
 
             return XLError.IncompatibleValue;
+
+            static OneOf<double, XLError> ParsePercent(string text, int start, int length, CultureInfo c)
+            {
+                text = text.Substring(start, length);
+                if (double.TryParse(text, NumberStyles.Float
+                                          | NumberStyles.AllowThousands
+                                          | NumberStyles.AllowParentheses, c, out var percents))
+                    return percents / 100;
+
+                // other formats don't use '%' sign, but text has it, so just stop for invalid inputs like 'hundred%'
+                return XLError.IncompatibleValue;
+            }
+
+            static OneOf<double, XLError> ToSerialDate(DateTime dateTime)
+            {
+                if (dateTime.Year < 1900)
+                    return XLError.IncompatibleValue;
+
+                // Excel says 1900 was a leap year  :( Replicate an incorrect behavior thanks
+                // to Lotus 1-2-3 decision from 1983...
+                var oDate = dateTime.ToOADate();
+                const int nonExistent1900Feb29SerialDate = 60;
+                return oDate <= nonExistent1900Feb29SerialDate ? oDate - 1 : oDate;
+            }
         }
 
         public bool TryPickNumber(out double number)
