@@ -18,6 +18,30 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(firstValue, secondValue);
         }
 
+        [TestCase("0 1/2", 0.5)]
+        [TestCase("0 /20", null)]
+        [TestCase("0 1/32768", null)] // Denominator can be at most 2^15-1
+        [TestCase("0 1/32767", 3.0518509475997192E-05d)]
+        [TestCase("0 32768/1", null)] // Nominator can be at most 2^15-1
+        [TestCase("0 32767/1", 32767)]
+        [TestCase("1 32767/032767", null)] // Fraction can be only 5 digits at most
+        [TestCase("1 00100/025", 5)]
+        [TestCase("1 100/-2", null)] // Fractions can't be negative
+        [TestCase("1 -1/2", null)]
+        [TestCase("- 1 1/2", -1.5)] // can use minus sign
+        [TestCase("+1 1/2", 1.5)] // or plus sign
+        [TestCase("1.5 1/2", null)] // Can't use dot in whole part
+        [TestCase("   1 10/20  ", 1.5)]
+        [TestCase("1  1/2", null)] // Between whole part and nominator must be exactly one space
+        [TestCase("1 1 /2", null)] // Can't have spaces between nominator and denominator
+        [TestCase("1 1/ 2", null)] 
+        [TestCase("1	1/2", null)] // Tab and other whitespaces aren't allowed
+        [TestCase("0 1/0", null)]
+        public void Fraction_Format12_13(string fraction, double? expectedValue) // Format 12+13 '# ??/??' and  '# ?/?'
+        {
+            AssertCoercion(fraction, expectedValue);
+        }
+
         [TestCase("00:00", 0)] // Can parse zero
         [TestCase("90:00", 3.75)] // Minutes can be can be over 60
         [TestCase("59:59", 2.499305556)] // Even if looks like mm:ss parsed as h:mm
