@@ -95,8 +95,8 @@ namespace ClosedXML.Excel
                             filterMatch = row.Cell(columnIndex).DataType == XLDataType.DateTime &&
                                     condition(row.Cell(columnIndex).GetDateTime());
                         else
-                            filterMatch = row.Cell(columnIndex).DataType == XLDataType.Number &&
-                                    condition(row.Cell(columnIndex).GetDouble());
+                            filterMatch = row.Cell(columnIndex).TryGetValue(out double number) &&
+                                    condition(number);
 
                         if (filter.Connector == XLConnector.And)
                         {
