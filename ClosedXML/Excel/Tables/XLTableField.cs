@@ -250,7 +250,6 @@ namespace ClosedXML.Excel
                 var lastCell = table.LastRow().Cell(Index + 1);
                 if (lastCell.DataType != XLDataType.Text)
                 {
-                    cell.DataType = lastCell.DataType;
                     cell.Style.NumberFormat = lastCell.Style.NumberFormat;
                 }
             }

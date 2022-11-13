@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ClosedXML.Extensions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -66,6 +67,34 @@ namespace ClosedXML.Excel.CalcEngine
         public static implicit operator ScalarValue(string text) => From(text);
 
         public static implicit operator ScalarValue(XLError error) => From(error);
+
+        public static implicit operator ScalarValue(XLCellValue cellValue)
+        {
+            return cellValue.Type switch
+            {
+                XLDataType.Blank => ScalarValue.Blank,
+                XLDataType.Boolean => cellValue.GetBoolean(),
+                XLDataType.Number => cellValue.GetNumber(),
+                XLDataType.Text => cellValue.GetText(),
+                XLDataType.Error => cellValue.GetError(),
+                XLDataType.DateTime => cellValue.GetDateTime().ToSerialDateTime(),
+                XLDataType.TimeSpan => cellValue.GetTimeSpan().ToSerialDateTime(),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        internal XLCellValue ToCellValue()
+        {
+            return _index switch
+            {
+                BlankValue => Excel.Blank.Value,
+                LogicalValue => _logical,
+                NumberValue => _number,
+                TextValue => _text,
+                ErrorValue => _error,
+                _ => throw new InvalidOperationException()
+            };
+        }
 
         public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<XLError, TResult> transformError)
         {
@@ -151,7 +180,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        private static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
+        public static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return XLError.IncompatibleValue;
@@ -292,6 +321,19 @@ namespace ClosedXML.Excel.CalcEngine
 
             error = default;
             return false;
+        }
+
+        public string ToDisplayString(CultureInfo culture)
+        {
+            return _index switch
+            {
+                BlankValue => string.Empty,
+                LogicalValue => _logical ? "TRUE" : "FALSE",
+                NumberValue => _number.ToString(culture),
+                TextValue => _text,
+                ErrorValue => _error.ToDisplayString(),
+                _ => throw new InvalidOperationException()
+            };
         }
     }
 }

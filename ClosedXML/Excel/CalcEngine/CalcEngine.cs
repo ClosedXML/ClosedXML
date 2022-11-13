@@ -55,7 +55,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public object Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        public ScalarValue Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
         {
             var x = _cache != null
                 ? _cache[expression]
@@ -136,18 +136,18 @@ namespace ClosedXML.Excel.CalcEngine
         ///    <item><see cref="XLError" /> - represents a formula calculation error.</item>
         /// </list>
         /// </summary>
-        private static object ToCellContentValue(AnyValue value, CalcContext ctx)
+        private static ScalarValue ToCellContentValue(AnyValue value, CalcContext ctx)
         {
             if (value.TryPickScalar(out var scalar, out var collection))
-                return ToCellContentValue(scalar);
+                return scalar;
 
             if (collection.TryPickT0(out var array, out var reference))
             {
-                return ToCellContentValue(array[0, 0]);
+                return array[0, 0];
             }
 
             if (reference.TryGetSingleCellValue(out var cellValue, ctx))
-                return ToCellContentValue(cellValue);
+                return cellValue;
 
             var intersected = reference.ImplicitIntersection(ctx.FormulaAddress);
             if (!intersected.TryPickT0(out var singleCellReference, out var error))
@@ -156,10 +156,10 @@ namespace ClosedXML.Excel.CalcEngine
             if (!singleCellReference.TryGetSingleCellValue(out var singleCellValue, ctx))
                 throw new InvalidOperationException("Got multi cell reference instead of single cell reference.");
 
-            return ToCellContentValue(singleCellValue);
+            return singleCellValue;
         }
 
-        private static object ToCellContentValue(ScalarValue value)
+        internal static object ToCellContentValue(ScalarValue value)
         {
             return value.Match<object>(
                 () => 0,

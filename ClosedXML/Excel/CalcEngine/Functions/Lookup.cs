@@ -208,14 +208,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     .FirstOrDefault();
             else
             {
-                object previousValue = null;
+                var isFirst = true;
+                XLCellValue previousValue = Blank.Value;
                 foundCell = range
                     .CellsUsed(XLCellsUsedOptions.Contents)
                     .TakeWhile(c =>
                     {
                         var currentCellExpression = new Expression(c.Value);
-
-                        if (previousValue != null)
+                        if (!isFirst)
                         {
                             // When match_type != 0, we have to assume that the order of the items being search is ascending or descending
                             var previousValueExpression = new Expression(previousValue);
@@ -223,6 +223,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                                 return false;
                         }
 
+                        isFirst = false;
                         previousValue = c.Value;
 
                         return lookupPredicate.Invoke(currentCellExpression.CompareTo(lookup_value));

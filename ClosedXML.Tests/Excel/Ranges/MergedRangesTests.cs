@@ -244,8 +244,8 @@ namespace ClosedXML.Tests
                 ws.Range("A1:A3").Merge();
 
                 Assert.AreEqual(100, ws.Cell("A1").Value);
-                Assert.AreEqual("", ws.Cell("A2").Value);
-                Assert.AreEqual("", ws.Cell("A3").Value);
+                Assert.AreEqual(Blank.Value, ws.Cell("A2").Value);
+                Assert.AreEqual(Blank.Value, ws.Cell("A3").Value);
             }
         }
 
@@ -306,7 +306,7 @@ namespace ClosedXML.Tests
                 range.Unmerge();
 
                 Assert.IsTrue(range.Cells().All(c => c.Style.Fill.BackgroundColor == XLColor.Red));
-                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.GetString().Length == 0));
+                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.Value.Equals(Blank.Value)));
                 Assert.AreEqual("B2", firstCell.Value);
 
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B2").Style.Border.TopBorder);
@@ -363,9 +363,9 @@ namespace ClosedXML.Tests
             {
                 var ws = workbook.AddWorksheet();
                 ws.Range("A2:A4").Merge();
-                ws.Cell("A2").Value = "1";
-                ws.Cell("A3").Value = "1";
-                ws.Cell("A4").Value = "1";
+                ws.Cell("A2").Value = 1;
+                ws.Cell("A3").Value = 1;
+                ws.Cell("A4").Value = 1;
                 ws.Cell("B1").FormulaA1 = "SUM(A:A)";
                 Assert.AreEqual(1, ws.Cell("B1").Value);
             }

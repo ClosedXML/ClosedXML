@@ -22,6 +22,7 @@ namespace ClosedXML.Tests.Excel
                     var cell = ws.FirstCell().CellRight() as XLCell;
 
                     Assert.IsTrue(cell.IsEmpty());
+                    cell.Value = String.Empty;
                     cell.Style.IncludeQuotePrefix = true;
 
                     Assert.IsTrue(cell.IsEmpty());

@@ -446,18 +446,18 @@ namespace ClosedXML.Tests.Excel
 
                 Assert.AreEqual("Page 1", ws.Name);
 
-                var expected = new Dictionary<string, string>()
+                var expected = new Dictionary<string, XLCellValue>
                 {
                     ["A1"] = "Action Plan.Name",
                     ["B1"] = "Action Plan.Description",
                     ["A2"] = "Jerry",
                     ["B2"] = "This is a longer Text.\nSecond line.\nThird line.",
-                    ["A3"] = "",
-                    ["B3"] = ""
+                    ["A3"] = Blank.Value,
+                    ["B3"] = Blank.Value
                 };
 
                 foreach (var pair in expected)
-                    Assert.AreEqual(pair.Value, ws.Cell(pair.Key).GetString(), pair.Key);
+                    Assert.AreEqual(pair.Value, ws.Cell(pair.Key).Value, pair.Key);
             }
         }
 

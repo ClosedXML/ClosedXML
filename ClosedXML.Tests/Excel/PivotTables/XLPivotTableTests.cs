@@ -246,7 +246,7 @@ namespace ClosedXML.Tests
                     monthPivotField.StyleFormats.Label.Style.Fill.BackgroundColor = XLColor.Amber;
                     monthPivotField.StyleFormats.Header.Style.Font.FontColor = XLColor.Yellow;
                     namePivotField.StyleFormats.DataValuesFormat
-                        .AndWith(monthPivotField, v => v.ToString() == "May")
+                        .AndWith(monthPivotField, v => v.GetText() == "May")
                         .ForValueField(numberOfOrdersPivotValue)
                         .Style.Font.FontColor = XLColor.Green;
 

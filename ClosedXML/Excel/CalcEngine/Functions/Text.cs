@@ -356,8 +356,7 @@ namespace ClosedXML.Excel.CalcEngine
                             .Where(s => !string.IsNullOrEmpty(s));
                     else
                         cellValues = (range as XLRange).CellValues()
-                            .Cast<object>()
-                            .Select(o => o.ToString());
+                            .Select(o => o.ToString(CultureInfo.CurrentCulture));
 
                     values.AddRange(cellValues);
                 }

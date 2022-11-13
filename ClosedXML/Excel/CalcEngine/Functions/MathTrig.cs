@@ -616,7 +616,7 @@ namespace ClosedXML.Excel.CalcEngine
                 A = GetArray(p[0]);
                 B = GetArray(p[1]);
             }
-            catch (FormatException e)
+            catch (InvalidCastException e)
             {
                 throw new CellValueException("Cells are empty or contain text.", e);
             }
@@ -874,7 +874,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Subtotal(CalcContext ctx, double number, List<Reference> p)
         {
-            var cellsWitoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
+            var cellsWithoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
                 .Where(cell =>
                 {
                     if (!cell.HasFormula)
@@ -885,7 +885,7 @@ namespace ClosedXML.Excel.CalcEngine
                 .Select(cell => new Expression(cell.Value));
 
             var fId = (int)number;
-            var tally = new Tally(cellsWitoutSubtotal);
+            var tally = new Tally(cellsWithoutSubtotal);
 
             return fId switch
             {

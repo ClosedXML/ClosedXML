@@ -79,8 +79,7 @@ namespace ClosedXML.Excel
                     if (String.IsNullOrEmpty(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
-                        cell.SetValue(name);
-                        cell.DataType = XLDataType.Text;
+                        (cell as XLCell).SetValue(name, false, false);
                     }
                     if (_fieldNames.ContainsKey(name))
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
@@ -341,7 +340,7 @@ namespace ClosedXML.Excel
                 var co = 1;
                 foreach (var c in firstRow.Cells())
                 {
-                    if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                    if (c.IsEmpty(XLCellsUsedOptions.Contents))
                         c.Value = GetUniqueName("Column", co, true);
 
                     var header = c.GetString();
@@ -373,11 +372,11 @@ namespace ClosedXML.Excel
             {
                 foreach (var f in this._fieldNames.Values)
                 {
-                    var c = this.TotalsRow().Cell(f.Index + 1);
+                    var fieldColumn = f.Index + 1;
+                    var c = this.TotalsRow().Cell(fieldColumn);
                     if (!c.IsEmpty() && newHeaders.Contains(f.Name))
                     {
                         f.TotalsRowLabel = c.GetFormattedString();
-                        c.DataType = XLDataType.Text;
                     }
                 }
 
@@ -386,19 +385,15 @@ namespace ClosedXML.Excel
                     foreach (var f in this._fieldNames.Values.Cast<XLTableField>())
                     {
                         f.UpdateTableFieldTotalsRowFormula();
-                        var c = this.TotalsRow().Cell(f.Index + 1);
+                        var fieldColumn = f.Index + 1;
+                        var c = this.TotalsRow().Cell(fieldColumn);
                         if (!String.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
-                            c.DataType = XLDataType.Text;
-
                             //Remove previous row's label
-                            var oldTotalsCell = this.Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
-                            if (oldTotalsCell.Value.ToString() == f.TotalsRowLabel)
-                                oldTotalsCell.Value = null;
+                            var oldTotalsCell = Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
+                            if (oldTotalsCell.Value.Equals(f.TotalsRowLabel))
+                                oldTotalsCell.Value = Blank.Value;
                         }
-
-                        if (f.TotalsRowFunction != XLTotalsRowFunction.None)
-                            c.DataType = XLDataType.Number;
 
                         if (!string.IsNullOrEmpty(f.TotalsRowLabel))
                             c.SetValue(f.TotalsRowLabel);
@@ -535,8 +530,6 @@ namespace ClosedXML.Excel
             if (setAutofilter)
                 InitializeAutoFilter();
 
-            AsRange().Row(1).DataType = XLDataType.Text;
-
             if (RowCount() == 1)
                 InsertRowsBelow(1);
         }
@@ -553,8 +546,8 @@ namespace ClosedXML.Excel
             foreach (IXLCell c in Row(1).Cells())
             {
                 // Be careful here. Fields names may actually be whitespace, but not empty
-                if (String.IsNullOrEmpty(((XLCell)c).InnerText))
-                    c.Value = GetUniqueName("Column", co, true);
+                if (c.IsEmpty(XLCellsUsedOptions.Contents))
+                    (c as XLCell).SetValue(GetUniqueName("Column", co, true), false, false);
                 _uniqueNames.Add(c.GetString());
                 co++;
             }
@@ -605,7 +598,7 @@ namespace ClosedXML.Excel
                     Int32 co = 1;
                     foreach (IXLCell c in headersRow.Cells())
                     {
-                        if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        if (String.IsNullOrWhiteSpace(c.GetString()))
                             c.Value = GetUniqueName("Column", co, true);
                         _uniqueNames.Add(c.GetString());
                         co++;
@@ -663,9 +656,6 @@ namespace ClosedXML.Excel
 
                 // Invalidate fields' columns
                 this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
-
-                if (_showHeaderRow)
-                    HeadersRow().DataType = XLDataType.Text;
             }
         }
 
@@ -816,7 +806,7 @@ namespace ClosedXML.Excel
 
                 foreach (var f in this.Fields)
                 {
-                    dr[f.Name] = row.Cell(f.Index + 1).Value;
+                    dr[f.Name] = row.Cell(f.Index + 1).Value.ToObject();
                 }
 
                 table.Rows.Add(dr);

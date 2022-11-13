@@ -94,7 +94,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("C1").FormulaA1 = "\"The total value is: \" & SUM(A1:B2)";
 
             object r = ws.Cell("C1").Value;
-            Assert.AreEqual("The total value is: 4", r.ToString());
+            Assert.AreEqual("The total value is: 4", r);
         }
 
         [Test]

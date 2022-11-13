@@ -61,7 +61,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", ws.Row(3).Cell(2).GetString());
+            Assert.AreEqual("X", ws.Row(3).Cell(2).GetText());
 
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, rowIns.Cell(2).Style.Fill.BackgroundColor);
@@ -79,7 +79,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, row3.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, row3.Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", row2.Cell(2).GetString());
+            Assert.AreEqual("X", row2.Cell(2).GetText());
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", ws.Row(3).Cell(2).GetString());
+            Assert.AreEqual("X", ws.Row(3).Cell(2).GetText());
 
             Assert.AreEqual(XLColor.Red, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, rowIns.Cell(2).Style.Fill.BackgroundColor);
@@ -132,7 +132,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, row3.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, row3.Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", row2.Cell(2).GetString());
+            Assert.AreEqual("X", row2.Cell(2).GetText());
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", ws.Row(2).Cell(2).GetString());
+            Assert.AreEqual("X", ws.Row(2).Cell(2).GetText());
 
             Assert.AreEqual(XLColor.Yellow, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Green, rowIns.Cell(2).Style.Fill.BackgroundColor);
@@ -185,7 +185,7 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, row3.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, row3.Cell(3).Style.Fill.BackgroundColor);
 
-            Assert.AreEqual("X", row2.Cell(2).GetString());
+            Assert.AreEqual("X", row2.Cell(2).GetText());
         }
 
         [Test]

@@ -37,8 +37,6 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        IXLRangeRows SetDataType(XLDataType dataType);
-
         /// <summary>
         /// Clears the contents of these rows.
         /// </summary>

@@ -8,13 +8,13 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{SourceName}")]
     internal class XLPivotField : IXLPivotField
     {
+        private readonly List<XLCellValue> _selectedValues = new();
         private readonly IXLPivotTable _pivotTable;
         public XLPivotField(IXLPivotTable pivotTable, string sourceName)
         {
             this._pivotTable = pivotTable;
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
-            SelectedValues = new List<Object>();
             SortType = XLPivotSortType.Default;
             SetExcelDefaults();
 
@@ -95,17 +95,17 @@ namespace ClosedXML.Excel
 
         public IXLPivotField SetSort(XLPivotSortType value) { SortType = value; return this; }
 
-        public IList<Object> SelectedValues { get; private set; }
+        public IList<XLCellValue> SelectedValues => _selectedValues;
 
-        public IXLPivotField AddSelectedValue(Object value)
+        public IXLPivotField AddSelectedValue(XLCellValue value)
         {
             SelectedValues.Add(value);
             return this;
         }
 
-        public IXLPivotField AddSelectedValues(IEnumerable<Object> values)
+        public IXLPivotField AddSelectedValues(IEnumerable<XLCellValue> values)
         {
-            ((List<Object>)SelectedValues).AddRange(values);
+            _selectedValues.AddRange(values);
             return this;
         }
 

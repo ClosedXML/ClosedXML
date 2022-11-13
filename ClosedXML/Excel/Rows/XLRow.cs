@@ -215,7 +215,7 @@ namespace ClosedXML.Excel
             {
                 Double thisHeight;
                 Int32 textRotation = c.StyleValue.Alignment.TextRotation;
-                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
+                if (c.HasRichText || textRotation != 0 || c.GetString().Contains(Environment.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
                     if (c.HasRichText)
@@ -438,12 +438,6 @@ namespace ClosedXML.Excel
         public IXLRow AddHorizontalPageBreak()
         {
             Worksheet.PageSetup.AddHorizontalPageBreak(RowNumber());
-            return this;
-        }
-
-        public IXLRow SetDataType(XLDataType dataType)
-        {
-            DataType = dataType;
             return this;
         }
 

@@ -346,6 +346,12 @@ namespace ClosedXML.Excel
 
         IXLWorksheet CopyTo(XLWorkbook workbook);
 
+        /// <summary>
+        /// Copy a worksheet from this workbook to a different workbook as a new sheet.
+        /// </summary>
+        /// <param name="workbook">Workbook into which copy this sheet.</param>
+        /// <param name="newSheetName">Name of new sheet in the <paramref name="workbook"/> where will the data be copied. Sheet will be in the last position.</param>
+        /// <returns>Newly created sheet in the <paramref name="workbook"/>.</returns>
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName);
 
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);

@@ -616,7 +616,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("C1").FormulaA1 = formula;
             var a = ws.Cell("C1").Value;
 
-            Assert.AreEqual(expectedOutput, a.ToString());
+            Assert.AreEqual(expectedOutput, a);
         }
 
         [TestCase("=TEXTJOIN(\",\", FALSE, D1:D32769)", "The value is too long")]

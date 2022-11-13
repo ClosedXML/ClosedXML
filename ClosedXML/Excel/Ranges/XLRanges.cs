@@ -178,12 +178,12 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Object Value
+        public XLCellValue Value
         {
             set { Ranges.ForEach(r => r.Value = value); }
         }
 
-        public IXLRanges SetValue<T>(T value)
+        public IXLRanges SetValue(XLCellValue value)
         {
             Ranges.ForEach(r => r.SetValue(value));
             return this;
@@ -219,12 +219,6 @@ namespace ClosedXML.Excel
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
-        }
-
-        public IXLRanges SetDataType(XLDataType dataType)
-        {
-            Ranges.ForEach(c => c.DataType = dataType);
-            return this;
         }
 
         #endregion IXLRanges Members

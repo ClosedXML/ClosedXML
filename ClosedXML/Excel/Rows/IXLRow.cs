@@ -184,8 +184,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRow AddHorizontalPageBreak();
 
-        IXLRow SetDataType(XLDataType dataType);
-
         IXLRow RowAbove();
 
         IXLRow RowAbove(Int32 step);

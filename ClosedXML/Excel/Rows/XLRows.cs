@@ -208,12 +208,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRows SetDataType(XLDataType dataType)
-        {
-            Rows.ForEach(c => c.DataType = dataType);
-            return this;
-        }
-
         #endregion IXLRows Members
 
         #region IXLStylized Members

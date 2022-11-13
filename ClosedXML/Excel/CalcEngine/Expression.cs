@@ -20,6 +20,11 @@ namespace ClosedXML.Excel.CalcEngine
             _value = value;
         }
 
+        public Expression(XLCellValue value)
+        {
+            _value = value.ToObject();
+        }
+
         public virtual object Evaluate()
         {
             if (_value is XLError error)
@@ -284,7 +289,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class EmptyValueExpression : Expression
     {
-        public EmptyValueExpression() : base(null)
+        public EmptyValueExpression() : base(Blank.Value)
         {
         }
     }

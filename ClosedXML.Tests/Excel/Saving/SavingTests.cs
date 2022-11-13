@@ -18,7 +18,7 @@ namespace ClosedXML.Tests.Excel.Saving
     public class SavingTests
     {
         [Test]
-        public void BooleanValueSavesAsLowerCase()
+        public void BooleanValueSavesAsZeroOrOne()
         {
             // When a cell evaluates to a boolean value, the text in the XML has to be true/false (lowercase only) or 0/1
             TestHelper.CreateAndCompare(() =>
@@ -151,7 +151,7 @@ namespace ClosedXML.Tests.Excel.Saving
                 {
                     var ws = book2.Worksheet(1);
 
-                    Assert.IsNull(ws.Cell("A2").CachedValue);
+                    Assert.AreEqual(Blank.Value, ws.Cell("A2").CachedValue);
                 }
             }
         }
@@ -427,7 +427,8 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void SaveCellValueWithLeadingQuotationMarkCorrectly()
         {
-            var quotedFormulaValue = "'=IF(TRUE, 1, 0)";
+            var formulaValue = "=IF(TRUE, 1, 0)";
+            var quotedFormulaValue = '\'' + formulaValue;
             using (var ms = new MemoryStream())
             {
                 using (var wb = new XLWorkbook())
@@ -436,7 +437,9 @@ namespace ClosedXML.Tests.Excel.Saving
                     var cell = ws.FirstCell();
                     cell.SetValue(quotedFormulaValue);
                     Assert.IsFalse(cell.HasFormula);
-                    Assert.AreEqual(quotedFormulaValue, cell.Value);
+                    Assert.AreEqual(formulaValue, cell.Value);
+                    Assert.AreEqual(XLDataType.Text, cell.DataType);
+                    Assert.True(cell.Style.IncludeQuotePrefix);
 
                     wb.SaveAs(ms);
                 }
@@ -448,7 +451,10 @@ namespace ClosedXML.Tests.Excel.Saving
                     var ws = wb.Worksheets.First();
                     var cell = ws.FirstCell();
                     Assert.IsFalse(cell.HasFormula);
-                    Assert.AreEqual(quotedFormulaValue, cell.Value);
+                    Assert.IsFalse(cell.HasFormula);
+                    Assert.AreEqual(formulaValue, cell.Value);
+                    Assert.AreEqual(XLDataType.Text, cell.DataType);
+                    Assert.True(cell.Style.IncludeQuotePrefix);
                 }
             }
         }
@@ -593,7 +599,8 @@ namespace ClosedXML.Tests.Excel.Saving
                     foreach (var cell in numericCells)
                     {
                         cell.Clear(XLClearOptions.AllFormats);
-                        cell.SetDataType(XLDataType.Number);
+                        Assert.True(cell.Value.TryConvert(out double val, CultureInfo.CurrentCulture));
+                        cell.Value = val;
                     }
 
                     foreach (var cell in textCells)

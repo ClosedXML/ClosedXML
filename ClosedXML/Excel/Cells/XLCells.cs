@@ -170,20 +170,9 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Object Value
+        public XLCellValue Value
         {
             set { this.ForEach<XLCell>(c => c.Value = value); }
-        }
-
-        public IXLCells SetDataType(XLDataType dataType)
-        {
-            this.ForEach<XLCell>(c => c.DataType = dataType);
-            return this;
-        }
-
-        public XLDataType DataType
-        {
-            set { this.ForEach<XLCell>(c => c.DataType = value); }
         }
 
         public IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.All)

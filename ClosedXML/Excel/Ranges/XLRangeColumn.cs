@@ -48,9 +48,11 @@ namespace ClosedXML.Excel
             if (deleteTableField && IsTableColumn())
             {
                 var table = Table as XLTable;
-                var firstCellValue = Cell(1).Value.ToString();
+                if (!Cell(1).Value.TryGetText(out var firstCellValue))
+                    throw new InvalidOperationException("Top cell doesn't contain a text.");
+
                 if (!table.FieldNames.ContainsKey(firstCellValue))
-                    throw new ArgumentException(string.Format("Field {0} not found.", firstCellValue));
+                    throw new InvalidOperationException($"Field {firstCellValue} not found.");
 
                 var field = table.Fields.Cast<XLTableField>().Single(f => f.Name == firstCellValue);
                 field.Delete(false);
@@ -90,9 +92,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public new IXLRangeColumn CopyTo(IXLCell target)
+        public IXLRangeColumn CopyTo(IXLCell target)
         {
-            base.CopyTo(target);
+            base.CopyTo((XLCell)target);
 
             int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
@@ -163,12 +165,6 @@ namespace ClosedXML.Excel
             }
 
             return retVal;
-        }
-
-        public IXLRangeColumn SetDataType(XLDataType dataType)
-        {
-            DataType = dataType;
-            return this;
         }
 
         public IXLColumn WorksheetColumn()
@@ -248,16 +244,20 @@ namespace ClosedXML.Excel
                 {
                     if (thisCell.DataType == otherCell.DataType)
                     {
-                        if (thisCell.DataType == XLDataType.Text)
+                        if (thisCell.DataType == XLDataType.Blank)
+                            comparison = 0;
+                        else if (thisCell.DataType == XLDataType.Boolean)
+                            comparison = thisCell.GetBoolean().CompareTo(otherCell.GetBoolean());
+                        else if (thisCell.DataType == XLDataType.Text)
                         {
                             comparison = e.MatchCase
-                                             ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                             : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                             ? thisCell.GetText().CompareTo(otherCell.GetText())
+                                             : String.Compare(thisCell.GetText(), otherCell.GetText(), true);
                         }
-                        else if (thisCell.DataType == XLDataType.TimeSpan)
-                            comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
+                        else if (thisCell.DataType == XLDataType.Error)
+                            comparison = 0; // Errors are incomparable
                         else
-                            comparison = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
+                            comparison = thisCell.CachedValue.GetUnifiedNumber().CompareTo(thisCell.CachedValue.GetUnifiedNumber());
                     }
                     else if (e.MatchCase)
                         comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);

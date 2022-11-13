@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -19,9 +20,6 @@ namespace ClosedXML.Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.CreateRichText().AddText("12");
-            cell.DataType = XLDataType.Number;
-
-            Assert.AreEqual(12.0, cell.GetDouble());
 
             IXLRichText richText = cell.GetRichText();
 
@@ -29,11 +27,7 @@ namespace ClosedXML.Tests
 
             richText.AddText("34");
 
-            Assert.AreEqual("1234", cell.GetString());
-
-            Assert.AreEqual(XLDataType.Number, cell.DataType);
-
-            Assert.AreEqual(1234.0, cell.GetDouble());
+            Assert.AreEqual("1234", cell.GetText());
         }
 
         /// <summary>
@@ -49,7 +43,7 @@ namespace ClosedXML.Tests
             string text = "Hello";
             richString.AddText(text).SetBold().SetFontColor(XLColor.Red);
 
-            Assert.AreEqual(cell.GetString(), text);
+            Assert.AreEqual(cell.GetText(), text);
             Assert.AreEqual(cell.GetRichText().First().Bold, true);
             Assert.AreEqual(cell.GetRichText().First().FontColor, XLColor.Red);
 
@@ -148,11 +142,7 @@ namespace ClosedXML.Tests
 
             Assert.AreEqual(true, cell.HasRichText);
 
-            cell.DataType = XLDataType.Text;
-
-            Assert.AreEqual(true, cell.HasRichText);
-
-            cell.DataType = XLDataType.Number;
+            cell.Value = "123";
 
             Assert.AreEqual(false, cell.HasRichText);
 
@@ -643,6 +633,26 @@ namespace ClosedXML.Tests
             Assert.That(() => richString.Substring(5, 20), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
+        [Test]
+        public void CopyFrom_DoesCopy()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var original = ws.Cell(1, 1).GetRichText();
+            original
+                .AddText("Hello").SetFontSize(15).SetFontColor(XLColor.Red)
+                .AddText("World").SetFontSize(7).SetFontColor(XLColor.Blue);
+
+            var otherCell = ws.Cell(1, 2);
+            var otherRichText = otherCell.GetRichText();
+            otherRichText.CopyFrom(original);
+
+            Assert.AreEqual("HelloWorld", otherCell.Value);
+            Assert.AreEqual(2, otherRichText.Count);
+            Assert.AreEqual(XLColor.Red, otherRichText.First().FontColor);
+            Assert.AreEqual(XLColor.Blue, otherRichText.Last().FontColor);
+        }
+
         /// <summary>
         ///     A test for ToString
         /// </summary>
@@ -757,6 +767,38 @@ namespace ClosedXML.Tests
                     return wb2;
                 }, @"Other\InlinedRichText\ChangeRichTextToFormula\output.xlsx");
             }
+        }
+
+        [Test]
+        public void RichTextChangesContentOfItsCell()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell(1, 1);
+            var richText = cell.GetRichText();
+
+            Assert.AreEqual(cell.Value, richText.Text);
+
+            richText.AddText("Hello");
+            Assert.AreEqual(cell.Value, "Hello");
+
+            richText.AddText(" World");
+            Assert.AreEqual(cell.Value, "Hello World");
+
+            richText.ClearText();
+            Assert.AreEqual(cell.Value, string.Empty);
+        }
+
+        [Test]
+        public void RemovedRichTextFromCellCantBeChanged()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell(1, 1);
+            var richText = cell.GetRichText();
+            cell.Value = 4;
+
+            Assert.Throws<InvalidOperationException>(() => richText.AddText("Hello"), "The rich text isn't a content of a cell.");
         }
     }
 }

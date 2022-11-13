@@ -9,14 +9,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
     internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
-        public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
-
         private static readonly Regex A1Regex = new Regex(
             @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
             + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
@@ -64,17 +63,23 @@ namespace ClosedXML.Excel
 
         #region Fields
 
-        private string _cellValue = String.Empty;
-
-        private XLComment _comment;
-        private XLDataType _dataType;
-        private XLHyperlink _hyperlink;
+        private XLCellValue _cellValue;
         private XLRichText _richText;
 
-        public bool SettingHyperlink;
         internal int SharedStringId { get; set; }
+
+        /// <summary>
+        /// A flag indicating if a string should be stored in the shared table or inline.
+        /// </summary>
+        public bool ShareString { get; set; }
+
         private string _formulaA1;
         private string _formulaR1C1;
+
+        private XLComment _comment;
+        private XLHyperlink _hyperlink;
+
+        public bool SettingHyperlink;
 
         #endregion Fields
 
@@ -124,17 +129,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public string InnerText
-        {
-            get
-            {
-                if (HasRichText)
-                    return _richText.ToString();
-
-                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
-            }
-        }
-
         internal XLComment GetComment()
         {
             return _comment ?? CreateComment();
@@ -163,29 +157,42 @@ namespace ClosedXML.Excel
             return AsRange();
         }
 
-        public IXLCell SetValue<T>(T value)
-        {
-            if (value is IEnumerable ie && !(value is string))
-            {
-                this.InsertData(ie);
-                return this;
-            }
-            else
-                return SetValue(value, setTableHeader: true, checkMergedRanges: true);
-        }
-
-        internal IXLCell SetValue<T>(T value, bool setTableHeader, bool checkMergedRanges)
+        internal IXLCell SetValue(XLCellValue value, bool setTableHeader, bool checkMergedRanges)
         {
             if (checkMergedRanges && IsInferiorMergedCell())
                 return this;
 
-            if (value == null)
-                return this.Clear(XLClearOptions.Contents);
+            switch (value.Type)
+            {
+                case XLDataType.DateTime:
+                    SetOnlyValue(value);
+                    SetDateTimeFormat(StyleValue, value.GetUnifiedNumber() % 1 == 0);
+                    break;
+                case XLDataType.TimeSpan:
+                    SetOnlyValue(value);
+                    SetTimeSpanFormat(StyleValue);
+                    break;
+                case XLDataType.Text:
+                    var text = value.GetText();
+                    if (text.Length > 0 && text[0] == '\'')
+                    {
+                        text = text.Substring(1);
+                        SetOnlyValue(text);
+                        Style.SetIncludeQuotePrefix();
+                    }
+                    else
+                        SetOnlyValue(value);
+
+                    if (text.AsSpan().Contains(Environment.NewLine.AsSpan(), StringComparison.Ordinal) && !StyleValue.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
+                    break;
+                default:
+                    SetOnlyValue(value);
+                    break;
+            }
 
             _richText = null;
-            _formulaA1 = String.Empty;
-            _formulaR1C1 = null;
-            cachedValue = null;
+            FormulaA1 = null;
 
             if (setTableHeader)
             {
@@ -193,143 +200,226 @@ namespace ClosedXML.Excel
                 if (SetTableTotalsRowLabel(value)) return this;
             }
 
-            var style = GetStyleForRead();
-
-            // For SetValue<T> we set the cell value directly to the parameter
-            // as opposed to the other SetValue(object value) where we parse the string and try to deduce the value
-
-            // If parsing was unsuccessful, we throw an ArgumentException
-            // because we are using SetValue<T> (typed).
-            // Only in SetValue(object value) to we try to fall back to a value of a different type
-            if (!TrySetInternallySupportedType(ConvertOtherSupportedTypes(value), style, out var parsedValue))
-                throw new ArgumentException($"Unable to set cell value to {value.ObjectToInvariantString()}");
-
-            SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
-
             return this;
-        }
 
-        /// <summary>
-        /// This method converts a wider set up supported types to internal types
-        /// </summary>
-        /// <param name="value"></param>
-        internal static object ConvertOtherSupportedTypes(object value)
-        {
-            return value switch
+            Boolean SetTableHeaderValue(XLCellValue newFieldName)
             {
-                DBNull dbnull when dbnull.Equals(DBNull.Value) => string.Empty,
-                Guid _ or char _ or Enum _ => value.ObjectToInvariantString(),
-                DateTimeOffset dto => dto.DateTime,
-                _ => value,
-            };
-        }
-
-        /// <summary>
-        /// This method accepts only values of the supported internal types: String, DateTime, TimeSpan, Boolean and Numbers.
-        /// Any other types should be converted with <see cref="ConvertOtherSupportedTypes(object)"/> first.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="style"></param>
-        /// <param name="internalValue"></param>
-        private bool TrySetInternallySupportedType<T>(T value, XLStyleValue style, out string internalValue)
-        {
-            internalValue = null;
-
-            switch (value)
-            {
-                case string s:
-                    internalValue = s;
-                    _dataType = XLDataType.Text;
-                    if (s.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-
-                    return true;
-
-                case DateTime d when d >= BaseDate:
-                    SetDateTimeFormat(style, d.Date == d);
-                    internalValue = d.ToOADate().ToInvariantString();
-                    return true;
-
-                case TimeSpan ts:
-                    SetTimeSpanFormat(style);
-                    internalValue = ts.TotalDays.ToInvariantString();
-                    return true;
-
-                case bool b:
-                    _dataType = XLDataType.Boolean;
-                    internalValue = b ? "1" : "0";
-                    return true;
-
-                default:
-                    if (value.IsNumber())
+                foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
+                {
+                    if (TryGetField(out var field, table, table.RangeAddress.FirstAddress.RowNumber))
                     {
-                        if (
-                            (value is double d1 && (double.IsNaN(d1) || double.IsInfinity(d1)))
-                            || (value is float f && (float.IsNaN(f) || float.IsInfinity(f)))
-                           )
-                        {
-                            _dataType = XLDataType.Text;
-                            internalValue = value.ToString();
-                            return true;
-                        }
-                        else
-                        {
-                            _dataType = XLDataType.Number;
-                            internalValue = value.ObjectToInvariantString();
-                            return true;
-                        }
+                        field.Name = newFieldName.ToString(CultureInfo.CurrentCulture);
+                        return true;
                     }
+                }
+                return false;
+            }
+
+            Boolean SetTableTotalsRowLabel(XLCellValue value)
+            {
+                foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
+                {
+                    if (TryGetField(out var field, table, table.RangeAddress.LastAddress.RowNumber))
+                    {
+                        field.TotalsRowFunction = XLTotalsRowFunction.None;
+                        field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            Boolean TryGetField(out IXLTableField field, IXLTable table, int rowNumber)
+            {
+                var tableRange = table.RangeAddress;
+                var tableInTotalsRow = rowNumber == Address.RowNumber;
+                if (!tableInTotalsRow)
+                {
+                    field = null;
                     return false;
+                }
+
+                var fieldIndex = Address.ColumnNumber - tableRange.FirstAddress.ColumnNumber;
+                var tableContainsCell = fieldIndex >= 0 && fieldIndex < tableRange.ColumnSpan;
+                if (!tableContainsCell)
+                {
+                    field = null;
+                    return false;
+                }
+                field = table.Field(fieldIndex);
+                return true;
             }
         }
+        
+        public Boolean GetBoolean() => Value.GetBoolean();
+        
+        public Double GetDouble() => Value.GetNumber();
+        
+        public string GetText() => Value.GetText();
 
-        private string DeduceCellValueByParsing(string value, XLStyleValue style)
+        public XLError GetError() => Value.GetError();
+
+        public DateTime GetDateTime() => Value.GetDateTime();
+
+        public TimeSpan GetTimeSpan() => Value.GetTimeSpan();
+
+        public Boolean TryGetValue<T>(out T value)
         {
-            if (String.IsNullOrEmpty(value))
+            XLCellValue currentValue;
+            try
             {
-                _dataType = XLDataType.Text;
+                currentValue = Value;
             }
-            else if (value[0] == '\'')
+            catch
             {
-                // If a user sets a cell value to a value starting with a single quote
-                // ensure the data type is text
-                // and that it will be prefixed with a quote in Excel too
-
-                value = value.Substring(1, value.Length - 1);
-
-                _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
-
-                this.Style.SetIncludeQuotePrefix();
-            }
-            else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
-                     Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
-                _dataType = XLDataType.Number;
-            else if (TimeSpan.TryParse(value, out TimeSpan ts))
-            {
-                value = ts.ToInvariantString();
-                SetTimeSpanFormat(style);
-            }
-            else if (DateTime.TryParse(value, out DateTime dt) && dt >= BaseDate)
-            {
-                value = dt.ToOADate().ToInvariantString();
-                SetDateTimeFormat(style, dt.Date == dt);
-            }
-            else if (Boolean.TryParse(value, out Boolean b))
-            {
-                value = b ? "1" : "0";
-                _dataType = XLDataType.Boolean;
-            }
-            else
-            {
-                _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
+                // May fail for formula evaluation
+                value = default;
+                return false;
             }
 
-            return value;
+            var targetType = typeof(T);
+            var isNullable = targetType.IsNullableType();
+            if (isNullable && currentValue.TryConvert(out Blank _))
+            {
+                value = default;
+                return true;
+            }
+
+            // JIT compiles a separate version for each T value type and one for all reference types
+            // Optimization then removes the double casting for value types.
+            var underlyingType = targetType.GetUnderlyingType();
+            if (underlyingType == typeof(DateTime) && currentValue.TryConvert(out DateTime dateTime))
+            {
+                value = (T)(object)dateTime;
+                return true;
+            }
+
+            var culture = CultureInfo.CurrentCulture;
+            if (underlyingType == typeof(TimeSpan) && currentValue.TryConvert(out TimeSpan timeSpan, culture))
+            {
+                value = (T)(object)timeSpan;
+                return true;
+            }
+
+            if (underlyingType == typeof(Boolean) && currentValue.TryConvert(out Boolean boolean))
+            {
+                value = (T)(object)boolean;
+                return true;
+            }
+
+            if (TryGetStringValue(out value, currentValue)) return true;
+
+            // Type code of an enum is a type of an integer, so do this check before numbers
+            if (underlyingType.IsEnum)
+            {
+                var strValue = currentValue.ToString(culture);
+                if (Enum.IsDefined(underlyingType, strValue))
+                {
+                    value = (T)Enum.Parse(underlyingType, strValue, ignoreCase: false);
+                    return true;
+                }
+                value = default;
+                return false;
+            }
+
+            var typeCode = Type.GetTypeCode(underlyingType);
+
+            // T is a floating point numbers
+            if (typeCode >= TypeCode.Single && typeCode <= TypeCode.Decimal)
+            {
+                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                    return false;
+
+                if (typeCode == TypeCode.Single && doubleValue is < Single.MinValue or > Single.MaxValue)
+                    return false;
+
+                value = typeCode switch
+                {
+                    TypeCode.Single => (T)(object)(Single)doubleValue,
+                    TypeCode.Double => (T)(object)doubleValue,
+                    TypeCode.Decimal => (T)(object)(Decimal)doubleValue,
+                    _ => throw new NotSupportedException()
+                };
+                return true;
+            }
+
+            // T is an integer
+            if (typeCode >= TypeCode.SByte && typeCode <= TypeCode.UInt64)
+            {
+                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                    return false;
+
+                if (!doubleValue.Equals(Math.Truncate(doubleValue)))
+                    return false;
+
+                var valueIsWithinBounds = typeCode switch
+                {
+                    TypeCode.SByte => doubleValue >= SByte.MinValue && doubleValue <= SByte.MaxValue,
+                    TypeCode.Byte => doubleValue >= Byte.MinValue && doubleValue <= Byte.MaxValue,
+                    TypeCode.Int16 => doubleValue >= Int16.MinValue && doubleValue <= Int16.MaxValue,
+                    TypeCode.UInt16 => doubleValue >= UInt16.MinValue && doubleValue <= UInt16.MaxValue,
+                    TypeCode.Int32 => doubleValue >= Int32.MinValue && doubleValue <= Int32.MaxValue,
+                    TypeCode.UInt32 => doubleValue >= UInt32.MinValue && doubleValue <= UInt32.MaxValue,
+                    TypeCode.Int64 => doubleValue >= Int64.MinValue && doubleValue <= Int64.MaxValue,
+                    TypeCode.UInt64 => doubleValue >= UInt64.MinValue && doubleValue <= UInt64.MaxValue,
+                    _ => throw new NotSupportedException()
+                };
+                if (!valueIsWithinBounds)
+                    return false;
+
+                value = typeCode switch
+                {
+                    TypeCode.SByte => (T)(object)(SByte)doubleValue,
+                    TypeCode.Byte => (T)(object)(Byte)doubleValue,
+                    TypeCode.Int16 => (T)(object)(Int16)doubleValue,
+                    TypeCode.UInt16 => (T)(object)(UInt16)doubleValue,
+                    TypeCode.Int32 => (T)(object)(Int32)doubleValue,
+                    TypeCode.UInt32 => (T)(object)(UInt32)doubleValue,
+                    TypeCode.Int64 => (T)(object)(Int64)doubleValue,
+                    TypeCode.UInt64 => (T)(object)(UInt64)doubleValue,
+                    _ => throw new NotSupportedException()
+                };
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryGetStringValue<T>(out T value, XLCellValue currentValue)
+        {
+            if (typeof(T) == typeof(String))
+            {
+                var s = currentValue.ToString(CultureInfo.CurrentCulture);
+                var matches = utfPattern.Matches(s);
+
+                if (matches.Count == 0)
+                {
+                    value = (T)Convert.ChangeType(s, typeof(T));
+                    return true;
+                }
+
+                var sb = new StringBuilder();
+                var lastIndex = 0;
+
+                foreach (var match in matches.Cast<Match>())
+                {
+                    var matchString = match.Value;
+                    var matchIndex = match.Index;
+                    sb.Append(s.Substring(lastIndex, matchIndex - lastIndex));
+
+                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+
+                    lastIndex = matchIndex + matchString.Length;
+                }
+
+                if (lastIndex < s.Length)
+                    sb.Append(s.Substring(lastIndex));
+
+                value = (T)Convert.ChangeType(sb.ToString(), typeof(T));
+                return true;
+            }
+            value = default;
+            return false;
         }
 
         public T GetValue<T>()
@@ -337,50 +427,33 @@ namespace ClosedXML.Excel
             if (TryGetValue(out T retVal))
                 return retVal;
 
-            throw new FormatException($"Cannot convert {this.Address.ToStringRelative(true)}'s value to " + typeof(T));
+            throw new InvalidCastException($"Cannot convert {Address.ToStringRelative(true)}'s value to " + typeof(T));
         }
 
-        public string GetString()
-        {
-            return GetValue<string>();
-        }
-
-        public double GetDouble()
-        {
-            return GetValue<double>();
-        }
-
-        public bool GetBoolean()
-        {
-            return GetValue<bool>();
-        }
-
-        public DateTime GetDateTime()
-        {
-            return GetValue<DateTime>();
-        }
-
-        public TimeSpan GetTimeSpan()
-        {
-            return GetValue<TimeSpan>();
-        }
+        public String GetString() => Value.ToString(CultureInfo.CurrentCulture);
 
         public string GetFormattedString()
         {
+            // Need to get actual value because formula might be out of date or value wasn't set at all
+
             var format = GetFormat();
             try
             {
-                return Value.ToExcelFormat(format);
+                // Unimplemented functions and features throw exceptions
+                var value = Value;
+                if (value.Type == XLDataType.Blank)
+                    return String.Empty;
+                return value.ToObject().ToExcelFormat(format);
             }
             catch { }
 
             try
             {
-                return CachedValue.ToExcelFormat(format);
+                return CachedValue.ToObject().ToExcelFormat(format);
             }
             catch { }
 
-            return _cellValue;
+            return Value.ToString(CultureInfo.CurrentCulture);
         }
 
         /// <summary>
@@ -393,11 +466,8 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="fA1">Cell formula to evaluate.</param>
         /// <returns>Null if formula is empty or null, calculated value otherwise.</returns>
-        private object RecalculateFormula(string fA1)
+        private ScalarValue RecalculateFormula(string fA1)
         {
-            if (string.IsNullOrEmpty(fA1))
-                return null;
-
             if (IsEvaluating)
                 throw new InvalidOperationException($"Cell {Address} is a part of circular reference.");
 
@@ -428,7 +498,7 @@ namespace ClosedXML.Excel
                     IsEvaluating = true;
                     var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
                     if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                        return 0;
+                        return 0d;
                     else
                         return referenceCell.Value;
                 }
@@ -438,7 +508,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            object retVal;
+            ScalarValue retVal;
             try
             {
                 IsEvaluating = true;
@@ -460,9 +530,6 @@ namespace ClosedXML.Excel
                 IsEvaluating = false;
             }
 
-            if (retVal is IEnumerable retValEnumerable && !(retVal is String))
-                return retValEnumerable.Cast<object>().First();
-
             return retVal;
         }
 
@@ -480,145 +547,33 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
-        public Object Evaluate(Boolean force = false)
+        public void Evaluate(Boolean force)
         {
             if (force || NeedsRecalculation)
             {
                 if (HasFormula)
                 {
-                    CachedValue = RecalculateFormula(FormulaA1);
-                    UpdateCachedValueFromDataType();
+                    var cachedValue = RecalculateFormula(FormulaA1);
+                    _cellValue = cachedValue.ToCellValue();
                 }
-                else
-                    CachedValue = null;
 
                 EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
                 NeedsRecalculation = false;
             }
-            return CachedValue;
         }
 
-        internal void SetInternalCellValueString(String cellValue)
+        /// <summary>
+        /// Set only value, don't clear formula, don't set format.
+        /// Sets the value even for merged cells.
+        /// </summary>
+        internal void SetOnlyValue(XLCellValue value)
         {
-            SetInternalCellValueString(cellValue, validate: false, parseToCachedValue: this.HasFormula);
+            _cellValue = value;
         }
 
-        private void SetInternalCellValueString(String cellValue, Boolean validate, Boolean parseToCachedValue)
+        public IXLCell SetValue(XLCellValue value)
         {
-            if (validate)
-            {
-                if (cellValue.Length > 32767) throw new ArgumentOutOfRangeException(nameof(cellValue), "Cells can hold a maximum of 32,767 characters.");
-            }
-
-            this._cellValue = cellValue;
-
-            if (parseToCachedValue)
-                CachedValue = ParseCellValueFromString();
-        }
-
-        private void UpdateCachedValueFromDataType()
-        {
-            if (CachedValue is double d)
-            {
-                if (this.DataType == XLDataType.DateTime && d.IsValidOADateNumber())
-                    CachedValue = DateTime.FromOADate(d);
-                else if (this.DataType == XLDataType.TimeSpan)
-                    CachedValue = XLHelper.GetTimeSpan(d);
-            }
-            else if (CachedValue is DateTime dt)
-            {
-                if (this.DataType == XLDataType.Number)
-                    CachedValue = dt.ToOADate();
-                else if (this.DataType == XLDataType.TimeSpan)
-                    CachedValue = XLHelper.GetTimeSpan(dt.ToOADate());
-            }
-            else if (CachedValue is TimeSpan ts)
-            {
-                if (this.DataType == XLDataType.DateTime)
-                    CachedValue = DateTime.FromOADate(ts.TotalDays);
-                else if (this.DataType == XLDataType.Number)
-                    CachedValue = ts.TotalDays;
-            }
-        }
-
-        internal void SetDataTypeFast(XLDataType dataType)
-        {
-            this._dataType = dataType;
-        }
-
-        private Object ParseCellValueFromString()
-        {
-            return ParseCellValueFromString(_cellValue, _dataType, out String error);
-        }
-
-        private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
-        {
-            error = "";
-            if ("" == cellValue)
-                return "";
-
-            if (dataType == XLDataType.Boolean)
-            {
-                if (bool.TryParse(cellValue, out Boolean b))
-                    return b;
-                else if (cellValue == "0")
-                    return false;
-                else if (cellValue == "1")
-                    return true;
-                else
-                    return !string.IsNullOrEmpty(cellValue);
-            }
-
-            if (dataType == XLDataType.DateTime)
-            {
-                if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
-                {
-                    if (d.IsValidOADateNumber())
-                        return DateTime.FromOADate(d);
-                    else
-                        return d;
-                }
-                else if (DateTime.TryParse(cellValue, out DateTime dt))
-                    return dt;
-                else
-                {
-                    error = string.Format("Cannot set data type to DateTime because '{0}' is not recognized as a date.", cellValue);
-                    return null;
-                }
-            }
-            if (dataType == XLDataType.Number)
-            {
-                var v = cellValue;
-                Double factor = 1.0;
-                if (v.EndsWith("%"))
-                {
-                    v = v.Substring(0, v.Length - 1);
-                    factor = 1 / 100.0;
-                }
-
-                if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out Double d))
-                    return d * factor;
-                else
-                {
-                    error = string.Format("Cannot set data type to Number because '{0}' is not recognized as a number.", cellValue);
-                    return null;
-                }
-            }
-
-            if (dataType == XLDataType.TimeSpan)
-            {
-                if (TimeSpan.TryParse(cellValue, out TimeSpan ts))
-                    return ts;
-                else if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
-                    return XLHelper.GetTimeSpan(d);
-                else
-                {
-                    error = string.Format("Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.", cellValue);
-                    return null;
-                }
-            }
-
-            return cellValue;
+            return SetValue(value, true, true);
         }
 
         public override string ToString() => ToString("A");
@@ -637,47 +592,19 @@ namespace ClosedXML.Excel
             };
         }
 
-        public object Value
+        public XLCellValue Value
         {
             get
             {
                 if (!String.IsNullOrWhiteSpace(_formulaA1) ||
                     !String.IsNullOrEmpty(_formulaR1C1))
                 {
-                    return Evaluate();
+                    Evaluate(false);
                 }
 
-                var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-                return ParseCellValueFromString(cellValue, _dataType, out _);
+                return _cellValue;
             }
-            set
-            {
-                if (IsInferiorMergedCell())
-                    return;
-
-                FormulaA1 = String.Empty;
-
-                if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
-
-                if (SetTableHeaderValue(value)) return;
-
-                if (SetRangeRows(value)) return;
-
-                if (SetRangeColumns(value)) return;
-
-                if (SetDataTable(value)) return;
-
-                if (SetEnumerable(value)) return;
-
-                if (SetRange(value)) return;
-
-                if (!SetRichText(value))
-                    SetValue(value);
-
-                CachedValue = null;
-
-                if (_cellValue.Length > 32767) throw new ArgumentOutOfRangeException(nameof(value), "Cells can hold only 32,767 characters.");
-            }
+            set => SetValue(value);
         }
 
         public IXLTable InsertTable<T>(IEnumerable<T> data)
@@ -896,91 +823,7 @@ namespace ClosedXML.Excel
             return InsertDataInternal(reader, addHeadings: false, transpose: false);
         }
 
-        public IXLCell SetDataType(XLDataType dataType)
-        {
-            DataType = dataType;
-            return this;
-        }
-
-        public XLDataType DataType
-        {
-            get { return _dataType; }
-            set
-            {
-                if (_dataType == value) return;
-
-                if (HasRichText)
-                {
-                    _cellValue = _richText.ToString();
-                    _richText = null;
-                }
-
-                if (!string.IsNullOrEmpty(_cellValue))
-                {
-                    // If we're converting the DataType to Text, there are some quirky rules currently
-                    if (value == XLDataType.Text)
-                    {
-                        var v = Value;
-                        switch (v)
-                        {
-                            case DateTime d:
-                                _cellValue = d.ToOADate().ToInvariantString();
-                                break;
-
-                            case TimeSpan ts:
-                                _cellValue = ts.TotalDays.ToInvariantString();
-                                break;
-
-                            case Boolean b:
-                                _cellValue = b ? "True" : "False";
-                                break;
-
-                            default:
-                                _cellValue = v.ObjectToInvariantString();
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        var v = ParseCellValueFromString(_cellValue, value, out String error);
-
-                        if (!String.IsNullOrWhiteSpace(error))
-                            throw new ArgumentException(error, nameof(value));
-
-                        _cellValue = v?.ObjectToInvariantString() ?? "";
-
-                        var style = GetStyleForRead();
-                        switch (v)
-                        {
-                            case DateTime d:
-                                _cellValue = d.ToOADate().ToInvariantString();
-
-                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                                    Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
-
-                                break;
-
-                            case TimeSpan ts:
-                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                                    Style.NumberFormat.NumberFormatId = 46;
-
-                                break;
-
-                            case Boolean b:
-                                _cellValue = b ? "1" : "0";
-                                break;
-                        }
-                    }
-                }
-
-                _dataType = value;
-
-                if (HasFormula && !NeedsRecalculation)
-                    UpdateCachedValueFromDataType();
-                else
-                    CachedValue = null;
-            }
-        }
+        public XLDataType DataType => _cellValue.Type;
 
         public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
@@ -1003,12 +846,9 @@ namespace ClosedXML.Excel
                 {
                     SetHyperlink(null);
                     _richText = null;
-                    _cellValue = String.Empty;
+                    _cellValue = Blank.Value;
                     FormulaA1 = String.Empty;
                 }
-
-                if (clearOptions.HasFlag(XLClearOptions.DataType))
-                    _dataType = XLDataType.Text;
 
                 if (clearOptions.HasFlag(XLClearOptions.NormalFormats))
                     SetStyle(Worksheet.Style);
@@ -1105,8 +945,6 @@ namespace ClosedXML.Excel
                 _formulaA1 = null;
             }
         }
-
-        public bool ShareString { get; set; }
 
         public XLHyperlink GetHyperlink()
         {
@@ -1235,25 +1073,7 @@ namespace ClosedXML.Excel
         /// </summary>
         private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
-        private Object cachedValue;
-
-        public Object CachedValue
-        {
-            get
-            {
-                if (!HasFormula && cachedValue == null)
-                    cachedValue = Value;
-
-                return cachedValue;
-            }
-            private set
-            {
-                if (value != null && !HasFormula)
-                    throw new InvalidOperationException("Cached values can be set only for cells with formulas");
-
-                cachedValue = value;
-            }
-        }
+        public XLCellValue CachedValue => _cellValue;
 
         public IXLRichText GetRichText()
         {
@@ -1268,10 +1088,10 @@ namespace ClosedXML.Excel
         public IXLRichText CreateRichText()
         {
             var style = GetStyleForRead();
-            _richText = _cellValue.Length == 0
-                            ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
-                            : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-
+            _richText = Value.Type == XLDataType.Blank
+                            ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
+                            : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
+            _cellValue = _richText.Text;
             return _richText;
         }
 
@@ -1319,7 +1139,20 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            if (InnerText.Length > 0)
+            bool isValueEmpty;
+            if (HasRichText)
+                isValueEmpty = _richText.Length == 0;
+            else
+            {
+                isValueEmpty = _cellValue.Type switch
+                {
+                    XLDataType.Blank => true,
+                    XLDataType.Text => _cellValue.GetText().Length == 0,
+                    _ => false
+                };
+            }
+
+            if (!isValueEmpty || HasFormula)
                 return false;
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
@@ -1479,257 +1312,6 @@ namespace ClosedXML.Excel
             get { return _hyperlink != null; }
         }
 
-        public Boolean TryGetValue<T>(out T value)
-        {
-            var targetType = typeof(T);
-            var underlyingType = targetType.GetUnderlyingType();
-            var isNullable = targetType.IsNullableType();
-
-            Object currentValue;
-            try
-            {
-                currentValue = Value;
-            }
-            catch
-            {
-                // May fail for formula evaluation
-                value = default;
-                return false;
-            }
-
-            if (isNullable && (currentValue == null || currentValue is string s && String.IsNullOrEmpty(s)))
-            {
-                value = default;
-                return true;
-            }
-
-            if (targetType != typeof(String) // Strings are handled later and have some specifics to UTF handling
-                && currentValue is T t)
-            {
-                value = t;
-                return true;
-            }
-
-            if (TryGetDateTimeValue(out value, currentValue)) return true;
-
-            if (TryGetTimeSpanValue(out value, currentValue)) return true;
-
-            if (TryGetBooleanValue(out value, currentValue)) return true;
-
-            if (TryGetRichStringValue(out value)) return true;
-
-            if (TryGetStringValue(out value, currentValue)) return true;
-
-            if (TryGetHyperlink(out value)) return true;
-
-            if (currentValue.IsNumber())
-            {
-                try
-                {
-                    value = (T)Convert.ChangeType(currentValue, underlyingType);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    value = default;
-                    return false;
-                }
-            }
-
-            var strValue = currentValue.ToString();
-
-            if (underlyingType == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(strValue, sbyte.TryParse, out value);
-            if (underlyingType == typeof(byte)) return TryGetBasicValue<T, byte>(strValue, byte.TryParse, out value);
-            if (underlyingType == typeof(short)) return TryGetBasicValue<T, short>(strValue, short.TryParse, out value);
-            if (underlyingType == typeof(ushort)) return TryGetBasicValue<T, ushort>(strValue, ushort.TryParse, out value);
-            if (underlyingType == typeof(int)) return TryGetBasicValue<T, int>(strValue, int.TryParse, out value);
-            if (underlyingType == typeof(uint)) return TryGetBasicValue<T, uint>(strValue, uint.TryParse, out value);
-            if (underlyingType == typeof(long)) return TryGetBasicValue<T, long>(strValue, long.TryParse, out value);
-            if (underlyingType == typeof(ulong)) return TryGetBasicValue<T, ulong>(strValue, ulong.TryParse, out value);
-            if (underlyingType == typeof(float)) return TryGetBasicValue<T, float>(strValue, float.TryParse, out value);
-            if (underlyingType == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
-            if (underlyingType == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
-
-            if (underlyingType.IsEnum)
-            {
-                if (Enum.IsDefined(underlyingType, strValue))
-                {
-                    value = (T)Enum.Parse(underlyingType, strValue, ignoreCase: false);
-                    return true;
-                }
-                value = default;
-                return false;
-            }
-
-            try
-            {
-                value = (T)Convert.ChangeType(currentValue, targetType);
-                return true;
-            }
-            catch
-            {
-                value = default;
-                return false;
-            }
-        }
-
-        private static bool TryGetDateTimeValue<T>(out T value, object currentValue)
-        {
-            if (typeof(T) != typeof(DateTime) && typeof(T) != typeof(DateTime?))
-            {
-                value = default;
-                return false;
-            }
-
-            if (currentValue is T v) { value = v; return true; }
-
-            if (currentValue.IsNumber())
-            {
-                var dbl1 = Convert.ToDouble(currentValue);
-                if (dbl1.IsValidOADateNumber())
-                {
-                    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl1), typeof(T));
-                    return true;
-                }
-            }
-
-            if (DateTime.TryParse(currentValue.ToString(), out DateTime ts))
-            {
-                value = (T)Convert.ChangeType(ts, typeof(T));
-                return true;
-            }
-
-            // If the cell value is a string, e.g. "42020", we could theoretically coerce it to a DateTime, but this seems to go against what is expected.
-            // Leaving this code block here, though. Maybe we revert our decision later.
-
-            //if (Double.TryParse(currentValue.ObjectToInvariantString(), out Double dbl2) && dbl2.IsValidOADateNumber())
-            //{
-            //    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl2), typeof(T));
-            //    return true;
-            //}
-
-            value = default;
-            return false;
-        }
-
-        private static bool TryGetTimeSpanValue<T>(out T value, object currentValue)
-        {
-            if (typeof(T) != typeof(TimeSpan) && typeof(T) != typeof(TimeSpan?))
-            {
-                value = default;
-                return false;
-            }
-
-            if (currentValue is T v) { value = v; return true; }
-
-            if (!TimeSpan.TryParse(currentValue.ToString(), out TimeSpan ts))
-            {
-                value = default;
-                return false;
-            }
-
-            value = (T)Convert.ChangeType(ts, typeof(T));
-            return true;
-        }
-
-        private bool TryGetRichStringValue<T>(out T value)
-        {
-            if (typeof(T) == typeof(IXLRichText))
-            {
-                value = (T)GetRichText();
-                return true;
-            }
-            value = default;
-            return false;
-        }
-
-        private static bool TryGetStringValue<T>(out T value, object currentValue)
-        {
-            if (typeof(T) == typeof(String))
-            {
-                var s = currentValue.ToString();
-                var matches = utfPattern.Matches(s);
-
-                if (matches.Count == 0)
-                {
-                    value = (T)Convert.ChangeType(s, typeof(T));
-                    return true;
-                }
-
-                var sb = new StringBuilder();
-                var lastIndex = 0;
-
-                foreach (var match in matches.Cast<Match>())
-                {
-                    var matchString = match.Value;
-                    var matchIndex = match.Index;
-                    sb.Append(s.Substring(lastIndex, matchIndex - lastIndex));
-
-                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
-
-                    lastIndex = matchIndex + matchString.Length;
-                }
-
-                if (lastIndex < s.Length)
-                    sb.Append(s.Substring(lastIndex));
-
-                value = (T)Convert.ChangeType(sb.ToString(), typeof(T));
-                return true;
-            }
-            value = default;
-            return false;
-        }
-
-        private static Boolean TryGetBooleanValue<T>(out T value, object currentValue)
-        {
-            if (typeof(T) != typeof(Boolean) && typeof(T) != typeof(Boolean?))
-            {
-                value = default;
-                return false;
-            }
-
-            if (currentValue is T v) { value = v; return true; }
-
-            if (!Boolean.TryParse(currentValue.ToString(), out Boolean b))
-            {
-                value = default;
-                return false;
-            }
-
-            value = (T)Convert.ChangeType(b, typeof(T));
-            return true;
-        }
-
-        private Boolean TryGetHyperlink<T>(out T value)
-        {
-            if (typeof(T) == typeof(XLHyperlink))
-            {
-                var hyperlink = _hyperlink ?? Value as XLHyperlink;
-                if (hyperlink != null)
-                {
-                    value = (T)Convert.ChangeType(hyperlink, typeof(T));
-                    return true;
-                }
-            }
-
-            value = default;
-            return false;
-        }
-
-        private delegate Boolean ParseFunction<T>(String s, NumberStyles style, IFormatProvider provider, out T result);
-
-        private static Boolean TryGetBasicValue<T, U>(String currentValue, ParseFunction<U> parseFunction, out T value)
-        {
-            if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out U result))
-            {
-                value = (T)Convert.ChangeType(result, typeof(T).GetUnderlyingType());
-                return true;
-            }
-
-            value = default;
-            return false;
-        }
-
         #endregion IXLCell Members
 
         #region IXLStylized Members
@@ -1765,109 +1347,6 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
-        private Boolean SetTableHeaderValue(object value)
-        {
-            foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
-            {
-                var cell = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address)).FirstOrDefault();
-                if (cell != null)
-                {
-                    var oldName = cell.GetString();
-                    var field = table.Field(oldName);
-                    field.Name = value.ToString();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private Boolean SetTableTotalsRowLabel(object value)
-        {
-            foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
-            {
-                var cell = table.TotalsRow().Cells(c => c.Address.Equals(this.Address)).FirstOrDefault();
-                if (cell != null)
-                {
-                    var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
-                    field.TotalsRowFunction = XLTotalsRowFunction.None;
-
-                    SetInternalCellValueString(value.ObjectToInvariantString(), validate: true, parseToCachedValue: false);
-
-                    field.TotalsRowLabel = _cellValue;
-                    this.DataType = XLDataType.Text;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool SetRangeColumns(object value)
-        {
-            if (value is XLRangeColumns columns)
-            {
-                var cell = this;
-                foreach (var column in columns)
-                {
-                    cell.SetRange(column);
-                    cell = cell.CellRight();
-                }
-                return true;
-            }
-            else
-
-                return SetColumns(value);
-        }
-
-        private bool SetColumns(object value)
-        {
-            if (value is XLColumns columns)
-            {
-                var cell = this;
-                foreach (var column in columns)
-                {
-                    cell.SetRange(column);
-                    cell = cell.CellRight();
-                }
-                return true;
-            }
-            else
-                return false;
-        }
-
-        private bool SetRangeRows(object value)
-        {
-            if (value is XLRangeRows rows)
-            {
-                var cell = this;
-                foreach (var row in rows)
-                {
-                    cell.SetRange(row);
-                    cell = cell.CellBelow();
-                }
-                return true;
-            }
-            else
-                return SetRows(value);
-        }
-
-        private bool SetRows(object value)
-        {
-            if (value is XLRows rows)
-            {
-                var cell = this;
-                foreach (var row in rows)
-                {
-                    cell.SetRange(row);
-                    cell = cell.CellBelow();
-                }
-                return true;
-            }
-            else
-                return false;
-        }
-
         public XLRange AsRange()
         {
             return Worksheet.Range(Address, Address);
@@ -1902,17 +1381,6 @@ namespace ClosedXML.Excel
             Clear(XLClearOptions.Sparklines);
         }
 
-        private bool IsDateFormat()
-        {
-            var style = GetStyleForRead();
-            return _dataType == XLDataType.Number
-                   && String.IsNullOrWhiteSpace(style.NumberFormat.Format)
-                   && ((style.NumberFormat.NumberFormatId >= 14
-                        && style.NumberFormat.NumberFormatId <= 22)
-                       || (style.NumberFormat.NumberFormatId >= 45
-                           && style.NumberFormat.NumberFormatId <= 47));
-        }
-
         private string GetFormat()
         {
             var style = GetStyleForRead();
@@ -1928,98 +1396,81 @@ namespace ClosedXML.Excel
                 return style.NumberFormat.Format;
         }
 
-        private bool SetRichText(object value)
+        public IXLCell CopyFrom(IXLRangeBase rangeObject)
         {
-            if (value is XLRichText asRichString)
+            if (rangeObject is null)
+                throw new ArgumentNullException(nameof(rangeObject));
+
+            var asRange = (XLRangeBase)rangeObject;
+            var maxRows = asRange.RowCount();
+            var maxColumns = asRange.ColumnCount();
+
+            var lastRow = Math.Min(_rowNumber + maxRows - 1, XLHelper.MaxRowNumber);
+            var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
+
+            var targetRange = Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn);
+
+            if (!(asRange is XLRow || asRange is XLColumn))
             {
-                _richText = asRichString;
-                _dataType = XLDataType.Text;
-                return true;
+                targetRange.Clear();
             }
-            else
-                return false;
-        }
 
-        private Boolean SetRange(Object rangeObject)
-        {
-            var asRange = (rangeObject as XLRangeBase)
-                       ?? (rangeObject as XLCell)?.AsRange();
-
-            if (asRange != null)
+            var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
+            var minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
+            var cellsUsed = asRange.CellsUsed(XLCellsUsedOptions.All
+                                              & ~XLCellsUsedOptions.ConditionalFormats
+                                              & ~XLCellsUsedOptions.DataValidation
+                                              & ~XLCellsUsedOptions.MergedRanges);
+            foreach (var sourceCell in cellsUsed)
             {
-                var maxRows = asRange.RowCount();
-                var maxColumns = asRange.ColumnCount();
+                Worksheet.Cell(
+                    _rowNumber + sourceCell.Address.RowNumber - minRow,
+                    _columnNumber + sourceCell.Address.ColumnNumber - minColumn
+                    ).CopyFromInternal(sourceCell as XLCell,
+                    XLCellCopyOptions.All & ~XLCellCopyOptions.ConditionalFormats); //Conditional formats are copied separately
+            }
 
-                var lastRow = Math.Min(_rowNumber + maxRows - 1, XLHelper.MaxRowNumber);
-                var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
-
-                var targetRange = Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn);
-
-                if (!(asRange is XLRow || asRange is XLColumn))
+            var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
+                .Where(mr => asRange.Contains(mr))
+                .Select(mr =>
                 {
-                    targetRange.Clear();
-                }
+                    var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                    var firstColumn = _columnNumber + (mr.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+                    return (IXLRange)Worksheet.Range
+                    (
+                        firstRow,
+                        firstColumn,
+                        firstRow + mr.RowCount() - 1,
+                        firstColumn + mr.ColumnCount() - 1
+                    );
+                })
+                .ToList();
 
-                var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
-                var minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
-                var cellsUsed = asRange.CellsUsed(XLCellsUsedOptions.All
-                                                  & ~XLCellsUsedOptions.ConditionalFormats
-                                                  & ~XLCellsUsedOptions.DataValidation
-                                                  & ~XLCellsUsedOptions.MergedRanges);
-                foreach (var sourceCell in cellsUsed)
+            rangesToMerge.ForEach(r => r.Merge(false));
+
+            var dataValidations = asRange.Worksheet.DataValidations
+                .GetAllInRange(asRange.RangeAddress)
+                .ToList();
+
+            foreach (var dataValidation in dataValidations)
+            {
+                XLDataValidation newDataValidation = null;
+                foreach (var dvRange in dataValidation.Ranges.Where(r => r.Intersects(asRange)))
                 {
-                    Worksheet.Cell(
-                        _rowNumber + sourceCell.Address.RowNumber - minRow,
-                        _columnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFromInternal(sourceCell as XLCell,
-                        XLCellCopyOptions.All & ~XLCellCopyOptions.ConditionalFormats); //Conditional formats are copied separately
-                }
-
-                var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
-                    .Where(mr => asRange.Contains(mr))
-                    .Select(mr =>
+                    var dvTargetAddress = dvRange.RangeAddress.Relative(asRange.RangeAddress, targetRange.RangeAddress);
+                    var dvTargetRange = Worksheet.Range(dvTargetAddress);
+                    if (newDataValidation == null)
                     {
-                        var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
-                        var firstColumn = _columnNumber + (mr.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
-                        return (IXLRange)Worksheet.Range
-                        (
-                            firstRow,
-                            firstColumn,
-                            firstRow + mr.RowCount() - 1,
-                            firstColumn + mr.ColumnCount() - 1
-                        );
-                    })
-                    .ToList();
-
-                rangesToMerge.ForEach(r => r.Merge(false));
-
-                var dataValidations = asRange.Worksheet.DataValidations
-                    .GetAllInRange(asRange.RangeAddress)
-                    .ToList();
-
-                foreach (var dataValidation in dataValidations)
-                {
-                    XLDataValidation newDataValidation = null;
-                    foreach (var dvRange in dataValidation.Ranges.Where(r => r.Intersects(asRange)))
-                    {
-                        var dvTargetAddress = dvRange.RangeAddress.Relative(asRange.RangeAddress, targetRange.RangeAddress);
-                        var dvTargetRange = Worksheet.Range(dvTargetAddress);
-                        if (newDataValidation == null)
-                        {
-                            newDataValidation = dvTargetRange.CreateDataValidation() as XLDataValidation;
-                            newDataValidation.CopyFrom(dataValidation);
-                        }
-                        else
-                            newDataValidation.AddRange(dvTargetRange);
+                        newDataValidation = dvTargetRange.CreateDataValidation() as XLDataValidation;
+                        newDataValidation.CopyFrom(dataValidation);
                     }
+                    else
+                        newDataValidation.AddRange(dvTargetRange);
                 }
-
-                CopyConditionalFormatsFrom(asRange);
-
-                return true;
             }
 
-            return false;
+            CopyConditionalFormatsFrom(asRange);
+            return this;
         }
 
         private void CopyConditionalFormatsFrom(XLCell otherCell)
@@ -2106,68 +1557,14 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetValue(object value)
-        {
-            if (value == null)
-            {
-                this.Clear(XLClearOptions.Contents);
-                return;
-            }
-
-            FormulaA1 = String.Empty;
-            _richText = null;
-
-            var style = GetStyleForRead();
-            Boolean parsed = false;
-            string parsedValue = string.Empty;
-
-            ////
-            // Try easy parsing first. If that doesn't work, we'll have to ToString it and parse it slowly
-
-            // When number format starts with @, we treat any value as text - no parsing required
-            // This doesn't happen in the SetValue<T>() version
-            if (style.NumberFormat.Format == "@")
-            {
-                parsedValue = value.ObjectToInvariantString();
-
-                _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
-
-                parsed = true;
-            }
-            // Don't accept strings, because we're going to try to parse them later
-            else if (value is not string _)
-            {
-                parsed = TrySetInternallySupportedType(ConvertOtherSupportedTypes(value), style, out parsedValue);
-            }
-
-            ////
-            if (!parsed)
-            {
-                // We'll have to parse it slowly :-(
-                parsedValue = DeduceCellValueByParsing(value.ToString(), style);
-            }
-
-            if (SetTableHeaderValue(parsedValue)) return;
-            if (SetTableTotalsRowLabel(parsedValue)) return;
-
-            SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
-            CachedValue = null;
-        }
-
         private void SetDateTimeFormat(XLStyleValue style, Boolean onlyDatePart)
         {
-            _dataType = XLDataType.DateTime;
-
             if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
         }
 
         private void SetTimeSpanFormat(XLStyleValue style)
         {
-            _dataType = XLDataType.TimeSpan;
-
             if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = 46;
         }
@@ -2377,9 +1774,8 @@ namespace ClosedXML.Excel
         internal void CopyValuesFrom(XLCell source)
         {
             _cellValue = source._cellValue;
-            _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
-            _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
+            _richText = source._richText == null ? null : new XLRichText(this, source._richText, source.Style.Font);
             _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font, source._comment.Style);
             if (source._hyperlink != null)
             {

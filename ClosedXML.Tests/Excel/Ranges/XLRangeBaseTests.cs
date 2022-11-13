@@ -88,7 +88,7 @@ namespace ClosedXML.Tests
             wb.NamedRanges.Add("SingleCell", "Sheet1!$A$1");
             IXLRange range = wb.Range("SingleCell");
             Assert.AreEqual(1, range.CellsUsed().Count());
-            Assert.AreEqual("Hello World!", range.CellsUsed().Single().GetString());
+            Assert.AreEqual("Hello World!", range.CellsUsed().Single().GetText());
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace ClosedXML.Tests
             IXLRange namedRange = wb.Range("FNameColumn");
             Assert.AreEqual(3, namedRange.Cells().Count());
             Assert.IsTrue(
-                namedRange.CellsUsed().Select(cell => cell.GetString()).SequenceEqual(new[] { "John", "Hank", "Dagny" }));
+                namedRange.CellsUsed().Select(cell => cell.GetText()).SequenceEqual(new[] { "John", "Hank", "Dagny" }));
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace ClosedXML.Tests
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
-            Assert.AreEqual("Test", ws.Cell("TestCell").GetString());
+            Assert.AreEqual("Test", ws.Cell("TestCell").GetText());
         }
 
         [Test]
@@ -127,8 +127,8 @@ namespace ClosedXML.Tests
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
             ws.Cell(2, 1).SetValue("B");
             IXLCells cells = ws.Cells("TestCell, A2");
-            Assert.AreEqual("Test", cells.First().GetString());
-            Assert.AreEqual("B", cells.Last().GetString());
+            Assert.AreEqual("Test", cells.First().GetText());
+            Assert.AreEqual("B", cells.Last().GetText());
         }
 
         [Test]

@@ -96,7 +96,7 @@ namespace ClosedXML.Examples.Misc
 
                 // Extract the string in different ways
                 String string1 = (String)cellString.Value;
-                String string2 = cellString.GetString();
+                String string2 = cellString.GetText();
                 String string3 = cellString.GetValue<String>();
                 String stringString = cellString.GetString();
                 String stringFormattedString = cellString.GetFormattedString();

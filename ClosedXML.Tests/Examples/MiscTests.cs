@@ -80,12 +80,6 @@ namespace ClosedXML.Tests.Examples
         }
 
         [Test]
-        public void DataTypesUnderDifferentCulture()
-        {
-            TestHelper.RunTestExample<DataTypesUnderDifferentCulture>(@"Misc\DataTypesUnderDifferentCulture.xlsx");
-        }
-
-        [Test]
         public void DataValidation()
         {
             TestHelper.RunTestExample<DataValidation>(@"Misc\DataValidation.xlsx");

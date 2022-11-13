@@ -1705,7 +1705,7 @@ namespace ClosedXML.Excel
         public Object Evaluate(String expression, string formulaAddress = null)
         {
             IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
-            return CalcEngine.Evaluate(expression, Workbook, this, address);
+            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngine.Evaluate(expression, Workbook, this, address));
         }
 
         /// <summary>
@@ -1779,14 +1779,25 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        internal void SetValue<T>(T value, int ro, int co) where T : class
+        internal void SetValue<T>(T value, int ro, int co)
         {
-            if (value == null)
-                this.Cell(ro, co).SetValue(String.Empty, setTableHeader: true, checkMergedRanges: false);
-            else if (value is IConvertible)
-                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
-            else
-                this.Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
+            var cell = Cell(ro, co);
+            XLCellValue newValue = value switch
+            {
+                null => Blank.Value,
+                Blank blankValue => blankValue,
+                Boolean logical => logical,
+                Double number => number,
+                String text => text,
+                XLError error => error,
+                Int32 intNumber => intNumber,
+                DateTime date => date,
+                DateTimeOffset dateOfs => dateOfs.DateTime,
+                TimeSpan timeSpan => timeSpan,
+                _ => value.ToString() // Other things, like chars ect are just turned to string
+            };
+
+            cell.SetValue(newValue, setTableHeader: true, checkMergedRanges: false);
         }
 
         /// <summary>
@@ -1794,16 +1805,15 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="ro">Row number</param>
         /// <param name="co">Column number</param>
-        /// <returns>Current value of the specified cell. Empty string for non-initialized cells.</returns>
-        internal object GetCellValue(int ro, int co)
+        internal XLCellValue GetCellValue(int ro, int co)
         {
             var cell = GetCell(ro, co);
             if (cell is null)
-                return string.Empty;
+                return Blank.Value;
 
             // LEGACY: This is deeply suspicious, this only exists so the legacy formulas can get cell value
             if (cell.IsEvaluating)
-                return string.Empty;
+                return Blank.Value;
 
             return cell.Value;
         }

@@ -65,11 +65,11 @@ namespace ClosedXML.Excel
 
         IXLPivotField SetSort(XLPivotSortType value);
 
-        IList<Object> SelectedValues { get; }
+        IList<XLCellValue> SelectedValues { get; }
 
-        IXLPivotField AddSelectedValue(Object value);
+        IXLPivotField AddSelectedValue(XLCellValue value);
 
-        IXLPivotField AddSelectedValues(IEnumerable<Object> values);
+        IXLPivotField AddSelectedValues(IEnumerable<XLCellValue> values);
 
         IXLPivotFieldStyleFormats StyleFormats { get; }
 

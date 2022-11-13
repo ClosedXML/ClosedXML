@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         {
             _pivotValue = pivotValue;
         }
-        public IXLPivotValue And(String item)
+        public IXLPivotValue And(XLCellValue item)
         {
             _pivotValue.BaseItem = item;
             _pivotValue.CalculationItem = XLPivotCalculationItem.Value;
