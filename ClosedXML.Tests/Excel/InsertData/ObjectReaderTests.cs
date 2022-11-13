@@ -10,14 +10,14 @@ namespace ClosedXML.Tests.Excel.InsertData
     {
         private static readonly TablesTests.TestObjectWithAttributes[] ObjectWithAttributes =
         {
-            new TablesTests.TestObjectWithAttributes
+            new()
             {
                 Column1 = "Value 1",
                 Column2 = "Value 2",
                 UnOrderedColumn = 3,
                 MyField = 4,
             },
-            new TablesTests.TestObjectWithAttributes
+            new()
             {
                 Column1 = "Value 5",
                 Column2 = "Value 6",
@@ -28,12 +28,12 @@ namespace ClosedXML.Tests.Excel.InsertData
 
         private static readonly TablesTests.TestObjectWithoutAttributes[] ObjectWithoutAttributes =
         {
-            new TablesTests.TestObjectWithoutAttributes
+            new()
             {
                 Column1 = "Value 9",
                 Column2 = "Value 10"
             },
-            new TablesTests.TestObjectWithoutAttributes
+            new()
             {
                 Column1 = "Value 11",
                 Column2 = "Value 12"
@@ -42,13 +42,13 @@ namespace ClosedXML.Tests.Excel.InsertData
 
         private static readonly TestPoint[] Structs =
         {
-            new TestPoint
+            new()
             {
                 X = 1,
                 Y = 2,
                 Z = 3
             },
-            new TestPoint(),
+            new(),
         };
 
         private static readonly TestPoint?[] NullableStructs =
@@ -182,6 +182,22 @@ namespace ClosedXML.Tests.Excel.InsertData
             Assert.AreEqual(null, lastRecord[0]);
             Assert.AreEqual(null, lastRecord[1]);
             Assert.AreEqual(null, lastRecord[2]);
+        }
+
+        [Test]
+        public void IgnoresIndexers()
+        {
+            var data = new[] { new TestClassWithIndexer() };
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+
+            Assert.AreEqual(1, reader.GetPropertiesCount());
+            Assert.AreEqual(nameof(TestClassWithIndexer.Value), reader.GetPropertyName(0));
+        }
+
+        private record TestClassWithIndexer
+        {
+            public int Value => 0;
+            public int this[int i] => 0;
         }
 
         private struct TestPoint

@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.InsertData
 {
     internal class ObjectReader : IInsertDataReader
     {
-        private const BindingFlags bindingFlags = BindingFlags.Public
+        private const BindingFlags MemberBindingFlags = BindingFlags.Public
                                                   | BindingFlags.Instance
                                                   | BindingFlags.Static;
 
@@ -27,10 +27,10 @@ namespace ClosedXML.Excel.InsertData
             if (itemType.IsNullableType())
                 itemType = itemType.GetUnderlyingType();
 
-            _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
-                .Concat(itemType.GetProperties(bindingFlags))
+            _members = itemType.GetFields(MemberBindingFlags).Cast<MemberInfo>()
+                .Concat(itemType.GetProperties(MemberBindingFlags).Where(pi => !pi.GetIndexParameters().Any()))
                 .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
+                .OrderBy(XLColumnAttribute.GetOrder)
                 .ToArray();
 
             _staticMembers = _members.Select(ReflectionExtensions.IsStatic).ToArray();
