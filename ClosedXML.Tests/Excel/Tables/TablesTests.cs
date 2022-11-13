@@ -87,8 +87,8 @@ namespace ClosedXML.Tests.Excel
                     .CellBelow().SetValue("X");
                 ws.Range("A1").CreateTable();
 
-                Assert.AreEqual(String.Empty, ws.Cell("A2").GetString());
-                Assert.AreEqual("X", ws.Cell("A3").GetString());
+                Assert.AreEqual(Blank.Value, ws.Cell("A2").Value);
+                Assert.AreEqual("X", ws.Cell("A3").GetText());
             }
         }
 
@@ -105,7 +105,7 @@ namespace ClosedXML.Tests.Excel
 
                 IXLTable table = ws.RangeUsed().CreateTable();
                 table.InsertColumnsAfter(1);
-                Assert.AreEqual("Column2", table.HeadersRow().LastCell().GetString());
+                Assert.AreEqual("Column2", table.HeadersRow().LastCell().GetText());
             }
         }
 
@@ -382,15 +382,15 @@ namespace ClosedXML.Tests.Excel
 
                 Assert.IsTrue(ws.Cell(1, 1).IsEmpty(XLCellsUsedOptions.All));
                 Assert.AreEqual(null, table.HeadersRow());
-                Assert.AreEqual("A", table.DataRange.FirstRow().Field("Categories").GetString());
-                Assert.AreEqual("C", table.DataRange.LastRow().Field("Categories").GetString());
-                Assert.AreEqual("A", table.DataRange.FirstCell().GetString());
-                Assert.AreEqual("C", table.DataRange.LastCell().GetString());
+                Assert.AreEqual("A", table.DataRange.FirstRow().Field("Categories").GetText());
+                Assert.AreEqual("C", table.DataRange.LastRow().Field("Categories").GetText());
+                Assert.AreEqual("A", table.DataRange.FirstCell().GetText());
+                Assert.AreEqual("C", table.DataRange.LastCell().GetText());
 
                 table.SetShowHeaderRow();
                 IXLRangeRow headerRow = table.HeadersRow();
                 Assert.AreNotEqual(null, headerRow);
-                Assert.AreEqual("Categories", headerRow.Cell(1).GetString());
+                Assert.AreEqual("Categories", headerRow.Cell(1).GetText());
 
                 table.SetShowHeaderRow(false);
 
@@ -398,13 +398,13 @@ namespace ClosedXML.Tests.Excel
 
                 table.SetShowHeaderRow();
 
-                Assert.AreEqual("x", ws.FirstCell().GetString());
-                Assert.AreEqual("Categories", ws.Cell("A2").GetString());
+                Assert.AreEqual("x", ws.FirstCell().GetText());
+                Assert.AreEqual("Categories", ws.Cell("A2").GetText());
                 Assert.AreNotEqual(null, headerRow);
-                Assert.AreEqual("A", table.DataRange.FirstRow().Field("Categories").GetString());
-                Assert.AreEqual("C", table.DataRange.LastRow().Field("Categories").GetString());
-                Assert.AreEqual("A", table.DataRange.FirstCell().GetString());
-                Assert.AreEqual("C", table.DataRange.LastCell().GetString());
+                Assert.AreEqual("A", table.DataRange.FirstRow().Field("Categories").GetText());
+                Assert.AreEqual("C", table.DataRange.LastRow().Field("Categories").GetText());
+                Assert.AreEqual("A", table.DataRange.FirstCell().GetText());
+                Assert.AreEqual("C", table.DataRange.LastCell().GetText());
             }
         }
 
@@ -425,7 +425,7 @@ namespace ClosedXML.Tests.Excel
                 tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
                 var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
 
-                var cellValue = ws.Cell("B1").GetString();
+                var cellValue = ws.Cell("B1").GetText();
 
                 Assert.AreEqual("LName", nameBefore);
                 Assert.AreEqual("LastName", nameAfter);
@@ -437,7 +437,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual("LastNameChanged", nameAfter);
 
                 tbl.SetShowHeaderRow(true);
-                nameAfter = tbl.Cell("B1").Value.ToString();
+                nameAfter = (String)tbl.Cell("B1").Value;
                 Assert.AreEqual("LastNameChanged", nameAfter);
 
                 var field = tbl.Field("LastNameChanged");
@@ -1094,9 +1094,9 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual("Custom column 1", ws2.Cell("A1").Value);
             Assert.AreEqual("Custom column 2", ws2.Cell("B1").Value);
             Assert.AreEqual("Custom column 3", ws2.Cell("C1").Value);
-            Assert.AreEqual("", ws2.Cell("A2").Value);
-            Assert.AreEqual("", ws2.Cell("B2").Value);
-            Assert.AreEqual("", ws2.Cell("C2").Value);
+            Assert.AreEqual(Blank.Value, ws2.Cell("A2").Value);
+            Assert.AreEqual(Blank.Value, ws2.Cell("B2").Value);
+            Assert.AreEqual(Blank.Value, ws2.Cell("C2").Value);
         }
 
         [Test]

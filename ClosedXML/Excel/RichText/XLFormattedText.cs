@@ -5,12 +5,13 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLFormattedText<T>: IXLFormattedText<T>
+    internal class XLFormattedText<T> : IXLFormattedText<T>
     {
-        List<IXLRichString> _richTexts = new List<IXLRichString>();
-
+        private readonly IXLFontBase _defaultFont;
+        private List<IXLRichString> _richTexts = new();
+        protected event EventHandler ContentChanged;
         protected T Container;
-        readonly IXLFontBase _defaultFont;
+
         public XLFormattedText(IXLFontBase defaultFont)
         {
             Length = 0;
@@ -29,7 +30,7 @@ namespace ClosedXML.Excel
         }
 
         public XLFormattedText(String text, IXLFontBase defaultFont)
-            :this(defaultFont)
+            : this(defaultFont)
         {
             AddText(text);
         }
@@ -51,6 +52,7 @@ namespace ClosedXML.Excel
         {
             _richTexts.Add(richText);
             Length += richText.Text.Length;
+            ContentChanged?.Invoke(this, EventArgs.Empty);
             return richText;
         }
 
@@ -63,8 +65,10 @@ namespace ClosedXML.Excel
         {
             _richTexts.Clear();
             Length = 0;
+            ContentChanged?.Invoke(this, EventArgs.Empty);
             return this;
         }
+
         public IXLFormattedText<T> ClearFont()
         {
             String text = Text;
@@ -84,6 +88,7 @@ namespace ClosedXML.Excel
         {
             return Substring(index, Length - index);
         }
+
         public IXLFormattedText<T> Substring(Int32 index, Int32 length)
         {
             if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
@@ -126,7 +131,17 @@ namespace ClosedXML.Excel
                 lastPosition += rt.Text.Length;
             }
             _richTexts = newRichTexts;
+            ContentChanged?.Invoke(this, EventArgs.Empty);
             return retVal;
+        }
+
+        public IXLFormattedText<T> CopyFrom(IXLFormattedText<T> original)
+        {
+            ClearText();
+            foreach (var richText in original)
+                AddText(new XLRichString(richText.Text, richText, this));
+
+            return this;
         }
 
         public IEnumerator<IXLRichString> GetEnumerator()
@@ -150,12 +165,17 @@ namespace ClosedXML.Excel
         public String FontName { set { _richTexts.ForEach(rt => rt.FontName = value); } }
         public XLFontFamilyNumberingValues FontFamilyNumbering { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
 
-        public IXLFormattedText<T> SetBold() { Bold = true; return this; }	public IXLFormattedText<T> SetBold(Boolean value) { Bold = value; return this; }
-        public IXLFormattedText<T> SetItalic() { Italic = true; return this; }	public IXLFormattedText<T> SetItalic(Boolean value) { Italic = value; return this; }
-        public IXLFormattedText<T> SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }	public IXLFormattedText<T> SetUnderline(XLFontUnderlineValues value) { Underline = value; return this; }
-        public IXLFormattedText<T> SetStrikethrough() { Strikethrough = true; return this; }	public IXLFormattedText<T> SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
+        public IXLFormattedText<T> SetBold() { Bold = true; return this; }
+        public IXLFormattedText<T> SetBold(Boolean value) { Bold = value; return this; }
+        public IXLFormattedText<T> SetItalic() { Italic = true; return this; }
+        public IXLFormattedText<T> SetItalic(Boolean value) { Italic = value; return this; }
+        public IXLFormattedText<T> SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }
+        public IXLFormattedText<T> SetUnderline(XLFontUnderlineValues value) { Underline = value; return this; }
+        public IXLFormattedText<T> SetStrikethrough() { Strikethrough = true; return this; }
+        public IXLFormattedText<T> SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
         public IXLFormattedText<T> SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
-        public IXLFormattedText<T> SetShadow() { Shadow = true; return this; }	public IXLFormattedText<T> SetShadow(Boolean value) { Shadow = value; return this; }
+        public IXLFormattedText<T> SetShadow() { Shadow = true; return this; }
+        public IXLFormattedText<T> SetShadow(Boolean value) { Shadow = value; return this; }
         public IXLFormattedText<T> SetFontSize(Double value) { FontSize = value; return this; }
         public IXLFormattedText<T> SetFontColor(XLColor value) { FontColor = value; return this; }
         public IXLFormattedText<T> SetFontName(String value) { FontName = value; return this; }
@@ -179,7 +199,7 @@ namespace ClosedXML.Excel
         public String Text { get { return ToString(); } }
 
         private IXLPhonetics _phonetics;
-        public IXLPhonetics Phonetics 
+        public IXLPhonetics Phonetics
         {
             get { return _phonetics ?? (_phonetics = new XLPhonetics(_defaultFont)); }
         }

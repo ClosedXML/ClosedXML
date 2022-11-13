@@ -49,9 +49,9 @@ namespace ClosedXML.Tests
             IXLRangeRow r = ws.Range("B4").InsertRowsAbove(1).First();
             r.Cell(1).SetValue("A");
 
-            Assert.AreEqual("X", ws.Cell("B3").GetString());
-            Assert.AreEqual("A", ws.Cell("B4").GetString());
-            Assert.AreEqual("B", ws.Cell("B5").GetString());
+            Assert.AreEqual("X", ws.Cell("B3").GetText());
+            Assert.AreEqual("A", ws.Cell("B4").GetText());
+            Assert.AreEqual("B", ws.Cell("B5").GetText());
         }
 
         [Test]

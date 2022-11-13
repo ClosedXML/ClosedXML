@@ -28,7 +28,6 @@ namespace ClosedXML.Examples
             new InsertColumns().Create(Path.Combine(path, "InsertColumns.xlsx"));
             new ColumnCollection().Create(Path.Combine(path, "ColumnCollection.xlsx"));
             new DataTypes().Create(Path.Combine(path, "DataTypes.xlsx"));
-            new DataTypesUnderDifferentCulture().Create(Path.Combine(path, "DataTypesUnderDifferentCulture.xlsx"));
             new MultipleSheets().Create(Path.Combine(path, "MultipleSheets.xlsx"));
             new RowCollection().Create(Path.Combine(path, "RowCollection.xlsx"));
             new DefiningRanges().Create(Path.Combine(path, "DefiningRanges.xlsx"));

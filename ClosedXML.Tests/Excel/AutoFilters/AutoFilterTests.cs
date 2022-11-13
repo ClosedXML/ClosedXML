@@ -51,7 +51,7 @@ namespace ClosedXML.Tests
                     .CellBelow().SetValue("Carlos")
                     .CellBelow().SetValue("Dominic");
                 ws.RangeUsed().SetAutoFilter().Sort();
-                Assert.AreEqual("Carlos", ws.Cell(4, 3).GetString());
+                Assert.AreEqual("Carlos", ws.Cell(4, 3).GetText());
             }
         }
 
@@ -192,7 +192,7 @@ namespace ClosedXML.Tests
 
                 autoFilter.Column(1).AddFilter("Carlos");
 
-                Assert.AreEqual("Carlos", ws.Cell(5, 3).GetString());
+                Assert.AreEqual("Carlos", ws.Cell(5, 3).GetText());
                 Assert.AreEqual(2, autoFilter.VisibleRows.Count());
                 Assert.AreEqual(3, autoFilter.VisibleRows.First().WorksheetRow().RowNumber());
                 Assert.AreEqual(5, autoFilter.VisibleRows.Last().WorksheetRow().RowNumber());

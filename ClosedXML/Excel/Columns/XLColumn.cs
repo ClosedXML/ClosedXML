@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
 
                 Double thisWidthMax = 0;
                 Int32 textRotation = cellStyle.Alignment.TextRotation;
-                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
+                if (c.HasRichText || textRotation != 0 || c.GetFormattedString().Contains(Environment.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
 
@@ -495,12 +495,6 @@ namespace ClosedXML.Excel
         public IXLColumn AddVerticalPageBreak()
         {
             Worksheet.PageSetup.AddVerticalPageBreak(ColumnNumber());
-            return this;
-        }
-
-        public IXLColumn SetDataType(XLDataType dataType)
-        {
-            DataType = dataType;
             return this;
         }
 

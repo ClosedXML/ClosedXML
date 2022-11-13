@@ -113,7 +113,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
 
-            int value = ws.Evaluate(formula).CastTo<int>();
+            var value = ws.Evaluate(formula);
             Assert.AreEqual(expectedResult, value);
         }
 

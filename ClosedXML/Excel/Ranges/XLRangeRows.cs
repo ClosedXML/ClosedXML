@@ -78,12 +78,6 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLRangeRows SetDataType(XLDataType dataType)
-        {
-            _ranges.ForEach(c => c.DataType = dataType);
-            return this;
-        }
-
         #endregion IXLRangeRows Members
 
         #region IXLStylized Members

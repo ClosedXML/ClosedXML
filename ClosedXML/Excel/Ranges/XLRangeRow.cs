@@ -95,9 +95,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public new IXLRangeRow CopyTo(IXLCell target)
+        public IXLRangeRow CopyTo(IXLCell target)
         {
-            base.CopyTo(target);
+            base.CopyTo((XLCell)target);
 
             int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
@@ -168,12 +168,6 @@ namespace ClosedXML.Excel
             }
 
             return retVal;
-        }
-
-        public IXLRangeRow SetDataType(XLDataType dataType)
-        {
-            DataType = dataType;
-            return this;
         }
 
         public IXLRow WorksheetRow()
@@ -251,8 +245,8 @@ namespace ClosedXML.Excel
                         {
                             case XLDataType.Text:
                                 comparison = e.MatchCase
-                                                 ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                                 : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                                 ? thisCell.GetText().CompareTo(otherCell.GetText())
+                                                 : String.Compare(thisCell.GetText(), otherCell.GetText(), true);
                                 break;
 
                             case XLDataType.TimeSpan:
@@ -275,6 +269,8 @@ namespace ClosedXML.Excel
                                 throw new NotImplementedException();
                         }
                     }
+                    else if (thisCell.Value.IsUnifiedNumber && otherCell.Value.IsUnifiedNumber)
+                        comparison = thisCell.Value.GetUnifiedNumber().CompareTo(otherCell.Value.GetUnifiedNumber());
                     else if (e.MatchCase)
                         comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
                     else

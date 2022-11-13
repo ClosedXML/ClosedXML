@@ -95,8 +95,6 @@ namespace ClosedXML.Excel
 
         IXLRangeColumns Columns(String columns);
 
-        IXLRangeColumn SetDataType(XLDataType dataType);
-
         IXLRangeColumn ColumnLeft();
 
         IXLRangeColumn ColumnLeft(Int32 step);

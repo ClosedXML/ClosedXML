@@ -1104,7 +1104,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
-            Object actual;
+            XLCellValue actual;
 
             ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
             actual = ws.Cell("A5").Value;
@@ -1128,9 +1128,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
-            ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
+            ws.Cell("A3").SetValue(0d).CellRight().SetValue(2).CellRight().SetValue(0d);
 
-            Object actual;
+            XLCellValue actual;
 
             ws.Cell("A5").FormulaA1 = "MInverse(A1:C3)";
             actual = ws.Cell("A5").Value;
@@ -1222,10 +1222,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual("The number of columns in array1 is different from the number of rows in array2.", error.Message);
         }
 
-        [TestCase(null)]
         [TestCase("")]
         [TestCase("Text")]
-        public void MMult_ThrowsWhenCellsContainInvalidInput(object invalidInput)
+        public void MMult_ThrowsWhenCellsContainInvalidInput(string invalidInput)
         {
             IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
 
@@ -2057,8 +2056,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().Value = Enumerable.Range(1, 10);
-                ws.FirstCell().CellRight().Value = Enumerable.Range(1, 10).Reverse();
+                ws.FirstCell().InsertData(Enumerable.Range(1, 10));
+                ws.FirstCell().CellRight().InsertData(Enumerable.Range(1, 10).Reverse());
 
                 Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
                 Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
@@ -2103,7 +2102,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual);
         }
 
-        private static IXLWorksheet AddWorksheetWithCellValues(XLWorkbook wb, params object[] values)
+        private static IXLWorksheet AddWorksheetWithCellValues(XLWorkbook wb, params XLCellValue[] values)
         {
             var ws = wb.AddWorksheet();
             for (var row = 1; row <= values.Length; ++row)

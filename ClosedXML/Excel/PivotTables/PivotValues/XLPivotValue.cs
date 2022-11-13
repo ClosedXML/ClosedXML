@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         public XLPivotSummary SummaryFormula { get; set; }		public IXLPivotValue SetSummaryFormula(XLPivotSummary value) { SummaryFormula = value; return this; }
         public XLPivotCalculation Calculation { get; set; }		public IXLPivotValue SetCalculation(XLPivotCalculation value) { Calculation = value; return this; }
         public String BaseField { get; set; }		public IXLPivotValue SetBaseField(String value) { BaseField = value; return this; }
-        public String BaseItem { get; set; }		public IXLPivotValue SetBaseItem(String value) { BaseItem = value; return this; }
+        public XLCellValue BaseItem { get; set; }		public IXLPivotValue SetBaseItem(XLCellValue value) { BaseItem = value; return this; }
         public XLPivotCalculationItem CalculationItem { get; set; }		public IXLPivotValue SetCalculationItem(XLPivotCalculationItem value) { CalculationItem = value; return this; }
 
 

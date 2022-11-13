@@ -7,16 +7,16 @@ namespace ClosedXML.Excel
 {
     internal class PivotLabelFieldReference : AbstractPivotFieldReference
     {
-        private readonly Predicate<Object> predicate;
+        private readonly Predicate<XLCellValue> _predicate;
 
         public PivotLabelFieldReference(IXLPivotField pivotField)
             : this(pivotField, null)
         { }
 
-        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<Object> predicate)
+        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<XLCellValue> predicate)
         {
-            this.PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
-            this.predicate = predicate;
+            PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
+            _predicate = predicate;
         }
 
         public IXLPivotField PivotField { get; set; }
@@ -30,13 +30,18 @@ namespace ClosedXML.Excel
         {
             var values = pti.Fields[PivotField.SourceName].DistinctValues.ToList();
 
-            if (predicate == null)
-                return new Int32[] { };
+            if (_predicate == null)
+                return Array.Empty<Int32>();
 
-            return values.Select((Value, Index) => new { Value, Index })
-                .Where(v => predicate.Invoke(v.Value))
-                .Select(v => v.Index)
-                .ToList();
+            var result = new List<Int32>();
+            for (var i = 0; i < values.Count; ++i)
+            {
+                var value = values[i];
+                if (_predicate(value))
+                    result.Add(i);
+            }
+
+            return result;
         }
     }
 }

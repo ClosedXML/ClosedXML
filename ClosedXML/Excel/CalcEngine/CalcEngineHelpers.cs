@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine
             // safety...
             if (value == null)
             {
-                return false;
+                return criteria is string { Length: 0 };
             }
 
             // Excel treats TRUE and 1 as unequal, but LibreOffice treats them as equal. We follow Excel's convention
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // evaluate
-                    return (bool)ce.Evaluate(expression);
+                    return (bool)CalcEngine.ToCellContentValue(ce.Evaluate(expression));
                 }
 
                 // if criteria is a regular expression, use regex

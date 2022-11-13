@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
             return GetCells(1, 1, MaxRowUsed, MaxColumnUsed);
         }
 
-        internal IEnumerable<XLCell> GetCells(Func<IXLCell, Boolean> predicate)
+        internal IEnumerable<XLCell> GetCells(Func<XLCell, Boolean> predicate)
         {
             for (int ro = 1; ro <= MaxRowUsed; ro++)
             {

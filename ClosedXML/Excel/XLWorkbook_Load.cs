@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
+using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
@@ -770,7 +771,7 @@ namespace ClosedXML.Excel
                                             {
                                                 var bi = (int)df.BaseItem.Value;
                                                 if (bi.Between(0, items.Count - 1))
-                                                    pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                                    pivotValue.BaseItem = items[(int)df.BaseItem.Value];
                                             }
                                         }
                                     }
@@ -1018,12 +1019,13 @@ namespace ClosedXML.Excel
                                 var cacheField = pcd.CacheFields.OfType<CacheField>()
                                     .FirstOrDefault(cf => cf.Name == additionalFieldName);
 
-                                Predicate<Object> predicate = null;
+                                Predicate<XLCellValue> predicate = null;
                                 if ((cacheField?.SharedItems?.Any() ?? false)
                                     && fieldItemValue < cacheField.SharedItems.Count)
                                 {
+                                    // Shared items can only be strings, not other types
                                     var value = cacheField.SharedItems.OfType<StringItem>().ElementAt(fieldItemValue).Val?.Value;
-                                    predicate = o => o.ToString() == value;
+                                    predicate = o => o.Type == XLDataType.Text && o.GetText() == value;
                                 }
 
                                 styleFormat = (styleFormat as XLPivotValueStyleFormat)
@@ -1657,6 +1659,7 @@ namespace ClosedXML.Excel
             }
 
             var xlCell = ws.Cell(in cellAddress);
+            var dataType = cell.DataType ?? CvNumber;
 
             if (styleList.TryGetValue(styleIndex, out IXLStyle style))
             {
@@ -1682,29 +1685,8 @@ namespace ClosedXML.Excel
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
 
-                if (cell.DataType != null)
-                {
-                    switch (cell.DataType.Value)
-                    {
-                        case CellValues.Boolean:
-                            xlCell.SetDataTypeFast(XLDataType.Boolean);
-                            break;
-
-                        case CellValues.Number:
-                            xlCell.SetDataTypeFast(XLDataType.Number);
-                            break;
-
-                        case CellValues.Date:
-                            xlCell.SetDataTypeFast(XLDataType.DateTime);
-                            break;
-
-                        case CellValues.InlineString:
-                        case CellValues.SharedString:
-                        case CellValues.String:
-                            xlCell.SetDataTypeFast(XLDataType.Text);
-                            break;
-                    }
-                }
+                // Set calculated value from the worksheet
+                SetFormulaCellValue(xlCell, cell);
             }
             else if (cell.CellFormula != null)
             {
@@ -1733,159 +1715,193 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (cell.DataType != null)
-                {
-                    switch (cell.DataType.Value)
-                    {
-                        case CellValues.Boolean:
-                            xlCell.SetDataTypeFast(XLDataType.Boolean);
-                            break;
-
-                        case CellValues.Number:
-                            xlCell.SetDataTypeFast(XLDataType.Number);
-                            break;
-
-                        case CellValues.Date:
-                            xlCell.SetDataTypeFast(XLDataType.DateTime);
-                            break;
-
-                        case CellValues.InlineString:
-                        case CellValues.SharedString:
-                        case CellValues.String:
-                            xlCell.SetDataTypeFast(XLDataType.Text);
-                            break;
-                    }
-                }
+                // Set calculated value from the worksheet
+                SetFormulaCellValue(xlCell, cell);
             }
-            else if (cell.DataType != null)
+            else if (dataType != null)
             {
-                if (cell.DataType == CellValues.InlineString)
+                if (dataType == CellValues.InlineString)
                 {
-                    xlCell.SetDataTypeFast(XLDataType.Text);
                     xlCell.ShareString = false;
-
                     if (cell.InlineString != null)
                     {
                         if (cell.InlineString.Text != null)
-                            xlCell.SetInternalCellValueString(cell.InlineString.Text.Text.FixNewLines());
+                            xlCell.SetOnlyValue(cell.InlineString.Text.Text.FixNewLines());
                         else
-                            ParseCellValue(cell.InlineString, xlCell);
+                            SetCellText(xlCell, cell.InlineString);
                     }
                     else
-                        xlCell.SetInternalCellValueString(String.Empty);
+                        xlCell.SetOnlyValue(String.Empty);
                 }
-                else if (cell.DataType == CellValues.SharedString)
+                else if (dataType == CellValues.SharedString)
                 {
-                    xlCell.SetDataTypeFast(XLDataType.Text);
-
                     if (cell.CellValue != null
                         && Int32.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
                         && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                     {
                         xlCell.SharedStringId = sharedStringId;
                         var sharedString = sharedStrings[sharedStringId];
-                        ParseCellValue(sharedString, xlCell);
+
+                        SetCellText(xlCell, sharedString);
                     }
                     else
-                        xlCell.SetInternalCellValueString(String.Empty);
+                        xlCell.SetOnlyValue(String.Empty);
                 }
-                else if (cell.DataType == CellValues.String)
+                else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
                 {
-                    xlCell.SetDataTypeFast(XLDataType.Text);
-
-                    if (!String.IsNullOrEmpty(cell.CellValue?.Text))
-                        xlCell.SetInternalCellValueString(cell.CellValue.Text);
-                    else
-                        xlCell.SetInternalCellValueString(String.Empty);
+                    xlCell.SetOnlyValue(cell.CellValue?.Text ?? String.Empty);
                 }
-                else if (cell.DataType == CellValues.Date)
+                else if (dataType == CellValues.Date)
                 {
-                    xlCell.SetDataTypeFast(XLDataType.DateTime);
-
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
+                    var date = DateTime.ParseExact(cell.CellValue.Text, DateCellFormats,
+                        XLHelper.ParseCulture,
+                        DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
+                    xlCell.SetOnlyValue(date);
                 }
-                else if (cell.DataType == CellValues.Boolean)
+                else if (dataType == CellValues.Boolean)
                 {
-                    xlCell.SetDataTypeFast(XLDataType.Boolean);
-                    if (cell.CellValue != null)
-                        xlCell.SetInternalCellValueString(cell.CellValue.Text);
+                    // Can be empty for formulas
+                    if (cell.CellValue is not null)
+                    {
+                        var isTrue = string.Equals(cell.CellValue?.Text, "1", StringComparison.Ordinal) ||
+                                     string.Equals(cell.CellValue?.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
+                        xlCell.SetOnlyValue(isTrue);
+                    }
                 }
-                else if (cell.DataType == CellValues.Number)
+                else if (dataType == CellValues.Number)
                 {
-                    if (s == null)
-                        xlCell.SetDataTypeFast(XLDataType.Number);
-                    else
-                        xlCell.DataType = GetDataTypeFromCell(xlCell.StyleValue.NumberFormat);
-
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
+                    if (cell.CellValue != null && cell.CellValue.TryGetDouble(out var number))
+                    {
+                        var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
+                        switch (numberDataType)
+                        {
+                            case XLDataType.DateTime:
+                                xlCell.SetOnlyValue(XLCellValue.FromSerialDateTime(number));
+                                break;
+                            case XLDataType.TimeSpan:
+                                xlCell.SetOnlyValue(XLCellValue.FromSerialTimeSpan(number));
+                                break;
+                            default: // Normal number
+                                xlCell.SetOnlyValue(number);
+                                break;
+                        }
+                    }
                 }
             }
-            else if (cell.CellValue != null)
+            else if (cell.CellValue != null) // Default data type is a number
             {
-                if (s == null)
-                {
-                    xlCell.SetDataTypeFast(XLDataType.Number);
-                }
+                if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    xlCell.SetOnlyValue(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture));
                 else
+                    xlCell.SetOnlyValue(Blank.Value); // No value and not type => blank
+
+                var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+
+                if (numberFormatId?.HasValue ?? false)
                 {
-                    xlCell.DataType = GetDataTypeFromCell(xlCell.StyleValue.NumberFormat);
+                    var format = s.NumberingFormats?
+                        .Cast<NumberingFormat>()
+                        .Where(nf => nf.NumberFormatId.Value == numberFormatId)
+                        .Select(nf => nf.FormatCode.Value)
+                        .FirstOrDefault();
 
-                    if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString());
-
-                    var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-
-                    if (numberFormatId?.HasValue ?? false)
-                    {
-                        var format = s.NumberingFormats?
-                            .Cast<NumberingFormat>()
-                            .Where(nf => nf.NumberFormatId.Value == numberFormatId)
-                            .Select(nf => nf.FormatCode.Value)
-                            .FirstOrDefault();
-
-                        if (format == null)
-                            xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
-                        else
-                            xlCell.InnerStyle.NumberFormat.Format = format;
-                    }
+                    if (format == null)
+                        xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+                    else
+                        xlCell.InnerStyle.NumberFormat.Format = format;
                 }
             }
 
             if (xlCell.HasFormula)
             {
-                if (cell.CellValue != null)
-                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
-
-                xlCell.NeedsRecalculation = (xlCell.CachedValue == null);
+                xlCell.NeedsRecalculation = cell.CellValue?.Text is null;
             }
 
             if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
             {
                 // Internally ClosedXML stores cells as standard 1900-based style
                 // so if a workbook is in 1904-format, we do that adjustment here and when saving.
-                xlCell.SetValue(xlCell.GetDateTime().AddDays(1462));
+                xlCell.SetOnlyValue(xlCell.GetDateTime().AddDays(1462));
             }
 
             if (!styleList.ContainsKey(styleIndex))
                 styleList.Add(styleIndex, xlCell.Style);
         }
 
+        private static readonly string[] DateCellFormats =
+        {
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff", // Format accepted by OpenXML SDK
+            "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
+        };
+
+        private void SetFormulaCellValue(XLCell xlCell, Cell cell)
+        {
+            var cellDataType = cell.DataType?.Value ?? CellValues.Number;
+            var cellValue = cell.CellValue;
+
+            xlCell.SetOnlyValue(Blank.Value);
+
+            // Type without a value is blank. Formula string can be a whitespace text and be valid (e.g. ="  ").
+            if (cellValue is null || (string.IsNullOrWhiteSpace(cellValue.InnerText) && cellDataType != CellValues.String))
+                return;
+
+            switch (cellDataType)
+            {
+                case CellValues.Boolean:
+                    if (cellValue.TryGetBoolean(out var logical))
+                        xlCell.SetOnlyValue(logical);
+                    break;
+
+                case CellValues.Number:
+                    if (!cellValue.TryGetDouble(out var number))
+                        break;
+
+                    var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
+                    switch (numberDataType)
+                    {
+                        case XLDataType.DateTime:
+                            xlCell.SetOnlyValue(XLCellValue.FromSerialDateTime(number));
+                            break;
+                        case XLDataType.TimeSpan:
+                            xlCell.SetOnlyValue(XLCellValue.FromSerialTimeSpan(number));
+                            break;
+                        default: // Normal number
+                            xlCell.SetOnlyValue(number);
+                            break;
+                    }
+                    break;
+
+                case CellValues.Error:
+                    if (XLErrorParser.TryParseError(cellValue.InnerText, out var error))
+                        xlCell.SetOnlyValue(error);
+                    break;
+
+                case CellValues.String: // A plaintext calculates from a formula
+                    xlCell.SetOnlyValue(cellValue.InnerText);
+                    break;
+
+                case CellValues.SharedString:
+                case CellValues.InlineString:
+                case CellValues.Date:
+                    throw new NotSupportedException($"Cell with a formula shouldn't have value of type {cellDataType}.");
+                default:
+                    throw new NotSupportedException($"Invalid cell data type '{cellDataType}'.");
+            }
+        }
+
         /// <summary>
         /// Parses the cell value for normal or rich text
         /// Input element should either be a shared string or inline string
         /// </summary>
-        /// <param name="element">The element (either a shared string or inline string)</param>
         /// <param name="xlCell">The cell.</param>
-        private void ParseCellValue(RstType element, XLCell xlCell)
+        /// <param name="element">The element (either a shared string or inline string)</param>
+        private void SetCellText(XLCell xlCell, RstType element)
         {
             var runs = element.Elements<Run>();
-            var phoneticRuns = element.Elements<PhoneticRun>();
-            var phoneticProperties = element.Elements<PhoneticProperties>();
-            Boolean hasRuns = false;
+            var hasRuns = false;
             foreach (Run run in runs)
             {
+                hasRuns = true;
                 var runProperties = run.RunProperties;
                 String text = run.Text.InnerText.FixNewLines();
 
@@ -1896,15 +1912,13 @@ namespace ClosedXML.Excel
                     var rt = xlCell.GetRichText().AddText(text);
                     LoadFont(runProperties, rt);
                 }
-                if (!hasRuns)
-                    hasRuns = true;
             }
 
             if (!hasRuns)
-                xlCell.SetInternalCellValueString(XmlEncoder.DecodeString(element.Text.InnerText));
+                xlCell.SetOnlyValue(XmlEncoder.DecodeString(element.Text.InnerText));
 
-            #region Load PhoneticProperties
-
+            // Load phonetic properties
+            var phoneticProperties = element.Elements<PhoneticProperties>();
             var pp = phoneticProperties.FirstOrDefault();
             if (pp != null)
             {
@@ -1916,17 +1930,13 @@ namespace ClosedXML.Excel
                 LoadFont(pp, xlCell.GetRichText().Phonetics);
             }
 
-            #endregion Load PhoneticProperties
-
-            #region Load Phonetic Runs
-
+            // Load phonetic runs
+            var phoneticRuns = element.Elements<PhoneticRun>();
             foreach (PhoneticRun pr in phoneticRuns)
             {
                 xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
                                               (Int32)pr.EndingBaseIndex.Value);
             }
-
-            #endregion Load Phonetic Runs
         }
 
         private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
@@ -2161,26 +2171,24 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLDataType GetDataTypeFromCell(XLNumberFormatValue numberFormat)
+        
+        private static XLDataType GetNumberDataType(XLNumberFormatValue numberFormat)
         {
             var numberFormatId = numberFormat.NumberFormatId;
             if (numberFormatId == 46U)
                 return XLDataType.TimeSpan;
-            else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
+
+            if ((numberFormatId >= 14 && numberFormatId <= 22) ||
                      (numberFormatId >= 45 && numberFormatId <= 47))
                 return XLDataType.DateTime;
-            else if (numberFormatId == 49)
-                return XLDataType.Text;
-            else
+
+            if (!String.IsNullOrWhiteSpace(numberFormat.Format))
             {
-                if (!String.IsNullOrWhiteSpace(numberFormat.Format))
-                {
-                    var dataType = GetDataTypeFromFormat(numberFormat.Format);
-                    return dataType.HasValue ? dataType.Value : XLDataType.Number;
-                }
-                else
-                    return XLDataType.Number;
+                var dataType = GetDataTypeFromFormat(numberFormat.Format);
+                return dataType ?? XLDataType.Number;
             }
+
+            return XLDataType.Number;
         }
 
         private static XLDataType? GetDataTypeFromFormat(String format)

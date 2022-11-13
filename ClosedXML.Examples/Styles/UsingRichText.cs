@@ -103,7 +103,7 @@ namespace ClosedXML.Examples.Styles
 
             cell.Style.Fill.SetBackgroundColor(XLColor.Gray);
 
-            ws.Cell(5, 2).Value = cell.GetRichText(); // Should copy only rich text, but not background
+            ws.Cell(5, 2).GetRichText().CopyFrom(cell.GetRichText()); // Should copy only rich text, but not cell background
 
 
             ws.Columns().AdjustToContents();

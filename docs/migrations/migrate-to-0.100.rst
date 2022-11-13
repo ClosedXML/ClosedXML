@@ -1,0 +1,176 @@
+############################
+Migration from 0.97 to 0.100
+############################
+
+******************************
+Strongly typed value of a cell
+******************************
+
+The key breaking change is that the ``IXLCell.Value`` is no longer untyped
+``Object`` backed by a string interpreted through a ``XLDataType``, but
+instead is strongly typed readonly structure ``XLCellValue`` that can represent
+any value of a cell. Type and value are now intrinsically linked together and
+it is not possible to change data type without changing value.
+
+Cell value (through ``XLCellValue``) can now be an ``XLError``, either literal
+or as a result of formula calculation.
+
+Strongly typed cell value 
+=========================
+
+``IXLCell.Value`` and ``IXLCell.CachedValue`` are now of type ``XLCellValue``.
+All possible values of a cell (blank, logical, number, text, error) can be
+converted to ``XLCellValue`` through implicit casting operators.
+
+Due to change of the ``Value`` setter, it is no longer possible use setter to
+
+* Set the value by the ``IRichText``. Use ``IXLCell.GetRichText().CopyFrom(IRichText)`` instead.
+* Set the value by the ``DateTimeOffset``. Use implicit ``XLCellValue`` cast operator from ``DateTimeOffset.Date`` instead.
+* Set the value by the ``Guid``. Use implicit ``XLCellValue`` cast operator from ``Guid.ToString()`` instead.
+* Inserting data by setting a value of type ``IEnumerable``. Use either ``IXLCell.InsertData(IEnumerable)`` or ``IXLCell.InsertData<T>(IEnumerable<T>)``.
+* Copy data by setting a value of type ``IXLRangeBase``. Use ``IXLCell.CopyFrom(IXLRangeBase)``
+* Set a value to an object of any type. It originally took an object and used its ``ToString()`` method to convert the object. Call the ``ToString()`` directly
+  in the code before setting the value to a string.
+* It is no longer possible set a value ``NaN`` or ``Infinity``.
+
+``SetDataType`` methods removed
+===============================
+
+Method ``SetDataType`` has been removed from all interfaces (``IXLCell``,
+``IXLColumn``, ``IXLColumns``, ``IXLRange`` ...). There is no replacement, if you
+need to reinterpret existing data, do it in application code and set a new value
+with a specific type.
+
+Bulk data insert
+================
+
+Previously, it was possible to insert data into a worksheet by calling
+a ``IXLCell.Value`` setter with a value of ``IEnumerable``. ``IXLCell.Value``
+no longer accepts object, use ``IXLCell.InsertData`` methods instead.
+
+Bulk copy cell values
+=====================
+
+Previously, it was possible to copy data from a range of cells to cells
+starting at cell by calling a ``IXLCell.Value`` setter with a value of
+``IXLRangeBase``. ``IXLCell.Value`` no longer accepts ``IXLRangeBase``,
+use ``IXLCell.CopyFrom`` methods instead.
+
+Rich text connected to cell value
+=================================
+
+Previously, it was possible to set a rich text to a cell by calling
+a ``IXLCell.Value`` setter with a value of ``IXLRichText``. ``IXLRichText``
+is now connected to the cell, changing a value of the rich text also changes
+value of the cell the rich text belongs to.
+
+As a conseqence, rich text can longer be copied around from one cell
+to another. If you need to copy a rich text from one cell to another, use
+``IXLRichText.CopyFrom`` method.
+
+.. code-block:: csharp
+
+   var cell = ws.Cell(1,1);
+   var richText = cell.GetRichText();
+
+   richText.AddText("Hello").SetFontSize(15);
+   Assert.AreEqual("Hello", cell.Value);
+
+   richText.AddText("World").SetFontSize(20);
+   Assert.AreEqual("HelloWorld", cell.Value);
+
+
+Copy cell value
+===============
+
+Previously, it was possible to use ``IXLCell.Value`` setter to copy a different
+cell to a cell. The main benefit in comparison of just copying the value was
+copying of conditional formatting of original cell. Conditional formatting is
+still copied for ``IXLCell.CopyFrom``, so use ``IXLCell.AsRange()`` method as
+an intermediate step during replacement.
+
+.. code-block:: csharp
+
+   var sourceCell = ws.Cell(1, 1);
+   var targetCell = ws.Cell(2, 1);
+   targetCell.CopyFrom(sourceCell.AsRange());
+
+
+Data type detected removed
+==========================
+
+Edge double values like ``Double.NaN``, ``Double.PositiveInfinity``,
+``Double.NegativeInfinity`` can't be excel cell value. Previously, such values
+were converted to string, leading to "saving number, getting text" situations.
+``XLCellValue`` now throws an ``ArgumentException`` on initialization from such
+values.
+
+ClosedXML also previously sometimes incorrectly detected string as a date time
+(e.g. for *"Z12.31"* interpreted as *2022-12-31*). Whole detection has been
+removed, developer is now in control of the type in a cell through
+``XLCellValue``.
+
+TryGetValue changes
+===================
+
+Previously, it was possible to retrive a ``IXLRichText`` or ``XLHyperlink``
+component of a cell through ``IXLCell.TryGetValue``. That is no longer
+possible, use ``IXLCell.GetRichText()`` or ``IXLCell.GetHyperlink()``.
+
+DateTime pre-1900
+=================
+
+Previously, dates before 1900-01-01 were converted to text. That no longer
+happens, it is possible to set value to any ``DateTime`` value. The cell type
+``XLDataType.DateTime`` is mostly masquarade above serial date time, values
+before 1900 are displayed as *######*, but are still a serial date time values.
+
+XLClearOptions.DataType removed
+===============================
+
+The enum member ``XLClearOptions.DataType`` has been removed. It makes no
+semantic sense, if you need to clear data type, you must set a new value. Use
+``IXLRangeBase.SetValue`` or ``IXLCell.SetValue`` instead.
+
+Cast errors throw InvalidCastException
+======================================
+
+Previously, methods to get a value of a cell used to the throw
+``FormatException``, instead they now throw ``InvalidCastException`` (+ they
+are now mostly shortcut to ``XLCellValue`` methods).
+
+* ``IXLCell.GetBoolean()``
+* ``IXLCell.GetDouble()``
+* ``IXLCell.GetDateTime()``
+* ``IXLCell.GetTimeSpan()``
+
+Method ``IXLCell.GetValue<T>()`` now also throws ``InvalidCastException``
+instead of ``FormatException``.
+
+IXLWorksheet.Search
+===================
+
+``IXLWorksheet.Search`` searches in the value text representation, not
+formatted string. That is consistent with Excel search behavior.
+
+An example for a number **12345.7** for a culture with a decimal separator *,*
+
+* Formatting (``IXLCell.GetFormattedString()``) adds thousand separator and
+  the value is formatted as ``12 345,7`` in a cell
+* In the formula bar, the value is represented as a ``12345,7`` (text
+  representation)
+* Searching for a string ``2345,7`` will find the value, because it is
+  a substring of text representation
+
+Pivot table values use XLCellValue
+==================================
+
+Previously, the predicate of ``IXLPivotValueStyleFormat.AndWith`` (used to
+specify which values to apply style to) has an ``Object`` as a parameter of
+a predicate. It now has parameter of type ``XLCellValue``.
+
+It also applies to several other API:
+
+* ``IXLPivotField.SelectedValues``
+* ``IXLPivotField.AddSelectedValue``
+* ``IXLPivotField.AddSelectedValues``

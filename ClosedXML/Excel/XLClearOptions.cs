@@ -6,7 +6,6 @@ namespace ClosedXML.Excel
     public enum XLClearOptions
     {
         Contents                = 1 << 0,
-        DataType                = 1 << 1,
         NormalFormats           = 1 << 2,
         ConditionalFormats      = 1 << 3,
         Comments                = 1 << 4,
@@ -15,8 +14,8 @@ namespace ClosedXML.Excel
         Sparklines              = 1 << 7,
 
         AllFormats = NormalFormats | ConditionalFormats,
-        AllContents = Contents | DataType | Comments,
-        All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges | Sparklines
+        AllContents = Contents | Comments,
+        All = Contents | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges | Sparklines
     }
 
     internal static class XLClearOptionsExtensions

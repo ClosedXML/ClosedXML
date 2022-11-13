@@ -32,6 +32,14 @@ namespace ClosedXML.Excel
         IXLFormattedText<T> ClearFont();
         IXLFormattedText<T> Substring(Int32 index);
         IXLFormattedText<T> Substring(Int32 index, Int32 length);
+
+        /// <summary>
+        /// Copy the text and formatting from the original text.
+        /// </summary>
+        /// <param name="original">Original to copy from.</param>
+        /// <returns>This text.</returns>
+        IXLFormattedText<T> CopyFrom(IXLFormattedText<T> original);
+
         Int32 Count { get; }
         Int32 Length { get; }
 

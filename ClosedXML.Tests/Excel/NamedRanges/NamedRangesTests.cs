@@ -33,24 +33,24 @@ namespace ClosedXML.Tests.Excel
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Cell("A1").SetValue(1).AddToNamed("value1");
 
-            Assert.AreEqual(1, wb.Cell("value1").GetValue<int>());
-            Assert.AreEqual(1, wb.Range("value1").FirstCell().GetValue<int>());
+            Assert.AreEqual(1, wb.Cell("value1").Value);
+            Assert.AreEqual(1, wb.Range("value1").FirstCell().Value);
 
-            Assert.AreEqual(1, ws1.Cell("value1").GetValue<int>());
-            Assert.AreEqual(1, ws1.Range("value1").FirstCell().GetValue<int>());
+            Assert.AreEqual(1, ws1.Cell("value1").Value);
+            Assert.AreEqual(1, ws1.Range("value1").FirstCell().Value);
 
             var ws2 = wb.Worksheets.Add("Sheet2");
 
             ws2.Cell("A1").SetFormulaA1("=value1").AddToNamed("value2");
 
-            Assert.AreEqual(1, wb.Cell("value2").GetValue<int>());
-            Assert.AreEqual(1, wb.Range("value2").FirstCell().GetValue<int>());
+            Assert.AreEqual(1, wb.Cell("value2").Value);
+            Assert.AreEqual(1, wb.Range("value2").FirstCell().Value);
 
-            Assert.AreEqual(1, ws2.Cell("value1").GetValue<int>());
-            Assert.AreEqual(1, ws2.Range("value1").FirstCell().GetValue<int>());
+            Assert.AreEqual(1, ws2.Cell("value1").Value);
+            Assert.AreEqual(1, ws2.Range("value1").FirstCell().Value);
 
-            Assert.AreEqual(1, ws2.Cell("value2").GetValue<int>());
-            Assert.AreEqual(1, ws2.Range("value2").FirstCell().GetValue<int>());
+            Assert.AreEqual(1, ws2.Cell("value2").Value);
+            Assert.AreEqual(1, ws2.Range("value2").FirstCell().Value);
         }
 
         [Test]
@@ -218,8 +218,8 @@ namespace ClosedXML.Tests.Excel
                 ws.Column(1).Delete();
 
                 Assert.IsTrue(ws.Cell("A1").Style.Font.Bold);
-                Assert.AreEqual("Column3", ws.Cell("B1").GetValue<string>());
-                Assert.IsEmpty(ws.Cell("C1").GetValue<string>());
+                Assert.AreEqual("Column3", ws.Cell("B1").Value);
+                Assert.AreEqual(Blank.Value, ws.Cell("C1").Value);
             }
         }
 
@@ -447,12 +447,12 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws1 = wb.AddWorksheet("Sheet1");
-                ws1.FirstCell().Value = Enumerable.Range(1, 10);
+                ws1.FirstCell().InsertData(Enumerable.Range(1, 10));
                 wb.NamedRanges.Add("wbNamedRange", ws1.Range("A1:A10"));
                 ws1.NamedRanges.Add("wsNamedRange", ws1.Range("A3"));
 
                 var ws2 = wb.AddWorksheet("Sheet2");
-                ws2.FirstCell().Value = Enumerable.Range(101, 10);
+                ws2.FirstCell().InsertData(Enumerable.Range(101, 10));
                 ws1.NamedRanges.Add("wsNamedRangeAcrossSheets", ws2.Range("A4"));
 
                 ws1.Cell("C1").FormulaA1 = "=wbNamedRange";

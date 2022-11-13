@@ -61,13 +61,13 @@ namespace ClosedXML.Examples.Styles
             var co = 2;
             var ro = 1;
 
-            ws.Cell(++ro, co).Value = "123456.789";
+            ws.Cell(++ro, co).Value = 123456.789d;
             ws.Cell(ro, co).Style.NumberFormat.Format = "$ #,##0.00";
 
-            ws.Cell(++ro, co).Value = "12.345";
+            ws.Cell(++ro, co).Value = 12.345d;
             ws.Cell(ro, co).Style.NumberFormat.Format = "0000";
 
-            ws.Cell(++ro, co).Value = "12.345";
+            ws.Cell(++ro, co).Value = 12.345d;
             ws.Cell(ro, co).Style.NumberFormat.NumberFormatId = 3;
 
             ws.Column(co).AdjustToContents();

@@ -35,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
                 );
 
             foreach (var c in trimmedRange.CellValues())
-                yield return c;
+                yield return c.ToObject();
         }
 
         private Boolean _evaluating;
@@ -50,13 +50,8 @@ namespace ClosedXML.Excel.CalcEngine
             try
             {
                 _evaluating = true;
-                var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
-                    return cell.Value;
-                else
-                {
-                    return (cell as XLCell).Evaluate();
-                }
+                return cell.Value.ToObject();
+                
             }
             finally
             {

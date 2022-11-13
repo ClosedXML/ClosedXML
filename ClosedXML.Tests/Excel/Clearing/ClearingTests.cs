@@ -55,9 +55,9 @@ namespace ClosedXML.Tests
                 .Border.SetOutsideBorderColor(XLColor.Blue)
                 .Font.SetBold();
 
-            Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-            Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-            Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
+            Assert.AreEqual(XLDataType.Text, ws.Cell("A1").Value.Type);
+            Assert.AreEqual(XLDataType.Text, ws.Cell("A2").Value.Type);
+            Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").Value.Type);
 
             Assert.AreEqual(false, ws.Cell("A1").HasFormula);
             Assert.AreEqual(true, ws.Cell("A2").HasFormula);
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests
                 foreach (var c in ws.Range("A1:A10").Cells())
                 {
                     Assert.IsTrue(c.IsEmpty());
-                    Assert.AreEqual(XLDataType.Text, c.DataType);
+                    Assert.AreEqual(XLDataType.Blank, c.DataType);
                     Assert.AreEqual(ws.Style.Fill.BackgroundColor, c.Style.Fill.BackgroundColor);
                     Assert.AreEqual(ws.Style.Font.FontColor, c.Style.Font.FontColor);
                     Assert.IsFalse(ws.ConditionalFormats.Any());
@@ -109,34 +109,9 @@ namespace ClosedXML.Tests
 
                 foreach (var c in ws.Range("A1:A3").Cells())
                 {
+                    Assert.AreEqual(XLDataType.Blank, ws.Cell("A1").DataType);
                     Assert.IsTrue(c.IsEmpty(XLCellsUsedOptions.Contents));
-                    Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
-                    Assert.IsTrue(ws.ConditionalFormats.Any());
-                    Assert.IsTrue(c.HasComment);
-                }
 
-                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
-
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-                Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
-            }
-        }
-
-        [Test]
-        public void WorksheetClearDataType()
-        {
-            using (var wb = SetupWorkbook())
-            {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.DataType);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
-                {
-                    Assert.IsFalse(c.IsEmpty());
-                    Assert.AreEqual(XLDataType.Text, c.DataType);
                     Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
                     Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
                     Assert.IsTrue(ws.ConditionalFormats.Any());
@@ -259,7 +234,7 @@ namespace ClosedXML.Tests
                 using (var wb = SetupWorkbook())
                 {
                     var ws = wb.Worksheets.First();
-                    Assert.AreEqual("Hello world!", ws.Cell("A1").GetString());
+                    Assert.AreEqual("Hello world!", ws.Cell("A1").GetText());
                     Assert.AreEqual(new DateTime(2018, 1, 15), ws.Cell("A3").GetDateTime());
 
                     wb.SaveAs(ms);
@@ -269,8 +244,8 @@ namespace ClosedXML.Tests
                 {
                     var ws = wb.Worksheets.First();
                     ws.Clear(XLClearOptions.Contents);
-                    Assert.AreEqual("", ws.Cell("A1").GetString());
-                    Assert.Throws<FormatException>(() => ws.Cell("A3").GetDateTime());
+                    Assert.AreEqual(Blank.Value, ws.Cell("A1").Value);
+                    Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
 
                     wb.Save();
                 }
@@ -278,8 +253,8 @@ namespace ClosedXML.Tests
                 using (var wb = new XLWorkbook(ms))
                 {
                     var ws = wb.Worksheets.First();
-                    Assert.AreEqual("", ws.Cell("A1").GetString());
-                    Assert.Throws<FormatException>(() => ws.Cell("A3").GetDateTime());
+                    Assert.AreEqual(Blank.Value, ws.Cell("A1").Value);
+                    Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
                 }
             }
         }

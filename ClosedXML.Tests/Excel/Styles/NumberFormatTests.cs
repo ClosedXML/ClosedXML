@@ -41,8 +41,7 @@ namespace ClosedXML.Tests.Excel
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 var c = ws.FirstCell()
-                    .SetValue(41573.875)
-                    .SetDataType(XLDataType.DateTime);
+                    .SetValue((41573.875));
 
                 c.Style.NumberFormat.SetFormat("m/d/yy\\ h:mm;@");
 

@@ -53,7 +53,7 @@ namespace ClosedXML.Examples.Misc
             listOfStrings.Add("Car");
             ws.Cell(1, 1).Value = "Strings";
             ws.Cell(1, 1).AsRange().AddToNamed("Titles");
-            ws.Cell(2, 1).Value = listOfStrings;
+            ws.Cell(2, 1).InsertData(listOfStrings);
 
             // From a list of arrays
             var listOfArr = new List<Int32[]>();
@@ -62,13 +62,13 @@ namespace ClosedXML.Examples.Misc
             listOfArr.Add(new Int32[] { 1, 2, 3, 4, 5, 6 });
             ws.Cell(1, 3).Value = "Arrays";
             ws.Range(1, 3, 1, 8).Merge().AddToNamed("Titles");
-            ws.Cell(2, 3).Value = listOfArr;
+            ws.Cell(2, 3).InsertData(listOfArr);
 
             // From a DataTable
             var dataTable = GetTable();
             ws.Cell(6, 1).Value = "DataTable";
             ws.Range(6, 1, 6, 4).Merge().AddToNamed("Titles");
-            ws.Cell(7, 1).Value = dataTable;
+            ws.Cell(7, 1).InsertData(dataTable);
 
             // From a query
             var list = new List<Person>();
@@ -83,7 +83,7 @@ namespace ClosedXML.Examples.Misc
 
             ws.Cell(6, 6).Value = "Query";
             ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
-            ws.Cell(7, 6).Value = people;
+            ws.Cell(7, 6).InsertData(people);
 
 
             // Prepare the style for the titles

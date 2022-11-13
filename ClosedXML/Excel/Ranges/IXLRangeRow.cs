@@ -105,8 +105,6 @@ namespace ClosedXML.Excel
 
         IXLRangeRows Rows(String rows);
 
-        IXLRangeRow SetDataType(XLDataType dataType);
-
         IXLRangeRow RowAbove();
 
         IXLRangeRow RowAbove(Int32 step);

@@ -107,6 +107,7 @@ namespace ClosedXML.Excel.CalcEngine
                 TimeSpan time => AnyValue.From(time.ToSerialDateTime()),
                 XLError errorType => AnyValue.From(errorType),
                 double[,] array => AnyValue.From(new NumberArray(array)),
+                XLCellValue cellValue => ((ScalarValue)cellValue).ToAnyValue(), // Some functions return directly value of a cell.
                 _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
             };
         }

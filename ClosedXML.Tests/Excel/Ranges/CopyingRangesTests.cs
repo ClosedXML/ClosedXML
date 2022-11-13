@@ -23,8 +23,8 @@ namespace ClosedXML.Tests
             column1.Cell(6).Style.Fill.SetBackgroundColor(XLColor.FromName("Blue"));
             column1.Cell(7).Style.Fill.SetBackgroundColor(XLColor.FromTheme(XLThemeColor.Accent3));
 
-            ws.Cell(1, 2).Value = column1;
-            ws.Cell(1, 3).Value = column1.Column(1, 7);
+            ws.Cell(1, 2).CopyFrom(column1);
+            ws.Cell(1, 3).CopyFrom(column1.Column(1, 7));
 
             IXLColumn column2 = ws.Column(2);
             Assert.AreEqual(XLColor.Red, column2.Cell(1).Style.Fill.BackgroundColor);
@@ -56,8 +56,8 @@ namespace ClosedXML.Tests
             IXLRow row1 = ws.Row(1);
             FillRow(row1);
 
-            ws.Cell(2, 1).Value = row1;
-            ws.Cell(3, 1).Value = row1.Row(1, 7);
+            ws.Cell(2, 1).CopyFrom(row1);
+            ws.Cell(3, 1).CopyFrom(row1.Row(1, 7));
 
             IXLRow row2 = ws.Row(2);
             Assert.AreEqual(XLColor.Red, row2.Cell(1).Style.Fill.BackgroundColor);
@@ -95,7 +95,7 @@ namespace ClosedXML.Tests
 
             ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
-            ws.Cell(5, 2).Value = ws.Row(2).Row(1, 7);
+            ws.Cell(5, 2).CopyFrom(ws.Row(2).Row(1, 7));
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
             Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B3").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula));
@@ -122,7 +122,7 @@ namespace ClosedXML.Tests
 
             var ws2 = wb.Worksheets.Add("Sheet2");
 
-            ws2.FirstCell().Value = ws1.Range("B1:B4");
+            ws2.FirstCell().CopyFrom(ws1.Range("B1:B4"));
 
             Assert.AreEqual(1, ws2.ConditionalFormats.Count());
             Assert.IsTrue(ws2.ConditionalFormats.All(x => x.Ranges.All(s => s.Worksheet == ws2)), "A conditional format was created for another worksheet.");

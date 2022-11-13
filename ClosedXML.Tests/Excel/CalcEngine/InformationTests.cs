@@ -316,14 +316,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 ws.Cell("B2").FormulaA1 = "ISREF(5)";
                 ws.Cell("B3").FormulaA1 = "ISREF(YEAR(TODAY()))";
 
-                bool actual;
-                actual = ws.Cell("B1").GetValue<bool>();
+                XLCellValue actual;
+                actual = ws.Cell("B1").Value;
                 Assert.AreEqual(true, actual);
 
-                actual = ws.Cell("B2").GetValue<bool>();
+                actual = ws.Cell("B2").Value;
                 Assert.AreEqual(false, actual);
 
-                actual = ws.Cell("B3").GetValue<bool>();
+                actual = ws.Cell("B3").Value;
                 Assert.AreEqual(false, actual);
             }
         }

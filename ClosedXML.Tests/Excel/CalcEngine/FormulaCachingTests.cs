@@ -132,7 +132,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void DeleteRowInvalidatesValues()
+        public void DeleteRowModifiesFormulaAndInvalidatesValues()
         {
             using (var wb = new XLWorkbook())
             {
@@ -140,12 +140,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var a4 = sheet.Cell("A4");
                 a4.FormulaA1 = "=COUNTBLANK(A1:A3)";
 
-                var res1 = a4.Value;
-                sheet.Row(2).Delete();
-                var res2 = a4.Value;
+                Assert.AreEqual(3, (double)a4.Value);
 
-                Assert.AreEqual(3, res1);
-                Assert.AreEqual(2, res2);
+                sheet.Row(2).Delete();
+
+                Assert.AreEqual("COUNTBLANK(A1:A2)", a4.FormulaA1);
+                Assert.AreEqual(2, (double)a4.Value);
             }
         }
 
@@ -309,29 +309,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 sheet2.Delete();
                 var valueAfterDeletion = sheet1_a1.Value;
 
-                Assert.AreEqual("TestValue", valueBeforeDeletion.ToString());
+                Assert.AreEqual("TestValue", valueBeforeDeletion);
                 Assert.AreEqual(XLError.CellReference, valueAfterDeletion);
-            }
-        }
-
-        [Test]
-        public void TestValueCellsCachedValue()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                var cell = sheet.Cell(1, 1);
-
-                var date = new DateTime(2018, 4, 19); ;
-                cell.Value = date;
-
-                Assert.AreEqual(XLDataType.DateTime, cell.DataType);
-                Assert.AreEqual(date, cell.CachedValue);
-
-                cell.DataType = XLDataType.Number;
-
-                Assert.AreEqual(XLDataType.Number, cell.DataType);
-                Assert.AreEqual(date.ToOADate(), cell.CachedValue);
             }
         }
 
@@ -359,32 +338,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void ChangingDataTypeChangesCachedValue()
+        public void ChangingValueChangesCachedValue()
         {
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Test");
-                ws.Cell(1, 1).Value = new DateTime(2019, 1, 1, 14, 0, 0);
-                ws.Cell(1, 2).Value = new DateTime(2019, 1, 1, 17, 45, 0);
-                var cell = ws.Cell(1, 3);
-                cell.FormulaA1 = "=B1-A1";
+                var cell = ws.Cell(1, 1);
 
-                Assert.IsNull(cell.CachedValue);
+                cell.Value = "Hello";
+                Assert.AreEqual("Hello", cell.CachedValue);
 
-                double value = (double)cell.Value;
-                Assert.AreEqual(value, cell.CachedValue);
+                cell.Value = 74.0;
+                Assert.AreEqual(74.0, cell.CachedValue);
 
-                cell.DataType = XLDataType.DateTime;
-                Assert.AreEqual(DateTime.FromOADate(value), cell.CachedValue);
-                Assert.AreEqual("12/30/1899 03:45:00", cell.GetFormattedString());
-
-                cell.DataType = XLDataType.Number;
-                Assert.AreEqual(value, (double)cell.CachedValue, 1e-10);
-                Assert.AreEqual("0.15625", cell.GetFormattedString());
-
-                cell.DataType = XLDataType.TimeSpan;
-                Assert.AreEqual(TimeSpan.FromDays(value), (TimeSpan)cell.CachedValue);
-                Assert.AreEqual("03:45:00", cell.GetFormattedString()); // I think the seconds in this string is due to a shortcoming in the ExcelNumberFormat library
+                cell.Value = new DateTime(2019, 1, 1, 14, 0, 0);
+                Assert.AreEqual(new DateTime(2019, 1, 1, 14, 0, 0), cell.CachedValue);
             }
         }
     }

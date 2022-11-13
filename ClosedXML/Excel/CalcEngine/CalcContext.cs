@@ -61,7 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (cell.IsEvaluating)
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
 
-            return ConvertLegacyCellValueToScalarValue(cell);
+            return cell.Value;
         }
 
         /// <summary>
@@ -84,24 +84,6 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             return nonBlankCells;
-        }
-
-        public static ScalarValue ConvertLegacyCellValueToScalarValue(XLCell cell)
-        {
-            // Blank cells should be 0 in Excel semantic, but cell value can't really represent it
-            var value = cell.Value;
-            return value switch
-            {
-                bool logical => ScalarValue.From(logical),
-                double number => ScalarValue.From(number),
-                int integer => ScalarValue.From(integer),
-                string text => text == string.Empty && !cell.HasFormula
-                    ? ScalarValue.Blank
-                    : ScalarValue.From(text),
-                DateTime date => ScalarValue.From(date.ToOADate()),
-                XLError errorType => ScalarValue.From(errorType),
-                _ => throw new NotImplementedException($"Not sure how to get convert value {value} (type {value?.GetType().Name}) to AnyValue.")
-            };
         }
     }
 }

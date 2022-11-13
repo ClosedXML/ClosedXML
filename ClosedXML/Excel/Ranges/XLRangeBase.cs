@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -132,14 +131,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Object Value
+        public XLCellValue Value
         {
             set { Cells().ForEach(c => c.Value = value); }
-        }
-
-        public XLDataType DataType
-        {
-            set { Cells().ForEach(c => c.DataType = value); }
         }
 
         #endregion IXLRangeBase Members
@@ -299,7 +293,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Return the collection of cell values not initializing empty cells.
         /// </summary>
-        public IEnumerable CellValues()
+        public IEnumerable<XLCellValue> CellValues()
         {
             for (int ro = RangeAddress.FirstAddress.RowNumber; ro <= RangeAddress.LastAddress.RowNumber; ro++)
             {
@@ -587,8 +581,8 @@ namespace ClosedXML.Excel
 
             return AsRange();
         }
-
-        public IXLRangeBase SetValue<T>(T value)
+        
+        public IXLRangeBase SetValue(XLCellValue value)
         {
             Cells().ForEach(c => c.SetValue(value));
             return this;
@@ -644,9 +638,9 @@ namespace ClosedXML.Excel
                     if (searchFormulae)
                         return c.HasFormula
                                && culture.CompareInfo.IndexOf(c.FormulaA1, searchText, compareOptions) >= 0
-                               || culture.CompareInfo.IndexOf(c.Value.ToString(), searchText, compareOptions) >= 0;
+                               || culture.CompareInfo.IndexOf(c.Value.ToString(CultureInfo.CurrentCulture), searchText, compareOptions) >= 0;
                     else
-                        return culture.CompareInfo.IndexOf(c.GetFormattedString(), searchText, compareOptions) >= 0;
+                        return culture.CompareInfo.IndexOf(c.Value.ToString(CultureInfo.CurrentCulture), searchText, compareOptions) >= 0;
                 }
                 catch
                 {
@@ -1776,12 +1770,12 @@ namespace ClosedXML.Excel
 
         public virtual void CopyTo(IXLRangeBase target)
         {
-            CopyTo(target.FirstCell());
+            CopyTo((XLCell)target.FirstCell());
         }
 
-        public virtual void CopyTo(IXLCell target)
+        internal void CopyTo(XLCell target)
         {
-            target.Value = this;
+            target.CopyFrom(this);
         }
 
         //public IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn)

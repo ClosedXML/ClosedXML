@@ -872,7 +872,7 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression, this);
+            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngine.Evaluate(expression, this));
         }
 
         /// <summary>
@@ -897,7 +897,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public static Object EvaluateExpr(String expression)
         {
-            return CalcEngineExpr.Evaluate(expression);
+            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngineExpr.Evaluate(expression));
         }
 
         public String Author { get; set; }

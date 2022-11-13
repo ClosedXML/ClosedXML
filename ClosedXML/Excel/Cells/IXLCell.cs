@@ -3,10 +3,56 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
-    public enum XLDataType { Text, Number, Boolean, DateTime, TimeSpan }
+    /// <summary>
+    /// A value that is in the cell.
+    /// </summary>
+    public enum XLDataType
+    {
+        /// <summary>
+        /// The value is a blank (either blank cells or the omitted optional argument of a function, e.g. <c>IF(TRUE,,)</c>.
+        /// </summary>
+        /// <remarks>Keep as the first, so the default values are blank.</remarks>
+        Blank = 0,
+
+        /// <summary>
+        /// The value is a logical value.
+        /// </summary>
+        Boolean = 1,
+
+        /// <summary>
+        /// The value is a double-precision floating points number, excluding <see cref="Double.NaN"/>,
+        /// <see cref="Double.PositiveInfinity"/> or <see cref="double.NegativeInfinity"/>.
+        /// </summary>
+        Number = 2,
+
+        /// <summary>
+        /// A text or a rich text. Can't be <c>null</c> and can be at most 32767 characters long.
+        /// </summary>
+        Text = 3,
+
+        /// <summary>
+        /// The value is one of <see cref="XLError"/>.
+        /// </summary>
+        Error = 4,
+
+        /// <summary>
+        /// The value is a <see cref="DateTime"/>, represented as a serial date time number.
+        /// </summary>
+        /// <remarks>
+        /// Serial date time 60 is a 1900-02-29, nonexistent day kept for compatibility,
+        /// but unrepresentable by <c>DateTime</c>. Don't use.
+        /// </remarks>
+        DateTime = 5,
+
+        /// <summary>
+        /// The value is a <see cref="TimeSpan"/>, represented in a serial date time (24 hours is 1, 36 hours is 1.5 ect.).
+        /// </summary>
+        TimeSpan = 6,
+    }
 
     public enum XLTableCellType { None, Header, Data, Total }
 
@@ -19,10 +65,13 @@ namespace ClosedXML.Excel
         IXLAddress Address { get; }
 
         /// <summary>
-        /// Calculated value of cell formula. Is used for decreasing number of computations performed.
+        /// Get the value of a cell without evaluation of a formula. If the cell contains
+        /// a formula, it returns the last calculated value or a blank value. If the cell
+        /// doesn't contain a formula, it returns same value as <see cref="Value"/>.
         /// May hold invalid value when <see cref="NeedsRecalculation"/> flag is True.
         /// </summary>
-        Object CachedValue { get; }
+        /// <remarks>Can be useful to decrease a number of formula evaluations.</remarks>
+        XLCellValue CachedValue { get; }
 
         /// <summary>
         /// Returns the current region. The current region is a range bounded by any combination of blank rows and blank columns
@@ -33,15 +82,12 @@ namespace ClosedXML.Excel
         IXLRange CurrentRegion { get; }
 
         /// <summary>
-        /// Gets or sets the type of this cell's data.
-        /// <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+        /// Gets the type of this cell's data.
         /// </summary>
         /// <value>
         /// The type of the cell's data.
         /// </value>
-        /// <exception cref="ArgumentException"></exception>
-        XLDataType DataType { get; set; }
+        XLDataType DataType { get; }
 
         /// <summary>
         /// Gets or sets the cell's formula with A1 references.
@@ -92,17 +138,18 @@ namespace ClosedXML.Excel
         IXLStyle Style { get; set; }
 
         /// <summary>
-        /// Gets or sets the cell's value. To get or set a strongly typed value, use the GetValue&lt;T&gt; and SetValue methods.
-        /// <para>ClosedXML will try to detect the data type through parsing. If it can't then the value will be left as a string.</para>
-        /// <para>If the object is an IEnumerable, ClosedXML will copy the collection's data into a table starting from this cell.</para>
-        /// <para>If the object is a range, ClosedXML will copy the range starting from this cell.</para>
-        /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-        /// <para>If the value starts with a single quote, ClosedXML will assume the value is a text variable and will prefix the value with a single quote in Excel too.</para>
+        /// Gets or sets the cell's value.
+        /// <para>
+        /// Getter will return value of a cell or value of formula. Getter will evaluate a formula, if the cell
+        /// <see cref="NeedsRecalculation"/>, before returning up-to-date value.
+        /// </para>
+        /// <para>
+        /// Setter will clear a formula, if the cell contains a formula.
+        /// If the value is a text that starts with a single quote, setter will prefix the value with a single quote through
+        /// <see cref="IXLStyle.IncludeQuotePrefix"/> in Excel too and the value of cell is set to to non-quoted text.
+        /// </para>
         /// </summary>
-        /// <value>
-        /// The object containing the value(s) to set.
-        /// </value>
-        Object Value { get; set; }
+        XLCellValue Value { get; set; }
 
         IXLWorksheet Worksheet { get; }
 
@@ -164,6 +211,14 @@ namespace ClosedXML.Excel
 
         IXLCell CopyFrom(String otherCell);
 
+        /// <summary>
+        /// Copy range content to an area of same size starting at the cell.
+        /// Original content of cells is overwritten.
+        /// </summary>
+        /// <param name="rangeBase">Range whose content to copy.</param>
+        /// <returns>This cell.</returns>
+        IXLCell CopyFrom(IXLRangeBase rangeBase);
+
         IXLCell CopyTo(IXLCell target);
 
         IXLCell CopyTo(String target);
@@ -195,13 +250,6 @@ namespace ClosedXML.Excel
         void Delete(XLShiftDeletedCells shiftDeleteCells);
 
         /// <summary>
-        /// Gets the cell's value converted to Boolean.
-        /// <para>ClosedXML will try to covert the current value to Boolean.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
-        /// </summary>
-        Boolean GetBoolean();
-
-        /// <summary>
         /// Returns the comment for the cell or create a new instance if there is no comment on the cell.
         /// </summary>
         IXLComment GetComment();
@@ -212,18 +260,86 @@ namespace ClosedXML.Excel
         IXLDataValidation GetDataValidation();
 
         /// <summary>
-        /// Gets the cell's value converted to DateTime.
-        /// <para>ClosedXML will try to covert the current value to DateTime.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to DateTime.</para>
+        /// Gets the cell's value as a Boolean.
         /// </summary>
+        /// <remarks>Shortcut for <c>Value.GetBoolean()</c></remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not a logical.</exception>
+        Boolean GetBoolean();
+
+        /// <summary>
+        /// Gets the cell's value as a Boolean.
+        /// </summary>
+        /// <remarks>Shortcut for <c>Value.GetNumber()</c></remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not a number.</exception>
+        Double GetDouble();
+        
+        /// <summary>
+        /// Gets the cell's value as a String.
+        /// </summary>
+        /// <remarks>Shortcut for <c>Value.GetText()</c>. Returned value is never null.</remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not a text.</exception>
+        String GetText();
+
+        /// <summary>
+        /// Gets the cell's value as a XLError.
+        /// </summary>
+        /// <remarks>Shortcut for <c>Value.GetError()</c></remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not an error.</exception>
+        XLError GetError();
+
+        /// <summary>
+        /// Gets the cell's value as a DateTime.
+        /// </summary>
+        /// <remarks>Shortcut for <c>Value.GetDateTime()</c></remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not a DateTime.</exception>
         DateTime GetDateTime();
 
         /// <summary>
-        /// Gets the cell's value converted to Double.
-        /// <para>ClosedXML will try to covert the current value to Double.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to Double.</para>
+        /// Gets the cell's value as a TimeSpan.
         /// </summary>
-        Double GetDouble();
+        /// <remarks>Shortcut for <c>Value.GetTimeSpan()</c></remarks>
+        /// <exception cref="InvalidCastException">If the value of the cell is not a TimeSpan.</exception>
+        TimeSpan GetTimeSpan();
+
+        /// <summary>
+        /// Try to get cell's value converted to the T type.
+        /// <para>
+        /// Supported <typeparamref name="T"/> types:
+        /// <list type="bullet">
+        ///   <item>Boolean - uses a logic of <see cref="XLCellValue.TryConvert(out Boolean)"/></item>
+        ///   <item>Number (<c>s/byte</c>, <c>u/short</c>, <c>u/int</c>, <c>u/long</c>, <c>float</c>, <c>double</c>, or <c>decimal</c>)
+        ///         - uses a logic of <see cref="XLCellValue.TryConvert(out Double, System.Globalization.CultureInfo)"/> and succeeds,
+        ///         if the value fits into the target type.</item>
+        ///   <item>String - sets the result to a text representation of a cell value (using current culture).</item>
+        ///   <item>DateTime - uses a logic of <see cref="XLCellValue.TryConvert(out DateTime)"/></item>
+        ///   <item>TimeSpan - uses a logic of <see cref="XLCellValue.TryConvert(out TimeSpan, System.Globalization.CultureInfo)"/></item>
+        ///   <item>Enum - tries to parse a value to a member by comparing the text of a cell value and a member name.</item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// If the <typeparamref name="T"/> is a nullable value type and the value of cell is blank or empty string, return null value.
+        /// </para>
+        /// <para>
+        /// If the cell value can't be determined because formula function is not implemented, the method always returns <c>false</c>.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="T">The requested type into which will the value be converted.</typeparam>
+        /// <param name="value">Value to store the value.</param>
+        /// <returns><c>true</c> if the value was converted and the result is in the <paramref name="value"/>, <c>false</c> otherwise.</returns>
+        Boolean TryGetValue<T>(out T value);
+
+        /// <summary>
+        /// <inheritdoc cref="TryGetValue{T}"/>
+        /// </summary>
+        /// <remarks>Conversion logic is identical with <see cref="TryGetValue{T}"/>.</remarks>
+        /// <typeparam name="T">The requested type into which will the value be converted.</typeparam>
+        /// <exception cref="InvalidCastException">If the value can't be converted to the type of T</exception>
+        T GetValue<T>();
+
+        /// <summary>
+        /// Return cell's value represented as a string. Doesn't use cell's formatting or style.
+        /// </summary>
+        String GetString();
 
         /// <summary>
         /// Gets the cell's value formatted depending on the cell's data type and style.
@@ -239,28 +355,7 @@ namespace ClosedXML.Excel
         /// Returns the value of the cell if it formatted as a rich text.
         /// </summary>
         IXLRichText GetRichText();
-
-        /// <summary>
-        /// Gets the cell's value converted to a String.
-        /// </summary>
-        String GetString();
-
-        /// <summary>
-        /// Gets the cell's value converted to TimeSpan.
-        /// <para>ClosedXML will try to covert the current value to TimeSpan.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to TimeSpan.</para>
-        /// </summary>
-        TimeSpan GetTimeSpan();
-
-        /// <summary>
-        /// Gets the cell's value converted to the T type.
-        /// <para>ClosedXML will try to covert the current value to the T type.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to the T type.</para>
-        /// </summary>
-        /// <typeparam name="T">The return type.</typeparam>
-        /// <exception cref="ArgumentException"></exception>
-        T GetValue<T>();
-
+        
         IXLCells InsertCellsAbove(int numberOfRows);
 
         IXLCells InsertCellsAfter(int numberOfColumns);
@@ -383,15 +478,6 @@ namespace ClosedXML.Excel
 
         IXLCell SetActive(Boolean value = true);
 
-        /// <summary>
-        /// Sets the type of this cell's data.
-        /// <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
-        /// <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
-        /// </summary>
-        /// <param name="dataType">Type of the data.</param>
-        /// <returns></returns>
-        IXLCell SetDataType(XLDataType dataType);
-
         [Obsolete("Use GetDataValidation to access the existing rule, or CreateDataValidation() to create a new one.")]
         IXLDataValidation SetDataValidation();
 
@@ -401,17 +487,9 @@ namespace ClosedXML.Excel
 
         void SetHyperlink(XLHyperlink hyperlink);
 
-        /// <summary>
-        /// Sets the cell's value.
-        /// <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
-        /// <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
-        /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-        /// <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
-        /// </summary>
-        /// <value>
-        /// The object containing the value(s) to set.
-        /// </value>
-        IXLCell SetValue<T>(T value);
+        /// <inheritdoc cref="Value"/>
+        /// <returns>This cell.</returns>
+        IXLCell SetValue(XLCellValue value);
 
         XLTableCellType TableCellType();
 
@@ -421,8 +499,6 @@ namespace ClosedXML.Excel
         /// <param name="format">A: address, F: formula, NF: number format, BG: background color, FG: foreground color, V: formatted value</param>
         /// <returns></returns>
         string ToString(string format);
-
-        Boolean TryGetValue<T>(out T value);
 
         IXLColumn WorksheetColumn();
 

@@ -66,51 +66,15 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void Double_Infinity_is_a_string()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1");
-            var doubleList = new List<Double> { 1.0 / 0.0 };
-
-            cell.Value = 5;
-            cell.Value = doubleList;
-            Assert.AreEqual(XLDataType.Text, cell.DataType);
-            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
-
-            cell.Value = 5;
-            cell.SetValue(doubleList);
-            Assert.AreEqual(XLDataType.Text, cell.DataType);
-            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
-        }
-
-        [Test]
-        public void Double_NaN_is_a_string()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1");
-            var doubleList = new List<Double> { 0.0 / 0.0 };
-
-            cell.Value = 5;
-            cell.Value = doubleList;
-            Assert.AreEqual(XLDataType.Text, cell.DataType);
-            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.NaNSymbol, cell.Value);
-
-            cell.Value = 5;
-            cell.SetValue(doubleList);
-            Assert.AreEqual(XLDataType.Text, cell.DataType);
-            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.NaNSymbol, cell.Value);
-        }
-
-        [Test]
         public void GetValue_Nullable()
         {
             var cell = new XLWorkbook().AddWorksheet().FirstCell();
 
             Assert.IsNull(cell.Clear().GetValue<double?>());
             Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
-            Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
-            Assert.AreEqual(2.5, cell.SetValue(2.5.ToString(CultureInfo.CurrentCulture)).GetValue<double?>());
-            Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
+            Assert.AreEqual(2, cell.SetValue(2).GetValue<int?>());
+            Assert.IsNull(cell.SetValue(Blank.Value).GetValue<double?>());
+            Assert.Throws<InvalidCastException>(() => cell.SetValue("text").GetValue<double?>());
         }
 
         [Test]
@@ -138,13 +102,30 @@ namespace ClosedXML.Tests
         }
 
         [Test]
+        public void InsertData_DifferentTypes()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            object[] values = { "Text", 45, DateTime.Today, true, "More text" };
+        
+            ws.FirstCell().InsertData(values);
+        
+            Assert.AreEqual("Text", ws.FirstCell().GetString());
+            Assert.AreEqual(45, ws.Cell("A2").GetDouble());
+            Assert.AreEqual(DateTime.Today, ws.Cell("A3").GetDateTime());
+            Assert.AreEqual(true, ws.Cell("A4").GetBoolean());
+            Assert.AreEqual("More text", ws.Cell("A5").GetString());
+            Assert.IsTrue(ws.Cell("A6").IsEmpty());
+        }
+
+        [Test]
         public void InsertData_with_Guids()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.FirstCell().InsertData(Enumerable.Range(1, 20).Select(i => new { Guid = Guid.NewGuid() }));
 
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-            Assert.AreEqual(Guid.NewGuid().ToString().Length, ws.FirstCell().GetString().Length);
+            Assert.AreEqual(Guid.NewGuid().ToString().Length, ws.FirstCell().GetText().Length);
         }
 
         [Test]
@@ -189,7 +170,7 @@ namespace ClosedXML.Tests
             ws.FirstCell().InsertData(dateTimeList);
 
             Assert.AreEqual(new DateTime(2000, 1, 1), ws.Cell("A1").GetDateTime());
-            Assert.AreEqual(String.Empty, ws.Cell("A5").Value);
+            Assert.AreEqual(Blank.Value, ws.Cell("A5").Value);
         }
 
         [Test]
@@ -296,13 +277,13 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void TryGetValue_Boolean_Good()
+        public void TryGetValue_Boolean_FalseText()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1").SetValue("True");
-            bool success = cell.TryGetValue(out bool outValue);
+            IXLCell cell = ws.Cell("A1").SetValue("False");
+            var success = cell.TryGetValue(out Boolean outValue);
             Assert.IsTrue(success);
-            Assert.IsTrue(outValue);
+            Assert.IsFalse(outValue);
         }
 
         [Test]
@@ -316,13 +297,13 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void TryGetValue_DateTime_Good()
+        public void TryGetValue_Boolean_TrueText()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var date = "2018-01-01";
-            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
+            IXLCell cell = ws.Cell("A1").SetValue("True");
+            var success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
-            Assert.AreEqual(new DateTime(2018, 1, 1), outValue);
+            Assert.IsTrue(outValue);
         }
 
         [Test]
@@ -358,12 +339,12 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void TryGetValue_DateTime_BadString2()
+        public void TryGetValue_DateTime_SerialDateTimeOutsideRange()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var date = 5545454;
-            ws.FirstCell().SetValue(date).DataType = XLDataType.DateTime;
-            bool success = ws.FirstCell().TryGetValue(out DateTime outValue);
+            var serialDateTimeOutsideRange = 5545454;
+            ws.FirstCell().SetValue(serialDateTimeOutsideRange);
+            bool success = ws.FirstCell().TryGetValue(out DateTime _);
             Assert.IsFalse(success);
         }
 
@@ -371,11 +352,11 @@ namespace ClosedXML.Tests
         public void TryGetValue_Enum_Good()
         {
             var ws = new XLWorkbook().AddWorksheet();
-            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles value));
+            Assert.IsTrue(ws.FirstCell().SetValue(nameof(NumberStyles.AllowCurrencySymbol)).TryGetValue(out NumberStyles value));
             Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value);
 
             // Nullable alternative
-            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles? value2));
+            Assert.IsTrue(ws.FirstCell().SetValue(nameof(NumberStyles.AllowCurrencySymbol)).TryGetValue(out NumberStyles? value2));
             Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value2);
         }
 
@@ -385,28 +366,6 @@ namespace ClosedXML.Tests
             var ws = new XLWorkbook().AddWorksheet();
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles value));
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles? value2));
-        }
-
-        [Test]
-        public void TryGetValue_RichText_Bad()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1").SetValue("Anything");
-            bool success = cell.TryGetValue(out IXLRichText outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(cell.GetRichText(), outValue);
-            Assert.AreEqual("Anything", outValue.ToString());
-        }
-
-        [Test]
-        public void TryGetValue_RichText_Good()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1");
-            cell.GetRichText().AddText("Anything");
-            bool success = cell.TryGetValue(out IXLRichText outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(cell.GetRichText(), outValue);
         }
 
         [Test]
@@ -439,22 +398,13 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void TryGetValue_TimeSpan_GoodString()
+        [SetCulture("en-US")]
+        public void TryGetValue_TimeSpan_Good_FromText()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var timeSpan = new TimeSpan(1, 1, 1);
-            bool success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out TimeSpan outValue);
+            bool success = ws.Cell("A1").SetValue("300:14:50.453").TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
-            Assert.AreEqual(timeSpan, outValue);
-        }
-
-        [Test]
-        public void TryGetValue_sbyte_Bad()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1").SetValue(255);
-            bool success = cell.TryGetValue(out sbyte outValue);
-            Assert.IsFalse(success);
+            Assert.AreEqual(new TimeSpan(12, 12, 14, 50, 453), outValue);
         }
 
         [Test]
@@ -475,59 +425,7 @@ namespace ClosedXML.Tests
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
         }
-
-        [Test]
-        public void TryGetValue_sbyte_Good2()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell("A1").SetValue("5");
-            bool success = cell.TryGetValue(out sbyte outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(5, outValue);
-        }
-
-        [Test]
-        public void TryGetValue_decimal_Good()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1").SetValue("5");
-            bool success = cell.TryGetValue(out decimal outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(5, outValue);
-        }
-
-        [Test]
-        public void TryGetValue_decimal_Good2()
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1").SetValue("1.60000001869776E-06");
-            bool success = cell.TryGetValue(out decimal outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(1.60000001869776E-06, outValue);
-        }
-
-        [Test]
-        public void TryGetValue_Hyperlink()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws1 = wb.Worksheets.Add("Sheet1");
-                var ws2 = wb.Worksheets.Add("Sheet2");
-
-                var targetCell = ws2.Cell("A1");
-
-                var linkCell1 = ws1.Cell("A1");
-                linkCell1.Value = "Link to IXLCell";
-                linkCell1.SetHyperlink(new XLHyperlink(targetCell));
-
-                var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
-                Assert.IsTrue(success);
-                Assert.AreEqual("Sheet2!A1", hyperlink.InternalAddress);
-            }
-        }
-
+        
         [Test]
         public void TryGetValue_Unicode_String()
         {
@@ -561,65 +459,14 @@ namespace ClosedXML.Tests
             ws.Cell("A3").SetValue(2.5.ToString(CultureInfo.CurrentCulture));
             ws.Cell("A4").SetValue("text");
 
-            foreach (var cell in ws.Range("A1:A3").Cells())
-            {
-                Assert.IsTrue(cell.TryGetValue(out double? value));
-            }
-
+            Assert.IsTrue(ws.Cell("A1").TryGetValue(out double? _));
+            Assert.IsTrue(ws.Cell("A2").TryGetValue(out double? _));
+            Assert.IsTrue(ws.Cell("A3").TryGetValue(out double? _));
             Assert.IsFalse(ws.Cell("A4").TryGetValue(out double? _));
         }
 
-        [TestCase(2019, 11, 5, 11, 30, 5, 0, ExpectedResult = "2019-11-05 11:30:05.000")]
-        [TestCase(2019, 11, 5, 11, 30, 5, 2, ExpectedResult = "2019-11-05 11:30:05.000")]
-        [TestCase(2019, 11, 5, 11, 30, 5, -10, ExpectedResult = "2019-11-05 11:30:05.000")]
-        public string ValueSetDateTimeOffset(int year, int month, int days, int hours, int minutes, int seconds, int offsetInHours)
-        {
-            var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
-
-            cell.Value = new DateTimeOffset(year, month, days, hours, minutes, seconds, new TimeSpan(offsetInHours * TimeSpan.TicksPerHour));
-
-            // C# Supports 7 digits milliseconds, but excel only 3
-            const string format = "yyyy-MM-dd HH:mm:ss.fff";
-
-            return cell.GetDateTime().ToString(format);
-        }
-
         [Test]
-        public void SetCellValueToGuid()
-        {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
-            var guid = Guid.NewGuid();
-            ws.FirstCell().Value = guid;
-            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
-            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
-
-            guid = Guid.NewGuid();
-            ws.FirstCell().SetValue(guid);
-            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
-            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
-        }
-
-        [Test]
-        public void SetCellValueToEnum()
-        {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
-            var dataType = XLDataType.Number;
-            ws.FirstCell().Value = dataType;
-            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
-            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
-
-            dataType = XLDataType.TimeSpan;
-            ws.FirstCell().SetValue(dataType);
-            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
-            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
-        }
-
-        [Test]
-        public void SetCellValueToRange()
+        public void CopyRangeAtCellAddress()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1");
 
@@ -630,7 +477,7 @@ namespace ClosedXML.Tests
 
             var range = ws.Range("1:1");
 
-            ws.Cell("B2").Value = range;
+            ws.Cell("B2").CopyFrom(range);
 
             Assert.AreEqual(2, ws.Cell("B2").Value);
             Assert.AreEqual(3, ws.Cell("C2").Value);
@@ -647,30 +494,12 @@ namespace ClosedXML.Tests
             IXLCell cell = ws.Cell(1, 1);
             cell.Value = new DateTime(2000, 1, 2);
             cell.Value = String.Empty;
-            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.GetText());
             Assert.AreEqual(expected, cell.Value);
 
             cell.Value = new DateTime(2000, 1, 2);
             cell.SetValue(string.Empty);
-            Assert.AreEqual(expected, cell.GetString());
-            Assert.AreEqual(expected, cell.Value);
-        }
-
-        [Test]
-        public void ValueSetToNull()
-        {
-            string expected = String.Empty;
-
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            cell.Value = new DateTime(2000, 1, 2);
-            cell.Value = null;
-            Assert.AreEqual(expected, cell.GetString());
-            Assert.AreEqual(expected, cell.Value);
-
-            cell.Value = new DateTime(2000, 1, 2);
-            cell.SetValue(null as string);
-            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.GetText());
             Assert.AreEqual(expected, cell.Value);
         }
 
@@ -691,36 +520,6 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void SetStringCellValues()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.FirstCell();
-
-                object expected;
-
-                var date = new DateTime(2018, 4, 18);
-                expected = date.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.DateTime, cell.DataType);
-                Assert.AreEqual(date, cell.Value);
-
-                var b = true;
-                expected = b.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.Boolean, cell.DataType);
-                Assert.AreEqual(b, cell.Value);
-
-                var ts = new TimeSpan(8, 12, 4);
-                expected = ts.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.TimeSpan, cell.DataType);
-                Assert.AreEqual(ts, cell.Value);
-            }
-        }
-
-        [Test]
         public void SetStringValueTooLong()
         {
             using (var wb = new XLWorkbook())
@@ -733,28 +532,6 @@ namespace ClosedXML.Tests
 
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().Value = new String('A', 32768));
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().SetValue(new String('A', 32768)));
-            }
-        }
-
-        [Test]
-        public void SetDateOutOfRange()
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-ZA");
-
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-
-                ws.FirstCell().Value = 5;
-
-                var date = XLCell.BaseDate.AddDays(-1);
-                ws.FirstCell().Value = date;
-
-                // Should default to string representation using current culture's date format
-                Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-                Assert.AreEqual(date.ToString(), ws.FirstCell().Value);
-
-                Assert.Throws<ArgumentException>(() => ws.FirstCell().SetValue(XLCell.BaseDate.AddDays(-1)));
             }
         }
 
@@ -819,28 +596,6 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void CanClearCellValueBySettingNullValue()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.FirstCell();
-
-                cell.Value = "Test";
-                Assert.AreEqual("Test", cell.Value);
-                Assert.AreEqual(XLDataType.Text, cell.DataType);
-
-                string s = null;
-                cell.SetValue(s);
-                Assert.AreEqual(string.Empty, cell.Value);
-
-                cell.Value = "Test";
-                cell.Value = null;
-                Assert.AreEqual(string.Empty, cell.Value);
-            }
-        }
-
-        [Test]
         public void CanClearDateTimeCellValue()
         {
             using (var ms = new MemoryStream())
@@ -871,7 +626,7 @@ namespace ClosedXML.Tests
                 {
                     var ws = wb.Worksheets.First();
                     var c = ws.FirstCell();
-                    Assert.AreEqual(XLDataType.Text, c.DataType);
+                    Assert.AreEqual(XLDataType.Blank, c.DataType);
                     Assert.True(c.IsEmpty());
                 }
             }
@@ -997,19 +752,19 @@ namespace ClosedXML.Tests
                 ws.Cell("C2").SetFormulaA1("=SUM(C1)");
                 ws.Cell("C3").SetFormulaA1("=C2");
 
-                object b1 = ws.Cell("B1").Value;
-                object b2 = ws.Cell("B2").Value;
-                object b3 = ws.Cell("B3").Value;
+                var b1 = ws.Cell("B1").Value;
+                var b2 = ws.Cell("B2").Value;
+                var b3 = ws.Cell("B3").Value;
 
-                Assert.AreEqual("", b1);
+                Assert.AreEqual(Blank.Value, b1);
                 Assert.AreEqual(0, b2);
                 Assert.AreEqual(0, b3);
 
-                object c1 = ws.Cell("C1").Value;
-                object c2 = ws.Cell("C2").Value;
-                object c3 = ws.Cell("C3").Value;
+                var c1 = ws.Cell("C1").Value;
+                var c2 = ws.Cell("C2").Value;
+                var c3 = ws.Cell("C3").Value;
 
-                Assert.AreEqual("", c1);
+                Assert.AreEqual(Blank.Value, c1);
                 Assert.AreEqual(0, c2);
                 Assert.AreEqual(0, c3);
             }
@@ -1079,7 +834,7 @@ namespace ClosedXML.Tests
 
                     Assert.AreEqual(3, ws.Cell("B2").Value);
 
-                    ws.Range("A2").Value = ws.Range("B2");
+                    ws.Range("B2").CopyTo(ws.Range("A2"));
                     var fA2 = ws.Cell("A2").FormulaA1;
 
                     wb.SaveAs(ms);
@@ -1122,23 +877,6 @@ namespace ClosedXML.Tests
                 Assert.IsFalse(A2.TryGetValue(out String _));
                 Assert.IsTrue(A3.TryGetValue(out String _));
             }
-        }
-
-        [Test]
-        public void SetValue_IEnumerable()
-        {
-            using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet();
-            object[] values = { "Text", 45, DateTime.Today, true, "More text" };
-
-            ws.FirstCell().SetValue(values);
-
-            Assert.AreEqual("Text", ws.FirstCell().GetString());
-            Assert.AreEqual(45, ws.Cell("A2").GetDouble());
-            Assert.AreEqual(DateTime.Today, ws.Cell("A3").GetDateTime());
-            Assert.AreEqual(true, ws.Cell("A4").GetBoolean());
-            Assert.AreEqual("More text", ws.Cell("A5").GetString());
-            Assert.IsTrue(ws.Cell("A6").IsEmpty());
         }
 
         [Test]
@@ -1188,15 +926,6 @@ namespace ClosedXML.Tests
             var c = ws.FirstCell();
 
             Assert.Throws<FormatException>(() => c.ToString("dummy"));
-        }
-
-        [Test]
-        public void ConvertOtherSupportedTypes()
-        {
-            Assert.AreEqual("", XLCell.ConvertOtherSupportedTypes(DBNull.Value));
-            Assert.AreEqual("748bdf0c-3e7d-415e-967d-a875a27634ed", XLCell.ConvertOtherSupportedTypes(new Guid("748BDF0C-3E7D-415E-967D-A875A27634ED")));
-            Assert.AreEqual(new DateTime(2022, 06, 30, 12, 57, 00), XLCell.ConvertOtherSupportedTypes(new DateTimeOffset(2022, 06, 30, 12, 57, 00, new TimeSpan(2 * TimeSpan.TicksPerHour))));
-            Assert.AreEqual(DateTime.Today, XLCell.ConvertOtherSupportedTypes(DateTime.Today));
         }
     }
 }

@@ -21,23 +21,23 @@ namespace ClosedXML.Tests.Excel.Misc
                 foundCells = ws.Search("Initial Value");
                 Assert.AreEqual(1, foundCells.Count());
                 Assert.AreEqual("B2", foundCells.Single().Address.ToString());
-                Assert.AreEqual("Initial Value", foundCells.Single().GetString());
+                Assert.AreEqual("Initial Value", foundCells.Single().GetText());
 
                 foundCells = ws.Search("Using");
                 Assert.AreEqual(2, foundCells.Count());
                 Assert.AreEqual("D2", foundCells.First().Address.ToString());
-                Assert.AreEqual("Using Get...()", foundCells.First().GetString());
+                Assert.AreEqual("Using Get...()", foundCells.First().GetText());
                 Assert.AreEqual(2, foundCells.Count());
                 Assert.AreEqual("E2", foundCells.Last().Address.ToString());
-                Assert.AreEqual("Using GetValue<T>()", foundCells.Last().GetString());
+                Assert.AreEqual("Using GetValue<T>()", foundCells.Last().GetText());
 
                 foundCells = ws.Search("1234");
-                Assert.AreEqual(4, foundCells.Count());
-                Assert.AreEqual("C5,D5,E5,F5", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
+                Assert.AreEqual(5, foundCells.Count());
+                Assert.AreEqual("B5,C5,D5,E5,F5", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
 
                 foundCells = ws.Search("Sep");
-                Assert.AreEqual(2, foundCells.Count());
-                Assert.AreEqual("B3,G3", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
+                Assert.AreEqual(1, foundCells.Count());
+                Assert.AreEqual("G3", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
 
                 foundCells = ws.Search("1234", CompareOptions.Ordinal, true);
                 Assert.AreEqual(5, foundCells.Count());

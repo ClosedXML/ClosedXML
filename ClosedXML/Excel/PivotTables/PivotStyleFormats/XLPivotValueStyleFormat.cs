@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
             return AndWith(field, null);
         }
 
-        public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<Object> predicate)
+        public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<XLCellValue> predicate)
         {
             FieldReferences.Add(new PivotLabelFieldReference(field, predicate));
             return this;

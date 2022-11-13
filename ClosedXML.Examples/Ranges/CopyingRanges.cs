@@ -21,7 +21,7 @@ namespace ClosedXML.Examples
 
                 // Copy the table to another worksheet
                 var wsCopy = workbook.Worksheets.Add("Contacts Copy");
-                wsCopy.Cell(1, 1).Value = rngData;
+                wsCopy.Cell(1, 1).CopyFrom(rngData);
 
                 workbook.SaveAs(filePath);
             }
