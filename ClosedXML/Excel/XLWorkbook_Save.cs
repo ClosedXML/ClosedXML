@@ -5973,6 +5973,15 @@ namespace ClosedXML.Excel
                 foreach (var removedPicture in xlPictures.Deleted)
                 {
                     worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                    // Remove Image reference link
+                    foreach (var wd in worksheetPart.DrawingsPart.WorksheetDrawing)
+                    {
+                        if (wd.Descendants<Blip>().Any(x => x.Embed == removedPicture))
+                        {
+                            worksheetPart.DrawingsPart.WorksheetDrawing.RemoveChild(wd);
+                            break;
+                        }
+                    }
                 }
                 xlPictures.Deleted.Clear();
             }
@@ -5994,9 +6003,22 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWorksheetContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
             }
 
+            bool isEmptyDrawingsPart(DrawingsPart drawingsPart)
+            {
+                return drawingsPart != null
+                && !drawingsPart.CustomXmlParts.Any()
+                && !drawingsPart.ImageParts.Any()
+                && !drawingsPart.DiagramStyleParts.Any()
+                && !drawingsPart.DiagramLayoutDefinitionParts.Any()
+                && !drawingsPart.DiagramPersistLayoutParts.Any()
+                && !drawingsPart.DiagramDataParts.Any()
+                && !drawingsPart.DiagramColorsParts.Any()
+                && !drawingsPart.ChartParts.Any()
+                && !drawingsPart.WebExtensionParts.Any();
+            }
+
             // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
-            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null
-                && !worksheetPart.DrawingsPart.Parts.Any())
+            if (!xlWorksheet.Pictures.Any() && isEmptyDrawingsPart(worksheetPart.DrawingsPart))
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
                 worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
