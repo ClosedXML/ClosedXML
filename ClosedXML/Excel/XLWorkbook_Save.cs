@@ -4343,7 +4343,7 @@ namespace ClosedXML.Excel
         {
             if (fills.Elements<Fill>().Any(f =>
                 f.PatternFill == null
-                || (f.PatternFill.PatternType == patternValues
+                || ((f.PatternFill.PatternType ?? PatternValues.None) == patternValues
                     && f.PatternFill.ForegroundColor == null
                     && f.PatternFill.BackgroundColor == null
                 )))
