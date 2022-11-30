@@ -33,6 +33,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx_csharp',
     'breathe',
+    'linuxdoc.rstFlatTable', # Table with row/col spans
 ]
 
 # Add any paths that contain templates here, relative to this directory.

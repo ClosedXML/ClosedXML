@@ -10,7 +10,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(FunctionRegistry ce)
         {
             //TODO: Add documentation
-            ce.RegisterFunction("ERRORTYPE", 1, ErrorType);
+            ce.RegisterFunction("ERROR.TYPE", 1, ErrorType);
             ce.RegisterFunction("ISBLANK", 1, int.MaxValue, IsBlank);
             ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
             ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
