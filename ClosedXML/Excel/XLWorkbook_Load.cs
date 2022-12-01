@@ -456,7 +456,7 @@ namespace ClosedXML.Excel
             var bookViews = workbook.BookViews;
             if (bookViews != null && bookViews.FirstOrDefault() is WorkbookView workbookView)
             {
-                if (workbookView.ActiveTab == null)
+                if (workbookView.ActiveTab == null || !workbookView.ActiveTab.HasValue)
                 {
                     Worksheets.First().SetTabActive().Unhide();
                 }
