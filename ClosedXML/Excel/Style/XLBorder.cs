@@ -351,109 +351,109 @@ namespace ClosedXML.Excel
         public IXLStyle SetOutsideBorder(XLBorderStyleValues value)
         {
             OutsideBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetOutsideBorderColor(XLColor value)
         {
             OutsideBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetInsideBorder(XLBorderStyleValues value)
         {
             InsideBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetInsideBorderColor(XLColor value)
         {
             InsideBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetLeftBorder(XLBorderStyleValues value)
         {
             LeftBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetLeftBorderColor(XLColor value)
         {
             LeftBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetRightBorder(XLBorderStyleValues value)
         {
             RightBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetRightBorderColor(XLColor value)
         {
             RightBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetTopBorder(XLBorderStyleValues value)
         {
             TopBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetTopBorderColor(XLColor value)
         {
             TopBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetBottomBorder(XLBorderStyleValues value)
         {
             BottomBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetBottomBorderColor(XLColor value)
         {
             BottomBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalUp()
         {
             DiagonalUp = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalUp(Boolean value)
         {
             DiagonalUp = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalDown()
         {
             DiagonalDown = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalDown(Boolean value)
         {
             DiagonalDown = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalBorder(XLBorderStyleValues value)
         {
             DiagonalBorder = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetDiagonalBorderColor(XLColor value)
         {
             DiagonalBorderColor = value;
-            return _container.Style;
+            return _style;
         }
 
         #endregion IXLBorder Members

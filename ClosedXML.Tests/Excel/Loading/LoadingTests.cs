@@ -180,8 +180,13 @@ namespace ClosedXML.Tests.Excel
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\PivotTableWithBorder.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
-                Assert.IsNotNull(wb);
-                //TODO: Implement pivot table with border
+                var pt = wb.Worksheet(1).PivotTables.PivotTable("PivotTable1");
+                var border = pt.RowLabels.Single().StyleFormats.DataValuesFormat.Style.Border;
+
+                Assert.AreEqual(XLBorderStyleValues.Thin, border.LeftBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thin, border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thin, border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thin, border.BottomBorder);
             }
         }
 

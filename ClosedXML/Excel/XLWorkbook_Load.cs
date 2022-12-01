@@ -1038,7 +1038,7 @@ namespace ClosedXML.Excel
                     styleFormat.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.CollapsedLevelsAreSubtotals, false);
                 }
 
-                IXLStyle style = new XLStyle(new XLStylizedEmpty(XLStyle.Default));
+                IXLStyle style = XLStyle.Default;
                 if (format.FormatId != null)
                 {
                     var df = differentialFormats[(Int32)format.FormatId.Value];
