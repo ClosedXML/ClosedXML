@@ -1232,6 +1232,7 @@ namespace ClosedXML.Tests
 
         [TestCase("noactive_noselected.xlsx")]
         [TestCase("noactive_twoselected.xlsx")]
+        [TestCase("noactive_negativeId.xlsx")]
         public void FirstSheetIsActive_WhenNotSpecified(string fileName)
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\" + fileName)))
