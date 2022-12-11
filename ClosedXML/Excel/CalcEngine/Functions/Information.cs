@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ERROR.TYPE", 1, 1, Adapt(ErrorType), FunctionFlags.Scalar);
-            ce.RegisterFunction("ISBLANK", 1, int.MaxValue, IsBlank);
+            ce.RegisterFunction("ISBLANK", 1, 1, Adapt(IsBlank), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
             ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
             ce.RegisterFunction("ISEVEN", 1, IsEven);
@@ -45,18 +45,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        static object IsBlank(List<Expression> p)
+        static AnyValue IsBlank(CalcContext ctx, ScalarValue value)
         {
-            var v = (string) p[0];
-            var isBlank = string.IsNullOrEmpty(v);
-
-
-            if (isBlank && p.Count > 1) {
-                var sublist = p.GetRange(1, p.Count);
-                isBlank = (bool)IsBlank(sublist);
-            }
-
-            return isBlank;
+            return value.IsBlank;
         }
 
         static object IsErr(List<Expression> p)
@@ -171,7 +162,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         static object IsText(List<Expression> p)
         {
             //Evaluate Expressions
-            var isText = !(bool) IsBlank(p);
+            var isText = !(bool) string.IsNullOrEmpty(p[0]);
             if (isText)
             {
                 isText = !(bool) IsNumber(p);

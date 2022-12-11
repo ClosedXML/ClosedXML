@@ -36,64 +36,41 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region IsBlank Tests
 
         [Test]
-        public void IsBlank_MultipleAllEmpty_true()
+        public void IsBlank_EmptyCell_true()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                var actual = ws.Evaluate("=IsBlank(A1:A3)", "A2");
-                Assert.AreEqual(true, actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var actual = ws.Evaluate("IsBlank(A1)");
+            Assert.AreEqual(true, actual);
         }
 
         [Test]
-        public void IsBlank_MultipleAllFill_false()
+        public void IsBlank_NonEmptyCell_false()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "1";
-                ws.Cell("A2").Value = "1";
-                ws.Cell("A3").Value = "1";
-                var actual = ws.Evaluate("=IsBlank(A1:A3)", "A2");
-                Assert.AreEqual(false, actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = "1";
+            var actual = ws.Evaluate("IsBlank(A1)");
+            Assert.AreEqual(false, actual);
+        }
+
+        [TestCase("FALSE")]
+        [TestCase("0")]
+        [TestCase("5")]
+        [TestCase("\"\"")]
+        [TestCase("\"Hello\"")]
+        [TestCase("#DIV/0!")]
+        public void IsBlank_NonEmptyValue_false(string value)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsBlank({value})");
+            Assert.AreEqual(false, actual);
         }
 
         [Test]
-        public void IsBlank_MultipleMixedFill_false()
+        public void IsBlank_InlineBlank_true()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "1";
-                ws.Cell("A3").Value = "1";
-                var actual = ws.Evaluate("=IsBlank(A1:A3)", "A3");
-                Assert.AreEqual(false, actual);
-            }
-        }
-
-        [Test]
-        public void IsBlank_Single_false()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = " ";
-                var actual = ws.Evaluate("=IsBlank(A1)");
-                Assert.AreEqual(false, actual);
-            }
-        }
-
-        [Test]
-        public void IsBlank_Single_true()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                var actual = ws.Evaluate("=IsBlank(A1)");
-                Assert.AreEqual(true, actual);
-            }
+            var actual = XLWorkbook.EvaluateExpr("IsBlank(IF(TRUE,,))");
+            Assert.AreEqual(true, actual);
         }
 
         #endregion IsBlank Tests

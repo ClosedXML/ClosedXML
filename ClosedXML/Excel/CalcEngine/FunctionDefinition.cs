@@ -98,6 +98,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return result switch
             {
+                null => AnyValue.Blank,
                 bool logic => AnyValue.From(logic),
                 double number => AnyValue.From(number),
                 string text => AnyValue.From(text),
