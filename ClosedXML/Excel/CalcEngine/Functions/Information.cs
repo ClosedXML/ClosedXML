@@ -13,7 +13,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ERROR.TYPE", 1, 1, Adapt(ErrorType), FunctionFlags.Scalar);
             ce.RegisterFunction("ISBLANK", 1, 1, Adapt(IsBlank), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERR", 1, 1, Adapt(IsErr), FunctionFlags.Scalar);
-            ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
+            ce.RegisterFunction("ISERROR", 1, 1, Adapt(IsError), FunctionFlags.Scalar);
             ce.RegisterFunction("ISEVEN", 1, IsEven);
             ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
             ce.RegisterFunction("ISNA", 1, int.MaxValue, IsNa);
@@ -45,21 +45,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        static AnyValue IsBlank(CalcContext ctx, ScalarValue value)
+        private static AnyValue IsBlank(CalcContext ctx, ScalarValue value)
         {
             return value.IsBlank;
         }
 
-        static AnyValue IsErr(CalcContext ctx, ScalarValue value)
+        private static AnyValue IsErr(CalcContext ctx, ScalarValue value)
         {
             return value.TryPickError(out var error) && error != XLError.NoValueAvailable;
         }
 
-        static object IsError(List<Expression> p)
+        private static AnyValue IsError(CalcContext ctx, ScalarValue value)
         {
-            var v = p[0].Evaluate();
-
-            return v is XLError;
+            return value.TryPickError(out _);
         }
 
         static object IsEven(List<Expression> p)
@@ -196,7 +194,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 return 4;
             }
-            if ((bool) IsError(p))
+            if (p[0].Evaluate() is XLError)
             {
                 return 16;
             }

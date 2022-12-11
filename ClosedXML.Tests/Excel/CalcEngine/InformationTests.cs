@@ -104,6 +104,30 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr("IsErr(#N/A)");
             Assert.AreEqual(false, actual);
         }
+        
+        [TestCase("#DIV/0!")]
+        [TestCase("#N/A")]
+        [TestCase("#NAME?")]
+        [TestCase("#NULL!")]
+        [TestCase("#NUM!")]
+        [TestCase("#REF!")]
+        [TestCase("#VALUE!")]
+        public void IsError_Errors_true(string error)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsError({error})");
+            Assert.AreEqual(true, actual);
+        }
+
+        [TestCase("IF(TRUE,,)")]
+        [TestCase("FALSE")]
+        [TestCase("0")]
+        [TestCase("\"\"")]
+        [TestCase("\"text\"")]
+        public void IsError_NonErrors_false(string valueFormula)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsError({valueFormula})");
+            Assert.AreEqual(false, actual);
+        }
 
         #region IsEven Tests
 
