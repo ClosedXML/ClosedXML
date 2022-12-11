@@ -75,6 +75,36 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion IsBlank Tests
 
+        [TestCase("IF(TRUE,,)")]
+        [TestCase("FALSE")]
+        [TestCase("0")]
+        [TestCase("\"\"")]
+        [TestCase("\"text\"")]
+        public void IsErr_NonErrorValues_false(string valueFormula)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsErr({valueFormula})");
+            Assert.AreEqual(false, actual);
+        }
+
+        [TestCase("#DIV/0!")]
+        [TestCase("#NAME?")]
+        [TestCase("#NULL!")]
+        [TestCase("#NUM!")]
+        [TestCase("#REF!")]
+        [TestCase("#VALUE!")]
+        public void IsErr_ErrorsExceptNA_true(string valueFormula)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsErr({valueFormula})");
+            Assert.AreEqual(true, actual);
+        }
+
+        [Test]
+        public void IsErr_NA_false()
+        {
+            var actual = XLWorkbook.EvaluateExpr("IsErr(#N/A)");
+            Assert.AreEqual(false, actual);
+        }
+
         #region IsEven Tests
 
         [Test]

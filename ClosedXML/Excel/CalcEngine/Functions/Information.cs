@@ -12,7 +12,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             ce.RegisterFunction("ERROR.TYPE", 1, 1, Adapt(ErrorType), FunctionFlags.Scalar);
             ce.RegisterFunction("ISBLANK", 1, 1, Adapt(IsBlank), FunctionFlags.Scalar);
-            ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
+            ce.RegisterFunction("ISERR", 1, 1, Adapt(IsErr), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
             ce.RegisterFunction("ISEVEN", 1, IsEven);
             ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
@@ -50,11 +50,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return value.IsBlank;
         }
 
-        static object IsErr(List<Expression> p)
+        static AnyValue IsErr(CalcContext ctx, ScalarValue value)
         {
-            var v = p[0].Evaluate();
-
-            return v is XLError error && error != XLError.NoValueAvailable;
+            return value.TryPickError(out var error) && error != XLError.NoValueAvailable;
         }
 
         static object IsError(List<Expression> p)
