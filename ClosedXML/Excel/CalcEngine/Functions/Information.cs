@@ -14,12 +14,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISBLANK", 1, 1, Adapt(IsBlank), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERR", 1, 1, Adapt(IsErr), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERROR", 1, 1, Adapt(IsError), FunctionFlags.Scalar);
-            ce.RegisterFunction("ISEVEN", 1, IsEven);
+            ce.RegisterFunction("ISEVEN", 1, 1, Adapt(IsEven), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
             ce.RegisterFunction("ISNA", 1, int.MaxValue, IsNa);
             ce.RegisterFunction("ISNONTEXT", 1, int.MaxValue, IsNonText);
             ce.RegisterFunction("ISNUMBER", 1, int.MaxValue, IsNumber);
-            ce.RegisterFunction("ISODD", 1, IsOdd);
+            ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISREF", 1, int.MaxValue, IsRef);
             ce.RegisterFunction("ISTEXT", 1, int.MaxValue, IsText);
             ce.RegisterFunction("N", 1, N);
@@ -60,15 +60,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return value.TryPickError(out _);
         }
 
-        static object IsEven(List<Expression> p)
+        private static AnyValue IsEven(CalcContext ctx, AnyValue value)
         {
-            var v = p[0].Evaluate();
-            if (v is double)
+            return GetParity(ctx, value, static (scalar, ctx) =>
             {
-                return Math.Abs((double) v%2) < 1;
-            }
-            //TODO: Error Exceptions
-            throw new ArgumentException("Expression doesn't evaluate to double");
+                if (scalar.IsLogical)
+                    return XLError.IncompatibleValue;
+
+                if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                    return error;
+
+                return Math.Truncate(number) % 2 == 0;
+            });
         }
 
         static object IsLogical(List<Expression> p)
@@ -79,7 +82,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (isLogical && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
-                isLogical = (bool) IsLogical(sublist);
+                isLogical = (bool)IsLogical(sublist);
             }
 
             return isLogical;
@@ -104,7 +107,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsNonText(List<Expression> p)
         {
-            return !(bool) IsText(p);
+            return !(bool)IsText(p);
         }
 
         static object IsNumber(List<Expression> p)
@@ -121,7 +124,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 //Handle Number Styles
                 try
                 {
-                    var stringValue = (string) v;
+                    var stringValue = (string)v;
                     return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out double dv);
                 }
                 catch (Exception)
@@ -139,9 +142,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return isNumber;
         }
 
-        static object IsOdd(List<Expression> p)
+        private static AnyValue IsOdd(CalcContext ctx, AnyValue value)
         {
-            return !(bool) IsEven(p);
+            return GetParity(ctx, value, static (scalar, ctx) =>
+            {
+                if (scalar.IsLogical)
+                    return XLError.IncompatibleValue;
+
+                if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                    return error;
+
+                return Math.Truncate(number) % 2 != 0;
+            });
         }
 
         static object IsRef(List<Expression> p)
@@ -158,21 +170,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         static object IsText(List<Expression> p)
         {
             //Evaluate Expressions
-            var isText = !(bool) string.IsNullOrEmpty(p[0]);
+            var isText = !(bool)string.IsNullOrEmpty(p[0]);
             if (isText)
             {
-                isText = !(bool) IsNumber(p);
+                isText = !(bool)IsNumber(p);
             }
             if (isText)
             {
-                isText = !(bool) IsLogical(p);
+                isText = !(bool)IsLogical(p);
             }
             return isText;
         }
 
         static object N(List<Expression> p)
         {
-            return (double) p[0];
+            return (double)p[0];
         }
 
         static object NA(List<Expression> p)
@@ -182,15 +194,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object Type(List<Expression> p)
         {
-            if ((bool) IsNumber(p))
+            if ((bool)IsNumber(p))
             {
                 return 1;
             }
-            if ((bool) IsText(p))
+            if ((bool)IsText(p))
             {
                 return 2;
             }
-            if ((bool) IsLogical(p))
+            if ((bool)IsLogical(p))
             {
                 return 4;
             }
@@ -198,11 +210,32 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 return 16;
             }
-            if(p.Count > 1)
+            if (p.Count > 1)
             {
                 return 64;
             }
             return null;
+        }
+
+        private static AnyValue GetParity(CalcContext ctx, AnyValue value, Func<ScalarValue, CalcContext, ScalarValue> f)
+        {
+            // IsOdd/IsEven has very strange semantic that is different for pretty much every other function
+            // Array behaves differently for multi-cell references, in-place blank vs cell blank give different value...
+            if (value.TryPickScalar(out var scalar, out var coll))
+            {
+                if (scalar.IsBlank)
+                    return XLError.NoValueAvailable;
+
+                return f(scalar, ctx).ToAnyValue();
+            }
+
+            if (coll.TryPickT0(out var array, out var reference))
+                return array.Apply(x => f(x, ctx));
+
+            if (!reference.TryGetSingleCellValue(out var cellValue, ctx))
+                return XLError.IncompatibleValue;
+
+            return f(cellValue, ctx).ToAnyValue();
         }
     }
 }

@@ -46,6 +46,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool IsBlank => _index == BlankValue;
 
+        public bool IsLogical => _index == LogicalValue;
+
         public static ScalarValue From(bool logical) => new(LogicalValue, logical, default, default, default);
 
         public static ScalarValue From(double number) => new(NumberValue, default, number, default, default);
