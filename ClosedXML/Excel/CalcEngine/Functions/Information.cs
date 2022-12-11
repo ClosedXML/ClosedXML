@@ -2,6 +2,7 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -9,8 +10,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
     {
         public static void Register(FunctionRegistry ce)
         {
-            //TODO: Add documentation
-            ce.RegisterFunction("ERROR.TYPE", 1, ErrorType);
+            ce.RegisterFunction("ERROR.TYPE", 1, 1, Adapt(ErrorType), FunctionFlags.Scalar);
             ce.RegisterFunction("ISBLANK", 1, int.MaxValue, IsBlank);
             ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
             ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
@@ -27,25 +27,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<XLError, int> errorTypes = new Dictionary<XLError, int>()
+        private static AnyValue ErrorType(CalcContext ctx, ScalarValue value)
         {
-            [XLError.NullValue] = 1,
-            [XLError.DivisionByZero] = 2,
-            [XLError.IncompatibleValue] = 3,
-            [XLError.CellReference] = 4,
-            [XLError.NameNotRecognized] = 5,
-            [XLError.NumberInvalid] = 6,
-            [XLError.NoValueAvailable] = 7
-        };
+            if (!value.TryPickError(out var error))
+                return XLError.NoValueAvailable;
 
-        static object ErrorType(List<Expression> p)
-        {
-            var v = p[0].Evaluate();
-
-            if (v is XLError error)
-                return errorTypes[error];
-            else
-                throw new NoValueAvailableException();
+            return error switch
+            {
+                XLError.NullValue => 1,
+                XLError.DivisionByZero => 2,
+                XLError.IncompatibleValue => 3,
+                XLError.CellReference => 4,
+                XLError.NameNotRecognized => 5,
+                XLError.NumberInvalid => 6,
+                XLError.NoValueAvailable => 7,
+                _ => throw new NotSupportedException($"Error {error} not supported.")
+            };
         }
 
         static object IsBlank(List<Expression> p)

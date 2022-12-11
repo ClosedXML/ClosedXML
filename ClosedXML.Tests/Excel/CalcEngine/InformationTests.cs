@@ -1,18 +1,36 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
-using System.Globalization;
-using System.Threading;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class InformationTests
     {
-        [SetUp]
-        public void SetCultureInfo()
+        [TestCase("A1")] // blank
+        [TestCase("TRUE")]
+        [TestCase("14.5")]
+        [TestCase("\"text\"")]
+        public void ErrorType_NonErrorsAreNA(string argumentFormula)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate($"ERROR.TYPE({argumentFormula})"));
+        }
+
+        [TestCase("#NULL!",1)]
+        [TestCase("#DIV/0!", 2)]
+        [TestCase("#VALUE!", 3)]
+        [TestCase("#REF!", 4)]
+        [TestCase("#NAME?", 5)]
+        [TestCase("#NUM!", 6)]
+        [TestCase("#N/A", 7)]
+        //[TestCase("#GETTING_DATA", 8)] OLAP Cube not supported
+        public void ErrorType_ReturnsNumberForError(string error, int expectedNumber)
+        {
+            Assert.AreEqual(expectedNumber, XLWorkbook.EvaluateExpr($"ERROR.TYPE({error})"));
         }
 
         #region IsBlank Tests
