@@ -131,48 +131,67 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #region IsEven Tests
 
-        [Test]
-        public void IsEven_Single_False()
+        [SetCulture("en-US")]
+        [TestCase("2")]
+        [TestCase("\"1 2/2\"")]
+        [TestCase("\"4 1/2\"")]
+        [TestCase("\"48:30:00\"")]
+        [TestCase("\"1900-01-02\"")]
+        public void IsEven_SingleValue_ConvertedThroughValueSemantic(string valueFormula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            var actual = XLWorkbook.EvaluateExpr($"IsEven({valueFormula})");
+            Assert.AreEqual(true, actual);
+        }
+        
+        [Test]
+        public void IsEven_NonIntegerValues_TruncatedForEvaluation()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
 
-                ws.Cell("A1").Value = 1;
-                ws.Cell("A2").Value = 1.2;
-                ws.Cell("A3").Value = 3;
+            ws.Cell("A1").Value = 4;
+            ws.Cell("A2").Value = 0.9;
+            ws.Cell("A3").Value = -2.9;
 
-                var actual = ws.Evaluate("=IsEven(A1)");
-                Assert.AreEqual(false, actual);
+            var actual = ws.Evaluate("=IsEven(A1)");
+            Assert.AreEqual(true, actual);
 
-                actual = ws.Evaluate("=IsEven(A2)");
-                Assert.AreEqual(false, actual);
+            actual = ws.Evaluate("=IsEven(A2)");
+            Assert.AreEqual(true, actual);
 
-                actual = ws.Evaluate("=IsEven(A3)");
-                Assert.AreEqual(false, actual);
-            }
+            actual = ws.Evaluate("=IsEven(A3)");
+            Assert.AreEqual(true, actual);
+
+            actual = ws.Evaluate("=IsEven(A4)");
+            Assert.AreEqual(true, actual);
         }
 
+        [SetCulture("en-US")]
         [Test]
-        public void IsEven_Single_True()
+        [Ignore("Arrays not yet implemented.")]
+        public void IsEven_Array_ReturnsArray()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            Assert.AreEqual(2.0, XLWorkbook.EvaluateExpr("SUM(N(IsEven({\"2.9\";2;1})))"));
+        }
+        
+        [Test]
+        public void IsEven_ReferenceToMoreThanOneCell_Error()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell(1, 2).FormulaA1 = "IsEven(A1:A2)";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell(1, 2).Value);
+        }
 
-                ws.Cell("A1").Value = 4;
-                ws.Cell("A2").Value = 0.2;
-                ws.Cell("A3").Value = 12.2;
-
-                var actual = ws.Evaluate("=IsEven(A1)");
-                Assert.AreEqual(true, actual);
-
-                actual = ws.Evaluate("=IsEven(A2)");
-                Assert.AreEqual(true, actual);
-
-                actual = ws.Evaluate("=IsEven(A3)");
-                Assert.AreEqual(true, actual);
-            }
+        [TestCase("TRUE", XLError.IncompatibleValue)]
+        [TestCase("FALSE", XLError.IncompatibleValue)]
+        [TestCase("\"\"", XLError.IncompatibleValue)]
+        [TestCase("\"test\"", XLError.IncompatibleValue)]
+        [TestCase("#DIV/0!", XLError.DivisionByZero)]
+        [TestCase("IF(TRUE,,)", XLError.NoValueAvailable)] // Behaves differently from a reference to a blank cell
+        public void IsEven_NonNumberValues_Error(string valueFormula, XLError expectedError)
+        {
+            Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr($"IsEven({valueFormula})"));
         }
 
         #endregion IsEven Tests
@@ -311,44 +330,67 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #region IsOdd Test
 
-        [Test]
-        public void IsOdd_Simple_false()
+        [SetCulture("en-US")]
+        [TestCase("1")]
+        [TestCase("\"2 3/3\"")]
+        [TestCase("\"5 1/3\"")]
+        [TestCase("\"25:30:00\"")]
+        [TestCase("\"1900-01-03\"")]
+        public void IsOdd_SingleValue_ConvertedThroughValueSemantic(string valueFormula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            var actual = XLWorkbook.EvaluateExpr($"IsOdd({valueFormula})");
+            Assert.AreEqual(true, actual);
+        }
+        
+        [Test]
+        public void IsOdd_NonIntegerValues_TruncatedForEvaluation()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
 
-                ws.Cell("A1").Value = 4;
-                ws.Cell("A2").Value = 0.2;
-                ws.Cell("A3").Value = 12.2;
+            ws.Cell("A1").Value = 3;
+            ws.Cell("A2").Value = 1.9;
+            ws.Cell("A3").Value = -5.9;
 
-                var actual = ws.Evaluate("=IsOdd(A1)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsOdd(A2)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsOdd(A3)");
-                Assert.AreEqual(false, actual);
-            }
+            var actual = ws.Evaluate("=IsOdd(A1)");
+            Assert.AreEqual(true, actual);
+
+            actual = ws.Evaluate("=IsOdd(A2)");
+            Assert.AreEqual(true, actual);
+
+            actual = ws.Evaluate("=IsOdd(A3)");
+            Assert.AreEqual(true, actual);
+
+            actual = ws.Evaluate("=IsOdd(A4)");
+            Assert.AreEqual(false, actual);
         }
 
+        [SetCulture("en-US")]
         [Test]
-        public void IsOdd_Simple_true()
+        [Ignore("Arrays not yet implemented.")]
+        public void IsOdd_Array_ReturnsArray()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            Assert.AreEqual(2.0, XLWorkbook.EvaluateExpr("SUM(N(IsOdd({\"3.2\",7,2})))"));
+        }
+        
+        [Test]
+        public void IsOdd_ReferenceToMoreThanOneCell_Error()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell(1, 2).FormulaA1 = "IsOdd(A1:A2)";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell(1, 2).Value);
+        }
 
-                ws.Cell("A1").Value = 1;
-                ws.Cell("A2").Value = 1.2;
-                ws.Cell("A3").Value = 3;
-
-                var actual = ws.Evaluate("=IsOdd(A1)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsOdd(A2)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsOdd(A3)");
-                Assert.AreEqual(true, actual);
-            }
+        [TestCase("TRUE", XLError.IncompatibleValue)]
+        [TestCase("FALSE", XLError.IncompatibleValue)]
+        [TestCase("\"\"", XLError.IncompatibleValue)]
+        [TestCase("\"test\"", XLError.IncompatibleValue)]
+        [TestCase("#DIV/0!", XLError.DivisionByZero)]
+        [TestCase("IF(TRUE,,)", XLError.NoValueAvailable)] // Behaves differently from a reference to a blank cell
+        public void IsOdd_NonNumberValues_Error(string valueFormula, XLError expectedError)
+        {
+            Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr($"IsOdd({valueFormula})"));
         }
 
         #endregion IsOdd Test

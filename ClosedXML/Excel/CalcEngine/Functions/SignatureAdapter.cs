@@ -48,6 +48,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, AnyValue, AnyValue> f)
+        {
+            return (ctx, args) => f(ctx, args[0]);
+        }
+
         public static CalcEngineFunction Adapt(Func<CalcContext, ScalarValue, AnyValue> f)
         {
             return (ctx, args) =>
