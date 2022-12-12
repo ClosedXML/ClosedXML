@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISNUMBER", 1, 1, Adapt(IsNumber), FunctionFlags.Scalar);
             ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISREF", 1, 1, Adapt(IsRef), FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("ISTEXT", 1, int.MaxValue, IsText);
+            ce.RegisterFunction("ISTEXT", 1, 1, Adapt(IsText), FunctionFlags.Scalar);
             ce.RegisterFunction("N", 1, N);
             ce.RegisterFunction("NA", 0, NA);
             ce.RegisterFunction("TYPE", 1, Type);
@@ -142,6 +142,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static AnyValue IsRef(CalcContext ctx, AnyValue value)
         {
             return value.IsReference;
+        }
+
+        private static AnyValue IsText(CalcContext ctx, ScalarValue value)
+        {
+            return value.IsText;
         }
 
         static object IsText(List<Expression> p)
