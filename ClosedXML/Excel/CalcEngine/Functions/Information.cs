@@ -15,8 +15,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISERR", 1, 1, Adapt(IsErr), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERROR", 1, 1, Adapt(IsError), FunctionFlags.Scalar);
             ce.RegisterFunction("ISEVEN", 1, 1, Adapt(IsEven), FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
-            ce.RegisterFunction("ISNA", 1, int.MaxValue, IsNa);
+            ce.RegisterFunction("ISLOGICAL", 1, 1, Adapt(IsLogical), FunctionFlags.Scalar);
+            ce.RegisterFunction("ISNA", 1, 1, Adapt(IsNa), FunctionFlags.Scalar);
             ce.RegisterFunction("ISNONTEXT", 1, int.MaxValue, IsNonText);
             ce.RegisterFunction("ISNUMBER", 1, int.MaxValue, IsNumber);
             ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
@@ -74,35 +74,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             });
         }
 
-        static object IsLogical(List<Expression> p)
+        private static AnyValue IsLogical(CalcContext ctx, ScalarValue value)
         {
-            var v = p[0].Evaluate();
-            var isLogical = v is bool;
-
-            if (isLogical && p.Count > 1)
-            {
-                var sublist = p.GetRange(1, p.Count);
-                isLogical = (bool)IsLogical(sublist);
-            }
-
-            return isLogical;
+            return value.IsLogical;
         }
 
-        static object IsNa(List<Expression> p)
+        private static AnyValue IsNa(CalcContext ctx, ScalarValue value)
         {
-            try
-            {
-                var v = p[0].Evaluate();
-                return v is XLError error && error == XLError.NoValueAvailable;
-            }
-            catch (NoValueAvailableException)
-            {
-                return true;
-            }
-            catch (CalcEngineException)
-            {
-                return false;
-            }
+            return value.TryPickError(out var error) && error == XLError.NoValueAvailable;
         }
 
         static object IsNonText(List<Expression> p)
@@ -177,7 +156,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
             if (isText)
             {
-                isText = !(bool)IsLogical(p);
+                isText = p[0].Evaluate() is not bool;
             }
             return isText;
         }
@@ -202,7 +181,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 return 2;
             }
-            if ((bool)IsLogical(p))
+            if (p[0].Evaluate() is bool)
             {
                 return 4;
             }
