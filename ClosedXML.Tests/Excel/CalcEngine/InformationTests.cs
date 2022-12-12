@@ -20,7 +20,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate($"ERROR.TYPE({argumentFormula})"));
         }
 
-        [TestCase("#NULL!",1)]
+        [TestCase("#NULL!", 1)]
         [TestCase("#DIV/0!", 2)]
         [TestCase("#VALUE!", 3)]
         [TestCase("#REF!", 4)]
@@ -104,7 +104,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr("IsErr(#N/A)");
             Assert.AreEqual(false, actual);
         }
-        
+
         [TestCase("#DIV/0!")]
         [TestCase("#N/A")]
         [TestCase("#NAME?")]
@@ -142,7 +142,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr($"IsEven({valueFormula})");
             Assert.AreEqual(true, actual);
         }
-        
+
         [Test]
         public void IsEven_NonIntegerValues_TruncatedForEvaluation()
         {
@@ -173,7 +173,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             Assert.AreEqual(2.0, XLWorkbook.EvaluateExpr("SUM(N(IsEven({\"2.9\";2;1})))"));
         }
-        
+
         [Test]
         public void IsEven_ReferenceToMoreThanOneCell_Error()
         {
@@ -198,44 +198,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #region IsLogical Tests
 
-        [Test]
-        public void IsLogical_Simpe_False()
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        public void IsLogical_OnlyLogical_True(string valueFormula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            var actual = XLWorkbook.EvaluateExpr($"IsLogical({valueFormula})");
+            Assert.AreEqual(true, actual);
+        }
 
-                ws.Cell("A1").Value = 123;
-
-                var actual = ws.Evaluate("=IsLogical(A1)");
-                Assert.AreEqual(false, actual);
-            }
+        [TestCase("IF(TRUE,,)")]
+        [TestCase("0")]
+        [TestCase("1")]
+        [TestCase("\"\"")]
+        [TestCase("\"text\"")]
+        [TestCase("#NAME?")]
+        [TestCase("#N/A")]
+        [TestCase("#VALUE!")]
+        [TestCase("#REF!")]
+        public void IsLogical_NonLogical_False(string valueFormula)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsLogical({valueFormula})");
+            Assert.AreEqual(false, actual);
         }
 
         [Test]
-        public void IsLogical_Simple_True()
+        public void IsLogical_ReferenceToLogical_True()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-                ws.Cell("A1").Value = true;
+            ws.Cell("A1").Value = true;
 
-                var actual = ws.Evaluate("=IsLogical(A1)");
-                Assert.AreEqual(true, actual);
-            }
+            var actual = ws.Evaluate("IsLogical(A1)");
+            Assert.AreEqual(true, actual);
         }
 
         #endregion IsLogical Tests
 
         [Test]
-        public void IsNA()
+        public void IsNA_NA_True()
         {
-            object actual;
-            actual = XLWorkbook.EvaluateExpr("ISNA(#N/A)");
+            var actual = XLWorkbook.EvaluateExpr("ISNA(#N/A)");
             Assert.AreEqual(true, actual);
+        }
 
-            actual = XLWorkbook.EvaluateExpr("ISNA(#REF!)");
+        [TestCase("IF(TRUE,,)")]
+        [TestCase("TRUE")]
+        [TestCase("0")]
+        [TestCase("\"\"")]
+        [TestCase("#REF!")]
+        [TestCase("\"#N/A\"")]
+        public void IsNA_NA_False(string valueFormula)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"ISNA({valueFormula})");
             Assert.AreEqual(false, actual);
         }
 
@@ -341,7 +356,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr($"IsOdd({valueFormula})");
             Assert.AreEqual(true, actual);
         }
-        
+
         [Test]
         public void IsOdd_NonIntegerValues_TruncatedForEvaluation()
         {
@@ -372,7 +387,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             Assert.AreEqual(2.0, XLWorkbook.EvaluateExpr("SUM(N(IsOdd({\"3.2\",7,2})))"));
         }
-        
+
         [Test]
         public void IsOdd_ReferenceToMoreThanOneCell_Error()
         {
