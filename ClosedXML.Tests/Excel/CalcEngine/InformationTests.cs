@@ -447,45 +447,37 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region IsText Tests
 
         [Test]
-        public void IsText_Simple_false()
+        public void IsText_BlankCell_False()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "123"; //Double Value
-                ws.Cell("A2").Value = DateTime.Now; //Date Value
-                ws.Cell("A3").Value = "12,235.5"; //Comma Formatting
-                ws.Cell("A4").Value = "$12,235.5"; //Currency Value
-                ws.Cell("A5").Value = true; //Bool Value
-                ws.Cell("A6").Value = "12%"; //Percentage Value
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B1").FormulaA1 = "ISTEXT(A1)";
 
-                var actual = ws.Evaluate("=IsText(A1)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsText(A2)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsText(A3)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsText(A4)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsText(A5)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsText(A6)");
-                Assert.AreEqual(false, actual);
-            }
+            Assert.AreEqual(false, ws.Cell("B1").Value);
         }
 
-        [Test]
-        public void IsText_Simple_true()
+        [TestCase("0")]
+        [TestCase("123")]
+        [TestCase("TRUE")]
+        [TestCase("#DIV/0!")]
+        [TestCase("IF(TRUE,,)")]
+        public void IsText_NonText_False(string nonText)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
+            var actual = XLWorkbook.EvaluateExpr($"ISTEXT({nonText})");
+            Assert.AreEqual(false, actual);
+        }
 
-                ws.Cell("A1").Value = "asd";
+        [TestCase("")]
+        [TestCase("abc")]
+        public void IsText_CellWithText_True(string textValue)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-                var actual = ws.Evaluate("=IsText(A1)");
-                Assert.AreEqual(true, actual);
-            }
+            ws.Cell("A1").Value = textValue;
+
+            var actual = ws.Evaluate("IsText(A1)");
+            Assert.AreEqual(true, actual);
         }
 
         #endregion IsText Tests
