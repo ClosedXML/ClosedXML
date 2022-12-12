@@ -85,6 +85,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool IsBlank => _index == BlankValue;
 
+        public bool IsLogical => _index == LogicalValue;
+
+        public bool IsNumber => _index == NumberValue;
+
+        public bool IsText => _index == TextValue;
+
+        public bool IsError => _index == ErrorValue;
+
+        public bool IsArray => _index == ArrayValue;
+
         public bool IsReference => _index == ReferenceValue;
 
         public bool TryPickScalar(out ScalarValue scalar, out CollectionValue collection)
