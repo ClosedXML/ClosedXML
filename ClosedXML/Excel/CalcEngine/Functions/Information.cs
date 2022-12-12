@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -8,7 +8,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
     {
         public static void Register(FunctionRegistry ce)
         {
+            //ce.RegisterFunction("CELL", 1, 1, Adapt(Cell), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ERROR.TYPE", 1, 1, Adapt(ErrorType), FunctionFlags.Scalar);
+            //ce.RegisterFunction("INFO", 1, 1, Adapt(Info), FunctionFlags.Scalar);
             ce.RegisterFunction("ISBLANK", 1, 1, Adapt(IsBlank), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERR", 1, 1, Adapt(IsErr), FunctionFlags.Scalar);
             ce.RegisterFunction("ISERROR", 1, 1, Adapt(IsError), FunctionFlags.Scalar);
@@ -20,8 +22,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISREF", 1, 1, Adapt(IsRef), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISTEXT", 1, 1, Adapt(IsText), FunctionFlags.Scalar);
-            ce.RegisterFunction("N", 1, N);
-            ce.RegisterFunction("NA", 0, NA);
+            ce.RegisterFunction("N", 1, 1, Adapt(N), FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("NA", 0, 0, NA, FunctionFlags.Scalar);
             ce.RegisterFunction("TYPE", 1, 1, Adapt(Type), FunctionFlags.Range, AllowRange.All);
         }
 
@@ -115,13 +117,33 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             return value.IsText;
         }
-        
-        static object N(List<Expression> p)
+
+        private static AnyValue N(CalcContext ctx, AnyValue value)
         {
-            return (double)p[0];
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return ToNumber(scalar).ToAnyValue();
+
+            if (collection.TryPickT0(out var array, out var reference))
+                return array.Apply(static v => ToNumber(v));
+
+            var area = reference.Areas.First();
+            var referenceValue = ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.RowNumber);
+            return ToNumber(referenceValue).ToAnyValue();
+
+            static ScalarValue ToNumber(ScalarValue scalar)
+            {
+                if (scalar.TryPickNumber(out var number))
+                    return number;
+                if (scalar.TryPickLogical(out var logical))
+                    return logical ? 1 : 0;
+                if (scalar.TryPickError(out var error))
+                    return error;
+
+                return 0; // Blank, text
+            }
         }
 
-        static object NA(List<Expression> p)
+        private static AnyValue NA(CalcContext ctx, Span<AnyValue> value)
         {
             return XLError.NoValueAvailable;
         }
