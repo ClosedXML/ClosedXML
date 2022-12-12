@@ -257,43 +257,44 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region IsNotText Tests
 
         [Test]
-        public void IsNotText_Simple_false()
+        public void IsNotText_ReferenceToBlankCell_True()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "asd";
-                var actual = ws.Evaluate("=IsNonText(A1)");
-                Assert.AreEqual(false, actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var actual = ws.Evaluate("IsNonText(A1)");
+            Assert.AreEqual(true, actual);
+        }
+
+        [TestCase("")]
+        [TestCase("  ")]
+        [TestCase("text")]
+        public void IsNotText_ReferenceToStringCell_False(string text)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = text;
+            var actual = ws.Evaluate("IsNonText(A1)");
+            Assert.AreEqual(false, actual);
         }
 
         [Test]
-        public void IsNotText_Simple_true()
+        public void IsNotText_NonTextValues_True()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "123"; //Double Value
-                ws.Cell("A2").Value = DateTime.Now; //Date Value
-                ws.Cell("A3").Value = "12,235.5"; //Comma Formatting
-                ws.Cell("A4").Value = "$12,235.5"; //Currency Value
-                ws.Cell("A5").Value = true; //Bool Value
-                ws.Cell("A6").Value = "12%"; //Percentage Value
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").Value = 123; //Double Value
+            ws.Cell("A2").Value = DateTime.Now; //Date Value
+            ws.Cell("A3").Value = true; //Bool Value
+            ws.Cell("A4").Value = XLError.IncompatibleValue; //Error value
 
-                var actual = ws.Evaluate("=IsNonText(A1)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNonText(A2)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNonText(A3)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNonText(A4)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNonText(A5)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNonText(A6)");
-                Assert.AreEqual(true, actual);
-            }
+            var actual = ws.Evaluate("IsNonText(A1)");
+            Assert.AreEqual(true, actual);
+            actual = ws.Evaluate("IsNonText(A2)");
+            Assert.AreEqual(true, actual);
+            actual = ws.Evaluate("IsNonText(A3)");
+            Assert.AreEqual(true, actual);
+            actual = ws.Evaluate("IsNonText(A4)");
+            Assert.AreEqual(true, actual);
         }
 
         #endregion IsNotText Tests

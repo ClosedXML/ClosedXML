@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISEVEN", 1, 1, Adapt(IsEven), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISLOGICAL", 1, 1, Adapt(IsLogical), FunctionFlags.Scalar);
             ce.RegisterFunction("ISNA", 1, 1, Adapt(IsNa), FunctionFlags.Scalar);
-            ce.RegisterFunction("ISNONTEXT", 1, int.MaxValue, IsNonText);
+            ce.RegisterFunction("ISNONTEXT", 1, 1, Adapt(IsNonText), FunctionFlags.Scalar);
             ce.RegisterFunction("ISNUMBER", 1, int.MaxValue, IsNumber);
             ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISREF", 1, int.MaxValue, IsRef);
@@ -84,9 +84,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return value.TryPickError(out var error) && error == XLError.NoValueAvailable;
         }
 
-        static object IsNonText(List<Expression> p)
+        private static AnyValue IsNonText(CalcContext ctx, ScalarValue value)
         {
-            return !(bool)IsText(p);
+            return !value.IsText;
         }
 
         static object IsNumber(List<Expression> p)
