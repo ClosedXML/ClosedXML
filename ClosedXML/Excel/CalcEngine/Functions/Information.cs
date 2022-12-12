@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -23,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISTEXT", 1, 1, Adapt(IsText), FunctionFlags.Scalar);
             ce.RegisterFunction("N", 1, N);
             ce.RegisterFunction("NA", 0, NA);
-            ce.RegisterFunction("TYPE", 1, Type);
+            ce.RegisterFunction("TYPE", 1, 1, Adapt(Type), FunctionFlags.Range, AllowRange.All);
         }
 
         private static AnyValue ErrorType(CalcContext ctx, ScalarValue value)
@@ -93,38 +92,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return value.IsNumber;
         }
 
-        private static object IsNumber(List<Expression> p)
-        {
-            var v = p[0].Evaluate();
-
-            var isNumber = v is double; //Normal number formatting
-            if (!isNumber)
-            {
-                isNumber = v is DateTime; //Handle DateTime Format
-            }
-            if (!isNumber)
-            {
-                //Handle Number Styles
-                try
-                {
-                    var stringValue = (string)v;
-                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out double dv);
-                }
-                catch (Exception)
-                {
-                    isNumber = false;
-                }
-            }
-
-            if (isNumber && p.Count > 1)
-            {
-                var sublist = p.GetRange(1, p.Count);
-                isNumber = (bool)IsNumber(sublist);
-            }
-
-            return isNumber;
-        }
-
         private static AnyValue IsOdd(CalcContext ctx, AnyValue value)
         {
             return GetParity(ctx, value, static (scalar, ctx) =>
@@ -148,22 +115,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             return value.IsText;
         }
-
-        static object IsText(List<Expression> p)
-        {
-            //Evaluate Expressions
-            var isText = !(bool)string.IsNullOrEmpty(p[0]);
-            if (isText)
-            {
-                isText = !(bool)IsNumber(p);
-            }
-            if (isText)
-            {
-                isText = p[0].Evaluate() is not bool;
-            }
-            return isText;
-        }
-
+        
         static object N(List<Expression> p)
         {
             return (double)p[0];
@@ -174,29 +126,30 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return XLError.NoValueAvailable;
         }
 
-        static object Type(List<Expression> p)
+        private static AnyValue Type(CalcContext ctx, AnyValue value)
         {
-            if ((bool)IsNumber(p))
+            if (!value.TryPickScalar(out var scalar, out var collection))
             {
+                var isArray = collection.TryPickT0(out _, out var reference);
+                if (isArray)
+                    return 64;
+                if (reference.Areas.Count > 1)
+                    return 16;
+                if (!reference.TryGetSingleCellValue(out scalar, ctx))
+                    return 64;
+            }
+
+            if (scalar.IsBlank || scalar.IsNumber)
                 return 1;
-            }
-            if ((bool)IsText(p))
-            {
+            if (scalar.IsText)
                 return 2;
-            }
-            if (p[0].Evaluate() is bool)
-            {
+            if (scalar.IsLogical)
                 return 4;
-            }
-            if (p[0].Evaluate() is XLError)
-            {
+            if (scalar.IsError)
                 return 16;
-            }
-            if (p.Count > 1)
-            {
-                return 64;
-            }
-            return null;
+
+            // There is a "composite type", but no idea what exactly it is. Shouldn't happen.
+            throw new InvalidOperationException("Unknown type.");
         }
 
         private static AnyValue GetParity(CalcContext ctx, AnyValue value, Func<ScalarValue, CalcContext, ScalarValue> f)

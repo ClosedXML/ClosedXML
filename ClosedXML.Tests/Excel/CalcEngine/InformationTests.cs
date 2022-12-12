@@ -547,5 +547,69 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion N Tests
+
+        [TestCase("IF(TRUE,,)", 1)]
+        [TestCase("0", 1)]
+        [TestCase("1", 1)]
+        [TestCase("-5.2", 1)]
+        [TestCase("\"\"", 2)]
+        [TestCase("\"text\"", 2)]
+        [TestCase("\"1\"", 2)]
+        [TestCase("\"TRUE\"", 2)]
+        [TestCase("TRUE", 4)]
+        [TestCase("FALSE", 4)]
+        [TestCase("#DIV/0!", 16)]
+        [TestCase("1/0", 16)]
+        [TestCase("#N/A", 16)]
+        [TestCase("#VALUE!", 16)]
+        public void Type_NonReferenceScalarValues(string literalValues, double expectedNumber)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").FormulaA1 = $"TYPE({literalValues})";
+            Assert.AreEqual(expectedNumber, ws.Cell("A1").Value);
+        }
+
+        [Ignore("Arrays not implemented")]
+        [TestCase("{1}")]
+        [TestCase("{TRUE,#N/A}")]
+        [TestCase("{\"abc\";5}")]
+        public void Type_Array_HasValue64(string arrayLiteral)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"TYPE({arrayLiteral})");
+            Assert.AreEqual(64.0, actual);
+        }
+
+        [TestCase("A1:A2")]
+        // [TestCase("(A1:A3 A2:B3)")] Not implemented // Intersection results in a 1x2 block
+        public void Type_ReferenceToNonSingleCell_BehavesLikeArray(string reference)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("C1").FormulaA1 = $"TYPE({reference})";
+            Assert.AreEqual(64.0, ws.Cell("C1").Value);
+        }
+
+        [Test]
+        public void Type_ReferenceToSingleCell_ReturnsTypeOfCell()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = "text";
+
+            ws.Cell("C1").FormulaA1 = "TYPE(A1)";
+            Assert.AreEqual(2.0, ws.Cell("C1").Value);
+        }
+
+        [Test]
+        public void Type_MultiAreaReference_ReturnsError()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = "text";
+
+            ws.Cell("C1").FormulaA1 = "TYPE((A1,A1))";
+            Assert.AreEqual(16.0, ws.Cell("C1").Value);
+        }
     }
 }
