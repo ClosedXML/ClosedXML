@@ -304,42 +304,45 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void IsNumber_Simple_false()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "asd"; //String Value
-                ws.Cell("A2").Value = true; //Bool Value
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").Value = "asd"; //String Value
+            ws.Cell("A2").Value = true; //Bool Value
 
-                var actual = ws.Evaluate("=IsNumber(A1)");
-                Assert.AreEqual(false, actual);
-                actual = ws.Evaluate("=IsNumber(A2)");
-                Assert.AreEqual(false, actual);
-            }
+            var actual = ws.Evaluate("IsNumber(A1)");
+            Assert.AreEqual(false, actual);
+            actual = ws.Evaluate("IsNumber(A2)");
+            Assert.AreEqual(false, actual);
         }
 
         [Test]
         public void IsNumber_Simple_true()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "123"; //Double Value
-                ws.Cell("A2").Value = DateTime.Now; //Date Value
-                ws.Cell("A3").Value = "12,235.5"; //Coma Formatting
-                ws.Cell("A4").Value = "$12,235.5"; //Currency Value
-                ws.Cell("A5").Value = "12%"; //Percentage Value
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").Value = 123; //Double Value
+            ws.Cell("A2").Value = DateTime.Now; //Date Value
+            ws.Cell("A3").Value = new TimeSpan(2, 30, 50); //TimeSpan Value
 
-                var actual = ws.Evaluate("=IsNumber(A1)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNumber(A2)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNumber(A3)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNumber(A4)");
-                Assert.AreEqual(true, actual);
-                actual = ws.Evaluate("=IsNumber(A5)");
-                Assert.AreEqual(true, actual);
-            }
+            var actual = ws.Evaluate("=IsNumber(A1)");
+            Assert.AreEqual(true, actual);
+            actual = ws.Evaluate("=IsNumber(A2)");
+            Assert.AreEqual(true, actual);
+            actual = ws.Evaluate("=IsNumber(A3)");
+            Assert.AreEqual(true, actual);
+        }
+
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        [TestCase("\"\"")]
+        [TestCase("#DIV/0!")]
+        [TestCase("#NULL!")]
+        [TestCase("#VALUE!")]
+        [TestCase("#N/A")]
+        public void IsNumber_NonNumber_False(string nonNumberValue)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"IsNumber({nonNumberValue})");
+            Assert.AreEqual(false, actual);
         }
 
         #endregion IsNumber Tests

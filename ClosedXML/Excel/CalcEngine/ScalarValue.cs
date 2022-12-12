@@ -48,6 +48,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool IsLogical => _index == LogicalValue;
 
+        public bool IsNumber => _index == NumberValue;
+
         public bool IsText => _index == TextValue;
 
         public static ScalarValue From(bool logical) => new(LogicalValue, logical, default, default, default);
