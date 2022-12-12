@@ -85,6 +85,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool IsBlank => _index == BlankValue;
 
+        public bool IsReference => _index == ReferenceValue;
+
         public bool TryPickScalar(out ScalarValue scalar, out CollectionValue collection)
         {
             scalar = _index switch

@@ -1,4 +1,3 @@
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISNONTEXT", 1, 1, Adapt(IsNonText), FunctionFlags.Scalar);
             ce.RegisterFunction("ISNUMBER", 1, 1, Adapt(IsNumber), FunctionFlags.Scalar);
             ce.RegisterFunction("ISODD", 1, 1, Adapt(IsOdd), FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("ISREF", 1, int.MaxValue, IsRef);
+            ce.RegisterFunction("ISREF", 1, 1, Adapt(IsRef), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("ISTEXT", 1, int.MaxValue, IsText);
             ce.RegisterFunction("N", 1, N);
             ce.RegisterFunction("NA", 0, NA);
@@ -140,15 +139,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             });
         }
 
-        static object IsRef(List<Expression> p)
+        private static AnyValue IsRef(CalcContext ctx, AnyValue value)
         {
-            var oe = p[0] as XObjectExpression;
-            if (oe == null)
-                return false;
-
-            var crr = oe.Value as CellRangeReference;
-
-            return crr != null;
+            return value.IsReference;
         }
 
         static object IsText(List<Expression> p)

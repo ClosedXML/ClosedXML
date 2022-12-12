@@ -414,28 +414,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion IsOdd Test
 
-        [Test]
-        public void IsRef()
+        [TestCase("A1")]
+        [TestCase("(A1,A5)")]
+        public void IsRef_True(string reference)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "123";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").Value = "123";
 
-                ws.Cell("B1").FormulaA1 = "ISREF(A1)";
-                ws.Cell("B2").FormulaA1 = "ISREF(5)";
-                ws.Cell("B3").FormulaA1 = "ISREF(YEAR(TODAY()))";
+            ws.Cell("B1").FormulaA1 = $"ISREF({reference})";
 
-                XLCellValue actual;
-                actual = ws.Cell("B1").Value;
-                Assert.AreEqual(true, actual);
+            Assert.AreEqual(true, ws.Cell("B1").Value);
+        }
 
-                actual = ws.Cell("B2").Value;
-                Assert.AreEqual(false, actual);
+        [TestCase("IF(TRUE,,)")]
+        [TestCase("TRUE")]
+        [TestCase("0")]
+        [TestCase("\"\"")]
+        // [TestCase("{1;2}")] Arrays not yet implemented
+        [TestCase("#N/A")]
+        [TestCase("#VALUE!")]
+        public void IsRef_NonReference_False(string nonReference)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
 
-                actual = ws.Cell("B3").Value;
-                Assert.AreEqual(false, actual);
-            }
+            ws.Cell("B1").FormulaA1 = $"ISREF({nonReference})";
+
+            Assert.AreEqual(false, ws.Cell("B1").Value);
         }
 
         #region IsText Tests
