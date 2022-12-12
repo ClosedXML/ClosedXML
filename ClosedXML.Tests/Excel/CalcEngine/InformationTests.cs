@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region IsBlank Tests
 
         [Test]
-        public void IsBlank_EmptyCell_true()
+        public void IsBlank_EmptyCell_True()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -45,7 +45,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void IsBlank_NonEmptyCell_false()
+        public void IsBlank_NonEmptyCell_False()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -60,14 +60,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"\"")]
         [TestCase("\"Hello\"")]
         [TestCase("#DIV/0!")]
-        public void IsBlank_NonEmptyValue_false(string value)
+        public void IsBlank_NonEmptyValue_False(string value)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsBlank({value})");
             Assert.AreEqual(false, actual);
         }
 
         [Test]
-        public void IsBlank_InlineBlank_true()
+        public void IsBlank_InlineBlank_True()
         {
             var actual = XLWorkbook.EvaluateExpr("IsBlank(IF(TRUE,,))");
             Assert.AreEqual(true, actual);
@@ -80,7 +80,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("0")]
         [TestCase("\"\"")]
         [TestCase("\"text\"")]
-        public void IsErr_NonErrorValues_false(string valueFormula)
+        public void IsErr_NonErrorValues_False(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsErr({valueFormula})");
             Assert.AreEqual(false, actual);
@@ -92,14 +92,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#NUM!")]
         [TestCase("#REF!")]
         [TestCase("#VALUE!")]
-        public void IsErr_ErrorsExceptNA_true(string valueFormula)
+        public void IsErr_ErrorsExceptNA_True(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsErr({valueFormula})");
             Assert.AreEqual(true, actual);
         }
 
         [Test]
-        public void IsErr_NA_false()
+        public void IsErr_NA_False()
         {
             var actual = XLWorkbook.EvaluateExpr("IsErr(#N/A)");
             Assert.AreEqual(false, actual);
@@ -112,7 +112,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#NUM!")]
         [TestCase("#REF!")]
         [TestCase("#VALUE!")]
-        public void IsError_Errors_true(string error)
+        public void IsError_Errors_True(string error)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsError({error})");
             Assert.AreEqual(true, actual);
@@ -123,7 +123,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("0")]
         [TestCase("\"\"")]
         [TestCase("\"text\"")]
-        public void IsError_NonErrors_false(string valueFormula)
+        public void IsError_NonErrors_False(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsError({valueFormula})");
             Assert.AreEqual(false, actual);
@@ -131,13 +131,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #region IsEven Tests
 
-        [SetCulture("en-US")]
         [TestCase("2")]
         [TestCase("\"1 2/2\"")]
         [TestCase("\"4 1/2\"")]
         [TestCase("\"48:30:00\"")]
         [TestCase("\"1900-01-02\"")]
-        public void IsEven_SingleValue_ConvertedThroughValueSemantic(string valueFormula)
+        public void IsEven_NumberLikeValue_ConvertedThroughValueSemantic(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsEven({valueFormula})");
             Assert.AreEqual(true, actual);
@@ -166,7 +165,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(true, actual);
         }
 
-        [SetCulture("en-US")]
         [Test]
         [Ignore("Arrays not yet implemented.")]
         public void IsEven_Array_ReturnsArray()
@@ -215,14 +213,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#N/A")]
         [TestCase("#VALUE!")]
         [TestCase("#REF!")]
-        public void IsLogical_NonLogical_False(string valueFormula)
+        public void IsLogical_NonLogicalValue_False(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"IsLogical({valueFormula})");
             Assert.AreEqual(false, actual);
         }
 
         [Test]
-        public void IsLogical_ReferenceToLogical_True()
+        public void IsLogical_ReferenceToLogicalValue_True()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -248,7 +246,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"\"")]
         [TestCase("#REF!")]
         [TestCase("\"#N/A\"")]
-        public void IsNA_NA_False(string valueFormula)
+        public void IsNA_NonNotAvailableValue_False(string valueFormula)
         {
             var actual = XLWorkbook.EvaluateExpr($"ISNA({valueFormula})");
             Assert.AreEqual(false, actual);
@@ -416,7 +414,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("A1")]
         [TestCase("(A1,A5)")]
-        public void IsRef_True(string reference)
+        public void IsRef_Reference_True(string reference)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
@@ -485,65 +483,86 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region N Tests
 
         [Test]
+        public void N_Blank_Zero()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(0.0, actual);
+        }
+
+        [Test]
         public void N_Date_SerialNumber()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                var testedDate = DateTime.Now;
-                ws.Cell("A1").Value = testedDate;
-                var actual = ws.Evaluate("=N(A1)");
-                Assert.AreEqual(testedDate.ToOADate(), actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var testedDate = DateTime.Now;
+            ws.Cell("A1").Value = testedDate;
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(testedDate.ToSerialDateTime(), actual);
         }
 
         [Test]
         public void N_False_Zero()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = false;
-                var actual = ws.Evaluate("=N(A1)");
-                Assert.AreEqual(0, actual);
-            }
-        }
-
-        [Test]
-        public void N_Number_Number()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                var testedValue = 123;
-                ws.Cell("A1").Value = testedValue;
-                var actual = ws.Evaluate("=N(A1)");
-                Assert.AreEqual(testedValue, actual);
-            }
-        }
-
-        [Test]
-        public void N_String_Zero()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = "asd";
-                var actual = ws.Evaluate("=N(A1)");
-                Assert.AreEqual(0, actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = false;
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(0, actual);
         }
 
         [Test]
         public void N_True_One()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet");
-                ws.Cell("A1").Value = true;
-                var actual = ws.Evaluate("=N(A1)");
-                Assert.AreEqual(1, actual);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = true;
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(1, actual);
+        }
+        [Test]
+        public void N_Number_Number()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var testedValue = 123;
+            ws.Cell("A1").Value = testedValue;
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(testedValue, actual);
+        }
+
+        [TestCase("")]
+        [TestCase("abc")]
+        public void N_String_Zero(string text)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = text;
+            var actual = ws.Evaluate("N(A1)");
+            Assert.AreEqual(0, actual);
+        }
+
+        [Test]
+        [Ignore("Array not implemented")]
+        public void N_Array_ConvertsIndividualItems()
+        {
+            var actual = XLWorkbook.EvaluateExpr("SUM(N({2,TRUE}))");
+            Assert.AreEqual(3, actual);
+        }
+
+        [TestCase("A1")]
+        [TestCase("A1:B1")]
+        [TestCase("(A1, B1)")]
+        public void N_Reference_TakesFirstCellFromFirstArea(string reference)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 5;
+            ws.Cell("B1").Value = 10;
+
+            var actual = ws.Evaluate($"SUM(N({reference}))");
+            Assert.AreEqual(5, actual);
         }
 
         #endregion N Tests

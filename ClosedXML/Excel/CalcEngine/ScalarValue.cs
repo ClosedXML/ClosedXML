@@ -293,6 +293,18 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        public bool TryPickLogical(out bool logical)
+        {
+            if (_index == LogicalValue)
+            {
+                logical = _logical;
+                return true;
+            }
+
+            logical = default;
+            return false;
+        }
+
         public bool TryPickNumber(out double number)
         {
             if (_index == NumberValue)
