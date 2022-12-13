@@ -176,6 +176,14 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void UnimplementedStandardFunctionsAreEvaluatedToNameNotFoundError()
+        {
+            // RTD will never be implemented
+            var actual = XLWorkbook.EvaluateExpr("RTD(\"MyRTDServerProdID\",\"MyServer\",\"RaceNum\",\"RunnerID\",\"StatType\")");
+            Assert.AreEqual(XLError.NameNotRecognized, actual);
+        }
+
+        [Test]
         public void FormulasWithErrors()
         {
             Assert.Throws<CellReferenceException>(() => XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
