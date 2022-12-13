@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -186,13 +185,19 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void FormulasWithErrors()
         {
-            Assert.Throws<CellReferenceException>(() => XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
-            Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
-            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
-            Assert.Throws<NullValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
+            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
+        }
+
+        [Test]
+        public void LegacyFunctionPropagateErrorWithoutException()
+        {
+            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("SIN(YEAR(#NAME?))+1"));
         }
 
         [Test]

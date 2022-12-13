@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             string unit = p[2];
 
             if (startDate > endDate)
-                throw new NumberException("The start date is greater than the end date");
+                return XLError.NumberInvalid;
 
             return (unit.ToUpper()) switch
             {
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 "YM" => (endDate.Month - startDate.Month + 12) % 12 - (endDate.Day < startDate.Day ? 1 : 0),
                 "YD" => Math.Truncate(new DateTime(startDate.Year + (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0), endDate.Month, endDate.Day).Subtract(startDate).TotalDays),
-                _ => throw new NumberException(),
+                _ => XLError.NumberInvalid,
             };
         }
 

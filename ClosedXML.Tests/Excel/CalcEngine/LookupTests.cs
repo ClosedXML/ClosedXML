@@ -173,14 +173,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Index_Exceptions()
         {
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 20, 1)"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 1, 10)"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 10)"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 4, 1)"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 4, )"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, 20)"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, 20, )"));
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, , 4)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I10, 20, 1)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I10, 1, 10)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 10)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 4, 1)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 4, )"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, 20)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, 20, )"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, , 4)"));
         }
 
         [Test]
@@ -233,9 +233,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Match_Exceptions()
         {
-            Assert.Throws<CellValueException>(() => ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
-            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
-            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
         }
 
         [Test]
@@ -311,11 +311,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Vlookup_Exceptions()
         {
-            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"));
-            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"));
-            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
 
-            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
         }
     }
 }

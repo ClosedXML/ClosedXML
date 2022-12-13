@@ -1,10 +1,10 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -250,15 +250,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return workbook.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
         }
 
-        [TestCase("D3:D45", typeof(NumberException), "No numeric parameters.")]
-        [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
-        public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        [TestCase("D3:D45", ExpectedResult = XLError.NumberInvalid)]
+        [TestCase("-1, 0, 3", ExpectedResult = XLError.NumberInvalid)]
+        public XLError Geomean_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=GEOMEAN({sourceValue})"));
+            return (XLError)ws.Evaluate($"GEOMEAN({sourceValue})");
         }
 
         [SetUp]
@@ -285,14 +283,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return workbook.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
         }
 
-        [TestCase("D3:D45", typeof(CellValueException), "No numeric parameters.")]
-        public void Devsq_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        [TestCase("D3:D45", ExpectedResult = XLError.IncompatibleValue)]
+        public XLError Devsq_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=DEVSQ({sourceValue})"));
+            return (XLError)ws.Evaluate($"DEVSQ({sourceValue})");
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -312,15 +308,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         // TODO : the string case will be treated correctly when Coercion is implemented better
-        //[TestCase("asdf", typeof(CellValueException), "Parameter non numeric.")]
-        [TestCase("5", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        //[TestCase("asdf", ExpectedResult = XLError.IncompatibleValue)]
+        [TestCase("5", ExpectedResult = XLError.NumberInvalid)]
+        [TestCase("-1", ExpectedResult = XLError.NumberInvalid)]
+        [TestCase("1", ExpectedResult = XLError.NumberInvalid)]
+        public XLError Fisher_IncorrectCases(string sourceValue)
         {
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})"));
+            return (XLError)XLWorkbook.EvaluateExpr($"FISHER({sourceValue})");
         }
 
         [Test]

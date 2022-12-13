@@ -175,9 +175,24 @@ It also applies to several other API:
 * ``IXLPivotField.AddSelectedValue``
 * ``IXLPivotField.AddSelectedValues``
 
-******************
-Formula exceptions
-******************
+*****************
+CalcEngine errors
+*****************
+
+Previously, if an error happened during formula evaluation (e.g. division by
+``=1/0`` `#DIV/0!`) have thrown an exception for the error derived from
+``CalcEngineException``. Errors have been incorporated to CalcEngine and are
+now a valid value that can be stored in a cell or it can be a result of formula
+evaluation.
+
+Errors are represented by an ``XLError`` enum. ``CalcEngineException`` and
+derived exception have been removed.
+
+.. code-block:: csharp
+
+   // Errors are now valid return value. CalcEngine no longer throws exceptions
+   Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("1/0"));
+
 
 Previously, if formula contained a standard unimplemented function,
 ``NameNotRecognizedException`` was thrown during parsing. Instead CalcEngine
