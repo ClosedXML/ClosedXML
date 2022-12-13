@@ -331,7 +331,6 @@ namespace ClosedXML.Excel
                         if (String.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         {
                             worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                            worksheet.LegacyDrawingIsNew = true;
                         }
 
                         vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
@@ -339,6 +338,10 @@ namespace ClosedXML.Excel
 
                     GenerateWorksheetCommentsPartContent(commentsPart, worksheet);
                     hasAnyVmlElements = GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet);
+                }
+                else
+                {
+                    worksheet.LegacyDrawingId = null;
                 }
 
                 // Remove empty parts
@@ -5947,18 +5950,20 @@ namespace ClosedXML.Excel
 
             #region LegacyDrawing
 
-            if (xlWorksheet.LegacyDrawingIsNew)
+            // Does worksheet have any comments (stored in legacy VML drawing)
+            if (!String.IsNullOrEmpty(xlWorksheet.LegacyDrawingId))
             {
                 worksheet.RemoveAllChildren<LegacyDrawing>();
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.LegacyDrawing);
+                worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                    previousElement);
 
-                if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.LegacyDrawing);
-                    worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-                        previousElement);
-
-                    cm.SetElement(XLWorksheetContents.LegacyDrawing, worksheet.Elements<LegacyDrawing>().First());
-                }
+                cm.SetElement(XLWorksheetContents.LegacyDrawing, worksheet.Elements<LegacyDrawing>().First());
+            }
+            else
+            {
+                worksheet.RemoveAllChildren<LegacyDrawing>();
+                cm.SetElement(XLWorksheetContents.LegacyDrawing, null);
             }
 
             #endregion LegacyDrawing
