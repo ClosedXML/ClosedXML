@@ -174,3 +174,10 @@ It also applies to several other API:
 * ``IXLPivotField.SelectedValues``
 * ``IXLPivotField.AddSelectedValue``
 * ``IXLPivotField.AddSelectedValues``
+
+
+****************
+Value formatting
+****************
+
+Previously, ``IXLCell.GetFormattedString()`` formatted logical values ``true``/``false`` to a string *True*/*False*. It now formats them to Excel compliant *TRUE*/*FALSE*.
