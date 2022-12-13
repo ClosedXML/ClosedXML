@@ -96,8 +96,12 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Worksheet; }
         }
 
+        /// <summary>
+        /// Reference to a VML that contains notes, forms controls and so on. All such things are generally unified into
+        /// a single legacy VML file, set during load/save.
+        /// </summary>
         public string LegacyDrawingId;
-        public Boolean LegacyDrawingIsNew;
+
         private Double _columnWidth;
 
         public XLWorksheetInternals Internals { get; private set; }
