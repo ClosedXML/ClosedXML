@@ -502,18 +502,18 @@ namespace ClosedXML.Excel.CalcEngine
                 foundFunction = _fnTbl.TryGetFunc(functionName, out parmMin, out parmMax);
             }
 
-            if (!foundFunction)
-                throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");
+            if (string.Equals(functionName, @"SUBTOTAL", StringComparison.OrdinalIgnoreCase))
+                ctx.Values[FormulaFlags.HasSubtotal] = true;
 
             var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
+            if (!foundFunction)
+                return new FunctionNode(functionName, arguments);
+
             if (parmMin != -1 && arguments.Count < parmMin)
                 throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {parmMin} and a maximum of {parmMax}.");
 
             if (parmMax != -1 && arguments.Count > parmMax)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {parmMin} and a maximum of {parmMax}.");
-
-            if (string.Equals(functionName, @"SUBTOTAL", StringComparison.OrdinalIgnoreCase))
-                ctx.Values[FormulaFlags.HasSubtotal] = true;
 
             return new FunctionNode(functionName, arguments);
         }

@@ -175,6 +175,32 @@ It also applies to several other API:
 * ``IXLPivotField.AddSelectedValue``
 * ``IXLPivotField.AddSelectedValues``
 
+******************
+Formula exceptions
+******************
+
+Previously, if formula contained a standard unimplemented function,
+``NameNotRecognizedException`` was thrown during parsing. Instead CalcEngine
+will now return ``XLError.NameNotRecognized`` error.
+
+.. code-block:: csharp
+
+   var wb = new XLWorkbook();
+   var ws = wb.AddWorksheet();
+   var cell = ws.Cell(1,1);
+   cell.FormulaA1 = "RTD(\"stockprice.rtd\", \"NASD\", \"MSFT\")";
+   var value = cell.Value; // Used to throw NameNotRecognizedException
+   Assert.AreEqual(XLError.NameNotRecognized, value.GetError());
+
+
+This causes a differences, if ClosedXML saves formula values (by default it
+doesn't, but can be enabled by ``SaveOptions.EvaluateFormulasBeforeSaving``).
+The original behavior kept the values blank for cells with formulas containing
+unimplemented functions, new behavior will set values of cells to ``#NAME?``
+User won't see a difference, because Excel recalculates values on load (this
+is the default calculate mode for workbooks). If the workbook has a different
+mode (e.g. ``XLWorkbook.CalculateMode = XLCalculateMode.Manual``), user might
+see the ``#NAME?`` values instead of blanks in some formulas.
 
 ****************
 Value formatting
