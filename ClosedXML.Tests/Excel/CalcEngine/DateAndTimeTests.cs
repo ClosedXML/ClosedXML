@@ -1,5 +1,5 @@
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -75,7 +75,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [TestCase(38718, 40524, "N")]
         public void DatedifExceptions(object startDate, object endDate, string unit)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")"));
         }
 
         [Test]

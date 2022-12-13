@@ -1,8 +1,6 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
-using System;
 using System.Globalization;
 using System.Threading;
 
@@ -20,8 +18,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void InvalidCharNumber()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(-2)"));
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(270)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("CHAR(-2)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("CHAR(270)"));
         }
 
         [Test]
@@ -34,7 +32,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void InvalidFunction()
         {
-            Exception ex;
             Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
 
             var ws = new XLWorkbook().AddWorksheet();

@@ -1,4 +1,3 @@
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -71,7 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             double numberOfPayments = p[1];
             if (numberOfPayments == 0)
-                throw new NumberException();
+                return XLError.NumberInvalid;
 
             double presentValue = p[2];
             double futureValue = p.Count > 3 ? p[3] : 0.0;

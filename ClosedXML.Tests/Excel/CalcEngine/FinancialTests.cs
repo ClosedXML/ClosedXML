@@ -1,5 +1,5 @@
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -7,14 +7,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class FinancialTests
     {
-        private readonly double tolerance = 1e-10;
-
         [TestCase("PMT(0.08/12,10,10000)", -1037.03208935915)]
         [TestCase("PMT(0.08/12,10,10000,0,1)", -1030.16432717797)]
         public void Pmt_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, tolerance);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
         }
 
         [Test]
@@ -35,7 +33,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Pmt_EdgeCases(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, tolerance);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
         }
 
         [Test]
@@ -66,7 +64,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Pmt_ZeroPeriodsReturnsNumError()
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("PMT(0.1,0,1000)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("PMT(0.1,0,1000)"));
         }
     }
 }

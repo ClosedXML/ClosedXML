@@ -1,4 +1,3 @@
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -120,7 +119,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object CountBlank(List<Expression> p)
         {
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
-                throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+                return XLError.NoValueAvailable;
 
             var e = p[0] as XObjectExpression;
             long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
@@ -216,14 +215,14 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Fisher(List<Expression> p)
         {
             var x = (double)p[0];
-            if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            if (x <= -1 || x >= 1) return XLError.NumberInvalid;
 
             return 0.5 * Math.Log((1 + x) / (1 - x));
         }
 
         private static object Geomean(List<Expression> p)
         {
-            return GetTally(p, true).Geomean();
+            return GetTally(p, true).GeoMean();
         }
 
         private static object Max(List<Expression> p)

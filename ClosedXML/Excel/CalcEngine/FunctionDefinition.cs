@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -70,8 +71,15 @@ namespace ClosedXML.Excel.CalcEngine
                 foreach (var arg in args)
                     adaptedArgs.Add(ConvertAnyValueToLegacyExpression(ctx, arg));
 
-                var result = _legacyFunction(adaptedArgs);
-                return ConvertLegacyFormulaValueToAnyValue(result);
+                try
+                {
+                    var result = _legacyFunction(adaptedArgs);
+                    return ConvertLegacyFormulaValueToAnyValue(result);
+                }
+                catch (FormulaErrorException ex)
+                {
+                    return ex.Error;
+                }
             }
 
             return _function(ctx, args);

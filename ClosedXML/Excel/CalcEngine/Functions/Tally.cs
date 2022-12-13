@@ -1,5 +1,4 @@
 // Keep this file CodeMaid organised and cleaned
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -113,20 +112,20 @@ namespace ClosedXML.Excel.CalcEngine
                 return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
         }
 
-        public double DevSq()
+        public object DevSq()
         {
             var nums = NumericValuesInternal();
-            if (nums.Length == 0) throw new CellValueException("No numeric parameters.");
+            if (nums.Length == 0) return XLError.IncompatibleValue;
 
             return nums.Sum(x => Math.Pow(x - Average(), 2));
         }
 
-        public double Geomean()
+        public object GeoMean()
         {
             var nums = NumericValuesInternal();
 
-            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
-            if (HasNonPositiveNumbers()) throw new NumberException("Incorrect parameters. Use only positive numbers in your data.");
+            if (nums.Length == 0) return XLError.NumberInvalid;
+            if (HasNonPositiveNumbers()) return XLError.NumberInvalid;
 
             return Math.Pow(Product(), 1.0 / nums.Length);
         }
