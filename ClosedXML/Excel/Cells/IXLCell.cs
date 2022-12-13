@@ -313,6 +313,7 @@ namespace ClosedXML.Excel
         ///   <item>String - sets the result to a text representation of a cell value (using current culture).</item>
         ///   <item>DateTime - uses a logic of <see cref="XLCellValue.TryConvert(out DateTime)"/></item>
         ///   <item>TimeSpan - uses a logic of <see cref="XLCellValue.TryConvert(out TimeSpan, System.Globalization.CultureInfo)"/></item>
+        ///   <item>XLError - if the value is of type <see cref="XLDataType.Error"/>, it will return the value.</item>
         ///   <item>Enum - tries to parse a value to a member by comparing the text of a cell value and a member name.</item>
         /// </list>
         /// </para>

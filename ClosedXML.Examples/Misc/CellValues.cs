@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using System;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -28,7 +29,7 @@ namespace ClosedXML.Examples.Misc
                 cellDateTime.Style.DateFormat.Format = "yyyy-MMM-dd";
 
                 // Extract the date in different ways
-                DateTime dateTime1 = (DateTime)cellDateTime.Value;
+                DateTime dateTime1 = cellDateTime.Value;
                 DateTime dateTime2 = cellDateTime.GetDateTime();
                 DateTime dateTime3 = cellDateTime.GetValue<DateTime>();
                 String dateTimeString = cellDateTime.GetString();
@@ -116,7 +117,7 @@ namespace ClosedXML.Examples.Misc
                 cellTimeSpan.Value = new TimeSpan(1, 2, 31, 45);
 
                 // Extract the timeSpan in different ways
-                TimeSpan timeSpan1 = (TimeSpan)cellTimeSpan.Value;
+                TimeSpan timeSpan1 = cellTimeSpan.Value;
                 TimeSpan timeSpan2 = cellTimeSpan.GetTimeSpan();
                 TimeSpan timeSpan3 = cellTimeSpan.GetValue<TimeSpan>();
                 String timeSpanString = "'" + cellTimeSpan.GetString();
@@ -130,6 +131,26 @@ namespace ClosedXML.Examples.Misc
                 ws.Cell(7, 7).Value = timeSpanFormattedString;
 
                 //////////////////////////////////////////////////////////////////
+                // XLError
+
+                var cellError = ws.Cell(8, 2);
+                cellError.Value = XLError.DivisionByZero;
+
+                // Extract the error in different ways
+                XLError error1 = (XLError)cellError.Value;
+                XLError error2 = cellError.GetError();
+                XLError error3 = cellError.GetValue<XLError>();
+                String errorString = "'" + cellError.GetString();
+                String errorFormattedString = "'" + cellError.GetFormattedString();
+
+                // Set the values back to cells
+                ws.Cell(8, 3).Value = error1;
+                ws.Cell(8, 4).Value = error2;
+                ws.Cell(8, 5).Value = error3;
+                ws.Cell(8, 6).Value = errorString;
+                ws.Cell(8, 7).Value = errorFormattedString;
+
+                //////////////////////////////////////////////////////////////////
                 // Do some formatting
                 ws.Columns("B:G").Width = 20;
                 var rngTitle = ws.Range("B2:G2");
@@ -141,7 +162,32 @@ namespace ClosedXML.Examples.Misc
                 ws = workbook.AddWorksheet("Test Whitespace");
                 ws.FirstCell().Value = "'    ";
 
-                workbook.SaveAs(filePath);
+                ws = workbook.AddWorksheet("Errors");
+                ws.Cell(2, 2).Value = "Error value";
+                ws.Cell(2, 3).Value = "Formula error";
+
+                ws.Cell(3, 2).Value = XLError.CellReference;
+                ws.Cell(3, 3).FormulaA1 = "#REF!+1";
+
+                ws.Cell(4, 2).Value = XLError.IncompatibleValue;
+                ws.Cell(4, 3).FormulaA1 = "\"TRUE\"*1";
+
+                ws.Cell(5, 2).Value = XLError.DivisionByZero;
+                ws.Cell(5, 3).FormulaA1 = "1/0";
+
+                ws.Cell(6, 2).Value = XLError.NameNotRecognized;
+                ws.Cell(6, 3).FormulaA1 = "NONEXISTENT.FUNCTION()";
+
+                ws.Cell(7, 2).Value = XLError.NoValueAvailable;
+                ws.Cell(7, 3).FormulaA1 = "NA()";
+
+                ws.Cell(8, 2).Value = XLError.NullValue;
+                ws.Cell(8, 3).FormulaA1 = "#NULL!+1";
+
+                ws.Cell(9, 2).Value = XLError.NumberInvalid;
+                ws.Cell(9, 3).FormulaA1 = "#NUM!+1";
+
+                workbook.SaveAs(filePath, true, true);
             }
         }
     }

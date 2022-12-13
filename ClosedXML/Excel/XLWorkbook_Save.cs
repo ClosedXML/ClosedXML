@@ -6105,7 +6105,7 @@ namespace ClosedXML.Excel
                 var cellValue = xlCell.GetBoolean() ? new CellValue("1") : new CellValue("0");
                 openXmlCell.CellValue = cellValue;
             }
-            else if (dataType == XLDataType.Text)
+            else if (dataType == XLDataType.Error)
             {
                 openXmlCell.CellValue = new CellValue(xlCell.Value.GetError().ToDisplayString());
             }
