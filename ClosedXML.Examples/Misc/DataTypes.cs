@@ -1,5 +1,6 @@
 using System;
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -73,6 +74,14 @@ namespace ClosedXML.Examples.Misc
             var cell = ws.Cell(ro, co + 1);
             cell.Value = "Not Shared";
             cell.ShareString = false;
+
+            ro++;
+
+            ws.Cell(++ro, co).Value = "Error from literal:";
+            ws.Cell(ro, co + 1).Value = XLError.IncompatibleValue;
+
+            ws.Cell(++ro, co).Value = "Error from evaluation:";
+            ws.Cell(ro, co + 1).FormulaA1 = "1/0";
 
             // To view all shared strings (all texts in the workbook actually), use the following:
             // workbook.GetSharedStrings()

@@ -309,6 +309,17 @@ namespace ClosedXML.Excel
 
             if (TryGetStringValue(out value, currentValue)) return true;
 
+            if (underlyingType == typeof(XLError))
+            {
+                if (currentValue.IsError)
+                {
+                    value = (T)(object)currentValue.GetError();
+                    return true;
+                }
+
+                return false;
+            }
+
             // Type code of an enum is a type of an integer, so do this check before numbers
             if (underlyingType.IsEnum)
             {

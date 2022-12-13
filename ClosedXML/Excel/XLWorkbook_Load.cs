@@ -1787,6 +1787,11 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
+                else if (dataType == CellValues.Error)
+                {
+                    if (cell.CellValue is not null && XLErrorParser.TryParseError(cell.CellValue.InnerText, out var error))
+                        xlCell.SetOnlyValue(error);
+                }
             }
             else if (cell.CellValue != null) // Default data type is a number
             {

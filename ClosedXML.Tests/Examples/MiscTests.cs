@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void CellValues()
         {
-            TestHelper.RunTestExample<CellValues>(@"Misc\CellValues.xlsx");
+            TestHelper.RunTestExample<CellValues>(@"Misc\CellValues.xlsx", true);
         }
 
         [Test]
