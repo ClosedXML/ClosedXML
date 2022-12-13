@@ -434,26 +434,22 @@ namespace ClosedXML.Excel
 
         public string GetFormattedString()
         {
-            // Need to get actual value because formula might be out of date or value wasn't set at all
+            XLCellValue value;
+            try
+            {
+                // Need to get actual value because formula might be out of date or value wasn't set at all
+                // Unimplemented functions and features throw exceptions
+                value = Value;
+            }
+            catch
+            {
+                value = CachedValue;
+            }
 
             var format = GetFormat();
-            try
-            {
-                // Unimplemented functions and features throw exceptions
-                var value = Value;
-                if (value.Type == XLDataType.Blank)
-                    return String.Empty;
-                return value.ToObject().ToExcelFormat(format);
-            }
-            catch { }
-
-            try
-            {
-                return CachedValue.ToObject().ToExcelFormat(format);
-            }
-            catch { }
-
-            return Value.ToString(CultureInfo.CurrentCulture);
+            return value.IsUnifiedNumber
+                ? value.GetUnifiedNumber().ToExcelFormat(format)
+                : value.ToString(CultureInfo.CurrentCulture);
         }
 
         /// <summary>
