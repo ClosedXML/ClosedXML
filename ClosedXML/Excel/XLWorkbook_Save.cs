@@ -351,6 +351,23 @@ namespace ClosedXML.Excel
                 if (!hasAnyVmlElements && vmlDrawingPart != null)
                     worksheetPart.DeletePart(vmlDrawingPart);
 
+                var xlTables = (XLTables)worksheet.Tables;
+
+                // The way forward is to have 2-phase save, this is a start of that
+                // concept for tables:
+                //
+                // Phase 1 - synchronize part existence with tables xlWorksheet, so each
+                // table has a corresponding part and part that don't are deleted.
+                // This phase doesn't modify the content, it only ensures that RelIds are set
+                // corresponding parts exist and the parts that don't exist are removed
+                SynchronizeTableParts(xlTables, worksheetPart, context);
+
+                // Phase 2 - At this point, all pieces must have corresponding parts
+                // The only way to link between parts is through RelIds that were already
+                // set in phase 1. The phase 2 is all about content of individual parts.
+                // Each part should have individual writer.
+                GenerateTableParts(xlTables, worksheetPart, context);
+
                 GenerateWorksheetPartContent(worksheetPart, worksheet, options, context);
 
                 if (worksheet.PivotTables.Any())
@@ -442,61 +459,63 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static void GenerateTables(XLWorksheet worksheet, WorksheetPart worksheetPart, SaveContext context, XLWorksheetContentManager cm)
+        private static void SynchronizeTableParts(XLTables tables, WorksheetPart worksheetPart, SaveContext context)
         {
-            var tables = worksheet.Tables as XLTables;
+            // Remove table definition parts that are not a part of workbook
+            foreach (var tableDefinitionPart in worksheetPart.GetPartsOfType<TableDefinitionPart>().ToList())
+            {
+                var partId = worksheetPart.GetIdOfPart(tableDefinitionPart);
+                var xlWorkbookContainsTable = tables.Cast<XLTable>().Any(t => t.RelId == partId);
+                if (!xlWorkbookContainsTable)
+                {
+                    worksheetPart.DeletePart(tableDefinitionPart);
+                }
+            }
 
-            var emptyTable = tables.FirstOrDefault(t => t.DataRange == null);
+            foreach (var xlTable in tables.Cast<XLTable>())
+            {
+                if (String.IsNullOrEmpty(xlTable.RelId))
+                {
+                    xlTable.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    worksheetPart.AddNewPart<TableDefinitionPart>(xlTable.RelId);
+                }
+            }
+        }
+
+        private static void GenerateTableParts(XLTables tables, WorksheetPart worksheetPart, SaveContext context)
+        {
+            foreach (var xlTable in tables.Cast<XLTable>())
+            {
+                var relId = xlTable.RelId;
+                var tableDefinitionPart = (TableDefinitionPart)worksheetPart.GetPartById(relId);
+                GenerateTableDefinitionPartContent(tableDefinitionPart, xlTable, context);
+            }
+        }
+
+        private static void PopulateTablePartReferences(XLTables xlTables, Worksheet worksheet, XLWorksheetContentManager cm)
+        {
+            var emptyTable = xlTables.FirstOrDefault(t => t.DataRange == null);
             if (emptyTable != null)
                 throw new EmptyTableException($"Table '{emptyTable.Name}' should have at least 1 row.");
 
             TableParts tableParts;
-            if (worksheetPart.Worksheet.Elements<TableParts>().Any())
+            if (worksheet.Elements<TableParts>().Any())
             {
-                tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
+                tableParts = worksheet.Elements<TableParts>().First();
             }
             else
             {
                 var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.TableParts);
                 tableParts = new TableParts();
-                worksheetPart.Worksheet.InsertAfter(tableParts, previousElement);
+                worksheet.InsertAfter(tableParts, previousElement);
             }
             cm.SetElement(XLWorksheetContents.TableParts, tableParts);
 
-            foreach (var deletedTableRelId in tables.Deleted)
-            {
-                if (worksheetPart.TableDefinitionParts != null)
-                {
-                    var tableDefinitionPart = worksheetPart.GetPartById(deletedTableRelId);
-                    worksheetPart.DeletePart(tableDefinitionPart);
-
-                    var tablePartsToRemove = tableParts.OfType<TablePart>().Where(tp => tp.Id?.Value == deletedTableRelId).ToList();
-                    tablePartsToRemove.ForEach(tp => tableParts.RemoveChild(tp));
-                }
-            }
-
-            tables.Deleted.Clear();
-
+            xlTables.Deleted.Clear();
+            tableParts.RemoveAllChildren();
             foreach (var xlTable in tables.Cast<XLTable>())
             {
-                if (String.IsNullOrEmpty(xlTable.RelId))
-                    xlTable.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
-
-                var relId = xlTable.RelId;
-
-                TableDefinitionPart tableDefinitionPart;
-                if (worksheetPart.HasPartWithId(relId))
-                    tableDefinitionPart = worksheetPart.GetPartById(relId) as TableDefinitionPart;
-                else
-                    tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>(relId);
-
-                GenerateTableDefinitionPartContent(tableDefinitionPart, xlTable, context);
-
-                if (!tableParts.OfType<TablePart>().Any(tp => tp.Id == xlTable.RelId))
-                {
-                    var tablePart = new TablePart { Id = xlTable.RelId };
-                    tableParts.AppendChild(tablePart);
-                }
+                tableParts.AppendChild(new TablePart { Id = xlTable.RelId });
             }
 
             tableParts.Count = (UInt32)tables.Count();
@@ -5903,7 +5922,7 @@ namespace ClosedXML.Excel
 
             #region Tables
 
-            GenerateTables(xlWorksheet, worksheetPart, context, cm);
+            PopulateTablePartReferences((XLTables)xlWorksheet.Tables, worksheet, cm);
 
             #endregion Tables
 
