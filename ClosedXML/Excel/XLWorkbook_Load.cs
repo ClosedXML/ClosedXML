@@ -243,7 +243,7 @@ namespace ClosedXML.Excel
                                                        sheetFormatProperties.CustomHeight.Value);
 
                                 if (sheetFormatProperties.DefaultColumnWidth != null)
-                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth - ColumnWidthOffset;
+                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth - XLConstants.ColumnWidthOffset;
                             }
                         }
                         else if (reader.ElementType == typeof(SheetViews))
@@ -1659,7 +1659,7 @@ namespace ClosedXML.Excel
             }
 
             var xlCell = ws.Cell(in cellAddress);
-            var dataType = cell.DataType ?? CvNumber;
+            var dataType = cell.DataType ?? new EnumValue<CellValues>(CellValues.Number);
 
             if (styleList.TryGetValue(styleIndex, out IXLStyle style))
             {
@@ -2129,7 +2129,7 @@ namespace ClosedXML.Excel
                 columns.Elements<Column>().FirstOrDefault(c => c.Max == XLHelper.MaxColumnNumber);
 
             if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
-                ws.ColumnWidth = wsDefaultColumn.Width - ColumnWidthOffset;
+                ws.ColumnWidth = wsDefaultColumn.Width - XLConstants.ColumnWidthOffset;
 
             Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
                                           ? Int32.Parse(wsDefaultColumn.Style.InnerText)
@@ -2145,7 +2145,7 @@ namespace ClosedXML.Excel
                 var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
                 if (col.Width != null)
                 {
-                    Double width = col.Width - ColumnWidthOffset;
+                    Double width = col.Width - XLConstants.ColumnWidthOffset;
                     //if (width < 0) width = 0;
                     xlColumns.Width = width;
                 }
