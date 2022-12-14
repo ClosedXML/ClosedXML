@@ -8,6 +8,8 @@ namespace ClosedXML.Excel
 
         internal const int MaxFunctionArguments = 255; // To keep allocation sane
 
+        internal const double ColumnWidthOffset = 0.710625;
+
         #region Pivot Table constants
 
         public static class PivotTable
