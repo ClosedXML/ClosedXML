@@ -260,10 +260,17 @@ namespace ClosedXML.Excel
             {
                 WorksheetPart worksheetPart;
                 var wsRelId = worksheet.RelId;
+                bool partIsEmpty;
                 if (workbookPart.Parts.Any(p => p.RelationshipId == wsRelId))
+                {
                     worksheetPart = (WorksheetPart)workbookPart.GetPartById(wsRelId);
+                    partIsEmpty = false;
+                }
                 else
+                {
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
+                    partIsEmpty = true;
+                }
 
                 var worksheetHasComments = worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any();
 
@@ -321,7 +328,8 @@ namespace ClosedXML.Excel
                 // Each part should have individual writer.
                 GenerateTableParts(xlTables, worksheetPart, context);
 
-                WorksheetPartWriter.GenerateWorksheetPartContent(worksheetPart, worksheet, options, context);
+                var ws = WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
+                WorksheetPartWriter.StreamToPart(ws, worksheetPart);
 
                 if (worksheet.PivotTables.Any())
                 {
