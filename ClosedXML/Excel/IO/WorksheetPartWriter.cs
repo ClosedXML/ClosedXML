@@ -61,8 +61,12 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        internal static void GenerateWorksheetPartContent(
-            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, SaveOptions options, XLWorkbook.SaveContext context)
+        internal static Worksheet GenerateWorksheetPartContent(
+            bool partIsEmpty,
+            WorksheetPart worksheetPart,
+            XLWorksheet xlWorksheet,
+            SaveOptions options,
+            SaveContext context)
         {
             if (options.ConsolidateConditionalFormatRanges)
             {
@@ -71,10 +75,26 @@ namespace ClosedXML.Excel.IO
 
             #region Worksheet
 
-            if (worksheetPart.Worksheet == null)
-                worksheetPart.Worksheet = new Worksheet();
+            Worksheet worksheet;
+            if (!partIsEmpty)
+            {
+                // Accessing the worksheet through worksheetPart.Worksheet creates an attached DOM
+                // worksheet that is tracked and later saved automatically to the part.
+                // Using the reader, we get a detached DOM.
+                // The OpenXmlReader.Create method only reads xml declaration, but doesn't read content.
+                using var reader = OpenXmlReader.Create(worksheetPart);
+                if (!reader.Read())
+                {
+                    throw new ArgumentException("Worksheet part should contain worksheet xml, but is empty.");
+                }
 
-            var worksheet = worksheetPart.Worksheet;
+                worksheet = (Worksheet)reader.LoadCurrentElement();
+            }
+            else
+            {
+                worksheet = new Worksheet();
+            }
+
             if (
                 !worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
                     "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
@@ -1502,6 +1522,8 @@ namespace ClosedXML.Excel.IO
             //}
 
             #endregion LegacyDrawingHeaderFooter
+
+            return worksheet;
         }
 
 
@@ -2074,6 +2096,39 @@ namespace ClosedXML.Excel.IO
             }
 
             tableParts.Count = (UInt32)xlTables.Count();
+        }
+
+        /// <summary>
+        /// Stream detached worksheet DOM to the worksheet part stream.
+        /// Replaces the content of the part.
+        /// </summary>
+        internal static void StreamToPart(Worksheet worksheet, WorksheetPart worksheetPart)
+        {
+            // Worksheet part might have some data, but the writer truncates everything upon creation.
+            using var writer = OpenXmlWriter.Create(worksheetPart);
+            using var reader = OpenXmlReader.Create(worksheet);
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement)
+                {
+                    writer.WriteStartElement(reader);
+                    var canContainText = typeof(OpenXmlLeafTextElement).IsAssignableFrom(reader.ElementType);
+                    if (canContainText)
+                    {
+                        var text = reader.GetText();
+                        if (text.Length > 0)
+                        {
+                            writer.WriteString(text);
+                        }
+                    }
+                }
+                else if (reader.IsEndElement)
+                {
+                    writer.WriteEndElement();
+                }
+            }
+            writer.Close();
         }
     }
 }
