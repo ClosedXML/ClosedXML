@@ -328,9 +328,8 @@ namespace ClosedXML.Excel
                 // Each part should have individual writer.
                 GenerateTableParts(xlTables, worksheetPart, context);
 
-                var ws = WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
-                WorksheetPartWriter.StreamToPart(ws, worksheetPart);
-
+                WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
+                
                 if (worksheet.PivotTables.Any())
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
