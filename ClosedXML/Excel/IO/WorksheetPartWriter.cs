@@ -1856,6 +1856,8 @@ namespace ClosedXML.Excel.IO
             using var writer = OpenXmlWriter.Create(worksheetPart);
             using var reader = OpenXmlReader.Create(worksheet);
 
+            writer.WriteStartDocument(true);
+
             while (reader.Read())
             {
                 if (reader.ElementType == typeof(SheetData))
@@ -1892,6 +1894,8 @@ namespace ClosedXML.Excel.IO
             var maxColumn = GetMaxColumn(xlWorksheet);
             var sheetData = worksheet.Elements<SheetData>().FirstOrDefault() ?? new SheetData();
 
+            writer.WriteStartElement(sheetData);
+
             var lastRow = 0;
             var existingSheetDataRows =
                 sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
@@ -1913,7 +1917,6 @@ namespace ClosedXML.Excel.IO
                 .Select(cell => cell.Address));
 
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            var noRows = !sheetData.Elements<Row>().Any();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;
@@ -2110,50 +2113,22 @@ namespace ClosedXML.Excel.IO
                     xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
                 }
 
-                // If we're adding a new row (not in sheet already and it's not "empty"
-                if (!existingSheetDataRows.ContainsKey(distinctRow))
-                {
-                    var invalidRow = row.Height == null
-                        && row.CustomHeight == null
-                        && row.Hidden == null
-                        && row.StyleIndex == null
-                        && row.CustomFormat == null
-                        && row.Collapsed == null
-                        && row.OutlineLevel == null
-                        && !row.Elements().Any();
+                var invalidRow = row.Height == null
+                    && row.CustomHeight == null
+                    && row.Hidden == null
+                    && row.StyleIndex == null
+                    && row.CustomFormat == null
+                    && row.Collapsed == null
+                    && row.OutlineLevel == null
+                    && !row.Elements().Any();
 
-                    if (!invalidRow)
-                    {
-                        if (noRows)
-                        {
-                            sheetData.AppendChild(row);
-                            noRows = false;
-                        }
-                        else
-                        {
-                            if (existingSheetDataRows.Any(r => r.Key > row.RowIndex.Value))
-                            {
-                                var minRow = existingSheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
-                                var rowBeforeInsert = existingSheetDataRows[minRow];
-                                sheetData.InsertBefore(row, rowBeforeInsert);
-                            }
-                            else
-                                sheetData.AppendChild(row);
-                        }
-                    }
+                if (!invalidRow)
+                {
+                    writer.WriteElement(row);
                 }
             }
 
-            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Keys)
-            {
-                if (existingSheetDataRows.TryGetValue(r, out Row row))
-                {
-                    sheetData.RemoveChild(row);
-                    existingSheetDataRows.Remove(r);
-                }
-            }
-
-            writer.WriteElement(sheetData);
+            writer.WriteEndElement(); // SheetData
         }
 
         private static Int32 GetMaxColumn(XLWorksheet xlWorksheet)
