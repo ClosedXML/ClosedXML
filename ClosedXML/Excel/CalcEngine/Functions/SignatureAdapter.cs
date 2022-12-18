@@ -86,6 +86,28 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptLastOptional(Func<CalcContext, ScalarValue, AnyValue, ScalarValue, ScalarValue, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToScalarValue(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1 = args[1];
+
+                var arg2Converted = ToScalarValue(args[2], ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                var arg3Converted = args.Length >= 4 ? ToScalarValue(args[3], ctx) : ScalarValue.Blank;
+                if (!arg3Converted.TryPickT0(out var arg3, out var err3))
+                    return err3;
+
+                return f(ctx, arg0, arg1, arg2, arg3);
+            };
+        }
+
         #endregion
 
         #region Value converters
