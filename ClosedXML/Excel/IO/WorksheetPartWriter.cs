@@ -1341,7 +1341,7 @@ namespace ClosedXML.Excel.IO
                         var inlineString = new InlineString();
                         if (xlCell.HasRichText)
                         {
-                            XLWorkbook.PopulatedRichTextElements(inlineString, xlCell, context);
+                            TextSerializer.PopulatedRichTextElements(inlineString, xlCell, context);
                         }
                         else
                         {

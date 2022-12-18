@@ -236,7 +236,7 @@ namespace ClosedXML.Excel
                                         workbookPart.AddNewPart<SharedStringTablePart>(
                                             context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            GenerateSharedStringTablePartContent(sharedStringTablePart, context);
+            SharedStringTableWriter.GenerateSharedStringTablePartContent(this, sharedStringTablePart, context);
 
             var workbookStylesPart = workbookPart.WorkbookStylesPart ??
                                      workbookPart.AddNewPart<WorkbookStylesPart>(
@@ -932,168 +932,7 @@ namespace ClosedXML.Excel
             if (FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = FullCalculationOnLoad;
             if (FullPrecision) workbook.CalculationProperties.FullPrecision = FullPrecision;
         }
-
-        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart,
-            SaveContext context)
-        {
-            // Call all table headers to make sure their names are filled
-            var x = 0;
-            Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
-
-            sharedStringTablePart.SharedStringTable = new SharedStringTable { Count = 0, UniqueCount = 0 };
-
-            var stringId = 0;
-
-            var newStrings = new Dictionary<String, Int32>();
-            var newRichStrings = new Dictionary<IXLRichText, Int32>();
-
-            static bool HasSharedString(XLCell c)
-            {
-                if (c.DataType == XLDataType.Text && c.ShareString)
-                    return c.StyleValue.IncludeQuotePrefix || String.IsNullOrWhiteSpace(c.FormulaA1) && c.GetText().Length > 0;
-                else
-                    return false;
-            }
-
-            foreach (var c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells(HasSharedString)))
-            {
-                if (c.HasRichText)
-                {
-                    if (newRichStrings.TryGetValue(c.GetRichText(), out int id))
-                        c.SharedStringId = id;
-                    else
-                    {
-                        var sharedStringItem = new SharedStringItem();
-                        PopulatedRichTextElements(sharedStringItem, c, context);
-
-                        sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
-                        sharedStringTablePart.SharedStringTable.Count += 1;
-                        sharedStringTablePart.SharedStringTable.UniqueCount += 1;
-
-                        newRichStrings.Add(c.GetRichText(), stringId);
-                        c.SharedStringId = stringId;
-
-                        stringId++;
-                    }
-                }
-                else
-                {
-                    var value = c.Value.GetText();
-                    if (newStrings.TryGetValue(value, out int id))
-                        c.SharedStringId = id;
-                    else
-                    {
-                        var s = value;
-                        var sharedStringItem = new SharedStringItem();
-                        var text = new Text { Text = XmlEncoder.EncodeString(s) };
-                        if (!s.Trim().Equals(s))
-                            text.Space = SpaceProcessingModeValues.Preserve;
-                        sharedStringItem.Append(text);
-                        sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
-                        sharedStringTablePart.SharedStringTable.Count += 1;
-                        sharedStringTablePart.SharedStringTable.UniqueCount += 1;
-
-                        newStrings.Add(value, stringId);
-                        c.SharedStringId = stringId;
-
-                        stringId++;
-                    }
-                }
-            }
-        }
-
-        internal static void PopulatedRichTextElements(RstType rstType, IXLCell cell, SaveContext context)
-        {
-            var richText = cell.GetRichText();
-            foreach (var rt in richText.Where(r => !String.IsNullOrEmpty(r.Text)))
-            {
-                rstType.Append(GetRun(rt));
-            }
-
-            if (richText.HasPhonetics)
-            {
-                foreach (var p in richText.Phonetics)
-                {
-                    var phoneticRun = new PhoneticRun
-                    {
-                        BaseTextStartIndex = (UInt32)p.Start,
-                        EndingBaseIndex = (UInt32)p.End
-                    };
-
-                    var text = new Text { Text = p.Text };
-                    if (p.Text.PreserveSpaces())
-                        text.Space = SpaceProcessingModeValues.Preserve;
-
-                    phoneticRun.Append(text);
-                    rstType.Append(phoneticRun);
-                }
-
-                var fontKey = XLFont.GenerateKey(richText.Phonetics);
-                var f = XLFontValue.FromKey(ref fontKey);
-
-                if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
-                {
-                    fi = new FontInfo { Font = f };
-                    context.SharedFonts.Add(f, fi);
-                }
-
-                var phoneticProperties = new PhoneticProperties
-                {
-                    FontId = fi.FontId
-                };
-
-                if (richText.Phonetics.Alignment != XLPhoneticAlignment.Left)
-                    phoneticProperties.Alignment = richText.Phonetics.Alignment.ToOpenXml();
-
-                if (richText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
-                    phoneticProperties.Type = richText.Phonetics.Type.ToOpenXml();
-
-                rstType.Append(phoneticProperties);
-            }
-        }
-
-        private static Run GetRun(IXLRichString rt)
-        {
-            var run = new Run();
-
-            var runProperties = new RunProperties();
-
-            var bold = rt.Bold ? new Bold() : null;
-            var italic = rt.Italic ? new Italic() : null;
-            var underline = rt.Underline != XLFontUnderlineValues.None
-                ? new Underline { Val = rt.Underline.ToOpenXml() }
-                : null;
-            var strike = rt.Strikethrough ? new Strike() : null;
-            var verticalAlignment = new VerticalTextAlignment
-            { Val = rt.VerticalAlignment.ToOpenXml() };
-            var shadow = rt.Shadow ? new Shadow() : null;
-            var fontSize = new FontSize { Val = rt.FontSize };
-            var color = new Color().FromClosedXMLColor<Color>(rt.FontColor);
-            var fontName = new RunFont { Val = rt.FontName };
-            var fontFamilyNumbering = new FontFamily { Val = (Int32)rt.FontFamilyNumbering };
-
-            if (bold != null) runProperties.Append(bold);
-            if (italic != null) runProperties.Append(italic);
-
-            if (strike != null) runProperties.Append(strike);
-            if (shadow != null) runProperties.Append(shadow);
-            if (underline != null) runProperties.Append(underline);
-            runProperties.Append(verticalAlignment);
-
-            runProperties.Append(fontSize);
-            runProperties.Append(color);
-            runProperties.Append(fontName);
-            runProperties.Append(fontFamilyNumbering);
-
-            var text = new Text { Text = rt.Text };
-            if (rt.Text.PreserveSpaces())
-                text.Space = SpaceProcessingModeValues.Preserve;
-
-            run.Append(runProperties);
-            run.Append(text);
-            return run;
-        }
-
+        
         private void DeleteCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
         {
             if (workbookPart.CalculationChainPart != null)
@@ -3057,7 +2896,7 @@ namespace ClosedXML.Excel
                 var commentText = new CommentText();
                 foreach (var rt in c.GetComment())
                 {
-                    commentText.Append(GetRun(rt));
+                    commentText.Append(TextSerializer.GetRun(rt));
                 }
 
                 comment.Append(commentText);
