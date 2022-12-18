@@ -18,7 +18,7 @@ namespace ClosedXML.Excel.IO
             var x = 0;
             workbook.Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
 
-            sharedStringTablePart.SharedStringTable = new SharedStringTable { Count = 0, UniqueCount = 0 };
+            var sharedStringTable = new SharedStringTable { Count = 0, UniqueCount = 0 };
 
             var stringId = 0;
 
@@ -44,9 +44,9 @@ namespace ClosedXML.Excel.IO
                         var sharedStringItem = new SharedStringItem();
                         TextSerializer.PopulatedRichTextElements(sharedStringItem, c, context);
 
-                        sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
-                        sharedStringTablePart.SharedStringTable.Count += 1;
-                        sharedStringTablePart.SharedStringTable.UniqueCount += 1;
+                        sharedStringTable.Append(sharedStringItem);
+                        sharedStringTable.Count += 1;
+                        sharedStringTable.UniqueCount += 1;
 
                         newRichStrings.Add(c.GetRichText(), stringId);
                         c.SharedStringId = stringId;
@@ -67,9 +67,9 @@ namespace ClosedXML.Excel.IO
                         if (!s.Trim().Equals(s))
                             text.Space = SpaceProcessingModeValues.Preserve;
                         sharedStringItem.Append(text);
-                        sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
-                        sharedStringTablePart.SharedStringTable.Count += 1;
-                        sharedStringTablePart.SharedStringTable.UniqueCount += 1;
+                        sharedStringTable.Append(sharedStringItem);
+                        sharedStringTable.Count += 1;
+                        sharedStringTable.UniqueCount += 1;
 
                         newStrings.Add(value, stringId);
                         c.SharedStringId = stringId;
@@ -78,6 +78,10 @@ namespace ClosedXML.Excel.IO
                     }
                 }
             }
+
+            using var writer = OpenXmlWriter.Create(sharedStringTablePart);
+            writer.WriteElement(sharedStringTable);
+            writer.Close();
         }
     }
 }
