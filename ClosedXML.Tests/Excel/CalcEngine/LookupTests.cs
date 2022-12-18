@@ -1,9 +1,9 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -309,13 +309,139 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Vlookup_Exceptions()
+        public void Vlookup_ElementNotFound_ReturnsNotAvailableError()
         {
+            // Value not present in the range for exact search
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"));
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"));
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
 
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
+            // Value in approximate search that is lower than first element
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
+        }
+
+        [Test]
+        public void Vlookup_UnexpectedArguments()
+        {
+            // Lookup value can't be an error
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("=VLOOKUP(#DIV/0!,B2:I71,1)"));
+
+            // Text value can't be over 255 chars
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate($"=VLOOKUP(\"{new string('A', 256)}\",B2:I71,1)"));
+
+            // Range can only be array or a reference. If other type, it returns the error #N/A
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("=VLOOKUP(1,1,1)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("=VLOOKUP(1,TRUE,1)"));
+
+            // If range is a non-contiguous range, #N/A
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("=VLOOKUP(1,(B2:I5,B6:I10),1)"));
+
+            // The column index must be at most the same as width of the range. It is 9 here, but range is 8 cell wide.
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate("=VLOOKUP(20,B2:I71,9,FALSE)"));
+            // The column index must be at least 1. It is 0 here.
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("=VLOOKUP(20,B2:I71,0,FALSE)"));
+        }
+
+        [Test]
+        public void Vlookup_ColumnIndexParameter_UsesValueSemantic()
+        {
+            // If column index is not a whole number, it is truncated, so here 1.9 is truncated to 1
+            Assert.AreEqual(14.0, ws.Evaluate("=VLOOKUP(14,B2:I71,1.9)"));
+
+            // Column index is evaluated using a VALUE semantic
+            Assert.AreEqual(@"Jardine", ws.Evaluate("=VLOOKUP(3,B2:I71,\"2 5/2\")"));
+        }
+
+        [TestCase("\"TRUE\"")]
+        [TestCase("1")]
+        [TestCase("TRUE")]
+        public void Vlookup_FlagParameter_CoercedToBoolean(string flagValue)
+        {
+            Assert.AreEqual(5.0, ws.Evaluate($"VLOOKUP(5,B2:I71,1,{flagValue})"));
+        }
+
+        [Test]
+        public void Vlookup_BlankLookupValue_BehavesAsZero()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A1").InsertData(Enumerable.Range(-5, 10).Select(x => new object[] {x, $"Row with value {x}"}));
+
+            var actual = worksheet.Evaluate("VLOOKUP(IF(TRUE,,),A1:B10,2)");
+
+            Assert.AreEqual("Row with value 0", actual);
+        }
+
+        [Test]
+        public void Vlookup_ApproximateSearch_OmitsValuesWithDifferentType()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A1").Value = "0";
+            worksheet.Cell("A2").Value = "1";
+            worksheet.Cell("A3").Value = 1;
+            worksheet.Cell("A4").Value = "0";
+            worksheet.Cell("A5").Value = "text";
+            worksheet.Cell("A6").Value = Blank.Value;
+            worksheet.Cell("A7").Value = 2;
+            worksheet.Cell("B1").InsertData(Enumerable.Range(1, 7).Select(x => $"Row {x}"));
+
+            var actual = worksheet.Evaluate("VLOOKUP(1.9,A1:B7,2,TRUE)");
+            Assert.AreEqual("Row 3", actual);
+        }
+
+        [Test]
+        public void Vlookup_OnlyCellsWithDifferentType_ReturnsNotAvailable()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            Assert.AreEqual(XLError.NoValueAvailable, worksheet.Evaluate("VLOOKUP(1,A1,1,TRUE)"));
+        }
+
+        [Test]
+        public void Vlookup_OnlyOneValueSurreoundedByIgnoredTypes()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A3").Value = 5;
+
+            Assert.AreEqual(5, worksheet.Evaluate("VLOOKUP(6,A1:A5,1,TRUE)"));
+        }
+
+        [Test]
+        public void Vlookup_ResultAtTheHighestCellWithTrailingDifferentTypeAtTheEnd()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A1").Value = 1;
+            worksheet.Cell("A2").Value = 2;
+            worksheet.Cell("A3").Value = 3;
+            worksheet.Cell("A4").Value = Blank.Value;
+
+            Assert.AreEqual(3, worksheet.Evaluate("VLOOKUP(3,A1:A4,1,TRUE)"));
+        }
+
+        [Test]
+        public void Vlookup_ApproximateSearch_ReturnsLastRowForMultipleEqualValues()
+        {
+            var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("A1").Value = 1;
+            sheet.Cell("A2").Value = 3;
+            sheet.Cell("A3").Value = 3;
+            sheet.Cell("A4").Value = 3;
+            sheet.Cell("A5").Value = 3;
+            sheet.Cell("A6").Value = 3;
+            sheet.Cell("A7").Value = 3;
+            sheet.Cell("A8").Value = 9;
+            sheet.Cell("B1").InsertData(Enumerable.Range(1, 8));
+
+            // If there is a section of values with same value, return the value at the highest row
+            var actual = sheet.Evaluate("VLOOKUP(3, A1:B8, 2, TRUE)");
+            Assert.AreEqual(7, actual);
+
+            // If the last value is in the highest row, just return value outright
+            actual = sheet.Evaluate("VLOOKUP(3, A2:B7, 2, TRUE)");
+            Assert.AreEqual(7, actual);
         }
     }
 }

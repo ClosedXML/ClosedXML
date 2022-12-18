@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
@@ -28,7 +29,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
-            ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
+            ce.RegisterFunction("VLOOKUP", 3, 4, AdaptLastOptional(Vlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
         private static AnyValue Column(CalcContext ctx, Span<AnyValue> p)
@@ -275,56 +276,172 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new ConstArray(array);
         }
 
-        private static object Vlookup(List<Expression> p)
+        private static AnyValue Vlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue columnIndex, ScalarValue flagValue)
         {
-            var lookup_value = p[0];
+            if (lookupValue.IsError)
+                return lookupValue.ToAnyValue();
 
-            if (!TryExtractRange(p[1], out var range, out var error))
+            // Only the lookup value is converted to 0, not values in the range
+            if (lookupValue.IsBlank)
+                lookupValue = 0;
+
+            if (lookupValue.TryPickText(out var lookupText, out _) && lookupText.Length > 255)
+                return XLError.IncompatibleValue;
+
+            if (rangeValue.TryPickScalar(out _, out var range))
+                return XLError.NoValueAvailable;
+            if (!range.TryPickT0(out var array, out var reference))
+            {
+                if (reference.Areas.Count > 1)
+                    return XLError.NoValueAvailable;
+
+                array = new ReferenceArray(reference.Areas.Single(), ctx);
+            }
+
+            if (!columnIndex.ToNumber(ctx.Culture).TryPickT0(out var column, out var error))
                 return error;
-
-            var col_index_num = (int)p[2];
-            var range_lookup = p.Count < 4
-                               || p[3] is EmptyValueExpression
-                               || (bool)(p[3]);
-
-            if (col_index_num < 1)
+            var columnIdx = (int)column;
+            if (columnIdx < 1)
+                return XLError.IncompatibleValue;
+            if (columnIdx > array.Width)
                 return XLError.CellReference;
 
-            if (col_index_num > range.ColumnCount())
-                return XLError.CellReference;
+            var approximateSearchFlag = true;
+            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrNumberOrText(out approximateSearchFlag, out var flagError))
+                return flagError;
 
-            IXLRangeRow matching_row;
-            try
+            if (approximateSearchFlag)
             {
-                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
-            }
-            catch (Exception)
-            {
-                return XLError.NoValueAvailable;
-            }
-            if (range_lookup && matching_row == null)
-            {
-                var first_row = range.FirstRow().RowNumber();
-                var number_of_rows_in_range = range.RowsUsed().Count();
+                // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
+                var foundRow = Bisection(array, lookupValue);
+                if (foundRow == -1)
+                    return XLError.NoValueAvailable;
 
-                matching_row = range.FindRow(r =>
+                return array[foundRow, columnIdx - 1].ToAnyValue();
+            }
+            else
+            {
+                // TODO: Implement wildcard search
+                for (var rowIndex = 0; rowIndex < array.Height; rowIndex++)
                 {
-                    var row_index_in_range = r.RowNumber() - first_row + 1;
-                    if (row_index_in_range < number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
-                        return true;
-                    else if (row_index_in_range == number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
-                        return true;
-                    else
-                        return false;
-                });
+                    var currentValue = array[rowIndex, 0];
+
+                    // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
+                    var comparison = ScalarValueComparer.SortIgnoreCase.Compare(currentValue, lookupValue);
+                    if (comparison == 0)
+                        return array[rowIndex, columnIdx - 1].ToAnyValue();
+                }
+
+                return XLError.NoValueAvailable;
+            }
+        }
+
+        private static int Bisection(Array range, ScalarValue lookupValue)
+        {
+            // Bisection is predicated on a fact that values of the same type are sorted.
+            // If they are not, results are unpredictable.
+            // Invariants:
+            // * Low row has a value that is less or equal than lookup value
+            // * High row has a value that is greater than lookup value
+            var lowRow = 0;
+            var highRow = range.Height - 1;
+
+            lowRow = FindSameTypeRow(range, highRow, 1, lowRow, in lookupValue);
+            if (lowRow == -1)
+                return -1; // Range doesn't contain even one element of same type
+
+            // Sanity check for unsorted ranges. For bisection to work, lowRow always
+            // has to have a value that is less or equal to the lookup value.
+            var lowValue = range[lowRow, 0];
+            var lowCompare = ScalarValueComparer.SortIgnoreCase.Compare(lowValue, lookupValue);
+
+            // Ensure invariants before main loop. If even lowest value in the range is greater than lookup value,
+            // then there can't be any row that matches lookup value/lower.
+            if (lowCompare > 0)
+                return -1; 
+
+            // Since we already know that there is at least one element of same type as lookup value,
+            // high row will find something, though it might be same row as lowRow.
+            highRow = FindSameTypeRow(range, lowRow, -1, highRow, in lookupValue);
+
+            // Sanity check for unsorted ranges. For bisection to work, highRow always
+            // has to have a value that is greater than the lookup value
+            var highValue = range[highRow, 0];
+            var highCompare = ScalarValueComparer.SortIgnoreCase.Compare(highValue, lookupValue);
+
+            // Ensure invariants before main loop. If the lookup value is greater/equal than
+            // the greatest value of the range, it is the result.
+            if (highCompare <= 0)
+                return highRow;
+
+            // Now we have two borders with actual values and we know the lookup value is less than high and greater/equal to lower
+            while (true)
+            {
+                // The FindMiddle method returns only values [lowRow, highRow)
+                // so in each loop it decreases the interval. The lowRow value is
+                // the last one checked during search of a middle.
+                var middleRow = FindMiddle(range, lowRow, highRow, in lookupValue);
+
+                // A condition for "if an exact match is not found, the next
+                // largest value that is less than lookup-value is returned".
+                // At this time, lowRow is less than lookup value and highRow
+                // is more than lookup value.
+                if (middleRow == lowRow)
+                    return lowRow;
+
+                var middleValue = range[middleRow, 0];
+                var middleCompare = ScalarValueComparer.SortIgnoreCase.Compare(middleValue, lookupValue);
+
+                if (middleCompare <= 0)
+                    lowRow = middleRow;
+                else
+                    highRow = middleRow;
+            }
+        }
+
+        /// <summary>
+        /// Find a row with a value of same type as <paramref name="lookupValue"/>
+        /// between values <paramref name="low"/> and <c><paramref name="high"/> - 1</c>.
+        /// We know that both <paramref name="low"/> and <paramref name="high"/>
+        /// contain value of the same type, so we always get a valid row.
+        /// </summary>
+        private static int FindMiddle(Array range, int low, int high, in ScalarValue lookupValue)
+        {
+            Debug.Assert(low < high);
+            var middleRow = (low + high) / 2;
+
+            // Since low is < high, it's always possible skip high row for determining middle row
+            var higherIndex = FindSameTypeRow(range, high - 1, 1, middleRow, in lookupValue);
+            if (higherIndex != -1)
+                return higherIndex;
+
+            // We can't skip low like we did for high, because there might be only different type
+            // Cells between low row and high row.
+            var lowerIndex = FindSameTypeRow(range, low, -1, middleRow, in lookupValue);
+            return lowerIndex;
+        }
+
+        /// <summary>
+        /// Find row index of an element with same type as the lookup value. Go from
+        /// <paramref name="startRow"/> to the <paramref name="limitRow"/> by a step
+        /// of <paramref name="delta"/>. If there isn't any such row, return <c>-1</c>.
+        /// </summary> 
+        private static int FindSameTypeRow(Array range, int limitRow, int delta, int startRow, in ScalarValue lookupValue)
+        {
+            // Although the spec says that elements must be sorted in
+            // "ascending order", as follows: ..., -2, -1, 0, 1, 2, ..., A-Z, FALSE, TRUE.
+            // In reality, comparison ignores elements of the different type than lookupValue.
+            // E.g. search for 2.5 in the {"1", 2, "3", #DIV/0!, 3 } will find the second element 2
+            // Elements with incompatible type are just skipped. 
+            int currentRow;
+            for (currentRow = startRow; !lookupValue.HaveSameType(range[currentRow , 0]); currentRow += delta)
+            {
+                // Don't move beyond limitRow
+                if (currentRow == limitRow)
+                    return -1;
             }
 
-            if (matching_row == null)
-                return XLError.NoValueAvailable;
-
-            return matching_row
-                .Cell(col_index_num)
-                .Value;
+            return currentRow;
         }
     }
 }

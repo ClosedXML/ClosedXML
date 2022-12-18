@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using ClosedXML.Extensions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -90,6 +89,14 @@ namespace ClosedXML.Excel.CalcEngine
                 _ => throw new InvalidOperationException()
             };
         }
+
+        public Boolean GetLogical() => IsLogical ? _logical : throw new InvalidCastException();
+
+        public Double GetNumber() => IsNumber ? _number : throw new InvalidCastException();
+
+        public string GetText() => IsText ? _text : throw new InvalidCastException();
+
+        public XLError GetError() => IsError ? _error : throw new InvalidCastException();
 
         internal XLCellValue ToCellValue()
         {
@@ -343,17 +350,40 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        public string ToDisplayString(CultureInfo culture)
+        /// <summary>
+        /// Does this value have same type as the other one?
+        /// </summary>
+        public bool HaveSameType(ScalarValue other) => _index == other._index;
+
+        /// <summary>
+        /// Get the logical value, if it is either logical or number (0 = false, otherwise true)a text <c>TRUE</c> or <c>FALSE</c> (case insensitive).
+        /// </summary>
+        /// <remarks>Used for coercion in functions.</remarks>
+        public bool TryCoerceLogicalOrNumberOrText(out Boolean value, out XLError error)
         {
-            return _index switch
+            switch (_index)
             {
-                BlankValue => string.Empty,
-                LogicalValue => _logical ? "TRUE" : "FALSE",
-                NumberValue => _number.ToString(culture),
-                TextValue => _text,
-                ErrorValue => _error.ToDisplayString(),
-                _ => throw new InvalidOperationException()
-            };
+                case LogicalValue:
+                    value = _logical;
+                    error = default;
+                    return true;
+                case NumberValue:
+                    value = _number != 0;
+                    error = default;
+                    return true;
+                case TextValue when (StringComparer.OrdinalIgnoreCase.Equals(_text, "TRUE")):
+                    value = true;
+                    error = default;
+                    return true;
+                case TextValue when (StringComparer.OrdinalIgnoreCase.Equals(_text, "FALSE")):
+                    value = false;
+                    error = default;
+                    return true;
+                default:
+                    value = default;
+                    error = XLError.IncompatibleValue;
+                    return false;
+            }
         }
     }
 }
