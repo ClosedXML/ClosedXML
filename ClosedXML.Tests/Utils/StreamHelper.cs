@@ -23,7 +23,10 @@ namespace ClosedXML.Tests
 
         private static readonly IEnumerable<(string PartSubstring, XName NodeName, XName AttrName)> ignoredAttributes = new List<(string PartSubstring, XName NodeName, XName AttrName)>
         {
-            ("sheet", XName.Get("cfRule", @"http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"), XName.Get("id"))
+            ("sheet", XName.Get("cfRule", @"http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"), XName.Get("id")),
+            // count and uniqueCount were removed due to streaming, but they are used by every file, for now ignore difference.
+            ("/xl/sharedStrings.xml", XName.Get("sst", @"http://schemas.openxmlformats.org/spreadsheetml/2006/main"), XName.Get("count")),
+            ("/xl/sharedStrings.xml", XName.Get("sst", @"http://schemas.openxmlformats.org/spreadsheetml/2006/main"), XName.Get("uniqueCount")),
         };
 
         public static void StreamToStreamAppend(Stream streamIn, Stream streamToWrite)

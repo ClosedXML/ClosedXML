@@ -18,8 +18,6 @@ namespace ClosedXML.Excel.IO
             var x = 0;
             workbook.Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
 
-            var sharedStringTable = new SharedStringTable { Count = 0, UniqueCount = 0 };
-
             var stringId = 0;
 
             var newStrings = new Dictionary<String, Int32>();
@@ -33,6 +31,13 @@ namespace ClosedXML.Excel.IO
                     return false;
             }
 
+            using var writer = OpenXmlWriter.Create(sharedStringTablePart);
+            writer.WriteStartDocument();
+
+            // Due to streaming and XLWorkbook structure, we don't know count before strings are written.
+            // Attributes count and uniqueCount are optional thus are omitted.
+            writer.WriteStartElement(new SharedStringTable());
+
             foreach (var c in workbook.Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells(HasSharedString)))
             {
                 if (c.HasRichText)
@@ -43,10 +48,7 @@ namespace ClosedXML.Excel.IO
                     {
                         var sharedStringItem = new SharedStringItem();
                         TextSerializer.PopulatedRichTextElements(sharedStringItem, c, context);
-
-                        sharedStringTable.Append(sharedStringItem);
-                        sharedStringTable.Count += 1;
-                        sharedStringTable.UniqueCount += 1;
+                        writer.WriteElement(sharedStringItem);
 
                         newRichStrings.Add(c.GetRichText(), stringId);
                         c.SharedStringId = stringId;
@@ -67,9 +69,8 @@ namespace ClosedXML.Excel.IO
                         if (!s.Trim().Equals(s))
                             text.Space = SpaceProcessingModeValues.Preserve;
                         sharedStringItem.Append(text);
-                        sharedStringTable.Append(sharedStringItem);
-                        sharedStringTable.Count += 1;
-                        sharedStringTable.UniqueCount += 1;
+
+                        writer.WriteElement(sharedStringItem);
 
                         newStrings.Add(value, stringId);
                         c.SharedStringId = stringId;
@@ -79,8 +80,7 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            using var writer = OpenXmlWriter.Create(sharedStringTablePart);
-            writer.WriteElement(sharedStringTable);
+            writer.WriteEndElement(); // SharedStringTable
             writer.Close();
         }
     }
