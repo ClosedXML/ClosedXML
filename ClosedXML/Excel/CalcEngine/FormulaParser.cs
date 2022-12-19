@@ -133,8 +133,10 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.Error.SetFlag(TermFlags.AstDelayChildren);
             grammar.RefError.AstConfig.NodeCreator = CreateErrorNode;
             grammar.RefError.SetFlag(TermFlags.AstDelayChildren);
-            grammar.ConstantArray.AstConfig.NodeCreator = CreateNotImplementedNode("constant array");
-            grammar.ConstantArray.SetFlag(TermFlags.AstDelayChildren);
+            grammar.ConstantArray.AstConfig.NodeCreator = CreateCopyNode(0);
+            grammar.ArrayColumns.AstConfig.NodeCreator = CreateArrayColumnsNode;
+            grammar.ArrayRows.AstConfig.NodeCreator = (_, _) => { }; // ArrayColumns directly takes values from ArrayConstants.AstNode
+            grammar.ArrayConstant.AstConfig.NodeCreator = CreateArrayConstantNode;
 
             grammar.FunctionCall.AstConfig.NodeCreator = GetFunctionCallNodeFactory();
             grammar.FunctionName.SetFlag(TermFlags.NoAstNode);
@@ -543,6 +545,57 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateEmptyArgumentNode(AstContext context, ParseTreeNode parseNode)
         {
             parseNode.AstNode = new ScalarNode(ScalarValue.Blank);
+        }
+
+        private static void CreateArrayColumnsNode(AstContext context, ParseTreeNode parseNode)
+        {
+            // Per grammar, each array has to have at least one row
+            var rowNodes = parseNode.ChildNodes;
+            var colCount = rowNodes[0].ChildNodes.Count;
+            var rowCount = rowNodes.Count;
+            var array = new ScalarValue[rowCount, colCount];
+            for (var rowIdx = 0; rowIdx < rowCount; ++rowIdx)
+            {
+                var row = rowNodes[rowIdx];
+                if (row.ChildNodes.Count != colCount)
+                    throw new ExpressionParseException("Not all rows of array have same number of columns.");
+
+                for (var colIdx = 0; colIdx < colCount; ++colIdx)
+                {
+                    var arrayConstant = row.ChildNodes[colIdx];
+                    var value = (ScalarValue)arrayConstant.AstNode;
+                    array[rowIdx, colIdx] = value;
+                }
+            }
+
+            parseNode.AstNode = new ArrayNode(new ConstArray(array));
+        }
+
+        private static void CreateArrayConstantNode(AstContext context, ParseTreeNode parseNode)
+        {
+            var firstNode = parseNode.ChildNodes[0];
+            var firstNodeName = firstNode.Term.Name;
+            if (firstNodeName is GrammarNames.Constant or GrammarNames.RefError)
+            {
+                parseNode.AstNode = ((ScalarNode)firstNode.AstNode).Value;
+            }
+            else
+            {
+                // PrefixOp + Number
+                var number = ((ScalarNode)parseNode.ChildNodes[1].AstNode).Value.GetNumber();
+                switch (firstNodeName)
+                {
+                    case "+":
+                        parseNode.AstNode = ScalarValue.From(number);
+                        break;
+                    case "-":
+                        parseNode.AstNode = ScalarValue.From(-number);
+                        break;
+                    default:
+                        // @ sign is technically valid prefixOp in XLParser
+                        throw new ExpressionParseException($"Operator {firstNode.Term.Name} is not a valid operator for array element.");
+                }
+            }
         }
 
         public void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)

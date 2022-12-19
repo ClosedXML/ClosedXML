@@ -28,11 +28,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void FormulaProducesCorrectCstAndAst(string formula, string[] expectedCst, Type[] expectedAst)
         {
             var dummyFunctions = new FunctionRegistry();
-            dummyFunctions.RegisterFunction("SUM", 0, 255, x => throw new InvalidOperationException());
-            dummyFunctions.RegisterFunction("SIN", 1, 1, x => throw new InvalidOperationException());
-            dummyFunctions.RegisterFunction("RAND", 0, 0, x => throw new InvalidOperationException());
-            dummyFunctions.RegisterFunction("IF", 0, 3, x => throw new InvalidOperationException());
-            dummyFunctions.RegisterFunction("INDEX", 1, 3, x => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("SUM", 0, 255, _ => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("SIN", 1, 1, _ => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("RAND", 0, 0, _ => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("IF", 0, 3, _ => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("INDEX", 1, 3, _ => throw new InvalidOperationException());
             var parser = new FormulaParser(dummyFunctions);
 
             var cst = parser.ParseCst(formula);
@@ -121,7 +121,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "{1}",
                 new[] { GrammarNames.Formula, ConstantArray, ArrayColumns, ArrayRows, ArrayConstant, Constant, Number, TokenNumber },
-                new[] { typeof(NotSupportedNode) });
+                new[] { typeof(ArrayNode) });
 
             // Formula.Rule = OpenParen + Formula + CloseParen
             yield return new TestCaseData(
@@ -646,7 +646,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "{1}",
                 new[] { GrammarNames.Formula, ConstantArray, ArrayColumns, ArrayRows, ArrayConstant, Constant, Number, TokenNumber },
-                new[] { typeof(NotSupportedNode) });
+                new[] { typeof(ArrayNode) });
 
             // ArrayColumns.Rule = MakePlusRule(ArrayColumns, semicolon, ArrayRows);
             yield return new TestCaseData(
@@ -655,7 +655,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     ArrayRows, ArrayConstant, Constant, Number, TokenNumber, null, null, null, null, null,
                     ArrayRows, ArrayConstant, Constant, Bool, TokenBool, null, null, null, null, null,
                     ArrayRows, ArrayConstant, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(NotSupportedNode) });
+                new[] { typeof(ArrayNode) });
 
             // ArrayRows.Rule = MakePlusRule(ArrayRows, comma, ArrayConstant);
             yield return new TestCaseData(
@@ -664,7 +664,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     ArrayConstant, Constant, Number, TokenNumber, null, null, null, null,
                     ArrayConstant, Constant, Bool, TokenBool, null, null, null, null,
                     ArrayConstant, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(NotSupportedNode) });
+                new[] { typeof(ArrayNode) });
 
             // ArrayConstant.Rule = Constant | PrefixOp + Number | RefError;
             yield return new TestCaseData(
@@ -673,7 +673,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     ArrayConstant, Constant, GrammarNames.Error, TokenError, null, null, null, null,
                     ArrayConstant, "-", null, Number, TokenNumber, null, null, null,
                     ArrayConstant, RefError, TokenRefError },
-                new[] { typeof(NotSupportedNode) });
+                new[] { typeof(ArrayNode) });
 
             // -------------- Complex ad hoc test cases --------------
 
@@ -750,6 +750,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             public override AstNode Visit(LinkedList<Type> context, ScalarNode node)
                 => LinearizeNode(context, typeof(ScalarNode), () => base.Visit(context, node));
+
+            public override AstNode Visit(LinkedList<Type> context, ArrayNode node)
+                => LinearizeNode(context, typeof(ArrayNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, UnaryNode node)
                 => LinearizeNode(context, typeof(UnaryNode), () => base.Visit(context, node));
