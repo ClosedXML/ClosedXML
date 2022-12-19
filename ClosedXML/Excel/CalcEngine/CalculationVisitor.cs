@@ -15,6 +15,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ScalarNode node)
         {
+            return node.Value.ToAnyValue();
+        }
+
+        public AnyValue Visit(CalcContext context, ArrayNode node)
+        {
             return node.Value;
         }
 

@@ -4,6 +4,8 @@
     {
         public TResult Visit(TContext context, ScalarNode node);
 
+        public TResult Visit(TContext context, ArrayNode node);
+
         public TResult Visit(TContext context, UnaryNode node);
 
         public TResult Visit(TContext context, BinaryNode node);

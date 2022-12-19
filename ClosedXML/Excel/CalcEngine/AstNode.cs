@@ -28,10 +28,25 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public ScalarNode(ScalarValue value)
         {
-            Value = value.ToAnyValue();
+            Value = value;
         }
 
-        public AnyValue Value { get; }
+        public ScalarValue Value { get; }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    /// <summary>
+    /// AST node that contains a constant array. Array is at least 1x1.
+    /// </summary>
+    internal class ArrayNode : ValueNode
+    {
+        public ArrayNode(Array value)
+        {
+            Value = value;
+        }
+
+        public Array Value { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -134,7 +149,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
-    
+
     /// <summary>
     /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
     /// </summary>

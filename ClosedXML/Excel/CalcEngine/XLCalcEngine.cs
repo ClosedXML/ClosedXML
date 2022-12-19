@@ -175,6 +175,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return XLError.CellReference;
             }
 
+            public OneOf<Reference, XLError> Visit(PrecedentAreasContext ctx, ArrayNode node)
+            {
+                return XLError.CellReference;
+            }
+
             public OneOf<Reference, XLError> Visit(PrecedentAreasContext ctx, UnaryNode node)
             {
                 var value = node.Expression.Accept(ctx, this);

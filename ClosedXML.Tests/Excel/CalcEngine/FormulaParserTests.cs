@@ -2,6 +2,7 @@
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -75,7 +76,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Formula_can_be_constant_array()
         {
-            AssertCanParseButNotEvaluate("={1,2,3;4,5,6}", "Evaluation of constant array is not implemented.");
+            // 1 is determined through implicit intersection (first element)
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("={1,2,3;4,5,6}"));
         }
 
         [TestCase("=(1)", 1)]
@@ -373,13 +375,77 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #region ConstantArray.Rule
 
-        [TestCase("={1}")]
-        [TestCase("={1,2,3,4}")]
-        [TestCase("={1,2;3,4}")]
-        [TestCase("={+1,#REF!,\"Text\";FALSE,#DIV/0!,-1.5}")]
-        public void Const_array_can_have_only_scalars(string formula)
+        [Test]
+        public void Const_array_must_have_same_number_of_columns()
         {
-            AssertCanParseButNotEvaluate(formula, "Evaluation of constant array is not implemented.");
+            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            Assert.Throws<ExpressionParseException>(
+                () => calcEngine.Parse("{1;2,3}"),
+                "Not all rows of array have same number of columns.");
+        }
+
+        [Test]
+        public void Const_array_cant_contain_implicit_intersection_operator()
+        {
+            // XLParser allows @ for number through 'PrefixOp + Number'
+            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            Assert.Throws<ExpressionParseException>(
+                () => calcEngine.Parse("{@1}"),
+                "Operator @ is not a valid operator for array element");
+        }
+
+        [TestCaseSource(nameof(ArrayCases))]
+        public void Const_array_can_have_only_scalars(string formula, object expected)
+        {
+            var expectedArray = (ConstArray)expected;
+            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+
+            var ast = calcEngine.Parse(formula);
+
+            var actual = ((ArrayNode)ast.AstRoot).Value;
+            Assert.AreEqual(expectedArray.Width, actual.Width);
+            Assert.AreEqual(expectedArray.Height, actual.Height);
+            for (var row = 0; row < actual.Height; ++row)
+            {
+                for (var col = 0; col < actual.Width; ++col)
+                {
+                    var actualElement = actual[row, col];
+                    var expectedElement = expectedArray[row, col];
+                    Assert.AreEqual(expectedElement, actualElement);
+                }
+            }
+        }
+
+        private static IEnumerable<object[]> ArrayCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    "{1}",
+                    new ConstArray(new ScalarValue[,] { { 1 } })
+                };
+                yield return new object[]
+                {
+                    "{#REF!}",
+                    new ConstArray(new ScalarValue[,] { { XLError.CellReference } })
+                };
+                yield return new object[]
+                {
+                    "{1,2,3,4}",
+                    new ConstArray(new ScalarValue[,] { { 1, 2, 3, 4 } })
+                };
+                yield return new object[]
+                {
+                    "{1,2;3,4}",
+                    new ConstArray(new ScalarValue[,] { { 1, 2}, { 3, 4 } })
+                };
+                yield return new object[]
+                {
+                    "{+1,#REF!,\"Text\";FALSE,#DIV/0!,-1.5}",
+                    new ConstArray(new ScalarValue[,] { { 1, XLError.CellReference, "Text" }, { false, XLError.DivisionByZero, -1.5 } })
+                };
+            }
         }
 
         #endregion
