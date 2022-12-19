@@ -443,5 +443,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             actual = sheet.Evaluate("VLOOKUP(3, A2:B7, 2, TRUE)");
             Assert.AreEqual(7, actual);
         }
+
+        [Test]
+        public void Vlookup_CanSearchArrays()
+        {
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("VLOOKUP(4, {1,2; 3,2; 5,3; 7,4}, 2)"));
+        }
     }
 }
