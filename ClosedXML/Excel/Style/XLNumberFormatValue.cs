@@ -11,6 +11,9 @@ namespace ClosedXML.Excel
             return Repository.GetOrCreate(ref key);
         }
 
+        /// <summary>
+        /// <em>General</em> number format.
+        /// </summary>
         private static readonly XLNumberFormatKey DefaultKey = new XLNumberFormatKey
         {
             NumberFormatId = 0,
@@ -21,6 +24,12 @@ namespace ClosedXML.Excel
 
         public XLNumberFormatKey Key { get; private set; }
 
+        /// <summary>
+        /// Id of the number format. Every workbook has <see cref="XLConstants.NumberOfBuiltInStyles"/>
+        /// built-int formats that start at 0 (<em>General</em> format). The built-int formats are
+        /// not explicitly written and might differ depending on culture. Custom number formats
+        /// have a valid <see cref="Format"/> and the id is <c>-1</c>.
+        /// </summary>
         public int NumberFormatId { get { return Key.NumberFormatId; } }
 
         public string Format { get { return Key.Format; } }

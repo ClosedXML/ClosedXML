@@ -89,5 +89,27 @@ namespace ClosedXML.Tests.Excel
 
             Assert.IsFalse(numberFormatKey1.Equals(numberFormatKey2));
         }
+
+        [Test]
+        public void AddCustomNumberFormatsToFileWithNonSequentialNumberFormatIds()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NumberFormats\NonSequentialNumberFormatsIds-Input.xlsx")))
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+
+                    var ws = wb.Worksheet("Sheet1");
+
+                    var format = "\"P\" #,##0.00; \"N\" #,##0.00;0;@";
+                    ws.Cell(5, 1).Value = 1.2;
+                    ws.Cell(5, 1).Style.NumberFormat.Format = format;
+                    ws.Cell(5, 2).Value = -1.2;
+                    ws.Cell(5, 2).Style.NumberFormat.Format = format;
+
+                    return wb;
+                }, @"Other\NumberFormats\NonSequentialNumberFormatsIds-Output.xlsx");
+            }
+        }
     }
 }

@@ -27,12 +27,10 @@ using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
 using Comment = DocumentFormat.OpenXml.Spreadsheet.Comment;
 using Comments = DocumentFormat.OpenXml.Spreadsheet.Comments;
-using Drawing = DocumentFormat.OpenXml.Spreadsheet.Drawing;
 using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Fill = DocumentFormat.OpenXml.Spreadsheet.Fill;
 using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
 using FontCharSet = DocumentFormat.OpenXml.Spreadsheet.FontCharSet;
-using FontFamily = DocumentFormat.OpenXml.Spreadsheet.FontFamily;
 using Fonts = DocumentFormat.OpenXml.Spreadsheet.Fonts;
 using FontScheme = DocumentFormat.OpenXml.Drawing.FontScheme;
 using FontSize = DocumentFormat.OpenXml.Spreadsheet.FontSize;
@@ -44,24 +42,18 @@ using Italic = DocumentFormat.OpenXml.Spreadsheet.Italic;
 using LeftBorder = DocumentFormat.OpenXml.Spreadsheet.LeftBorder;
 using Locked = DocumentFormat.OpenXml.Vml.Spreadsheet.Locked;
 using NumberingFormat = DocumentFormat.OpenXml.Spreadsheet.NumberingFormat;
-using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
 using Outline = DocumentFormat.OpenXml.Drawing.Outline;
 using Path = System.IO.Path;
 using PatternFill = DocumentFormat.OpenXml.Spreadsheet.PatternFill;
 using Properties = DocumentFormat.OpenXml.ExtendedProperties.Properties;
 using RightBorder = DocumentFormat.OpenXml.Spreadsheet.RightBorder;
-using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
-using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using Shadow = DocumentFormat.OpenXml.Spreadsheet.Shadow;
 using Strike = DocumentFormat.OpenXml.Spreadsheet.Strike;
 using Table = DocumentFormat.OpenXml.Spreadsheet.Table;
-using Text = DocumentFormat.OpenXml.Spreadsheet.Text;
 using TopBorder = DocumentFormat.OpenXml.Spreadsheet.TopBorder;
 using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
 using Vml = DocumentFormat.OpenXml.Vml;
-using X14 = DocumentFormat.OpenXml.Office2010.Excel;
-using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using ClosedXML.Excel.Cells;
 using ClosedXML.Excel.IO;
 
@@ -3196,7 +3188,6 @@ namespace ClosedXML.Excel
             UInt32 fontCount = 1;
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
-            var numberFormatCount = 0; // 0-based
             var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
             var xlStyles = new HashSet<XLStyleValue>();
 
@@ -3242,13 +3233,9 @@ namespace ClosedXML.Excel
             var sharedBorders = borders.ToDictionary(
                 b => b, b => new BorderInfo { BorderId = borderCount++, Border = b });
 
-            var sharedNumberFormats = numberFormats
+            var customNumberFormats = numberFormats
                 .Where(nf => nf.NumberFormatId == -1)
-                .ToDictionary(nf => nf, nf => new NumberFormatInfo
-                {
-                    NumberFormatId = XLConstants.NumberOfBuiltInStyles + numberFormatCount++,
-                    NumberFormat = nf
-                });
+                .ToHashSet();
 
             foreach (var pivotNumberFormat in pivotTableNumberFormats.Where(nf => nf.NumberFormatId == -1))
             {
@@ -3259,18 +3246,10 @@ namespace ClosedXML.Excel
                 };
                 var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
 
-                if (sharedNumberFormats.ContainsKey(numberFormat))
-                    continue;
-
-                sharedNumberFormats.Add(numberFormat,
-                    new NumberFormatInfo
-                    {
-                        NumberFormatId = XLConstants.NumberOfBuiltInStyles + numberFormatCount++,
-                        NumberFormat = numberFormat
-                    });
+                customNumberFormats.Add(numberFormat);
             }
 
-            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats, defaultFormatId);
+            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, customNumberFormats, defaultFormatId);
             foreach (var nf in allSharedNumberFormats)
             {
                 context.SharedNumberFormats.Add(nf.Value.NumberFormatId, nf.Value);
@@ -4062,7 +4041,7 @@ namespace ClosedXML.Excel
 
         private static Dictionary<XLNumberFormatValue, NumberFormatInfo> ResolveNumberFormats(
             WorkbookStylesPart workbookStylesPart,
-            Dictionary<XLNumberFormatValue, NumberFormatInfo> sharedNumberFormats,
+            HashSet<XLNumberFormatValue> customNumberFormats,
             UInt32 defaultFormatId)
         {
             if (workbookStylesPart.Stylesheet.NumberingFormats == null)
@@ -4076,34 +4055,40 @@ namespace ClosedXML.Excel
             }
 
             var allSharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
-            foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
+            var partNumberingFormats = workbookStylesPart.Stylesheet.NumberingFormats;
+
+            // number format ids in the part can have holes in the sequence and first id can be greater than last built-in style id.
+            // In some cases, there are also existing number formats with id below last built-in style id.
+            var availableNumberFormatId = partNumberingFormats.Any()
+                ? Math.Max(partNumberingFormats.Cast<NumberingFormat>().Max(nf => nf.NumberFormatId!.Value), XLConstants.NumberOfBuiltInStyles) + 1
+                : XLConstants.NumberOfBuiltInStyles; // 0-based
+
+            // Merge custom formats used in the workbook that are not already present in the part to the part and assign ids
+            foreach (var customNumberFormat in customNumberFormats.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
-                var numberingFormatId = XLConstants.NumberOfBuiltInStyles; // 0-based
-                var foundOne = false;
-                foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
+                NumberingFormat partNumberFormat = null;
+                foreach (var nf in workbookStylesPart.Stylesheet.NumberingFormats.Cast<NumberingFormat>())
                 {
-                    if (NumberFormatsAreEqual(nf, numberFormatInfo.NumberFormat))
+                    if (CustomNumberFormatsAreEqual(nf, customNumberFormat))
                     {
-                        foundOne = true;
-                        numberingFormatId = (Int32)nf.NumberFormatId.Value;
+                        partNumberFormat = nf;
                         break;
                     }
-                    numberingFormatId++;
                 }
-                if (!foundOne)
+                if (partNumberFormat is null)
                 {
-                    var numberingFormat = new NumberingFormat
+                    partNumberFormat = new NumberingFormat
                     {
-                        NumberFormatId = (UInt32)numberingFormatId,
-                        FormatCode = numberFormatInfo.NumberFormat.Format
+                        NumberFormatId = (UInt32)availableNumberFormatId++,
+                        FormatCode = customNumberFormat.Format
                     };
-                    workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(numberingFormat);
+                    workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(partNumberFormat);
                 }
-                allSharedNumberFormats.Add(numberFormatInfo.NumberFormat,
+                allSharedNumberFormats.Add(customNumberFormat,
                     new NumberFormatInfo
                     {
-                        NumberFormat = numberFormatInfo.NumberFormat,
-                        NumberFormatId = numberingFormatId
+                        NumberFormat = customNumberFormat,
+                        NumberFormatId = (Int32)partNumberFormat.NumberFormatId!.Value
                     });
             }
             workbookStylesPart.Stylesheet.NumberingFormats.Count =
@@ -4111,12 +4096,11 @@ namespace ClosedXML.Excel
             return allSharedNumberFormats;
         }
 
-        private static bool NumberFormatsAreEqual(NumberingFormat nf, XLNumberFormatValue xlNumberFormat)
+        private static bool CustomNumberFormatsAreEqual(NumberingFormat nf, XLNumberFormatValue xlNumberFormat)
         {
             if (nf.FormatCode != null && !String.IsNullOrWhiteSpace(nf.FormatCode.Value))
                 return string.Equals(xlNumberFormat?.Format, nf.FormatCode.Value);
-            else if (nf.NumberFormatId != null)
-                return xlNumberFormat?.NumberFormatId == (Int32)nf.NumberFormatId.Value;
+
             return false;
         }
 
