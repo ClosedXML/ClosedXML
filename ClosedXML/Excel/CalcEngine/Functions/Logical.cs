@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -8,12 +9,12 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("AND", 1, int.MaxValue, And, AllowRange.All);
-            ce.RegisterFunction("FALSE", 0, False);
+            ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
             ce.RegisterFunction("IF", 2, 3, If);
             ce.RegisterFunction("IFERROR",2,IfError);
-            ce.RegisterFunction("NOT", 1, Not);
+            ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or);
-            ce.RegisterFunction("TRUE", 0, True);
+            ce.RegisterFunction("TRUE", 0, 0, Adapt(True), FunctionFlags.Scalar);
         }
 
         private static object And(List<Expression> p)
@@ -36,9 +37,9 @@ namespace ClosedXML.Excel.CalcEngine
             return b;
         }
 
-        private static object Not(List<Expression> p)
+        private static AnyValue Not(Boolean value)
         {
-            return !p[0];
+            return !value;
         }
 
         private static object If(List<Expression> p)
@@ -57,12 +58,12 @@ namespace ClosedXML.Excel.CalcEngine
             else return false;
         }
 
-        private static object True(List<Expression> p)
+        private static AnyValue True()
         {
             return true;
         }
 
-        private static object False(List<Expression> p)
+        private static AnyValue False()
         {
             return false;
         }
