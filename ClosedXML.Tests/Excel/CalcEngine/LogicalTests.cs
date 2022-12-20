@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -65,6 +66,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             Object actual = XLWorkbook.EvaluateExpr(@"IF(FALSE, 1,)");
             Assert.AreEqual(false, actual);
+        }
+
+        [TestCase("TRUE", false)]
+        [TestCase("FALSE", true)]
+        [TestCase("IF(TRUE,,)", true)] // Blank
+        [TestCase("0", true)]
+        [TestCase("0.1", false)]
+        [TestCase("\"true\"", false)]
+        [TestCase("\"false\"", true)]
+        [TestCase("1/0", XLError.DivisionByZero)]
+        public void Not(string valueFormula, object expectedResult)
+        {
+            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr($"NOT({valueFormula})"));
         }
     }
 }

@@ -307,7 +307,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return XLError.CellReference;
 
             var approximateSearchFlag = true;
-            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrNumberOrText(out approximateSearchFlag, out var flagError))
+            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrBlankOrNumberOrText(out approximateSearchFlag, out var flagError))
                 return flagError;
 
             if (approximateSearchFlag)

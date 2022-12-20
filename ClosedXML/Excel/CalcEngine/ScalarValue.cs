@@ -356,13 +356,17 @@ namespace ClosedXML.Excel.CalcEngine
         public bool HaveSameType(ScalarValue other) => _index == other._index;
 
         /// <summary>
-        /// Get the logical value, if it is either logical or number (0 = false, otherwise true)a text <c>TRUE</c> or <c>FALSE</c> (case insensitive).
+        /// Get the logical value, if it is either blank (false), logical or number (0 = false, otherwise true)a text <c>TRUE</c> or <c>FALSE</c> (case insensitive).
         /// </summary>
         /// <remarks>Used for coercion in functions.</remarks>
-        public bool TryCoerceLogicalOrNumberOrText(out Boolean value, out XLError error)
+        public bool TryCoerceLogicalOrBlankOrNumberOrText(out Boolean value, out XLError error)
         {
             switch (_index)
             {
+                case BlankValue:
+                    value = false;
+                    error = default;
+                    return true;
                 case LogicalValue:
                     value = _logical;
                     error = default;
@@ -379,6 +383,10 @@ namespace ClosedXML.Excel.CalcEngine
                     value = false;
                     error = default;
                     return true;
+                case ErrorValue:
+                    value = default;
+                    error = _error;
+                    return false;
                 default:
                     value = default;
                     error = XLError.IncompatibleValue;

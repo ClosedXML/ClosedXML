@@ -13,6 +13,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         // We have many functions with same signature and the adapters should be reusable. Convert parameters
         // through value converters below. We can hopefully generate them at a later date, so try to keep them similar.
 
+        public static CalcEngineFunction Adapt(Func<AnyValue> f)
+        {
+            return (_, _) => f();
+        }
+
+        public static CalcEngineFunction AdaptCoerced(Func<Boolean, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = CoerceToLogical(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                return f(arg0);
+            };
+        }
+
         public static CalcEngineFunction Adapt(Func<double, AnyValue> f)
         {
             return (ctx, args) =>
@@ -113,6 +130,17 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         #region Value converters
         // Each method is named ToSomething and it converts an argument into a desired type (e.g. for ToSomething it should be type Something).
         // Return value is always OneOf<Something, Error>, if there is an error, return it as an error.
+
+        private static OneOf<Boolean, XLError> CoerceToLogical(in AnyValue value, CalcContext ctx)
+        {
+            if (!ToScalarValue(in value, ctx).TryPickT0(out var scalar, out var scalarError))
+                return scalarError;
+
+            if (!scalar.TryCoerceLogicalOrBlankOrNumberOrText(out var logical, out var coercionError))
+                return coercionError;
+
+            return logical;
+        }
 
         private static OneOf<double, XLError> ToNumber(in AnyValue value, CalcContext ctx)
         {
