@@ -42,6 +42,48 @@ namespace ClosedXML.Excel.CalcEngine
             return value;
         }
 
+        private static AnyValue False()
+        {
+            return false;
+        }
+
+        private static object If(List<Expression> p)
+        {
+            if (p[0])
+            {
+                return p[1].Evaluate();
+            }
+            else if (p.Count > 2)
+            {
+                if (p[2] is EmptyValueExpression)
+                    return false;
+                else
+                    return p[2].Evaluate();
+            }
+            else return false;
+        }
+
+        private static object IfError(List<Expression> p)
+        {
+            try
+            {
+                var value = p[0].Evaluate();
+                if (value is XLError)
+                    return p[1].Evaluate();
+
+                return value;
+            }
+            catch (ArgumentException)
+            {
+                return p[1].Evaluate();
+            }
+        }
+
+        private static AnyValue Not(Boolean value)
+        {
+            return !value;
+        }
+
         private static AnyValue Or(CalcContext ctx, Span<AnyValue> args)
         {
             var aggResult = args.Aggregate(
@@ -66,51 +108,9 @@ namespace ClosedXML.Excel.CalcEngine
             return value;
         }
 
-        private static AnyValue Not(Boolean value)
-        {
-            return !value;
-        }
-
-        private static object If(List<Expression> p)
-        {
-            if (p[0])
-            {
-                return p[1].Evaluate();
-            }
-            else if (p.Count > 2)
-            {
-                if (p[2] is EmptyValueExpression)
-                    return false;
-                else
-                    return p[2].Evaluate();
-            }
-            else return false;
-        }
-
         private static AnyValue True()
         {
             return true;
-        }
-
-        private static AnyValue False()
-        {
-            return false;
-        }
-
-        private static object IfError(List<Expression> p)
-        {
-            try
-            {
-                var value = p[0].Evaluate();
-                if (value is XLError)
-                    return p[1].Evaluate();
-
-                return value;
-            }
-            catch (ArgumentException)
-            {
-                return p[1].Evaluate();
-            }
         }
     }
 }
