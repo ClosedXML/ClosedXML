@@ -68,7 +68,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(false, ws.Evaluate("AND(TRUE,A2)"));
 
             // Text is not converted and thus skipped for evaluation
-            ws.Cell("A3").Value = "TRUE";
+            ws.Cell("A3").Value = "FALSE";
             Assert.AreEqual(true, ws.Evaluate("AND(TRUE,A3)"));
 
             ws.Cell("A4").Value = "some text";
@@ -134,10 +134,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             Assert.AreEqual(true, ws.Evaluate(@"ISREF(IF(TRUE, A1))"));
+            Assert.AreEqual(true, ws.Evaluate(@"ISREF(IF(FALSE,, A1))"));
         }
 
         [Test]
-        public void If_ConditionError_ReturnsError()
+        public void If_ConditionError_ReturnError()
         {
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"IF(1/0, ""T"", ""F"")"));
         }
@@ -158,14 +159,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void If_Missing_Second_Value_Then_Blank()
+        public void If_MissingValues_ReturnBlank()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"ISBLANK(IF(FALSE, 1,))");
-            Assert.AreEqual(true, actual);
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr(@"ISBLANK(IF(TRUE,,))"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr(@"ISBLANK(IF(FALSE,,))"));
         }
 
         [Test]
-        public void IfError_FirstArgumentNonError_ReturnFirstValue()
+        public void IfError_FirstArgumentNonError_ReturnFirstArgument()
         {
             Assert.AreEqual(true, XLWorkbook.EvaluateExpr("ISBLANK(IFERROR(IF(TRUE,), 5))"));
 
@@ -180,7 +181,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void IfError_FirstArgumentError_ReturnSecondValue()
+        public void IfError_FirstArgumentError_ReturnSecondArgument()
         {
             Assert.AreEqual("text", XLWorkbook.EvaluateExpr("IFERROR(1/0, \"text\")"));
 
