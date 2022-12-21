@@ -164,6 +164,40 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(true, actual);
         }
 
+        [Test]
+        public void IfError_FirstArgumentNonError_ReturnFirstValue()
+        {
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("ISBLANK(IFERROR(IF(TRUE,), 5))"));
+
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("IFERROR(FALSE, 5)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("IFERROR(TRUE, 5)"));
+
+            Assert.AreEqual(0.0, XLWorkbook.EvaluateExpr("IFERROR(0, 5)"));
+            Assert.AreEqual(-2.0, XLWorkbook.EvaluateExpr("IFERROR(-2, 5)"));
+
+            Assert.AreEqual(string.Empty, XLWorkbook.EvaluateExpr("IFERROR(\"\", 5)"));
+            Assert.AreEqual("text", XLWorkbook.EvaluateExpr("IFERROR(\"text\", 5)"));
+        }
+
+        [Test]
+        public void IfError_FirstArgumentError_ReturnSecondValue()
+        {
+            Assert.AreEqual("text", XLWorkbook.EvaluateExpr("IFERROR(1/0, \"text\")"));
+
+            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("IFERROR(#REF!, #NAME?)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("IFERROR(#NULL!, TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("ISBLANK(IFERROR(#VALUE!,IF(TRUE,)))"));
+        }
+
+        [Test]
+        public void IfError_ReferenceNeverReturned()
+        {
+            // Unlike IF, IFERROR doesn't return reference
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(false, ws.Evaluate("ISREF(IFERROR(#VALUE!, A1))"));
+        }
+
         [TestCase("TRUE", false)]
         [TestCase("FALSE", true)]
         [TestCase("IF(TRUE,,)", true)] // Blank

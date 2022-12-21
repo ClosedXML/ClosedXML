@@ -134,8 +134,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 value = wb.Evaluate("=IF(TRUE,1,)");
                 Assert.AreEqual(1, value);
 
-                value = wb.Evaluate("=IF(FALSE,1,)");
-                Assert.AreEqual(false, value);
+                value = wb.Evaluate("=ISBLANK(IF(FALSE,1,))");
+                Assert.AreEqual(true, value);
 
                 value = wb.Evaluate("=IF(FALSE,,2)");
                 Assert.AreEqual(2, value);
