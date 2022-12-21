@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ClosedXML.Excel.CalcEngine.Functions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -8,33 +9,61 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("AND", 1, int.MaxValue, And, AllowRange.All);
+            ce.RegisterFunction("AND", 1, int.MaxValue, And, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
             ce.RegisterFunction("IF", 2, 3, If);
-            ce.RegisterFunction("IFERROR",2,IfError);
+            ce.RegisterFunction("IFERROR", 2, IfError);
             ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
-            ce.RegisterFunction("OR", 1, int.MaxValue, Or);
+            ce.RegisterFunction("OR", 1, int.MaxValue, Or, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("TRUE", 0, 0, Adapt(True), FunctionFlags.Scalar);
         }
 
-        private static object And(List<Expression> p)
+        private static AnyValue And(CalcContext ctx, Span<AnyValue> args)
         {
-            var b = true;
-            foreach (var v in p)
-            {
-                b = b && v;
-            }
-            return b;
+            var aggResult = args.Aggregate(
+                ctx,
+                true,
+                XLError.IncompatibleValue,
+                static (acc, val) => acc && val,
+                static (v, _) =>
+                {
+                    // Skip values that can't be converted, but aren't errors, like "text"
+                    if (v.IsError)
+                        return v.GetError();
+                    if (!v.TryCoerceLogicalOrBlankOrNumberOrText(out var logical, out var _))
+                        return true;
+                    return logical;
+                },
+                static v => v.IsLogical || v.IsNumber); // No text conversion for element of collection, blanks are ignored in references
+
+            if (!aggResult.TryPickT0(out var value, out var error))
+                return error;
+
+            return value;
         }
 
-        private static object Or(List<Expression> p)
+        private static AnyValue Or(CalcContext ctx, Span<AnyValue> args)
         {
-            var b = false;
-            foreach (var v in p)
-            {
-                b = b || v;
-            }
-            return b;
+            var aggResult = args.Aggregate(
+                ctx,
+                false,
+                XLError.IncompatibleValue,
+                static (acc, val) => acc || val,
+                static (v, _) =>
+                {
+                    // Skip values that can't be converted, but aren't errors, like "text"
+                    if (v.IsError)
+                        return v.GetError();
+                    if (!v.TryCoerceLogicalOrBlankOrNumberOrText(out var logical, out var _))
+                        return false;
+                    return logical;
+                },
+                static v => v.IsLogical || v.IsNumber); // No text conversion for element of collection, blanks are ignored in references
+
+            if (!aggResult.TryPickT0(out var value, out var error))
+                return error;
+
+            return value;
         }
 
         private static AnyValue Not(Boolean value)
