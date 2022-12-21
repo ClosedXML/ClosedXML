@@ -82,6 +82,20 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptLastOptional(Func<ScalarValue, AnyValue, AnyValue, AnyValue> f, AnyValue lastDefault)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToScalarValue(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1 = args[1];
+                var arg2 = args.Length > 2 ? args[2] : lastDefault;
+                return f(arg0, arg1, arg2);
+            };
+        }
+
         public static CalcEngineFunction Adapt(Func<CalcContext, double, List<Reference>, AnyValue> f)
         {
             return (ctx, args) =>

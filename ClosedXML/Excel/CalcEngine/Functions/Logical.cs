@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             ce.RegisterFunction("AND", 1, int.MaxValue, And, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
-            ce.RegisterFunction("IF", 2, 3, If);
+            ce.RegisterFunction("IF", 2, 3, AdaptLastOptional(If, false), FunctionFlags.Scalar);
             ce.RegisterFunction("IFERROR", 2, IfError);
             ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or, FunctionFlags.Range, AllowRange.All);
@@ -47,20 +47,12 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
-        private static object If(List<Expression> p)
+        private static AnyValue If(ScalarValue condition, AnyValue valueIfTrue, AnyValue valueIfFalse)
         {
-            if (p[0])
-            {
-                return p[1].Evaluate();
-            }
-            else if (p.Count > 2)
-            {
-                if (p[2] is EmptyValueExpression)
-                    return false;
-                else
-                    return p[2].Evaluate();
-            }
-            else return false;
+            if (!condition.TryCoerceLogicalOrBlankOrNumberOrText(out var value, out var error))
+                return error;
+
+            return value ? valueIfTrue : valueIfFalse;
         }
 
         private static object IfError(List<Expression> p)
