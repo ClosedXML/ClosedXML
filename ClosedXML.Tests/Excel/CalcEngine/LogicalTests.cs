@@ -129,10 +129,39 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void If_Missing_Second_Value_Then_False()
+        public void If_CanReturnReference()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"IF(FALSE, 1,)");
-            Assert.AreEqual(false, actual);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(true, ws.Evaluate(@"ISREF(IF(TRUE, A1))"));
+        }
+
+        [Test]
+        public void If_ConditionError_ReturnsError()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"IF(1/0, ""T"", ""F"")"));
+        }
+
+        [Test]
+        public void If_ConditionCoercedToLogical()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual("F", ws.Evaluate(@"IF(A1, ""T"", ""F"")"));
+
+            Assert.AreEqual("T", ws.Evaluate(@"IF(""TRUE"", ""T"", ""F"")"));
+            Assert.AreEqual("F", ws.Evaluate(@"IF(""FALSE"", ""T"", ""F"")"));
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(@"IF(""text"", ""T"", ""F"")"));
+
+            Assert.AreEqual("T", ws.Evaluate(@"IF(1, ""T"", ""F"")"));
+            Assert.AreEqual("F", ws.Evaluate(@"IF(0, ""T"", ""F"")"));
+        }
+
+        [Test]
+        public void If_Missing_Second_Value_Then_Blank()
+        {
+            Object actual = XLWorkbook.EvaluateExpr(@"ISBLANK(IF(FALSE, 1,))");
+            Assert.AreEqual(true, actual);
         }
 
         [TestCase("TRUE", false)]
