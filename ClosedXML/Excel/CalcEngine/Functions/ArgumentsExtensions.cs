@@ -14,15 +14,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// A lot of functions take all argument values and aggregate the values to a different value.
         /// These aggregation functions apply aggregation on each argument and if the argument is
         /// a collection (array/reference), the aggregation function is also applied to each element of
-        /// the an array/reference (e.g. <c>SUM({1, 2}, 3)</c> applies sum on each element of an array
+        /// the array/reference (e.g. <c>SUM({1, 2}, 3)</c> applies sum on each element of an array
         /// <c>{1,2}</c> and thus result is <c>1+2+3</c>).
         /// </remarks>
         /// <typeparam name="TValue">Type of the value that is being aggregated.</typeparam>
         /// <param name="args">Arguments of a function. Method goes over all elements of the arguments.</param>
         /// <param name="ctx">Calculation context.</param>>
         /// <param name="initialValue">
-        /// Initial value of the accumulator. It is used as an input into the first call of <paramref name="aggregate"/>
-        /// or as a return value, if there are no elements.
+        /// Initial value of the accumulator. It is used as an input into the first call of <paramref name="aggregate"/>.
         /// </param>
         /// <param name="noElementsResult">
         /// What should be the result of aggregation, if there are no elements. Common choices are
