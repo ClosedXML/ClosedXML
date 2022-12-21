@@ -9,6 +9,73 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     public class LogicalTests
     {
         [Test]
+        public void And_IsLogicalConjunction()
+        {
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(TRUE, TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(TRUE, TRUE, TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND({TRUE, TRUE}, TRUE)"));
+
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(FALSE)"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(TRUE, FALSE)"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND({TRUE, FALSE})"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(TRUE, {TRUE, FALSE})"));
+        }
+
+        [TestCase("A1")]
+        [TestCase("A1:A5")]
+        [TestCase("(A1:A5,B1:B5)")]
+        public void And_NoCollectionValues_Error(string range)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate($"AND({range})"));
+        }
+
+        [Test]
+        public void And_ScalarArgumentsCoercedFromBlankOrTextOrNumber()
+        {
+            // Blank evaluated to false
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(IF(TRUE,,))"));
+
+            // Number coerced to logical
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(0)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(0.1)"));
+
+            // Text coerced to logical
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("AND(\"FALSE\")"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(\"TRUE\")"));
+        }
+
+        [Test]
+        public void And_UnconvertableScalarArgumentsSkipped()
+        {
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("AND(TRUE,\"z\")"));
+        }
+
+        [Test]
+        public void And_OnlyLogicalOrNumberElementsOfCollectionUsed()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // 0 is a number and is converted to logical
+            ws.Cell("A1").Value = 0;
+            Assert.AreEqual(false, ws.Evaluate("AND(TRUE,A1)"));
+
+            // false is a logical
+            ws.Cell("A2").Value = false;
+            Assert.AreEqual(false, ws.Evaluate("AND(TRUE,A2)"));
+
+            // Text is not converted and thus skipped for evaluation
+            ws.Cell("A3").Value = "TRUE";
+            Assert.AreEqual(true, ws.Evaluate("AND(TRUE,A3)"));
+
+            ws.Cell("A4").Value = "some text";
+            Assert.AreEqual(true, ws.Evaluate("AND(TRUE,A4)"));
+        }
+
+        [Test]
         public void If_2_Params_true()
         {
             Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
@@ -79,6 +146,73 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Not(string valueFormula, object expectedResult)
         {
             Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr($"NOT({valueFormula})"));
+        }
+
+        [Test]
+        public void Or_IsLogicalDisjunction()
+        {
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(TRUE, TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(TRUE, FALSE, TRUE)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR({FALSE, TRUE}, FALSE)"));
+
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(FALSE)"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(FALSE, FALSE)"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR({FALSE, FALSE})"));
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(FALSE, {FALSE, FALSE})"));
+        }
+
+        [TestCase("A1")]
+        [TestCase("A1:A5")]
+        [TestCase("(A1:A5,B1:B5)")]
+        public void Or_NoCollectionValues_Error(string range)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate($"OR({range})"));
+        }
+
+        [Test]
+        public void Or_ScalarArgumentsCoercedFromBlankOrTextOrNumber()
+        {
+            // Blank evaluated to false
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(IF(TRUE,,))"));
+
+            // Number coerced to logical
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(0)"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(0.1)"));
+
+            // Text coerced to logical
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("OR(\"FALSE\")"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(\"TRUE\")"));
+        }
+
+        [Test]
+        public void Or_UnconvertableScalarArgumentsSkipped()
+        {
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("OR(TRUE,\"z\")"));
+        }
+
+        [Test]
+        public void Or_OnlyLogicalOrNumberElementsOfCollectionUsed()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // 1 is a number and is converted to logical
+            ws.Cell("A1").Value = 1;
+            Assert.AreEqual(true, ws.Evaluate("OR(FALSE,A1)"));
+
+            // false is a logical
+            ws.Cell("A2").Value = true;
+            Assert.AreEqual(true, ws.Evaluate("OR(FALSE,A2)"));
+
+            // Text is not converted and thus skipped for evaluation
+            ws.Cell("A3").Value = "TRUE";
+            Assert.AreEqual(false, ws.Evaluate("OR(FALSE,A3)"));
+
+            ws.Cell("A4").Value = "some text";
+            Assert.AreEqual(false, ws.Evaluate("OR(FALSE,A4)"));
         }
     }
 }
