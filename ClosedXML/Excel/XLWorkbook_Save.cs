@@ -4060,7 +4060,7 @@ namespace ClosedXML.Excel
             // number format ids in the part can have holes in the sequence and first id can be greater than last built-in style id.
             // In some cases, there are also existing number formats with id below last built-in style id.
             var availableNumberFormatId = partNumberingFormats.Any()
-                ? Math.Max(partNumberingFormats.Cast<NumberingFormat>().Max(nf => nf.NumberFormatId!.Value), XLConstants.NumberOfBuiltInStyles) + 1
+                ? Math.Max(partNumberingFormats.Cast<NumberingFormat>().Max(nf => nf.NumberFormatId!.Value) + 1, XLConstants.NumberOfBuiltInStyles)
                 : XLConstants.NumberOfBuiltInStyles; // 0-based
 
             // Merge custom formats used in the workbook that are not already present in the part to the part and assign ids
