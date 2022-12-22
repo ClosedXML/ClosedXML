@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Utils;
 using NUnit.Framework;
 using System;
 using System.Drawing;
@@ -470,5 +471,26 @@ namespace ClosedXML.Tests
             img2 = ws2.Pictures.First();
             Assert.AreEqual(XLPictureFormat.Emf, img2.Format);
         }
+
+        [Test]
+        public void CanKeepPictureShapeOrder()
+        {
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageShapeOrder.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws1 = wb.Worksheets.First();
+            var img1 = ws1.Pictures.First();
+            var xlImage1 = img1 as ClosedXML.Excel.Drawings.XLPicture;
+            var relId = xlImage1.RelId;
+            int pos1 = OpenXmlHelper.FindImageRelIdDrawingOrder(stream,ws1.Name, relId);
+
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
+            stream.Close();
+            int pos2 = OpenXmlHelper.FindImageRelIdDrawingOrder(ms, ws1.Name, relId);
+            ms.Close();
+
+            Assert.AreEqual(pos1, pos2);
+        }
+
     }
 }
