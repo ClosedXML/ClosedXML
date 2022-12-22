@@ -1666,8 +1666,6 @@ namespace ClosedXML.Excel.IO
 
             // Clear current anchors
             var existingAnchor = GetAnchorFromImageId(worksheetPart, pic.RelId);
-            if (existingAnchor != null)
-                worksheetDrawing.RemoveChild(existingAnchor);
 
             var wb = pic.Worksheet.Workbook;
             var extentsCx = ConvertToEnglishMetricUnits(pic.Width, wb.DpiX);
@@ -1714,7 +1712,14 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    worksheetDrawing.Append(absoluteAnchor);
+                    if (existingAnchor != null)
+                    {
+                        worksheetDrawing.ReplaceChild(absoluteAnchor, existingAnchor);
+                    }
+                    else
+                    {
+                        worksheetDrawing.Append(absoluteAnchor);
+                    }
                     break;
 
                 case Drawings.XLPicturePlacement.MoveAndSize:
@@ -1761,7 +1766,14 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    worksheetDrawing.Append(twoCellAnchor);
+                    if (existingAnchor != null)
+                    {
+                        worksheetDrawing.ReplaceChild(twoCellAnchor, existingAnchor);
+                    }
+                    else
+                    {
+                        worksheetDrawing.Append(twoCellAnchor);
+                    }
                     break;
 
                 case Drawings.XLPicturePlacement.Move:
@@ -1802,7 +1814,14 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    worksheetDrawing.Append(oneCellAnchor);
+                    if (existingAnchor != null)
+                    {
+                        worksheetDrawing.ReplaceChild(oneCellAnchor, existingAnchor);
+                    }
+                    else
+                    {
+                        worksheetDrawing.Append(oneCellAnchor);
+                    }
                     break;
             }
         }
