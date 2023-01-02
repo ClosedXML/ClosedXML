@@ -706,7 +706,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Examples from spec
             Assert.AreEqual(123.456d, wb.Evaluate("VALUE(\"123.456\")"));
             Assert.AreEqual(1000d, wb.Evaluate("VALUE(\"$1,000\")"));
-            Assert.AreEqual(new DateTime(2002, 3, 23).ToOADate(), wb.Evaluate("VALUE(\"23-Mar-2002\")"));
+            Assert.AreEqual(new DateTime(2002, 3, 23).ToSerialDateTime(), wb.Evaluate("VALUE(\"23-Mar-2002\")"));
             Assert.AreEqual(0.188056d, (double)wb.Evaluate("VALUE(\"16:48:00\")-VALUE(\"12:17:12\")"), 0.000001d);
         }
 
@@ -730,10 +730,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(-15d, wb.Evaluate("VALUE(\"(1,5e3%)\")"));
             Assert.AreEqual(-15d, wb.Evaluate("VALUE(\"(1,5e3)%\")"));
 
-            var expectedSerialDate = new DateTime(2022, 3, 5).ToOADate();
+            var expectedSerialDate = new DateTime(2022, 3, 5).ToSerialDateTime();
             Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"5-březen-22\")"));
-            Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"5-březen\")"));
             Assert.AreEqual(expectedSerialDate, wb.Evaluate("VALUE(\"05.03.2022\")"));
+            Assert.AreEqual(new DateTime(DateTime.Now.Year, 3, 5).ToSerialDateTime(), wb.Evaluate("VALUE(\"5-březen\")"));
         }
     }
 }

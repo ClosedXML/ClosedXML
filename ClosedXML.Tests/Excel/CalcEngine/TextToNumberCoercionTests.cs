@@ -120,6 +120,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AssertCoercion(text, expectedValue);
         }
 
+        [SetCulture("cs-CZ")]
+        [TestCase("3-leden", 36528)] // Serial datetime is for 03-01-2000
+        [TestCase("3-led", 36528)] // Serial datetime is for 03-01-2000
+        public void Date_Format16_UsesCulture(string text, double? expectedValue) // Format 16 'd-mmm'
+        {
+            expectedValue += new DateTime(DateTime.Now.Year, 1, 1).ToOADate() - new DateTime(2000, 1, 1).ToOADate();
+            AssertCoercion(text, expectedValue);
+        }
+
         // In en locale, there should be an extra pattern MMM-dd that is before the standard MMM-yy, but .NET Framework doesn't have it.
         // To overcome missing locale, use numbers over 31 for year (otherwise they should be interpreted as days)
         [TestCase("jan-02", 44563, Ignore = ".NET misses culture, en interprets it as MMM-dd, but czech as MMM-yy, so the MMM-dd is the extra culture for en.")] // interpreted as 2022-01-02
@@ -287,8 +296,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("02/28/20", null)]
         [TestCase("10:30 AM", 0.4375)] // AM seems to work for some reason
         [TestCase("10:30 dop.", 0.4375)]
-        [TestCase("3-leden", 44564)]
-        [TestCase("3-led", 44564)]
         [TestCase("1-leden-2020", 43831)]
         [TestCase("1-led-2020", 43831)]
         [TestCase("led-5", 38353)]
