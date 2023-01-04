@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Excel
 {
@@ -147,7 +148,14 @@ namespace ClosedXML.Excel
 
         IXLCustomProperty CustomProperty(String name);
 
-        Object Evaluate(String expression);
+        /// <summary>
+        /// Evaluate a formula expression.
+        /// </summary>
+        /// <param name="expression">Formula expression to evaluate.</param>
+        /// <exception cref="MissingContextException">
+        /// If the expression contains a function that requires a context (e.g. current cell or worksheet).
+        /// </exception>
+        XLCellValue Evaluate(String expression);
 
         IXLCells FindCells(Func<IXLCell, Boolean> predicate);
 

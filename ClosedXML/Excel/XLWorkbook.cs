@@ -869,9 +869,9 @@ namespace ClosedXML.Excel
             get { return _calcEngine ??= new XLCalcEngine(CultureInfo.CurrentCulture); }
         }
 
-        public Object Evaluate(String expression)
+        public XLCellValue Evaluate(String expression)
         {
-            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngine.Evaluate(expression, this));
+            return CalcEngine.Evaluate(expression, this).ToCellValue();
         }
 
         /// <summary>
