@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // evaluate
-                    return (bool)CalcEngine.ToCellContentValue(ce.Evaluate(expression));
+                    return ce.Evaluate(expression).GetLogical();
                 }
 
                 // if criteria is a regular expression, use regex
