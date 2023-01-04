@@ -158,16 +158,6 @@ namespace ClosedXML.Excel.CalcEngine
 
             return singleCellValue;
         }
-
-        internal static object ToCellContentValue(ScalarValue value)
-        {
-            return value.Match<object>(
-                () => 0,
-                logical => logical,
-                number => number,
-                text => text,
-                error => error);
-        }
     }
 
     internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue> arg);
