@@ -12,18 +12,18 @@ namespace ClosedXML.Excel
 
         void Clear();
 
-        Boolean Contains(String sourceName);
+        Boolean Contains(String customName);
 
         Boolean Contains(IXLPivotValue pivotValue);
 
-        IXLPivotValue Get(String sourceName);
+        IXLPivotValue Get(String customName);
 
         IXLPivotValue Get(Int32 index);
 
-        Int32 IndexOf(String sourceName);
+        Int32 IndexOf(String customName);
 
         Int32 IndexOf(IXLPivotValue pivotValue);
 
-        void Remove(String sourceName);
+        void Remove(String customName);
     }
 }

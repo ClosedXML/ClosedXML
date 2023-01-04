@@ -40,19 +40,19 @@ namespace ClosedXML.Excel
             _pivotValues.Clear();
         }
 
-        public Boolean Contains(String sourceName)
+        public Boolean Contains(String customName)
         {
-            return _pivotValues.ContainsKey(sourceName);
+            return _pivotValues.ContainsKey(customName);
         }
 
         public Boolean Contains(IXLPivotValue pivotValue)
         {
-            return _pivotValues.ContainsKey(pivotValue.SourceName);
+            return _pivotValues.ContainsKey(pivotValue.CustomName);
         }
 
-        public IXLPivotValue Get(String sourceName)
+        public IXLPivotValue Get(String customName)
         {
-            return _pivotValues[sourceName];
+            return _pivotValues[customName];
         }
 
         public IXLPivotValue Get(Int32 index)
@@ -70,23 +70,23 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Int32 IndexOf(String sourceName)
+        public Int32 IndexOf(String customName)
         {
-            var selectedItem = _pivotValues.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == sourceName);
+            var selectedItem = _pivotValues.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == customName);
             if (selectedItem == null)
-                throw new ArgumentNullException(nameof(sourceName), "Invalid field name.");
+                throw new ArgumentNullException(nameof(customName), "Invalid field name.");
 
             return selectedItem.Position;
         }
 
         public Int32 IndexOf(IXLPivotValue pivotValue)
         {
-            return IndexOf(pivotValue.SourceName);
+            return IndexOf(pivotValue.CustomName);
         }
 
-        public void Remove(String sourceName)
+        public void Remove(String customName)
         {
-            _pivotValues.Remove(sourceName);
+            _pivotValues.Remove(customName);
         }
     }
 }
