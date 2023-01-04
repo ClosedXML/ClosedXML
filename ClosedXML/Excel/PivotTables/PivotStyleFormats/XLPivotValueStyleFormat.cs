@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotValueStyleFormat ForValueField(IXLPivotValue valueField)
         {
-            FieldReferences.Add(new PivotValueFieldReference(valueField.SourceName));
+            FieldReferences.Add(new PivotValueFieldReference(valueField.CustomName));
             return this;
         }
 
