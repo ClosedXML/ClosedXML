@@ -151,10 +151,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1=\"\"")]
         public void Comparison_BlankIsEqualToFalseOrZeroOrEmptyString(string formula)
         {
-            Assert.That(Evaluate(formula), Is.True);
+            Assert.AreEqual(true, Evaluate(formula));
         }
 
-        private static object Evaluate(string formula)
+        private static XLCellValue Evaluate(string formula)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();

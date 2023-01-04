@@ -74,7 +74,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("+TRUE", true)]
         [TestCase("+FALSE", false)]
         [TestCase("+#DIV/0!", XLError.DivisionByZero)]
-        [TestCase("+A1", 0)]
+        [TestCase("ISBLANK(+A1)", true)]
         public void UnaryPlus_IsNonOpThatKeepsValueAndType(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
@@ -224,7 +224,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
-        private static object Evaluate(string formula)
+        private static XLCellValue Evaluate(string formula)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();

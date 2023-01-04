@@ -1543,8 +1543,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SeriesSum()
         {
-            object actual = XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)");
-            Assert.AreEqual(40.0, actual);
+            Assert.AreEqual(40.0, XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)"));
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
@@ -1554,7 +1553,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A5").FormulaA1 = "1/FACT(4)";
             ws.Cell("A6").FormulaA1 = "-1/FACT(6)";
 
-            actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
+            var actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
             Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
         }
 
@@ -1946,7 +1945,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 ws.Cell(1, 3).Value = 300000;
 
-                var actualResult = ws.Evaluate(formula).CastTo<double>();
+                var actualResult = (double)ws.Evaluate(formula);
                 Assert.AreEqual(expectedResult, actualResult);
             }
         }
@@ -2039,9 +2038,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 ws.Cell(row, 2).Value = "Carrots";
                 ws.Cell(row, 3).Value = "Sarah";
 
-                var actualResult = ws.Evaluate(formula).CastTo<Double>();
+                var actualResult = ws.Evaluate(formula);
 
-                Assert.AreEqual(expectedResult, actualResult, tolerance);
+                Assert.AreEqual(expectedResult, (double)actualResult, tolerance);
             }
         }
 
