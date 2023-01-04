@@ -273,5 +273,96 @@ namespace ClosedXML.Tests
                 Thread.CurrentThread.CurrentCulture = backupCulture;
             }
         }
+
+        [Test]
+        public void Issue1917NotContainsFilter()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Test");
+                    ws.Cell(1, 1).SetValue("StringCol");
+
+                    for (var i = 0; i < 5; i++)
+                    {
+                        ws.Cell(i + 2, 1).SetValue($"String{i}");
+                    }
+
+                    var autoFilter = ws.RangeUsed()
+                        .SetAutoFilter();
+
+                    autoFilter.Column(1).NotContains("String3");
+                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Position = 0;
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.Worksheet("Test");
+                    var autoFilter = ws.AutoFilter;
+
+                    autoFilter.Reapply();
+                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("ends")]
+        [TestCase("begins")]
+        [TestCase("equal")]
+        [TestCase("contains")]
+        public void NotStringFilter(string type)
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Test");
+                    ws.Cell(1, 1).SetValue("StringCol");
+
+                    for (var i = 0; i < 5; i++)
+                    {
+                        ws.Cell(i + 2, 1).SetValue($"{i}-String{i}");
+                    }
+
+                    ws.Columns().AdjustToContents();
+                    var autoFilter = ws.RangeUsed()
+                        .SetAutoFilter();
+
+                    switch (type)
+                    {
+                        case "ends":
+                            autoFilter.Column(1).NotEndsWith("3");
+                            break;
+                        case "begins":
+                            autoFilter.Column(1).NotBeginsWith("3");
+                            break;
+                        case "equal":
+                            autoFilter.Column(1).NotEqualTo("3-String3");
+                            break;
+                        case "contains":
+                            autoFilter.Column(1).NotContains("3-");
+                            break;
+                    }
+                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Position = 0;
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.Worksheet("Test");
+                    var autoFilter = ws.AutoFilter;
+
+                    autoFilter.Reapply();
+                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
+                }
+            }
+        }
     }
 }

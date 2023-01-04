@@ -2301,7 +2301,7 @@ namespace ClosedXML.Excel
                                 case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
                                 case XLFilterOperator.NotEqual:
                                     if (isText)
-                                        condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+                                        condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                     else
                                         condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
                                     break;
