@@ -1657,10 +1657,10 @@ namespace ClosedXML.Excel
 
         internal XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
-        public Object Evaluate(String expression, string formulaAddress = null)
+        public XLCellValue Evaluate(String expression, string formulaAddress = null)
         {
             IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
-            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngine.Evaluate(expression, Workbook, this, address));
+            return CalcEngine.Evaluate(expression, Workbook, this, address).ToCellValue();
         }
 
         /// <summary>

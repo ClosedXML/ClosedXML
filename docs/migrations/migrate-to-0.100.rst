@@ -41,10 +41,12 @@ Method ``SetDataType`` has been removed from all interfaces (``IXLCell``,
 need to reinterpret existing data, do it in application code and set a new value
 with a specific type.
 
-Evaluate method
-===============
+Evaluate methods
+================
 
-Evaluation method ``XLWorkbook.Evaluate(String)`` not returns ``XLCellValue``, not ``Object``.
+Evaluation methods ``IXLWorkbook.Evaluate(String)`` and
+``IXLWorksheet.Evaluate(String, String)`` don't return ``Object``, but
+``XLCellValue``.
 
 Bulk data insert
 ================
