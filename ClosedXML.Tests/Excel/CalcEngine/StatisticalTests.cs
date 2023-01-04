@@ -304,7 +304,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-12)]
         public double Fisher(double sourceValue)
         {
-            return XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})").CastTo<double>();
+            return (double)XLWorkbook.EvaluateExpr($"FISHER({sourceValue})");
         }
 
         // TODO : the string case will be treated correctly when Coercion is implemented better

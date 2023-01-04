@@ -817,8 +817,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Degrees()
         {
-            object actual1 = XLWorkbook.EvaluateExpr("Degrees(180)");
-            Assert.IsTrue(Math.PI - (double)actual1 < XLHelper.Epsilon);
+            var actual = (double)XLWorkbook.EvaluateExpr("DEGREES(PI())");
+            Assert.AreEqual(180, actual, XLHelper.Epsilon);
         }
 
         [TestCase(0, 0)]
@@ -1359,8 +1359,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Radians()
         {
-            object actual = XLWorkbook.EvaluateExpr("Radians(270)");
-            Assert.IsTrue(Math.Abs(4.71238898038469 - (double)actual) < XLHelper.Epsilon);
+            var actual = (double)XLWorkbook.EvaluateExpr("Radians(270)");
+            Assert.AreEqual(4.71238898038469, actual, XLHelper.Epsilon);
         }
 
         [Test]
@@ -1560,11 +1560,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SqrtPi()
         {
-            object actual = XLWorkbook.EvaluateExpr("SqrtPi(1)");
-            Assert.IsTrue(Math.Abs(1.7724538509055159 - (double)actual) < XLHelper.Epsilon);
+            var actual = (double)XLWorkbook.EvaluateExpr("SqrtPi(1)");
+            Assert.AreEqual(1.7724538509055159, actual, XLHelper.Epsilon);
 
-            actual = XLWorkbook.EvaluateExpr("SqrtPi(2)");
-            Assert.IsTrue(Math.Abs(2.5066282746310002 - (double)actual) < XLHelper.Epsilon);
+            actual = (double)XLWorkbook.EvaluateExpr("SqrtPi(2)");
+            Assert.AreEqual(2.5066282746310002, actual, XLHelper.Epsilon);
         }
 
         [Test]
