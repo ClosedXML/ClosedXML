@@ -44,8 +44,8 @@ with a specific type.
 Evaluate methods
 ================
 
-Evaluation methods ``IXLWorkbook.Evaluate(String)`` and
-``IXLWorksheet.Evaluate(String, String)`` don't return ``Object``, but
+Evaluation methods ``IXLWorkbook.Evaluate(String)``, ``XLWorkbook.EvaluateExpr(String)``
+and ``IXLWorksheet.Evaluate(String, String)`` don't return ``Object``, but
 ``XLCellValue``.
 
 Bulk data insert

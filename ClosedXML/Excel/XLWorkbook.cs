@@ -894,9 +894,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Evaluate a formula and return a value. Formulas with references don't work and culture used for conversion is invariant.
         /// </summary>
-        public static Object EvaluateExpr(String expression)
+        public static XLCellValue EvaluateExpr(String expression)
         {
-            return ClosedXML.Excel.CalcEngine.CalcEngine.ToCellContentValue(CalcEngineExpr.Evaluate(expression));
+            return CalcEngineExpr.Evaluate(expression).ToCellValue();
         }
 
         public String Author { get; set; }
