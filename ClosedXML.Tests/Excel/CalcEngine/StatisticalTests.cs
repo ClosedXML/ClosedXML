@@ -18,11 +18,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Average()
         {
             double value;
-            value = workbook.Evaluate("AVERAGE(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+            value = (double)workbook.Evaluate("AVERAGE(-27.5,93.93,64.51,-70.56)");
             Assert.AreEqual(15.095, value, tolerance);
 
             var ws = workbook.Worksheets.First();
-            value = ws.Evaluate("AVERAGE(G3:G45)").CastTo<double>();
+            value = (double)ws.Evaluate("AVERAGE(G3:G45)");
             Assert.AreEqual(49.3255814, value, tolerance);
 
             Assert.That(() => ws.Evaluate("AVERAGE(D3:D45)"), Throws.TypeOf<ApplicationException>());
@@ -42,7 +42,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNT(G:G)").CastTo<int>();
             Assert.AreEqual(43, value);
 
-            value = workbook.Evaluate(@"=COUNT(Data!G:G)").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=COUNT(Data!G:G)");
             Assert.AreEqual(43, value);
         }
 
@@ -60,7 +60,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTA(G:G)").CastTo<int>();
             Assert.AreEqual(44, value);
 
-            value = workbook.Evaluate(@"=COUNTA(Data!G:G)").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=COUNTA(Data!G:G)");
             Assert.AreEqual(44, value);
         }
 
@@ -97,7 +97,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTIF(D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
 
-            value = workbook.Evaluate(@"=COUNTIF(Data!D:D,""Central"")").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=COUNTIF(Data!D:D,""Central"")");
             Assert.AreEqual(24, value);
         }
 
@@ -208,7 +208,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTIFS(D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
 
-            value = workbook.Evaluate(@"=COUNTIFS(Data!D:D,""Central"")").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=COUNTIFS(Data!D:D,""Central"")");
             Assert.AreEqual(24, value);
         }
 
@@ -331,7 +331,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=MAX(G:G)").CastTo<int>();
             Assert.AreEqual(96, value);
 
-            value = workbook.Evaluate(@"=MAX(Data!G:G)").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=MAX(Data!G:G)");
             Assert.AreEqual(96, value);
         }
 
@@ -365,7 +365,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Median_EvenCountOfManualNumbers_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
         {
             //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+            var value = (double)workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)");
 
             //Assert
             Assert.AreEqual(18.505, value, tolerance);
@@ -388,7 +388,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Median_OddCountOfManualNumbers_ReturnsElementInMiddleOfSortedList()
         {
             //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
+            var value = (double)workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)");
 
             //Assert
             Assert.AreEqual(64.51, value, tolerance);
@@ -408,7 +408,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=MIN(G:G)").CastTo<int>();
             Assert.AreEqual(2, value);
 
-            value = workbook.Evaluate(@"=MIN(Data!G:G)").CastTo<int>();
+            value = (int)workbook.Evaluate(@"=MIN(Data!G:G)");
             Assert.AreEqual(2, value);
         }
 
@@ -425,7 +425,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=STDEV(H:H)").CastTo<double>();
             Assert.AreEqual(47.34511769, value, tolerance);
 
-            value = workbook.Evaluate(@"=STDEV(Data!H:H)").CastTo<double>();
+            value = (double)workbook.Evaluate(@"=STDEV(Data!H:H)");
             Assert.AreEqual(47.34511769, value, tolerance);
         }
 
@@ -442,7 +442,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=STDEVP(H:H)").CastTo<double>();
             Assert.AreEqual(46.79135458, value, tolerance);
 
-            value = workbook.Evaluate(@"=STDEVP(Data!H:H)").CastTo<double>();
+            value = (double)workbook.Evaluate(@"=STDEVP(Data!H:H)");
             Assert.AreEqual(46.79135458, value, tolerance);
         }
 
@@ -505,7 +505,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=VAR(H:H)").CastTo<double>();
             Assert.AreEqual(2241.560169, value, tolerance);
 
-            value = workbook.Evaluate(@"=VAR(Data!H:H)").CastTo<double>();
+            value = (double)workbook.Evaluate(@"=VAR(Data!H:H)");
             Assert.AreEqual(2241.560169, value, tolerance);
         }
 
@@ -522,7 +522,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=VARP(H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
 
-            value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
+            value = (double)workbook.Evaluate(@"=VARP(Data!H:H)");
             Assert.AreEqual(2189.430863, value, tolerance);
         }
         private XLWorkbook SetupWorkbook()
