@@ -222,3 +222,15 @@ Value formatting
 ****************
 
 Previously, ``IXLCell.GetFormattedString()`` formatted logical values ``true``/``false`` to a string *True*/*False*. It now formats them to Excel compliant *TRUE*/*FALSE*.
+
+***********************
+Pivot table value field
+***********************
+
+Methods for manipulating the ``IXLPivotValues`` now use the custom name of
+a pivot value fields, not source names. Source name is roughly name of
+a column in the source table while custom name is a name of a field in
+the pivot table. There can be multiple values for a single source column
+(e.g. average value and minimal value).
+
+Methods for manipulating the ``IXLPivotFields`` still use source names.
