@@ -188,6 +188,32 @@ namespace ClosedXML.Excel
             else
                 differentialFormats = new Dictionary<Int32, DifferentialFormat>();
 
+            var style = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(x => x.FormatId == 0).FirstOrDefault();
+            if (style != null)
+            {
+                var font = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet.Fonts.Elements<Font>().ElementAt(0);
+                if (font != null)
+                {
+                    if (font.FontName != null && font.FontName.Val.HasValue)
+                    {
+                        Style.Font.FontName = font.FontName.Val;
+                    }
+                    if (font.FontSize != null && font.FontSize.Val.HasValue)
+                    {
+                        Style.Font.FontSize = font.FontSize.Val;
+                    }
+                    if (font.FontCharSet != null && font.FontCharSet.Val.HasValue)
+                    {
+                        Style.Font.SetFontCharSet((XLFontCharSet)font.FontCharSet.Val.Value);
+                    }
+                    if (font.FontFamilyNumbering != null && font.FontFamilyNumbering.Val.HasValue)
+                    {
+                        Style.Font.SetFontFamilyNumbering((XLFontFamilyNumberingValues)font.FontFamilyNumbering.Val.Value);
+                    }
+                }
+                ColumnWidth = XLHelper.CalculateDefaultColumnWidth(this);
+            }
+
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
@@ -243,7 +269,9 @@ namespace ClosedXML.Excel
                                                        sheetFormatProperties.CustomHeight.Value);
 
                                 if (sheetFormatProperties.DefaultColumnWidth != null)
-                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth - XLConstants.ColumnWidthOffset;
+                                    ws.ColumnWidth = XLHelper.CalculateDefaultWorksheetColumnWidthFromDefaultColumnWidth(ws.Workbook, ws.Style.Font, sheetFormatProperties.DefaultColumnWidth.Value);
+                                else if (sheetFormatProperties.BaseColumnWidth != null)
+                                    ws.ColumnWidth = XLHelper.CalculateDefaultWorksheetColumnWidthFromBaseColumnWidth(ws.Workbook,ws.Style.Font,sheetFormatProperties.BaseColumnWidth.Value);
                             }
                         }
                         else if (reader.ElementType == typeof(SheetViews))

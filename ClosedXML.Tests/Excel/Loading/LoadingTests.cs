@@ -423,6 +423,65 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanCorrectLoadWorkbookDefaultColumnWidth()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\Styles\DefaultStyles.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var defaultColumnWidth = wb.ColumnWidth;
+                var pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, wb.Style.Font, defaultColumnWidth);
+                Assert.AreEqual(8.43, defaultColumnWidth, XLHelper.Epsilon);
+                Assert.AreEqual(64, pixelWidth, XLHelper.Epsilon);
+            }
+
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\DefaultColumnWidth.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var defaultColumnWidth = wb.ColumnWidth;
+                var pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, wb.Style.Font, defaultColumnWidth);
+                Assert.AreEqual(8.5, defaultColumnWidth, XLHelper.Epsilon);
+                Assert.AreEqual(56, pixelWidth, XLHelper.Epsilon);
+            }
+        }
+
+        [Test]
+        public void CanCorrectLoadWorksheetBaseColumnWidth()
+        {
+            // default calibi font case
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\Styles\DefaultStyles.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                Assert.AreEqual(8.43, ws.ColumnWidth, XLHelper.Epsilon);
+                Assert.AreEqual(8.43, ws.Column(1).Width, XLHelper.Epsilon);
+            }
+
+            // worksheet has base column width.
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\BaseColumnWidth.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                Assert.AreEqual(11.17, ws.ColumnWidth, XLHelper.Epsilon);
+                Assert.AreEqual(11.17, ws.Column(1).Width, XLHelper.Epsilon);
+            }
+        }
+
+        [Test]
+        public void CanCorrectLoadWorksheetDefaultColumnWidth()
+        {
+            // worksheet has default column width.
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\SheetDefaultColumnWidth.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                double pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, ws.Style.Font, ws.Column(1).Width);
+                Assert.AreEqual(19.75, ws.ColumnWidth, XLHelper.Epsilon);
+                Assert.AreEqual(163, pixelWidth, XLHelper.Epsilon);
+            }
+        }
+
+
+        [Test]
         public void CanLoadFileWithInvalidSelectedRanges()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\SelectedRanges\InvalidSelectedRange.xlsx")))
