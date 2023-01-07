@@ -1665,7 +1665,7 @@ namespace ClosedXML.Excel.IO
             /////////
 
             // Clear current anchors
-            var existingAnchor = GetAnchorFromImageId(worksheetPart, pic.RelId);
+            var existingAnchor = GetAnchorFromImageId(drawingsPart, pic.RelId);
 
             var wb = pic.Worksheet.Workbook;
             var extentsCx = ConvertToEnglishMetricUnits(pic.Width, wb.DpiX);
@@ -1712,14 +1712,7 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    if (existingAnchor != null)
-                    {
-                        worksheetDrawing.ReplaceChild(absoluteAnchor, existingAnchor);
-                    }
-                    else
-                    {
-                        worksheetDrawing.Append(absoluteAnchor);
-                    }
+                    AttachAnchor(absoluteAnchor, existingAnchor);
                     break;
 
                 case Drawings.XLPicturePlacement.MoveAndSize:
@@ -1766,14 +1759,7 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    if (existingAnchor != null)
-                    {
-                        worksheetDrawing.ReplaceChild(twoCellAnchor, existingAnchor);
-                    }
-                    else
-                    {
-                        worksheetDrawing.Append(twoCellAnchor);
-                    }
+                    AttachAnchor(twoCellAnchor, existingAnchor);
                     break;
 
                 case Drawings.XLPicturePlacement.Move:
@@ -1814,15 +1800,20 @@ namespace ClosedXML.Excel.IO
                         new Xdr.ClientData()
                     );
 
-                    if (existingAnchor != null)
-                    {
-                        worksheetDrawing.ReplaceChild(oneCellAnchor, existingAnchor);
-                    }
-                    else
-                    {
-                        worksheetDrawing.Append(oneCellAnchor);
-                    }
+                    AttachAnchor(oneCellAnchor, existingAnchor);
                     break;
+            }
+
+            void AttachAnchor(OpenXmlElement pictureAnchor, OpenXmlElement existingAnchor)
+            {
+                if (existingAnchor is not null)
+                {
+                    worksheetDrawing.ReplaceChild(pictureAnchor, existingAnchor);
+                }
+                else
+                {
+                    worksheetDrawing.Append(pictureAnchor);
+                }
             }
         }
 

@@ -473,24 +473,13 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void CanKeepPictureShapeOrder()
+        public void KeepOriginalDrawingShapesZOrder()
         {
-            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageShapeOrder.xlsx"));
-            using var wb = new XLWorkbook(stream);
-            var ws1 = wb.Worksheets.First();
-            var img1 = ws1.Pictures.First();
-            var xlImage1 = img1 as ClosedXML.Excel.Drawings.XLPicture;
-            var relId = xlImage1.RelId;
-            int pos1 = OpenXmlHelper.FindImageRelIdDrawingOrder(stream,ws1.Name, relId);
-
-            using var ms = new MemoryStream();
-            wb.SaveAs(ms);
-            stream.Close();
-            int pos2 = OpenXmlHelper.FindImageRelIdDrawingOrder(ms, ws1.Name, relId);
-            ms.Close();
-
-            Assert.AreEqual(pos1, pos2);
+            // File contains shapes and a picture in a mixed order.
+            using var stream = TestHelper.GetStreamFromResource(@"Other.Pictures.ImageShapeZOrder-Input.xlsx");
+            TestHelper.CreateAndCompare(
+                () => new XLWorkbook(stream),
+                @"Other\Pictures\ImageShapeZOrder-Output.xlsx");
         }
-
     }
 }

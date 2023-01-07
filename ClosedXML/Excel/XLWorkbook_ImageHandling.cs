@@ -10,9 +10,8 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
-        public static OpenXmlElement GetAnchorFromImageId(WorksheetPart worksheetPart, string relId)
+        public static OpenXmlElement GetAnchorFromImageId(DrawingsPart drawingsPart, string relId)
         {
-            var drawingsPart = worksheetPart.DrawingsPart;
             var matchingAnchor = drawingsPart.WorksheetDrawing
                 .Where(wsdr => wsdr.Descendants<Xdr.BlipFill>()
                     .Any(x => x?.Blip?.Embed?.Value.Equals(relId) ?? false)
