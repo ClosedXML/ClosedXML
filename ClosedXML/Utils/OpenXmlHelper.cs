@@ -4,7 +4,6 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Drawing = System.Drawing;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
@@ -81,52 +80,6 @@ namespace ClosedXML.Utils
         }
 
         #endregion Public Methods
-
-        #region Internal Methods
-        /// <summary>
-        /// Find image position in drawing.
-        /// </summary>
-        /// <param name="stream">elsx stream</param>
-        /// <param name="sheetName">sheet name</param>
-        /// <param name="relId">picture relId</param>
-        /// <returns>position index in drawing part</returns>
-        internal static int FindImageRelIdDrawingOrder(System.IO.Stream stream, string sheetName, string relId)
-        {
-            var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(stream, false);
-            try
-            {
-                var sheets = doc.WorkbookPart.Workbook.Sheets;
-                var sheet = sheets.OfType<Sheet>().Where(x => x.Name == sheetName).SingleOrDefault();
-                if (sheet == null)
-                {
-                    return -1;
-                }
-
-                var worksheetPart = doc.WorkbookPart.GetPartById(sheet.Id) as DocumentFormat.OpenXml.Packaging.WorksheetPart;
-                if (worksheetPart.DrawingsPart == null)
-                {
-                    return -1;
-                }
-                int pos = 0;
-                foreach (var anchor in worksheetPart.DrawingsPart.WorksheetDrawing.ChildElements)
-                {
-                    var id = XLWorkbook.GetImageRelIdFromAnchor(anchor);
-                    if (id == relId)
-                    {
-                        return pos;
-                    }
-                    pos++;
-                }
-                return -1;
-
-            }
-            finally
-            {
-                doc.Close();
-            }
-        }
-        #endregion Internal Methods
-
 
         #region Private Methods
 
