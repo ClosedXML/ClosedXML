@@ -88,10 +88,7 @@ namespace ClosedXML.Excel
                         Boolean filterMatch;
 
                         if (isText)
-                            filterMatch =
-                                filter.Operator is XLFilterOperator.Equal or XLFilterOperator.EqualOrGreaterThan or XLFilterOperator.EqualOrLessThan or XLFilterOperator.GreaterThan or XLFilterOperator.LessThan ? condition(row.Cell(columnIndex).GetFormattedString()) :
-                                filter.Operator is XLFilterOperator.NotEqual ? !condition(row.Cell(columnIndex).GetFormattedString()) :
-                                throw new NotSupportedException("This kind of operator is not supported for textual filter.");
+                            filterMatch = condition(row.Cell(columnIndex).GetFormattedString());
                         else if (isDateTime)
                             filterMatch = row.Cell(columnIndex).DataType == XLDataType.DateTime &&
                                     condition(row.Cell(columnIndex).GetDateTime());

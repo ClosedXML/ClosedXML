@@ -132,7 +132,7 @@ namespace ClosedXML.Excel
             {
                 return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
                                          v =>
-                                         v.ToString().Equals(value.ToString(),
+                                         !v.ToString().Equals(value.ToString(),
                                                               StringComparison.InvariantCultureIgnoreCase));
             }
 
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector NotBeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => BeginsWithFunction(value, s));
+            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => !BeginsWithFunction(value, s));
         }
 
         public static Func<String, Object, Boolean> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
@@ -195,7 +195,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector NotEndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => EndsWithFunction(value, s));
+            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => !EndsWithFunction(value, s));
         }
 
         public static Func<String, Object, Boolean> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector NotContains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.NotEqual, s => ContainsFunction(value, s));
+            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.NotEqual, s => !ContainsFunction(value, s));
         }
 
         public XLFilterType FilterType { get; set; }
