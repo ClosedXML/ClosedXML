@@ -62,8 +62,9 @@ namespace ClosedXML.Graphics
         /// </summary>
         /// <remarks>Useful/necessary for environments without an access to filesystem.</remarks>
         /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
+        /// <param name="useSystemFonts">Should engine try to use system fonts? If false, system fonts won't be loaded which can significantly speed up library startup.</param>
         /// <param name="fontStreams">Extra fonts that should be loaded to the engine.</param>
-        public DefaultGraphicEngine(Stream fallbackFontStream, params Stream[] fontStreams)
+        private DefaultGraphicEngine(Stream fallbackFontStream, bool useSystemFonts, params Stream[] fontStreams)
         {
             if (fallbackFontStream is null)
                 throw new ArgumentNullException(nameof(fallbackFontStream));
@@ -76,10 +77,50 @@ namespace ClosedXML.Graphics
             foreach (var fontStream in fontStreams)
                 fontCollection.Add(fontStream);
 
-            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts());
+            _fontCollection = useSystemFonts
+                ? new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts())
+                : new Lazy<IReadOnlyFontCollection>(() => fontCollection);
             _fallbackFont = fallbackFamily.Name;
             _loadFont = LoadFont;
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
+        }
+
+        /// <summary>
+        /// Create a default graphic engine that uses only fallback font and additional fonts passed as streams.
+        /// It ignores all system fonts and that can lead to decrease of initialization time.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Font is determined by a name and style in the worksheet, but the font name must be mapped to a font file/stream.
+        /// System fonts on Windows contain hundreds of font files that have to be checked to find the correct font
+        /// file for the font name and style. That means to read hundreds of files and parse data inside them.
+        /// Even though SixLabors.Fonts does this only once (lazily too) and stores data in a static variable, it is
+        /// an overhead that can be avoided.
+        /// </para>
+        /// <para>
+        /// This factory method is useful in several scenarios:
+        /// <list type="bullet">
+        ///   <item>Client side Blazor doesn't have access to any system fonts.</item>
+        ///   <item>Worksheet contains only limited number of fonts. It might be sufficient to just load few fonts we are</item>
+        /// </list>
+        /// </para>
+        /// </remarks>
+        /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
+        /// <param name="fontStreams">Fonts that should be loaded to the engine.</param>
+        public static IXLGraphicEngine CreateOnlyWithFonts(Stream fallbackFontStream, params Stream[] fontStreams)
+        {
+            return new DefaultGraphicEngine(fallbackFontStream, false, fontStreams);
+        }
+
+        /// <summary>
+        /// Create a default graphic engine that uses only fallback font and additional fonts passed as streams.
+        /// It also uses system fonts.
+        /// </summary>
+        /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
+        /// <param name="fontStreams">Fonts that should be loaded to the engine.</param>
+        public static IXLGraphicEngine CreateWithFontsAndSystemFonts(Stream fallbackFontStream, params Stream[] fontStreams)
+        {
+            return new DefaultGraphicEngine(fallbackFontStream, true, fontStreams);
         }
 
         public XLPictureInfo GetPictureInfo(Stream stream, XLPictureFormat expectedFormat)
@@ -145,7 +186,8 @@ namespace ClosedXML.Graphics
                 !_fontCollection.Value.TryGet(_fallbackFont, out fontFamily))
                 throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}. " +
                                             "Install missing fonts or specify a different fallback font through " +
-                                            "'LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(\"Fallback font name\")'.");
+                                            "'LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(\"Fallback font name\")'. " +
+                                            "Additional information is available at https://closedxml.readthedocs.io/en/latest/tips/missing-font.html page.");
 
             return fontFamily.CreateFont(FontMetricSize); // Size is irrelevant for metric
         }
