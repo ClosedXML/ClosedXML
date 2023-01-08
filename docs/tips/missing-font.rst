@@ -12,6 +12,10 @@ The exception was most likely thrown during a call of ``IXLColumn.AdjustToConten
 on Linux or some Cloud service that doesn't contain Windows fonts (e.g. AWS
 lambda functions, Azure functions).
 
+.. note::
+   For more details about how the engine works and available API,
+   see `graphic engine </en/latest/features/graphic-engine.html>`_ page.
+
 **************************
 Explanation of the problem
 **************************
@@ -33,7 +37,8 @@ the aforementioned exception.
 
 .. note::
    It is  responsibility of developer to ensure that required font/s are
-   present.
+   present. ClosedXML needs font metrics and substitution tables to calculate
+   text bounds in the font. It can't pull them out of thin air.
 
 SixLabors.Fonts library looks for fonts in the following folders
 (`source <https://github.com/SixLabors/Fonts/blob/main/src/SixLabors.Fonts/SystemFontCollection.cs#L38>`_):
@@ -105,6 +110,7 @@ choose a font that will be used as a fallback font.
 .. code-block:: csharp
 
    // "Fallback font name" will likely be something like "DejaVu Sans" or "Tahoma"
+   // It is not a path to font file, but a font name.
    LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("Fallback font name");
 
 
@@ -140,6 +146,16 @@ be clipped or displayed as `####`).
 Install the selected font on the target environment or bundle the font with
 the application.
 
+.. code-block:: csharp
+   :caption: Code to use Carlito as a default font
+
+   using (var fallbackFontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Carlito.ttf"))
+   {
+       // Carlito font will be used for everything, since it is the fallback font and no other font was loaded
+       LoadOptions.DefaultGraphicEngine = DefaultGraphicEngine.CreateOnlyWithFonts(fallbackFontStream);
+   }
+
+
 Install Windows fonts
 =====================
 
@@ -163,15 +179,26 @@ directory) and create ``DefaultGraphicEngine`` with a stream of bundled font.
 
 .. code-block:: csharp
 
-   using (var fallbackFont = Assembly.GetExecutingAssembly().GetManifestResourceStream("Namespace.SomeFont.ttf"))
+   using (var fallbackFontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Namespace.SomeFont.ttf"))
    {
-       LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(fallbackFont);
+       LoadOptions.DefaultGraphicEngine = DefaultGraphicEngine.CreateWithFontsAndSystemFonts(fallbackFontStream);
    }
 
 
 The ``DefaultGraphicEngine`` constructor can accept multiple font streams, so
 it is possible to load fonts that are actually used in the workbooks, not just
 fallback font. That is rather useful for client-side Blazor.
+
+Set ``IXLColumn.Width``/``IXLColumn.Height``
+============================================
+
+Width of columns and height of row can be set explicitely. Row has its height
+expressed in points, width of column is expressed in multiples of Maximum Digit
+Width (MDW). MDW is a maximum width of a any digit (0-9) in pixels. If column
+has width 12.5, it means 12.5 * width_of_widest_0-9_digit.
+
+For more information about how does Excel calculate width of a cell during
+``AdjustToContent``, see `Cell Dimension Dev documentation <https://github.com/ClosedXML/ClosedXML/wiki/Cell-Dimensions>`_.
 
 Create adapter
 ==============

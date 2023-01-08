@@ -60,7 +60,7 @@ namespace ClosedXML.Tests.Graphics
         public void CanSpecifyFallbackFontWithoutFileSystem()
         {
             using var fallbackFontStream = TestHelper.GetStreamFromResource("Fonts.TestFontA.ttf");
-            var engine = new DefaultGraphicEngine(fallbackFontStream);
+            var engine = DefaultGraphicEngine.CreateOnlyWithFonts(fallbackFontStream);
 
             var nonExistentFont = new DummyFont("Nonexistent Font", 20);
             var widthOfLetterA = engine.GetTextWidth("A", nonExistentFont, 120);
@@ -74,7 +74,7 @@ namespace ClosedXML.Tests.Graphics
         {
             using var fallbackFontStream = TestHelper.GetStreamFromResource("Fonts.TestFontA.ttf");
             var fontBStream = TestHelper.GetStreamFromResource("Fonts.TestFontB.ttf");
-            var engine = new DefaultGraphicEngine(fallbackFontStream, fontBStream);
+            var engine = DefaultGraphicEngine.CreateOnlyWithFonts(fallbackFontStream, fontBStream);
 
             var widthOfLetterB = engine.GetTextWidth("B", new DummyFont("TestFontB", 30), 96);
 
