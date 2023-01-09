@@ -136,6 +136,16 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(DateTime dateTime) => new(dateTime);
         public static implicit operator XLCellValue(TimeSpan timeSpan) => new(timeSpan);
 
+        public static implicit operator XLCellValue(sbyte number) => new(number);
+        public static implicit operator XLCellValue(byte number) => new(number);
+        public static implicit operator XLCellValue(short number) => new(number);
+        public static implicit operator XLCellValue(ushort number) => new(number);
+        public static implicit operator XLCellValue(int number) => new(number);
+        public static implicit operator XLCellValue(uint number) => new(number);
+        public static implicit operator XLCellValue(long number) => new(number);
+        public static implicit operator XLCellValue(ulong number) => new(number);
+        public static implicit operator XLCellValue(decimal number) => new(decimal.ToDouble(number));
+
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
 
