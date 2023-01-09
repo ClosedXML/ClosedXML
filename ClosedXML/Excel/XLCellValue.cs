@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
 
         private XLCellValue(XLError error) : this()
         {
-            if (error < XLError.CellReference || error > XLError.NumberInvalid)
+            if (error < XLError.NullValue || error > XLError.NoValueAvailable)
                 throw new ArgumentOutOfRangeException(nameof(error));
 
             Type = XLDataType.Error;

@@ -224,6 +224,15 @@ is the default calculate mode for workbooks). If the workbook has a different
 mode (e.g. ``XLWorkbook.CalculateMode = XLCalculateMode.Manual``), user might
 see the ``#NAME?`` values instead of blanks in some formulas.
 
+************************************
+XLError enum moved and order changed
+************************************
+
+Enum XLError has been moved from ``ClosedXML.Excel.CalcEngine`` namespace
+to ``ClosedXML.Excel`` namespace. XLError's members have been reordered, so
+the order is same as values returned by ERROR.TYPE function (the values
+are actually used sometimes during sorting).
+
 ****************
 Value formatting
 ****************

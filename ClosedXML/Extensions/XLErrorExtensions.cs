@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel;
 
 namespace ClosedXML.Extensions
 {
