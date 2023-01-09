@@ -32,17 +32,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!value.TryPickError(out var error))
                 return XLError.NoValueAvailable;
 
-            return error switch
-            {
-                XLError.NullValue => 1,
-                XLError.DivisionByZero => 2,
-                XLError.IncompatibleValue => 3,
-                XLError.CellReference => 4,
-                XLError.NameNotRecognized => 5,
-                XLError.NumberInvalid => 6,
-                XLError.NoValueAvailable => 7,
-                _ => throw new NotSupportedException($"Error {error} not supported.")
-            };
+            return (int)error + 1;
         }
 
         private static AnyValue IsBlank(CalcContext ctx, ScalarValue value)
