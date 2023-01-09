@@ -43,6 +43,22 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.Throws<ArgumentException>(() => _ = (XLCellValue)nonNumber);
         }
 
+        // Decimal is not allowed as a member of an attribute, so TestCase can't be used.
+        private static readonly object[] DecimalTestCases =
+        {
+            new object[] { 5.875m, 5.875d },
+            new object[] { Decimal.MaxValue, 7.922816251426434E+28 },
+            new object[] { 1.0E-28m, 1.0000000000000001E-28d }
+        };
+
+        [TestCaseSource(nameof(DecimalTestCases))]
+        public void Creation_Decimal(Decimal decimalNumber, Double expectedNumber)
+        {
+            XLCellValue cellValue = decimalNumber;
+            Assert.True(cellValue.IsNumber);
+            Assert.AreEqual(expectedNumber, cellValue.GetNumber());
+        }
+
         [Test]
         public void Creation_Text()
         {
@@ -89,6 +105,77 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.AreEqual(XLDataType.TimeSpan, dateTime.Type);
             Assert.True(dateTime.IsTimeSpan);
             Assert.AreEqual(new TimeSpan(10, 1, 2, 3, 456), dateTime.GetTimeSpan());
+        }
+
+        [Test]
+        public void NumberTypes_HaveUnambiguousConversion()
+        {
+            {
+                sbyte sbyteNumber = 5;
+                XLCellValue sbyteCellValue = sbyteNumber;
+                Assert.IsTrue(sbyteCellValue.IsNumber);
+                Assert.AreEqual(5d, sbyteCellValue.GetNumber());
+            }
+            {
+                byte byteNumber = 6;
+                XLCellValue byteCellValue = byteNumber;
+                Assert.IsTrue(byteCellValue.IsNumber);
+                Assert.AreEqual(6d, byteCellValue.GetNumber());
+            }
+            {
+                short shortNumber = 7;
+                XLCellValue shortCellValue = shortNumber;
+                Assert.IsTrue(shortCellValue.IsNumber);
+                Assert.AreEqual(7d, shortCellValue.GetNumber());
+            }
+            {
+                ushort ushortNumber = 8;
+                XLCellValue ushortCellValue = ushortNumber;
+                Assert.IsTrue(ushortCellValue.IsNumber);
+                Assert.AreEqual(8d, ushortCellValue.GetNumber());
+            }
+            {
+                int intNumber = 9;
+                XLCellValue intCellValue = intNumber;
+                Assert.IsTrue(intCellValue.IsNumber);
+                Assert.AreEqual(9d, intCellValue.GetNumber());
+            }
+            {
+                uint uintNumber = 10;
+                XLCellValue uintCellValue = uintNumber;
+                Assert.IsTrue(uintCellValue.IsNumber);
+                Assert.AreEqual(10d, uintCellValue.GetNumber());
+            }
+            {
+                long longNumber = 11;
+                XLCellValue longCellValue = longNumber;
+                Assert.IsTrue(longCellValue.IsNumber);
+                Assert.AreEqual(11d, longCellValue.GetNumber());
+            }
+            {
+                ulong ulongNumber = 12;
+                XLCellValue ulongCellValue = ulongNumber;
+                Assert.IsTrue(ulongCellValue.IsNumber);
+                Assert.AreEqual(12d, ulongCellValue.GetNumber());
+            }
+            {
+                float floatNumber = 13.5f;
+                XLCellValue floatCellValue = floatNumber;
+                Assert.IsTrue(floatCellValue.IsNumber);
+                Assert.AreEqual(13.5d, floatCellValue.GetNumber());
+            }
+            {
+                double doubleNumber = 14.5;
+                XLCellValue doubleCellValue = doubleNumber;
+                Assert.IsTrue(doubleCellValue.IsNumber);
+                Assert.AreEqual(14.5d, doubleCellValue.GetNumber());
+            }
+            {
+                decimal decimalNumber = 15.75m;
+                XLCellValue decimalCellValue = decimalNumber;
+                Assert.IsTrue(decimalCellValue.IsNumber);
+                Assert.AreEqual(15.75d, decimalCellValue.GetNumber());
+            }
         }
 
         [Test]
