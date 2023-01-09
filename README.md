@@ -7,7 +7,19 @@
 
 ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying [OpenXML](https://github.com/OfficeDev/Open-XML-SDK) API.
 
-[For more information see the wiki](https://github.com/closedxml/closedxml/wiki)
+For more information see [the documentation](https://closedxml.readthedocs.io/) or [the wiki](https://github.com/closedxml/closedxml/wiki).
+
+### Release notes & migration guide
+
+The public API is still not stable and it is a very good idea to **read release notes** and **migration guide** before each update.
+* [Release notes for 0.100](https://github.com/ClosedXML/ClosedXML/releases/tag/0.100.0)
+* [Migration guide for 0.100](https://closedxml.readthedocs.io/en/latest/migrations/migrate-to-0.100.html)
+* [Release notes for 0.97](https://github.com/ClosedXML/ClosedXML/releases/tag/0.97.0)
+
+### Frequent answers
+- If you get an exception `Unable to find font font name or fallback font fallback font name. Install missing fonts or specify a different fallback font through ‘LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(“Fallback font name”)’`, see help page about [missing fonts](https://closedxml.readthedocs.io/en/latest/tips/missing-font.html).
+- ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
+- If you get an exception `The type initializer for 'Gdip' threw an exception.` on Linux, you have to upgrade to 0.97+.
 
 ### Install ClosedXML via NuGet
 
@@ -33,10 +45,6 @@ using (var workbook = new XLWorkbook())
     workbook.SaveAs("HelloWorld.xlsx");
 }
 ```
-
-### Frequent answers
-- ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
-- If you get an exception `The type initializer for 'Gdip' threw an exception.` on Linux, you have to upgrade to 0.97+.
 
 ### Extensions
 Be sure to check out our `ClosedXML` extension projects
