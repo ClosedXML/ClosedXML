@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
         private XLCellValue(string text) : this()
         {
             if (text is null)
-                throw new ArgumentNullException(nameof(text));
+                throw new ArgumentNullException(nameof(text), "Text can't be null. If you are trying to set value of a cell to empty value, use Blank.Value instead of null.");
 
             if (text.Length > 32767)
                 throw new ArgumentOutOfRangeException(nameof(text), "Cells can hold a maximum of 32,767 characters.");
