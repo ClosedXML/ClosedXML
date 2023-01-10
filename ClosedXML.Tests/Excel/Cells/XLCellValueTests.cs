@@ -322,6 +322,25 @@ namespace ClosedXML.Tests.Excel.Cells
         }
 
         [Test]
+        [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
+        public void NullableDateTime_WithNullValue_IsConvertedToBlank()
+        {
+            DateTime? dateTimeNull = null;
+            XLCellValue dateTimeCellValue = dateTimeNull;
+            Assert.IsFalse(dateTimeCellValue.IsDateTime);
+            Assert.IsTrue(dateTimeCellValue.IsBlank);
+        }
+
+        [Test]
+        public void NullableDateTime_WithDateValue_IsConvertedToDateTime()
+        {
+            DateTime? dateTime = new DateTime(2020, 5, 14, 8, 14, 30);
+            XLCellValue dateTimeCellValue = dateTime;
+            Assert.IsTrue(dateTimeCellValue.IsDateTime);
+            Assert.AreEqual(dateTime.Value, dateTimeCellValue.GetDateTime());
+        }
+
+        [Test]
         public void UnifiedNumber_IsFormOf_Number_DateTime_And_TimeSpan()
         {
             XLCellValue value = Blank.Value;
