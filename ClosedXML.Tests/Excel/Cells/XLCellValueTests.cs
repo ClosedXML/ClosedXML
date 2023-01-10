@@ -341,6 +341,25 @@ namespace ClosedXML.Tests.Excel.Cells
         }
 
         [Test]
+        [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
+        public void NullableTimeSpan_WithNullValue_IsConvertedToBlank()
+        {
+            TimeSpan? timeSpanNull = null;
+            XLCellValue timeSpanCellValue = timeSpanNull;
+            Assert.IsFalse(timeSpanCellValue.IsTimeSpan);
+            Assert.IsTrue(timeSpanCellValue.IsBlank);
+        }
+
+        [Test]
+        public void NullableTimeSpan_WithTimeSpanValue_IsConvertedToTimeSpan()
+        {
+            TimeSpan? timeSpan = new TimeSpan(48, 12, 45, 30);
+            XLCellValue timeSpanCellValue = timeSpan;
+            Assert.IsTrue(timeSpanCellValue.IsTimeSpan);
+            Assert.AreEqual(timeSpan.Value, timeSpanCellValue.GetTimeSpan());
+        }
+
+        [Test]
         public void UnifiedNumber_IsFormOf_Number_DateTime_And_TimeSpan()
         {
             XLCellValue value = Blank.Value;

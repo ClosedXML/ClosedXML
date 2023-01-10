@@ -158,6 +158,7 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(decimal? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
 
         public static implicit operator XLCellValue(DateTime? dateTimeOrBlank) => dateTimeOrBlank.HasValue ? dateTimeOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(TimeSpan? timeSpanOrBlank) => timeSpanOrBlank.HasValue ? timeSpanOrBlank.Value : Blank.Value;
 
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
