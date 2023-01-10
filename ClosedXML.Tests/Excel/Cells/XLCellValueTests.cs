@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.Cells
 {
@@ -175,6 +175,149 @@ namespace ClosedXML.Tests.Excel.Cells
                 XLCellValue decimalCellValue = decimalNumber;
                 Assert.IsTrue(decimalCellValue.IsNumber);
                 Assert.AreEqual(15.75d, decimalCellValue.GetNumber());
+            }
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
+        public void NullableNumber_WithNullValue_AreConvertedToBlank()
+        {
+            {
+                sbyte? sbyteNull = null;
+                XLCellValue sbyteCellValue = sbyteNull;
+                Assert.IsFalse(sbyteCellValue.IsNumber);
+                Assert.IsTrue(sbyteCellValue.IsBlank);
+            }
+            {
+                byte? byteNull = null;
+                XLCellValue byteCellValue = byteNull;
+                Assert.IsFalse(byteCellValue.IsNumber);
+                Assert.IsTrue(byteCellValue.IsBlank);
+            }
+            {
+                short? shortNull = null;
+                XLCellValue shortCellValue = shortNull;
+                Assert.IsFalse(shortCellValue.IsNumber);
+                Assert.IsTrue(shortCellValue.IsBlank);
+            }
+            {
+                ushort? ushortNull = null;
+                XLCellValue ushortCellValue = ushortNull;
+                Assert.IsFalse(ushortCellValue.IsNumber);
+                Assert.IsTrue(ushortCellValue.IsBlank);
+            }
+            {
+                int? intNull = null;
+                XLCellValue intCellValue = intNull;
+                Assert.IsFalse(intCellValue.IsNumber);
+                Assert.IsTrue(intCellValue.IsBlank);
+            }
+            {
+                uint? uintNull = null;
+                XLCellValue uintCellValue = uintNull;
+                Assert.IsFalse(uintCellValue.IsNumber);
+                Assert.IsTrue(uintCellValue.IsBlank);
+            }
+            {
+                long? longNull = null;
+                XLCellValue longCellValue = longNull;
+                Assert.IsFalse(longCellValue.IsNumber);
+                Assert.IsTrue(longCellValue.IsBlank);
+            }
+            {
+                ulong? ulongNull = null;
+                XLCellValue ulongCellValue = ulongNull;
+                Assert.IsFalse(ulongCellValue.IsNumber);
+                Assert.IsTrue(ulongCellValue.IsBlank);
+            }
+            {
+                float? floatValue = null;
+                XLCellValue floatCellValue = floatValue;
+                Assert.IsFalse(floatCellValue.IsNumber);
+                Assert.IsTrue(floatCellValue.IsBlank);
+            }
+            {
+                double? doubleValue = null;
+                XLCellValue doubleCellValue = doubleValue;
+                Assert.IsFalse(doubleCellValue.IsNumber);
+                Assert.IsTrue(doubleCellValue.IsBlank);
+            }
+            {
+                decimal? decimalValue = null;
+                XLCellValue decimalCellValue = decimalValue;
+                Assert.IsFalse(decimalCellValue.IsNumber);
+                Assert.IsTrue(decimalCellValue.IsBlank);
+            }
+        }
+
+        [Test]
+        public void NullableNumber_WithNumberValue_AreConvertedToNumber()
+        {
+            {
+                sbyte? sbyteNumber = 5;
+                XLCellValue sbyteCellValue = sbyteNumber;
+                Assert.IsTrue(sbyteCellValue.IsNumber);
+                Assert.AreEqual(5d, sbyteCellValue.GetNumber());
+            }
+            {
+                byte? byteNumber = 6;
+                XLCellValue byteCellValue = byteNumber;
+                Assert.IsTrue(byteCellValue.IsNumber);
+                Assert.AreEqual(6d, byteCellValue.GetNumber());
+            }
+            {
+                short? shortNumber = 7;
+                XLCellValue shortCellValue = shortNumber;
+                Assert.IsTrue(shortCellValue.IsNumber);
+                Assert.AreEqual(7d, shortCellValue.GetNumber());
+            }
+            {
+                ushort? ushortNumber = 8;
+                XLCellValue ushortCellValue = ushortNumber;
+                Assert.IsTrue(ushortCellValue.IsNumber);
+                Assert.AreEqual(8d, ushortCellValue.GetNumber());
+            }
+            {
+                int? intNumber = 9;
+                XLCellValue intCellValue = intNumber;
+                Assert.IsTrue(intCellValue.IsNumber);
+                Assert.AreEqual(9d, intCellValue.GetNumber());
+            }
+            {
+                uint? uintNumber = 9;
+                XLCellValue uintCellValue = uintNumber;
+                Assert.IsTrue(uintCellValue.IsNumber);
+                Assert.AreEqual(9d, uintCellValue.GetNumber());
+            }
+            {
+                long? longNumber = 10;
+                XLCellValue longCellValue = longNumber;
+                Assert.IsTrue(longCellValue.IsNumber);
+                Assert.AreEqual(10d, longCellValue.GetNumber());
+            }
+            {
+                ulong? ulongNumber = 11;
+                XLCellValue ulongCellValue = ulongNumber;
+                Assert.IsTrue(ulongCellValue.IsNumber);
+                Assert.AreEqual(11d, ulongCellValue.GetNumber());
+            }
+            {
+                float? floatNumber = 12.875f;
+                XLCellValue floatCellValue = floatNumber;
+                Assert.IsTrue(floatCellValue.IsNumber);
+                Assert.AreEqual(12.875d, floatCellValue.GetNumber());
+            }
+            {
+                double? doubleNumber = 13.875d;
+                XLCellValue doubleCellValue = doubleNumber;
+                Assert.IsTrue(doubleCellValue.IsNumber);
+                Assert.AreEqual(13.875d, doubleCellValue.GetNumber());
+            }
+            {
+                decimal? decimalNumber = 14.875m;
+                XLCellValue decimalCellValue = decimalNumber;
+                Assert.IsTrue(decimalCellValue.IsNumber);
+                Assert.AreEqual(14.875d, decimalCellValue.GetNumber());
             }
         }
 

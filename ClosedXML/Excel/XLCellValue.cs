@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         private readonly double _value;
         private readonly string _text;
 
-        private XLCellValue(Blank value) : this()
+        private XLCellValue(Blank _) : this()
         {
             Type = XLDataType.Blank;
         }
@@ -145,6 +145,17 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(long number) => new(number);
         public static implicit operator XLCellValue(ulong number) => new(number);
         public static implicit operator XLCellValue(decimal number) => new(decimal.ToDouble(number));
+
+        public static implicit operator XLCellValue(sbyte? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(byte? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(short? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(ushort? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(int? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(uint? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(long? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(ulong? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(double? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(decimal? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
 
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
