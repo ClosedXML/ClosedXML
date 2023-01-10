@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
         private XLCellValue(string text) : this()
         {
             if (text is null)
-                throw new ArgumentNullException(nameof(text), "Text can't be null. If you are trying to set value of a cell to empty value, use Blank.Value instead of null.");
+                throw new ArgumentNullException(nameof(text));
 
             if (text.Length > 32767)
                 throw new ArgumentOutOfRangeException(nameof(text), "Cells can hold a maximum of 32,767 characters.");
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(Blank blank) => new(blank);
         public static implicit operator XLCellValue(bool logical) => new(logical);
         public static implicit operator XLCellValue(double number) => new(number);
-        public static implicit operator XLCellValue(string text) => new(text);
+        public static implicit operator XLCellValue(string text) => text is not null ? new(text) : new(Blank.Value);
         public static implicit operator XLCellValue(XLError error) => new(error);
         public static implicit operator XLCellValue(DateTime dateTime) => new(dateTime);
         public static implicit operator XLCellValue(TimeSpan timeSpan) => new(timeSpan);
