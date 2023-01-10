@@ -68,9 +68,11 @@ namespace ClosedXML.Tests.Excel.Cells
         }
 
         [Test]
-        public void Creation_Text_CantBeNull()
+        public void NullString_IsConvertedToBlank()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = (XLCellValue)(string)null);
+            XLCellValue value = (string)null;
+            Assert.IsTrue(value.IsBlank);
+            Assert.IsFalse(value.IsText);
         }
 
         [Test]
