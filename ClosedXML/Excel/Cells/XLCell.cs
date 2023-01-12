@@ -1626,8 +1626,8 @@ namespace ClosedXML.Excel
                 string rightPart;
                 if (p1.StartsWith("R"))
                 {
-                    leftPart = GetA1Row(p1);
-                    rightPart = GetA1Row(p2);
+                    leftPart = GetA1Row(p1, _rowNumber);
+                    rightPart = GetA1Row(p2, _rowNumber);
                 }
                 else
                 {
@@ -1641,7 +1641,7 @@ namespace ClosedXML.Excel
             try
             {
                 var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-                var rowToReturn = GetA1Row(rowPart);
+                var rowToReturn = GetA1Row(rowPart, _rowNumber);
 
                 var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
                 var columnToReturn = GetA1Column(columnPart);
@@ -1687,21 +1687,21 @@ namespace ClosedXML.Excel
             return columnToReturn;
         }
 
-        private string GetA1Row(string rowPart)
+        private static string GetA1Row(string rowPartRC, int cellRow)
         {
             string rowToReturn;
-            if (rowPart == "R")
-                rowToReturn = _rowNumber.ToString();
+            if (rowPartRC == "R")
+                rowToReturn = cellRow.ToString();
             else
             {
-                var bIndex = rowPart.IndexOf("[");
+                var bIndex = rowPartRC.IndexOf("[");
                 if (bIndex >= 0)
                 {
                     rowToReturn =
-                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2))).ToString();
+                        (cellRow + Int32.Parse(rowPartRC.Substring(bIndex + 1, rowPartRC.Length - bIndex - 2))).ToString();
                 }
                 else
-                    rowToReturn = "$" + (Int32.Parse(rowPart.Substring(1)));
+                    rowToReturn = "$" + (Int32.Parse(rowPartRC.Substring(1)));
             }
 
             return rowToReturn;
