@@ -250,3 +250,15 @@ the pivot table. There can be multiple values for a single source column
 (e.g. average value and minimal value).
 
 Methods for manipulating the ``IXLPivotFields`` still use source names.
+
+***********************
+XLEventTracking removed
+***********************
+
+ClosedXML used to track various events and call registered event handlers.
+That functionality was removed long ago and now even enum
+``XLEventTracking``, ``LoadOptions.EventTracking`` property
+and ``XLWorkbook`` constructors that accepted the enum were removed.
+
+To migrate the code, just remove the ``XLEventTracking`` argument from
+the constructor and remove setters of ``LoadOptions.EventTracking``.
