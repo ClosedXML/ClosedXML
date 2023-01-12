@@ -602,8 +602,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_formula.A1) ||
-                    !String.IsNullOrEmpty(_formula.R1C1))
+                if (_formula.HasAnyFormula)
                 {
                     Evaluate(false);
                 }
@@ -2348,6 +2347,10 @@ namespace ClosedXML.Excel
         {
             internal string A1;
             internal string R1C1;
+
+            internal bool HasAnyFormula =>
+                !String.IsNullOrWhiteSpace(A1) ||
+                !String.IsNullOrEmpty(R1C1);
         }
     }
 }
