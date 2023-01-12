@@ -1631,8 +1631,8 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    leftPart = GetA1Column(p1);
-                    rightPart = GetA1Column(p2);
+                    leftPart = GetA1Column(p1, _columnNumber);
+                    rightPart = GetA1Column(p2, _columnNumber);
                 }
 
                 return leftPart + ":" + rightPart;
@@ -1644,7 +1644,7 @@ namespace ClosedXML.Excel
                 var rowToReturn = GetA1Row(rowPart, _rowNumber);
 
                 var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-                var columnToReturn = GetA1Column(columnPart);
+                var columnToReturn = GetA1Column(columnPart, _columnNumber);
 
                 var retAddress = columnToReturn + rowToReturn;
                 return retAddress;
@@ -1655,32 +1655,32 @@ namespace ClosedXML.Excel
             }
         }
 
-        private string GetA1Column(string columnPart)
+        private static string GetA1Column(string columnPartRC, int cellColumn)
         {
             string columnToReturn;
-            if (columnPart == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(_columnNumber);
+            if (columnPartRC == "C")
+                columnToReturn = XLHelper.GetColumnLetterFromNumber(cellColumn);
             else
             {
-                var bIndex = columnPart.IndexOf("[");
-                var mIndex = columnPart.IndexOf("-");
+                var bIndex = columnPartRC.IndexOf("[");
+                var mIndex = columnPartRC.IndexOf("-");
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber +
-                        Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2))
+                        cellColumn +
+                        Int32.Parse(columnPartRC.Substring(bIndex + 1, columnPartRC.Length - bIndex - 2))
                         );
                 }
                 else if (mIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex))
+                        cellColumn + Int32.Parse(columnPartRC.Substring(mIndex))
                         );
                 }
                 else
                 {
                     columnToReturn = "$" +
-                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
+                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPartRC.Substring(1)));
                 }
             }
 
