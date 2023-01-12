@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,22 @@ namespace ClosedXML.Tests
     [TestFixture]
     public class XLCellTests
     {
+        [SuppressMessage("ReSharper", "RedundantCast")]
+        private static readonly object[] AllNumberTypes =
+        {
+            (sbyte)1,
+            (byte)2,
+            (short)3,
+            (ushort)4,
+            (int)5,
+            (uint)6,
+            (long)7,
+            (ulong)8,
+            (float)9.5f,
+            (double)10.75,
+            (decimal)11.875m
+        };
+
         [Test]
         public void CellsUsed()
         {
@@ -86,7 +103,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void InsertData2()
+        public void InsertData_DoesntTransposeDataOnFalseFlag()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, false);
@@ -94,7 +111,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void InsertData3()
+        public void InsertData_TransposesDataOnTrueFlag()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, true);
@@ -107,9 +124,9 @@ namespace ClosedXML.Tests
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             object[] values = { "Text", 45, DateTime.Today, true, "More text" };
-        
+
             ws.FirstCell().InsertData(values);
-        
+
             Assert.AreEqual("Text", ws.FirstCell().GetString());
             Assert.AreEqual(45, ws.Cell("A2").GetDouble());
             Assert.AreEqual(DateTime.Today, ws.Cell("A3").GetDateTime());
@@ -171,6 +188,45 @@ namespace ClosedXML.Tests
 
             Assert.AreEqual(new DateTime(2000, 1, 1), ws.Cell("A1").GetDateTime());
             Assert.AreEqual(Blank.Value, ws.Cell("A5").Value);
+        }
+
+        [Test]
+        public void InsertData_AllNumberTypes_AreInsertedAsNumbers()
+        {
+            var ws = new XLWorkbook().Worksheets.Add();
+
+            ws.FirstCell().InsertData(AllNumberTypes);
+
+            for (var row = 1; row <= AllNumberTypes.Length; ++row)
+            {
+                var expectedValue = Convert.ChangeType(AllNumberTypes[row - 1], typeof(double));
+                var actualValue = ws.Cell(row, 1).Value;
+                Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [Test]
+        public void InsertTable_AllNumberTypes_AreInsertedAsNumbers()
+        {
+            var ws = new XLWorkbook().Worksheets.Add();
+
+            var table = new DataTable("Numbers");
+            foreach (var number in AllNumberTypes)
+            {
+                var numberType = number.GetType();
+                table.Columns.Add(numberType.Name, numberType);
+            }
+
+            table.Rows.Add(AllNumberTypes);
+
+            ws.FirstCell().InsertTable(table);
+
+            for (var column = 1; column <= AllNumberTypes.Length; ++column)
+            {
+                var expectedValue = Convert.ChangeType(AllNumberTypes[column - 1], typeof(double));
+                var actualValue = ws.Cell(2, column).Value;
+                Assert.AreEqual(expectedValue, actualValue);
+            }
         }
 
         [Test]
@@ -425,7 +481,7 @@ namespace ClosedXML.Tests
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
         }
-        
+
         [Test]
         public void TryGetValue_Unicode_String()
         {
