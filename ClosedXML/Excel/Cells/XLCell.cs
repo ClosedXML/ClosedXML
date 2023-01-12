@@ -73,8 +73,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public bool ShareString { get; set; }
 
-        private string _formulaA1;
-        private string _formulaR1C1;
+        private readonly CellFormula _formula = new();
 
         private XLComment _comment;
         private XLHyperlink _hyperlink;
@@ -603,8 +602,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_formulaA1) ||
-                    !String.IsNullOrEmpty(_formulaR1C1))
+                if (!String.IsNullOrWhiteSpace(_formula.A1) ||
+                    !String.IsNullOrEmpty(_formula.R1C1))
                 {
                     Evaluate(false);
                 }
@@ -897,24 +896,24 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1))
+                if (String.IsNullOrWhiteSpace(_formula.A1))
                 {
-                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
+                    if (!String.IsNullOrWhiteSpace(_formula.R1C1))
                     {
-                        _formulaA1 = GetFormulaA1(_formulaR1C1);
+                        _formula.A1 = GetFormulaA1(_formula.R1C1);
                         return FormulaA1;
                     }
 
                     return String.Empty;
                 }
 
-                if (_formulaA1.Trim()[0] == '=')
-                    return _formulaA1.Substring(1);
+                if (_formula.A1.Trim()[0] == '=')
+                    return _formula.A1.Substring(1);
 
-                if (_formulaA1.Trim().StartsWith("{="))
-                    return "{" + _formulaA1.Substring(2);
+                if (_formula.A1.Trim().StartsWith("{="))
+                    return "{" + _formula.A1.Substring(2);
 
-                return _formulaA1;
+                return _formula.A1;
             }
 
             set
@@ -924,9 +923,9 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formula.A1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
-                _formulaR1C1 = null;
+                _formula.R1C1 = null;
             }
         }
 
@@ -934,10 +933,10 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaR1C1))
-                    _formulaR1C1 = GetFormulaR1C1(FormulaA1);
+                if (String.IsNullOrWhiteSpace(_formula.R1C1))
+                    _formula.R1C1 = GetFormulaR1C1(FormulaA1);
 
-                return _formulaR1C1;
+                return _formula.R1C1;
             }
 
             set
@@ -947,9 +946,9 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formula.R1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
-                _formulaA1 = null;
+                _formula.A1 = null;
             }
         }
 
@@ -1033,7 +1032,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
+                if (String.IsNullOrWhiteSpace(_formula.A1) && String.IsNullOrEmpty(_formula.R1C1))
                     return false;
 
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
@@ -1043,7 +1042,7 @@ namespace ClosedXML.Excel
                 if (cellWasModified)
                     return NeedsRecalculation = true;
 
-                if (!Worksheet.CalcEngine.TryGetPrecedentCells(_formulaA1, Worksheet, out var precedentCells))
+                if (!Worksheet.CalcEngine.TryGetPrecedentCells(_formula.A1, Worksheet, out var precedentCells))
                     return NeedsRecalculation = true;
 
                 var res = precedentCells.Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
@@ -2343,6 +2342,12 @@ namespace ClosedXML.Excel
         internal bool IsSuperiorMergedCell()
         {
             return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+        }
+
+        private class CellFormula
+        {
+            internal string A1;
+            internal string R1C1;
         }
     }
 }
