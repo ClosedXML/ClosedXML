@@ -887,13 +887,12 @@ namespace ClosedXML.Excel
             {
                 if (String.IsNullOrWhiteSpace(_formula.A1))
                 {
-                    if (!String.IsNullOrWhiteSpace(_formula.R1C1))
+                    if (String.IsNullOrWhiteSpace(_formula.R1C1))
                     {
-                        _formula.A1 = GetFormulaA1(_formula.R1C1);
-                        return FormulaA1;
+                        return String.Empty;
                     }
 
-                    return String.Empty;
+                    _formula.A1 = GetFormulaA1(_formula.R1C1);
                 }
 
                 if (_formula.A1.Trim()[0] == '=')
