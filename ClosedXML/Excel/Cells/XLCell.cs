@@ -883,26 +883,7 @@ namespace ClosedXML.Excel
 
         public string FormulaA1
         {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(_formula.A1))
-                {
-                    if (String.IsNullOrWhiteSpace(_formula.R1C1))
-                    {
-                        return String.Empty;
-                    }
-
-                    _formula.A1 = GetFormulaA1(_formula.R1C1);
-                }
-
-                if (_formula.A1.Trim()[0] == '=')
-                    return _formula.A1.Substring(1);
-
-                if (_formula.A1.Trim().StartsWith("{="))
-                    return "{" + _formula.A1.Substring(2);
-
-                return _formula.A1;
-            }
+            get => _formula.GetFormulaA1(new XLSheetPoint(_rowNumber, _columnNumber));
 
             set
             {
@@ -2158,6 +2139,31 @@ namespace ClosedXML.Excel
             internal bool HasAnyFormula =>
                 !String.IsNullOrWhiteSpace(A1) ||
                 !String.IsNullOrEmpty(R1C1);
+
+            /// <summary>
+            /// Get stored formula or or <c>string.Empty</c> if both A1/R1C1 are empty.
+            /// Formula doesn't contain artificial equal sign.
+            /// </summary>
+            public string GetFormulaA1(XLSheetPoint cellAddress)
+            {
+                if (String.IsNullOrWhiteSpace(A1))
+                {
+                    if (String.IsNullOrWhiteSpace(R1C1))
+                    {
+                        return String.Empty;
+                    }
+
+                    A1 = GetFormula(R1C1, FormulaConversionType.R1C1ToA1, cellAddress);
+                }
+
+                if (A1.Trim()[0] == '=')
+                    return A1.Substring(1);
+
+                if (A1.Trim().StartsWith("{="))
+                    return "{" + A1.Substring(2);
+
+                return A1;
+            }
 
             internal static string GetFormula(string strValue, FormulaConversionType conversionType, XLSheetPoint cellAddress)
             {
