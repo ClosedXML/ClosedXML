@@ -82,6 +82,15 @@ namespace ClosedXML.Tests.Graphics
             Assert.AreEqual(expectedWidthOfLetterB, widthOfLetterB, 0.0001);
         }
 
+        [TestCase]
+        public void Issue_1916_CanMeasureSpecificArabicText()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell(1, 1).Value = @"اصين";
+            ws.Column(1).AdjustToContents();
+        }
+
         private class DummyFont : IXLFontBase
         {
             public DummyFont(string name, double size)
