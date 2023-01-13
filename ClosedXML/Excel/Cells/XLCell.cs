@@ -1725,8 +1725,8 @@ namespace ClosedXML.Excel
                 {
                     var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
                     var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'));
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'));
+                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), _columnNumber);
+                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), _columnNumber);
                     return leftPart + ":" + rightPart;
                 }
             }
@@ -1734,7 +1734,7 @@ namespace ClosedXML.Excel
             var address = XLAddress.Create(Worksheet, a1Address);
 
             var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow);
-            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn);
+            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, _columnNumber);
 
             return rowPart + columnPart;
         }
@@ -1751,10 +1751,10 @@ namespace ClosedXML.Excel
             return rowPart;
         }
 
-        private string GetR1C1Column(int columnNumber, bool fixedColumn)
+        private static string GetR1C1Column(int columnNumber, bool fixedColumn, int cellColumn)
         {
             string columnPart;
-            var columnDiff = columnNumber - _columnNumber;
+            var columnDiff = columnNumber - cellColumn;
             if (columnDiff != 0 || fixedColumn)
                 columnPart = fixedColumn ? "C" + columnNumber : "C[" + columnDiff + "]";
             else
