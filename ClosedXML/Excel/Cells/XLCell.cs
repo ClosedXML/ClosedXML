@@ -1598,7 +1598,7 @@ namespace ClosedXML.Excel
                     // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                        ? GetR1C1Address(matchString)
+                        ? GetR1C1Address(matchString, new XLSheetPoint(_rowNumber, _columnNumber))
                         : GetA1Address(matchString, new XLSheetPoint(_rowNumber, _columnNumber)));
                 }
                 else
@@ -1707,7 +1707,7 @@ namespace ClosedXML.Excel
             return rowToReturn;
         }
 
-        private string GetR1C1Address(string a1Address)
+        private string GetR1C1Address(string a1Address, XLSheetPoint cellAddress)
         {
             if (a1Address.Contains(':'))
             {
@@ -1717,24 +1717,24 @@ namespace ClosedXML.Excel
                 if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
                 {
                     var row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), _rowNumber);
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), _rowNumber);
+                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), cellAddress.Row);
+                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), cellAddress.Row);
                     return leftPart + ":" + rightPart;
                 }
                 else
                 {
                     var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
                     var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), _columnNumber);
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), _columnNumber);
+                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), cellAddress.Column);
+                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), cellAddress.Column);
                     return leftPart + ":" + rightPart;
                 }
             }
 
             var address = XLAddress.Create(Worksheet, a1Address);
 
-            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, _rowNumber);
-            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, _columnNumber);
+            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, cellAddress.Row);
+            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, cellAddress.Column);
 
             return rowPart + columnPart;
         }
