@@ -1568,15 +1568,15 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return GetFormula(value, FormulaConversionType.A1ToR1C1);
+            return GetFormula(value, FormulaConversionType.A1ToR1C1, new XLSheetPoint(_rowNumber, _columnNumber));
         }
 
         internal string GetFormulaA1(string value)
         {
-            return GetFormula(value, FormulaConversionType.R1C1ToA1);
+            return GetFormula(value, FormulaConversionType.R1C1ToA1, new XLSheetPoint(_rowNumber, _columnNumber));
         }
 
-        private string GetFormula(string strValue, FormulaConversionType conversionType)
+        private static string GetFormula(string strValue, FormulaConversionType conversionType, XLSheetPoint cellAddress)
         {
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
@@ -1598,8 +1598,8 @@ namespace ClosedXML.Excel
                     // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                        ? GetR1C1Address(matchString, new XLSheetPoint(_rowNumber, _columnNumber))
-                        : GetA1Address(matchString, new XLSheetPoint(_rowNumber, _columnNumber)));
+                        ? GetR1C1Address(matchString, cellAddress)
+                        : GetA1Address(matchString, cellAddress));
                 }
                 else
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
