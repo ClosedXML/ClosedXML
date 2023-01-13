@@ -1599,7 +1599,7 @@ namespace ClosedXML.Excel
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                         ? GetR1C1Address(matchString)
-                        : GetA1Address(matchString));
+                        : GetA1Address(matchString, new XLSheetPoint(_rowNumber, _columnNumber)));
                 }
                 else
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
@@ -1613,7 +1613,7 @@ namespace ClosedXML.Excel
             return retVal.Substring(1, retVal.Length - 2);
         }
 
-        private string GetA1Address(string r1C1Address)
+        private static string GetA1Address(string r1C1Address, XLSheetPoint cellAddress)
         {
             var addressToUse = r1C1Address.ToUpper();
 
@@ -1626,13 +1626,13 @@ namespace ClosedXML.Excel
                 string rightPart;
                 if (p1.StartsWith("R"))
                 {
-                    leftPart = GetA1Row(p1, _rowNumber);
-                    rightPart = GetA1Row(p2, _rowNumber);
+                    leftPart = GetA1Row(p1, cellAddress.Row);
+                    rightPart = GetA1Row(p2, cellAddress.Row);
                 }
                 else
                 {
-                    leftPart = GetA1Column(p1, _columnNumber);
-                    rightPart = GetA1Column(p2, _columnNumber);
+                    leftPart = GetA1Column(p1, cellAddress.Column);
+                    rightPart = GetA1Column(p2, cellAddress.Column);
                 }
 
                 return leftPart + ":" + rightPart;
@@ -1641,10 +1641,10 @@ namespace ClosedXML.Excel
             try
             {
                 var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-                var rowToReturn = GetA1Row(rowPart, _rowNumber);
+                var rowToReturn = GetA1Row(rowPart, cellAddress.Row);
 
                 var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-                var columnToReturn = GetA1Column(columnPart, _columnNumber);
+                var columnToReturn = GetA1Column(columnPart, cellAddress.Column);
 
                 var retAddress = columnToReturn + rowToReturn;
                 return retAddress;
