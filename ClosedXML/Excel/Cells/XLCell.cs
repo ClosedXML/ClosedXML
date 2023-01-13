@@ -1707,7 +1707,7 @@ namespace ClosedXML.Excel
             return rowToReturn;
         }
 
-        private string GetR1C1Address(string a1Address, XLSheetPoint cellAddress)
+        private static string GetR1C1Address(string a1Address, XLSheetPoint cellAddress)
         {
             if (a1Address.Contains(':'))
             {
@@ -1731,7 +1731,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var address = XLAddress.Create(Worksheet, a1Address);
+            var address = XLAddress.Create(a1Address);
 
             var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, cellAddress.Row);
             var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, cellAddress.Column);
