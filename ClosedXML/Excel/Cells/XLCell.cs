@@ -1717,8 +1717,8 @@ namespace ClosedXML.Excel
                 if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
                 {
                     var row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'));
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'));
+                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), _rowNumber);
+                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), _rowNumber);
                     return leftPart + ":" + rightPart;
                 }
                 else
@@ -1733,16 +1733,16 @@ namespace ClosedXML.Excel
 
             var address = XLAddress.Create(Worksheet, a1Address);
 
-            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow);
+            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, _rowNumber);
             var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, _columnNumber);
 
             return rowPart + columnPart;
         }
 
-        private string GetR1C1Row(int rowNumber, bool fixedRow)
+        private static string GetR1C1Row(int rowNumber, bool fixedRow, int cellRow)
         {
             string rowPart;
-            var rowDiff = rowNumber - _rowNumber;
+            var rowDiff = rowNumber - cellRow;
             if (rowDiff != 0 || fixedRow)
                 rowPart = fixedRow ? "R" + rowNumber : "R[" + rowDiff + "]";
             else
