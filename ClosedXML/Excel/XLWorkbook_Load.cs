@@ -1731,10 +1731,10 @@ namespace ClosedXML.Excel
             }
             else
             {
+                var cellValue = cell.CellValue;
                 if (dataType == CellValues.Number)
                 {
                     // XLCell is by default blank, so no need to set it.
-                    var cellValue = cell.CellValue;
                     if (cellValue is not null && cellValue.TryGetDouble(out var number))
                     {
                         var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
@@ -1749,8 +1749,8 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.SharedString)
                 {
-                    if (cell.CellValue != null
-                        && Int32.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
+                    if (cellValue is not null
+                        && Int32.TryParse(cellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
                         && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                     {
                         xlCell.SharedStringId = sharedStringId;
@@ -1763,15 +1763,15 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
                 {
-                    xlCell.SetOnlyValue(cell.CellValue?.Text ?? String.Empty);
+                    xlCell.SetOnlyValue(cellValue?.Text ?? String.Empty);
                 }
                 else if (dataType == CellValues.Boolean)
                 {
                     // Can be empty for formulas
-                    if (cell.CellValue is not null)
+                    if (cellValue is not null)
                     {
-                        var isTrue = string.Equals(cell.CellValue?.Text, "1", StringComparison.Ordinal) ||
-                                     string.Equals(cell.CellValue?.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
+                        var isTrue = string.Equals(cellValue?.Text, "1", StringComparison.Ordinal) ||
+                                     string.Equals(cellValue?.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
                         xlCell.SetOnlyValue(isTrue);
                     }
                 }
@@ -1790,15 +1790,18 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.Error)
                 {
-                    if (cell.CellValue is not null && XLErrorParser.TryParseError(cell.CellValue.InnerText, out var error))
+                    if (cellValue is not null && XLErrorParser.TryParseError(cellValue.InnerText, out var error))
                         xlCell.SetOnlyValue(error);
                 }
                 else if (dataType == CellValues.Date)
                 {
-                    var date = DateTime.ParseExact(cell.CellValue.Text, DateCellFormats,
-                        XLHelper.ParseCulture,
-                        DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
-                    xlCell.SetOnlyValue(date);
+                    if (cellValue is not null)
+                    {
+                        var date = DateTime.ParseExact(cellValue.Text, DateCellFormats,
+                            XLHelper.ParseCulture,
+                            DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
+                        xlCell.SetOnlyValue(date);
+                    }
                 }
             }
 
