@@ -1755,85 +1755,80 @@ namespace ClosedXML.Excel
                 // Original code incremented version each time it set the values. That is no longer happening, but few
                 // examples rely on it. It should be set when cellFormula.CalculateCell is set or when value is missing.
                 xlCell.InvalidateFormula();
-
-                SetFormulaCellValue(xlCell, cell);
             }
-            else
+            // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
+            // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
+            var cellValue = cell.CellValue;
+            if (dataType == CellValues.Number)
             {
-                // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
-                // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
-                var cellValue = cell.CellValue;
-                if (dataType == CellValues.Number)
+                // XLCell is by default blank, so no need to set it.
+                if (cellValue is not null && cellValue.TryGetDouble(out var number))
                 {
-                    // XLCell is by default blank, so no need to set it.
-                    if (cellValue is not null && cellValue.TryGetDouble(out var number))
+                    var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
+                    var cellNumber = numberDataType switch
                     {
-                        var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
-                        var cellNumber = numberDataType switch
-                        {
-                            XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
-                            XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
-                            _ => number // Normal number
-                        };
-                        xlCell.SetOnlyValue(cellNumber);
-                    }
+                        XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
+                        XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
+                        _ => number // Normal number
+                    };
+                    xlCell.SetOnlyValue(cellNumber);
                 }
-                else if (dataType == CellValues.SharedString)
+            }
+            else if (dataType == CellValues.SharedString)
+            {
+                if (cellValue is not null
+                    && Int32.TryParse(cellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
+                    && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                 {
-                    if (cellValue is not null
-                        && Int32.TryParse(cellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
-                        && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
-                    {
-                        xlCell.SharedStringId = sharedStringId;
-                        var sharedString = sharedStrings[sharedStringId];
+                    xlCell.SharedStringId = sharedStringId;
+                    var sharedString = sharedStrings[sharedStringId];
 
-                        SetCellText(xlCell, sharedString);
-                    }
+                    SetCellText(xlCell, sharedString);
+                }
+                else
+                    xlCell.SetOnlyValue(String.Empty);
+            }
+            else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
+            {
+                xlCell.SetOnlyValue(cellValue?.Text ?? String.Empty);
+            }
+            else if (dataType == CellValues.Boolean)
+            {
+                if (cellValue is not null)
+                {
+                    var isTrue = string.Equals(cellValue.Text, "1", StringComparison.Ordinal) ||
+                                 string.Equals(cellValue.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
+                    xlCell.SetOnlyValue(isTrue);
+                }
+            }
+            else if (dataType == CellValues.InlineString)
+            {
+                xlCell.ShareString = false;
+                if (cell.InlineString != null)
+                {
+                    if (cell.InlineString.Text != null)
+                        xlCell.SetOnlyValue(cell.InlineString.Text.Text.FixNewLines());
                     else
-                        xlCell.SetOnlyValue(String.Empty);
+                        SetCellText(xlCell, cell.InlineString);
                 }
-                else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
+                else
+                    xlCell.SetOnlyValue(String.Empty);
+            }
+            else if (dataType == CellValues.Error)
+            {
+                if (cellValue is not null && XLErrorParser.TryParseError(cellValue.InnerText, out var error))
+                    xlCell.SetOnlyValue(error);
+            }
+            else if (dataType == CellValues.Date)
+            {
+                // Technically, cell can contain date as ISO8601 string, but not rarely used due
+                // to inconsistencies between ISO and serial date time representation.
+                if (cellValue is not null)
                 {
-                    xlCell.SetOnlyValue(cellValue?.Text ?? String.Empty);
-                }
-                else if (dataType == CellValues.Boolean)
-                {
-                    if (cellValue is not null)
-                    {
-                        var isTrue = string.Equals(cellValue.Text, "1", StringComparison.Ordinal) ||
-                                     string.Equals(cellValue.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
-                        xlCell.SetOnlyValue(isTrue);
-                    }
-                }
-                else if (dataType == CellValues.InlineString)
-                {
-                    xlCell.ShareString = false;
-                    if (cell.InlineString != null)
-                    {
-                        if (cell.InlineString.Text != null)
-                            xlCell.SetOnlyValue(cell.InlineString.Text.Text.FixNewLines());
-                        else
-                            SetCellText(xlCell, cell.InlineString);
-                    }
-                    else
-                        xlCell.SetOnlyValue(String.Empty);
-                }
-                else if (dataType == CellValues.Error)
-                {
-                    if (cellValue is not null && XLErrorParser.TryParseError(cellValue.InnerText, out var error))
-                        xlCell.SetOnlyValue(error);
-                }
-                else if (dataType == CellValues.Date)
-                {
-                    // Technically, cell can contain date as ISO8601 string, but not rarely used due
-                    // to inconsistencies between ISO and serial date time representation.
-                    if (cellValue is not null)
-                    {
-                        var date = DateTime.ParseExact(cellValue.Text, DateCellFormats,
-                            XLHelper.ParseCulture,
-                            DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
-                        xlCell.SetOnlyValue(date);
-                    }
+                    var date = DateTime.ParseExact(cellValue.Text, DateCellFormats,
+                        XLHelper.ParseCulture,
+                        DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
+                    xlCell.SetOnlyValue(date);
                 }
             }
 
@@ -1858,61 +1853,6 @@ namespace ClosedXML.Excel
             "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff", // Format accepted by OpenXML SDK
             "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
         };
-
-        private void SetFormulaCellValue(XLCell xlCell, Cell cell)
-        {
-            var cellDataType = cell.DataType?.Value ?? CellValues.Number;
-            var cellValue = cell.CellValue;
-
-            xlCell.SetOnlyValue(Blank.Value);
-
-            // Type without a value is blank. Formula string can be a whitespace text and be valid (e.g. ="  ").
-            if (cellValue is null || (string.IsNullOrWhiteSpace(cellValue.InnerText) && cellDataType != CellValues.String))
-                return;
-
-            switch (cellDataType)
-            {
-                case CellValues.Boolean:
-                    if (cellValue.TryGetBoolean(out var logical))
-                        xlCell.SetOnlyValue(logical);
-                    break;
-
-                case CellValues.Number:
-                    if (!cellValue.TryGetDouble(out var number))
-                        break;
-
-                    var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
-                    switch (numberDataType)
-                    {
-                        case XLDataType.DateTime:
-                            xlCell.SetOnlyValue(XLCellValue.FromSerialDateTime(number));
-                            break;
-                        case XLDataType.TimeSpan:
-                            xlCell.SetOnlyValue(XLCellValue.FromSerialTimeSpan(number));
-                            break;
-                        default: // Normal number
-                            xlCell.SetOnlyValue(number);
-                            break;
-                    }
-                    break;
-
-                case CellValues.Error:
-                    if (XLErrorParser.TryParseError(cellValue.InnerText, out var error))
-                        xlCell.SetOnlyValue(error);
-                    break;
-
-                case CellValues.String: // A plaintext calculates from a formula
-                    xlCell.SetOnlyValue(cellValue.InnerText);
-                    break;
-
-                case CellValues.SharedString:
-                case CellValues.InlineString:
-                case CellValues.Date:
-                    throw new NotSupportedException($"Cell with a formula shouldn't have value of type {cellDataType}.");
-                default:
-                    throw new NotSupportedException($"Invalid cell data type '{cellDataType}'.");
-            }
-        }
 
         /// <summary>
         /// Parses the cell value for normal or rich text
