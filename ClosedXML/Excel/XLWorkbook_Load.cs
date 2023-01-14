@@ -1801,29 +1801,6 @@ namespace ClosedXML.Excel
                         xlCell.SetOnlyValue(error);
                 }
             }
-            else if (cell.CellValue != null) // Default data type is a number
-            {
-                if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                    xlCell.SetOnlyValue(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture));
-                else
-                    xlCell.SetOnlyValue(Blank.Value); // No value and not type => blank
-
-                var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-
-                if (numberFormatId?.HasValue ?? false)
-                {
-                    var format = s.NumberingFormats?
-                        .Cast<NumberingFormat>()
-                        .Where(nf => nf.NumberFormatId.Value == numberFormatId)
-                        .Select(nf => nf.FormatCode.Value)
-                        .FirstOrDefault();
-
-                    if (format == null)
-                        xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
-                    else
-                        xlCell.InnerStyle.NumberFormat.Format = format;
-                }
-            }
 
             if (xlCell.HasFormula)
             {
