@@ -1659,7 +1659,7 @@ namespace ClosedXML.Excel
             }
 
             var xlCell = ws.Cell(in cellAddress);
-            var dataType = cell.DataType ?? new EnumValue<CellValues>(CellValues.Number);
+            var dataType = cell.DataType?.Value ?? CellValues.Number;
 
             if (styleList.TryGetValue(styleIndex, out IXLStyle style))
             {
@@ -1729,20 +1729,23 @@ namespace ClosedXML.Excel
                     SetFormulaCellValue(xlCell, cell);
                 }
             }
-            else if (dataType != null)
+            else
             {
-                if (dataType == CellValues.InlineString)
+                if (dataType == CellValues.Number)
                 {
-                    xlCell.ShareString = false;
-                    if (cell.InlineString != null)
+                    // XLCell is by default blank, so no need to set it.
+                    var cellValue = cell.CellValue;
+                    if (cellValue is not null && cellValue.TryGetDouble(out var number))
                     {
-                        if (cell.InlineString.Text != null)
-                            xlCell.SetOnlyValue(cell.InlineString.Text.Text.FixNewLines());
-                        else
-                            SetCellText(xlCell, cell.InlineString);
+                        var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
+                        var cellNumber = numberDataType switch
+                        {
+                            XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
+                            XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
+                            _ => number // Normal number
+                        };
+                        xlCell.SetOnlyValue(cellNumber);
                     }
-                    else
-                        xlCell.SetOnlyValue(String.Empty);
                 }
                 else if (dataType == CellValues.SharedString)
                 {
@@ -1762,13 +1765,6 @@ namespace ClosedXML.Excel
                 {
                     xlCell.SetOnlyValue(cell.CellValue?.Text ?? String.Empty);
                 }
-                else if (dataType == CellValues.Date)
-                {
-                    var date = DateTime.ParseExact(cell.CellValue.Text, DateCellFormats,
-                        XLHelper.ParseCulture,
-                        DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
-                    xlCell.SetOnlyValue(date);
-                }
                 else if (dataType == CellValues.Boolean)
                 {
                     // Can be empty for formulas
@@ -1779,26 +1775,30 @@ namespace ClosedXML.Excel
                         xlCell.SetOnlyValue(isTrue);
                     }
                 }
-                else if (dataType == CellValues.Number)
+                else if (dataType == CellValues.InlineString)
                 {
-                    // XLCell is by default blank, so no need to set it.
-                    var cellValue = cell.CellValue;
-                    if (cellValue is not null && cellValue.TryGetDouble(out var number)) 
+                    xlCell.ShareString = false;
+                    if (cell.InlineString != null)
                     {
-                        var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
-                        var cellNumber = numberDataType switch
-                        {
-                            XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
-                            XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
-                            _ => number // Normal number
-                        };
-                        xlCell.SetOnlyValue(cellNumber);
+                        if (cell.InlineString.Text != null)
+                            xlCell.SetOnlyValue(cell.InlineString.Text.Text.FixNewLines());
+                        else
+                            SetCellText(xlCell, cell.InlineString);
                     }
+                    else
+                        xlCell.SetOnlyValue(String.Empty);
                 }
                 else if (dataType == CellValues.Error)
                 {
                     if (cell.CellValue is not null && XLErrorParser.TryParseError(cell.CellValue.InnerText, out var error))
                         xlCell.SetOnlyValue(error);
+                }
+                else if (dataType == CellValues.Date)
+                {
+                    var date = DateTime.ParseExact(cell.CellValue.Text, DateCellFormats,
+                        XLHelper.ParseCulture,
+                        DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
+                    xlCell.SetOnlyValue(date);
                 }
             }
 
