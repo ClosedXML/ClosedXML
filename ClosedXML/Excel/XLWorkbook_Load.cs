@@ -1781,21 +1781,18 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.Number)
                 {
-                    if (cell.CellValue != null && cell.CellValue.TryGetDouble(out var number))
+                    // XLCell is by default blank, so no need to set it.
+                    var cellValue = cell.CellValue;
+                    if (cellValue is not null && cellValue.TryGetDouble(out var number)) 
                     {
                         var numberDataType = GetNumberDataType(xlCell.StyleValue.NumberFormat);
-                        switch (numberDataType)
+                        var cellNumber = numberDataType switch
                         {
-                            case XLDataType.DateTime:
-                                xlCell.SetOnlyValue(XLCellValue.FromSerialDateTime(number));
-                                break;
-                            case XLDataType.TimeSpan:
-                                xlCell.SetOnlyValue(XLCellValue.FromSerialTimeSpan(number));
-                                break;
-                            default: // Normal number
-                                xlCell.SetOnlyValue(number);
-                                break;
-                        }
+                            XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
+                            XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
+                            _ => number // Normal number
+                        };
+                        xlCell.SetOnlyValue(cellNumber);
                     }
                 }
                 else if (dataType == CellValues.Error)
