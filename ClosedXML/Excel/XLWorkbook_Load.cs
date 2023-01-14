@@ -1673,10 +1673,13 @@ namespace ClosedXML.Excel
             var cellFormula = cell.CellFormula;
             if (cellFormula is not null)
             {
-                if (cellFormula.SharedIndex != null && cellFormula?.Reference != null)
+                // Shared formulas are rather limited: https://stackoverflow.com/questions/54654993
+                // Shared formula is created, when user in GUI takes a supported formula and drags it
+                // to more cells.
+                if (cellFormula.SharedIndex is not null && cellFormula.Reference is not null)
                 {
                     String formula;
-                    if (cellFormula.FormulaType != null && cellFormula.FormulaType == CellFormulaValues.Array)
+                    if (cellFormula.FormulaType == CellFormulaValues.Array)
                         formula = "{" + cellFormula.Text + "}";
                     else
                         formula = cellFormula.Text;
@@ -1693,11 +1696,11 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    // Shared formulas are rather limited: https://stackoverflow.com/questions/54654993
-                    // Shared formula is created, when user in GUI takes a supported formula and drags it
-                    // to more cells.
                     if (cellFormula.SharedIndex is not null)
+                    {
+                        // Subsequent shared formula.
                         xlCell.FormulaR1C1 = sharedFormulasR1C1[cellFormula.SharedIndex.Value];
+                    }
                     else if (!String.IsNullOrWhiteSpace(cellFormula.Text))
                     {
                         String formula;
@@ -1709,12 +1712,13 @@ namespace ClosedXML.Excel
                         xlCell.FormulaA1 = formula;
                     }
 
-                    if (cellFormula.Reference != null)
+                    if (cellFormula.Reference is not null)
                     {
-                        foreach (var childCell in ws.Range(cellFormula.Reference.Value).Cells(c => c.FormulaReference == null || !c.HasFormula))
+                        var formulaRange = ws.Range(cellFormula.Reference.Value);
+                        foreach (var childCell in formulaRange.Cells(c => c.FormulaReference is null || !c.HasFormula))
                         {
                             if (childCell.FormulaReference == null)
-                                childCell.FormulaReference = ws.Range(cellFormula.Reference.Value).RangeAddress;
+                                childCell.FormulaReference = formulaRange.RangeAddress;
 
                             if (!childCell.HasFormula)
                                 childCell.FormulaA1 = xlCell.FormulaA1;
