@@ -921,6 +921,8 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal XLCellFormula Formula => _formula;
+
         public XLHyperlink GetHyperlink()
         {
             return _hyperlink ?? CreateHyperlink();
