@@ -1673,64 +1673,95 @@ namespace ClosedXML.Excel
             var cellFormula = cell.CellFormula;
             if (cellFormula is not null)
             {
-                // Shared formulas are rather limited: https://stackoverflow.com/questions/54654993
-                // Shared formula is created, when user in GUI takes a supported formula and drags it
-                // to more cells.
-                if (cellFormula.SharedIndex is not null && cellFormula.Reference is not null)
+                // bx attribute of cell formula is not ever used, per MS-OI29500 2.1.620
+                var xlCellFormula = xlCell.Formula;
+                var formulaType = cellFormula.FormulaType?.Value ?? CellFormulaValues.Normal;
+                if (formulaType == CellFormulaValues.Normal)
                 {
-                    String formula;
-                    if (cellFormula.FormulaType == CellFormulaValues.Array)
-                        formula = "{" + cellFormula.Text + "}";
-                    else
-                        formula = cellFormula.Text;
-
-                    // Parent cell of shared formulas
-                    // Child cells will use this shared index to set its R1C1 style formula
-                    xlCell.FormulaReference = ws.Range(cellFormula.Reference.Value).RangeAddress;
-
-                    xlCell.FormulaA1 = formula;
-                    sharedFormulasR1C1.Add(cellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
-
-                    // Set calculated value from the worksheet
-                    SetFormulaCellValue(xlCell, cell);
+                    xlCellFormula.SetNormal(cellFormula.Text);
                 }
-                else
+                else if (formulaType == CellFormulaValues.Array && cellFormula.Reference is not null) // Child cells of an array may have array type, but not ref, that is reserved for parent cell
                 {
-                    if (cellFormula.SharedIndex is not null)
-                    {
-                        // Subsequent shared formula.
-                        xlCell.FormulaR1C1 = sharedFormulasR1C1[cellFormula.SharedIndex.Value];
-                    }
-                    else if (!String.IsNullOrWhiteSpace(cellFormula.Text))
-                    {
-                        String formula;
-                        if (cellFormula.FormulaType != null && cellFormula.FormulaType == CellFormulaValues.Array)
-                            formula = "{" + cellFormula.Text + "}";
-                        else
-                            formula = cellFormula.Text;
+                    var aca = cellFormula.AlwaysCalculateArray?.Value ?? false;
+                    xlCellFormula.SetArray(cellFormula.Text, aca);
 
-                        xlCell.FormulaA1 = formula;
-                    }
+                    // Excel displays {=FORMULA} for each cell of array formula, so we do the same... for now.
+                    var range = XLSheetRange.Parse(cellFormula.Reference);
+                    var firstAddress = new XLAddress(ws, range.FirstPoint.Row, range.FirstPoint.Column, false, false);
+                    var lastAddress = new XLAddress(ws, range.LastPoint.Row, range.LastPoint.Column, false, false);
+                    var rangeAddress = new XLRangeAddress(firstAddress, lastAddress);
 
-                    if (cellFormula.Reference is not null)
+                    xlCell.FormulaReference = rangeAddress;
+
+                    // Because cells are read from top-to-bottom, from left-to-right, none of child cells have
+                    // a formula. Also, Excel doesn't allow change of array data, only through parent formula.
+                    for (var col = range.FirstPoint.Column; col <= range.LastPoint.Column; ++col)
                     {
-                        var formulaRange = ws.Range(cellFormula.Reference.Value);
-                        foreach (var childCell in formulaRange.Cells(c => c.FormulaReference is null || !c.HasFormula))
+                        for (var row = range.FirstPoint.Row; row <= range.LastPoint.Row; ++row)
                         {
-                            if (childCell.FormulaReference == null)
-                                childCell.FormulaReference = formulaRange.RangeAddress;
-
-                            if (!childCell.HasFormula)
-                                childCell.FormulaA1 = xlCell.FormulaA1;
+                            // Skip first cell, it is special and children shouldn't need any extra data
+                            if (col == range.FirstPoint.Column && row == range.FirstPoint.Row)
+                                continue;
+                            var arrayFormulaCell = ws.Cell(row, col);
+                            arrayFormulaCell.Formula.SetArray(cellFormula.Text, false);
+                            arrayFormulaCell.FormulaReference = rangeAddress;
                         }
                     }
-
-                    // Set calculated value from the worksheet
-                    SetFormulaCellValue(xlCell, cell);
                 }
+                else if (formulaType == CellFormulaValues.Shared && cellFormula.SharedIndex is not null)
+                {
+                    // Shared formulas are rather limited in use and parsing, even by Excel
+                    // https://stackoverflow.com/questions/54654993. Therefore we accept them,
+                    // but don't output them. Shared formula is created, when user in Excel
+                    // takes a supported formula and drags it to more cells.
+                    var sharedIndex = cellFormula.SharedIndex.Value;
+                    if (!sharedFormulasR1C1.TryGetValue(sharedIndex, out var sharedR1C1Formula))
+                    {
+                        // Spec: The first formula in a group of shared formulas is saved
+                        // in the f element.This is considered the 'master' formula cell.
+                        xlCellFormula.SetNormal(cellFormula.Text);
+
+                        // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
+                        var xlCellSheetPoint = new XLSheetPoint(cellAddress.RowNumber, cellAddress.ColumnNumber);
+                        var formulaR1C1 = XLCellFormula.GetFormula(cellFormula.Text, FormulaConversionType.A1ToR1C1, xlCellSheetPoint);
+                        sharedFormulasR1C1.Add(cellFormula.SharedIndex.Value, formulaR1C1);
+                    }
+                    else
+                    {
+                        // Spec: The formula expression for a cell that is specified to be part of a shared formula
+                        // (and is not the master) shall be ignored, and the master formula shall override.
+                        xlCell.FormulaR1C1 = sharedR1C1Formula;
+                    }
+                }
+                else if (formulaType == CellFormulaValues.DataTable)
+                {
+                    var is2D = cellFormula.DataTable2D?.Value ?? false;
+                    var input1Deleted = cellFormula.Input1Deleted?.Value ?? false;
+                    var input1 = XLSheetPoint.Parse(cellFormula.R1);
+                    if (is2D)
+                    {
+                        // Input 2 is only used for 2D tables
+                        var input2Deleted = cellFormula.Input2Deleted?.Value ?? false;
+                        var input2 = XLSheetPoint.Parse(cellFormula.R2);
+                        xlCellFormula.SetDataTable2D(cellFormula.Text, input1, input1Deleted, input2, input2Deleted);
+                    }
+                    else
+                    {
+                        var isRowDataTable = cellFormula.DataTableRow?.Value ?? false;
+                        xlCellFormula.SetDataTable1D(cellFormula.Text, isRowDataTable, input1, input1Deleted);
+                    }
+                }
+
+                // Original code incremented version each time it set the values. That is no longer happening, but few
+                // examples rely on it. It should be set when cellFormula.CalculateCell is set or when value is missing.
+                xlCell.InvalidateFormula();
+
+                SetFormulaCellValue(xlCell, cell);
             }
             else
             {
+                // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
+                // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
                 var cellValue = cell.CellValue;
                 if (dataType == CellValues.Number)
                 {
@@ -1767,11 +1798,10 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.Boolean)
                 {
-                    // Can be empty for formulas
                     if (cellValue is not null)
                     {
-                        var isTrue = string.Equals(cellValue?.Text, "1", StringComparison.Ordinal) ||
-                                     string.Equals(cellValue?.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
+                        var isTrue = string.Equals(cellValue.Text, "1", StringComparison.Ordinal) ||
+                                     string.Equals(cellValue.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
                         xlCell.SetOnlyValue(isTrue);
                     }
                 }
@@ -1795,6 +1825,8 @@ namespace ClosedXML.Excel
                 }
                 else if (dataType == CellValues.Date)
                 {
+                    // Technically, cell can contain date as ISO8601 string, but not rarely used due
+                    // to inconsistencies between ISO and serial date time representation.
                     if (cellValue is not null)
                     {
                         var date = DateTime.ParseExact(cellValue.Text, DateCellFormats,

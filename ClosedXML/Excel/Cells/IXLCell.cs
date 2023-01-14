@@ -101,6 +101,10 @@ namespace ClosedXML.Excel
         /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { get; set; }
 
+        /// <summary>
+        /// An indication that value of this cell is calculated by a array formula
+        /// that calculates values for cells in the referenced address. Null if not part of such formula.
+        /// </summary>
         IXLRangeAddress FormulaReference { get; set; }
 
         Boolean HasArrayFormula { get; }

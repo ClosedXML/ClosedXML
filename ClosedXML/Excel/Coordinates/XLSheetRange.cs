@@ -2,7 +2,10 @@ using System;
 
 namespace ClosedXML.Excel
 {
-    internal struct XLSheetRange : IEquatable<XLSheetRange>
+    /// <summary>
+    /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to teh sheet).
+    /// </summary>
+    internal readonly struct XLSheetRange : IEquatable<XLSheetRange>
     {
         public XLSheetRange(XLSheetPoint firstPoint, XLSheetPoint lastPoint)
         {
@@ -10,8 +13,19 @@ namespace ClosedXML.Excel
             LastPoint = lastPoint;
         }
 
+        /// <summary>
+        /// Top-left point of the sheet range.
+        /// </summary>
         public readonly XLSheetPoint FirstPoint;
+
+        /// <summary>
+        /// Bottom-right point of the sheet range.
+        /// </summary>
         public readonly XLSheetPoint LastPoint;
+
+        public int Width => LastPoint.Column - FirstPoint.Column + 1;
+
+        public int Height => LastPoint.Row - FirstPoint.Row + 1;
 
         public bool Equals(XLSheetRange other)
         {
