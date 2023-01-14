@@ -1670,53 +1670,60 @@ namespace ClosedXML.Excel
                 ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
             }
 
-            if (cell.CellFormula?.SharedIndex != null && cell.CellFormula?.Reference != null)
+            var cellFormula = cell.CellFormula;
+            if (cellFormula is not null)
             {
-                String formula;
-                if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
-                    formula = "{" + cell.CellFormula.Text + "}";
-                else
-                    formula = cell.CellFormula.Text;
-
-                // Parent cell of shared formulas
-                // Child cells will use this shared index to set its R1C1 style formula
-                xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
-
-                xlCell.FormulaA1 = formula;
-                sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
-
-                // Set calculated value from the worksheet
-                SetFormulaCellValue(xlCell, cell);
-            }
-            else if (cell.CellFormula != null)
-            {
-                if (cell.CellFormula.SharedIndex != null)
-                    xlCell.FormulaR1C1 = sharedFormulasR1C1[cell.CellFormula.SharedIndex.Value];
-                else if (!String.IsNullOrWhiteSpace(cell.CellFormula.Text))
+                if (cellFormula.SharedIndex != null && cellFormula?.Reference != null)
                 {
                     String formula;
-                    if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
-                        formula = "{" + cell.CellFormula.Text + "}";
+                    if (cellFormula.FormulaType != null && cellFormula.FormulaType == CellFormulaValues.Array)
+                        formula = "{" + cellFormula.Text + "}";
                     else
-                        formula = cell.CellFormula.Text;
+                        formula = cellFormula.Text;
+
+                    // Parent cell of shared formulas
+                    // Child cells will use this shared index to set its R1C1 style formula
+                    xlCell.FormulaReference = ws.Range(cellFormula.Reference.Value).RangeAddress;
 
                     xlCell.FormulaA1 = formula;
-                }
+                    sharedFormulasR1C1.Add(cellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
 
-                if (cell.CellFormula.Reference != null)
+                    // Set calculated value from the worksheet
+                    SetFormulaCellValue(xlCell, cell);
+                }
+                else
                 {
-                    foreach (var childCell in ws.Range(cell.CellFormula.Reference.Value).Cells(c => c.FormulaReference == null || !c.HasFormula))
+                    // Shared formulas are rather limited: https://stackoverflow.com/questions/54654993
+                    // Shared formula is created, when user in GUI takes a supported formula and drags it
+                    // to more cells.
+                    if (cellFormula.SharedIndex is not null)
+                        xlCell.FormulaR1C1 = sharedFormulasR1C1[cellFormula.SharedIndex.Value];
+                    else if (!String.IsNullOrWhiteSpace(cellFormula.Text))
                     {
-                        if (childCell.FormulaReference == null)
-                            childCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                        String formula;
+                        if (cellFormula.FormulaType != null && cellFormula.FormulaType == CellFormulaValues.Array)
+                            formula = "{" + cellFormula.Text + "}";
+                        else
+                            formula = cellFormula.Text;
 
-                        if (!childCell.HasFormula)
-                            childCell.FormulaA1 = xlCell.FormulaA1;
+                        xlCell.FormulaA1 = formula;
                     }
-                }
 
-                // Set calculated value from the worksheet
-                SetFormulaCellValue(xlCell, cell);
+                    if (cellFormula.Reference != null)
+                    {
+                        foreach (var childCell in ws.Range(cellFormula.Reference.Value).Cells(c => c.FormulaReference == null || !c.HasFormula))
+                        {
+                            if (childCell.FormulaReference == null)
+                                childCell.FormulaReference = ws.Range(cellFormula.Reference.Value).RangeAddress;
+
+                            if (!childCell.HasFormula)
+                                childCell.FormulaA1 = xlCell.FormulaA1;
+                        }
+                    }
+
+                    // Set calculated value from the worksheet
+                    SetFormulaCellValue(xlCell, cell);
+                }
             }
             else if (dataType != null)
             {
