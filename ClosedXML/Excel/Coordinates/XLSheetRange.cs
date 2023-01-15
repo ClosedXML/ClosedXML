@@ -63,5 +63,28 @@ namespace ClosedXML.Excel
 
             return new XLSheetRange(first, second);
         }
+
+        /// <summary>
+        /// Write the sheet range to the span. If range has only one cell, write only the cell.
+        /// </summary>
+        /// <param name="output">Must be at least 21 chars long.</param>
+        /// <returns>Number of written characters.</returns>
+        public int Format(Span<char> output)
+        {
+            if (FirstPoint == LastPoint)
+                return FirstPoint.Format(output);
+
+            var firstPointLen = FirstPoint.Format(output);
+            output[firstPointLen] = ':';
+            var lastPointLen = LastPoint.Format(output.Slice(firstPointLen + 1));
+            return firstPointLen + 1 + lastPointLen;
+        }
+
+        public override String ToString()
+        {
+            Span<char> text = stackalloc char[21];
+            var len = Format(text);
+            return text.Slice(0, len).ToString();
+        }
     }
 }
