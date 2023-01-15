@@ -40,6 +40,7 @@ namespace ClosedXML.Graphics
                 throw new ArgumentException("Size of picture too large.");
             Format = format;
             SizePx = new Size((int)width, (int)height);
+            SizePhys = Size.Empty;
             DpiX = dpiX;
             DpiY = dpiY;
         }
