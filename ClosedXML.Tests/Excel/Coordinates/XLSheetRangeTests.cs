@@ -34,5 +34,15 @@ namespace ClosedXML.Tests.Excel.Coordinates
         {
             Assert.Throws<FormatException>(() => XLSheetRange.Parse(invalidRef));
         }
+
+        [TestCase("A1:A1", "A1")]
+        [TestCase("DO974:LAR2487", "DO974:LAR2487")]
+        [TestCase("XFD1048576:XFD1048576", "XFD1048576")]
+        [TestCase("XFD1048575:XFD1048576", "XFD1048575:XFD1048576")]
+        public void CanFormatToString(string cellRef, string expected)
+        {
+            var r = XLSheetRange.Parse(cellRef);
+            Assert.AreEqual(expected, r.ToString());
+        }
     }
 }
