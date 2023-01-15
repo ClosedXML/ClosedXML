@@ -50,5 +50,15 @@ namespace ClosedXML.Tests.Excel.Coordinates
         {
             Assert.Throws<FormatException>(() => XLSheetPoint.Parse(cellRef.AsSpan()));
         }
+
+        [TestCase("A1")]
+        [TestCase("DE1")]
+        [TestCase("D174")]
+        [TestCase("XFD1048576")]
+        public void CanFormatToString(string cellRef)
+        {
+            var r = XLSheetPoint.Parse(cellRef);
+            Assert.AreEqual(cellRef, r.ToString());
+        }
     }
 }

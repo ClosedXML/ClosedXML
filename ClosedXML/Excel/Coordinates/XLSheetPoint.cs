@@ -107,5 +107,47 @@ namespace ClosedXML.Excel
             static bool IsLetter(char c) => c is >= 'A' and <= 'Z';
             static bool IsDigit(char c) => c is >= '0' and <= '9';
         }
+
+        /// <summary>
+        /// Write
+        /// </summary>
+        /// <param name="output">Must be at least 10 chars long</param>
+        /// <returns>Number of chars </returns>
+        public int Format(Span<char> output)
+        {
+            var columnLetters = XLHelper.GetColumnLetterFromNumber(Column);
+            for (var i = 0; i < columnLetters.Length; ++i)
+                output[i] = columnLetters[i];
+
+            var digitCount = GetDigitCount(Row);
+            var rowRemainder = Row;
+            var formattedLength = digitCount + columnLetters.Length;
+            for (var i = formattedLength - 1; i >= columnLetters.Length; --i)
+            {
+                var digit = rowRemainder % 10;
+                rowRemainder /= 10;
+                output[i] = (char)(digit + '0');
+            }
+
+            return formattedLength;
+        }
+
+        public override String ToString()
+        {
+            Span<char> text = stackalloc char[10];
+            var len = Format(text);
+            return text.Slice(0, len).ToString();
+        }
+
+        private static int GetDigitCount(int n)
+        {
+            if (n < 10L) return 1;
+            if (n < 100L) return 2;
+            if (n < 1000L) return 3;
+            if (n < 10000L) return 4;
+            if (n < 100000L) return 5;
+            if (n < 1000000L) return 6;
+            return 7; // Row can't have more digits
+        }
     }
 }
