@@ -2074,7 +2074,29 @@ namespace ClosedXML.Excel
         public Boolean HasArrayFormula
         { get { return FormulaA1.StartsWith("{"); } }
 
-        public IXLRangeAddress FormulaReference { get; set; }
+        public IXLRangeAddress FormulaReference
+        {
+            get
+            {
+                var range = Formula.Range;
+                if (range == default)
+                    return null;
+                return XLRangeAddress.FromSheetRange(Worksheet, range);
+            }
+            set
+            {
+                if (value is null)
+                {
+                    Formula.Range = default;
+                    return;
+                }
+
+                if (value.Worksheet is not null && Worksheet != value.Worksheet)
+                    throw new ArgumentException("The reference worksheet must be same as worksheet of the cell or null.");
+
+                Formula.Range = XLSheetRange.FromRangeAddress(value);
+            }
+        }
 
         public IXLRange CurrentRegion
         {

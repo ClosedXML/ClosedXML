@@ -137,6 +137,23 @@ namespace ClosedXML.Tests
             }
         }
 
+        /// <summary>
+        /// Load a file from the <paramref name="loadResourcePath"/>, save it through ClosedXML without modifications
+        /// and compare the saved file against the <paramref name="expectedOutputResourcePath"/>.
+        /// </summary>
+        /// <remarks>Useful for checking whether we can load data from Excel and save it while keeping various feature in the OpenXML intact.</remarks>
+        public static void LoadSaveAndCompare(string loadResourcePath, string expectedOutputResourcePath, bool evaluateFormulae = false)
+        {
+            using var stream = GetStreamFromResource(GetResourcePath(loadResourcePath));
+            using var ms = new MemoryStream();
+            CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+                return wb;
+            }, expectedOutputResourcePath, evaluateFormulae);
+        }
+
         public static string GetResourcePath(string filePartName)
         {
             return filePartName.Replace('\\', '.').TrimStart('.');

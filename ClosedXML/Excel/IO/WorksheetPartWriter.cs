@@ -2053,7 +2053,42 @@ namespace ClosedXML.Excel.IO
                             if (xlCell.HasFormula)
                             {
                                 var formula = xlCell.FormulaA1;
-                                if (xlCell.HasArrayFormula)
+                                var xlFormula = xlCell.Formula;
+                                if (xlFormula.Type == FormulaType.DataTable)
+                                {
+                                    var f = new CellFormula
+                                    {
+                                        // Excel doesn't recalculate table formula on load or on click of a button or any kind of forced recalculation.
+                                        // It is necessary to mark some precedent formula dirty (e.g. edit cell formula and enter in Excel).
+                                        // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
+                                        // user will see correct values.
+                                        CalculateCell = true,
+                                        FormulaType = CellFormulaValues.DataTable,
+                                        Reference = xlFormula.Range.ToString(),
+                                        R1 = xlFormula.Input1.ToString()
+                                    };
+                                    var is2D = xlFormula.Is2DDataTable;
+                                    if (is2D)
+                                        f.DataTable2D = is2D;
+
+                                    var isDataRowTable = xlFormula.IsRowDataTable;
+                                    if (isDataRowTable)
+                                        f.DataTableRow = isDataRowTable;
+
+                                    if (is2D)
+                                        f.R2 = xlFormula.Input2.ToString();
+
+                                    var input1Deleted = xlFormula.Input1Deleted;
+                                    if (input1Deleted)
+                                        f.Input1Deleted = input1Deleted;
+
+                                    var input2Deleted = xlFormula.Input2Deleted;
+                                    if (input2Deleted)
+                                        f.Input2Deleted = input2Deleted;
+
+                                    cell.CellFormula = f;
+                                }
+                                else if (xlCell.HasArrayFormula)
                                 {
                                     formula = formula.Substring(1, formula.Length - 2);
                                     var f = new CellFormula { FormulaType = CellFormulaValues.Array };
