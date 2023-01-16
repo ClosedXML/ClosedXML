@@ -946,7 +946,11 @@ namespace ClosedXML.Excel
             {
                 foreach (var c in worksheet.Internals.CellsCollection.GetCells().Where(c => c.HasFormula))
                 {
-                    if (c.HasArrayFormula)
+                    if (c.Formula.Type == FormulaType.DataTable)
+                    {
+                        // Do nothing, Excel doesn't generate calc chain for data table
+                    }
+                    else if (c.HasArrayFormula)
                     {
                         if (c.FormulaReference == null)
                             c.FormulaReference = c.AsRange().RangeAddress;

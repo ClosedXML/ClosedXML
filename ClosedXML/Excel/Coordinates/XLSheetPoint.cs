@@ -109,7 +109,7 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Write
+        /// Write the sheet point as a reference to the span (e.g. <c>A1</c>).
         /// </summary>
         /// <param name="output">Must be at least 10 chars long</param>
         /// <returns>Number of chars </returns>
@@ -149,5 +149,11 @@ namespace ClosedXML.Excel
             if (n < 1000000L) return 6;
             return 7; // Row can't have more digits
         }
+
+        /// <summary>
+        /// Create a sheet point from the address. Workbook is ignored.
+        /// </summary>
+        public static XLSheetPoint FromAddress(IXLAddress address)
+            => new(address.RowNumber, address.ColumnNumber);
     }
 }

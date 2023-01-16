@@ -1733,8 +1733,9 @@ namespace ClosedXML.Excel
                         xlCell.FormulaR1C1 = sharedR1C1Formula;
                     }
                 }
-                else if (formulaType == CellFormulaValues.DataTable)
+                else if (formulaType == CellFormulaValues.DataTable && cellFormula.Reference is not null)
                 {
+                    var range = XLSheetRange.Parse(cellFormula.Reference);
                     var is2D = cellFormula.DataTable2D?.Value ?? false;
                     var input1Deleted = cellFormula.Input1Deleted?.Value ?? false;
                     var input1 = XLSheetPoint.Parse(cellFormula.R1);
@@ -1743,12 +1744,12 @@ namespace ClosedXML.Excel
                         // Input 2 is only used for 2D tables
                         var input2Deleted = cellFormula.Input2Deleted?.Value ?? false;
                         var input2 = XLSheetPoint.Parse(cellFormula.R2);
-                        xlCellFormula.SetDataTable2D(cellFormula.Text, input1, input1Deleted, input2, input2Deleted);
+                        xlCellFormula.SetDataTable2D(range, input1, input1Deleted, input2, input2Deleted);
                     }
                     else
                     {
                         var isRowDataTable = cellFormula.DataTableRow?.Value ?? false;
-                        xlCellFormula.SetDataTable1D(cellFormula.Text, isRowDataTable, input1, input1Deleted);
+                        xlCellFormula.SetDataTable1D(range, input1, input1Deleted, isRowDataTable);
                     }
                 }
 

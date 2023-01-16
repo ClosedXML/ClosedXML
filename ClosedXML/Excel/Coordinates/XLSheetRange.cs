@@ -27,6 +27,11 @@ namespace ClosedXML.Excel
 
         public int Height => LastPoint.Row - FirstPoint.Row + 1;
 
+        public override bool Equals(object obj)
+        {
+            return obj is XLSheetRange range && Equals(range);
+        }
+
         public bool Equals(XLSheetRange other)
         {
             return FirstPoint.Equals(other.FirstPoint) && LastPoint.Equals(other.LastPoint);
@@ -36,6 +41,11 @@ namespace ClosedXML.Excel
         {
             return FirstPoint.GetHashCode() ^ LastPoint.GetHashCode();
         }
+
+        public static bool operator ==(XLSheetRange left, XLSheetRange right) => left.Equals(right);
+
+        public static bool operator !=(XLSheetRange left, XLSheetRange right) => !(left == right);
+
 
         /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
         public static XLSheetRange Parse(String input) => Parse(input.AsSpan());
@@ -85,6 +95,16 @@ namespace ClosedXML.Excel
             Span<char> text = stackalloc char[21];
             var len = Format(text);
             return text.Slice(0, len).ToString();
+        }
+
+        internal static XLSheetRange FromRangeAddress(IXLRangeAddress address)
+        {
+            var firstPoint = XLSheetPoint.FromAddress(address.FirstAddress);
+            var lastPoint = XLSheetPoint.FromAddress(address.LastAddress);
+            if (firstPoint.Row > lastPoint.Row || firstPoint.Column > lastPoint.Column)
+                return new XLSheetRange(lastPoint, firstPoint);
+
+            return new XLSheetRange(firstPoint, lastPoint);
         }
     }
 }

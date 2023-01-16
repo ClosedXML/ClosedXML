@@ -28,6 +28,14 @@ namespace ClosedXML.Excel
             new XLAddress(-1, -1, fixedRow: true, fixedColumn: true)
         );
 
+        internal static XLRangeAddress FromSheetRange(XLWorksheet worksheet, XLSheetRange range)
+        {
+            return new XLRangeAddress(
+                new XLAddress(worksheet, range.FirstPoint.Row, range.FirstPoint.Column, fixedRow: false, fixedColumn: false),
+                new XLAddress(range.LastPoint.Row, range.LastPoint.Column, fixedRow: false, fixedColumn: false)
+            );
+        }
+
         #endregion Static members
 
         #region Constructor
