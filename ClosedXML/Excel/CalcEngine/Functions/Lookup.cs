@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("MATCH", 2, 3, Match, AllowRange.Only, 1); // Looks up values in a reference or array
             //ce.RegisterFunction("OFFSET", , Offset); // Returns a reference offset from a given reference
             ce.RegisterFunction("ROW", 0, 1, Row, FunctionFlags.Range, AllowRange.All); // Returns the row number of a reference
-            //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
+            ce.RegisterFunction("ROWS", 1, 1, Adapt(Rows), FunctionFlags.Range, AllowRange.All); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
             ce.RegisterFunction("VLOOKUP", 3, 4, AdaptLastOptional(Vlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
@@ -53,25 +53,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new ConstArray(array);
         }
 
-        private static AnyValue Columns(CalcContext ctx, AnyValue value)
+        private static AnyValue Columns(CalcContext _, AnyValue value)
         {
-            if (value.TryPickArea(out var area, out _))
-                return area.ColumnSpan;
-
-            if (value.TryPickArray(out var array))
-                return array.Width;
-
-            if (value.TryPickError(out var error))
-                return error;
-
-            if (value.IsLogical || value.IsNumber || value.IsText)
-                return 1;
-
-            if (value.IsBlank)
-                return XLError.IncompatibleValue;
-
-            // Only thing left, if reference has multiple areas
-            return XLError.CellReference;
+            return RowsOrColumns(value, false);
         }
 
         private static bool TryExtractRange(Expression expression, out IXLRange range, out XLError calculationErrorType)
@@ -297,6 +281,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new ConstArray(array);
         }
 
+        private static AnyValue Rows(CalcContext _, AnyValue value)
+        {
+            return RowsOrColumns(value, true);
+        }
+
         private static AnyValue Vlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue columnIndex, ScalarValue flagValue)
         {
             if (lookupValue.IsError)
@@ -463,6 +452,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             return currentRow;
+        }
+
+        private static AnyValue RowsOrColumns(AnyValue value, bool rows)
+        {
+            if (value.TryPickArea(out var area, out _))
+                return rows ? area.RowSpan : area.ColumnSpan;
+
+            if (value.TryPickArray(out var array))
+                return rows ? array.Height : array.Width;
+
+            if (value.TryPickError(out var error))
+                return error;
+
+            if (value.IsLogical || value.IsNumber || value.IsText)
+                return 1;
+
+            if (value.IsBlank)
+                return XLError.IncompatibleValue;
+
+            // Only thing left, if reference has multiple areas
+            return XLError.CellReference;
         }
     }
 }

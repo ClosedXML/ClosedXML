@@ -574,7 +574,7 @@ Standard functions
      - **YES**
 
    * - ROWS
-     - No
+     - **YES**
 
    * - RTD
      - No
