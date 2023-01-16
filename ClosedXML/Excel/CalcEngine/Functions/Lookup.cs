@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("AREAS", , Areas); // Returns the number of areas in a reference
             //ce.RegisterFunction("CHOOSE", , Choose); // Chooses a value from a list of values
             ce.RegisterFunction("COLUMN", 0, 1, Column, FunctionFlags.Range, AllowRange.All); // Returns the column number of a reference
-            //ce.RegisterFunction("COLUMNS", , Columns); // Returns the number of columns in a reference
+            ce.RegisterFunction("COLUMNS", 1, 1, Adapt(Columns), FunctionFlags.Range, AllowRange.All); // Returns the number of columns in a reference
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
@@ -51,6 +51,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 array[0, col - firstColumn] = col;
 
             return new ConstArray(array);
+        }
+
+        private static AnyValue Columns(CalcContext ctx, AnyValue value)
+        {
+            if (value.TryPickArea(out var area, out _))
+                return area.ColumnSpan;
+
+            if (value.TryPickArray(out var array))
+                return array.Width;
+
+            if (value.TryPickError(out var error))
+                return error;
+
+            if (value.IsLogical || value.IsNumber || value.IsText)
+                return 1;
+
+            if (value.IsBlank)
+                return XLError.IncompatibleValue;
+
+            // Only thing left, if reference has multiple areas
+            return XLError.CellReference;
         }
 
         private static bool TryExtractRange(Expression expression, out IXLRange range, out XLError calculationErrorType)
@@ -358,7 +379,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // Ensure invariants before main loop. If even lowest value in the range is greater than lookup value,
             // then there can't be any row that matches lookup value/lower.
             if (lowCompare > 0)
-                return -1; 
+                return -1;
 
             // Since we already know that there is at least one element of same type as lookup value,
             // high row will find something, though it might be same row as lowRow.
@@ -434,7 +455,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // E.g. search for 2.5 in the {"1", 2, "3", #DIV/0!, 3 } will find the second element 2
             // Elements with incompatible type are just skipped. 
             int currentRow;
-            for (currentRow = startRow; !lookupValue.HaveSameType(range[currentRow , 0]); currentRow += delta)
+            for (currentRow = startRow; !lookupValue.HaveSameType(range[currentRow, 0]); currentRow += delta)
             {
                 // Don't move beyond limitRow
                 if (currentRow == limitRow)
