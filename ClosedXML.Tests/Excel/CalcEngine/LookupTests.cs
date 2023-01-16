@@ -125,6 +125,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Columns_Blank_ReturnsValueError()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("COLUMNS(IF(TRUE,,))"));
+        }
+
+        [TestCase("0")]
+        [TestCase("1")]
+        [TestCase("99")]
+        [TestCase("-10")]
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        [TestCase("\"\"")]
+        [TestCase("\"A\"")]
+        [TestCase("\"Hello World\"")]
+        public void Columns_ScalarValues_ReturnsOne(string value)
+        {
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr($"COLUMNS({value})"));
+        }
+
+        [Test]
+        public void Columns_Error_ReturnsError()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("COLUMNS(#DIV/0!)"));
+        }
+
+        [TestCase("{1}", 1)]
+        [TestCase("{1;2;3}", 1)]
+        [TestCase("{1,2,3,4;5,6,7,8}", 4)]
+        [TestCase("{TRUE,\"Z\";#DIV/0!,4}", 2)]
+        public void Columns_Arrays_ReturnsNumberOfColumns(string array, int expectedColumnCount)
+        {
+            Assert.AreEqual(expectedColumnCount, XLWorkbook.EvaluateExpr($"COLUMNS({array})"));
+        }
+
+        [TestCase("A1", 1)]
+        [TestCase("A1:A6", 1)]
+        [TestCase("B2:D6", 3)]
+        [TestCase("E7:AA14", 23)]
+        public void Columns_References_ReturnsNumberOfColumns(string range, int expectedColumnCount)
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            Assert.AreEqual(expectedColumnCount, sheet.Evaluate($"COLUMNS({range})"));
+        }
+
+        [Test]
+        public void Columns_NonContiguousReferences_ReturnsReferenceError()
+        {
+            // Spec says #NULL!, but Excel says #REF!
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr($"COLUMNS((A1,C3))"));
+        }
+
+        [Test]
         public void Hlookup()
         {
             // Range lookup false
@@ -364,7 +417,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var worksheet = wb.AddWorksheet();
-            worksheet.Cell("A1").InsertData(Enumerable.Range(-5, 10).Select(x => new object[] {x, $"Row with value {x}"}));
+            worksheet.Cell("A1").InsertData(Enumerable.Range(-5, 10).Select(x => new object[] { x, $"Row with value {x}" }));
 
             var actual = worksheet.Evaluate("VLOOKUP(IF(TRUE,,),A1:B10,2)");
 

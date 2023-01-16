@@ -544,7 +544,7 @@ Standard functions
      - **YES**
 
    * - COLUMNS
-     - No
+     - **YES**
 
    * - GETPIVOTDATA
      - No

@@ -129,6 +129,18 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
+        public bool TryPickArray(out Array array)
+        {
+            if (_index == ArrayValue)
+            {
+                array = _array;
+                return true;
+            }
+
+            array = default;
+            return false;
+        }
+
         public bool TryPickReference(out Reference reference, out XLError error)
         {
             if (_index == ReferenceValue)
