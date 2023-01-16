@@ -1,6 +1,5 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -174,7 +173,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Columns_NonContiguousReferences_ReturnsReferenceError()
         {
             // Spec says #NULL!, but Excel says #REF!
-            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr($"COLUMNS((A1,C3))"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("COLUMNS((A1,C3))"));
         }
 
         [Test]
@@ -325,6 +324,58 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
             Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
             Assert.AreEqual(XLError.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
+        }
+
+        [Test]
+        public void Rows_Blank_ReturnsValueError()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("ROWS(IF(TRUE,,))"));
+        }
+
+        [TestCase("0")]
+        [TestCase("1")]
+        [TestCase("99")]
+        [TestCase("-10")]
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        [TestCase("\"\"")]
+        [TestCase("\"A\"")]
+        [TestCase("\"Hello World\"")]
+        public void Rows_ScalarValues_ReturnsOne(string value)
+        {
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr($"ROWS({value})"));
+        }
+
+        [Test]
+        public void Rows_Error_ReturnsError()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("ROWS(#DIV/0!)"));
+        }
+
+        [TestCase("{1}", 1)]
+        [TestCase("{1;2;3}", 3)]
+        [TestCase("{1,2,3,4;5,6,7,8;9,10,11,12}", 3)]
+        [TestCase("{TRUE;#DIV/0!}", 2)]
+        public void Rows_Arrays_ReturnsNumberOfRows(string array, int expectedColumnCount)
+        {
+            Assert.AreEqual(expectedColumnCount, XLWorkbook.EvaluateExpr($"ROWS({array})"));
+        }
+
+        [TestCase("C3", 1)]
+        [TestCase("B3:E12", 10)]
+        [TestCase("AA21:AC400", 380)]
+        public void Rows_References_ReturnsNumberOfColumns(string range, int expectedColumnCount)
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            Assert.AreEqual(expectedColumnCount, sheet.Evaluate($"ROWS({range})"));
+        }
+
+        [Test]
+        public void Rows_NonContiguousReferences_ReturnsReferenceError()
+        {
+            // Spec says #NULL!, but Excel says #REF!
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("ROWS((A1,C3))"));
         }
 
         [Test]
