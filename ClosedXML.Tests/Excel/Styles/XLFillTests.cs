@@ -113,5 +113,25 @@ namespace ClosedXML.Tests.Excel
                 }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
             }
         }
+
+        [Test]
+        public void ReservedFills_ReplaceWithPredefinedValues()
+        {
+            // If attribute or whole predefined fill is missing from the file, save predefined values
+            TestHelper.LoadSaveAndCompare(
+                @"Other\StyleReferenceFiles\FillAtReservedPosition-SavePredefinedValues-Input.xlsx",
+                @"Other\StyleReferenceFiles\FillAtReservedPosition-SavePredefinedValues-Output.xlsx");
+        }
+
+        [Test]
+        public void ReservedFills_MoveFillsFromReservedPositions()
+        {
+            // If the input doesn't have expected fill values at the reserved position s0 and 1 (can only happen
+            // for non-excel sources, excel always has correct values), put expected fill at 0 and 1, but save original
+            // fills to different positions if they are used.
+            TestHelper.LoadSaveAndCompare(
+                @"Other\StyleReferenceFiles\FillAtReservedPosition-MoveFill-Input.xlsx",
+                @"Other\StyleReferenceFiles\FillAtReservedPosition-MoveFill-Output.xlsx");
+        }
     }
 }
