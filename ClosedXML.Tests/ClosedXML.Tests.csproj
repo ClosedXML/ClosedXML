@@ -12,6 +12,7 @@
     <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
     <EmbeddedResource Include="Resource\Images\*.*" />
     <EmbeddedResource Include="Resource\Fonts\*.*" />
+    <EmbeddedResource Include="Resource\Other\Unicode\let_it_go_in_emoji.txt" />
   </ItemGroup>
 
   <ItemGroup>

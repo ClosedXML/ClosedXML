@@ -16,16 +16,22 @@ namespace ClosedXML.Utils
             encodeStr = xHHHHRegex.Replace(encodeStr, "_x005F_$1_");
 
             var sb = new StringBuilder(encodeStr.Length);
-
-            foreach (var ch in encodeStr)
+            var len = encodeStr.Length;
+            for (var i = 0; i < len; ++i)
             {
-                if (XmlConvert.IsXmlChar(ch))
+                var currentChar = encodeStr[i];
+                if (XmlConvert.IsXmlChar(currentChar))
                 {
-                    sb.Append(ch);
+                    sb.Append(currentChar);
+                }
+                else if (i + 1 < len && XmlConvert.IsXmlSurrogatePair(encodeStr[i + 1], currentChar))
+                {
+                    sb.Append(currentChar);
+                    sb.Append(encodeStr[++i]);
                 }
                 else
                 {
-                    sb.Append(XmlConvert.EncodeName(ch.ToString()));
+                    sb.Append(XmlConvert.EncodeName(currentChar.ToString()));
                 }
             }
 
