@@ -321,7 +321,7 @@ namespace ClosedXML.Excel
                 GenerateTableParts(xlTables, worksheetPart, context);
 
                 WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
-                
+
                 if (worksheet.PivotTables.Any())
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
@@ -924,7 +924,7 @@ namespace ClosedXML.Excel
             if (FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = FullCalculationOnLoad;
             if (FullPrecision) workbook.CalculationProperties.FullPrecision = FullPrecision;
         }
-        
+
         private void DeleteCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
         {
             if (workbookPart.CalculationChainPart != null)
@@ -3812,15 +3812,19 @@ namespace ClosedXML.Excel
             if (workbookStylesPart.Stylesheet.Fills == null)
                 workbookStylesPart.Stylesheet.Fills = new Fills();
 
-            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.None);
-            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.Gray125);
+            var fills = workbookStylesPart.Stylesheet.Fills;
+
+            // Pattern idx 0 and idx 1 are hardcoded to Excel with values None (0) and Gray125. Excel will ignore
+            // values from the file. Every file has have these values inside to keep the first available idx at 2.
+            ResolveFillWithPattern(fills, 0, PatternValues.None);
+            ResolveFillWithPattern(fills, 1, PatternValues.Gray125);
 
             var allSharedFills = new Dictionary<XLFillValue, FillInfo>();
             foreach (var fillInfo in sharedFills.Values)
             {
                 var fillId = 0;
                 var foundOne = false;
-                foreach (Fill f in workbookStylesPart.Stylesheet.Fills)
+                foreach (Fill f in fills)
                 {
                     if (FillsAreEqual(f, fillInfo.Fill, fromDifferentialFormat: false))
                     {
@@ -3832,29 +3836,33 @@ namespace ClosedXML.Excel
                 if (!foundOne)
                 {
                     var fill = GetNewFill(fillInfo, differentialFillFormat: false);
-                    workbookStylesPart.Stylesheet.Fills.AppendChild(fill);
+                    fills.AppendChild(fill);
                 }
                 allSharedFills.Add(fillInfo.Fill, new FillInfo { Fill = fillInfo.Fill, FillId = (UInt32)fillId });
             }
 
-            workbookStylesPart.Stylesheet.Fills.Count = (UInt32)workbookStylesPart.Stylesheet.Fills.Count();
+            fills.Count = (UInt32)fills.Count();
             return allSharedFills;
         }
 
-        private static void ResolveFillWithPattern(Fills fills, PatternValues patternValues)
+        private static void ResolveFillWithPattern(Fills fills, Int32 index, PatternValues patternValues)
         {
-            if (fills.Elements<Fill>().Any(f =>
-                f.PatternFill == null
-                || (f.PatternFill.PatternType == patternValues
-                    && f.PatternFill.ForegroundColor == null
-                    && f.PatternFill.BackgroundColor == null
-                )))
+            var fill = (Fill)fills.ElementAtOrDefault(index);
+            if (fill is null)
+            {
+                fills.InsertAt(new Fill { PatternFill = new PatternFill { PatternType = patternValues } }, index);
+                return;
+            }
+
+            var fillHasExpectedValue =
+                fill.PatternFill?.PatternType?.Value == patternValues &&
+                fill.PatternFill.ForegroundColor is null &&
+                fill.PatternFill.BackgroundColor is null;
+
+            if (fillHasExpectedValue)
                 return;
 
-            var fill1 = new Fill();
-            var patternFill1 = new PatternFill { PatternType = patternValues };
-            fill1.AppendChild(patternFill1);
-            fills.AppendChild(fill1);
+            fill.PatternFill = new PatternFill { PatternType = patternValues };
         }
 
         private static Fill GetNewFill(FillInfo fillInfo, Boolean differentialFillFormat, Boolean ignoreMod = true)
