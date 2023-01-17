@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.IO
                     return false;
             }
 
-            using var writer = OpenXmlWriter.Create(sharedStringTablePart);
+            using var writer = OpenXmlWriter.Create(sharedStringTablePart, XLHelper.NoBomUTF8);
             writer.WriteStartDocument();
 
             // Due to streaming and XLWorkbook structure, we don't know count before strings are written.
