@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
@@ -17,6 +18,8 @@ namespace ClosedXML.Excel
         public const int MaxColumnNumber = 16384;
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
+
+        public static Encoding NoBomUTF8 = new UTF8Encoding(false);
 
         public static String LastCell { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
 
