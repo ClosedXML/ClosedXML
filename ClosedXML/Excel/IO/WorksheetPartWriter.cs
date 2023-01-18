@@ -1902,22 +1902,9 @@ namespace ClosedXML.Excel.IO
         private static void StreamSheetData(OpenXmlWriter writer, Worksheet worksheet, XLWorksheet xlWorksheet, SaveContext context, SaveOptions options)
         {
             var maxColumn = GetMaxColumn(xlWorksheet);
-            var sheetData = worksheet.Elements<SheetData>().FirstOrDefault() ?? new SheetData();
+            var sheetData = new SheetData();
 
             writer.WriteStartElement(sheetData);
-
-            var lastRow = 0;
-            var existingSheetDataRows =
-                sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
-                    r => r);
-            foreach (
-                var r in
-                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => existingSheetDataRows.ContainsKey(r.Key)))
-            {
-                sheetData.RemoveChild(existingSheetDataRows[r.Key]);
-                existingSheetDataRows.Remove(r.Key);
-                xlWorksheet.Internals.CellsCollection.Deleted.Remove(r.Key);
-            }
 
             var tableTotalCells = new HashSet<IXLAddress>(
                 xlWorksheet.Tables
@@ -1972,39 +1959,11 @@ namespace ClosedXML.Excel.IO
                                    && row.CustomFormat == null
                                    && row.Collapsed == null
                                    && row.OutlineLevel == null;
-                var lastCell = 0;
-                var currentOpenXmlRowCells = row.Elements<Cell>()
-                    .ToDictionary
-                    (
-                        c => c.CellReference?.Value ?? XLHelper.GetColumnLetterFromNumber(++lastCell) + rowNumber,
-                        c => c
-                    );
 
-                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(rowNumber, out HashSet<Int32> deletedColumns))
-                {
-                    foreach (var deletedColumn in deletedColumns.ToList())
-                    {
-                        var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + rowNumber.ToInvariantString();
-
-                        if (!currentOpenXmlRowCells.TryGetValue(key, out Cell cell))
-                            continue;
-
-                        row.RemoveChild(cell);
-                        deletedColumns.Remove(deletedColumn);
-                    }
-                    if (deletedColumns.Count == 0)
-                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(rowNumber);
-                }
-
+                var cellWritten = false;
                 if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(rowNumber, out Dictionary<int, XLCell> cells))
                 {
-                    var isNewRow = !row.Elements<Cell>().Any();
-                    lastCell = 0;
-                    var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
-                        ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + rowNumber) : c.CellReference.Value), c => c);
-                    foreach (var xlCell in cells.Values
-                        .OrderBy(c => c.Address.ColumnNumber)
-                        .Select(c => c))
+                    foreach (var xlCell in cells.Values.OrderBy(c => c.Address.ColumnNumber))
                     {
                         XLTableField field = null;
 
@@ -2018,46 +1977,14 @@ namespace ClosedXML.Excel.IO
                                                      & ~XLCellsUsedOptions.DataValidation
                                                      & ~XLCellsUsedOptions.MergedRanges);
 
-                        if (currentOpenXmlRowCells.TryGetValue(cellReference, out Cell cell))
-                        {
-                            if (isEmpty)
-                            {
-                                cell.Remove();
-                            }
-
-                            // reset some stuff that we'll populate later
-                            cell.DataType = null;
-                            cell.RemoveAllChildren<InlineString>();
-                        }
-
                         if (!isEmpty)
                         {
-                            if (cell == null)
+                            var cell = new Cell
                             {
-                                cell = new Cell();
-                                cell.CellReference = new StringValue(cellReference);
+                                CellReference = new StringValue(cellReference),
+                                StyleIndex = styleId
+                            };
 
-                                if (isNewRow)
-                                    row.AppendChild(cell);
-                                else
-                                {
-                                    var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
-
-                                    Cell cellBeforeInsert = null;
-                                    int[] lastCo = { Int32.MaxValue };
-                                    foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
-                                    {
-                                        cellBeforeInsert = c.Value;
-                                        lastCo[0] = c.Key;
-                                    }
-                                    if (cellBeforeInsert == null)
-                                        row.AppendChild(cell);
-                                    else
-                                        row.InsertBefore(cell, cellBeforeInsert);
-                                }
-                            }
-
-                            cell.StyleIndex = styleId;
                             if (xlCell.HasFormula)
                             {
                                 var formula = xlCell.FormulaA1;
@@ -2160,16 +2087,22 @@ namespace ClosedXML.Excel.IO
 
                             if (options.EvaluateFormulasBeforeSaving || field != null || !xlCell.HasFormula)
                                 SetCellValue(xlCell, field, cell, context);
+
+                            if (!cellWritten)
+                            {
+                                writer.WriteStartElement(row);
+                                cellWritten = true;
+                            }
+
+                            writer.WriteElement(cell);
                         }
                     }
-                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(rowNumber);
                 }
 
-                var isEmptyRow = isRowDefault && !row.Elements().Any();
-                if (!isEmptyRow)
-                {
+                if (cellWritten)
+                    writer.WriteEndElement();
+                else if (!isRowDefault)
                     writer.WriteElement(row);
-                }
             }
 
             writer.WriteEndElement(); // SheetData
