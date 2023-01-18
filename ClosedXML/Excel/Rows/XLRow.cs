@@ -59,6 +59,18 @@ namespace ClosedXML.Excel
 
         public Boolean Collapsed { get; set; }
 
+        /// <summary>
+        /// Distance in pixels from the bottom of the cells in the current row to the typographical
+        /// baseline of the cell content if, hypothetically, the zoom level for the sheet containing
+        /// this row is 100 percent and the cell has bottom-alignment formatting.
+        /// </summary>
+        /// <remarks>
+        /// If the attribute is set, it sets customHeight to true even if the customHeight is explicitly
+        /// set to false. Custom height means no auto-sizing by Excel on load, so if row has this
+        /// attribute, it stops Excel from auto-sizing the height of a row to fit the content on load.
+        /// </remarks>
+        public Double? DyDescent { get; set; }
+
         #region IXLRow Members
 
         public Boolean Loading { get; set; }

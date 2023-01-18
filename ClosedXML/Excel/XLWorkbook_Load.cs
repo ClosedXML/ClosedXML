@@ -2053,6 +2053,9 @@ namespace ClosedXML.Excel
                 xlRow.Loading = false;
             }
 
+            if (row.DyDescent != null)
+                xlRow.DyDescent = row.DyDescent.Value;
+
             if (row.Hidden != null && row.Hidden)
                 xlRow.Hide();
 
