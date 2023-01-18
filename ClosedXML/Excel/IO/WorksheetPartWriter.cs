@@ -1921,12 +1921,6 @@ namespace ClosedXML.Excel.IO
                 if (maxColumn > 0)
                     row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
 
-                row.Height = null;
-                row.CustomHeight = null;
-                row.Hidden = null;
-                row.StyleIndex = null;
-                row.CustomFormat = null;
-                row.Collapsed = null;
                 if (xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow thisRow))
                 {
                     if (thisRow.HeightChanged)
@@ -2041,8 +2035,7 @@ namespace ClosedXML.Excel.IO
                                 }
                                 else
                                 {
-                                    cell.CellFormula = new CellFormula();
-                                    cell.CellFormula.Text = formula;
+                                    cell.CellFormula = new CellFormula { Text = formula };
                                 }
 
                                 cell.CellValue = !options.EvaluateFormulasBeforeSaving || xlCell.CachedValue.Type == XLDataType.Blank || xlCell.NeedsRecalculation
@@ -2062,11 +2055,9 @@ namespace ClosedXML.Excel.IO
                                 {
                                     cell.DataType = null;
                                 }
-                                cell.CellFormula = null;
                             }
                             else
                             {
-                                cell.CellFormula = null;
                                 cell.DataType = GetCellValueType(xlCell);
                             }
 
