@@ -1292,25 +1292,8 @@ namespace ClosedXML.Excel.IO
             };
         }
 
-        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell, XLWorkbook.SaveContext context)
+        private static void SetCellValue(XLCell xlCell, Cell openXmlCell, SaveContext context)
         {
-            if (field != null)
-            {
-                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
-                {
-                    var cellValue = new CellValue();
-                    cellValue.Text = xlCell.SharedStringId.ToInvariantString();
-                    openXmlCell.DataType = CvSharedString;
-                    openXmlCell.CellValue = cellValue;
-                }
-                else if (field.TotalsRowFunction == XLTotalsRowFunction.None)
-                {
-                    openXmlCell.DataType = CvSharedString;
-                    openXmlCell.CellValue = null;
-                }
-                return;
-            }
-
             openXmlCell.CellValue = null;
             var dataType = xlCell.DataType;
 
@@ -2049,7 +2032,7 @@ namespace ClosedXML.Excel.IO
                                 {
                                     xlCell.Evaluate(false);
                                     cell.DataType = GetCellValueType(xlCell);
-                                    SetCellValue(xlCell, field, cell, context);
+                                    SetCellValue(xlCell, cell, context);
                                 }
                                 catch
                                 {
@@ -2062,21 +2045,22 @@ namespace ClosedXML.Excel.IO
                             var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
                             field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
 
+                            // If this is a cell in the totals row that contains a label (xor with function), write label
+                            // Only label can be written. Total functions are basically formulas that use structured
+                            // references and SR are not yet supported, so not yet possible to calculate total values.
                             if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                             {
                                 cell.DataType = CvSharedString;
+                                cell.CellValue = new CellValue
+                                {
+                                    Text = xlCell.SharedStringId.ToInvariantString()
+                                };
                             }
-                            else
-                            {
-                                cell.DataType = null;
-                            }
-
-                            SetCellValue(xlCell, field, cell, context);
                         }
                         else
                         {
                             cell.DataType = GetCellValueType(xlCell);
-                            SetCellValue(xlCell, field, cell, context);
+                            SetCellValue(xlCell, cell, context);
                         }
 
                         if (!cellWritten)
