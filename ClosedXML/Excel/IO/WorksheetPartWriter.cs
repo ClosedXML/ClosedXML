@@ -1971,122 +1971,121 @@ namespace ClosedXML.Excel.IO
                                                      & ~XLCellsUsedOptions.DataValidation
                                                      & ~XLCellsUsedOptions.MergedRanges);
 
-                        if (!isEmpty)
+                        if (isEmpty)
+                            continue;
+
+                        var cell = new Cell
                         {
-                            var cell = new Cell
+                            CellReference = new StringValue(cellReference),
+                            StyleIndex = styleId
+                        };
+
+                        if (xlCell.HasFormula)
+                        {
+                            var formula = xlCell.FormulaA1;
+                            var xlFormula = xlCell.Formula;
+                            if (xlFormula.Type == FormulaType.DataTable)
                             {
-                                CellReference = new StringValue(cellReference),
-                                StyleIndex = styleId
-                            };
-
-                            if (xlCell.HasFormula)
-                            {
-                                var formula = xlCell.FormulaA1;
-                                var xlFormula = xlCell.Formula;
-                                if (xlFormula.Type == FormulaType.DataTable)
+                                var f = new CellFormula
                                 {
-                                    var f = new CellFormula
-                                    {
-                                        // Excel doesn't recalculate table formula on load or on click of a button or any kind of forced recalculation.
-                                        // It is necessary to mark some precedent formula dirty (e.g. edit cell formula and enter in Excel).
-                                        // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
-                                        // user will see correct values.
-                                        CalculateCell = true,
-                                        FormulaType = CellFormulaValues.DataTable,
-                                        Reference = xlFormula.Range.ToString(),
-                                        R1 = xlFormula.Input1.ToString()
-                                    };
-                                    var is2D = xlFormula.Is2DDataTable;
-                                    if (is2D)
-                                        f.DataTable2D = is2D;
+                                    // Excel doesn't recalculate table formula on load or on click of a button or any kind of forced recalculation.
+                                    // It is necessary to mark some precedent formula dirty (e.g. edit cell formula and enter in Excel).
+                                    // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
+                                    // user will see correct values.
+                                    CalculateCell = true,
+                                    FormulaType = CellFormulaValues.DataTable,
+                                    Reference = xlFormula.Range.ToString(),
+                                    R1 = xlFormula.Input1.ToString()
+                                };
+                                var is2D = xlFormula.Is2DDataTable;
+                                if (is2D)
+                                    f.DataTable2D = is2D;
 
-                                    var isDataRowTable = xlFormula.IsRowDataTable;
-                                    if (isDataRowTable)
-                                        f.DataTableRow = isDataRowTable;
+                                var isDataRowTable = xlFormula.IsRowDataTable;
+                                if (isDataRowTable)
+                                    f.DataTableRow = isDataRowTable;
 
-                                    if (is2D)
-                                        f.R2 = xlFormula.Input2.ToString();
+                                if (is2D)
+                                    f.R2 = xlFormula.Input2.ToString();
 
-                                    var input1Deleted = xlFormula.Input1Deleted;
-                                    if (input1Deleted)
-                                        f.Input1Deleted = input1Deleted;
+                                var input1Deleted = xlFormula.Input1Deleted;
+                                if (input1Deleted)
+                                    f.Input1Deleted = input1Deleted;
 
-                                    var input2Deleted = xlFormula.Input2Deleted;
-                                    if (input2Deleted)
-                                        f.Input2Deleted = input2Deleted;
+                                var input2Deleted = xlFormula.Input2Deleted;
+                                if (input2Deleted)
+                                    f.Input2Deleted = input2Deleted;
 
-                                    cell.CellFormula = f;
-                                }
-                                else if (xlCell.HasArrayFormula)
-                                {
-                                    formula = formula.Substring(1, formula.Length - 2);
-                                    var f = new CellFormula { FormulaType = CellFormulaValues.Array };
-
-                                    if (xlCell.FormulaReference == null)
-                                        xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
-
-                                    if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
-                                    {
-                                        f.Text = formula;
-                                        f.Reference = xlCell.FormulaReference.ToStringRelative();
-                                    }
-
-                                    cell.CellFormula = f;
-                                }
-                                else
-                                {
-                                    cell.CellFormula = new CellFormula { Text = formula };
-                                }
-
-                                cell.CellValue = !options.EvaluateFormulasBeforeSaving || xlCell.CachedValue.Type == XLDataType.Blank || xlCell.NeedsRecalculation
-                                    ? null
-                                    : new CellValue(ToValueString(xlCell.CachedValue));
+                                cell.CellFormula = f;
                             }
-                            else if (tableTotalCells.Contains(xlCell.Address))
+                            else if (xlCell.HasArrayFormula)
                             {
-                                var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
-                                field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+                                formula = formula.Substring(1, formula.Length - 2);
+                                var f = new CellFormula { FormulaType = CellFormulaValues.Array };
 
-                                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                                if (xlCell.FormulaReference == null)
+                                    xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+
+                                if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
                                 {
-                                    cell.DataType = CvSharedString;
+                                    f.Text = formula;
+                                    f.Reference = xlCell.FormulaReference.ToStringRelative();
                                 }
-                                else
-                                {
-                                    cell.DataType = null;
-                                }
+
+                                cell.CellFormula = f;
                             }
                             else
                             {
-                                cell.DataType = GetCellValueType(xlCell);
+                                cell.CellFormula = new CellFormula { Text = formula };
                             }
 
-                            if (xlCell.HasFormula && options.EvaluateFormulasBeforeSaving)
+                            cell.CellValue = !options.EvaluateFormulasBeforeSaving || xlCell.CachedValue.Type == XLDataType.Blank || xlCell.NeedsRecalculation
+                                ? null
+                                : new CellValue(ToValueString(xlCell.CachedValue));
+
+                            if (options.EvaluateFormulasBeforeSaving)
                             {
                                 try
                                 {
                                     xlCell.Evaluate(false);
+                                    cell.DataType = GetCellValueType(xlCell);
+                                    SetCellValue(xlCell, field, cell, context);
                                 }
                                 catch
                                 {
-                                    // Do nothing. Unimplemented features or functions would stop trying to save a file.
+                                    // Do nothing, cell will be left blank. Unimplemented features or functions would stop trying to save a file.
                                 }
-
-                                cell.DataType = GetCellValueType(xlCell);
                             }
-
-
-                            if (options.EvaluateFormulasBeforeSaving || field != null || !xlCell.HasFormula)
-                                SetCellValue(xlCell, field, cell, context);
-
-                            if (!cellWritten)
-                            {
-                                writer.WriteStartElement(row);
-                                cellWritten = true;
-                            }
-
-                            writer.WriteElement(cell);
                         }
+                        else if (tableTotalCells.Contains(xlCell.Address))
+                        {
+                            var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                            field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+
+                            if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                            {
+                                cell.DataType = CvSharedString;
+                            }
+                            else
+                            {
+                                cell.DataType = null;
+                            }
+
+                            SetCellValue(xlCell, field, cell, context);
+                        }
+                        else
+                        {
+                            cell.DataType = GetCellValueType(xlCell);
+                            SetCellValue(xlCell, field, cell, context);
+                        }
+
+                        if (!cellWritten)
+                        {
+                            writer.WriteStartElement(row);
+                            cellWritten = true;
+                        }
+
+                        writer.WriteElement(cell);
                     }
                 }
 
