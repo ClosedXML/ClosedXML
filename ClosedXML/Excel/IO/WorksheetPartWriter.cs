@@ -1294,49 +1294,44 @@ namespace ClosedXML.Excel.IO
 
         private static void SetCellValue(XLCell xlCell, Cell openXmlCell, SaveContext context)
         {
-            openXmlCell.CellValue = null;
             var dataType = xlCell.DataType;
-
-            if (dataType != XLDataType.Text)
-                openXmlCell.InlineString = null;
-
             if (dataType == XLDataType.Text)
             {
                 if (xlCell.HasFormula)
                 {
-                    var cellValue = new CellValue(xlCell.GetText());
-                    openXmlCell.CellValue = cellValue;
+                    openXmlCell.CellValue = new CellValue(xlCell.GetText());
                 }
-                else if (!xlCell.StyleValue.IncludeQuotePrefix && xlCell.GetText().Length == 0)
-                    openXmlCell.CellValue = null;
                 else
                 {
-                    if (xlCell.ShareString)
+                    if (xlCell.StyleValue.IncludeQuotePrefix || xlCell.GetText().Length != 0)
                     {
-                        var cellValue = new CellValue();
-                        cellValue.Text = xlCell.SharedStringId.ToInvariantString();
-                        openXmlCell.CellValue = cellValue;
-
-                        openXmlCell.InlineString = null;
-                    }
-                    else
-                    {
-                        var inlineString = new InlineString();
-                        if (xlCell.HasRichText)
+                        if (xlCell.ShareString)
                         {
-                            TextSerializer.PopulatedRichTextElements(inlineString, xlCell, context);
+                            var cellValue = new CellValue
+                            {
+                                Text = xlCell.SharedStringId.ToInvariantString()
+                            };
+                            openXmlCell.CellValue = cellValue;
                         }
                         else
                         {
-                            var text = xlCell.GetText();
-                            var t = new Text(text);
-                            if (text.PreserveSpaces())
-                                t.Space = SpaceProcessingModeValues.Preserve;
+                            var inlineString = new InlineString();
+                            if (xlCell.HasRichText)
+                            {
+                                TextSerializer.PopulatedRichTextElements(inlineString, xlCell, context);
+                            }
+                            else
+                            {
+                                var text = xlCell.GetText();
+                                var t = new Text(text);
+                                if (text.PreserveSpaces())
+                                    t.Space = SpaceProcessingModeValues.Preserve;
 
-                            inlineString.Text = t;
+                                inlineString.Text = t;
+                            }
+
+                            openXmlCell.InlineString = inlineString;
                         }
-
-                        openXmlCell.InlineString = inlineString;
                     }
                 }
             }
@@ -1347,8 +1342,10 @@ namespace ClosedXML.Excel.IO
             }
             else if (dataType == XLDataType.Number)
             {
-                var cellValue = new CellValue();
-                cellValue.Text = xlCell.Value.GetNumber().ToInvariantString();
+                var cellValue = new CellValue
+                {
+                    Text = xlCell.Value.GetNumber().ToInvariantString()
+                };
                 openXmlCell.CellValue = cellValue;
             }
             else if (dataType == XLDataType.DateTime)
@@ -1942,8 +1939,6 @@ namespace ClosedXML.Excel.IO
                 {
                     foreach (var xlCell in cells.Values.OrderBy(c => c.Address.ColumnNumber))
                     {
-                        XLTableField field = null;
-
                         var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
                         var cellReference = (xlCell.Address).GetTrimmedAddress();
 
@@ -2043,7 +2038,7 @@ namespace ClosedXML.Excel.IO
                         else if (tableTotalCells.Contains(xlCell.Address))
                         {
                             var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
-                            field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+                            var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
 
                             // If this is a cell in the totals row that contains a label (xor with function), write label
                             // Only label can be written. Total functions are basically formulas that use structured
