@@ -1927,11 +1927,9 @@ namespace ClosedXML.Excel.IO
                 .Select(cell => cell.Address));
 
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            foreach (var distinctRow in distinctRows.OrderBy(r => r))
+            foreach (var rowNumber in distinctRows.OrderBy(r => r))
             {
-                Row row;
-                if (!existingSheetDataRows.TryGetValue(distinctRow, out row))
-                    row = new Row { RowIndex = (UInt32)distinctRow };
+                var row = new Row { RowIndex = (UInt32)rowNumber };
 
                 if (maxColumn > 0)
                     row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
@@ -1942,13 +1940,16 @@ namespace ClosedXML.Excel.IO
                 row.StyleIndex = null;
                 row.CustomFormat = null;
                 row.Collapsed = null;
-                if (xlWorksheet.Internals.RowsCollection.TryGetValue(distinctRow, out XLRow thisRow))
+                if (xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow thisRow))
                 {
                     if (thisRow.HeightChanged)
                     {
                         row.Height = thisRow.Height.SaveRound();
                         row.CustomHeight = true;
                     }
+
+                    if (thisRow.DyDescent is not null)
+                        row.DyDescent = thisRow.DyDescent.Value;
 
                     if (thisRow.StyleValue != xlWorksheet.StyleValue)
                     {
@@ -1964,19 +1965,26 @@ namespace ClosedXML.Excel.IO
                         row.OutlineLevel = (byte)thisRow.OutlineLevel;
                 }
 
+                var isRowDefault = row.Height == null
+                                   && row.CustomHeight == null
+                                   && row.Hidden == null
+                                   && row.StyleIndex == null
+                                   && row.CustomFormat == null
+                                   && row.Collapsed == null
+                                   && row.OutlineLevel == null;
                 var lastCell = 0;
                 var currentOpenXmlRowCells = row.Elements<Cell>()
                     .ToDictionary
                     (
-                        c => c.CellReference?.Value ?? XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow,
+                        c => c.CellReference?.Value ?? XLHelper.GetColumnLetterFromNumber(++lastCell) + rowNumber,
                         c => c
                     );
 
-                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(distinctRow, out HashSet<Int32> deletedColumns))
+                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(rowNumber, out HashSet<Int32> deletedColumns))
                 {
                     foreach (var deletedColumn in deletedColumns.ToList())
                     {
-                        var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + distinctRow.ToInvariantString();
+                        var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + rowNumber.ToInvariantString();
 
                         if (!currentOpenXmlRowCells.TryGetValue(key, out Cell cell))
                             continue;
@@ -1985,15 +1993,15 @@ namespace ClosedXML.Excel.IO
                         deletedColumns.Remove(deletedColumn);
                     }
                     if (deletedColumns.Count == 0)
-                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
+                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(rowNumber);
                 }
 
-                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out Dictionary<int, XLCell> cells))
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(rowNumber, out Dictionary<int, XLCell> cells))
                 {
                     var isNewRow = !row.Elements<Cell>().Any();
                     lastCell = 0;
                     var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
-                        ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
+                        ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + rowNumber) : c.CellReference.Value), c => c);
                     foreach (var xlCell in cells.Values
                         .OrderBy(c => c.Address.ColumnNumber)
                         .Select(c => c))
@@ -2135,7 +2143,6 @@ namespace ClosedXML.Excel.IO
                                 cell.DataType = GetCellValueType(xlCell);
                             }
 
-
                             if (xlCell.HasFormula && options.EvaluateFormulasBeforeSaving)
                             {
                                 try
@@ -2155,19 +2162,11 @@ namespace ClosedXML.Excel.IO
                                 SetCellValue(xlCell, field, cell, context);
                         }
                     }
-                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
+                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(rowNumber);
                 }
 
-                var invalidRow = row.Height == null
-                    && row.CustomHeight == null
-                    && row.Hidden == null
-                    && row.StyleIndex == null
-                    && row.CustomFormat == null
-                    && row.Collapsed == null
-                    && row.OutlineLevel == null
-                    && !row.Elements().Any();
-
-                if (!invalidRow)
+                var isEmptyRow = isRowDefault && !row.Elements().Any();
+                if (!isEmptyRow)
                 {
                     writer.WriteElement(row);
                 }
