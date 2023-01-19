@@ -5,7 +5,11 @@ using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.IO;
+using System.Text;
 using static ClosedXML.Excel.XLWorkbook;
+using static ClosedXML.Excel.IO.OpenXmlConst;
 
 namespace ClosedXML.Excel.IO
 {
@@ -15,8 +19,7 @@ namespace ClosedXML.Excel.IO
             SaveContext context)
         {
             // Call all table headers to make sure their names are filled
-            var x = 0;
-            workbook.Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
+            workbook.Worksheets.ForEach(w => w.Tables.ForEach(t => _ = ((XLTable)t).FieldNames.Count));
 
             var stringId = 0;
 
@@ -31,12 +34,19 @@ namespace ClosedXML.Excel.IO
                     return false;
             }
 
-            using var writer = OpenXmlWriter.Create(sharedStringTablePart, XLHelper.NoBomUTF8);
-            writer.WriteStartDocument();
+            var settings = new XmlWriterSettings
+            {
+                CloseOutput = true,
+                Encoding = XLHelper.NoBomUTF8
+            };
+            var partStream = sharedStringTablePart.GetStream(FileMode.Create);
+            using var xml = XmlWriter.Create(partStream, settings);
+
+            xml.WriteStartDocument();
 
             // Due to streaming and XLWorkbook structure, we don't know count before strings are written.
             // Attributes count and uniqueCount are optional thus are omitted.
-            writer.WriteStartElement(new SharedStringTable());
+            xml.WriteStartElement("x", "sst", Main2006SsNs);
 
             foreach (var c in workbook.Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells(HasSharedString)))
             {
@@ -47,8 +57,9 @@ namespace ClosedXML.Excel.IO
                     else
                     {
                         var sharedStringItem = new SharedStringItem();
-                        TextSerializer.PopulatedRichTextElements(sharedStringItem, c, context);
-                        writer.WriteElement(sharedStringItem);
+                        xml.WriteStartElement("si", Main2006SsNs);
+                        TextSerializer.PopulatedRichTextElements(xml, sharedStringItem, c, context);
+                        xml.WriteEndElement(); // si
 
                         newRichStrings.Add(c.GetRichText(), stringId);
                         c.SharedStringId = stringId;
@@ -65,12 +76,21 @@ namespace ClosedXML.Excel.IO
                     {
                         var s = value;
                         var sharedStringItem = new SharedStringItem();
-                        var text = new Text { Text = XmlEncoder.EncodeString(s) };
+                        xml.WriteStartElement("si", Main2006SsNs);
+                        xml.WriteStartElement("t", Main2006SsNs);
+                        var t = XmlEncoder.EncodeString(s);
+                        var text = new Text { Text = t };
                         if (!s.Trim().Equals(s))
+                        {
                             text.Space = SpaceProcessingModeValues.Preserve;
-                        sharedStringItem.Append(text);
+                            xml.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
+                        }
 
-                        writer.WriteElement(sharedStringItem);
+                        xml.WriteString(t);
+                        xml.WriteEndElement(); // t
+                        xml.WriteEndElement(); // si
+
+                        sharedStringItem.Append(text);
 
                         newStrings.Add(value, stringId);
                         c.SharedStringId = stringId;
@@ -80,8 +100,8 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            writer.WriteEndElement(); // SharedStringTable
-            writer.Close();
+            xml.WriteEndElement(); // SharedStringTable
+            xml.Close();
         }
     }
 }
