@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using System.IO;
 using System.Text;
+using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
 using static ClosedXML.Excel.IO.OpenXmlConst;
 
@@ -73,11 +74,11 @@ namespace ClosedXML.Excel.IO
                     {
                         xml.WriteStartElement("si", Main2006SsNs);
                         xml.WriteStartElement("t", Main2006SsNs);
-                        var s = value;
-                        if (!s.Trim().Equals(s))
-                            xml.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
+                        var sharedString = value;
+                        if (!sharedString.Trim().Equals(sharedString))
+                            xml.WritePreserveSpaceAttr();
 
-                        xml.WriteString(XmlEncoder.EncodeString(s));
+                        xml.WriteString(XmlEncoder.EncodeString(sharedString));
                         xml.WriteEndElement(); // t
                         xml.WriteEndElement(); // si
 

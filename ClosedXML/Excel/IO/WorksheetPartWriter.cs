@@ -1274,26 +1274,7 @@ namespace ClosedXML.Excel.IO
 
             return worksheet;
         }
-
-
-        /// <summary>
-        /// Get a representation of a value within a xlsx file. DateTime/TimeSpan is interpreted as a number.
-        /// </summary>
-        internal static string ToValueString(XLCellValue xlCell)
-        {
-            return xlCell.Type switch
-            {
-                XLDataType.Blank => string.Empty,
-                XLDataType.Boolean => xlCell.GetBoolean() ? "1" : "0",
-                XLDataType.Number => xlCell.GetNumber().ToInvariantString(),
-                XLDataType.Text => xlCell.GetText(),
-                XLDataType.Error => xlCell.GetError().ToDisplayString(),
-                XLDataType.DateTime => xlCell.GetUnifiedNumber().ToInvariantString(),
-                XLDataType.TimeSpan => xlCell.GetUnifiedNumber().ToInvariantString(),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
+        
         private static void WriteCellValue(XmlWriter w, XLCell xlCell, SaveContext context)
         {
             var dataType = xlCell.DataType;
@@ -1304,7 +1285,7 @@ namespace ClosedXML.Excel.IO
             {
                 if (xlCell.HasFormula)
                 {
-                    WriteValue(w, xlCell.GetText());
+                    WriteStringValue(w, xlCell.GetText());
                 }
                 else
                 {
@@ -1312,7 +1293,9 @@ namespace ClosedXML.Excel.IO
                     {
                         if (xlCell.ShareString)
                         {
-                            WriteValue(w, xlCell.SharedStringId.ToInvariantString());
+                            w.WriteStartElement("v", Main2006SsNs);
+                            w.WriteValue(xlCell.SharedStringId);
+                            w.WriteEndElement();
                         }
                         else
                         {
@@ -1328,7 +1311,7 @@ namespace ClosedXML.Excel.IO
                                 if (text.PreserveSpaces())
                                 {
                                     // TODO: add test
-                                    w.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
+                                    w.WritePreserveSpaceAttr();
                                 }
 
                                 w.WriteString(text);
@@ -1342,11 +1325,11 @@ namespace ClosedXML.Excel.IO
             }
             else if (dataType == XLDataType.TimeSpan)
             {
-                WriteValue(w, xlCell.Value.GetUnifiedNumber().ToInvariantString());
+                WriteNumberValue(w, xlCell.Value.GetUnifiedNumber());
             }
             else if (dataType == XLDataType.Number)
             {
-                WriteValue(w, xlCell.Value.GetNumber().ToInvariantString());
+                WriteNumberValue(w, xlCell.Value.GetNumber());
             }
             else if (dataType == XLDataType.DateTime)
             {
@@ -1355,25 +1338,32 @@ namespace ClosedXML.Excel.IO
                 if (xlCell.Worksheet.Workbook.Use1904DateSystem)
                     date = date.AddDays(-1462);
 
-                WriteValue(w, date.ToSerialDateTime().ToInvariantString());
+                WriteNumberValue(w, date.ToSerialDateTime());
             }
             else if (dataType == XLDataType.Boolean)
             {
-                WriteValue(w, xlCell.GetBoolean() ? TrueValue : FalseValue);
+                WriteStringValue(w, xlCell.GetBoolean() ? TrueValue : FalseValue);
             }
             else if (dataType == XLDataType.Error)
             {
-                WriteValue(w, xlCell.Value.GetError().ToDisplayString());
+                WriteStringValue(w, xlCell.Value.GetError().ToDisplayString());
             }
             else
             {
                 throw new InvalidOperationException();
             }
 
-            static void WriteValue(XmlWriter w, String valueText)
+            static void WriteStringValue(XmlWriter w, String text)
             {
                 w.WriteStartElement("v", Main2006SsNs);
-                w.WriteString(valueText);
+                w.WriteString(text);
+                w.WriteEndElement();
+            }
+
+            static void WriteNumberValue(XmlWriter w, Double value)
+            {
+                w.WriteStartElement("v", Main2006SsNs);
+                w.WriteNumberValue(value);
                 w.WriteEndElement();
             }
         }
@@ -2043,7 +2033,6 @@ namespace ClosedXML.Excel.IO
                             if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
                             {
                                 WriteCellValue(xml, xlCell, context);
-                                cell.CellValue = new CellValue(ToValueString(xlCell.CachedValue));
                             }
                         }
                         else if (tableTotalCells.Contains(xlCell.Address))
@@ -2060,7 +2049,7 @@ namespace ClosedXML.Excel.IO
                                 WriteStartCell(xml, cell);
 
                                 xml.WriteStartElement("v", Main2006SsNs);
-                                xml.WriteString(xlCell.SharedStringId.ToInvariantString());
+                                xml.WriteValue(xlCell.SharedStringId);
                                 xml.WriteEndElement();
                             }
                         }
@@ -2090,12 +2079,12 @@ namespace ClosedXML.Excel.IO
             static void WriteStartRow(XmlWriter w, Row row)
             {
                 w.WriteStartElement("row", Main2006SsNs);
-                w.WriteAttributeString("r", row.RowIndex.Value.ToString());
+                w.WriteAttribute("r", row.RowIndex.Value);
                 if (row.Spans is not null)
                     w.WriteAttributeString("spans", row.Spans.InnerText);
 
                 if (row.Height is not null)
-                    w.WriteAttributeString("ht", row.Height.Value.ToInvariantString());
+                    w.WriteAttribute("ht", row.Height.Value);
 
                 if (row.CustomHeight is not null)
                     w.WriteAttributeString("customHeight", row.CustomHeight.Value ? TrueValue : FalseValue);
@@ -2104,7 +2093,7 @@ namespace ClosedXML.Excel.IO
                     w.WriteAttributeString("hidden", row.Hidden.Value ? TrueValue : FalseValue);
 
                 if (row.StyleIndex is not null)
-                    w.WriteAttributeString("s", row.StyleIndex.Value.ToInvariantString());
+                    w.WriteAttribute("s", row.StyleIndex.Value);
 
                 if (row.CustomFormat is not null)
                     w.WriteAttributeString("customFormat", row.CustomFormat.Value ? TrueValue : FalseValue);
@@ -2113,10 +2102,10 @@ namespace ClosedXML.Excel.IO
                     w.WriteAttributeString("collapsed", row.Collapsed.Value ? TrueValue : FalseValue);
 
                 if (row.OutlineLevel is not null)
-                    w.WriteAttributeString("outlineLevel", row.OutlineLevel.Value.ToInvariantString());
+                    w.WriteAttribute("outlineLevel", row.OutlineLevel.Value);
 
                 if (row.DyDescent is not null)
-                    w.WriteAttributeString("x14ac", "dyDescent", X14Ac2009SsNs, row.DyDescent.Value.ToInvariantString());
+                    w.WriteAttribute("dyDescent", X14Ac2009SsNs, row.DyDescent.Value);
 
                 // TODO: Write ph, thickBot, thickTop
             }
@@ -2129,7 +2118,7 @@ namespace ClosedXML.Excel.IO
                     w.WriteAttributeString("r", cell.CellReference.Value);
 
                 if (cell.StyleIndex is not null)
-                    w.WriteAttributeString("s", cell.StyleIndex.Value.ToString());
+                    w.WriteAttribute("s", cell.StyleIndex.Value);
 
                 if (cell.DataType is not null)
                     w.WriteAttributeString("t", CellTypeName[(int)cell.DataType.Value]);
@@ -2137,7 +2126,6 @@ namespace ClosedXML.Excel.IO
                 // TODO: Write vm, cm, ph
             }
         }
-
 
         /// <summary>
         /// Mapping from <see cref="CellValues"/> enum to type written to the output file.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
+using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
 using static ClosedXML.Excel.IO.OpenXmlConst;
 
@@ -19,14 +20,14 @@ namespace ClosedXML.Excel.IO
                 foreach (var p in richText.Phonetics)
                 {
                     w.WriteStartElement("rPh", Main2006SsNs);
-                    w.WriteAttributeString("sb", p.Start.ToInvariantString());
-                    w.WriteAttributeString("eb", p.End.ToInvariantString());
+                    w.WriteAttribute("sb", p.Start);
+                    w.WriteAttribute("eb", p.End);
 
                     w.WriteStartElement("t", Main2006SsNs);
                     if (p.Text.PreserveSpaces())
                     {
                         // TODO: add test
-                        w.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
+                        w.WritePreserveSpaceAttr();
                     }
 
                     w.WriteString(p.Text);
@@ -44,7 +45,7 @@ namespace ClosedXML.Excel.IO
                 }
 
                 w.WriteStartElement("phoneticPr", Main2006SsNs);
-                w.WriteAttributeString("fontId", fi.FontId.ToInvariantString());
+                w.WriteAttribute("fontId", fi.FontId);
 
                 if (richText.Phonetics.Alignment != XLPhoneticAlignment.Left)
                     w.WriteAttributeString("alignment", richText.Phonetics.Alignment.ToOpenXmlString());
@@ -63,25 +64,25 @@ namespace ClosedXML.Excel.IO
             w.WriteStartElement("rPr", Main2006SsNs);
 
             if (rt.Bold)
-                WritePropertyElTrue(w, "b");
+                w.WriteEmptyElement("b");
 
             if (rt.Italic)
-                WritePropertyElTrue(w, "i");
+                w.WriteEmptyElement("i");
 
             if (rt.Strikethrough)
-                WritePropertyElTrue(w, "strike");
+                w.WriteEmptyElement("strike");
 
             if (rt.Shadow)
-                WritePropertyElTrue(w, "shadow");
+                w.WriteEmptyElement("shadow");
 
             if (rt.Underline != XLFontUnderlineValues.None)
-                WriteProperty(w, "u", rt.Underline.ToOpenXmlString());
+                WriteRunProperty(w, "u", rt.Underline.ToOpenXmlString());
 
-            WriteProperty(w, "vertAlign", rt.VerticalAlignment.ToOpenXmlString());
-            WriteProperty(w, "sz", rt.FontSize);
-            WriteColor(w, "color", rt.FontColor);
-            WriteProperty(w, "rFont", rt.FontName);
-            WriteProperty(w, "family", (Int32)rt.FontFamilyNumbering);
+            WriteRunProperty(w, "vertAlign", rt.VerticalAlignment.ToOpenXmlString());
+            WriteRunProperty(w, "sz", rt.FontSize);
+            w.WriteColor("color", rt.FontColor);
+            WriteRunProperty(w, "rFont", rt.FontName);
+            WriteRunProperty(w, "family", (Int32)rt.FontFamilyNumbering);
 
             w.WriteEndElement(); // rPr
 
@@ -98,56 +99,24 @@ namespace ClosedXML.Excel.IO
             w.WriteEndElement(); // r
         }
 
-        private static void WriteProperty(XmlWriter w, String name, String val)
+        private static void WriteRunProperty(XmlWriter w, String elName, String val)
         {
-            w.WriteStartElement(name, Main2006SsNs);
+            w.WriteStartElement(elName, Main2006SsNs);
             w.WriteAttributeString("val", val);
             w.WriteEndElement();
         }
 
-        private static void WriteProperty(XmlWriter w, String name, Int32 val)
-        {
-            w.WriteStartElement(name, Main2006SsNs);
-            w.WriteAttributeString("val", val.ToInvariantString());
-            w.WriteEndElement();
-        }
-
-        private static void WriteProperty(XmlWriter w, String name, Double val)
-        {
-            w.WriteStartElement(name, Main2006SsNs);
-            w.WriteAttributeString("val", val.ToInvariantString());
-            w.WriteEndElement();
-        }
-
-        private static void WritePropertyElTrue(XmlWriter w, String name)
-        {
-            w.WriteStartElement(name, Main2006SsNs);
-            w.WriteEndElement();
-        }
-
-        private static void WriteColor(XmlWriter w, String elName, XLColor xlColor, Boolean isDifferential = false)
+        private static void WriteRunProperty(XmlWriter w, String elName, Int32 val)
         {
             w.WriteStartElement(elName, Main2006SsNs);
-            switch (xlColor.ColorType)
-            {
-                case XLColorType.Color:
-                    w.WriteAttributeString("rgb", xlColor.Color.ToHex());
-                    break;
+            w.WriteAttribute("val", val);
+            w.WriteEndElement();
+        }
 
-                case XLColorType.Indexed:
-                    // 64 is 'transparent' and should be ignored for differential formats
-                    if (!isDifferential || xlColor.Indexed != 64)
-                        w.WriteAttributeString("indexed", xlColor.Indexed.ToInvariantString());
-                    break;
-
-                case XLColorType.Theme:
-                    w.WriteAttributeString("theme", xlColor.ThemeColor.ToInvariantString());
-
-                    if (xlColor.ThemeTint != 0)
-                        w.WriteAttributeString("tint", xlColor.ThemeTint.ToInvariantString());
-                    break;
-            }
-
+        private static void WriteRunProperty(XmlWriter w, String elName, Double val)
+        {
+            w.WriteStartElement(elName, Main2006SsNs);
+            w.WriteAttribute("val", val);
             w.WriteEndElement();
         }
     }
