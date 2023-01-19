@@ -2900,7 +2900,7 @@ namespace ClosedXML.Excel
                 // TODO: Some other file can have different declaration, so ensure that it works for all of them.
                 w.WriteStartElement("x", "text", Main2006SsNs);
                 foreach (var rt in c.GetComment())
-                    TextSerializer.GetRun(w, rt);
+                    TextSerializer.WriteRun(w, rt);
 
                 w.WriteEndElement();
                 w.Flush();

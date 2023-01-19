@@ -16,7 +16,6 @@ using Columns = DocumentFormat.OpenXml.Spreadsheet.Columns;
 using Drawing = DocumentFormat.OpenXml.Spreadsheet.Drawing;
 using Hyperlink = DocumentFormat.OpenXml.Spreadsheet.Hyperlink;
 using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
-using Text = DocumentFormat.OpenXml.Spreadsheet.Text;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using System.Reflection;
@@ -1295,7 +1294,7 @@ namespace ClosedXML.Excel.IO
             };
         }
 
-        private static void WriteCellValue(XmlWriter w, XLCell xlCell, Cell openXmlCell, SaveContext context)
+        private static void WriteCellValue(XmlWriter w, XLCell xlCell, SaveContext context)
         {
             var dataType = xlCell.DataType;
             if (dataType == XLDataType.Blank)
@@ -1305,7 +1304,6 @@ namespace ClosedXML.Excel.IO
             {
                 if (xlCell.HasFormula)
                 {
-                    openXmlCell.CellValue = new CellValue(xlCell.GetText());
                     WriteValue(w, xlCell.GetText());
                 }
                 else
@@ -1314,57 +1312,40 @@ namespace ClosedXML.Excel.IO
                     {
                         if (xlCell.ShareString)
                         {
-                            var cellValue = new CellValue
-                            {
-                                Text = xlCell.SharedStringId.ToInvariantString()
-                            };
-                            openXmlCell.CellValue = cellValue;
                             WriteValue(w, xlCell.SharedStringId.ToInvariantString());
                         }
                         else
                         {
                             w.WriteStartElement("is", Main2006SsNs);
-                            var inlineString = new InlineString();
                             if (xlCell.HasRichText)
                             {
-                                TextSerializer.PopulatedRichTextElements(w, inlineString, xlCell, context);
+                                TextSerializer.WriteRichTextElements(w, xlCell, context);
                             }
                             else
                             {
                                 w.WriteStartElement("t", Main2006SsNs);
                                 var text = xlCell.GetText();
-                                var t = new Text(text);
                                 if (text.PreserveSpaces())
                                 {
                                     // TODO: add test
                                     w.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
-                                    t.Space = SpaceProcessingModeValues.Preserve;
                                 }
 
-                                inlineString.Text = t;
                                 w.WriteString(text);
                                 w.WriteEndElement();
                             }
 
                             w.WriteEndElement(); // is
-                            openXmlCell.InlineString = inlineString;
                         }
                     }
                 }
             }
             else if (dataType == XLDataType.TimeSpan)
             {
-                var cellValue = new CellValue(xlCell.Value.GetUnifiedNumber().ToInvariantString());
-                openXmlCell.CellValue = cellValue;
                 WriteValue(w, xlCell.Value.GetUnifiedNumber().ToInvariantString());
             }
             else if (dataType == XLDataType.Number)
             {
-                var cellValue = new CellValue
-                {
-                    Text = xlCell.Value.GetNumber().ToInvariantString()
-                };
-                openXmlCell.CellValue = cellValue;
                 WriteValue(w, xlCell.Value.GetNumber().ToInvariantString());
             }
             else if (dataType == XLDataType.DateTime)
@@ -1372,23 +1353,16 @@ namespace ClosedXML.Excel.IO
                 // OpenXML SDK validator requires a specific format, in addition to the spec, but can reads many more
                 var date = xlCell.GetDateTime();
                 if (xlCell.Worksheet.Workbook.Use1904DateSystem)
-                {
                     date = date.AddDays(-1462);
-                }
 
-                var cellValue = new CellValue(date.ToSerialDateTime().ToInvariantString());
-                openXmlCell.CellValue = cellValue;
                 WriteValue(w, date.ToSerialDateTime().ToInvariantString());
             }
             else if (dataType == XLDataType.Boolean)
             {
-                var cellValue = xlCell.GetBoolean() ? new CellValue("1") : new CellValue("0");
-                openXmlCell.CellValue = cellValue;
                 WriteValue(w, xlCell.GetBoolean() ? TrueValue : FalseValue);
             }
             else if (dataType == XLDataType.Error)
             {
-                openXmlCell.CellValue = new CellValue(xlCell.Value.GetError().ToDisplayString());
                 WriteValue(w, xlCell.Value.GetError().ToDisplayString());
             }
             else
@@ -2068,7 +2042,7 @@ namespace ClosedXML.Excel.IO
 
                             if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
                             {
-                                WriteCellValue(xml, xlCell, cell, context);
+                                WriteCellValue(xml, xlCell, context);
                                 cell.CellValue = new CellValue(ToValueString(xlCell.CachedValue));
                             }
                         }
@@ -2095,7 +2069,7 @@ namespace ClosedXML.Excel.IO
                             cell.DataType = GetCellValueType(xlCell);
                             WriteStartCell(xml, cell);
 
-                            WriteCellValue(xml, xlCell, cell, context);
+                            WriteCellValue(xml, xlCell, context);
                         }
 
                         xml.WriteEndElement(); // cell
