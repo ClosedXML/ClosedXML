@@ -514,27 +514,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static PhoneticAlignmentValues ToOpenXml(this XLPhoneticAlignment value)
-        {
-            switch (value)
-            {
-                case XLPhoneticAlignment.Center:
-                    return PhoneticAlignmentValues.Center;
-
-                case XLPhoneticAlignment.Distributed:
-                    return PhoneticAlignmentValues.Distributed;
-
-                case XLPhoneticAlignment.Left:
-                    return PhoneticAlignmentValues.Left;
-
-                case XLPhoneticAlignment.NoControl:
-                    return PhoneticAlignmentValues.NoControl;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
-            }
-        }
-
         private static readonly String[] XLPhoneticAlignmentStrings =
         {
             "center",

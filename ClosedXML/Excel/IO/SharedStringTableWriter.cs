@@ -1,7 +1,5 @@
 ﻿using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,9 +54,8 @@ namespace ClosedXML.Excel.IO
                         c.SharedStringId = id;
                     else
                     {
-                        var sharedStringItem = new SharedStringItem();
                         xml.WriteStartElement("si", Main2006SsNs);
-                        TextSerializer.PopulatedRichTextElements(xml, sharedStringItem, c, context);
+                        TextSerializer.WriteRichTextElements(xml, c, context);
                         xml.WriteEndElement(); // si
 
                         newRichStrings.Add(c.GetRichText(), stringId);
@@ -74,23 +71,15 @@ namespace ClosedXML.Excel.IO
                         c.SharedStringId = id;
                     else
                     {
-                        var s = value;
-                        var sharedStringItem = new SharedStringItem();
                         xml.WriteStartElement("si", Main2006SsNs);
                         xml.WriteStartElement("t", Main2006SsNs);
-                        var t = XmlEncoder.EncodeString(s);
-                        var text = new Text { Text = t };
+                        var s = value;
                         if (!s.Trim().Equals(s))
-                        {
-                            text.Space = SpaceProcessingModeValues.Preserve;
                             xml.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
-                        }
 
-                        xml.WriteString(t);
+                        xml.WriteString(XmlEncoder.EncodeString(s));
                         xml.WriteEndElement(); // t
                         xml.WriteEndElement(); // si
-
-                        sharedStringItem.Append(text);
 
                         newStrings.Add(value, stringId);
                         c.SharedStringId = stringId;
