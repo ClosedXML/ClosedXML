@@ -36,6 +36,18 @@ namespace ClosedXML.Excel
             }
         }
 
+        private static readonly String[] XLFontUnderlineValuesStrings =
+        {
+            "double",
+            "doubleAccounting",
+            "none",
+            "single",
+            "singleAccounting"
+        };
+
+        public static string ToOpenXmlString(this XLFontUnderlineValues value)
+            => XLFontUnderlineValuesStrings[(int)value];
+
         public static OrientationValues ToOpenXml(this XLPageOrientation value)
         {
             switch (value)
@@ -71,6 +83,16 @@ namespace ClosedXML.Excel
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
             }
         }
+
+        private static readonly String[] XLFontVerticalTextAlignmentValuesStrings =
+        {
+            "baseline",
+            "subscript",
+            "superscript"
+        };
+
+        public static String ToOpenXmlString(this XLFontVerticalTextAlignmentValues value)
+            => XLFontVerticalTextAlignmentValuesStrings[(int)value];
 
         public static PatternValues ToOpenXml(this XLFillPatternValues value)
         {
@@ -513,6 +535,17 @@ namespace ClosedXML.Excel
             }
         }
 
+        private static readonly String[] XLPhoneticAlignmentStrings =
+        {
+            "center",
+            "distributed",
+            "left",
+            "noControl"
+        };
+
+        public static String ToOpenXmlString(this XLPhoneticAlignment value)
+            => XLPhoneticAlignmentStrings[(int)value];
+
         public static PhoneticValues ToOpenXml(this XLPhoneticType value)
         {
             switch (value)
@@ -533,6 +566,17 @@ namespace ClosedXML.Excel
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
             }
         }
+
+        private static readonly String[] XLPhoneticTypeStrings =
+        {
+            "fullwidthKatakana",
+            "halfwidthKatakana",
+            "Hiragana",
+            "noConversion"
+        };
+
+        public static String ToOpenXmlString(this XLPhoneticType value)
+            => XLPhoneticTypeStrings[(int)value];
 
         public static DataConsolidateFunctionValues ToOpenXml(this XLPivotSummary value)
         {

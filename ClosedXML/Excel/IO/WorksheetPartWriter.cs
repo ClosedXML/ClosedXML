@@ -19,9 +19,10 @@ using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
 using Text = DocumentFormat.OpenXml.Spreadsheet.Text;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-using static ClosedXML.Excel.XLWorkbook;
 using System.Reflection;
 using System.Xml;
+using static ClosedXML.Excel.XLWorkbook;
+using static ClosedXML.Excel.IO.OpenXmlConst;
 
 namespace ClosedXML.Excel.IO
 {
@@ -1294,14 +1295,18 @@ namespace ClosedXML.Excel.IO
             };
         }
 
-        private static void SetCellValue(XLCell xlCell, Cell openXmlCell, SaveContext context)
+        private static void WriteCellValue(XmlWriter w, XLCell xlCell, Cell openXmlCell, SaveContext context)
         {
             var dataType = xlCell.DataType;
+            if (dataType == XLDataType.Blank)
+                return;
+
             if (dataType == XLDataType.Text)
             {
                 if (xlCell.HasFormula)
                 {
                     openXmlCell.CellValue = new CellValue(xlCell.GetText());
+                    WriteValue(w, xlCell.GetText());
                 }
                 else
                 {
@@ -1314,24 +1319,34 @@ namespace ClosedXML.Excel.IO
                                 Text = xlCell.SharedStringId.ToInvariantString()
                             };
                             openXmlCell.CellValue = cellValue;
+                            WriteValue(w, xlCell.SharedStringId.ToInvariantString());
                         }
                         else
                         {
+                            w.WriteStartElement("is", Main2006SsNs);
                             var inlineString = new InlineString();
                             if (xlCell.HasRichText)
                             {
-                                TextSerializer.PopulatedRichTextElements(inlineString, xlCell, context);
+                                TextSerializer.PopulatedRichTextElements(w, inlineString, xlCell, context);
                             }
                             else
                             {
+                                w.WriteStartElement("t", Main2006SsNs);
                                 var text = xlCell.GetText();
                                 var t = new Text(text);
                                 if (text.PreserveSpaces())
+                                {
+                                    // TODO: add test
+                                    w.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
                                     t.Space = SpaceProcessingModeValues.Preserve;
+                                }
 
                                 inlineString.Text = t;
+                                w.WriteString(text);
+                                w.WriteEndElement();
                             }
 
+                            w.WriteEndElement(); // is
                             openXmlCell.InlineString = inlineString;
                         }
                     }
@@ -1341,6 +1356,7 @@ namespace ClosedXML.Excel.IO
             {
                 var cellValue = new CellValue(xlCell.Value.GetUnifiedNumber().ToInvariantString());
                 openXmlCell.CellValue = cellValue;
+                WriteValue(w, xlCell.Value.GetUnifiedNumber().ToInvariantString());
             }
             else if (dataType == XLDataType.Number)
             {
@@ -1349,6 +1365,7 @@ namespace ClosedXML.Excel.IO
                     Text = xlCell.Value.GetNumber().ToInvariantString()
                 };
                 openXmlCell.CellValue = cellValue;
+                WriteValue(w, xlCell.Value.GetNumber().ToInvariantString());
             }
             else if (dataType == XLDataType.DateTime)
             {
@@ -1361,23 +1378,29 @@ namespace ClosedXML.Excel.IO
 
                 var cellValue = new CellValue(date.ToSerialDateTime().ToInvariantString());
                 openXmlCell.CellValue = cellValue;
-            }
-            else if (dataType == XLDataType.Blank)
-            {
-                // Nothing
+                WriteValue(w, date.ToSerialDateTime().ToInvariantString());
             }
             else if (dataType == XLDataType.Boolean)
             {
                 var cellValue = xlCell.GetBoolean() ? new CellValue("1") : new CellValue("0");
                 openXmlCell.CellValue = cellValue;
+                WriteValue(w, xlCell.GetBoolean() ? TrueValue : FalseValue);
             }
             else if (dataType == XLDataType.Error)
             {
                 openXmlCell.CellValue = new CellValue(xlCell.Value.GetError().ToDisplayString());
+                WriteValue(w, xlCell.Value.GetError().ToDisplayString());
             }
             else
             {
                 throw new InvalidOperationException();
+            }
+
+            static void WriteValue(XmlWriter w, String valueText)
+            {
+                w.WriteStartElement("v", Main2006SsNs);
+                w.WriteString(valueText);
+                w.WriteEndElement();
             }
         }
 
@@ -2045,9 +2068,8 @@ namespace ClosedXML.Excel.IO
 
                             if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
                             {
-                                SetCellValue(xlCell, cell, context);
+                                WriteCellValue(xml, xlCell, cell, context);
                                 cell.CellValue = new CellValue(ToValueString(xlCell.CachedValue));
-                                WriteCellValue(xml, cell.CellValue);
                             }
                         }
                         else if (tableTotalCells.Contains(xlCell.Address))
@@ -2061,12 +2083,11 @@ namespace ClosedXML.Excel.IO
                             if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                             {
                                 cell.DataType = CvSharedString;
-                                cell.CellValue = new CellValue
-                                {
-                                    Text = xlCell.SharedStringId.ToInvariantString()
-                                };
                                 WriteStartCell(xml, cell);
-                                WriteCellValue(xml, cell.CellValue);
+
+                                xml.WriteStartElement("v", Main2006SsNs);
+                                xml.WriteString(xlCell.SharedStringId.ToInvariantString());
+                                xml.WriteEndElement();
                             }
                         }
                         else
@@ -2074,13 +2095,7 @@ namespace ClosedXML.Excel.IO
                             cell.DataType = GetCellValueType(xlCell);
                             WriteStartCell(xml, cell);
 
-                            SetCellValue(xlCell, cell, context);
-
-                            if (cell.CellValue is not null)
-                                WriteCellValue(xml, cell.CellValue);
-
-                            if (cell.InlineString is not null)
-                                writer.WriteElement(cell.InlineString);
+                            WriteCellValue(xml, xlCell, cell, context);
                         }
 
                         xml.WriteEndElement(); // cell
@@ -2147,25 +2162,8 @@ namespace ClosedXML.Excel.IO
 
                 // TODO: Write vm, cm, ph
             }
-            
-            static void WriteCellValue(XmlWriter w, CellValue cellValue)
-            {
-                w.WriteStartElement("v", Main2006SsNs);
-                w.WriteString(cellValue.Text);
-                w.WriteEndElement();
-            }
         }
 
-        private const string Main2006SsNs = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-        private const string X14Ac2009SsNs = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac";
-
-        /// <summary>
-        /// Value that is written to the file as a true.
-        /// </summary>
-        /// <remarks>It is shorter than normal true.</remarks>
-        private static readonly String TrueValue = "1";
-
-        private static readonly String FalseValue = "0";
 
         /// <summary>
         /// Mapping from <see cref="CellValues"/> enum to type written to the output file.

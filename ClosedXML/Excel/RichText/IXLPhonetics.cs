@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public enum XLPhoneticAlignment { Center, Distributed, Left, NoControl }
-    public enum XLPhoneticType { FullWidthKatakana, HalfWidthKatakana, Hiragana, NoConversion }
+    public enum XLPhoneticAlignment { Center = 0, Distributed = 1, Left = 2, NoControl = 3 }
+    public enum XLPhoneticType { FullWidthKatakana = 0, HalfWidthKatakana = 1, Hiragana = 2, NoConversion = 3 }
     public interface IXLPhonetics : IXLFontBase, IEnumerable<IXLPhonetic>, IEquatable<IXLPhonetics>
     {
         IXLPhonetics SetBold(); IXLPhonetics SetBold(Boolean value);

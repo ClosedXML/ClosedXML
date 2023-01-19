@@ -56,6 +56,7 @@ using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAli
 using Vml = DocumentFormat.OpenXml.Vml;
 using ClosedXML.Excel.Cells;
 using ClosedXML.Excel.IO;
+using static ClosedXML.Excel.IO.OpenXmlConst;
 
 namespace ClosedXML.Excel
 {
@@ -2889,12 +2890,26 @@ namespace ClosedXML.Excel
                 }
                 comment.AuthorId = (UInt32)authorId;
 
-                var commentText = new CommentText();
-                foreach (var rt in c.GetComment())
+                // TODO: Move to full streaming
+                using var sw = new StringWriter();
+                using var w = XmlWriter.Create(sw, new XmlWriterSettings()
                 {
-                    commentText.Append(TextSerializer.GetRun(rt));
-                }
+                    OmitXmlDeclaration = true
+                });
 
+                // TODO: Some other file can have different declaration, so ensure that it works for all of them.
+                w.WriteStartElement("x", "text", Main2006SsNs);
+                foreach (var rt in c.GetComment())
+                    TextSerializer.GetRun(w, rt);
+
+                w.WriteEndElement();
+                w.Flush();
+                var commentTextXml = sw.ToString();
+                var commentText = new CommentText(commentTextXml);
+
+                // The XmlWriter of course wrote the declaration in the root element, but it is duplicate in
+                var nsDecl = (List<KeyValuePair<string, string>>)commentText.NamespaceDeclarations;
+                nsDecl.Clear();
                 comment.Append(commentText);
                 commentList.Append(comment);
             }
