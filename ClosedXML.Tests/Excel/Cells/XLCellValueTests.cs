@@ -110,6 +110,30 @@ namespace ClosedXML.Tests.Excel.Cells
         }
 
         [Test]
+        public void Creation_FromObject()
+        {
+            Assert.AreEqual(XLDataType.Blank, XLCellValue.FromObject(null).Type);
+            Assert.AreEqual(XLDataType.Blank, XLCellValue.FromObject(Blank.Value).Type);
+            Assert.AreEqual(XLDataType.Boolean, XLCellValue.FromObject(true).Type);
+            Assert.AreEqual(XLDataType.Text, XLCellValue.FromObject("Hello World").Type);
+            Assert.AreEqual(XLDataType.Error, XLCellValue.FromObject(XLError.NumberInvalid).Type);
+            Assert.AreEqual(XLDataType.DateTime, XLCellValue.FromObject(new DateTime(2021, 1, 1)).Type);
+            Assert.AreEqual(XLDataType.TimeSpan, XLCellValue.FromObject(new TimeSpan(10, 1, 2, 3, 456)).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((sbyte)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((byte)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((short)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((ushort)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((int)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((uint)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((long)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((ulong)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((float)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((double)42).Type);
+            Assert.AreEqual(XLDataType.Number, XLCellValue.FromObject((decimal)42).Type);
+            Assert.AreEqual(XLDataType.Text, XLCellValue.FromObject(DayOfWeek.Sunday).Type);
+        }
+
+        [Test]
         public void NumberTypes_HaveUnambiguousConversion()
         {
             {

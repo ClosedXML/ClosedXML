@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using ClosedXML.Excel.CalcEngine;
@@ -130,7 +130,6 @@ namespace ClosedXML.Excel
 
         public static implicit operator XLCellValue(Blank blank) => new(blank);
         public static implicit operator XLCellValue(bool logical) => new(logical);
-        public static implicit operator XLCellValue(double number) => new(number);
         public static implicit operator XLCellValue(string text) => text is not null ? new(text) : new(Blank.Value);
         public static implicit operator XLCellValue(XLError error) => new(error);
         public static implicit operator XLCellValue(DateTime dateTime) => new(dateTime);
@@ -144,6 +143,8 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(uint number) => new(number);
         public static implicit operator XLCellValue(long number) => new(number);
         public static implicit operator XLCellValue(ulong number) => new(number);
+        public static implicit operator XLCellValue(float number) => new(number);
+        public static implicit operator XLCellValue(double number) => new(number);
         public static implicit operator XLCellValue(decimal number) => new(decimal.ToDouble(number));
 
         public static implicit operator XLCellValue(sbyte? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
@@ -154,11 +155,66 @@ namespace ClosedXML.Excel
         public static implicit operator XLCellValue(uint? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
         public static implicit operator XLCellValue(long? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
         public static implicit operator XLCellValue(ulong? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
+        public static implicit operator XLCellValue(float? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
         public static implicit operator XLCellValue(double? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
         public static implicit operator XLCellValue(decimal? numberOrBlank) => numberOrBlank.HasValue ? numberOrBlank.Value : Blank.Value;
 
         public static implicit operator XLCellValue(DateTime? dateTimeOrBlank) => dateTimeOrBlank.HasValue ? dateTimeOrBlank.Value : Blank.Value;
         public static implicit operator XLCellValue(TimeSpan? timeSpanOrBlank) => timeSpanOrBlank.HasValue ? timeSpanOrBlank.Value : Blank.Value;
+
+        /// <summary>
+        /// Creates an <see cref="XLCellValue"/> from an <see cref="object"/>. If the type of the object has an implicit conversion operator then it is used.
+        /// Otherwise, the <see cref="Convert.ToString(object, IFormatProvider)"/> method is used to convert the provided object to a string.
+        /// <para/>
+        /// The following types and their nullable counterparts are supported without requiring to be converted to a string:
+        /// <list type="bullet">
+        ///   <item><see cref="Blank"/></item>
+        ///   <item><see cref="bool"/></item>
+        ///   <item><see cref="string"/></item>
+        ///   <item><see cref="XLError"/></item>
+        ///   <item><see cref="DateTime"/></item>
+        ///   <item><see cref="TimeSpan"/></item>
+        ///   <item><see cref="sbyte"/></item>
+        ///   <item><see cref="byte"/></item>
+        ///   <item><see cref="short"/></item>
+        ///   <item><see cref="ushort"/></item>
+        ///   <item><see cref="int"/></item>
+        ///   <item><see cref="uint"/></item>
+        ///   <item><see cref="long"/></item>
+        ///   <item><see cref="ulong"/></item>
+        ///   <item><see cref="float"/></item>
+        ///   <item><see cref="double"/></item>
+        ///   <item><see cref="decimal"/></item>
+        /// </list>
+        /// </summary>
+        /// <param name="obj">The object to convert.</param>
+        /// <param name="provider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>An <see cref="XLCellValue"/> representation of the object.</returns>
+        public static XLCellValue FromObject(object obj, IFormatProvider provider = null)
+        {
+            return obj switch
+            {
+                null => Blank.Value,
+                Blank blank => blank,
+                bool logical => logical,
+                string text => text,
+                XLError error => error,
+                DateTime dateTime => dateTime,
+                TimeSpan timeSpan => timeSpan,
+                sbyte number => number,
+                byte number => number,
+                short number => number,
+                ushort number => number,
+                int number => number,
+                uint number => number,
+                long number => number,
+                ulong number => number,
+                float number => number,
+                double number => number,
+                decimal number => number,
+                _ => Convert.ToString(obj, provider)
+            };
+        }
 
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
