@@ -67,6 +67,7 @@ namespace ClosedXML.Excel
 
         private XLComment _comment;
         private XLHyperlink _hyperlink;
+        private LinkInfo _linkInfo = null;
 
         public bool SettingHyperlink;
 
@@ -122,6 +123,18 @@ namespace ClosedXML.Excel
                 _fixedRow = value.FixedRow;
                 _fixedCol = value.FixedColumn;
             }
+        }
+
+        internal UInt32? CellMetaIndex
+        {
+            get => _linkInfo?.CellMetaIndex;
+            set => (_linkInfo ??= new LinkInfo()).CellMetaIndex = value;
+        }
+
+        internal UInt32? ValueMetaIndex
+        {
+            get => _linkInfo?.ValueMetaIndex;
+            set => (_linkInfo ??= new LinkInfo()).ValueMetaIndex = value;
         }
 
         internal XLComment GetComment()
@@ -2161,6 +2174,19 @@ namespace ClosedXML.Excel
         private enum XLCellFlags : byte
         {
             ShowPhonetic = 1
+        }
+
+        /// <summary>
+        /// A kitchen sink for information that is for the cell, but is not directly saved in the cell,
+        /// but generally in other parts of the workbook.
+        /// </summary>
+        private class LinkInfo
+        {
+            /// <summary> Metadata is not yet supported, so just make sure we can load/save it. </summary>
+            public UInt32? CellMetaIndex { get; set; }
+
+            /// <summary> Metadata is not yet supported, so just make sure we can load/save it. </summary>
+            public UInt32? ValueMetaIndex { get; set; }
         }
     }
 }

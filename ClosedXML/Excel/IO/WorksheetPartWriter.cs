@@ -2099,7 +2099,11 @@ namespace ClosedXML.Excel.IO
                 if (xlCell.ShowPhonetic)
                     w.WriteAttributeString("ph", TrueValue);
 
-                // TODO: Write vm, cm
+                if (xlCell.CellMetaIndex is not null)
+                    w.WriteAttribute("cm", xlCell.CellMetaIndex.Value);
+
+                if (xlCell.ValueMetaIndex is not null)
+                    w.WriteAttribute("vm", xlCell.ValueMetaIndex.Value);
             }
         }
 

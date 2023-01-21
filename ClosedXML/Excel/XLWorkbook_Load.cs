@@ -1673,6 +1673,12 @@ namespace ClosedXML.Excel
             if (cell.ShowPhonetic is not null && cell.ShowPhonetic.Value)
                 xlCell.ShowPhonetic = true;
 
+            if (cell.CellMetaIndex is not null)
+                xlCell.CellMetaIndex = cell.CellMetaIndex.Value;
+
+            if (cell.ValueMetaIndex is not null)
+                xlCell.ValueMetaIndex = cell.ValueMetaIndex.Value;
+
             var cellFormula = cell.CellFormula;
             if (cellFormula is not null)
             {
