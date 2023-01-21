@@ -5,11 +5,6 @@ namespace ClosedXML.Examples.Styles
 {
     public class UsingPhonetics : IXLExample
     {
-    
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -26,16 +21,10 @@ namespace ClosedXML.Examples.Styles
             cell.GetRichText().Phonetics.Add("げん", 7, 8);
             cell.GetRichText().Phonetics.Add("き", 8, 9);
 
-            //TODO: I'm looking for someone who understands Japanese to confirm the validity of the above code.
+            // Must set flag to actually display furigana
+            cell.ShowPhonetic = true;
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

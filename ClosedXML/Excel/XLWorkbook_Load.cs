@@ -1670,6 +1670,9 @@ namespace ClosedXML.Excel
                 ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
             }
 
+            if (cell.ShowPhonetic is not null && cell.ShowPhonetic.Value)
+                xlCell.ShowPhonetic = true;
+
             var cellFormula = cell.CellFormula;
             if (cellFormula is not null)
             {
@@ -2064,6 +2067,9 @@ namespace ClosedXML.Excel
 
             if (row.OutlineLevel != null && row.OutlineLevel > 0)
                 xlRow.OutlineLevel = row.OutlineLevel;
+
+            if (row.ShowPhonetic != null && row.ShowPhonetic.Value)
+                xlRow.ShowPhonetic = true;
 
             if (row.CustomFormat != null)
             {
