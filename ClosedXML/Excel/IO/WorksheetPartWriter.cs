@@ -27,42 +27,6 @@ namespace ClosedXML.Excel.IO
 {
     internal class WorksheetPartWriter
     {
-        private static readonly EnumValue<CellValues> CvSharedString = new EnumValue<CellValues>(CellValues.SharedString);
-        private static readonly EnumValue<CellValues> CvInlineString = new EnumValue<CellValues>(CellValues.InlineString);
-        private static readonly EnumValue<CellValues> CvString = new EnumValue<CellValues>(CellValues.String);
-        private static readonly EnumValue<CellValues> CvBoolean = new EnumValue<CellValues>(CellValues.Boolean);
-        private static readonly EnumValue<CellValues> CvError = new EnumValue<CellValues>(CellValues.Error);
-
-        private static EnumValue<CellValues> GetCellValueType(XLCell xlCell)
-        {
-            switch (xlCell.DataType)
-            {
-                case XLDataType.Text:
-                    return xlCell.HasFormula ? CvString : xlCell.ShareString ? CvSharedString : CvInlineString;
-
-                case XLDataType.Number:
-                    return null; // Number is a default type and as such doesn't have to be written
-
-                case XLDataType.DateTime:
-                    return null; // Type date is poorly supported and has limited precision. use number, which is default
-
-                case XLDataType.Boolean:
-                    return CvBoolean;
-
-                case XLDataType.TimeSpan:
-                    return null;
-
-                case XLDataType.Error:
-                    return CvError;
-
-                case XLDataType.Blank:
-                    return null;
-
-                default:
-                    throw new NotImplementedException($"DataType {xlCell.DataType}");
-            }
-        }
-
         internal static void GenerateWorksheetPartContent(
             bool partIsEmpty,
             WorksheetPart worksheetPart,
@@ -1274,7 +1238,7 @@ namespace ClosedXML.Excel.IO
 
             return worksheet;
         }
-        
+
         private static void WriteCellValue(XmlWriter w, XLCell xlCell, SaveContext context)
         {
             var dataType = xlCell.DataType;
@@ -1886,13 +1850,11 @@ namespace ClosedXML.Excel.IO
                     table.TotalsRow().CellsUsed())
                 .Select(cell => cell.Address));
 
+            // Must be enough to hold span and rowNumber as strings
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
             foreach (var rowNumber in distinctRows.OrderBy(r => r))
             {
                 var row = new Row { RowIndex = (UInt32)rowNumber };
-
-                if (maxColumn > 0)
-                    row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
 
                 if (xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow thisRow))
                 {
@@ -1927,13 +1889,13 @@ namespace ClosedXML.Excel.IO
                                    && row.Collapsed == null
                                    && row.OutlineLevel == null;
 
+                var cellRef = new char[10];
                 var cellWritten = false;
                 if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(rowNumber, out Dictionary<int, XLCell> cells))
                 {
                     foreach (var xlCell in cells.Values.OrderBy(c => c.Address.ColumnNumber))
                     {
                         var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
-                        var cellReference = (xlCell.Address).GetTrimmedAddress();
 
                         // For saving cells to file, ignore conditional formatting, data validation rules and merged
                         // ranges. They just bloat the file
@@ -1945,26 +1907,24 @@ namespace ClosedXML.Excel.IO
                         if (isEmpty)
                             continue;
 
-                        var cell = new Cell
-                        {
-                            CellReference = new StringValue(cellReference),
-                            StyleIndex = styleId
-                        };
-
                         if (!cellWritten)
                         {
-                            WriteStartRow(xml, row);
+                            WriteStartRow(xml, row, rowNumber, maxColumn);
                             cellWritten = true;
                         }
 
+                        Span<Char> cellRefSpan = cellRef;
+                        var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);
+
                         if (xlCell.HasFormula)
                         {
+                            String dataType = null;
                             if (options.EvaluateFormulasBeforeSaving)
                             {
                                 try
                                 {
                                     xlCell.Evaluate(false);
-                                    cell.DataType = GetCellValueType(xlCell);
+                                    dataType = FormulaDataType[(int)xlCell.DataType];
                                 }
                                 catch
                                 {
@@ -1972,7 +1932,7 @@ namespace ClosedXML.Excel.IO
                                 }
                             }
 
-                            WriteStartCell(xml, cell);
+                            WriteStartCell(xml, cellRef, cellRefLen, dataType, styleId);
                             xml.WriteStartElement("f", Main2006SsNs);
 
                             var formula = xlCell.FormulaA1;
@@ -2045,8 +2005,7 @@ namespace ClosedXML.Excel.IO
                             // references and SR are not yet supported, so not yet possible to calculate total values.
                             if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                             {
-                                cell.DataType = CvSharedString;
-                                WriteStartCell(xml, cell);
+                                WriteStartCell(xml, cellRef, cellRefLen, "s", styleId);
 
                                 xml.WriteStartElement("v", Main2006SsNs);
                                 xml.WriteValue(xlCell.SharedStringId);
@@ -2055,8 +2014,8 @@ namespace ClosedXML.Excel.IO
                         }
                         else
                         {
-                            cell.DataType = GetCellValueType(xlCell);
-                            WriteStartCell(xml, cell);
+                            var dataType = GetCellValueType(xlCell);
+                            WriteStartCell(xml, cellRef, cellRefLen, dataType, styleId);
 
                             WriteCellValue(xml, xlCell, context);
                         }
@@ -2069,19 +2028,28 @@ namespace ClosedXML.Excel.IO
                     xml.WriteEndElement(); // row
                 else if (!isRowDefault)
                 {
-                    WriteStartRow(xml, row);
+                    WriteStartRow(xml, row, rowNumber, maxColumn);
                     xml.WriteEndElement();
                 }
             }
 
             xml.WriteEndElement(); // SheetData
 
-            static void WriteStartRow(XmlWriter w, Row row)
+            static void WriteStartRow(XmlWriter w, Row row, int rowNumber, int maxColumn)
             {
                 w.WriteStartElement("row", Main2006SsNs);
-                w.WriteAttribute("r", row.RowIndex.Value);
-                if (row.Spans is not null)
-                    w.WriteAttributeString("spans", row.Spans.InnerText);
+
+                w.WriteStartAttribute("r");
+                w.WriteValue(rowNumber);
+                w.WriteEndAttribute();
+
+                if (maxColumn > 0)
+                {
+                    w.WriteStartAttribute("spans");
+                    w.WriteString("1:");
+                    w.WriteValue(maxColumn);
+                    w.WriteEndAttribute();
+                }
 
                 if (row.Height is not null)
                     w.WriteAttribute("ht", row.Height.Value);
@@ -2110,36 +2078,61 @@ namespace ClosedXML.Excel.IO
                 // TODO: Write ph, thickBot, thickTop
             }
 
-            static void WriteStartCell(XmlWriter w, Cell cell)
+            static void WriteStartCell(XmlWriter w, Char[] reference, int referenceLength, String dataType, UInt32 styleId)
             {
                 w.WriteStartElement("c", Main2006SsNs);
 
-                if (cell.CellReference is not null)
-                    w.WriteAttributeString("r", cell.CellReference.Value);
+                w.WriteStartAttribute("r");
+                w.WriteRaw(reference, 0, referenceLength);
+                w.WriteEndAttribute();
 
-                if (cell.StyleIndex is not null)
-                    w.WriteAttribute("s", cell.StyleIndex.Value);
+                // if (styleId != 0) Test files have style even for 0, fix later
+                w.WriteAttribute("s", styleId);
 
-                if (cell.DataType is not null)
-                    w.WriteAttributeString("t", CellTypeName[(int)cell.DataType.Value]);
+                if (dataType is not null)
+                    w.WriteAttributeString("t", dataType);
 
                 // TODO: Write vm, cm, ph
             }
         }
 
         /// <summary>
-        /// Mapping from <see cref="CellValues"/> enum to type written to the output file.
+        /// An array to convert data type for a formula cell. Key is <see cref="XLDataType"/>.
+        /// It saves some performance through direct indexation instead of switch.
         /// </summary>
-        private static readonly String[] CellTypeName = new[]
+        private static readonly String[] FormulaDataType =
         {
-            "b",
-            "n",
-            "e",
-            "s",
-            "str",
-            "inlineStr",
-            "d"
+            null, // blank
+            "b", // boolean
+            null, // number, default value, no need to save type
+            "str", // text, formula can only save this type, no inline or shared string
+            "e", // error
+            null, // datetime, saved as serialized date-time
+            null // timespan, saved as serialized date-time
         };
+
+        /// <summary>
+        /// An array to convert data type for a cell that only contains a value. Key is <see cref="XLDataType"/>.
+        /// It saves some performance through direct indexation instead of switch.
+        /// </summary>
+        private static readonly String[] ValueDataType =
+        {
+            null, // blank
+            "b", // boolean
+            null, // number, default value, no need to save type
+            "s", // text, the default is a shared string, but there also can be inline string depending on ShareString property
+            "e", // error
+            null, // datetime, saved as serialized date-time
+            null // timespan, saved as serialized date-time
+        };
+
+        private static String GetCellValueType(XLCell xlCell)
+        {
+            var dataType = xlCell.DataType;
+            if (dataType == XLDataType.Text && !xlCell.ShareString)
+                return "inlineStr";
+            return ValueDataType[(int)dataType];
+        }
 
         private static Int32 GetMaxColumn(XLWorksheet xlWorksheet)
         {

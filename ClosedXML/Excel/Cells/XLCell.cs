@@ -94,12 +94,17 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public XLWorksheet Worksheet { get; private set; }
+        public XLWorksheet Worksheet { get; }
 
         private int _rowNumber;
         private int _columnNumber;
         private bool _fixedRow;
         private bool _fixedCol;
+
+        /// <summary>
+        /// Sheet point of the cell.
+        /// </summary>
+        public XLSheetPoint SheetPoint => new(_rowNumber, _columnNumber);
 
         public XLAddress Address
         {
