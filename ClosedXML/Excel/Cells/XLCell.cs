@@ -100,6 +100,7 @@ namespace ClosedXML.Excel
         private int _columnNumber;
         private bool _fixedRow;
         private bool _fixedCol;
+        private XLCellFlags _flags;
 
         /// <summary>
         /// Sheet point of the cell.
@@ -1286,6 +1287,19 @@ namespace ClosedXML.Excel
             get { return _hyperlink != null; }
         }
 
+        /// <inheritdoc />
+        public Boolean ShowPhonetic
+        {
+            get => _flags.HasFlag(XLCellFlags.ShowPhonetic);
+            set
+            {
+                if (value)
+                    _flags |= XLCellFlags.ShowPhonetic;
+                else
+                    _flags &= ~XLCellFlags.ShowPhonetic;
+            }
+        }
+
         #endregion IXLCell Members
 
         #region IXLStylized Members
@@ -2138,6 +2152,15 @@ namespace ClosedXML.Excel
         internal bool IsSuperiorMergedCell()
         {
             return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+        }
+
+        /// <summary>
+        /// Flag enum to save space, instead of wasting byte for each flag.
+        /// </summary>
+        [Flags]
+        private enum XLCellFlags : byte
+        {
+            ShowPhonetic = 1
         }
     }
 }

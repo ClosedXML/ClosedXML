@@ -1899,7 +1899,7 @@ namespace ClosedXML.Excel.IO
                                 }
                             }
 
-                            WriteStartCell(xml, cellRef, cellRefLen, dataType, styleId);
+                            WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
                             xml.WriteStartElement("f", Main2006SsNs);
 
                             var formula = xlCell.FormulaA1;
@@ -1972,7 +1972,7 @@ namespace ClosedXML.Excel.IO
                             // references and SR are not yet supported, so not yet possible to calculate total values.
                             if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                             {
-                                WriteStartCell(xml, cellRef, cellRefLen, "s", styleId);
+                                WriteStartCell(xml, xlCell, cellRef, cellRefLen, "s", styleId);
 
                                 xml.WriteStartElement("v", Main2006SsNs);
                                 xml.WriteValue(xlCell.SharedStringId);
@@ -1982,7 +1982,7 @@ namespace ClosedXML.Excel.IO
                         else
                         {
                             var dataType = GetCellValueType(xlCell);
-                            WriteStartCell(xml, cellRef, cellRefLen, dataType, styleId);
+                            WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
 
                             WriteCellValue(xml, xlCell, context);
                         }
@@ -2066,15 +2066,23 @@ namespace ClosedXML.Excel.IO
                     w.WriteAttribute("outlineLevel", xlRow.OutlineLevel);
                 }
 
+                if (xlRow.ShowPhonetic)
+                {
+                    w.WriteAttributeString("ph", TrueValue);
+                }
+
                 if (xlRow.DyDescent is not null)
                 {
                     w.WriteAttribute("dyDescent", X14Ac2009SsNs, xlRow.DyDescent.Value);
                 }
 
-                // TODO: Write ph, thickBot, thickTop
+                // thickBot and thickTop attributes are not written, because Excel seems to determine adjustments
+                // from cell borders on its own and it would be rather costly to check each cell in each row.
+                // If row was adjusted when cell had it's border modified, then it would be fine to write
+                // the thickBot/thickBot attributes.
             }
 
-            static void WriteStartCell(XmlWriter w, Char[] reference, int referenceLength, String dataType, UInt32 styleId)
+            static void WriteStartCell(XmlWriter w, XLCell xlCell, Char[] reference, int referenceLength, String dataType, UInt32 styleId)
             {
                 w.WriteStartElement("c", Main2006SsNs);
 
@@ -2088,7 +2096,10 @@ namespace ClosedXML.Excel.IO
                 if (dataType is not null)
                     w.WriteAttributeString("t", dataType);
 
-                // TODO: Write vm, cm, ph
+                if (xlCell.ShowPhonetic)
+                    w.WriteAttributeString("ph", TrueValue);
+
+                // TODO: Write vm, cm
             }
         }
 

@@ -90,7 +90,7 @@ namespace ClosedXML.Excel.IO
             if (rt.Text.PreserveSpaces())
             {
                 // TODO: add test
-                w.WriteAttributeString("xml", "space", Xml1998Ns, "preserve");
+                w.WritePreserveSpaceAttr();
             }
 
             w.WriteString(rt.Text);

@@ -4,10 +4,14 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRow : XLRangeBase, IXLRow
+    internal sealed class XLRow : XLRangeBase, IXLRow
     {
         #region Private fields
 
+        /// <summary>
+        /// Don't use directly, use properties.
+        /// </summary>
+        private XlRowFlags _flags;
         private Double _height;
         private Int32 _outlineLevel;
 
@@ -57,7 +61,17 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean Collapsed { get; set; }
+        public Boolean Collapsed
+        {
+            get => _flags.HasFlag(XlRowFlags.Collapsed);
+            set
+            {
+                if (value)
+                    _flags |= XlRowFlags.Collapsed;
+                else
+                    _flags &= ~XlRowFlags.Collapsed;
+            }
+        }
 
         /// <summary>
         /// Distance in pixels from the bottom of the cells in the current row to the typographical
@@ -71,14 +85,54 @@ namespace ClosedXML.Excel
         /// </remarks>
         public Double? DyDescent { get; set; }
 
-        #region IXLRow Members
 
-        public Boolean Loading { get; set; }
+        /// <summary>
+        /// Should cells in the row display phonetic? This doesn't actually affect whether the phonetic are
+        /// actually shown in the row, that depends entirely on the <see cref="IXLCell.ShowPhonetic"/> property
+        /// of a cell. This property determines whether a new cell in the row will have it's phonetic turned on
+        /// (and also the state of the "Show or hide phonetic" in Excel when whole row is selected).
+        /// Default is <c>false</c>.
+        /// </summary>
+        public Boolean ShowPhonetic
+        {
+            get => _flags.HasFlag(XlRowFlags.ShowPhonetic);
+            set
+            {
+                if (value)
+                    _flags |= XlRowFlags.ShowPhonetic;
+                else
+                    _flags &= ~XlRowFlags.ShowPhonetic;
+            }
+        }
+
+        public Boolean Loading
+        {
+            get => _flags.HasFlag(XlRowFlags.Loading);
+            set
+            {
+                if (value)
+                    _flags |= XlRowFlags.Loading;
+                else
+                    _flags &= ~XlRowFlags.Loading;
+            }
+        }
 
         /// <summary>
         /// Does row has an individual height or is it derived from the worksheet?
         /// </summary>
-        public Boolean HeightChanged { get; private set; }
+        public Boolean HeightChanged
+        {
+            get => _flags.HasFlag(XlRowFlags.HeightChanged);
+            private set
+            {
+                if (value)
+                    _flags |= XlRowFlags.HeightChanged;
+                else
+                    _flags &= ~XlRowFlags.HeightChanged;
+            }
+        }
+
+        #region IXLRow Members
 
         public Double Height
         {
@@ -316,7 +370,17 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean IsHidden { get; set; }
+        public Boolean IsHidden
+        {
+            get => _flags.HasFlag(XlRowFlags.IsHidden);
+            set
+            {
+                if (value)
+                    _flags |= XlRowFlags.IsHidden;
+                else
+                    _flags &= ~XlRowFlags.IsHidden;
+            }
+        }
 
         public Int32 OutlineLevel
         {
@@ -600,6 +664,19 @@ namespace ClosedXML.Excel
         public override Boolean IsEntireColumn()
         {
             return false;
+        }
+
+        /// <summary>
+        /// Flag enum to save space, instead of wasting byte for each flag.
+        /// </summary>
+        [Flags]
+        private enum XlRowFlags : byte
+        {
+            Collapsed = 1,
+            IsHidden = 2,
+            ShowPhonetic = 4,
+            HeightChanged = 8,
+            Loading = 16
         }
     }
 }

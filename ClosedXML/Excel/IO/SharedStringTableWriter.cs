@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.IO;
-using System.Text;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
 using static ClosedXML.Excel.IO.OpenXmlConst;

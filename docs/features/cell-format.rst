@@ -149,3 +149,38 @@ method.
    that value isn't formatted correcty, set the format in an Excel,
    save the xlsx file, change the *xlsx* extension to *zip* and use
    correctly escaped format code from `/xl/styles.xml` file in the zip.
+
+Phonetics
+#########
+
+East Asian languages (e.g. Japanese) sometimes use phonetic 'hints' above parts
+of the text. In order to see the hints and the GUI option, it is necessary to
+switch "Office authoring language and proofing" to supported language. At this
+moment, only Japanese is supported. Excel won't show hints/button in other
+languages.
+
+.. image:: img/cell-format-phonetic.png
+  :alt: Furigana and a toggle to display phonetic information.
+
+
+In order to show furigana, phonetic information has to be added to the rich
+text and a property ``ShowPhonetics`` must be set for the cell.
+
+.. code-block:: csharp
+
+   using var wb = new XLWorkbook();
+   var ws = wb.AddWorksheet();
+   var cell = ws.Cell(1, 1);
+
+   // First we add the text. It is alwayes displayed
+   cell.GetRichText().AddText("みんなさんはお元気ですか。").SetFontSize(16);
+
+   // And then we add the phonetics
+   cell.GetRichText().Phonetics.SetFontSize(8);
+   cell.GetRichText().Phonetics.Add("げん", 7, 8);
+   cell.GetRichText().Phonetics.Add("き", 8, 9);
+
+   // Must set flag to actually display furigana
+   cell.ShowPhonetic = true;
+
+   wb.SaveAs("cell-format-phonetics.xlsx");
