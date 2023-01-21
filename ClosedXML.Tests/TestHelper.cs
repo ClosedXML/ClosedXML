@@ -101,7 +101,7 @@ namespace ClosedXML.Tests
             }
         }
 
-        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
+        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -118,7 +118,7 @@ namespace ClosedXML.Tests
             var filePath2 = Path.Combine(directory, fileName);
 
             using (var wb = workbookGenerator.Invoke())
-                wb.SaveAs(filePath2, true, evaluateFormulae);
+                wb.SaveAs(filePath2, validate, evaluateFormulae);
 
             if (CompareWithResources)
             {
@@ -142,16 +142,16 @@ namespace ClosedXML.Tests
         /// and compare the saved file against the <paramref name="expectedOutputResourcePath"/>.
         /// </summary>
         /// <remarks>Useful for checking whether we can load data from Excel and save it while keeping various feature in the OpenXML intact.</remarks>
-        public static void LoadSaveAndCompare(string loadResourcePath, string expectedOutputResourcePath, bool evaluateFormulae = false)
+        public static void LoadSaveAndCompare(string loadResourcePath, string expectedOutputResourcePath, bool evaluateFormulae = false, bool validate = true)
         {
             using var stream = GetStreamFromResource(GetResourcePath(loadResourcePath));
             using var ms = new MemoryStream();
             CreateAndCompare(() =>
             {
                 var wb = new XLWorkbook(stream);
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, validate);
                 return wb;
-            }, expectedOutputResourcePath, evaluateFormulae);
+            }, expectedOutputResourcePath, evaluateFormulae, validate);
         }
 
         public static string GetResourcePath(string filePartName)
