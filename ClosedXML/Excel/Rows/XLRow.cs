@@ -75,6 +75,9 @@ namespace ClosedXML.Excel
 
         public Boolean Loading { get; set; }
 
+        /// <summary>
+        /// Does row has an individual height or is it derived from the worksheet?
+        /// </summary>
         public Boolean HeightChanged { get; private set; }
 
         public Double Height

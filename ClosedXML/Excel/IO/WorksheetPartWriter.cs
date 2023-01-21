@@ -1854,40 +1854,7 @@ namespace ClosedXML.Excel.IO
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
             foreach (var rowNumber in distinctRows.OrderBy(r => r))
             {
-                var row = new Row { RowIndex = (UInt32)rowNumber };
-
-                if (xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow thisRow))
-                {
-                    if (thisRow.HeightChanged)
-                    {
-                        row.Height = thisRow.Height.SaveRound();
-                        row.CustomHeight = true;
-                    }
-
-                    if (thisRow.DyDescent is not null)
-                        row.DyDescent = thisRow.DyDescent.Value;
-
-                    if (thisRow.StyleValue != xlWorksheet.StyleValue)
-                    {
-                        row.StyleIndex = context.SharedStyles[thisRow.StyleValue].StyleId;
-                        row.CustomFormat = true;
-                    }
-
-                    if (thisRow.IsHidden)
-                        row.Hidden = true;
-                    if (thisRow.Collapsed)
-                        row.Collapsed = true;
-                    if (thisRow.OutlineLevel > 0)
-                        row.OutlineLevel = (byte)thisRow.OutlineLevel;
-                }
-
-                var isRowDefault = row.Height == null
-                                   && row.CustomHeight == null
-                                   && row.Hidden == null
-                                   && row.StyleIndex == null
-                                   && row.CustomFormat == null
-                                   && row.Collapsed == null
-                                   && row.OutlineLevel == null;
+                xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow xlRow);
 
                 var cellRef = new char[10];
                 var cellWritten = false;
@@ -1909,7 +1876,7 @@ namespace ClosedXML.Excel.IO
 
                         if (!cellWritten)
                         {
-                            WriteStartRow(xml, row, rowNumber, maxColumn);
+                            WriteStartRow(xml, xlRow, rowNumber, maxColumn, context);
                             cellWritten = true;
                         }
 
@@ -2025,17 +1992,29 @@ namespace ClosedXML.Excel.IO
                 }
 
                 if (cellWritten)
-                    xml.WriteEndElement(); // row
-                else if (!isRowDefault)
                 {
-                    WriteStartRow(xml, row, rowNumber, maxColumn);
-                    xml.WriteEndElement();
+                    xml.WriteEndElement(); // row
+                }
+                else if (xlRow is not null)
+                {
+                    var rowHasCustomProperties =
+                        xlRow.HeightChanged ||
+                        xlRow.IsHidden ||
+                        xlRow.StyleValue != xlWorksheet.StyleValue ||
+                        xlRow.Collapsed ||
+                        xlRow.OutlineLevel > 0;
+
+                    if (rowHasCustomProperties)
+                    {
+                        WriteStartRow(xml, xlRow, rowNumber, maxColumn, context);
+                        xml.WriteEndElement(); // row
+                    }
                 }
             }
 
             xml.WriteEndElement(); // SheetData
 
-            static void WriteStartRow(XmlWriter w, Row row, int rowNumber, int maxColumn)
+            static void WriteStartRow(XmlWriter w, XLRow xlRow, int rowNumber, int maxColumn, SaveContext context)
             {
                 w.WriteStartElement("row", Main2006SsNs);
 
@@ -2051,29 +2030,46 @@ namespace ClosedXML.Excel.IO
                     w.WriteEndAttribute();
                 }
 
-                if (row.Height is not null)
-                    w.WriteAttribute("ht", row.Height.Value);
+                if (xlRow is null)
+                    return;
 
-                if (row.CustomHeight is not null)
-                    w.WriteAttributeString("customHeight", row.CustomHeight.Value ? TrueValue : FalseValue);
+                if (xlRow.HeightChanged)
+                {
+                    var height = xlRow.Height.SaveRound();
+                    w.WriteStartAttribute("ht");
+                    w.WriteNumberValue(height);
+                    w.WriteEndAttribute();
 
-                if (row.Hidden is not null)
-                    w.WriteAttributeString("hidden", row.Hidden.Value ? TrueValue : FalseValue);
+                    // Note that dyDescent automatically implies custom height
+                    w.WriteAttributeString("customHeight", TrueValue);
+                }
 
-                if (row.StyleIndex is not null)
-                    w.WriteAttribute("s", row.StyleIndex.Value);
+                if (xlRow.IsHidden)
+                {
+                    w.WriteAttributeString("hidden", TrueValue);
+                }
 
-                if (row.CustomFormat is not null)
-                    w.WriteAttributeString("customFormat", row.CustomFormat.Value ? TrueValue : FalseValue);
+                if (xlRow.StyleValue != xlRow.Worksheet.StyleValue)
+                {
+                    var styleIndex = context.SharedStyles[xlRow.StyleValue].StyleId;
+                    w.WriteAttribute("s", styleIndex);
+                    w.WriteAttributeString("customFormat", TrueValue);
+                }
 
-                if (row.Collapsed is not null)
-                    w.WriteAttributeString("collapsed", row.Collapsed.Value ? TrueValue : FalseValue);
+                if (xlRow.Collapsed)
+                {
+                    w.WriteAttributeString("collapsed", TrueValue);
+                }
 
-                if (row.OutlineLevel is not null)
-                    w.WriteAttribute("outlineLevel", row.OutlineLevel.Value);
+                if (xlRow.OutlineLevel > 0)
+                {
+                    w.WriteAttribute("outlineLevel", xlRow.OutlineLevel);
+                }
 
-                if (row.DyDescent is not null)
-                    w.WriteAttribute("dyDescent", X14Ac2009SsNs, row.DyDescent.Value);
+                if (xlRow.DyDescent is not null)
+                {
+                    w.WriteAttribute("dyDescent", X14Ac2009SsNs, xlRow.DyDescent.Value);
+                }
 
                 // TODO: Write ph, thickBot, thickTop
             }
