@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Text}")]
     internal class XLRichString : IXLRichString
     {
-        private IXLWithRichString _withRichString;
+        private readonly IXLWithRichString _withRichString;
 
         public XLRichString(String text, IXLFontBase font, IXLWithRichString withRichString)
         {
@@ -16,6 +16,8 @@ namespace ClosedXML.Excel
         }
 
         public String Text { get; set; }
+
+        public XLFontScheme FontScheme { get; set; }
 
         public IXLRichString AddText(String text)
         {
@@ -37,6 +39,7 @@ namespace ClosedXML.Excel
         public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
+
         public XLFontCharSet FontCharSet { get; set; }
 
         public IXLRichString SetBold()
@@ -119,6 +122,11 @@ namespace ClosedXML.Excel
             FontCharSet = value; return this;
         }
 
+        public IXLRichString SetFontScheme(XLFontScheme value)
+        {
+            FontScheme = value; return this;
+        }
+
         public Boolean Equals(IXLRichString other)
         {
             return
@@ -133,6 +141,7 @@ namespace ClosedXML.Excel
                 && FontColor.Equals(other.FontColor)
                 && FontName.Equals(other.FontName)
                 && FontFamilyNumbering.Equals(other.FontFamilyNumbering)
+                && FontScheme.Equals(other.FontScheme)
                 ;
         }
 

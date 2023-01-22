@@ -184,3 +184,39 @@ text and a property ``ShowPhonetics`` must be set for the cell.
    cell.ShowPhonetic = true;
 
    wb.SaveAs("cell-format-phonetics.xlsx");
+
+
+Font scheme
+###########
+
+Rich text can have assigned a font scheme. Font scheme associates text with
+one of fonts of a theme. Theme has major font scheme (headings and such)
+and a minor font scheme (paragraphs, body ect.).
+
+When theme changes, Excel updates font of the text associated with a theme
+to use font for the scheme of a new theme.
+
+.. image:: img/cell-format-rich-text-scheme.png
+  :alt: A demonstration of how the text looks before theme change and after theme change.
+
+.. code-block:: csharp
+
+   using var wb = new XLWorkbook();
+   var ws = wb.AddWorksheet();
+   var cell = ws.Cell(1, 1);
+   cell.Style.Font.FontSize = 25;
+   
+   cell.GetRichText()
+       .AddText("Major scheme")
+           .SetFontName("Arial")
+           .SetFontScheme(XLFontScheme.Major)
+       .AddText(" ")
+       .AddText("Minor scheme")
+           .SetFontName(@"Consolas")
+           .SetFontScheme(XLFontScheme.Minor)
+       .AddText(" ")
+       .AddText("No scheme")
+           .SetFontName("Century")
+           .SetFontScheme(XLFontScheme.None);
+
+   wb.SaveAs("cell-format-font-scheme.xlsx");

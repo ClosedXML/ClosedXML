@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal class XLFormattedText<T> : IXLFormattedText<T>
     {
         private readonly IXLFontBase _defaultFont;
-        private List<IXLRichString> _richTexts = new();
+        private List<XLRichString> _richTexts = new();
         protected event EventHandler ContentChanged;
         protected T Container;
 
@@ -48,7 +48,7 @@ namespace ClosedXML.Excel
             return AddText(richText);
         }
 
-        public IXLRichString AddText(IXLRichString richText)
+        public IXLRichString AddText(XLRichString richText)
         {
             _richTexts.Add(richText);
             Length += richText.Text.Length;
@@ -94,7 +94,7 @@ namespace ClosedXML.Excel
             if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
 
-            List<IXLRichString> newRichTexts = new List<IXLRichString>();
+            var newRichTexts = new List<XLRichString>();
             var retVal = new XLFormattedText<T>(_defaultFont);
 
             Int32 lastPosition = 0;
@@ -144,15 +144,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IEnumerator<IXLRichString> GetEnumerator()
-        {
-            return _richTexts.GetEnumerator();
-        }
+        public List<XLRichString>.Enumerator GetEnumerator() => _richTexts.GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator<IXLRichString> IEnumerable<IXLRichString>.GetEnumerator() => GetEnumerator();
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
         public Boolean Bold { set { _richTexts.ForEach(rt => rt.Bold = value); } }
         public Boolean Italic { set { _richTexts.ForEach(rt => rt.Italic = value); } }

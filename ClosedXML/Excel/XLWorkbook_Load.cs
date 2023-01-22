@@ -1885,6 +1885,10 @@ namespace ClosedXML.Excel
                 else
                 {
                     var rt = xlCell.GetRichText().AddText(text);
+                    var fontScheme = runProperties.Elements<FontScheme>().FirstOrDefault();
+                    if (fontScheme != null && fontScheme.Val is not null)
+                        rt.SetFontScheme(fontScheme.Val.Value.ToClosedXml());
+
                     LoadFont(runProperties, rt);
                 }
             }

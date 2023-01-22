@@ -131,6 +131,28 @@ namespace ClosedXML.Excel
         Oem = 255
     }
 
+    /// <summary>
+    /// A font theme scheme. Theme has categories of fonts and when theme changes, texts that are associated with
+    /// the particular theme scheme are switched to a font of a new theme.
+    /// </summary>
+    public enum XLFontScheme
+    {
+        /// <summary>
+        /// Not a part of theme scheme.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// A major font of a theme, generally used for headings.
+        /// </summary>
+        Major = 1,
+
+        /// <summary>
+        /// A minor font of a theme, generally used to body and paragraphs.
+        /// </summary>
+        Minor = 2
+    }
+
     public interface IXLFont : IXLFontBase, IEquatable<IXLFont>
     {
         IXLStyle SetBold(); IXLStyle SetBold(Boolean value);

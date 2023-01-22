@@ -5,51 +5,6 @@ namespace ClosedXML.Examples.Styles
 {
     public class UsingRichText : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Constructors
-
-        // Public
-
-
-
-        // Private
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -105,17 +60,25 @@ namespace ClosedXML.Examples.Styles
 
             ws.Cell(5, 2).GetRichText().CopyFrom(cell.GetRichText()); // Should copy only rich text, but not cell background
 
+            // Parts of the rich text can be associated with a font scheme that changes font, when you switch theme
+            cell = ws.Cell(6, 1);
+            cell.Style.Font.FontSize = 25;
+            cell.GetRichText()
+                .AddText("Major scheme")
+                    .SetFontName("Arial")
+                    .SetFontScheme(XLFontScheme.Major)
+                .AddText(" ")
+                .AddText("Minor scheme")
+                    .SetFontName(@"Times New Roman")
+                    .SetFontScheme(XLFontScheme.Minor)
+                .AddText(" ")
+                .AddText("No scheme")
+                    .SetFontName("Cambria")
+                    .SetFontScheme(XLFontScheme.None);
 
             ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

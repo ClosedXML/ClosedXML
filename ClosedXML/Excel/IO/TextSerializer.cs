@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
@@ -9,11 +8,16 @@ namespace ClosedXML.Excel.IO
 {
     internal class TextSerializer
     {
-        internal static void WriteRichTextElements(XmlWriter w, IXLCell cell, SaveContext context)
+        internal static void WriteRichTextElements(XmlWriter w, XLCell cell, SaveContext context)
         {
             var richText = cell.GetRichText();
-            foreach (var rt in richText.Where(r => !String.IsNullOrEmpty(r.Text)))
-                WriteRun(w, rt);
+            foreach (var rt in richText)
+            {
+                if (!String.IsNullOrEmpty(rt.Text))
+                {
+                    WriteRun(w, rt);
+                }
+            }
 
             if (richText.HasPhonetics)
             {
@@ -57,9 +61,8 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        internal static void WriteRun(XmlWriter w, IXLRichString rt)
+        internal static void WriteRun(XmlWriter w, XLRichString rt)
         {
-            // TODO: Missing outline, charset, condense, extend and scheme properties
             w.WriteStartElement("r", Main2006SsNs);
             w.WriteStartElement("rPr", Main2006SsNs);
 
@@ -72,17 +75,29 @@ namespace ClosedXML.Excel.IO
             if (rt.Strikethrough)
                 w.WriteEmptyElement("strike");
 
+            // Three attributes are not stored/written:
+            // * outline - doesn't do anything and likely only works in Word.
+            // * condense - legacy compatibility setting for macs
+            // * extend - legacy compatibility setting for pre-xlsx Excels
+            // None have sensible descriptions.
+
             if (rt.Shadow)
                 w.WriteEmptyElement("shadow");
 
             if (rt.Underline != XLFontUnderlineValues.None)
                 WriteRunProperty(w, "u", rt.Underline.ToOpenXmlString());
 
-            WriteRunProperty(w, "vertAlign", rt.VerticalAlignment.ToOpenXmlString());
+            WriteRunProperty(w, @"vertAlign", rt.VerticalAlignment.ToOpenXmlString());
             WriteRunProperty(w, "sz", rt.FontSize);
             w.WriteColor("color", rt.FontColor);
             WriteRunProperty(w, "rFont", rt.FontName);
             WriteRunProperty(w, "family", (Int32)rt.FontFamilyNumbering);
+
+            if (rt.FontCharSet != XLFontCharSet.Default)
+                WriteRunProperty(w, "charset", (int)rt.FontCharSet);
+
+            if (rt.FontScheme != XLFontScheme.None)
+                WriteRunProperty(w, "scheme", rt.FontScheme.ToOpenXml());
 
             w.WriteEndElement(); // rPr
 

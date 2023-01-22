@@ -148,6 +148,21 @@ namespace ClosedXML.Excel
             return _comment;
         }
 
+        public XLRichText GetRichText()
+        {
+            return _richText ?? CreateRichText();
+        }
+
+        public XLRichText CreateRichText()
+        {
+            var style = GetStyleForRead();
+            _richText = Value.Type == XLDataType.Blank
+                ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
+                : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
+            _cellValue = _richText.Text;
+            return _richText;
+        }
+
         #region IXLCell Members
 
         IXLWorksheet IXLCell.Worksheet
@@ -1071,30 +1086,16 @@ namespace ClosedXML.Excel
 
         public XLCellValue CachedValue => _cellValue;
 
-        public IXLRichText GetRichText()
-        {
-            return _richText ?? CreateRichText();
-        }
+        IXLRichText IXLCell.GetRichText() => GetRichText();
 
         public bool HasRichText
         {
             get { return _richText != null; }
         }
 
-        public IXLRichText CreateRichText()
-        {
-            var style = GetStyleForRead();
-            _richText = Value.Type == XLDataType.Blank
-                            ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
-                            : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-            _cellValue = _richText.Text;
-            return _richText;
-        }
+        IXLRichText IXLCell.CreateRichText() => CreateRichText();
 
-        IXLComment IXLCell.GetComment()
-        {
-            return GetComment();
-        }
+        IXLComment IXLCell.GetComment() => GetComment();
 
         public bool HasComment
         {

@@ -94,6 +94,16 @@ namespace ClosedXML.Excel
         public static String ToOpenXmlString(this XLFontVerticalTextAlignmentValues value)
             => XLFontVerticalTextAlignmentValuesStrings[(int)value];
 
+        private static readonly String[] XLFontSchemeStrings =
+        {
+            "none",
+            "major",
+            "minor"
+        };
+
+        public static String ToOpenXml(this XLFontScheme value)
+            => XLFontSchemeStrings[(int)value];
+
         public static PatternValues ToOpenXml(this XLFillPatternValues value)
         {
             switch (value)
@@ -899,6 +909,24 @@ namespace ClosedXML.Excel
 
                 case UnderlineValues.SingleAccounting:
                     return XLFontUnderlineValues.SingleAccounting;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static XLFontScheme ToClosedXml(this FontSchemeValues value)
+        {
+            switch (value)
+            {
+                case FontSchemeValues.None:
+                    return XLFontScheme.None;
+
+                case FontSchemeValues.Major:
+                    return XLFontScheme.Major;
+
+                case FontSchemeValues.Minor:
+                    return XLFontScheme.Minor;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
