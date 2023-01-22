@@ -269,14 +269,13 @@ namespace ClosedXML.Excel
 
                 var commentsPart = worksheetPart.WorksheetCommentsPart;
                 var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
-                var hasAnyVmlElements = DeleteExistingComments(worksheetPart, worksheet, commentsPart, vmlDrawingPart);
+                var hasAnyVmlElements = DeleteExistingCommentsShapes(vmlDrawingPart);
 
                 if (worksheetHasComments)
                 {
                     if (commentsPart == null)
                     {
                         commentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-                        commentsPart.Comments = new Comments();
                     }
 
                     if (vmlDrawingPart == null)
@@ -289,17 +288,15 @@ namespace ClosedXML.Excel
                         vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
                     }
 
-                    GenerateWorksheetCommentsPartContent(commentsPart, worksheet);
+                    CommentPartWriter.GenerateWorksheetCommentsPartContent(commentsPart, worksheet);
                     hasAnyVmlElements = GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet);
                 }
                 else
                 {
                     worksheet.LegacyDrawingId = null;
+                    if (commentsPart is not null)
+                        worksheetPart.DeletePart(commentsPart);
                 }
-
-                // Remove empty parts
-                if (commentsPart != null && (commentsPart.RootElement?.ChildElements?.Count ?? 0) == 0)
-                    worksheetPart.DeletePart(commentsPart);
 
                 if (!hasAnyVmlElements && vmlDrawingPart != null)
                     worksheetPart.DeletePart(vmlDrawingPart);
@@ -363,14 +360,8 @@ namespace ClosedXML.Excel
             worksheets.Deleted.Clear();
         }
 
-        private bool DeleteExistingComments(WorksheetPart worksheetPart, XLWorksheet worksheet, WorksheetCommentsPart commentsPart, VmlDrawingPart vmlDrawingPart)
+        private bool DeleteExistingCommentsShapes(VmlDrawingPart vmlDrawingPart)
         {
-            // Nuke existing comments
-            if (commentsPart != null)
-            {
-                commentsPart.Comments = new Comments();
-            }
-
             if (vmlDrawingPart == null)
                 return false;
 
@@ -2871,57 +2862,6 @@ namespace ClosedXML.Excel
             }
 
             pivotAreaReferences.AppendChild(pivotAreaReference);
-        }
-
-        private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart,
-            XLWorksheet xlWorksheet)
-        {
-            var commentList = new CommentList();
-            var authorsDict = new Dictionary<String, Int32>();
-            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c => c.HasComment))
-            {
-                var comment = new Comment { Reference = c.Address.ToStringRelative() };
-                var authorName = c.GetComment().Author;
-
-                if (!authorsDict.TryGetValue(authorName, out int authorId))
-                {
-                    authorId = authorsDict.Count;
-                    authorsDict.Add(authorName, authorId);
-                }
-                comment.AuthorId = (UInt32)authorId;
-
-                // TODO: Move to full streaming
-                using var sw = new StringWriter();
-                using var w = XmlWriter.Create(sw, new XmlWriterSettings()
-                {
-                    OmitXmlDeclaration = true
-                });
-
-                // TODO: Some other file can have different declaration, so ensure that it works for all of them.
-                w.WriteStartElement("x", "text", Main2006SsNs);
-                foreach (var rt in c.GetComment())
-                    TextSerializer.WriteRun(w, rt);
-
-                w.WriteEndElement();
-                w.Flush();
-                var commentTextXml = sw.ToString();
-                var commentText = new CommentText(commentTextXml);
-
-                // The XmlWriter of course wrote the declaration in the root element, but it is duplicate in
-                var nsDecl = (List<KeyValuePair<string, string>>)commentText.NamespaceDeclarations;
-                nsDecl.Clear();
-                comment.Append(commentText);
-                commentList.Append(comment);
-            }
-
-            var authors = new Authors();
-            foreach (var author in authorsDict.Select(a => new Author { Text = a.Key }))
-            {
-                authors.Append(author);
-            }
-
-            worksheetCommentsPart.Comments.Append(authors);
-            worksheetCommentsPart.Comments.Append(commentList);
         }
 
         // Generates content of vmlDrawingPart1.
