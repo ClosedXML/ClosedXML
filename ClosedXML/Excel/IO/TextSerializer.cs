@@ -29,10 +29,7 @@ namespace ClosedXML.Excel.IO
 
                     w.WriteStartElement("t", Main2006SsNs);
                     if (p.Text.PreserveSpaces())
-                    {
-                        // TODO: add test
                         w.WritePreserveSpaceAttr();
-                    }
 
                     w.WriteString(p.Text);
                     w.WriteEndElement(); // t
@@ -103,10 +100,7 @@ namespace ClosedXML.Excel.IO
 
             w.WriteStartElement("t", Main2006SsNs);
             if (rt.Text.PreserveSpaces())
-            {
-                // TODO: add test
                 w.WritePreserveSpaceAttr();
-            }
 
             w.WriteString(rt.Text);
 

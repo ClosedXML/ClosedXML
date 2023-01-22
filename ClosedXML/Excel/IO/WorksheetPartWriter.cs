@@ -1273,10 +1273,7 @@ namespace ClosedXML.Excel.IO
                                 w.WriteStartElement("t", Main2006SsNs);
                                 var text = xlCell.GetText();
                                 if (text.PreserveSpaces())
-                                {
-                                    // TODO: add test
                                     w.WritePreserveSpaceAttr();
-                                }
 
                                 w.WriteString(text);
                                 w.WriteEndElement();
