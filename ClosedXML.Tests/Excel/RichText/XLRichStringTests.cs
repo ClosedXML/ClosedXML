@@ -1,7 +1,6 @@
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -799,6 +798,34 @@ namespace ClosedXML.Tests
             cell.Value = 4;
 
             Assert.Throws<InvalidOperationException>(() => richText.AddText("Hello"), "The rich text isn't a content of a cell.");
+        }
+
+        [Test]
+        public void MaintainWhitespaces()
+        {
+            const string textWithSpaces = "  元  気  ";
+            const string phoneticsWithSpace = "  げ  ん  ";
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var richTextCell = ws.Cell(1, 1);
+                var richText = richTextCell.GetRichText();
+                richText.AddText(textWithSpaces);
+                richText.Phonetics.Add(phoneticsWithSpace, 2, 3);
+
+                wb.SaveAs(ms);
+            }
+
+            ms.Position = 0;
+
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                var richText = ws.Cell(1, 1).GetRichText();
+                Assert.AreEqual(textWithSpaces, richText.First().Text);
+                Assert.AreEqual(phoneticsWithSpace, richText.Phonetics.First().Text);
+            }
         }
     }
 }
