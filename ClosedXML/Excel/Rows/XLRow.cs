@@ -85,10 +85,9 @@ namespace ClosedXML.Excel
         /// </remarks>
         public Double? DyDescent { get; set; }
 
-
         /// <summary>
         /// Should cells in the row display phonetic? This doesn't actually affect whether the phonetic are
-        /// actually shown in the row, that depends entirely on the <see cref="IXLCell.ShowPhonetic"/> property
+        /// shown in the row, that depends entirely on the <see cref="IXLCell.ShowPhonetic"/> property
         /// of a cell. This property determines whether a new cell in the row will have it's phonetic turned on
         /// (and also the state of the "Show or hide phonetic" in Excel when whole row is selected).
         /// Default is <c>false</c>.
@@ -118,7 +117,7 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Does row has an individual height or is it derived from the worksheet?
+        /// Does row have an individual height or is it derived from the worksheet <see cref="XLWorksheet.RowHeight"/>?
         /// </summary>
         public Boolean HeightChanged
         {

@@ -1831,7 +1831,8 @@ namespace ClosedXML.Excel.IO
 
         private static void StreamSheetData(OpenXmlWriter writer, XLWorksheet xlWorksheet, SaveContext context, SaveOptions options)
         {
-            // Steal through reflection for now
+            // Steal through reflection for now, whole OpenXmlPartWriter will be replaced by XmlWriter soon. OpenXmlPartWriter has basically
+            // no inner state, unless it is in a string leaf node. By writing SheetData through XmlWriter only, we bypass all that.
             var xmlWriterFieldInfo = typeof(OpenXmlPartWriter).GetField("_xmlWriter", BindingFlags.Instance | BindingFlags.NonPublic)!;
             var untypedXmlWriter = xmlWriterFieldInfo.GetValue(writer);
             var xml = (XmlWriter)untypedXmlWriter;
@@ -1978,6 +1979,7 @@ namespace ClosedXML.Excel.IO
                         }
                         else
                         {
+                            // Cell contains only a value
                             var dataType = GetCellValueType(xlCell);
                             WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
 
@@ -2087,7 +2089,7 @@ namespace ClosedXML.Excel.IO
                 w.WriteRaw(reference, 0, referenceLength);
                 w.WriteEndAttribute();
 
-                // if (styleId != 0) Test files have style even for 0, fix later
+                // TODO: if (styleId != 0) Test files have style even for 0, fix later
                 w.WriteAttribute("s", styleId);
 
                 if (dataType is not null)
