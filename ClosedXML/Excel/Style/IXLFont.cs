@@ -132,7 +132,7 @@ namespace ClosedXML.Excel
     }
 
     /// <summary>
-    /// A font theme scheme. Theme has categories of fonts and when theme changes, texts that are associated with
+    /// A font theme scheme. Theme has categories of fonts and when the theme changes, texts that are associated with
     /// the particular theme scheme are switched to a font of a new theme.
     /// </summary>
     public enum XLFontScheme

@@ -28,7 +28,6 @@ namespace ClosedXML.Extensions
             w.WriteEndAttribute();
         }
 
-
         public static void WriteAttribute(this XmlWriter w, String attrName, String ns, Double value)
         {
             w.WriteStartAttribute(attrName, ns);
