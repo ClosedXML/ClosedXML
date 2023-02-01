@@ -237,8 +237,9 @@ namespace ClosedXML.Tests
             {
                 // Set thread culture to French, which should format numbers using a space as thousands separator
                 var culture = CultureInfo.CreateSpecificCulture("fr-FR");
-                // but use a period instead of a comma as for decimal separator
+                // but use a period instead of a comma as for decimal separator and space as group separator
                 culture.NumberFormat.CurrencyDecimalSeparator = ".";
+                culture.NumberFormat.CurrencyGroupSeparator = " ";
 
                 Thread.CurrentThread.CurrentCulture = culture;
 
