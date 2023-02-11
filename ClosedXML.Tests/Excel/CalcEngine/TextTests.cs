@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 
@@ -442,67 +441,121 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Search_No_Parameters_With_Values()
+        public void Search_Empty_Pattern_And_Empty_Text()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search("""", """")"), Throws.TypeOf<ArgumentException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH("""", """")"));
         }
 
         [Test]
-        public void Search_Empty_Search_String()
+        public void Search_Empty_Search_Pattern_Returns_Start_Of_Text()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Search("""", ""asdf"")");
+            var actual = XLWorkbook.EvaluateExpr(@"SEARCH("""", ""asdf"")");
             Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void Search_Looks_Only_From_Start_Position_Onward()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""This"", ""This is some text"", 2)"));
         }
 
         [Test]
         public void Search_Start_Position_Too_Large()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", ""abcdef"", 10)"), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""abc"", ""abcdef"", 10)"));
         }
 
         [Test]
-        public void Search_Empty_Input_String()
+        public void Search_Start_Position_Too_Small()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", """")"), Throws.TypeOf<ArgumentException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""text"", ""This is some text"", 0)"));
         }
 
         [Test]
-        public void Search_String_Not_Found()
+        public void Search_Empty_Searched_Text_Returns_Error()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""123"", ""asdf"")"), Throws.TypeOf<ArgumentException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""abc"", """")"));
+        }
+
+        [Test]
+        public void Search_Text_Not_Found()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""123"", ""asdf"")"));
         }
 
         [Test]
         public void Search_Wildcard_String_Not_Found()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""soft?2010"", ""Microsoft Excel 2010"")"), Throws.TypeOf<ArgumentException>());
-        }
-
-        [Test]
-        public void Search_Start_Position_Too_Large2()
-        {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""text"", ""This is some text"", 15)"), Throws.TypeOf<ArgumentException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEARCH(""soft?2010"", ""Microsoft Excel 2010"")"));
         }
 
         // http://www.excel-easy.com/examples/find-vs-search.html
         [Test]
         public void Search_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Search(""Tuesday"", ""Today is Tuesday"")");
+            var actual = XLWorkbook.EvaluateExpr(@"SEARCH(""Tuesday"", ""Today is Tuesday"")");
             Assert.AreEqual(10, actual);
 
-            // Find is case-INsensitive
-            actual = XLWorkbook.EvaluateExpr(@"Search(""excel"", ""Microsoft Excel 2010"")");
+            // The search is case-insensitive
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""excel"", ""Microsoft Excel 2010"")");
             Assert.AreEqual(11, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Search(""soft*2010"", ""Microsoft Excel 2010"")");
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""soft*2010"", ""Microsoft Excel 2010"")");
             Assert.AreEqual(6, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Search(""Excel 20??"", ""Microsoft Excel 2010"")");
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""Excel 20??"", ""Microsoft Excel 2010"")");
             Assert.AreEqual(11, actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Search(""text"", ""This is some text"", 14)");
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""text"", ""This is some text"", 14)");
             Assert.AreEqual(14, actual);
+        }
+
+        [Test]
+        public void Search_Tilde_Escapes_Next_Char()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SEARCH(""~a~b~"", ""ab"")");
+            Assert.AreEqual(1, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a~*"", ""a*"")");
+            Assert.AreEqual(1, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a~*"", ""ab"")");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a~?"", ""a?"")");
+            Assert.AreEqual(1, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a~?"", ""ab"")");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
+        }
+
+        [Test]
+        public void Search_Arguments_Are_Converted_To_Expected_Types()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SEARCH(1.2, ""A1.2B"")");
+            Assert.AreEqual(2, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(TRUE, ""ATRUE"")");
+            Assert.AreEqual(2, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(23, 1.2345)");
+            Assert.AreEqual(3, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a"", ""aaaaa"", ""2 1/2"")");
+            Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void Search_Error_Arguments_Return_The_Error()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SEARCH(#N/A, ""a"")");
+            Assert.AreEqual(XLError.NoValueAvailable, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH("""", #N/A)");
+            Assert.AreEqual(XLError.NoValueAvailable, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SEARCH(""a"", ""a"", #N/A)");
+            Assert.AreEqual(XLError.NoValueAvailable, actual);
         }
 
         [Test]
