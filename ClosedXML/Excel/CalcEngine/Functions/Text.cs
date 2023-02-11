@@ -1,4 +1,3 @@
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using ExcelNumberFormat;
 using System;
 using System.Collections;
@@ -39,7 +38,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("REPLACE", 4, Replace); // Replaces characters within text
             ce.RegisterFunction("REPT", 2, Rept); // Repeats text a given number of times
             ce.RegisterFunction("RIGHT", 1, 2, Right); // Returns the rightmost characters from a text value
-            ce.RegisterFunction("SEARCH", 2, 3, Search); // Finds one text value within another (not case-sensitive)
+            ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
@@ -221,38 +220,23 @@ namespace ClosedXML.Excel.CalcEngine
             return str.Substring(str.Length - n);
         }
 
-        private static string WildcardToRegex(string pattern)
+        private static AnyValue Search(CalcContext ctx, String findText, String withinText, OneOf<double, Blank> startNum)
         {
-            return Regex.Escape(pattern)
-                .Replace(".", "\\.")
-                .Replace("\\*", ".*")
-                .Replace("\\?", ".");
-        }
+            if (withinText.Length == 0)
+                return XLError.IncompatibleValue;
 
-        private static object Search(List<Expression> p)
-        {
-            var search = WildcardToRegex(p[0]);
-            var text = (string)p[1];
+            var startIndex = startNum.TryPickT0(out var startNumber, out _) ? (int)Math.Truncate(startNumber) : 1;
+            startIndex -= 1;
+            if (startIndex < 0 || startIndex >= withinText.Length)
+                return XLError.IncompatibleValue;
 
-            if ("" == text) throw new ArgumentException("Invalid input string.");
+            var wildcard = new Wildcard(findText);
+            ReadOnlySpan<char> text = withinText.AsSpan().Slice(startIndex);
+            var firstIdx = wildcard.Search(text);
+            if (firstIdx < 0)
+                return XLError.IncompatibleValue;
 
-            var start = 0;
-            if (p.Count > 2)
-            {
-                start = (int)p[2] - 1;
-            }
-
-            Regex r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var match = r.Match(text.Substring(start));
-            if (!match.Success)
-                throw new ArgumentException("Search failed.");
-            else
-                return match.Index + start + 1;
-            //var index = text.IndexOf(search, start, StringComparison.OrdinalIgnoreCase);
-            //if (index == -1)
-            //    throw new ArgumentException("String not found.");
-            //else
-            //    return index + 1;
+            return firstIdx + startIndex + 1;
         }
 
         private static object Substitute(List<Expression> p)
