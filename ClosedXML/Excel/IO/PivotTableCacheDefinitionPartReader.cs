@@ -65,6 +65,12 @@ namespace ClosedXML.Excel.IO
             // Delay loading of pivot tables until all sheets have been loaded
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
+                if (string.IsNullOrEmpty(dSheet.Id))
+                {
+                    // Some non-Excel producers create sheets with empty relId.
+                    continue;
+                }
+
                 var worksheetPart = (WorksheetPart)workbookPart.GetPartById(dSheet.Id);
 
                 if (worksheetPart is not null)

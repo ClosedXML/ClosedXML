@@ -206,6 +206,12 @@ namespace ClosedXML.Excel
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
+                if (string.IsNullOrEmpty(dSheet.Id))
+                {
+                    // Some non-Excel producers create sheets with empty relId.
+                    continue;
+                }
+
                 position++;
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
 
