@@ -4,6 +4,7 @@ using System.IO;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using SixLabors.Fonts;
+using SixLabors.Fonts.Unicode;
 
 namespace ClosedXML.Graphics
 {
@@ -137,6 +138,11 @@ namespace ClosedXML.Graphics
         public double GetDescent(IXLFontBase font, double dpiY)
         {
             var metrics = GetMetrics(font);
+            return GetDescent(font, dpiY, metrics);
+        }
+
+        private double GetDescent(IXLFontBase font, double dpiY, FontMetrics metrics)
+        {
             return PointsToPixels(-metrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
@@ -162,6 +168,31 @@ namespace ClosedXML.Graphics
                 KerningMode = KerningMode.None
             });
             return PointsToPixels(dimensionsPx.Width / FontMetricSize * fontBase.FontSize, dpiX);
+        }
+
+        /// <inheritdoc />
+        public GlyphBox GetGlyphBox(ReadOnlySpan<int> graphemeCluster, IXLFontBase font, Dpi dpi)
+        {
+            // SixLabors.Fonts don't have a way to get a glyph representation of a cluster
+            // without a TextRenderer that has unacceptable performance.
+            var metric = GetMetrics(font);
+            var advanceFu = 0;
+            for (var i = 0; i < graphemeCluster.Length; ++i)
+            {
+                var glyphs = metric.GetGlyphMetrics(new CodePoint(graphemeCluster[i]), ColorFontSupport.None);
+                foreach (var glyph in glyphs)
+                {
+                    advanceFu += glyph.AdvanceWidth;
+                }
+            }
+
+            var emInPx = font.FontSize / 72d * dpi.X;
+            var advancePx = PointsToPixels(advanceFu * font.FontSize / metric.UnitsPerEm, dpi.X);
+            var descentPx = GetDescent(font, dpi.Y, metric);
+            return new GlyphBox(
+                (float)Math.Round(advancePx, MidpointRounding.AwayFromZero),
+                (float)Math.Round(emInPx, MidpointRounding.AwayFromZero),
+                (float)Math.Round(descentPx, MidpointRounding.AwayFromZero));
         }
 
         private FontMetrics GetMetrics(IXLFontBase fontBase)
@@ -199,7 +230,7 @@ namespace ClosedXML.Graphics
             var maxWidth = int.MinValue;
             for (var c = '0'; c <= '9'; ++c)
             {
-                var glyphMetrics = metrics.GetGlyphMetrics(new SixLabors.Fonts.Unicode.CodePoint(c), ColorFontSupport.None);
+                var glyphMetrics = metrics.GetGlyphMetrics(new CodePoint(c), ColorFontSupport.None);
                 var glyphAdvance = 0;
                 foreach (var glyphMetric in glyphMetrics)
                     glyphAdvance += glyphMetric.AdvanceWidth;

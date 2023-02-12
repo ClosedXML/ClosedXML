@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
         Boolean ShrinkToFit { get; set; }
 
         /// <summary>
-        /// Gets or sets the cell's text rotation.
+        /// Gets or sets the cell's text rotation in degrees.
         /// </summary>
         Int32 TextRotation { get; set; }
 

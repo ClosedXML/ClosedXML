@@ -88,5 +88,55 @@ namespace ClosedXML.Excel
         {
             return length < value.Length ? value.Substring(0, value.Length - length) : String.Empty;
         }
+
+        /// <summary>
+        /// Convert a string (containing code units) into code points.
+        /// Surrogate pairs of code units are joined to code points.
+        /// </summary>
+        /// <param name="text">UTF-16 code units to convert.</param>
+        /// <param name="output">Output containing code points. Must always be able to fit whole <paramref name="text"/>.</param>
+        /// <returns>Number of code points in the <paramref name="output"/>.</returns>
+        internal static int ToCodePoints(this ReadOnlySpan<char> text, Span<int> output)
+        {
+            var j = 0;
+            for (var i = 0; i < text.Length; ++i, ++j)
+            {
+                if (i + 1 < text.Length && char.IsSurrogatePair(text[i], text[i + 1]))
+                {
+                    output[j] = char.ConvertToUtf32(text[i], text[i + 1]);
+                    i++;
+                }
+                else
+                {
+                    output[j] = text[i];
+                }
+            }
+
+            return j;
+        }
+
+        /// <summary>
+        /// Is the string a new line of any kind (widnows/unix/mac)?
+        /// </summary>
+        /// <param name="text">Input text to check for EOL at the beginning.</param>
+        /// <param name="length">Length of EOL chars.</param>
+        /// <returns>True, if text has EOL at the beginning.</returns>
+        internal static bool TrySliceNewLine(this ReadOnlySpan<char> text, out int length)
+        {
+            if (text.Length >= 2 && text[0] == '\r' && text[1] == '\n')
+            {
+                length = 2;
+                return true;
+            }
+
+            if (text.Length >= 1 && (text[0] == '\n' || text[0] == '\r'))
+            {
+                length = 1;
+                return true;
+            }
+
+            length = default;
+            return false;
+        }
     }
 }
