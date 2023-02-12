@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Graphics;
 
 namespace ClosedXML.Excel
 {
@@ -2164,6 +2165,74 @@ namespace ClosedXML.Excel
         internal bool IsSuperiorMergedCell()
         {
             return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+        }
+
+        /// <summary>
+        /// Get glyph bounding boxes for each grapheme in the text. Box size is determined according to
+        /// the font of a grapheme. New lines are represented as default (all dimensions zero) box.
+        /// A line without any text (i.e. contains only new line) should be represented by a box
+        /// with zero advance width, but with a line height of corresponding font.
+        /// </summary>
+        /// <param name="engine">Engine used to determine box size.</param>
+        /// <param name="dpi">DPI used to determine size of glyphs.</param>
+        /// <param name="output">List where items are added.</param>
+        internal void GetGlyphBoxes(IXLGraphicEngine engine, Dpi dpi, List<GlyphBox> output)
+        {
+            if (_richText is not null)
+            {
+                foreach (var richString in _richText)
+                {
+                    IXLFontBase font = richString;
+                    AddGlyphs(richString.Text, font, engine, dpi, output);
+                }
+            }
+            else
+            {
+                var text = GetFormattedString();
+                AddGlyphs(text, Style.Font, engine, dpi, output);
+            }
+
+            static void AddGlyphs(string text, IXLFontBase font, IXLGraphicEngine engine, Dpi dpi, List<GlyphBox> output)
+            {
+                Span<int> zeroWidthJoiner = stackalloc int[1] { 0x200D };
+                var prevWasNewLine = false;
+                var graphemeStarts = StringInfo.ParseCombiningCharacters(text);
+                var textSpan = text.AsSpan();
+
+                // If we have more than 1 code unit per grapheme, the code units can
+                // be distributed through multiple grapheme. In the worst case, all extra
+                // code units are in exactly one grapheme -> allocate buffer of that size.
+                Span<int> codePointsBuffer = stackalloc int[1 + text.Length - graphemeStarts.Length];
+                for (var i = 0; i < graphemeStarts.Length; ++i)
+                {
+                    var startIdx = graphemeStarts[i];
+                    var slice = textSpan.Slice(startIdx);
+                    if (slice.TrySliceNewLine(out var eolLen))
+                    {
+                        i += eolLen - 1;
+                        if (prevWasNewLine)
+                        {
+                            // If there are consecutive new lines, we need height of new the lines between them
+                            var box = engine.GetGlyphBox(zeroWidthJoiner, font, dpi);
+                            output.Add(box);
+                        }
+
+                        output.Add(GlyphBox.LineBreak);
+                        prevWasNewLine = true;
+                    }
+                    else
+                    {
+                        var codeUnits = i + 1 < graphemeStarts.Length
+                            ? textSpan.Slice(startIdx, graphemeStarts[i + 1] - startIdx)
+                            : textSpan.Slice(startIdx);
+                        var count = codeUnits.ToCodePoints(codePointsBuffer);
+                        ReadOnlySpan<int> grapheme = codePointsBuffer.Slice(0, count);
+                        var box = engine.GetGlyphBox(grapheme, font, dpi);
+                        output.Add(box);
+                        prevWasNewLine = false;
+                    }
+                }
+            }
         }
 
         /// <summary>

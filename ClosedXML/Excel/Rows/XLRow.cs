@@ -1,3 +1,4 @@
+using ClosedXML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -278,87 +279,101 @@ namespace ClosedXML.Excel
             return AdjustToContents(startColumn, XLHelper.MaxColumnNumber, minHeight, maxHeight);
         }
 
-        public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
+        public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeightPt, Double maxHeightPt)
         {
             var engine = Worksheet.Workbook.GraphicEngine;
-            var dpiY = Worksheet.Workbook.DpiY;
-            Double rowMaxHeight = minHeight;
-            foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
-            {
-                Double thisHeight;
-                Int32 textRotation = c.StyleValue.Alignment.TextRotation;
-                if (c.HasRichText || textRotation != 0 || c.GetString().Contains(Environment.NewLine))
-                {
-                    var kpList = new List<KeyValuePair<IXLFontBase, string>>();
-                    if (c.HasRichText)
-                    {
-                        foreach (IXLRichString rt in c.GetRichText())
-                        {
-                            String formattedString = rt.Text;
-                            var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                            Int32 arrCount = arr.Count();
-                            for (Int32 i = 0; i < arrCount; i++)
-                            {
-                                String s = arr[i];
-                                if (i < arrCount - 1)
-                                    s += Environment.NewLine;
-                                kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        String formattedString = c.GetFormattedString();
-                        var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                        Int32 arrCount = arr.Count();
-                        for (Int32 i = 0; i < arrCount; i++)
-                        {
-                            String s = arr[i];
-                            if (i < arrCount - 1)
-                                s += Environment.NewLine;
-                            kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
-                        }
-                    }
+            var dpi = new Dpi(Worksheet.Workbook.DpiX, Worksheet.Workbook.DpiY);
 
-                    Double maxLongCol = kpList.Max(kp => kp.Value.Length);
-                    Double maxHeightCol = XLHelper.PixelsToPoints(kpList.Max(kp => engine.GetTextHeight(kp.Key, dpiY)), dpiY);
-                    Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
-                    if (textRotation == 0)
-                        thisHeight = maxHeightCol * lineCount;
-                    else
-                    {
-                        if (textRotation == 255)
-                            thisHeight = maxLongCol * maxHeightCol;
-                        else
-                        {
-                            Double rotation;
-                            if (textRotation == 90 || textRotation == 180)
-                                rotation = 90;
-                            else
-                                rotation = textRotation % 90;
+            var rowHeightPx = CalculateMinRowHeight(startColumn, endColumn, engine, dpi);
 
-                            thisHeight = (rotation / 90.0) * maxHeightCol * maxLongCol * 0.5;
-                        }
-                    }
-                }
-                else
-                    thisHeight = XLHelper.PixelsToPoints(engine.GetTextHeight(c.Style.Font, dpiY), dpiY);
+            var rowHeightPt = XLHelper.PixelsToPoints(rowHeightPx, dpi.Y);
+            if (rowHeightPt <= 0)
+                rowHeightPt = Worksheet.RowHeight;
 
-                if (thisHeight >= maxHeight)
-                {
-                    rowMaxHeight = maxHeight;
-                    break;
-                }
-                if (thisHeight > rowMaxHeight)
-                    rowMaxHeight = thisHeight;
-            }
+            if (minHeightPt > rowHeightPt)
+                rowHeightPt = minHeightPt;
 
-            if (rowMaxHeight <= 0)
-                rowMaxHeight = Worksheet.RowHeight;
+            if (maxHeightPt < rowHeightPt)
+                rowHeightPt = maxHeightPt;
 
-            Height = rowMaxHeight;
+            Height = rowHeightPt;
 
             return this;
+        }
+
+        private int CalculateMinRowHeight(int startColumn, int endColumn, IXLGraphicEngine engine, Dpi dpi)
+        {
+            var glyphs = new List<GlyphBox>();
+            XLStyle cellStyle = null;
+            var rowHeightPx = 0;
+            foreach (var cell in Row(startColumn, endColumn).CellsUsed().Cast<XLCell>())
+            {
+                // Clear maintains capacity -> reduce need for GC
+                glyphs.Clear();
+
+                if (cell.IsMerged())
+                    continue;
+
+                // Reuse styles if possible to reduce memory consumption
+                if (cellStyle is null || cellStyle.Value != cell.StyleValue)
+                    cellStyle = (XLStyle)cell.Style;
+
+                cell.GetGlyphBoxes(engine, dpi, glyphs);
+                var cellHeightPx = (int)Math.Ceiling(GetContentHeight(cellStyle.Alignment.TextRotation, glyphs));
+
+                rowHeightPx = Math.Max(cellHeightPx, rowHeightPx);
+            }
+
+            return rowHeightPx;
+        }
+
+        private static double GetContentHeight(int textRotationDeg, List<GlyphBox> glyphs)
+        {
+            if (textRotationDeg == 0)
+            {
+                var textHeight = 0d;
+                var lineMaxHeight = 0d;
+                foreach (var glyph in glyphs)
+                {
+                    if (!glyph.IsLineBreak)
+                    {
+                        var cellHeightPx = glyph.LineHeight;
+                        lineMaxHeight = Math.Max(cellHeightPx, lineMaxHeight);
+                    }
+                    else
+                    {
+                        // At the end of each line, add height of the line to total height.
+                        textHeight += lineMaxHeight;
+                        lineMaxHeight = 0d;
+                    }
+                }
+
+                // If the last line ends without EOL, it must be also counted
+                textHeight += lineMaxHeight;
+
+                return textHeight;
+            }
+            else if (textRotationDeg == 255)
+            {
+                // Glyphs are vertically aligned.
+                var textHeight = glyphs.Sum(static g => g.LineHeight);
+                return textHeight;
+            }
+            else
+            {
+                // Rotated text
+                var width = 0d;
+                var height = 0d;
+                foreach (var glyph in glyphs)
+                {
+                    width += glyph.AdvanceWidth;
+                    height = Math.Max(glyph.LineHeight, height);
+                }
+
+                var projectedWidth = Math.Sin(XLHelper.DegToRad(textRotationDeg)) * width;
+                var projectedHeight = Math.Cos(XLHelper.DegToRad(textRotationDeg)) * height;
+                return projectedWidth + projectedHeight;
+            }
         }
 
         public IXLRow Hide()

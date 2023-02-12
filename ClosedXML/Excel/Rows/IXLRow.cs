@@ -61,7 +61,14 @@ namespace ClosedXML.Excel
 
         IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight);
 
-        IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
+        /// <summary>
+        /// Adjust height of the column according to the content of the cells.
+        /// </summary>
+        /// <param name="startColumn">Number of a first column whose content is considered.</param>
+        /// <param name="endColumn">Number of a last column whose content is considered.</param>
+        /// <param name="minHeightPt">Minimum height of adjusted column, in points.</param>
+        /// <param name="maxHeightPt">Maximum height of adjusted column, in points.</param>
+        IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeightPt, Double maxHeightPt);
 
         /// <summary>Hides this row.</summary>
         IXLRow Hide();

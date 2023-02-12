@@ -5,11 +5,12 @@ namespace ClosedXML.Excel
     public interface IXLColumn : IXLRangeBase
     {
         /// <summary>
-        /// Gets or sets the width of this column.
+        /// Gets or sets the width of this column in number of characters (NoC).
         /// </summary>
-        /// <value>
-        /// The width of the column as multiple of maximum digit width (MDW). MDW is a maximum width of a 0-9 digit character.
-        /// </value>
+        /// <remarks>
+        /// NoC are a non-linear units displayed as a column width in Excel, next to pixels. NoC combined with default font
+        /// of the workbook can express width of the column in pixels and other units.
+        /// </remarks>
         Double Width { get; set; }
 
         /// <summary>
@@ -84,6 +85,13 @@ namespace ClosedXML.Excel
 
         IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth);
 
+        /// <summary>
+        /// Adjust width of the column according to the content of the cells.
+        /// </summary>
+        /// <param name="startRow">Number of a first row whose content is considered.</param>
+        /// <param name="endRow">Number of a last row whose content is considered.</param>
+        /// <param name="minWidth">Minimum width of adjusted column, in NoC.</param>
+        /// <param name="maxWidth">Maximum width of adjusted column, in NoC.</param>
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
 
         /// <summary>

@@ -353,5 +353,44 @@ namespace ClosedXML.Excel
         internal static double PixelsToPoints(double pixels, double dpi) => pixels * 72d / dpi;
 
         internal static double PointsToPixels(double points, double dpi) => points * dpi / 72d;
+
+        /// <summary>
+        /// Convert size in pixels to a size in NoC (number of characters).
+        /// </summary>
+        /// <param name="px">Size in pixels.</param>
+        /// <param name="mdw">Size of maximum digit width in pixels.</param>
+        /// <returns>Size in NoC.</returns>
+        internal static double PixelToNoC(int px, int mdw)
+        {
+            // Pixel padding. Each side should have 2px for Calibri at 11pt plus 1 pixel for the grid line.
+            var pp = 2 * (int)Math.Ceiling(mdw / 4.0) + 1;
+
+            // NoC scales linearly with MDW, if size is at least 1 char (+padding)
+            if (px >= (mdw + pp))
+                return (px - pp) / (double)mdw;
+
+            // smaller sizes are scaled to the 1 NoC size
+            return px / (double)(mdw + pp);
+        }
+
+        /// <summary>
+        /// Convert size in NoC to size in pixels.
+        /// </summary>
+        /// <param name="noc">Size in number of characters.</param>
+        /// <param name="mdw">Maximum digit width in pixels.</param>
+        /// <returns>Size in pixels (not rounded).</returns>
+        internal static double NoCToPixels(double noc, int mdw)
+        {
+            var pp = 2 * (int)Math.Ceiling(mdw / 4.0) + 1;
+            if (noc < 1)
+                return noc * (mdw + pp);
+
+            return noc * mdw + pp;
+        }
+
+        /// <summary>
+        /// Convert degrees to radians.
+        /// </summary>
+        internal static double DegToRad(double angle) => Math.PI * angle / 180.0;
     }
 }

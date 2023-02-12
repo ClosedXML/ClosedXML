@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
@@ -40,5 +41,26 @@ namespace ClosedXML.Graphics
         /// </summary>
         /// <remarks>Excel is using OS/2 WinAscent/WinDescent for TrueType fonts (e.g. Calibri), not a correct font ascent/descent.</remarks>
         double GetDescent(IXLFontBase font, double dpiY);
+
+        /// <summary>
+        /// Get a glyph bounding box for a grapheme cluster.
+        /// </summary>
+        /// <remarks>
+        /// In 99+%, grapheme cluster will be just a codepoint. Method uses grapheme instead, so it can be
+        /// future-proof signature and have less braking changes. Implementing method by adding widths of
+        /// individual code points is acceptable.
+        /// </remarks>
+        /// <param name="graphemeCluster">
+        /// A part of a string in code points (or runes in C# terminology, not UTF-16 code units) that together
+        /// form a grapheme. Multiple unicode codepoints can form a single glyph, e.g. family grapheme is a single
+        /// glyph created from 6 codepoints (man, zero-width-join, woman, zero-width-join and a girl). A string
+        /// can be split into a grapheme clusters through <see cref="StringInfo.GetTextElementEnumerator(string)"/>.
+        /// </param>
+        /// <param name="font">Font used to determine size of a glyph for the grapheme cluster.</param>
+        /// <param name="dpi">
+        /// A resolution used to determine pixel size of a glyph. Font might be rendered differently at different resolutions.
+        /// </param>
+        /// <returns>Bounding box containing the glyph.</returns>
+        GlyphBox GetGlyphBox(ReadOnlySpan<int> graphemeCluster, IXLFontBase font, Dpi dpi);
     }
 }
