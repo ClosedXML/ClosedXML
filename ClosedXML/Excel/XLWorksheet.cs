@@ -468,6 +468,8 @@ namespace ClosedXML.Excel
             return Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn);
         }
 
+        IXLRanges IXLWorksheet.Ranges(String ranges) => Ranges(ranges);
+
         public IXLWorksheet CollapseRows()
         {
             Enumerable.Range(1, 8).ForEach(i => CollapseRows(i));
@@ -899,7 +901,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public override IXLRanges Ranges(String ranges)
+        public override XLRanges Ranges(String ranges)
         {
             var retVal = new XLRanges();
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
@@ -1584,7 +1586,7 @@ namespace ClosedXML.Excel
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public override IXLCells Cells(Boolean usedCellsOnly)
+        public override XLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.AllContents);

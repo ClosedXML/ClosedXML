@@ -34,6 +34,8 @@ namespace ClosedXML.Excel
 
         #region IXLRanges Members
 
+        IXLCells IXLRanges.Cells() => Cells();
+
         public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             Ranges.ForEach(c => c.Clear(clearOptions));
@@ -189,7 +191,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLCells Cells()
+        public XLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
             foreach (XLRange container in Ranges)

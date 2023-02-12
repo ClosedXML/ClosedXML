@@ -145,6 +145,10 @@ namespace ClosedXML.Excel
             }
         }
 
+        IXLCells IXLRow.Cells(String cellsInRow) => Cells(cellsInRow);
+
+        IXLCells IXLRow.Cells(Int32 firstColumn, Int32 lastColumn) => Cells(firstColumn, lastColumn);
+
         public void ClearHeight()
         {
             Height = Worksheet.RowHeight;
@@ -226,7 +230,7 @@ namespace ClosedXML.Excel
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public override IXLCells Cells(Boolean usedCellsOnly)
+        public override XLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.AllContents);
@@ -234,7 +238,7 @@ namespace ClosedXML.Excel
                 return Cells(FirstCellUsed().Address.ColumnNumber, LastCellUsed().Address.ColumnNumber);
         }
 
-        public override IXLCells Cells(String cellsInRow)
+        public override XLCells Cells(String cellsInRow)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
@@ -243,7 +247,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLCells Cells(Int32 firstColumn, Int32 lastColumn)
+        public XLCells Cells(Int32 firstColumn, Int32 lastColumn)
         {
             return Cells(firstColumn + ":" + lastColumn);
         }
@@ -539,7 +543,7 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            return; // rows are shifted by XLRowCollection
+            // rows are shifted by XLRowCollection
         }
 
         internal void SetRowNumber(Int32 row)

@@ -150,6 +150,8 @@ namespace ClosedXML.Excel
             return Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn);
         }
 
+        IXLRanges IXLRange.Ranges(string ranges) => Ranges(ranges);
+
         public IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null)
         {
             var retVal = new XLRangeRows();

@@ -62,6 +62,10 @@ namespace ClosedXML.Excel
 
         public Double Width { get; set; }
 
+        IXLCells IXLColumn.Cells(String cellsInColumn) => Cells(cellsInColumn);
+
+        IXLCells IXLColumn.Cells(Int32 firstRow, Int32 lastRow) => Cells(firstRow, lastRow);
+
         public void Delete()
         {
             int columnNumber = ColumnNumber();
@@ -80,7 +84,7 @@ namespace ClosedXML.Excel
             return Cell(rowNumber, 1);
         }
 
-        public override IXLCells Cells(String cellsInColumn)
+        public override XLCells Cells(String cellsInColumn)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
@@ -94,7 +98,7 @@ namespace ClosedXML.Excel
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public override IXLCells Cells(Boolean usedCellsOnly)
+        public override XLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.AllContents);
@@ -102,7 +106,7 @@ namespace ClosedXML.Excel
                 return Cells(FirstCellUsed().Address.RowNumber, LastCellUsed().Address.RowNumber);
         }
 
-        public IXLCells Cells(Int32 firstRow, Int32 lastRow)
+        public XLCells Cells(Int32 firstRow, Int32 lastRow)
         {
             return Cells(firstRow + ":" + lastRow);
         }
@@ -445,6 +449,8 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        IXLRangeColumn IXLColumn.Column(Int32 start, Int32 end) => Column(start, end);
+
         IXLRangeColumn IXLColumn.CopyTo(IXLCell target)
         {
             var copy = AsRange().CopyTo(target);
@@ -470,7 +476,7 @@ namespace ClosedXML.Excel
             return newColumn;
         }
 
-        public IXLRangeColumn Column(Int32 start, Int32 end)
+        public XLRangeColumn Column(Int32 start, Int32 end)
         {
             return Range(start, 1, end, 1).Column(1);
         }

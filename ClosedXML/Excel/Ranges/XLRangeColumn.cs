@@ -24,7 +24,9 @@ namespace ClosedXML.Excel
             return Cell(rowNumber);
         }
 
-        public override IXLCells Cells(string cellsInColumn)
+        IXLCells IXLRangeColumn.Cells(string cellsInColumn) => Cells(cellsInColumn);
+
+        public override XLCells Cells(string cellsInColumn)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInColumn.Split(',');
