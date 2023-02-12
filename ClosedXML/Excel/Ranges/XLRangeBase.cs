@@ -173,6 +173,14 @@ namespace ClosedXML.Excel
 
         #region IXLRangeBase Members
 
+        IXLCells IXLRangeBase.Cells(String cells) => Cells(cells);
+
+        IXLCells IXLRangeBase.Cells(Boolean usedCellsOnly) => Cells(usedCellsOnly);
+
+        IXLCells IXLRangeBase.Cells(Boolean usedCellsOnly, XLCellsUsedOptions options) => Cells(usedCellsOnly, options);
+
+        IXLCells IXLRangeBase.CellsUsed() => CellsUsed();
+
         IXLCell IXLRangeBase.FirstCell()
         {
             return FirstCell();
@@ -226,18 +234,18 @@ namespace ClosedXML.Excel
             return Cells(false);
         }
 
-        public virtual IXLCells Cells(Boolean usedCellsOnly)
+        public virtual XLCells Cells(Boolean usedCellsOnly)
         {
             return Cells(usedCellsOnly, XLCellsUsedOptions.AllContents);
         }
 
-        public IXLCells Cells(Boolean usedCellsOnly, XLCellsUsedOptions options)
+        public XLCells Cells(Boolean usedCellsOnly, XLCellsUsedOptions options)
         {
             var cells = new XLCells(usedCellsOnly, options) { RangeAddress };
             return cells;
         }
 
-        public virtual IXLCells Cells(String cells)
+        public virtual XLCells Cells(String cells)
         {
             return Ranges(cells).Cells();
         }
@@ -248,7 +256,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells CellsUsed()
+        public XLCells CellsUsed()
         {
             return Cells(true);
         }
@@ -544,7 +552,7 @@ namespace ClosedXML.Excel
 
             return AsRange();
         }
-        
+
         public IXLRangeBase SetValue(XLCellValue value)
         {
             Cells().ForEach(c => c.SetValue(value));
@@ -558,7 +566,7 @@ namespace ClosedXML.Excel
 
         public virtual Boolean IsEmpty()
         {
-            return !CellsUsed().Any() || CellsUsed().Any(c => c.IsEmpty());
+            return !CellsUsed().Any<XLCell>() || CellsUsed().Any<XLCell>(c => c.IsEmpty());
         }
 
         public virtual Boolean IsEmpty(XLCellsUsedOptions options)
@@ -915,7 +923,7 @@ namespace ClosedXML.Excel
             return GetRange(newFirstCellAddress, newLastCellAddress);
         }
 
-        public virtual IXLRanges Ranges(String ranges)
+        public virtual XLRanges Ranges(String ranges)
         {
             var retVal = new XLRanges();
             var rangePairs = ranges.Split(',');

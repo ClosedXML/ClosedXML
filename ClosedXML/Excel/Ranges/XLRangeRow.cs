@@ -19,6 +19,8 @@ namespace ClosedXML.Excel
 
         #region IXLRangeRow Members
 
+        IXLCells IXLRangeRow.Cells(string cellsInRow) => Cells(cellsInRow);
+
         public IXLCell Cell(int column)
         {
             return Cell(1, column);
@@ -59,7 +61,7 @@ namespace ClosedXML.Excel
             return InsertColumnsBefore(numberOfColumns, expandRange).Cells();
         }
 
-        public override IXLCells Cells(string cellsInRow)
+        public override XLCells Cells(string cellsInRow)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
