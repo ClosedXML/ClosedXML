@@ -20,23 +20,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
-    <PackageReference Include="Fody" Version="6.3.0">
+    <PackageReference Include="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Janitor.Fody" Version="1.8.0" PrivateAssets="all" />
+    <PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
-    <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
-    <PackageReference Include="XLParser" Version="1.5.2" />
+    <PackageReference Include="System.IO.Packaging" Version="7.0.0" />
+    <PackageReference Include="XLParser" Version="1.6.3" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 </Project>
