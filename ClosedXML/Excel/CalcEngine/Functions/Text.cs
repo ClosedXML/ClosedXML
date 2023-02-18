@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate, AllowRange.All); //	Joins several text items into one text item
             ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, Exact); // Checks to see if two text values are identical
-            ce.RegisterFunction("FIND", 2, 3, Find); //Finds one text value within another (case-sensitive)
+            ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
             ce.RegisterFunction("FIXED", 1, 3, Fixed); // Formats a number as text with a fixed number of decimals
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
             ce.RegisterFunction("LEFT", 1, 2, Left); // LEFTB	Returns the leftmost characters from a text value
@@ -106,20 +106,17 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Find(List<Expression> p)
+        private static AnyValue Find(CalcContext ctx, String findText, String withinText, OneOf<double, Blank> startNum)
         {
-            var srch = (string)p[0];
-            var text = (string)p[1];
-            var start = 0;
-            if (p.Count > 2)
-            {
-                start = (int)p[2] - 1;
-            }
-            var index = text.IndexOf(srch, start, StringComparison.Ordinal);
-            if (index == -1)
-                throw new ArgumentException("String not found.");
-            else
-                return index + 1;
+            var startIndex = startNum.TryPickT0(out var startNumber, out _) ? (int)Math.Truncate(startNumber) - 1 : 0;
+            if (startIndex < 0 || startIndex > withinText.Length)
+                return XLError.IncompatibleValue;
+
+            var text = withinText.AsSpan(startIndex);
+            var index = text.IndexOf(findText.AsSpan());
+            return index == -1
+                ? XLError.IncompatibleValue
+                : index + startIndex + 1;
         }
 
         private static object Left(List<Expression> p)
