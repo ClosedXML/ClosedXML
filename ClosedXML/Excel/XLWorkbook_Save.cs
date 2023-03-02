@@ -2110,13 +2110,53 @@ namespace ClosedXML.Excel
                         sharedItems.MinDate = ptfi.DistinctValues.Min(x => x.GetDateTime());
                         sharedItems.MaxDate = ptfi.DistinctValues.Max(x => x.GetDateTime());
                     }
-                    else
+                    else if (types.Length == 1 && types.Single() == XLDataType.Text)
                     {
                         if (ptfi.DistinctValues.Any(v => v.GetText().Length > 255))
                             sharedItems.LongText = true;
 
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = value.GetText() });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                    }
+                    else
+                    {
+                        sharedItems.ContainsMixedTypes = true;
+                        if (ptfi.DistinctValues.Any(v => v.IsText))
+                        {
+                            if (ptfi.DistinctValues.Where(x => x.IsText).Any(v => v.GetText().Length > 255))
+                                sharedItems.LongText = true;
+                            sharedItems.ContainsString = true;
+                        }
+                        if (ptfi.DistinctValues.Any(v => v.IsDateTime))
+                        {
+                            sharedItems.MinDate = ptfi.DistinctValues.Where(x => x.IsDateTime).Min(v => v.GetDateTime());
+                            sharedItems.MaxDate = ptfi.DistinctValues.Where(x => x.IsDateTime).Max(v => v.GetDateTime());
+                            sharedItems.ContainsDate = true;
+                        }
+                        if (ptfi.DistinctValues.Any(v => v.IsNumber))
+                        {
+                            sharedItems.MinValue = ptfi.DistinctValues.Where(x => x.IsNumber).Min(v => v.GetNumber());
+                            sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
+                            sharedItems.ContainsNumber = true;
+                            var allInteger = ptfi.DistinctValues.Where(x => x.IsNumber).All(v => v.GetNumber() % 1 == 0);
+                            if (allInteger) sharedItems.ContainsInteger = true;
+                        }
+
+                        foreach (var value in ptfi.DistinctValues)
+                        {
+                            OpenXmlElement toAdd = value.Type switch
+                            {
+                                XLDataType.Blank => new MissingItem(),
+                                XLDataType.Boolean => new BooleanItem { Val = value.GetBoolean() },
+                                XLDataType.Number => new NumberItem { Val = value.GetNumber() },
+                                XLDataType.Text => new StringItem { Val = value.GetText() },
+                                XLDataType.DateTime => new DateTimeItem { Val = value.GetDateTime() },
+                                _ => throw new InvalidOperationException()
+                            };
+                            sharedItems.AppendChild(toAdd);
+                        }
 
                         if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
