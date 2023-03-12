@@ -348,21 +348,12 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void PivotMixedDataTypesInTableColumn() {
-            Assert.DoesNotThrow(() => {
-                //Load an excel that contains a table which has numbers and text in one column
-                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotMixedDataTypesInTableColumn\input.xlsx")))
-                using (var wb = new XLWorkbook(stream)) {
-                    var ws = wb.Worksheet("PastrySalesData");
-                    var table = ws.Table("PastrySalesData");
-                    var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                    ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
-
-                    using (var ms = new MemoryStream()) {
-                        wb.SaveAs(ms, true);
-                    }
-                }
-            });
+        public void SharedItemsWithVariousDataTypesInTableColumn()
+        {
+            // Load an excel that contains a table which has various combinations of types in columns
+            TestHelper.LoadSaveAndCompare(
+                @"Other\PivotTableReferenceFiles\VariousDataTypesInTableColumns\input.xlsx",
+                @"Other\PivotTableReferenceFiles\VariousDataTypesInTableColumns\output.xlsx");
         }
 
         [Test]
