@@ -56,7 +56,7 @@ using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAli
 using Vml = DocumentFormat.OpenXml.Vml;
 using ClosedXML.Excel.Cells;
 using ClosedXML.Excel.IO;
-using static ClosedXML.Excel.IO.OpenXmlConst;
+using Boolean = System.Boolean;
 
 namespace ClosedXML.Excel
 {
@@ -2112,6 +2112,7 @@ namespace ClosedXML.Excel
                     }
                     else if (types.Length == 1 && types.Single() == XLDataType.Text)
                     {
+                        // Default value for ContainsString is true, so no need to set it. 
                         if (ptfi.DistinctValues.Any(v => v.GetText().Length > 255))
                             sharedItems.LongText = true;
 
@@ -2152,7 +2153,9 @@ namespace ClosedXML.Excel
                                 XLDataType.Boolean => new BooleanItem { Val = value.GetBoolean() },
                                 XLDataType.Number => new NumberItem { Val = value.GetNumber() },
                                 XLDataType.Text => new StringItem { Val = value.GetText() },
+                                XLDataType.Error => new ErrorItem { Val = value.GetError().ToDisplayString() },
                                 XLDataType.DateTime => new DateTimeItem { Val = value.GetDateTime() },
+                                XLDataType.TimeSpan => new DateTimeItem { Val = value.GetUnifiedNumber().ToSerialDateTime() },
                                 _ => throw new InvalidOperationException()
                             };
                             sharedItems.AppendChild(toAdd);
