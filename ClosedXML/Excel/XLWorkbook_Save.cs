@@ -2073,7 +2073,8 @@ namespace ClosedXML.Excel
                         sharedItems.ContainsNumber = true;
 
                         var allInteger = ptfi.DistinctValues.All(v => v.GetNumber() % 1 == 0);
-                        if (allInteger) sharedItems.ContainsInteger = true;
+                        if (allInteger)
+                            sharedItems.ContainsInteger = true;
 
                         // Output items only for row / column / filter fields
                         if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
@@ -2083,7 +2084,8 @@ namespace ClosedXML.Excel
                             foreach (var value in ptfi.DistinctValues)
                                 sharedItems.AppendChild(new NumberItem { Val = value.GetNumber() });
 
-                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                            if (containsBlank)
+                                sharedItems.AppendChild(new MissingItem());
                         }
 
                         sharedItems.MinValue = ptfi.DistinctValues.Min(x => x.GetNumber());
@@ -2104,7 +2106,8 @@ namespace ClosedXML.Excel
                             foreach (var value in ptfi.DistinctValues)
                                 sharedItems.AppendChild(new DateTimeItem { Val = value.GetDateTime() });
 
-                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                            if (containsBlank)
+                                sharedItems.AppendChild(new MissingItem());
                         }
 
                         sharedItems.MinDate = ptfi.DistinctValues.Min(x => x.GetDateTime());
@@ -2119,7 +2122,8 @@ namespace ClosedXML.Excel
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = value.GetText() });
 
-                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        if (containsBlank)
+                            sharedItems.AppendChild(new MissingItem());
                     }
                     else
                     {
@@ -2128,8 +2132,10 @@ namespace ClosedXML.Excel
                         {
                             if (ptfi.DistinctValues.Where(x => x.IsText).Any(v => v.GetText().Length > 255))
                                 sharedItems.LongText = true;
-                            sharedItems.ContainsString = true;
                         }
+                        else
+                            sharedItems.ContainsString = false;
+
                         if (ptfi.DistinctValues.Any(v => v.IsDateTime))
                         {
                             sharedItems.MinDate = ptfi.DistinctValues.Where(x => x.IsDateTime).Min(v => v.GetDateTime());
@@ -2142,7 +2148,8 @@ namespace ClosedXML.Excel
                             sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
                             sharedItems.ContainsNumber = true;
                             var allInteger = ptfi.DistinctValues.Where(x => x.IsNumber).All(v => v.GetNumber() % 1 == 0);
-                            if (allInteger) sharedItems.ContainsInteger = true;
+                            if (allInteger)
+                                sharedItems.ContainsInteger = true;
                         }
 
                         foreach (var value in ptfi.DistinctValues)
@@ -2161,7 +2168,8 @@ namespace ClosedXML.Excel
                             sharedItems.AppendChild(toAdd);
                         }
 
-                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        if (containsBlank)
+                            sharedItems.AppendChild(new MissingItem());
                     }
 
                     sharedItems.Count = Convert.ToUInt32(sharedItems.Elements().Count());
