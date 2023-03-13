@@ -2041,7 +2041,7 @@ namespace ClosedXML.Excel
                                                  .ToArray();
                 var fieldValueCells = cellsUsed.Where(cell => !cell.IsEmpty()).ToArray();
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
-                var containsBlank = cellsUsed.Any(cell => cell.IsEmpty());
+                var containsBlank = cellsUsed.Any(cell => cell.IsEmpty()) || cellsUsed.Length < source.RowCount() - 1;
 
                 // For a totally blank column, we need to check that all cells in column are unused
                 if (fieldValueCells.Length == 0)
@@ -2104,14 +2104,14 @@ namespace ClosedXML.Excel
                             || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
                         {
                             foreach (var value in ptfi.DistinctValues)
-                                sharedItems.AppendChild(new DateTimeItem { Val = value.GetDateTime() });
+                                sharedItems.AppendChild(new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) });
 
                             if (containsBlank)
                                 sharedItems.AppendChild(new MissingItem());
                         }
 
-                        sharedItems.MinDate = ptfi.DistinctValues.Min(x => x.GetDateTime());
-                        sharedItems.MaxDate = ptfi.DistinctValues.Max(x => x.GetDateTime());
+                        sharedItems.MinDate = DateTime.FromOADate(ptfi.DistinctValues.Min(x => x.GetUnifiedNumber()));
+                        sharedItems.MaxDate = DateTime.FromOADate(ptfi.DistinctValues.Max(x => x.GetUnifiedNumber()));
                     }
                     else if (types.Length == 1 && types.Single() == XLDataType.Text)
                     {
@@ -2127,23 +2127,30 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        sharedItems.ContainsMixedTypes = true;
+                        sharedItems.ContainsMixedTypes = types.Length > 1 ? true : null;
                         if (ptfi.DistinctValues.Any(v => v.IsText))
                         {
                             if (ptfi.DistinctValues.Where(x => x.IsText).Any(v => v.GetText().Length > 255))
                                 sharedItems.LongText = true;
                         }
-                        else
-                            sharedItems.ContainsString = false;
-
-                        if (ptfi.DistinctValues.Any(v => v.IsDateTime))
+                        else if (!ptfi.DistinctValues.Any(x => x.IsError))
                         {
-                            sharedItems.MinDate = ptfi.DistinctValues.Where(x => x.IsDateTime).Min(v => v.GetDateTime());
-                            sharedItems.MaxDate = ptfi.DistinctValues.Where(x => x.IsDateTime).Max(v => v.GetDateTime());
+                            // The default value for contains string is 'true', so fix to false if field doesn't contain string.
+                            // If the field contains error, don't change default value (Excel would refuse to load the file).
+                            sharedItems.ContainsString = false;
+                        }
+
+                        if (ptfi.DistinctValues.Any(v => v.IsDateTime || v.IsTimeSpan))
+                        {
+                            // This is an exception to the "1900 is a leap year". Values are saved correctly, i.e starting at 1899-12-30. TimeSpan as well.
+                            sharedItems.MinDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Min(v => v.GetUnifiedNumber()));
+                            sharedItems.MaxDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Max(v => v.GetUnifiedNumber()));
                             sharedItems.ContainsDate = true;
                         }
-                        if (ptfi.DistinctValues.Any(v => v.IsNumber))
+                        else if (ptfi.DistinctValues.Any(v => v.IsNumber))
                         {
+                            // If the field contains a date, the number values are considered serial date times.
+                            // Don't indicate that date field with numbers contains numbers, Excel would refuse to load the file
                             sharedItems.MinValue = ptfi.DistinctValues.Where(x => x.IsNumber).Min(v => v.GetNumber());
                             sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
                             sharedItems.ContainsNumber = true;
@@ -2161,8 +2168,8 @@ namespace ClosedXML.Excel
                                 XLDataType.Number => new NumberItem { Val = value.GetNumber() },
                                 XLDataType.Text => new StringItem { Val = value.GetText() },
                                 XLDataType.Error => new ErrorItem { Val = value.GetError().ToDisplayString() },
-                                XLDataType.DateTime => new DateTimeItem { Val = value.GetDateTime() },
-                                XLDataType.TimeSpan => new DateTimeItem { Val = value.GetUnifiedNumber().ToSerialDateTime() },
+                                XLDataType.DateTime => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
+                                XLDataType.TimeSpan => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
                                 _ => throw new InvalidOperationException()
                             };
                             sharedItems.AppendChild(toAdd);
@@ -2175,7 +2182,8 @@ namespace ClosedXML.Excel
                     sharedItems.Count = Convert.ToUInt32(sharedItems.Elements().Count());
                 }
 
-                if (containsBlank) sharedItems.ContainsBlank = true;
+                if (containsBlank)
+                    sharedItems.ContainsBlank = true;
 
                 if (ptfi.IsTotallyBlankField)
                     pti.Fields.Add(xlpf.SourceName, ptfi);
