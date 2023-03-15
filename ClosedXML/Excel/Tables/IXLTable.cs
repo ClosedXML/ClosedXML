@@ -12,6 +12,11 @@ namespace ClosedXML.Excel
         Boolean EmphasizeFirstColumn { get; set; }
         Boolean EmphasizeLastColumn { get; set; }
         IEnumerable<IXLTableField> Fields { get; }
+
+        /// <summary>
+        /// Change the name of a table. Structural references to the table are not updated.
+        /// </summary>
+        /// <exception cref="ArgumentException">If the new table name is already used by other table in the sheet.</exception>
         string Name { get; set; }
         Boolean ShowAutoFilter { get; set; }
         Boolean ShowColumnStripes { get; set; }

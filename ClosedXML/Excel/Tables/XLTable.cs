@@ -292,7 +292,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Resize(string rangeAddress)
         {
-            return Resize(Worksheet.Range(RangeAddress));
+            return Resize(Worksheet.Range(rangeAddress));
         }
 
         public IXLTable Resize(IXLCell firstCell, IXLCell lastCell)

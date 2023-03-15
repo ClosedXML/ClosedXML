@@ -99,11 +99,12 @@ namespace ClosedXML.Excel
         XLTotalsRowFunction TotalsRowFunction { get; set; }
 
         /// <summary>
-        /// Gets or sets the totals row label.
+        /// Gets or sets the totals row label (the leftmost cell in the totals row).
         /// </summary>
         /// <value>
         /// The totals row label.
         /// </value>
+        /// <exception>If the totals row is not displayed for the table.</exception>
         String TotalsRowLabel { get; set; }
 
         /// <summary>
