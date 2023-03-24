@@ -4131,5 +4131,1801 @@ namespace ClosedXML.Excel
         }
 
         #endregion GenerateWorkbookStylesPartContent
+
+        #region GenerateWorksheetPartContent
+
+        private static void GenerateWorksheetPartContent(
+            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, SaveOptions options, SaveContext context)
+        {
+            if (options.ConsolidateConditionalFormatRanges)
+            {
+                ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+            }
+
+            #region Worksheet
+
+            if (worksheetPart.Worksheet == null)
+                worksheetPart.Worksheet = new Worksheet();
+
+            if (
+                !worksheetPart.Worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+            {
+                worksheetPart.Worksheet.AddNamespaceDeclaration("r",
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            }
+
+            #endregion Worksheet
+
+            var cm = new XLWorksheetContentManager(worksheetPart.Worksheet);
+
+            #region SheetProperties
+
+            if (worksheetPart.Worksheet.SheetProperties == null)
+                worksheetPart.Worksheet.SheetProperties = new SheetProperties();
+
+            worksheetPart.Worksheet.SheetProperties.TabColor = xlWorksheet.TabColor.HasValue
+                ? new TabColor().FromClosedXMLColor<TabColor>(xlWorksheet.TabColor)
+                : null;
+
+            cm.SetElement(XLWorksheetContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
+
+            if (worksheetPart.Worksheet.SheetProperties.OutlineProperties == null)
+                worksheetPart.Worksheet.SheetProperties.OutlineProperties = new OutlineProperties();
+
+            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryBelow =
+                (xlWorksheet.Outline.SummaryVLocation ==
+                 XLOutlineSummaryVLocation.Bottom);
+            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryRight =
+                (xlWorksheet.Outline.SummaryHLocation ==
+                 XLOutlineSummaryHLocation.Right);
+
+            if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
+                && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
+                worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties { FitToPage = true };
+
+            #endregion SheetProperties
+
+            var maxColumn = 0;
+
+            var sheetDimensionReference = "A1";
+            if (xlWorksheet.Internals.CellsCollection.Count > 0)
+            {
+                maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
+                var maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
+                sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
+                                          maxRow.ToInvariantString();
+            }
+
+            if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
+            {
+                var maxColCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+                if (maxColCollection > maxColumn)
+                    maxColumn = maxColCollection;
+            }
+
+            #region SheetViews
+
+            if (worksheetPart.Worksheet.SheetDimension == null)
+                worksheetPart.Worksheet.SheetDimension = new SheetDimension { Reference = sheetDimensionReference };
+
+            cm.SetElement(XLWorksheetContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
+
+            if (worksheetPart.Worksheet.SheetViews == null)
+                worksheetPart.Worksheet.SheetViews = new SheetViews();
+
+            cm.SetElement(XLWorksheetContents.SheetViews, worksheetPart.Worksheet.SheetViews);
+
+            var sheetView = (SheetView)worksheetPart.Worksheet.SheetViews.FirstOrDefault();
+            if (sheetView == null)
+            {
+                sheetView = new SheetView { WorkbookViewId = 0U };
+                worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
+            }
+
+            var svcm = new XLSheetViewContentManager(sheetView);
+
+            if (xlWorksheet.TabSelected)
+                sheetView.TabSelected = true;
+            else
+                sheetView.TabSelected = null;
+
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
+
+            if (xlWorksheet.ShowFormulas)
+                sheetView.ShowFormulas = true;
+            else
+                sheetView.ShowFormulas = null;
+
+            if (xlWorksheet.ShowGridLines)
+                sheetView.ShowGridLines = null;
+            else
+                sheetView.ShowGridLines = false;
+
+            if (xlWorksheet.ShowOutlineSymbols)
+                sheetView.ShowOutlineSymbols = null;
+            else
+                sheetView.ShowOutlineSymbols = false;
+
+            if (xlWorksheet.ShowRowColHeaders)
+                sheetView.ShowRowColHeaders = null;
+            else
+                sheetView.ShowRowColHeaders = false;
+
+            if (xlWorksheet.ShowRuler)
+                sheetView.ShowRuler = null;
+            else
+                sheetView.ShowRuler = false;
+
+            if (xlWorksheet.ShowWhiteSpace)
+                sheetView.ShowWhiteSpace = null;
+            else
+                sheetView.ShowWhiteSpace = false;
+
+            if (xlWorksheet.ShowZeros)
+                sheetView.ShowZeros = null;
+            else
+                sheetView.ShowZeros = false;
+
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
+
+            if (xlWorksheet.SheetView.View == XLSheetViewOptions.Normal)
+                sheetView.View = null;
+            else
+                sheetView.View = xlWorksheet.SheetView.View.ToOpenXml();
+
+            var pane = sheetView.Elements<Pane>().FirstOrDefault();
+            if (pane == null)
+            {
+                pane = new Pane();
+                sheetView.InsertAt(pane, 0);
+            }
+
+            svcm.SetElement(XLSheetViewContents.Pane, pane);
+
+            pane.State = PaneStateValues.FrozenSplit;
+            int hSplit = xlWorksheet.SheetView.SplitColumn;
+            int ySplit = xlWorksheet.SheetView.SplitRow;
+
+            pane.HorizontalSplit = hSplit;
+            pane.VerticalSplit = ySplit;
+
+            pane.ActivePane = (ySplit == 0 ? PaneValues.TopRight : 0)
+                              | (hSplit == 0 ? PaneValues.BottomLeft : 0);
+
+            pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
+                               + (xlWorksheet.SheetView.SplitRow + 1);
+
+            if (hSplit == 0 && ySplit == 0)
+            {
+                // We don't have a pane. Just a regular sheet.
+                pane = null;
+                sheetView.RemoveAllChildren<Pane>();
+                svcm.SetElement(XLSheetViewContents.Pane, null);
+            }
+
+            // Do sheet view. Whether it's for a regular sheet or for the bottom-right pane
+            if (!xlWorksheet.SheetView.TopLeftCellAddress.IsValid
+                || xlWorksheet.SheetView.TopLeftCellAddress == new XLAddress(1, 1, fixedRow: false, fixedColumn: false))
+                sheetView.TopLeftCell = null;
+            else
+                sheetView.TopLeftCell = xlWorksheet.SheetView.TopLeftCellAddress.ToString();
+
+            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
+            {
+                sheetView.RemoveAllChildren<Selection>();
+                svcm.SetElement(XLSheetViewContents.Selection, null);
+
+                var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
+
+                Action<Selection> populateSelection = (Selection selection) =>
+                {
+                    if (xlWorksheet.ActiveCell != null)
+                        selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                    else if (firstSelection != null)
+                        selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
+
+                    var seqRef = new List<String> { selection.ActiveCell.Value };
+                    seqRef.AddRange(xlWorksheet.SelectedRanges
+                        .Select(range =>
+                        {
+                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                            else
+                                return range.RangeAddress.ToStringRelative(false);
+                        })
+                    );
+
+                    selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+
+                    sheetView.InsertAfter(selection, svcm.GetPreviousElementFor(XLSheetViewContents.Selection));
+                    svcm.SetElement(XLSheetViewContents.Selection, selection);
+                };
+
+                // If a pane exists, we need to set the active pane too
+                // Yes, this might lead to 2 Selection elements!
+                if (pane != null)
+                {
+                    populateSelection(new Selection()
+                    {
+                        Pane = pane.ActivePane
+                    });
+                }
+                populateSelection(new Selection());
+            }
+
+            if (xlWorksheet.SheetView.ZoomScale == 100)
+                sheetView.ZoomScale = null;
+            else
+                sheetView.ZoomScale = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScale));
+
+            if (xlWorksheet.SheetView.ZoomScaleNormal == 100)
+                sheetView.ZoomScaleNormal = null;
+            else
+                sheetView.ZoomScaleNormal = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleNormal));
+
+            if (xlWorksheet.SheetView.ZoomScalePageLayoutView == 100)
+                sheetView.ZoomScalePageLayoutView = null;
+            else
+                sheetView.ZoomScalePageLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScalePageLayoutView));
+
+            if (xlWorksheet.SheetView.ZoomScaleSheetLayoutView == 100)
+                sheetView.ZoomScaleSheetLayoutView = null;
+            else
+                sheetView.ZoomScaleSheetLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleSheetLayoutView));
+
+            #endregion SheetViews
+
+            var maxOutlineColumn = 0;
+            if (xlWorksheet.ColumnCount() > 0)
+                maxOutlineColumn = xlWorksheet.GetMaxColumnOutline();
+
+            var maxOutlineRow = 0;
+            if (xlWorksheet.RowCount() > 0)
+                maxOutlineRow = xlWorksheet.GetMaxRowOutline();
+
+            #region SheetFormatProperties
+
+            if (worksheetPart.Worksheet.SheetFormatProperties == null)
+                worksheetPart.Worksheet.SheetFormatProperties = new SheetFormatProperties();
+
+            cm.SetElement(XLWorksheetContents.SheetFormatProperties,
+                worksheetPart.Worksheet.SheetFormatProperties);
+
+            worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight.SaveRound();
+
+            if (xlWorksheet.RowHeightChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
+
+            var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth).SaveRound();
+            if (xlWorksheet.ColumnWidthChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = null;
+
+            if (maxOutlineColumn > 0)
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = null;
+
+            if (maxOutlineRow > 0)
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = (byte)maxOutlineRow;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = null;
+
+            #endregion SheetFormatProperties
+
+            #region Columns
+
+            var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
+            if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
+                xlWorksheet.Internals.ColumnsCollection.Count == 0
+                && worksheetStyleId == 0)
+                worksheetPart.Worksheet.RemoveAllChildren<Columns>();
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<Columns>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.Columns);
+                    worksheetPart.Worksheet.InsertAfter(new Columns(), previousElement);
+                }
+
+                var columns = worksheetPart.Worksheet.Elements<Columns>().First();
+                cm.SetElement(XLWorksheetContents.Columns, columns);
+
+                var sheetColumnsByMin = columns.Elements<Column>().ToDictionary(c => c.Min.Value, c => c);
+                //Dictionary<UInt32, Column> sheetColumnsByMax = columns.Elements<Column>().ToDictionary(c => c.Max.Value, c => c);
+
+                Int32 minInColumnsCollection;
+                Int32 maxInColumnsCollection;
+                if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
+                {
+                    minInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Min();
+                    maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+                }
+                else
+                {
+                    minInColumnsCollection = 1;
+                    maxInColumnsCollection = 0;
+                }
+
+                if (minInColumnsCollection > 1)
+                {
+                    UInt32Value min = 1;
+                    UInt32Value max = (UInt32)(minInColumnsCollection - 1);
+
+                    for (var co = min; co <= max; co++)
+                    {
+                        var column = new Column
+                        {
+                            Min = co,
+                            Max = co,
+                            Style = worksheetStyleId,
+                            Width = worksheetColumnWidth,
+                            CustomWidth = true
+                        };
+
+                        UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
+                    }
+                }
+
+                for (var co = minInColumnsCollection; co <= maxInColumnsCollection; co++)
+                {
+                    UInt32 styleId;
+                    Double columnWidth;
+                    var isHidden = false;
+                    var collapsed = false;
+                    var outlineLevel = 0;
+                    if (xlWorksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn col))
+                    {
+                        styleId = context.SharedStyles[col.StyleValue].StyleId;
+                        columnWidth = GetColumnWidth(col.Width).SaveRound();
+                        isHidden = col.IsHidden;
+                        collapsed = col.Collapsed;
+                        outlineLevel = col.OutlineLevel;
+                    }
+                    else
+                    {
+                        styleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
+                        columnWidth = worksheetColumnWidth;
+                    }
+
+                    var column = new Column
+                    {
+                        Min = (UInt32)co,
+                        Max = (UInt32)co,
+                        Style = styleId,
+                        Width = columnWidth,
+                        CustomWidth = true
+                    };
+
+                    if (isHidden)
+                        column.Hidden = true;
+                    if (collapsed)
+                        column.Collapsed = true;
+                    if (outlineLevel > 0)
+                        column.OutlineLevel = (byte)outlineLevel;
+
+                    UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
+                }
+
+                var collection = maxInColumnsCollection;
+                foreach (
+                    var col in
+                        columns.Elements<Column>().Where(c => c.Min > (UInt32)(collection)).OrderBy(
+                            c => c.Min.Value))
+                {
+                    col.Style = worksheetStyleId;
+                    col.Width = worksheetColumnWidth;
+                    col.CustomWidth = true;
+
+                    if ((Int32)col.Max.Value > maxInColumnsCollection)
+                        maxInColumnsCollection = (Int32)col.Max.Value;
+                }
+
+                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && worksheetStyleId != 0)
+                {
+                    var column = new Column
+                    {
+                        Min = (UInt32)(maxInColumnsCollection + 1),
+                        Max = (UInt32)(XLHelper.MaxColumnNumber),
+                        Style = worksheetStyleId,
+                        Width = worksheetColumnWidth,
+                        CustomWidth = true
+                    };
+                    columns.AppendChild(column);
+                }
+
+                CollapseColumns(columns, sheetColumnsByMin);
+
+                if (!columns.Any())
+                {
+                    worksheetPart.Worksheet.RemoveAllChildren<Columns>();
+                    cm.SetElement(XLWorksheetContents.Columns, null);
+                }
+            }
+
+            #endregion Columns
+
+            #region SheetData
+
+            if (!worksheetPart.Worksheet.Elements<SheetData>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.SheetData);
+                worksheetPart.Worksheet.InsertAfter(new SheetData(), previousElement);
+            }
+
+            var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+            cm.SetElement(XLWorksheetContents.SheetData, sheetData);
+
+            var lastRow = 0;
+            var existingSheetDataRows =
+                sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
+                    r => r);
+            foreach (
+                var r in
+                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => existingSheetDataRows.ContainsKey(r.Key)))
+            {
+                sheetData.RemoveChild(existingSheetDataRows[r.Key]);
+                existingSheetDataRows.Remove(r.Key);
+                xlWorksheet.Internals.CellsCollection.Deleted.Remove(r.Key);
+            }
+
+            var tableTotalCells = new HashSet<IXLAddress>(
+                xlWorksheet.Tables
+                .Where(table => table.ShowTotalsRow)
+                .SelectMany(table =>
+                    table.TotalsRow().CellsUsed())
+                .Select(cell => cell.Address));
+
+            var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
+            var noRows = !sheetData.Elements<Row>().Any();
+            foreach (var distinctRow in distinctRows.OrderBy(r => r))
+            {
+                Row row;
+                if (!existingSheetDataRows.TryGetValue(distinctRow, out row))
+                    row = new Row { RowIndex = (UInt32)distinctRow };
+
+                if (maxColumn > 0)
+                    row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
+
+                row.Height = null;
+                row.CustomHeight = null;
+                row.Hidden = null;
+                row.StyleIndex = null;
+                row.CustomFormat = null;
+                row.Collapsed = null;
+                if (xlWorksheet.Internals.RowsCollection.TryGetValue(distinctRow, out XLRow thisRow))
+                {
+                    if (thisRow.HeightChanged)
+                    {
+                        row.Height = thisRow.Height.SaveRound();
+                        row.CustomHeight = true;
+                        row.CustomFormat = true;
+                    }
+
+                    if (thisRow.StyleValue != xlWorksheet.StyleValue)
+                    {
+                        row.StyleIndex = context.SharedStyles[thisRow.StyleValue].StyleId;
+                        row.CustomFormat = true;
+                    }
+
+                    if (thisRow.IsHidden)
+                        row.Hidden = true;
+                    if (thisRow.Collapsed)
+                        row.Collapsed = true;
+                    if (thisRow.OutlineLevel > 0)
+                        row.OutlineLevel = (byte)thisRow.OutlineLevel;
+                }
+
+                var lastCell = 0;
+                var currentOpenXmlRowCells = row.Elements<Cell>()
+                    .ToDictionary
+                    (
+                        c => c.CellReference?.Value ?? XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow,
+                        c => c
+                    );
+
+                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(distinctRow, out HashSet<Int32> deletedColumns))
+                {
+                    foreach (var deletedColumn in deletedColumns.ToList())
+                    {
+                        var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + distinctRow.ToInvariantString();
+
+                        if (!currentOpenXmlRowCells.TryGetValue(key, out Cell cell))
+                            continue;
+
+                        row.RemoveChild(cell);
+                        deletedColumns.Remove(deletedColumn);
+                    }
+                    if (deletedColumns.Count == 0)
+                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
+                }
+
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out Dictionary<int, XLCell> cells))
+                {
+                    var isNewRow = !row.Elements<Cell>().Any();
+                    lastCell = 0;
+                    var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
+                        ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
+                    foreach (var xlCell in cells.Values
+                        .OrderBy(c => c.Address.ColumnNumber)
+                        .Select(c => c))
+                    {
+                        XLTableField field = null;
+
+                        var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
+                        var cellReference = (xlCell.Address).GetTrimmedAddress();
+
+                        // For saving cells to file, ignore conditional formatting, data validation rules and merged
+                        // ranges. They just bloat the file
+                        var isEmpty = xlCell.IsEmpty(XLCellsUsedOptions.All
+                                                     & ~XLCellsUsedOptions.ConditionalFormats
+                                                     & ~XLCellsUsedOptions.DataValidation
+                                                     & ~XLCellsUsedOptions.MergedRanges);
+
+                        if (currentOpenXmlRowCells.TryGetValue(cellReference, out Cell cell))
+                        {
+                            if (isEmpty)
+                            {
+                                cell.Remove();
+                            }
+
+                            // reset some stuff that we'll populate later
+                            cell.DataType = null;
+                            cell.RemoveAllChildren<InlineString>();
+                        }
+
+                        if (!isEmpty)
+                        {
+                            if (cell == null)
+                            {
+                                cell = new Cell();
+                                cell.CellReference = new StringValue(cellReference);
+
+                                if (isNewRow)
+                                    row.AppendChild(cell);
+                                else
+                                {
+                                    var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
+
+                                    Cell cellBeforeInsert = null;
+                                    int[] lastCo = { Int32.MaxValue };
+                                    foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
+                                    {
+                                        cellBeforeInsert = c.Value;
+                                        lastCo[0] = c.Key;
+                                    }
+                                    if (cellBeforeInsert == null)
+                                        row.AppendChild(cell);
+                                    else
+                                        row.InsertBefore(cell, cellBeforeInsert);
+                                }
+                            }
+
+                            cell.StyleIndex = styleId;
+                            if (xlCell.HasFormula)
+                            {
+                                var formula = xlCell.FormulaA1;
+                                if (xlCell.HasArrayFormula)
+                                {
+                                    formula = formula.Substring(1, formula.Length - 2);
+                                    var f = new CellFormula { FormulaType = CellFormulaValues.Array };
+
+                                    if (xlCell.FormulaReference == null)
+                                        xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+
+                                    if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
+                                    {
+                                        f.Text = formula;
+                                        f.Reference = xlCell.FormulaReference.ToStringRelative();
+                                    }
+
+                                    cell.CellFormula = f;
+                                }
+                                else
+                                {
+                                    cell.CellFormula = new CellFormula();
+                                    cell.CellFormula.Text = formula;
+                                }
+
+                                if (!options.EvaluateFormulasBeforeSaving || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
+                                    cell.CellValue = null;
+                                else
+                                {
+                                    string valueCalculated;
+                                    if (xlCell.CachedValue is int)
+                                        valueCalculated = ((int)xlCell.CachedValue).ToInvariantString();
+                                    else if (xlCell.CachedValue is double)
+                                        valueCalculated = ((double)xlCell.CachedValue).ToInvariantString();
+                                    else
+                                        valueCalculated = xlCell.CachedValue.ToString();
+
+                                    cell.CellValue = new CellValue(valueCalculated);
+                                }
+                            }
+                            else if (tableTotalCells.Contains(xlCell.Address))
+                            {
+                                var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                                field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+
+                                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                                {
+                                    cell.DataType = XLWorkbook.CvSharedString;
+                                }
+                                else
+                                {
+                                    cell.DataType = null;
+                                }
+                                cell.CellFormula = null;
+                            }
+                            else
+                            {
+                                cell.CellFormula = null;
+                                cell.DataType = xlCell.DataType == XLDataType.DateTime ? null : GetCellValueType(xlCell);
+                            }
+
+                            if (options.EvaluateFormulasBeforeSaving || field != null || !xlCell.HasFormula)
+                                SetCellValue(xlCell, field, cell, context);
+                        }
+                    }
+                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
+                }
+
+                // If we're adding a new row (not in sheet already and it's not "empty"
+                if (!existingSheetDataRows.ContainsKey(distinctRow))
+                {
+                    var invalidRow = row.Height == null
+                        && row.CustomHeight == null
+                        && row.Hidden == null
+                        && row.StyleIndex == null
+                        && row.CustomFormat == null
+                        && row.Collapsed == null
+                        && row.OutlineLevel == null
+                        && !row.Elements().Any();
+
+                    if (!invalidRow)
+                    {
+                        if (noRows)
+                        {
+                            sheetData.AppendChild(row);
+                            noRows = false;
+                        }
+                        else
+                        {
+                            if (existingSheetDataRows.Any(r => r.Key > row.RowIndex.Value))
+                            {
+                                var minRow = existingSheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
+                                var rowBeforeInsert = existingSheetDataRows[minRow];
+                                sheetData.InsertBefore(row, rowBeforeInsert);
+                            }
+                            else
+                                sheetData.AppendChild(row);
+                        }
+                    }
+                }
+            }
+
+            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Keys)
+            {
+                if (existingSheetDataRows.TryGetValue(r, out Row row))
+                {
+                    sheetData.RemoveChild(row);
+                    existingSheetDataRows.Remove(r);
+                }
+            }
+
+            #endregion SheetData
+
+            #region SheetProtection
+
+            if (xlWorksheet.Protection.IsProtected)
+            {
+                if (!worksheetPart.Worksheet.Elements<SheetProtection>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.SheetProtection);
+                    worksheetPart.Worksheet.InsertAfter(new SheetProtection(), previousElement);
+                }
+
+                var sheetProtection = worksheetPart.Worksheet.Elements<SheetProtection>().First();
+                cm.SetElement(XLWorksheetContents.SheetProtection, sheetProtection);
+
+                var protection = xlWorksheet.Protection;
+                sheetProtection.Sheet = OpenXmlHelper.GetBooleanValue(protection.IsProtected, false);
+
+                sheetProtection.Password = null;
+                sheetProtection.AlgorithmName = null;
+                sheetProtection.HashValue = null;
+                sheetProtection.SpinCount = null;
+                sheetProtection.SaltValue = null;
+
+                if (protection.Algorithm == XLProtectionAlgorithm.Algorithm.SimpleHash)
+                {
+                    if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                        sheetProtection.Password = protection.PasswordHash;
+                }
+                else
+                {
+                    sheetProtection.AlgorithmName = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.ToDescription(protection.Algorithm);
+                    sheetProtection.HashValue = protection.PasswordHash;
+                    sheetProtection.SpinCount = protection.SpinCount;
+                    sheetProtection.SaltValue = protection.Base64EncodedSalt;
+                }
+
+                // default value of "1"
+                sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatCells), true);
+                sheetProtection.FormatColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatColumns), true);
+                sheetProtection.FormatRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatRows), true);
+                sheetProtection.InsertColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertColumns), true);
+                sheetProtection.InsertRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertRows), true);
+                sheetProtection.InsertHyperlinks = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertHyperlinks), true);
+                sheetProtection.DeleteColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.DeleteColumns), true);
+                sheetProtection.DeleteRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.DeleteRows), true);
+                sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.Sort), true);
+                sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.AutoFilter), true);
+                sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.PivotTables), true);
+                sheetProtection.Scenarios = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.EditScenarios), true);
+
+                // default value of "0"
+                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.EditObjects), false);
+                sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.SelectLockedCells), false);
+                sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.SelectUnlockedCells), false);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
+                cm.SetElement(XLWorksheetContents.SheetProtection, null);
+            }
+
+            #endregion SheetProtection
+
+            #region AutoFilter
+
+            worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
+            if (xlWorksheet.AutoFilter.IsEnabled)
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.AutoFilter);
+                worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
+
+                var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
+                cm.SetElement(XLWorksheetContents.AutoFilter, autoFilter);
+
+                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
+            }
+            else
+            {
+                cm.SetElement(XLWorksheetContents.AutoFilter, null);
+            }
+
+            #endregion AutoFilter
+
+            #region MergeCells
+
+            if ((xlWorksheet).Internals.MergedRanges.Any())
+            {
+                if (!worksheetPart.Worksheet.Elements<MergeCells>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.MergeCells);
+                    worksheetPart.Worksheet.InsertAfter(new MergeCells(), previousElement);
+                }
+
+                var mergeCells = worksheetPart.Worksheet.Elements<MergeCells>().First();
+                cm.SetElement(XLWorksheetContents.MergeCells, mergeCells);
+                mergeCells.RemoveAllChildren<MergeCell>();
+
+                foreach (var mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
+                    m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
+                        merged => new MergeCell { Reference = merged }))
+                    mergeCells.AppendChild(mergeCell);
+
+                mergeCells.Count = (UInt32)mergeCells.Count();
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
+                cm.SetElement(XLWorksheetContents.MergeCells, null);
+            }
+
+            #endregion MergeCells
+
+            #region Conditional Formatting
+
+            if (!xlWorksheet.ConditionalFormats.Any())
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
+                cm.SetElement(XLWorksheetContents.ConditionalFormatting, null);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.ConditionalFormatting);
+
+                var conditionalFormats = xlWorksheet.ConditionalFormats.ToList(); // Required for IndexOf method
+
+                foreach (var cfGroup in conditionalFormats
+                    .GroupBy(
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
+                        c => c,
+                        (key, g) => new { RangeId = key, CfList = g.ToList() }
+                    )
+                    )
+                {
+                    var conditionalFormatting = new ConditionalFormatting
+                    {
+                        SequenceOfReferences =
+                            new ListValue<StringValue> { InnerText = cfGroup.RangeId }
+                    };
+                    foreach (var cf in cfGroup.CfList)
+                    {
+                        var priority = conditionalFormats.IndexOf(cf) + 1;
+                        conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                    }
+                    worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
+                    previousElement = conditionalFormatting;
+                    cm.SetElement(XLWorksheetContents.ConditionalFormatting, conditionalFormatting);
+                }
+            }
+
+            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
+            if (exlst != null && exlst.Any())
+            {
+                if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
+                    worksheetPart.Worksheet.InsertAfter<WorksheetExtensionList>(new WorksheetExtensionList(), previousElement);
+                }
+
+                WorksheetExtensionList worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
+
+                var conditionalFormattings = worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings>().SingleOrDefault();
+                if (conditionalFormattings == null || !conditionalFormattings.Any())
+                {
+                    WorksheetExtension worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
+                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtensionList.Append(worksheetExtension1);
+
+                    conditionalFormattings = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings();
+                    worksheetExtension1.Append(conditionalFormattings);
+                }
+
+                foreach (var cfGroup in exlst
+                    .GroupBy(
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
+                        c => c,
+                        (key, g) => new { RangeId = key, CfList = g.ToList<IXLConditionalFormat>() }
+                        )
+                    )
+                {
+                    foreach (var xlConditionalFormat in cfGroup.CfList.Cast<XLConditionalFormat>())
+                    {
+                        var conditionalFormattingRule = conditionalFormattings.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                                .SingleOrDefault(r => r.Id == xlConditionalFormat.Id.WrapInBraces());
+                        if (conditionalFormattingRule != null)
+                        {
+                            var conditionalFormat = conditionalFormattingRule.Ancestors<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting>().SingleOrDefault();
+                            conditionalFormattings.RemoveChild<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting>(conditionalFormat);
+                        }
+
+                        var conditionalFormatting = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting();
+                        conditionalFormatting.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                        conditionalFormatting.Append(XLCFConvertersExtension.Convert(xlConditionalFormat, context));
+                        var referenceSequence = new DocumentFormat.OpenXml.Office.Excel.ReferenceSequence { Text = cfGroup.RangeId };
+                        conditionalFormatting.Append(referenceSequence);
+
+                        conditionalFormattings.Append(conditionalFormatting);
+                    }
+                }
+            }
+
+            #endregion Conditional Formatting
+
+            #region Sparklines
+
+            const string sparklineGroupsExtensionUri = "{05C60535-1F16-4fd2-B633-F4F36F0B64E0}";
+
+            if (!xlWorksheet.SparklineGroups.Any())
+            {
+                var worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().FirstOrDefault();
+                var worksheetExtension = worksheetExtensionList?.Elements<WorksheetExtension>()
+                    .FirstOrDefault(ext => string.Equals(ext.Uri, sparklineGroupsExtensionUri, StringComparison.InvariantCultureIgnoreCase));
+
+                worksheetExtension?.RemoveAllChildren<X14.SparklineGroups>();
+
+                if (worksheetExtensionList != null)
+                {
+                    if (worksheetExtension != null && !worksheetExtension.HasChildren)
+                    {
+                        worksheetExtensionList.RemoveChild(worksheetExtension);
+                    }
+
+                    if (!worksheetExtensionList.HasChildren)
+                    {
+                        worksheetPart.Worksheet.RemoveChild(worksheetExtensionList);
+                        cm.SetElement(XLWorksheetContents.WorksheetExtensionList, null);
+                    }
+                }
+            }
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
+                    worksheetPart.Worksheet.InsertAfter(new WorksheetExtensionList(), previousElement);
+                }
+
+                var worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
+
+                var sparklineGroups = worksheetExtensionList.Descendants<X14.SparklineGroups>().SingleOrDefault();
+
+                if (sparklineGroups == null || !sparklineGroups.Any())
+                {
+                    var worksheetExtension1 = new WorksheetExtension() { Uri = sparklineGroupsExtensionUri };
+                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtensionList.Append(worksheetExtension1);
+
+                    sparklineGroups = new X14.SparklineGroups();
+                    sparklineGroups.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    worksheetExtension1.Append(sparklineGroups);
+                }
+                else
+                {
+                    sparklineGroups.RemoveAllChildren();
+                }
+
+                foreach (var xlSparklineGroup in xlWorksheet.SparklineGroups)
+                {
+                    // Do not create an empty Sparkline group
+                    if (!xlSparklineGroup.Any())
+                        continue;
+
+                    var sparklineGroup = new X14.SparklineGroup();
+                    sparklineGroup.SetAttribute(new OpenXmlAttribute("xr2", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2", "{A98FF5F8-AE60-43B5-8001-AD89004F45D3}"));
+
+                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor().FromClosedXMLColor<X14.FirstMarkerColor>(xlSparklineGroup.Style.FirstMarkerColor);
+                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor().FromClosedXMLColor<X14.LastMarkerColor>(xlSparklineGroup.Style.LastMarkerColor);
+                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor().FromClosedXMLColor<X14.HighMarkerColor>(xlSparklineGroup.Style.HighMarkerColor);
+                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor().FromClosedXMLColor<X14.LowMarkerColor>(xlSparklineGroup.Style.LowMarkerColor);
+                    sparklineGroup.SeriesColor = new X14.SeriesColor().FromClosedXMLColor<X14.SeriesColor>(xlSparklineGroup.Style.SeriesColor);
+                    sparklineGroup.NegativeColor = new X14.NegativeColor().FromClosedXMLColor<X14.NegativeColor>(xlSparklineGroup.Style.NegativeColor);
+                    sparklineGroup.MarkersColor = new X14.MarkersColor().FromClosedXMLColor<X14.MarkersColor>(xlSparklineGroup.Style.MarkersColor);
+
+                    sparklineGroup.High = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint);
+                    sparklineGroup.Low = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint);
+                    sparklineGroup.First = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint);
+                    sparklineGroup.Last = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint);
+                    sparklineGroup.Negative = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints);
+                    sparklineGroup.Markers = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.Markers);
+
+                    sparklineGroup.DisplayHidden = xlSparklineGroup.DisplayHidden;
+                    sparklineGroup.LineWeight = xlSparklineGroup.LineWeight;
+                    sparklineGroup.Type = xlSparklineGroup.Type.ToOpenXml();
+                    sparklineGroup.DisplayEmptyCellsAs = xlSparklineGroup.DisplayEmptyCellsAs.ToOpenXml();
+
+                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = xlSparklineGroup.HorizontalAxis.Color.Color.ToHex() };
+                    sparklineGroup.DisplayXAxis = xlSparklineGroup.HorizontalAxis.IsVisible;
+                    sparklineGroup.RightToLeft = xlSparklineGroup.HorizontalAxis.RightToLeft;
+                    sparklineGroup.DateAxis = xlSparklineGroup.HorizontalAxis.DateAxis;
+                    if (xlSparklineGroup.HorizontalAxis.DateAxis)
+                        sparklineGroup.Formula = new OfficeExcel.Formula(
+                            xlSparklineGroup.DateRange.RangeAddress.ToString(XLReferenceStyle.A1, true));
+
+                    sparklineGroup.MinAxisType = xlSparklineGroup.VerticalAxis.MinAxisType.ToOpenXml();
+                    if (xlSparklineGroup.VerticalAxis.MinAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMin = xlSparklineGroup.VerticalAxis.ManualMin;
+
+                    sparklineGroup.MaxAxisType = xlSparklineGroup.VerticalAxis.MaxAxisType.ToOpenXml();
+                    if (xlSparklineGroup.VerticalAxis.MaxAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMax = xlSparklineGroup.VerticalAxis.ManualMax;
+
+                    var sparklines = new X14.Sparklines(xlSparklineGroup
+                        .Select(xlSparkline => new X14.Sparkline
+                        {
+                            Formula = new OfficeExcel.Formula(xlSparkline.SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true)),
+                            ReferenceSequence =
+                                    new OfficeExcel.ReferenceSequence(xlSparkline.Location.Address.ToString())
+                        })
+                        );
+
+                    sparklineGroup.Append(sparklines);
+                    sparklineGroups.Append(sparklineGroup);
+                }
+
+                // if all Sparkline groups had no Sparklines, remove the entire SparklineGroup element
+                if (sparklineGroups.ChildElements.Count == 0)
+                {
+                    sparklineGroups.Remove();
+                }
+            }
+
+            #endregion Sparklines
+
+            #region DataValidations
+
+            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
+                cm.SetElement(XLWorksheetContents.DataValidations, null);
+            }
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<DataValidations>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.DataValidations);
+                    worksheetPart.Worksheet.InsertAfter(new DataValidations(), previousElement);
+                }
+
+                var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
+                cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
+                dataValidations.RemoveAllChildren<DataValidation>();
+
+                if (options.ConsolidateDataValidationRanges)
+                {
+                    xlWorksheet.DataValidations.Consolidate();
+                }
+
+                foreach (var dv in xlWorksheet.DataValidations)
+                {
+                    var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
+
+                    if (sequence.Length > 0)
+                        sequence = sequence.Substring(0, sequence.Length - 1);
+
+                    var dataValidation = new DataValidation
+                    {
+                        AllowBlank = dv.IgnoreBlanks,
+                        Formula1 = new Formula1(dv.MinValue),
+                        Formula2 = new Formula2(dv.MaxValue),
+                        Type = dv.AllowedValues.ToOpenXml(),
+                        ShowErrorMessage = dv.ShowErrorMessage,
+                        Prompt = dv.InputMessage,
+                        PromptTitle = dv.InputTitle,
+                        ErrorTitle = dv.ErrorTitle,
+                        Error = dv.ErrorMessage,
+                        ShowDropDown = !dv.InCellDropdown,
+                        ShowInputMessage = dv.ShowInputMessage,
+                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                        Operator = dv.Operator.ToOpenXml(),
+                        SequenceOfReferences =
+                            new ListValue<StringValue> { InnerText = sequence }
+                    };
+
+                    dataValidations.AppendChild(dataValidation);
+                }
+                dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
+            }
+
+            #endregion DataValidations
+
+            #region Hyperlinks
+
+            var relToRemove = worksheetPart.HyperlinkRelationships.ToList();
+            relToRemove.ForEach(worksheetPart.DeleteReferenceRelationship);
+            if (!xlWorksheet.Hyperlinks.Any())
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
+                cm.SetElement(XLWorksheetContents.Hyperlinks, null);
+            }
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<Hyperlinks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.Hyperlinks);
+                    worksheetPart.Worksheet.InsertAfter(new Hyperlinks(), previousElement);
+                }
+
+                var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().First();
+                cm.SetElement(XLWorksheetContents.Hyperlinks, hyperlinks);
+                hyperlinks.RemoveAllChildren<Hyperlink>();
+                foreach (var hl in xlWorksheet.Hyperlinks)
+                {
+                    Hyperlink hyperlink;
+                    if (hl.IsExternal)
+                    {
+                        var rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                        hyperlink = new Hyperlink { Reference = hl.Cell.Address.ToString(), Id = rId };
+                        worksheetPart.AddHyperlinkRelationship(hl.ExternalAddress, true, rId);
+                    }
+                    else
+                    {
+                        hyperlink = new Hyperlink
+                        {
+                            Reference = hl.Cell.Address.ToString(),
+                            Location = hl.InternalAddress,
+                            Display = hl.Cell.GetFormattedString()
+                        };
+                    }
+                    if (!String.IsNullOrWhiteSpace(hl.Tooltip))
+                        hyperlink.Tooltip = hl.Tooltip;
+                    hyperlinks.AppendChild(hyperlink);
+                }
+            }
+
+            #endregion Hyperlinks
+
+            #region PrintOptions
+
+            if (!worksheetPart.Worksheet.Elements<PrintOptions>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PrintOptions);
+                worksheetPart.Worksheet.InsertAfter(new PrintOptions(), previousElement);
+            }
+
+            var printOptions = worksheetPart.Worksheet.Elements<PrintOptions>().First();
+            cm.SetElement(XLWorksheetContents.PrintOptions, printOptions);
+
+            printOptions.HorizontalCentered = xlWorksheet.PageSetup.CenterHorizontally;
+            printOptions.VerticalCentered = xlWorksheet.PageSetup.CenterVertically;
+            printOptions.Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings;
+            printOptions.GridLines = xlWorksheet.PageSetup.ShowGridlines;
+
+            #endregion PrintOptions
+
+            #region PageMargins
+
+            if (!worksheetPart.Worksheet.Elements<PageMargins>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PageMargins);
+                worksheetPart.Worksheet.InsertAfter(new PageMargins(), previousElement);
+            }
+
+            var pageMargins = worksheetPart.Worksheet.Elements<PageMargins>().First();
+            cm.SetElement(XLWorksheetContents.PageMargins, pageMargins);
+            pageMargins.Left = xlWorksheet.PageSetup.Margins.Left;
+            pageMargins.Right = xlWorksheet.PageSetup.Margins.Right;
+            pageMargins.Top = xlWorksheet.PageSetup.Margins.Top;
+            pageMargins.Bottom = xlWorksheet.PageSetup.Margins.Bottom;
+            pageMargins.Header = xlWorksheet.PageSetup.Margins.Header;
+            pageMargins.Footer = xlWorksheet.PageSetup.Margins.Footer;
+
+            #endregion PageMargins
+
+            #region PageSetup
+
+            if (!worksheetPart.Worksheet.Elements<PageSetup>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PageSetup);
+                worksheetPart.Worksheet.InsertAfter(new PageSetup(), previousElement);
+            }
+
+            var pageSetup = worksheetPart.Worksheet.Elements<PageSetup>().First();
+            cm.SetElement(XLWorksheetContents.PageSetup, pageSetup);
+
+            pageSetup.Orientation = xlWorksheet.PageSetup.PageOrientation.ToOpenXml();
+            pageSetup.PaperSize = (UInt32)xlWorksheet.PageSetup.PaperSize;
+            pageSetup.BlackAndWhite = xlWorksheet.PageSetup.BlackAndWhite;
+            pageSetup.Draft = xlWorksheet.PageSetup.DraftQuality;
+            pageSetup.PageOrder = xlWorksheet.PageSetup.PageOrder.ToOpenXml();
+            pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
+            pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
+
+            if (xlWorksheet.PageSetup.FirstPageNumber.HasValue)
+            {
+                pageSetup.FirstPageNumber = UInt32Value.FromUInt32(xlWorksheet.PageSetup.FirstPageNumber.Value);
+                pageSetup.UseFirstPageNumber = true;
+            }
+            else
+            {
+                pageSetup.FirstPageNumber = null;
+                pageSetup.UseFirstPageNumber = null;
+            }
+
+            if (xlWorksheet.PageSetup.HorizontalDpi > 0)
+                pageSetup.HorizontalDpi = (UInt32)xlWorksheet.PageSetup.HorizontalDpi;
+            else
+                pageSetup.HorizontalDpi = null;
+
+            if (xlWorksheet.PageSetup.VerticalDpi > 0)
+                pageSetup.VerticalDpi = (UInt32)xlWorksheet.PageSetup.VerticalDpi;
+            else
+                pageSetup.VerticalDpi = null;
+
+            if (xlWorksheet.PageSetup.Scale > 0)
+            {
+                pageSetup.Scale = (UInt32)xlWorksheet.PageSetup.Scale;
+                pageSetup.FitToWidth = null;
+                pageSetup.FitToHeight = null;
+            }
+            else
+            {
+                pageSetup.Scale = null;
+
+                if (xlWorksheet.PageSetup.PagesWide >= 0 && xlWorksheet.PageSetup.PagesWide != 1)
+                    pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
+
+                if (xlWorksheet.PageSetup.PagesTall >= 0 && xlWorksheet.PageSetup.PagesTall != 1)
+                    pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
+            }
+
+            // For some reason some Excel files already contains pageSetup.Copies = 0
+            // The validation fails for this
+            // Let's remove the attribute of that's the case.
+            if ((pageSetup?.Copies ?? 0) <= 0)
+                pageSetup.Copies = null;
+
+            #endregion PageSetup
+
+            #region HeaderFooter
+
+            var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().FirstOrDefault();
+            if (headerFooter == null)
+                headerFooter = new HeaderFooter();
+            else
+                worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
+
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.HeaderFooter);
+                worksheetPart.Worksheet.InsertAfter(headerFooter, previousElement);
+                cm.SetElement(XLWorksheetContents.HeaderFooter, headerFooter);
+            }
+            if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
+                || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
+            {
+                headerFooter.RemoveAllChildren();
+
+                headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
+                headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
+                headerFooter.DifferentFirst = xlWorksheet.PageSetup.DifferentFirstPageOnHF;
+                headerFooter.DifferentOddEven = xlWorksheet.PageSetup.DifferentOddEvenPagesOnHF;
+
+                var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddHeader);
+                var oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddFooter);
+
+                var evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenHeader);
+                var evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenFooter);
+
+                var firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstHeader);
+                var firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstFooter);
+            }
+
+            #endregion HeaderFooter
+
+            #region RowBreaks
+
+            var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
+            if (rowBreakCount > 0)
+            {
+                if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.RowBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
+                }
+
+                var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
+
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var rowBreaksToDelete = existingBreaks
+                    .Where(rb => !rb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in rowBreaksToDelete)
+                {
+                    rowBreaks.RemoveChild(rb);
+                }
+
+                var rowBreaksToAdd = xlWorksheet.PageSetup.RowBreaks
+                    .Where(xlRb => !existingBreaks.Any(rb => rb.Id.HasValue && rb.Id.Value == xlRb));
+
+                rowBreaks.Count = (UInt32)rowBreakCount;
+                rowBreaks.ManualBreakCount = (UInt32)rowBreakCount;
+                var lastRowNum = (UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber;
+                foreach (var break1 in rowBreaksToAdd.Select(rb => new Break
+                {
+                    Id = (UInt32)rb,
+                    Max = lastRowNum,
+                    ManualPageBreak = true
+                }))
+                    rowBreaks.AppendChild(break1);
+                cm.SetElement(XLWorksheetContents.RowBreaks, rowBreaks);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<RowBreaks>();
+                cm.SetElement(XLWorksheetContents.RowBreaks, null);
+            }
+
+            #endregion RowBreaks
+
+            #region ColumnBreaks
+
+            var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
+            if (columnBreakCount > 0)
+            {
+                if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.ColumnBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
+                }
+
+                var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
+
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var columnBreaksToDelete = existingBreaks
+                    .Where(cb => !cb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in columnBreaksToDelete)
+                {
+                    columnBreaks.RemoveChild(rb);
+                }
+
+                var columnBreaksToAdd = xlWorksheet.PageSetup.ColumnBreaks
+                    .Where(xlCb => !existingBreaks.Any(cb => cb.Id.HasValue && cb.Id.Value == xlCb));
+
+                columnBreaks.Count = (UInt32)columnBreakCount;
+                columnBreaks.ManualBreakCount = (UInt32)columnBreakCount;
+                var maxColumnNumber = (UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
+                foreach (var break1 in columnBreaksToAdd.Select(cb => new Break
+                {
+                    Id = (UInt32)cb,
+                    Max = maxColumnNumber,
+                    ManualPageBreak = true
+                }))
+                    columnBreaks.AppendChild(break1);
+                cm.SetElement(XLWorksheetContents.ColumnBreaks, columnBreaks);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ColumnBreaks>();
+                cm.SetElement(XLWorksheetContents.ColumnBreaks, null);
+            }
+
+            #endregion ColumnBreaks
+
+            #region Tables
+
+            GenerateTables(xlWorksheet, worksheetPart, context, cm);
+
+            #endregion Tables
+
+            #region Drawings
+
+            if (worksheetPart.DrawingsPart != null)
+            {
+                var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
+                foreach (var removedPicture in xlPictures.Deleted)
+                {
+                    // Clear existing anchor of the deleted picture
+                    var existingAnchor = GetAnchorFromImageId(worksheetPart, removedPicture);
+                    if (existingAnchor != null)
+                        worksheetPart.DrawingsPart.WorksheetDrawing.RemoveChild(existingAnchor);
+
+                    worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                }
+                xlPictures.Deleted.Clear();
+            }
+
+            foreach (var pic in xlWorksheet.Pictures)
+            {
+                AddPictureAnchor(worksheetPart, pic, context);
+            }
+
+            if (xlWorksheet.Pictures.Any())
+                RebaseNonVisualDrawingPropertiesIds(worksheetPart);
+
+            var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
+            if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
+            {
+                var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
+                worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
+                cm.SetElement(XLWorksheetContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
+            }
+
+            // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null
+                && !worksheetPart.DrawingsPart.Parts.Any())
+            {
+                var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
+                worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            }
+
+            #endregion Drawings
+
+            #region LegacyDrawing
+
+            if (xlWorksheet.LegacyDrawingIsNew)
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+
+                if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.LegacyDrawing);
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                        previousElement);
+
+                    cm.SetElement(XLWorksheetContents.LegacyDrawing, worksheetPart.Worksheet.Elements<LegacyDrawing>().First());
+                }
+            }
+
+            #endregion LegacyDrawing
+
+            #region LegacyDrawingHeaderFooter
+
+            //LegacyDrawingHeaderFooter legacyHeaderFooter = worksheetPart.Worksheet.Elements<LegacyDrawingHeaderFooter>().FirstOrDefault();
+            //if (legacyHeaderFooter != null)
+            //{
+            //    worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawingHeaderFooter>();
+            //    {
+            //            var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawingHeaderFooter);
+            //            worksheetPart.Worksheet.InsertAfter(new LegacyDrawingHeaderFooter { Id = xlWorksheet.LegacyDrawingId },
+            //                                                previousElement);
+            //    }
+            //}
+
+            #endregion LegacyDrawingHeaderFooter
+        }
+
+        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell, SaveContext context)
+        {
+            if (field != null)
+            {
+                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                {
+                    var cellValue = new CellValue();
+                    cellValue.Text = xlCell.SharedStringId.ToInvariantString();
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = cellValue;
+                }
+                else if (field.TotalsRowFunction == XLTotalsRowFunction.None)
+                {
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = null;
+                }
+                return;
+            }
+
+            if (xlCell.HasFormula)
+            {
+                openXmlCell.InlineString = null;
+                var cellValue = new CellValue();
+                try
+                {
+                    var v = xlCell.Value;
+                    cellValue.Text = v.ObjectToInvariantString();
+                    switch (v)
+                    {
+                        case String s:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                            break;
+
+                        case DateTime dt:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Date);
+                            break;
+
+                        case Boolean b:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Boolean);
+                            break;
+
+                        default:
+                            if (v.IsNumber())
+                                openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Number);
+                            else
+                                openXmlCell.DataType = null;
+                            break;
+                    }
+                }
+                catch
+                {
+                    cellValue = null;
+                }
+
+                openXmlCell.CellValue = cellValue;
+                return;
+            }
+            else
+                openXmlCell.CellValue = null;
+
+            var dataType = xlCell.DataType;
+
+            if (dataType != XLDataType.Text)
+                openXmlCell.InlineString = null;
+
+            if (dataType == XLDataType.Text)
+            {
+                if (!xlCell.StyleValue.IncludeQuotePrefix && xlCell.InnerText.Length == 0)
+                    openXmlCell.CellValue = null;
+                else
+                {
+                    if (xlCell.ShareString)
+                    {
+                        var cellValue = new CellValue();
+                        cellValue.Text = xlCell.SharedStringId.ToInvariantString();
+                        openXmlCell.CellValue = cellValue;
+
+                        openXmlCell.InlineString = null;
+                    }
+                    else
+                    {
+                        var inlineString = new InlineString();
+                        if (xlCell.HasRichText)
+                        {
+                            PopulatedRichTextElements(inlineString, xlCell, context);
+                        }
+                        else
+                        {
+                            var text = xlCell.GetString();
+                            var t = new Text(text);
+                            if (text.PreserveSpaces())
+                                t.Space = SpaceProcessingModeValues.Preserve;
+
+                            inlineString.Text = t;
+                        }
+
+                        openXmlCell.InlineString = inlineString;
+                    }
+                }
+            }
+            else if (dataType == XLDataType.TimeSpan)
+            {
+                var timeSpan = xlCell.GetTimeSpan();
+                var cellValue = new CellValue();
+                cellValue.Text = timeSpan.TotalDays.ToInvariantString();
+                openXmlCell.CellValue = cellValue;
+            }
+            else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
+            {
+                if (!String.IsNullOrWhiteSpace(xlCell.InnerText))
+                {
+                    var cellValue = new CellValue();
+                    var d = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);
+
+                    if (xlCell.Worksheet.Workbook.Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
+                    {
+                        // Internally ClosedXML stores cells as standard 1900-based style
+                        // so if a workbook is in 1904-format, we do that adjustment here and when loading.
+                        d -= 1462;
+                    }
+
+                    cellValue.Text = d.ToInvariantString();
+                    openXmlCell.CellValue = cellValue;
+                }
+            }
+            else
+            {
+                var cellValue = new CellValue();
+                cellValue.Text = xlCell.InnerText;
+                openXmlCell.CellValue = cellValue;
+            }
+        }
+
+        private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
+        {
+            var filterRange = xlAutoFilter.Range;
+            autoFilter.Reference = filterRange.RangeAddress.ToString();
+
+            foreach (var kp in xlAutoFilter.Filters)
+            {
+                var filterColumn = new FilterColumn { ColumnId = (UInt32)kp.Key - 1 };
+                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
+
+                switch (xlFilterColumn.FilterType)
+                {
+                    case XLFilterType.Custom:
+                        var customFilters = new CustomFilters();
+                        foreach (var filter in kp.Value)
+                        {
+                            var customFilter = new CustomFilter { Val = filter.Value.ObjectToInvariantString() };
+
+                            if (filter.Operator != XLFilterOperator.Equal)
+                                customFilter.Operator = filter.Operator.ToOpenXml();
+
+                            if (filter.Connector == XLConnector.And)
+                                customFilters.And = true;
+
+                            customFilters.Append(customFilter);
+                        }
+                        filterColumn.Append(customFilters);
+                        break;
+
+                    case XLFilterType.TopBottom:
+
+                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
+                        if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
+                            top101.Percent = true;
+                        if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
+                            top101.Top = false;
+
+                        filterColumn.Append(top101);
+                        break;
+
+                    case XLFilterType.Dynamic:
+
+                        var dynamicFilter = new DynamicFilter
+                        { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                        filterColumn.Append(dynamicFilter);
+                        break;
+
+                    case XLFilterType.DateTimeGrouping:
+                        var dateTimeGroupFilters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            if (filter.Value is DateTime)
+                            {
+                                var d = (DateTime)filter.Value;
+                                var dgi = new DateGroupItem
+                                {
+                                    Year = (UInt16)d.Year,
+                                    DateTimeGrouping = filter.DateTimeGrouping.ToOpenXml()
+                                };
+
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Month) dgi.Month = (UInt16)d.Month;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Day) dgi.Day = (UInt16)d.Day;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Hour) dgi.Hour = (UInt16)d.Hour;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Minute) dgi.Minute = (UInt16)d.Minute;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Second) dgi.Second = (UInt16)d.Second;
+
+                                dateTimeGroupFilters.Append(dgi);
+                            }
+                        }
+                        filterColumn.Append(dateTimeGroupFilters);
+                        break;
+
+                    default:
+                        var filters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            filters.Append(new Filter { Val = filter.Value.ObjectToInvariantString() });
+                        }
+
+                        filterColumn.Append(filters);
+                        break;
+                }
+                autoFilter.Append(filterColumn);
+            }
+
+            if (xlAutoFilter.Sorted)
+            {
+                string reference = null;
+
+                if (filterRange.FirstCell().Address.RowNumber < filterRange.LastCell().Address.RowNumber)
+                    reference = filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.ToString();
+                else
+                    reference = filterRange.RangeAddress.ToString();
+
+                var sortState = new SortState
+                {
+                    Reference = reference
+                };
+
+                var sortCondition = new SortCondition
+                {
+                    Reference =
+                        filterRange.Range(1, xlAutoFilter.SortColumn, filterRange.RowCount(),
+                            xlAutoFilter.SortColumn).RangeAddress.ToString()
+                };
+                if (xlAutoFilter.SortOrder == XLSortOrder.Descending)
+                    sortCondition.Descending = true;
+
+                sortState.Append(sortCondition);
+                autoFilter.Append(sortState);
+            }
+        }
+
+        private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
+        {
+            UInt32 lastMin = 1;
+            var count = sheetColumns.Count;
+            var arr = sheetColumns.OrderBy(kp => kp.Key).ToArray();
+            // sheetColumns[kp.Key + 1]
+            //Int32 i = 0;
+            //foreach (KeyValuePair<uint, Column> kp in arr
+            //    //.Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, )))
+            //    )
+            for (var i = 0; i < count; i++)
+            {
+                var kp = arr[i];
+                if (i + 1 != count && ColumnsAreEqual(kp.Value, arr[i + 1].Value)) continue;
+
+                var newColumn = (Column)kp.Value.CloneNode(true);
+                newColumn.Min = lastMin;
+                var newColumnMax = newColumn.Max.Value;
+                var columnsToRemove =
+                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
+                        Select(co => co).ToList();
+                columnsToRemove.ForEach(c => columns.RemoveChild(c));
+
+                columns.AppendChild(newColumn);
+                lastMin = kp.Key + 1;
+                //i++;
+            }
+        }
+
+        private static double GetColumnWidth(double columnWidth)
+        {
+            return Math.Min(255.0, Math.Max(0.0, columnWidth + ColumnWidthOffset));
+        }
+
+        private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
+        {
+            if (!sheetColumnsByMin.TryGetValue(column.Min.Value, out Column newColumn))
+            {
+                newColumn = (Column)column.CloneNode(true);
+                columns.AppendChild(newColumn);
+                sheetColumnsByMin.Add(column.Min.Value, newColumn);
+            }
+            else
+            {
+                var existingColumn = sheetColumnsByMin[column.Min.Value];
+                newColumn = (Column)existingColumn.CloneNode(true);
+                newColumn.Min = column.Min;
+                newColumn.Max = column.Max;
+                newColumn.Style = column.Style;
+                newColumn.Width = column.Width.SaveRound();
+                newColumn.CustomWidth = column.CustomWidth;
+
+                if (column.Hidden != null)
+                    newColumn.Hidden = true;
+                else
+                    newColumn.Hidden = null;
+
+                if (column.Collapsed != null)
+                    newColumn.Collapsed = true;
+                else
+                    newColumn.Collapsed = null;
+
+                if (column.OutlineLevel != null && column.OutlineLevel > 0)
+                    newColumn.OutlineLevel = (byte)column.OutlineLevel;
+                else
+                    newColumn.OutlineLevel = null;
+
+                sheetColumnsByMin.Remove(column.Min.Value);
+                if (existingColumn.Min + 1 > existingColumn.Max)
+                {
+                    //existingColumn.Min = existingColumn.Min + 1;
+                    //columns.InsertBefore(existingColumn, newColumn);
+                    //existingColumn.Remove();
+                    columns.RemoveChild(existingColumn);
+                    columns.AppendChild(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
+                }
+                else
+                {
+                    //columns.InsertBefore(existingColumn, newColumn);
+                    columns.AppendChild(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
+                    existingColumn.Min = existingColumn.Min + 1;
+                    sheetColumnsByMin.Add(existingColumn.Min.Value, existingColumn);
+                }
+            }
+        }
+
+        private static bool ColumnsAreEqual(Column left, Column right)
+        {
+            return
+                ((left.Style == null && right.Style == null)
+                 || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
+                && ((left.Width == null && right.Width == null)
+                    || (left.Width != null && right.Width != null && (Math.Abs(left.Width.Value - right.Width.Value) < XLHelper.Epsilon)))
+                && ((left.Hidden == null && right.Hidden == null)
+                    || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
+                && ((left.Collapsed == null && right.Collapsed == null)
+                    ||
+                    (left.Collapsed != null && right.Collapsed != null && left.Collapsed.Value == right.Collapsed.Value))
+                && ((left.OutlineLevel == null && right.OutlineLevel == null)
+                    ||
+                    (left.OutlineLevel != null && right.OutlineLevel != null &&
+                     left.OutlineLevel.Value == right.OutlineLevel.Value));
+        }
+
+        #endregion GenerateWorksheetPartContent
     }
 }
