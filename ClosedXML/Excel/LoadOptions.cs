@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using ClosedXML.Graphics;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML.Excel
 {
@@ -36,5 +37,15 @@ namespace ClosedXML.Excel
             get => _dpi;
             set => _dpi = value.X > 0 && value.Y > 0 ? value : throw new ArgumentException("DPI must be positive");
         }
+
+        /// <summary>
+        /// Represents the settings when opening a document.
+        /// </summary>
+        public OpenSettings OpenSettings { get; set; }
+
+        /// <summary>
+        /// In ReadWrite mode. False for Read only mode.
+        /// </summary>
+        public bool IsEditable { get; set; }
     }
 }

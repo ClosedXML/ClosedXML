@@ -28,25 +28,29 @@ namespace ClosedXML.Excel
     {
         private readonly Dictionary<String, Color> _colorList = new Dictionary<string, Color>();
 
-        private void Load(String file)
+        private void Load(String file, LoadOptions loadOptions)
         {
-            LoadSheets(file);
+            LoadSheets(file, loadOptions);
         }
 
-        private void Load(Stream stream)
+        private void Load(Stream stream, LoadOptions loadOptions)
         {
-            LoadSheets(stream);
+            LoadSheets(stream, loadOptions);
         }
 
-        private void LoadSheets(String fileName)
+        private void LoadSheets(String fileName, LoadOptions loadOptions)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
+            using (var dSpreadsheet = loadOptions.OpenSettings == null ?
+                SpreadsheetDocument.Open(fileName, loadOptions.IsEditable) :
+                SpreadsheetDocument.Open(fileName, loadOptions.IsEditable, loadOptions.OpenSettings))
                 LoadSpreadsheetDocument(dSpreadsheet);
         }
 
-        private void LoadSheets(Stream stream)
+        private void LoadSheets(Stream stream, LoadOptions loadOptions)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
+            using (var dSpreadsheet = loadOptions.OpenSettings == null ?
+                SpreadsheetDocument.Open(stream, loadOptions.IsEditable) :
+                SpreadsheetDocument.Open(stream, loadOptions.IsEditable, loadOptions.OpenSettings))
                 LoadSpreadsheetDocument(dSpreadsheet);
         }
 

@@ -684,7 +684,7 @@ namespace ClosedXML.Excel
             _loadSource = XLLoadSource.File;
             _originalFile = file;
             _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
-            Load(file);
+            Load(file, loadOptions);
 
             if (loadOptions.RecalculateAllFormulas)
                 this.RecalculateAllFormulas();
@@ -704,7 +704,7 @@ namespace ClosedXML.Excel
         {
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
-            Load(stream);
+            Load(stream, loadOptions);
 
             if (loadOptions.RecalculateAllFormulas)
                 this.RecalculateAllFormulas();
