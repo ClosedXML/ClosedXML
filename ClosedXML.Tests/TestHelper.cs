@@ -101,6 +101,23 @@ namespace ClosedXML.Tests
             }
         }
 
+        /// <summary>
+        /// Create a workbook and compare it with a saved resource.
+        /// </summary>
+        /// <param name="workbookGenerator">A function that gets an empty workbook and fills it with data.</param>
+        /// <param name="referenceResource">Reference workbook saved in resources</param>
+        /// <param name="evaluateFormulae">Should formulas of created workbook be evaluated and values saved?</param>
+        /// <param name="validate">Should the created workbook be validated during by OpenXmlSdk validator?</param>
+        public static void CreateAndCompare(Action<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
+        {
+            CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook();
+                workbookGenerator(wb);
+                return wb;
+            }, referenceResource, evaluateFormulae, validate);
+        }
+
         public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
@@ -152,6 +169,17 @@ namespace ClosedXML.Tests
                 wb.SaveAs(ms, validate);
                 return wb;
             }, expectedOutputResourcePath, evaluateFormulae, validate);
+        }
+
+        /// <summary>
+        /// A testing method to load a workbook from resource and assert the state of the loaded workbook.
+        /// </summary>
+        public static void LoadAndAssert(Action<XLWorkbook> assertWorkbook, string loadResourcePath)
+        {
+            using var stream = GetStreamFromResource(GetResourcePath(loadResourcePath));
+            using var wb = new XLWorkbook(stream);
+
+            assertWorkbook(wb);
         }
 
         public static string GetResourcePath(string filePartName)

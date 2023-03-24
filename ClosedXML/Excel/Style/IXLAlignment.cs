@@ -68,7 +68,9 @@ namespace ClosedXML.Excel
         Boolean ShrinkToFit { get; set; }
 
         /// <summary>
-        /// Gets or sets the cell's text rotation in degrees.
+        /// Gets or sets the cell's text rotation in degrees. Allowed values are -90
+        /// (text is rotated clockwise) to 90 (text is rotated counterclockwise) and
+        /// 255 for vertical layout of a text.
         /// </summary>
         Int32 TextRotation { get; set; }
 

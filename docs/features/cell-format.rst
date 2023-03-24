@@ -150,6 +150,45 @@ method.
    save the xlsx file, change the *xlsx* extension to *zip* and use
    correctly escaped format code from `/xl/styles.xml` file in the zip.
 
+Orientation
+###########
+
+Text in a cell can be rotated by an angle, either in a clockwise or in a
+counterclokwise direction. Text can't be rotated more that 90 degrees in
+either direction (i.e. *upside down*). In addition, text can also orienteted
+vertically, where each letters are laid out in vertical direction, instead
+of horizontally.
+
+.. image:: img/cell-format-alignment-orientation-dialog.png
+   :alt: An Excel dialog for setting text orientation.
+
+The sample demonstrates how to set text rotation with various angles and
+how to set vertical layout of a text.
+
+.. code-block:: csharp
+
+   using ClosedXML.Excel;
+   
+   using var wb = new XLWorkbook();
+   var ws = wb.AddWorksheet();
+   ws.ColumnWidth = 10;
+   ws.Cell(1, 1)
+       .SetValue("Vertical")
+       .Style.Alignment.SetTextRotation(255);
+   
+   for (var angle = -90; angle <= 90; angle += 30)
+   {
+       var column = angle / 30 + 5;
+       ws.Cell(1, column)
+           .SetValue($"Rotation: {angle}")
+           .Style.Alignment.SetTextRotation(angle);
+   }
+   
+   wb.SaveAs("cell-format-alignment-orientation.xlsx");
+
+.. image:: img/cell-format-alignment-orientation-example.png
+   :alt: Output of the sample
+
 Phonetics
 #########
 

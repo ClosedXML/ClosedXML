@@ -3502,7 +3502,7 @@ namespace ClosedXML.Excel
                     Indent = (UInt32)styleInfo.Style.Alignment.Indent,
                     ReadingOrder = (UInt32)styleInfo.Style.Alignment.ReadingOrder,
                     WrapText = styleInfo.Style.Alignment.WrapText,
-                    TextRotation = (UInt32)styleInfo.Style.Alignment.TextRotation,
+                    TextRotation = (UInt32)GetOpenXmlTextRotation(styleInfo.Style.Alignment),
                     ShrinkToFit = styleInfo.Style.Alignment.ShrinkToFit,
                     RelativeIndent = styleInfo.Style.Alignment.RelativeIndent,
                     JustifyLastLine = styleInfo.Style.Alignment.JustifyLastLine
@@ -3515,6 +3515,14 @@ namespace ClosedXML.Excel
                 workbookStylesPart.Stylesheet.CellFormats.AppendChild(cellFormat);
             }
             workbookStylesPart.Stylesheet.CellFormats.Count = (UInt32)workbookStylesPart.Stylesheet.CellFormats.Count();
+
+            static int GetOpenXmlTextRotation(XLAlignmentValue alignment)
+            {
+                var textRotation = alignment.TextRotation;
+                return textRotation >= 0
+                    ? textRotation
+                    : 90 - textRotation;
+            }
         }
 
         private static void ResolveCellStyleFormats(WorkbookStylesPart workbookStylesPart,
@@ -3653,7 +3661,7 @@ namespace ClosedXML.Excel
                 if (alignment.WrapText != null)
                     a.WrapText = alignment.WrapText.Value;
                 if (alignment.TextRotation != null)
-                    a.TextRotation = (Int32)alignment.TextRotation.Value;
+                    a.TextRotation = OpenXmlHelper.GetClosedXmlTextRotation(alignment);
                 if (alignment.ShrinkToFit != null)
                     a.ShrinkToFit = alignment.ShrinkToFit.Value;
                 if (alignment.RelativeIndent != null)
