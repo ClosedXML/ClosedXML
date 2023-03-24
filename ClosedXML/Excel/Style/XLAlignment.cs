@@ -158,8 +158,8 @@ namespace ClosedXML.Excel
             {
                 Int32 rotation = value;
 
-                if (rotation != 255 && (rotation < -90 || rotation > 180))
-                    throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
+                if (rotation != 255 && (rotation < -90 || rotation > 90))
+                    throw new ArgumentException("TextRotation must be between -90 and 90 degrees, or 255.");
 
                 Modify(k => { k.TextRotation = rotation; return k; });
             }

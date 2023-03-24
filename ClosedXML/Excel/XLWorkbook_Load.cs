@@ -3078,7 +3078,7 @@ namespace ClosedXML.Excel
                 if (alignment.ShrinkToFit != null)
                     xlAlignment.ShrinkToFit = alignment.ShrinkToFit;
                 if (alignment.TextRotation != null)
-                    xlAlignment.TextRotation = (Int32)alignment.TextRotation.Value;
+                    xlAlignment.TextRotation = OpenXmlHelper.GetClosedXmlTextRotation(alignment);
                 if (alignment.Vertical != null)
                     xlAlignment.Vertical = alignment.Vertical.Value.ToClosedXml();
                 if (alignment.WrapText != null)
