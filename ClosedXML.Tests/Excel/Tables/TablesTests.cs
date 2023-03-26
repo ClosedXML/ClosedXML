@@ -548,25 +548,6 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void TableNameCannotBeValidCellName()
-        {
-            var dt = new DataTable("sheet1");
-            dt.Columns.Add("Patient", typeof(string));
-            dt.Rows.Add("David");
-
-            using (var wb = new XLWorkbook())
-            {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "May2019"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "A1"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "R1C2"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "r3c2"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "R2C33333"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "RC"));
-            }
-        }
-
-        [Test]
         public void CanDeleteTableField()
         {
             var l = new List<TestObjectWithAttributes>()

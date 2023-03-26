@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
                 _lastRangeAddress = RangeAddress;
 
                 RescanFieldNames();
-                
+
                 return _fieldNames;
             }
         }
@@ -199,8 +199,12 @@ namespace ClosedXML.Excel
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
 
-                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out String message))
+
+                var casingOnlyChange = IsNameChangeACasingOnlyChange(oldname, value);
+
+                if (!casingOnlyChange && !TableNameValidator.IsValidTableNameInWorkbook(value, Worksheet.Workbook, out string message)){
                     throw new ArgumentException(message, nameof(value));
+                }
 
                 _name = value;
 
@@ -208,13 +212,19 @@ namespace ClosedXML.Excel
                 if (_fieldNames?.Any() ?? false)
                     this.Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
 
-                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
+                if (!casingOnlyChange)
                 {
                     Worksheet.Tables.Add(this);
                     if (Worksheet.Tables.Contains(oldname))
                         Worksheet.Tables.Remove(oldname);
                 }
             }
+        }
+
+        private bool IsNameChangeACasingOnlyChange(string oldname, string newName)
+        {
+            return !String.IsNullOrWhiteSpace(oldname) &&
+                   String.Equals(oldname, newName, StringComparison.OrdinalIgnoreCase);
         }
 
         public Boolean ShowTotalsRow
