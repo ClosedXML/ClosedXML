@@ -1683,24 +1683,18 @@ namespace ClosedXML.Excel
             if (cellFormula is not null)
             {
                 // bx attribute of cell formula is not ever used, per MS-OI29500 2.1.620
-                var xlCellFormula = xlCell.Formula;
                 var formulaType = cellFormula.FormulaType?.Value ?? CellFormulaValues.Normal;
                 if (formulaType == CellFormulaValues.Normal)
                 {
-                    xlCellFormula.SetNormal(cellFormula.Text);
+                    xlCell.Formula = XLCellFormula.NormalA1(cellFormula.Text);
                 }
                 else if (formulaType == CellFormulaValues.Array && cellFormula.Reference is not null) // Child cells of an array may have array type, but not ref, that is reserved for parent cell
                 {
                     var aca = cellFormula.AlwaysCalculateArray?.Value ?? false;
-                    xlCellFormula.SetArray(cellFormula.Text, aca);
 
                     // Excel displays {=FORMULA} for each cell of array formula, so we do the same... for now.
                     var range = XLSheetRange.Parse(cellFormula.Reference);
-                    var firstAddress = new XLAddress(ws, range.FirstPoint.Row, range.FirstPoint.Column, false, false);
-                    var lastAddress = new XLAddress(ws, range.LastPoint.Row, range.LastPoint.Column, false, false);
-                    var rangeAddress = new XLRangeAddress(firstAddress, lastAddress);
-
-                    xlCell.FormulaReference = rangeAddress;
+                    xlCell.Formula = XLCellFormula.Array(cellFormula.Text, range, aca);
 
                     // Because cells are read from top-to-bottom, from left-to-right, none of child cells have
                     // a formula. Also, Excel doesn't allow change of array data, only through parent formula.
@@ -1712,8 +1706,7 @@ namespace ClosedXML.Excel
                             if (col == range.FirstPoint.Column && row == range.FirstPoint.Row)
                                 continue;
                             var arrayFormulaCell = ws.Cell(row, col);
-                            arrayFormulaCell.Formula.SetArray(cellFormula.Text, false);
-                            arrayFormulaCell.FormulaReference = rangeAddress;
+                            arrayFormulaCell.Formula = XLCellFormula.Array(cellFormula.Text, range, false);
                         }
                     }
                 }
@@ -1728,11 +1721,12 @@ namespace ClosedXML.Excel
                     {
                         // Spec: The first formula in a group of shared formulas is saved
                         // in the f element.This is considered the 'master' formula cell.
-                        xlCellFormula.SetNormal(cellFormula.Text);
+                        var formula = XLCellFormula.NormalA1(cellFormula.Text);
+                        xlCell.Formula = formula;
 
                         // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
                         var xlCellSheetPoint = new XLSheetPoint(cellAddress.RowNumber, cellAddress.ColumnNumber);
-                        var formulaR1C1 = XLCellFormula.GetFormula(cellFormula.Text, FormulaConversionType.A1ToR1C1, xlCellSheetPoint);
+                        var formulaR1C1 = formula.GetFormulaR1C1(xlCellSheetPoint);
                         sharedFormulasR1C1.Add(cellFormula.SharedIndex.Value, formulaR1C1);
                     }
                     else
@@ -1753,12 +1747,12 @@ namespace ClosedXML.Excel
                         // Input 2 is only used for 2D tables
                         var input2Deleted = cellFormula.Input2Deleted?.Value ?? false;
                         var input2 = XLSheetPoint.Parse(cellFormula.R2);
-                        xlCellFormula.SetDataTable2D(range, input1, input1Deleted, input2, input2Deleted);
+                        xlCell.Formula = XLCellFormula.DataTable2D(range, input1, input1Deleted, input2, input2Deleted);
                     }
                     else
                     {
                         var isRowDataTable = cellFormula.DataTableRow?.Value ?? false;
-                        xlCellFormula.SetDataTable1D(range, input1, input1Deleted, isRowDataTable);
+                        xlCell.Formula = XLCellFormula.DataTable1D(range, input1, input1Deleted, isRowDataTable);
                     }
                 }
 
