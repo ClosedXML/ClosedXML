@@ -64,8 +64,6 @@ namespace ClosedXML.Excel
         /// </summary>
         public bool ShareString { get; set; }
 
-        private readonly XLCellFormula _formula = new();
-
         private XLComment _comment;
         private XLHyperlink _hyperlink;
         private LinkInfo _linkInfo = null;
@@ -135,6 +133,11 @@ namespace ClosedXML.Excel
             get => _linkInfo?.ValueMetaIndex;
             set => (_linkInfo ??= new LinkInfo()).ValueMetaIndex = value;
         }
+
+        /// <summary>
+        /// A formula in the cell. Null, if cell doesn't contain formula.
+        /// </summary>
+        internal XLCellFormula Formula { get; set; }
 
         internal XLComment GetComment()
         {
@@ -625,7 +628,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (_formula.HasAnyFormula)
+                if (Formula is not null)
                 {
                     Evaluate(false);
                 }
@@ -916,7 +919,7 @@ namespace ClosedXML.Excel
 
         public string FormulaA1
         {
-            get => _formula.GetFormulaA1(new XLSheetPoint(_rowNumber, _columnNumber));
+            get => Formula?.GetFormulaA1(SheetPoint) ?? String.Empty;
 
             set
             {
@@ -925,21 +928,15 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formula.A1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formula.R1C1 = null;
+                Formula = !String.IsNullOrWhiteSpace(value)
+                    ? XLCellFormula.NormalA1(value)
+                    : null;
             }
         }
 
         public string FormulaR1C1
         {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(_formula.R1C1))
-                    _formula.R1C1 = GetFormulaR1C1(FormulaA1);
-
-                return _formula.R1C1;
-            }
+            get => Formula?.GetFormulaR1C1(SheetPoint) ?? String.Empty;
 
             set
             {
@@ -948,13 +945,11 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formula.R1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formula.A1 = null;
+                Formula = !String.IsNullOrWhiteSpace(value)
+                    ? XLCellFormula.NormalR1C1(value)
+                    : null;
             }
         }
-
-        internal XLCellFormula Formula => _formula;
 
         public XLHyperlink GetHyperlink()
         {
@@ -1036,7 +1031,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formula.A1) && String.IsNullOrEmpty(_formula.R1C1))
+                if (Formula is null)
                     return false;
 
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
@@ -1046,7 +1041,7 @@ namespace ClosedXML.Excel
                 if (cellWasModified)
                     return NeedsRecalculation = true;
 
-                if (!Worksheet.CalcEngine.TryGetPrecedentCells(_formula.A1, Worksheet, out var precedentCells))
+                if (!Worksheet.CalcEngine.TryGetPrecedentCells(Formula.A1, Worksheet, out var precedentCells))
                     return NeedsRecalculation = true;
 
                 var res = precedentCells.Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
@@ -2110,13 +2105,20 @@ namespace ClosedXML.Excel
         {
             get
             {
+                if (Formula is null)
+                    return null;
+
                 var range = Formula.Range;
                 if (range == default)
                     return null;
+
                 return XLRangeAddress.FromSheetRange(Worksheet, range);
             }
             set
             {
+                if (Formula is null)
+                    throw new ArgumentException("Cell doesn't contain a formula.");
+
                 if (value is null)
                 {
                     Formula.Range = default;

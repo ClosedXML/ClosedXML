@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a cell formula, not the formula itself (i.e. the tree).
     /// </summary>
-    internal class XLCellFormula
+    internal sealed class XLCellFormula
     {
         /// <summary>
         /// This is only a placeholder, so the data table formula looks like array formula for saving code.
@@ -45,18 +45,26 @@ namespace ClosedXML.Excel
         private FormulaFlags _flags;
         private FormulaType _type;
 
-        internal string A1 { get; set; }
+        private XLCellFormula()
+        {
+        }
 
-        internal string R1C1 { get; set; }
+        /// <summary>
+        /// Formula in A1 notation. Either this or <see cref="R1C1"/> must be set (potentially
+        /// both, due to conversion from one notation to another).
+        /// </summary>
+        internal string A1 { get; private set; }
 
-        internal bool HasAnyFormula =>
-            !String.IsNullOrWhiteSpace(A1) ||
-            !String.IsNullOrEmpty(R1C1);
+        /// <summary>
+        /// Formula in R1C1 notation. Either this or <see cref="A1"/> must be set (potentially
+        /// both, due to conversion from one notation to another).
+        /// </summary>
+        internal string R1C1 { get; private set; }
 
         internal FormulaType Type => _type;
 
         /// <summary>
-        /// Range for array and data table formulas, otherwise default.
+        /// Range for array and data table formulas, otherwise default value.
         /// </summary>
         internal XLSheetRange Range { get; set; }
 
@@ -116,20 +124,13 @@ namespace ClosedXML.Excel
         internal Boolean Input2Deleted => _flags.HasFlag(FormulaFlags.Input2Deleted);
 
         /// <summary>
-        /// Get stored formula or or <c>string.Empty</c> if both A1/R1C1 are empty.
-        /// Formula doesn't contain artificial equal sign.
+        /// Get stored formula in A1 notation. Returned formula doesn't contain equal sign.
         /// </summary>
+        /// <param name="cellAddress">Address of the formula cell. Used to convert relative R1C1 to A1, if conversion is necessary.</param>
         public string GetFormulaA1(XLSheetPoint cellAddress)
         {
             if (String.IsNullOrWhiteSpace(A1))
-            {
-                if (String.IsNullOrWhiteSpace(R1C1))
-                {
-                    return String.Empty;
-                }
-
                 A1 = GetFormula(R1C1, FormulaConversionType.R1C1ToA1, cellAddress);
-            }
 
             if (A1.Trim()[0] == '=')
                 return A1.Substring(1);
@@ -140,6 +141,20 @@ namespace ClosedXML.Excel
             return A1;
         }
 
+        /// <summary>
+        /// Get stored formula in R1C1 notation. Returned formula doesn't contain equal sign.
+        /// </summary>
+        public string GetFormulaR1C1(XLSheetPoint cellAddress)
+        {
+            if (String.IsNullOrWhiteSpace(R1C1))
+            {
+                var normalizedA1 = GetFormulaA1(cellAddress);
+                R1C1 = GetFormula(normalizedA1, FormulaConversionType.A1ToR1C1, cellAddress);
+            }
+
+            return R1C1;
+        }
+        
         internal static string GetFormula(string strValue, FormulaConversionType conversionType, XLSheetPoint cellAddress)
         {
             if (String.IsNullOrWhiteSpace(strValue))
@@ -204,10 +219,10 @@ namespace ClosedXML.Excel
 
             try
             {
-                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf('C'));
                 var rowToReturn = GetA1Row(rowPart, cellAddress.Row);
 
-                var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
+                var columnPart = addressToUse.Substring(addressToUse.IndexOf('C'));
                 var columnToReturn = GetA1Column(columnPart, cellAddress.Column);
 
                 var retAddress = columnToReturn + rowToReturn;
@@ -226,8 +241,8 @@ namespace ClosedXML.Excel
                 columnToReturn = XLHelper.GetColumnLetterFromNumber(cellColumn);
             else
             {
-                var bIndex = columnPartRC.IndexOf("[");
-                var mIndex = columnPartRC.IndexOf("-");
+                var bIndex = columnPartRC.IndexOf('[');
+                var mIndex = columnPartRC.IndexOf('-');
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
@@ -258,7 +273,7 @@ namespace ClosedXML.Excel
                 rowToReturn = cellRow.ToString();
             else
             {
-                var bIndex = rowPartRC.IndexOf("[");
+                var bIndex = rowPartRC.IndexOf('[');
                 if (bIndex >= 0)
                 {
                     rowToReturn =
@@ -328,38 +343,61 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Set cell formula to a normal formula. Doesn't affect recalculation version.
+        /// A factory method to create a normal A1 formula. Doesn't affect recalculation version.
         /// </summary>
         /// <param name="formulaA1">Doesn't start with <c>=</c>.</param>
-        internal void SetNormal(string formulaA1)
+        internal static XLCellFormula NormalA1(string formulaA1)
         {
-            A1 = formulaA1;
-            R1C1 = null;
-            _type = FormulaType.Normal;
-            _flags = FormulaFlags.None;
+            return new XLCellFormula
+            {
+                A1 = formulaA1,
+                R1C1 = null,
+                _type = FormulaType.Normal,
+                _flags = FormulaFlags.None
+            };
         }
 
         /// <summary>
-        /// Set cell formula to an array formula. Doesn't affect recalculation version.
+        /// A factory method to create a normal R1C1 formula. Doesn't affect recalculation version.
+        /// </summary>
+        /// <param name="formulaR1C1">Doesn't start with <c>=</c>.</param>
+        internal static XLCellFormula NormalR1C1(string formulaR1C1)
+        {
+            return new XLCellFormula
+            {
+                A1 = null,
+                R1C1 = formulaR1C1,
+                _type = FormulaType.Normal,
+                _flags = FormulaFlags.None
+            };
+        }
+
+        /// <summary>
+        /// A factory method to create an array formula. Doesn't affect recalculation version.
         /// </summary>
         /// <param name="arrayFormulaA1">Isn't wrapped in <c>{}</c> and doesn't start with <c>=</c>.</param>
-        /// <param name="aca">A flag for always calculate array. </param>
-        internal void SetArray(string arrayFormulaA1, bool aca)
+        /// <param name="range">A range of cells that are calculated through the array formula.</param>
+        /// <param name="aca">A flag for always calculate array.</param>
+        internal static XLCellFormula Array(string arrayFormulaA1, XLSheetRange range, bool aca)
         {
-            A1 = "{" + arrayFormulaA1 + "}";
-            R1C1 = null;
-            _type = FormulaType.Array;
-            _flags = aca ? FormulaFlags.AlwaysCalculateArray : FormulaFlags.None;
+            return new XLCellFormula
+            {
+                A1 = "{" + arrayFormulaA1 + "}",
+                R1C1 = null,
+                _type = FormulaType.Array,
+                _flags = aca ? FormulaFlags.AlwaysCalculateArray : FormulaFlags.None,
+                Range = range
+            };
         }
 
         /// <summary>
-        /// Set cell formula to a 1D data table formula. Doesn't affect recalculation version.
+        /// A factory method to create a cell formula for 1D data table formula. Doesn't affect recalculation version.
         /// </summary>
         /// <param name="range">Range of the data table formula. Even 1D table can have rectangular range.</param>
         /// <param name="input1Address">Address of the input cell that will be replaced in the data table. If input deleted, ignored and value can be anything.</param>
         /// <param name="input1Deleted">Was the original address deleted?</param>
         /// <param name="isRowDataTable">Is data table in row (<c>true</c>) or columns (<c>false</c>)?</param>
-        internal void SetDataTable1D(
+        internal static XLCellFormula DataTable1D(
             XLSheetRange range,
             XLSheetPoint input1Address,
             bool input1Deleted,
@@ -378,25 +416,28 @@ namespace ClosedXML.Excel
                 rowInput = string.Empty;
             }
 
-            A1 = string.Format(DataTableFormulaFormat, rowInput, colInput);
-            R1C1 = null;
-            Range = range;
-            _type = FormulaType.DataTable;
-            _input1 = input1Address;
-            _flags =
-                (isRowDataTable ? FormulaFlags.Is1DRow : FormulaFlags.None) |
-                (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None);
+            return new XLCellFormula
+            {
+                A1 = string.Format(DataTableFormulaFormat, rowInput, colInput),
+                R1C1 = null,
+                Range = range,
+                _type = FormulaType.DataTable,
+                _input1 = input1Address,
+                _flags =
+                    (isRowDataTable ? FormulaFlags.Is1DRow : FormulaFlags.None) |
+                    (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None)
+            };
         }
 
         /// <summary>
-        /// Set cell formula to a 2D data table formula. Doesn't affect recalculation version.
+        /// A factory method to create a 2D data table formula. Doesn't affect recalculation version.
         /// </summary>
         /// <param name="range">Range of the formula.</param>
         /// <param name="input1Address">Address of the input cell that will be replaced in the data table. If input deleted, ignored and value can be anything.</param>
         /// <param name="input1Deleted">Was the original address deleted?</param>
         /// <param name="input2Address">Address of the input cell that will be replaced in the data table. If input deleted, ignored and value can be anything.</param>
         /// <param name="input2Deleted">Was the original address deleted?</param>
-        internal void SetDataTable2D(
+        internal static XLCellFormula DataTable2D(
             XLSheetRange range,
             XLSheetPoint input1Address,
             bool input1Deleted,
@@ -405,15 +446,18 @@ namespace ClosedXML.Excel
         {
             var colInput = input1Deleted ? "#REF!" : input1Address.ToString();
             var rowInput = input2Deleted ? "#REF!" : input2Address.ToString();
-            A1 = string.Format(DataTableFormulaFormat, rowInput, colInput);
-            R1C1 = null;
-            Range = range;
-            _type = FormulaType.DataTable;
-            _input1 = input1Address;
-            _input2 = input2Address;
-            _flags = FormulaFlags.Is2D |
-                     (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None) |
-                     (input2Deleted ? FormulaFlags.Input2Deleted : FormulaFlags.None);
+            return new XLCellFormula
+            {
+                A1 = string.Format(DataTableFormulaFormat, rowInput, colInput),
+                R1C1 = null,
+                Range = range,
+                _type = FormulaType.DataTable,
+                _input1 = input1Address,
+                _input2 = input2Address,
+                _flags = FormulaFlags.Is2D |
+                (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None) |
+                (input2Deleted ? FormulaFlags.Input2Deleted : FormulaFlags.None)
+            };
         }
 
         /// <summary>
