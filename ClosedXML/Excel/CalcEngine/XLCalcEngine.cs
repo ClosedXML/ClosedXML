@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="expression">Formula to analyze.</param>
         /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
         /// <param name="uniqueCells">All cells (including newly created blank ones) that are referenced in the formula.</param>
-        /// <returns>.</returns>
+        /// <returns>True if it was possible for get precedent cells, false otherwise (e.g. reference errors).</returns>
         public bool TryGetPrecedentCells(string expression, XLWorksheet worksheet, out ICollection<XLCell> uniqueCells)
         {
             // This sucks and doesn't work for adding/removing named ranges/worksheets. Also, it creates new cells for all found ranges.
