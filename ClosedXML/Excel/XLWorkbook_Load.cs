@@ -1756,9 +1756,13 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                // Original code incremented version each time it set the values. That is no longer happening, but few
-                // examples rely on it. It should be set when cellFormula.CalculateCell is set or when value is missing.
-                xlCell.InvalidateFormula();
+                // If the cell doesn't contain value, we should invalidate it, otherwise rely on the stored value.
+                // The value is likely more reliable. It should be set when cellFormula.CalculateCell is set or
+                // when value is missing.
+                if (cell.CellValue?.Text is null)
+                {
+                    xlCell.InvalidateFormula();
+                }
             }
             // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
             // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
@@ -1834,11 +1838,6 @@ namespace ClosedXML.Excel
                         DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
                     xlCell.SetOnlyValue(date);
                 }
-            }
-
-            if (xlCell.HasFormula)
-            {
-                xlCell.NeedsRecalculation = cell.CellValue?.Text is null;
             }
 
             if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)

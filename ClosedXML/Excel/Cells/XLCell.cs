@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Graphics;
 
 namespace ClosedXML.Excel
@@ -138,6 +137,12 @@ namespace ClosedXML.Excel
         /// A formula in the cell. Null, if cell doesn't contain formula.
         /// </summary>
         internal XLCellFormula Formula { get; set; }
+
+        /// <summary>
+        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that
+        /// workbook had at the moment of last value or formula change.
+        /// </summary>
+        internal long ModifiedAtVersion { get; private set; }
 
         internal XLComment GetComment()
         {
@@ -493,83 +498,16 @@ namespace ClosedXML.Excel
         /// </summary>
         internal bool IsEvaluating { get; private set; }
 
-        /// <summary>
-        /// Calculate a value of the specified formula.
-        /// </summary>
-        /// <param name="fA1">Cell formula to evaluate.</param>
-        /// <returns>Null if formula is empty or null, calculated value otherwise.</returns>
-        private ScalarValue RecalculateFormula(string fA1)
-        {
-            if (IsEvaluating)
-                throw new InvalidOperationException($"Cell {Address} is a part of circular reference.");
-
-            if (fA1[0] == '{')
-                fA1 = fA1.Substring(1, fA1.Length - 2);
-
-            string sName;
-            string cAddress;
-            if (fA1.Contains('!'))
-            {
-                sName = fA1.Substring(0, fA1.IndexOf('!'));
-                if (sName[0] == '\'')
-                    sName = sName.Substring(1, sName.Length - 2);
-
-                cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
-            }
-            else
-            {
-                sName = Worksheet.Name;
-                cAddress = fA1;
-            }
-
-            if (Worksheet.Workbook.Worksheets.Contains(sName)
-                && XLHelper.IsValidA1Address(cAddress))
-            {
-                try
-                {
-                    IsEvaluating = true;
-                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                        return 0d;
-                    else
-                        return referenceCell.Value;
-                }
-                finally
-                {
-                    IsEvaluating = false;
-                }
-            }
-
-            ScalarValue retVal;
-            try
-            {
-                IsEvaluating = true;
-
-                if (Worksheet.Workbook.Worksheets.Contains(sName)
-                    && XLHelper.IsValidA1Address(cAddress))
-                {
-                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                        return 0;
-                    else
-                        return referenceCell.Value;
-                }
-
-                retVal = Worksheet.CalcEngine.Evaluate(fA1, Worksheet.Workbook, Worksheet, Address);
-            }
-            finally
-            {
-                IsEvaluating = false;
-            }
-
-            return retVal;
-        }
-
         public void InvalidateFormula()
         {
-            NeedsRecalculation = true;
             Worksheet.Workbook.InvalidateFormulas();
             ModifiedAtVersion = Worksheet.Workbook.RecalculationCounter;
+            if (Formula is null)
+            {
+                return;
+            }
+
+            Formula.Invalidate(Worksheet);
         }
 
         /// <summary>
@@ -581,16 +519,32 @@ namespace ClosedXML.Excel
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
         public void Evaluate(Boolean force)
         {
-            if (force || NeedsRecalculation)
+            if (Formula is null)
             {
-                if (HasFormula)
-                {
-                    var cachedValue = RecalculateFormula(FormulaA1);
-                    _cellValue = cachedValue.ToCellValue();
-                }
+                return;
+            }
 
-                EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
-                NeedsRecalculation = false;
+            var shouldRecalculate = force || NeedsRecalculation;
+            if (!shouldRecalculate)
+            {
+                return;
+            }
+
+            if (IsEvaluating)
+            {
+                throw new InvalidOperationException($"Cell {Address} is a part of circular reference.");
+            }
+
+            try
+            {
+                IsEvaluating = true;
+                var result = Formula.RecalculateFormula(FormulaA1, this, Worksheet);
+                Formula.ValidateRecalculationStatus(Worksheet);
+                _cellValue = result.ToCellValue();
+            }
+            finally
+            {
+                IsEvaluating = false;
             }
         }
 
@@ -926,11 +880,10 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
-                InvalidateFormula();
-
                 Formula = !String.IsNullOrWhiteSpace(value)
                     ? XLCellFormula.NormalA1(value)
                     : null;
+                InvalidateFormula();
             }
         }
 
@@ -943,11 +896,10 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
-                InvalidateFormula();
-
                 Formula = !String.IsNullOrWhiteSpace(value)
                     ? XLCellFormula.NormalR1C1(value)
                     : null;
+                InvalidateFormula();
             }
         }
 
@@ -1022,8 +974,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        private bool _recalculationNeededLastValue;
-
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
@@ -1032,51 +982,13 @@ namespace ClosedXML.Excel
             get
             {
                 if (Formula is null)
+                {
                     return false;
+                }
 
-                if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
-                    return _recalculationNeededLastValue;
-
-                bool cellWasModified = EvaluatedAtVersion < ModifiedAtVersion;
-                if (cellWasModified)
-                    return NeedsRecalculation = true;
-
-                if (!Worksheet.CalcEngine.TryGetPrecedentCells(Formula.A1, Worksheet, out var precedentCells))
-                    return NeedsRecalculation = true;
-
-                var res = precedentCells.Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
-                                                     cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
-                                                     cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
-
-                NeedsRecalculation = res;
-                return res;
-            }
-            internal set
-            {
-                _recalculationNeededLastValue = value;
-                NeedsRecalculationEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                return Formula.NeedsRecalculation(this);
             }
         }
-
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell last modification.
-        /// If this value is greater than <see cref="EvaluatedAtVersion"/> then cell needs re-evaluation, as well as all dependent cells do.
-        /// </summary>
-        private long ModifiedAtVersion { get; set; }
-
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell formula evaluation.
-        /// If this value equals to <see cref="XLWorkbook.RecalculationCounter"/> it indicates that <see cref="CachedValue"/> stores
-        /// correct value and no re-evaluation has to be performed.
-        /// </summary>
-        private long EvaluatedAtVersion { get; set; }
-
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
-        /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If this value equals to <see cref="XLWorkbook.RecalculationCounter"/>
-        /// it indicates that <see cref="_recalculationNeededLastValue"/> stores correct value and no check has to be performed.
-        /// </summary>
-        private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
         public XLCellValue CachedValue => _cellValue;
 
@@ -2095,8 +2007,7 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula
-        { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula => Formula is not null;
 
         public Boolean HasArrayFormula
         { get { return FormulaA1.StartsWith("{"); } }
