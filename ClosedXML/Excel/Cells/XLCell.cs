@@ -496,7 +496,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Flag showing that the cell is in formula evaluation state.
         /// </summary>
-        internal bool IsEvaluating { get; private set; }
+        internal bool IsEvaluating => Formula is not null && Formula.IsEvaluating;
 
         public void InvalidateFormula()
         {
@@ -530,22 +530,7 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            if (IsEvaluating)
-            {
-                throw new InvalidOperationException($"Cell {Address} is a part of circular reference.");
-            }
-
-            try
-            {
-                IsEvaluating = true;
-                var result = Formula.RecalculateFormula(FormulaA1, this, Worksheet);
-                Formula.ValidateRecalculationStatus(Worksheet);
-                _cellValue = result.ToCellValue();
-            }
-            finally
-            {
-                IsEvaluating = false;
-            }
+            _cellValue = Formula.RecalculateFormula(this, Worksheet).ToCellValue();
         }
 
         /// <summary>

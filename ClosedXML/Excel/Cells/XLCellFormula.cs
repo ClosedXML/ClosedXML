@@ -60,8 +60,12 @@ namespace ClosedXML.Excel
 
         private XLCellFormula()
         {
-            _lastStatus = new(true, -1);
+            // Formulas from loaded worksheets with values are treated as valid, until something changes (i.e. recalculation version increases)
+            // When a formula is set directly from a cell, it invalidates formula immediately afterwards.
+            _lastStatus = new(false, 0);
         }
+
+        internal bool IsEvaluating { get; private set; }
 
         /// <summary>
         /// Formula in A1 notation. Either this or <see cref="R1C1"/> must be set (potentially
@@ -204,34 +208,10 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        internal void ValidateRecalculationStatus(XLWorksheet worksheet)
-        {
-            _lastStatus = new RecalculationStatus(false, worksheet.Workbook.RecalculationCounter);
-            _evaluatedAtVersion = worksheet.Workbook.RecalculationCounter;
-        }
-
         internal void Invalidate(XLWorksheet worksheet)
         {
             _lastStatus = new(true, worksheet.Workbook.RecalculationCounter);
         }
-
-        private readonly struct RecalculationStatus
-        {
-            public RecalculationStatus(bool neededRecalculation, long version)
-            {
-                NeededRecalculation = neededRecalculation;
-                Version = version;
-            }
-
-            internal bool NeededRecalculation { get; }
-
-            /// <summary>
-            /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
-            /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If this value equals to <see cref="XLWorkbook.RecalculationCounter"/>
-            /// it indicates that <see cref="NeededRecalculation"/> stores correct value and no check has to be performed.
-            /// </summary>
-            internal long Version { get; }
-        };
 
         /// <summary>
         /// Get stored formula in A1 notation. Returned formula doesn't contain equal sign.
@@ -452,14 +432,37 @@ namespace ClosedXML.Excel
             return columnPart;
         }
 
+        internal ScalarValue RecalculateFormula(XLCell cell, XLWorksheet worksheet)
+        {
+            var fA1 = GetFormulaA1(cell.SheetPoint);
+
+            if (IsEvaluating)
+            {
+                throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
+            }
+
+            try
+            {
+                IsEvaluating = true;
+                var result = RecalculateFormula(fA1, cell, worksheet);
+                _lastStatus = new RecalculationStatus(false, worksheet.Workbook.RecalculationCounter);
+                _evaluatedAtVersion = worksheet.Workbook.RecalculationCounter;
+                return result;
+            }
+            finally
+            {
+                IsEvaluating = false;
+            }
+        }
+
         /// <summary>
         /// Calculate a value of the specified formula.
         /// </summary>
-        /// <param name="fA1">Cell formula to evaluate.</param>
+        /// <param name="fA1">Cell formula to evaluate in A1 format.</param>
         /// <param name="cell">Cell whose formula is being evaluated.</param>
         /// <param name="worksheet">Worksheet of the cell.</param>
         /// <returns>Null if formula is empty or null, calculated value otherwise.</returns>
-        internal ScalarValue RecalculateFormula(string fA1, XLCell cell, XLWorksheet worksheet)
+        private ScalarValue RecalculateFormula(string fA1, XLCell cell, XLWorksheet worksheet)
         {
             if (fA1[0] == '{')
                 fA1 = fA1.Substring(1, fA1.Length - 2);
@@ -490,7 +493,6 @@ namespace ClosedXML.Excel
                     return referenceCell.Value;
             }
 
-            ScalarValue retVal;
             if (worksheet.Workbook.Worksheets.Contains(sName)
                 && XLHelper.IsValidA1Address(cAddress))
             {
@@ -501,7 +503,7 @@ namespace ClosedXML.Excel
                     return referenceCell.Value;
             }
 
-            retVal = worksheet.CalcEngine.Evaluate(fA1, worksheet.Workbook, worksheet, cell.Address);
+            var retVal = worksheet.CalcEngine.Evaluate(fA1, worksheet.Workbook, worksheet, cell.Address);
 
             return retVal;
         }
@@ -662,5 +664,23 @@ namespace ClosedXML.Excel
             /// </summary>
             Input2Deleted = 16,
         }
+
+        private readonly struct RecalculationStatus
+        {
+            public RecalculationStatus(bool neededRecalculation, long version)
+            {
+                NeededRecalculation = neededRecalculation;
+                Version = version;
+            }
+
+            internal bool NeededRecalculation { get; }
+
+            /// <summary>
+            /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
+            /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If this value equals to <see cref="XLWorkbook.RecalculationCounter"/>
+            /// it indicates that <see cref="NeededRecalculation"/> stores correct value and no check has to be performed.
+            /// </summary>
+            internal long Version { get; }
+        };
     }
 }

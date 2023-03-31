@@ -43,15 +43,14 @@ namespace ClosedXML.Excel.CalcEngine
         // ** implementation
         private object GetValue(IXLCell cell)
         {
-            if (_evaluating || (cell as XLCell).IsEvaluating)
+            if (_evaluating || ((XLCell)cell).IsEvaluating)
             {
-                throw new InvalidOperationException($"Circular Reference occured during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
+                throw new InvalidOperationException($"Circular Reference occurred during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
             }
             try
             {
                 _evaluating = true;
                 return cell.Value.ToObject();
-                
             }
             finally
             {
