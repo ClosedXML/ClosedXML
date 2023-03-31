@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -19,14 +18,21 @@ namespace ClosedXML.Excel
         /// Validates if a suggested TableName is valid in the context of a specific workbook
         /// </summary>
         /// <param name="tableName">Proposed Table Name</param>
-        /// <param name="workbook"></param>
+        /// <param name="worksheet">The worksheet the table will live on</param>
         /// <param name="message">Message if validation fails</param>
         /// <returns>True if the proposed table name is valid in the context of the workbook</returns>
-        public static bool IsValidTableNameInWorkbook(string tableName, IXLWorkbook workbook, out string message)
+        public static bool IsValidTableNameInWorkbook(string tableName, IXLWorksheet worksheet, out string message)
         {
             message = "";
 
-            var existingSheetNames = GetTableNamesAcrossWorkbook(workbook);
+            //TODO: Technically a table name should be unique across the entire workbook not just a sheet.
+            //For now I am just consolidating the table name validation logic here. If we wanted to match Excel
+            //We are going to have to refactor logic around copying tables and worksheets between workbooks
+            //Currently this isn't a problem because on save we call GetTableName in XL_Workbook_Save which will ensure
+            //There are no conflicts in table names when we write the files, but will mean names are changed when you
+            //Reopen the file.
+            var existingSheetNames = worksheet.Tables.Select(t => t.Name);
+            // var existingSheetNames = GetTableNamesAcrossWorkbook(worksheet.Workbook);
 
             //Validate common name rules, as well as check for existing conflicts
             if (!XLHelper.ValidateName("table", tableName, String.Empty, existingSheetNames, out message))
@@ -34,7 +40,7 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            //Perform table specific names validation
+            //Table names cannot contain spaces
             if (tableName.Contains(" "))
             {
                 message = "Table names cannot contain spaces";
@@ -50,7 +56,7 @@ namespace ClosedXML.Excel
 
 
             //A Table name must be unique across all defined names regardless of if it scoped to workbook or sheet
-            if (IsTableNameIsUniqueAcrossNamedRanges(tableName, workbook))
+            if (IsTableNameIsUniqueAcrossNamedRanges(tableName, worksheet.Workbook))
             {
                 message = $"Table name must be unique across all named ranges '{tableName}'.";
                 return false;
@@ -66,14 +72,9 @@ namespace ClosedXML.Excel
                    workbook.Worksheets.Any(ws => ws.NamedRanges.Contains(tableName));
         }
 
-        /// <summary>
-        /// Get all tables names in the workbook. Table names MUST be unique across the whole workbook, not just the sheet
-        /// </summary>
-        /// <param name="workbook">workbook context</param>
-        /// <returns>String collection representing all the table names in the workbook</returns>
-        private static IList<string> GetTableNamesAcrossWorkbook(IXLWorkbook workbook)
-        {
-            return workbook.Worksheets.SelectMany(ws => ws.Tables.Select(t => t.Name)).ToList();
-        }
+        // private static IList<string> GetTableNamesAcrossWorkbook(IXLWorkbook workbook)
+        // {
+        //     return workbook.Worksheets.SelectMany(ws => ws.Tables.Select(t => t.Name)).ToList();
+        // }
     }
 }

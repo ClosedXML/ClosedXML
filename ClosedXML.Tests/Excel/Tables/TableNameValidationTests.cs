@@ -15,34 +15,35 @@ namespace ClosedXML.Tests.Excel.Tables
             string message;
             using (var wb = new XLWorkbook())
             {
+                var ws = wb.AddWorksheet(0);
                 //Table names cannot be empty
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook(string.Empty, wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook(string.Empty, ws, out message));
                 Assert.AreEqual("The table name '' is invalid", message);
 
                 //Table names cannot be Whitespace
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("   ", wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("   ", ws, out message));
                 Assert.AreEqual("The table name '   ' is invalid", message);
 
                 //Table names cannot be Null
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook(null, wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook(null, ws, out message));
                 Assert.AreEqual("The table name '' is invalid", message);
 
                 //Table names cannot start with number
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("1Table", wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("1Table", ws, out message));
                 Assert.AreEqual("The table name '1Table' does not begin with a letter, an underscore or a backslash.",
                     message);
 
                 //Strings cannot be longer then 255 charters
                 Assert.False(TableNameValidator.IsValidTableNameInWorkbook(
-                    new string(Enumerable.Repeat('a', 256).ToArray()), wb, out message));
+                    new string(Enumerable.Repeat('a', 256).ToArray()), ws, out message));
                 Assert.AreEqual("The table name is more than 255 characters", message);
 
                 //Table names cannot contain spaces
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("Spaces in name", wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("Spaces in name", ws, out message));
                 Assert.AreEqual("Table names cannot contain spaces", message);
 
                 //Table names cannot be a cell address
-                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("R1C2", wb, out message));
+                Assert.False(TableNameValidator.IsValidTableNameInWorkbook("R1C2", ws, out message));
                 Assert.AreEqual("Table name cannot be a valid Cell Address 'R1C2'.", message);
             }
         }
@@ -92,18 +93,17 @@ namespace ClosedXML.Tests.Excel.Tables
         }
 
         [Test]
-        public void TestTableMustBeUniqueAcrossTheWorkbook()
+        public void TestTableMustBeUniqueAcrossTheWorksheet()
         {
             using (var wb = new XLWorkbook())
             {
                 var ws1 = wb.AddWorksheet();
-                var ws2 = wb.AddWorksheet();
                 var t1 = ws1.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
-                var t2 = ws2.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
+                var t2 = ws1.Cell("G1").InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
                 Assert.AreEqual("Table1", t1.Name);
                 Assert.AreEqual("Table2", t2.Name);
                 var ex = Assert.Throws<ArgumentException>(() => t2.Name = "TABLE1");
-                Assert.AreEqual("There is already a table named 'TABLE1' (Parameter 'value')", ex?.Message);
+                Assert.AreEqual("There is already a table named 'TABLE1'", ex?.Message);
             }
         }
 
@@ -128,13 +128,13 @@ namespace ClosedXML.Tests.Excel.Tables
                 var ex = Assert.Throws<ArgumentException>(() => t1.Name = "WorkbookScopedDefinedName");
                 if (ex != null)
                     Assert.AreEqual(
-                        "Table name must be unique across all named ranges 'WorkbookScopedDefinedName'. (Parameter 'value')",
+                        "Table name must be unique across all named ranges 'WorkbookScopedDefinedName'.",
                         ex.Message);
 
                 ex = Assert.Throws<ArgumentException>(() => t2.Name = "WorksheetScopedDefinedName");
                 if (ex != null)
                     Assert.AreEqual(
-                        "Table name must be unique across all named ranges 'WorksheetScopedDefinedName'. (Parameter 'value')",
+                        "Table name must be unique across all named ranges 'WorksheetScopedDefinedName'.",
                         ex.Message);
             }
         }

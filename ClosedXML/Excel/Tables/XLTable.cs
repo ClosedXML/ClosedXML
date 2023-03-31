@@ -202,8 +202,8 @@ namespace ClosedXML.Excel
 
                 var casingOnlyChange = IsNameChangeACasingOnlyChange(oldname, value);
 
-                if (!casingOnlyChange && !TableNameValidator.IsValidTableNameInWorkbook(value, Worksheet.Workbook, out string message)){
-                    throw new ArgumentException(message, nameof(value));
+                if (!casingOnlyChange && !TableNameValidator.IsValidTableNameInWorkbook(value, Worksheet, out string message)){
+                    throw new ArgumentException(message);
                 }
 
                 _name = value;
@@ -212,7 +212,7 @@ namespace ClosedXML.Excel
                 if (_fieldNames?.Any() ?? false)
                     this.Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
 
-                if (!casingOnlyChange)
+                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
                 {
                     Worksheet.Tables.Add(this);
                     if (Worksheet.Tables.Contains(oldname))

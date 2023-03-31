@@ -953,7 +953,7 @@ namespace ClosedXML.Tests.Excel
             ws1.Cell("A2").Value = "Value 1";
             ws1.Cell("B2").Value = 123.45;
             ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
-            var original = ws1.Range("A1:C2").AsTable("Detached table");
+            var original = ws1.Range("A1:C2").AsTable("Detached_table");
             var ws2 = wb.Worksheets.Add("Sheet2");
 
             var copy = original.CopyTo(ws2);
@@ -983,7 +983,7 @@ namespace ClosedXML.Tests.Excel
             ws1.Cell("A2").Value = "Value 1";
             ws1.Cell("B2").Value = 123.45;
             ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
-            var original = ws1.Range("A1:C2").AsTable("Attached table");
+            var original = ws1.Range("A1:C2").AsTable("Attached_table");
             ws1.Tables.Add(original);
             var ws2 = wb.Worksheets.Add("Sheet2");
 
@@ -1019,7 +1019,7 @@ namespace ClosedXML.Tests.Excel
                     ws.Cell("A2").Value = "Value 1";
                     ws.Cell("B2").Value = 123.45;
                     ws.Cell("C2").Value = new DateTime(2018, 5, 10);
-                    var original = ws.Range("A1:C2").CreateTable("Attached table");
+                    var original = ws.Range("A1:C2").CreateTable("Attached_table");
 
                     Assert.AreEqual(1, ws.Tables.Count());
                     Assert.IsNull((original as XLTable).RelId);
@@ -1063,7 +1063,7 @@ namespace ClosedXML.Tests.Excel
             ws1.Cell("A2").Value = "Value 1";
             ws1.Cell("B2").Value = 123.45;
             ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
-            var original = ws1.Range("A1:C2").AsTable("Attached table");
+            var original = ws1.Range("A1:C2").AsTable("Attached_table");
             ws1.Tables.Add(original);
             var ws2 = wb.Worksheets.Add("Sheet2") as XLWorksheet;
 
