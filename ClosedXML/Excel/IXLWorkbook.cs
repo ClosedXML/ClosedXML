@@ -134,13 +134,35 @@ namespace ClosedXML.Excel
 
         IXLWorksheet AddWorksheet(String sheetName, Int32 position);
 
-        IXLWorksheet AddWorksheet(DataTable dataTable);
-
         void AddWorksheet(DataSet dataSet);
 
         void AddWorksheet(IXLWorksheet worksheet);
 
+        /// <summary>
+        /// Add a worksheet with a table at Cell(row:1, column:1). The datatable's name is used for the
+        /// worksheet name and the table name.
+        /// </summary>
+        /// <param name="dataTable">Datatable to insert</param>
+        /// <returns>Inserted Worksheet</returns>
+        IXLWorksheet AddWorksheet(DataTable dataTable);
+
+        /// <summary>
+        /// Add a worksheet with a table at Cell(row:1, column:1). The sheetname provided is used for the
+        /// worksheet name. The name of a table will be generated as <em>Table{number suffix}</em>.
+        /// </summary>
+        /// <param name="dataTable">dataTable to insert as Excel Table</param>
+        /// <param name="sheetName">Worksheet and Excel Table name</param>
+        /// <returns>Inserted Worksheet</returns>
         IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName);
+
+        /// <summary>
+        /// Add a worksheet with a table at Cell(row:1, column:1).
+        /// </summary>
+        /// <param name="dataTable">dataTable to insert as Excel Table</param>
+        /// <param name="sheetName">Worksheet name</param>
+        /// <param name="tableName">Excel Table name</param>
+        /// <returns>Inserted Worksheet</returns>
+        IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName, String tableName);
 
         IXLCell Cell(String namedCell);
 
