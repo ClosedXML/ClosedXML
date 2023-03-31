@@ -22,6 +22,8 @@ namespace ClosedXML.Excel
 
         IXLWorksheet Add(DataTable dataTable, String sheetName);
 
+        IXLWorksheet Add(DataTable dataTable, String sheetName, String tableName);
+
         void Add(DataSet dataSet);
 
         Boolean Contains(String sheetName);

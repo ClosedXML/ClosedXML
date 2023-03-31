@@ -1509,7 +1509,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
         {
-            return Table(range, GetNewTableName("Table"), addToTables, setAutofilter);
+            return Table(range, TableNameGenerator.GetNewTableName(Workbook), addToTables, setAutofilter);
         }
 
         public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
@@ -1551,25 +1551,6 @@ namespace ClosedXML.Excel
             // Check that the range doesn't overlap with any filters
             if (AutoFilter.IsEnabled && this.AutoFilter.Range.Intersects(range))
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} overlaps with the worksheet's autofilter.");
-        }
-
-        private string GetNewTableName(string baseName)
-        {
-            var existingTableNames = new HashSet<String>(
-                this.Workbook.Worksheets
-                    .SelectMany(ws => ws.Tables)
-                    .Select(t => t.Name),
-                StringComparer.OrdinalIgnoreCase);
-
-            var i = 1;
-            string tableName;
-            do
-            {
-                tableName = baseName + i.ToString();
-                i++;
-            } while (existingTableNames.Contains(tableName));
-
-            return tableName;
         }
 
         private IXLRange GetRangeForSort()

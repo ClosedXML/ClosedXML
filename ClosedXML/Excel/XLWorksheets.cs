@@ -161,8 +161,13 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(DataTable dataTable, String sheetName)
         {
+            return Add(dataTable, sheetName, TableNameGenerator.GetNewTableName(_workbook));
+        }
+
+        public IXLWorksheet Add(DataTable dataTable, String sheetName, string tableName)
+        {
             var ws = Add(sheetName);
-            ws.Cell(1, 1).InsertTable(dataTable, sheetName);
+            ws.Cell(1, 1).InsertTable(dataTable, tableName);
             return ws;
         }
 

@@ -852,11 +852,6 @@ namespace ClosedXML.Excel
             return Worksheets.Add(sheetName, position);
         }
 
-        public IXLWorksheet AddWorksheet(DataTable dataTable)
-        {
-            return Worksheets.Add(dataTable);
-        }
-
         public void AddWorksheet(DataSet dataSet)
         {
             Worksheets.Add(dataSet);
@@ -867,9 +862,19 @@ namespace ClosedXML.Excel
             worksheet.CopyTo(this, worksheet.Name);
         }
 
+        public IXLWorksheet AddWorksheet(DataTable dataTable)
+        {
+            return Worksheets.Add(dataTable);
+        }
+
         public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName)
         {
             return Worksheets.Add(dataTable, sheetName);
+        }
+
+        public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName, String tableName)
+        {
+            return Worksheets.Add(dataTable, sheetName, tableName);
         }
 
         private XLCalcEngine _calcEngine;

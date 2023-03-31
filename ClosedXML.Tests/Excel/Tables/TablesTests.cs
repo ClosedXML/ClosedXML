@@ -567,6 +567,30 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void TableNameSetWhenAddingWorksheetWithDataTable()
+        {
+            var dt = new DataTable("sheet1");
+            dt.Columns.Add("Patient", typeof(string));
+            dt.Rows.Add("David");
+
+            using (var wb = new XLWorkbook())
+            {
+                // Generated table name is used and should not be an issue
+                Assert.DoesNotThrow(() => wb.AddWorksheet(dt, "t1"));
+            }
+
+            using (var wb = new XLWorkbook())
+            {
+                // Should pass because t1 is a valid sheet name, and is not used for the tableName
+                Assert.DoesNotThrow(() => wb.AddWorksheet(dt, "t1", "table1"));
+
+                Assert.AreEqual(1, wb.Worksheets.Count);
+                Assert.AreEqual(1, wb.Worksheet(1).Tables.Count());
+            }
+
+        }
+
+        [Test]
         public void CanDeleteTableField()
         {
             var l = new List<TestObjectWithAttributes>()
