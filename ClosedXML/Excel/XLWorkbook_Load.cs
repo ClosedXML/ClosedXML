@@ -188,13 +188,15 @@ namespace ClosedXML.Excel
             else
                 differentialFormats = new Dictionary<Int32, DifferentialFormat>();
 
-            var normalStyle = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
+            // If the loaded workbook has a changed "Normal" style, it might affect the default width of a column.
+            var normalStyle = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
+                .FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
                 LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, fills, borders, fonts, numberingFormats);
                 Style = new XLStyle(null, normalStyleKey);
-                ColumnWidth = XLHelper.CalculateDefaultColumnWidth(this);
+                ColumnWidth = CalculateColumnWidth(8, Style.Font, this);
             }
 
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
@@ -252,9 +254,9 @@ namespace ClosedXML.Excel
                                                        sheetFormatProperties.CustomHeight.Value);
 
                                 if (sheetFormatProperties.DefaultColumnWidth != null)
-                                    ws.ColumnWidth = XLHelper.CalculateDefaultWorksheetColumnWidthFromDefaultColumnWidth(ws.Workbook, ws.Style.Font, sheetFormatProperties.DefaultColumnWidth.Value);
+                                    ws.ColumnWidth = XLHelper.ConvertWidthToNoC(sheetFormatProperties.DefaultColumnWidth.Value, ws.Style.Font, this);
                                 else if (sheetFormatProperties.BaseColumnWidth != null)
-                                    ws.ColumnWidth = XLHelper.CalculateDefaultWorksheetColumnWidthFromBaseColumnWidth(ws.Workbook, ws.Style.Font, sheetFormatProperties.BaseColumnWidth.Value);
+                                    ws.ColumnWidth = CalculateColumnWidth(sheetFormatProperties.BaseColumnWidth.Value, ws.Style.Font, this);
                             }
                         }
                         else if (reader.ElementType == typeof(SheetViews))
@@ -872,6 +874,26 @@ namespace ClosedXML.Excel
             }
 
             #endregion Pivot tables
+        }
+
+        /// <summary>
+        /// Calculate expected column width as a number displayed in the column in Excel from
+        /// number of characters that should fit into the width and a font.
+        /// </summary>
+        internal static double CalculateColumnWidth(double charWidth, IXLFont font, XLWorkbook workbook)
+        {
+            // Convert width as a number of characters and translate it into a given number of pixels.
+            int mdw = workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX).RoundToInt();
+            int defaultColWidthPx = XLHelper.NoCToPixels(charWidth, mdw).RoundToInt();
+
+            // Excel then rounds this number up to the nearest multiple of 8 pixels, so that
+            // scrolling across columns and rows is faster.
+            int roundUpToMultiple = defaultColWidthPx + (8 - defaultColWidthPx % 8);
+
+            // and last convert the width in pixels to width displayed in Excel. Shouldn't round the number, because
+            // it causes inconsistency with conversion to other units, but other places in ClosedXML do = keep for now.
+            double defaultColumnWidth = XLHelper.PixelToNoC(roundUpToMultiple, mdw).Round(2);
+            return defaultColumnWidth;
         }
 
         private void LoadPivotStyleFormats(XLPivotTable pt, PivotTableDefinition ptd, PivotCacheDefinition pcd, Dictionary<Int32, DifferentialFormat> differentialFormats)
@@ -2006,7 +2028,7 @@ namespace ClosedXML.Excel
                     break;
             }
         }
-        
+
         private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
         {
             if (fontSource == null) return;
