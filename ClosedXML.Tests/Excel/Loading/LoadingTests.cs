@@ -429,18 +429,18 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook(stream))
             {
                 var defaultColumnWidth = wb.ColumnWidth;
-                var pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, wb.Style.Font, defaultColumnWidth);
+                var pixelWidth = XLHelper.NoCToPixels(defaultColumnWidth, wb.Style.Font, wb);
                 Assert.AreEqual(8.43, defaultColumnWidth, XLHelper.Epsilon);
-                Assert.AreEqual(64, pixelWidth, XLHelper.Epsilon);
+                Assert.AreEqual(64, pixelWidth);
             }
 
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\DefaultColumnWidth.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var defaultColumnWidth = wb.ColumnWidth;
-                var pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, wb.Style.Font, defaultColumnWidth);
+                var pixelWidth = XLHelper.NoCToPixels(defaultColumnWidth, wb.Style.Font, wb);
                 Assert.AreEqual(8.5, defaultColumnWidth, XLHelper.Epsilon);
-                Assert.AreEqual(56, pixelWidth, XLHelper.Epsilon);
+                Assert.AreEqual(56, pixelWidth);
             }
         }
 
@@ -474,12 +474,11 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
-                double pixelWidth = XLHelper.GetColumnWidthsInPixels(wb, ws.Style.Font, ws.Column(1).Width);
+                double pixelWidth = XLHelper.NoCToPixels(ws.Column(1).Width, ws.Style.Font, wb);
                 Assert.AreEqual(19.75, ws.ColumnWidth, XLHelper.Epsilon);
                 Assert.AreEqual(163, pixelWidth, XLHelper.Epsilon);
             }
         }
-
 
         [Test]
         public void CanLoadFileWithInvalidSelectedRanges()

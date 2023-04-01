@@ -389,44 +389,52 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Convert size in number of characters to pixels.
+        /// </summary>
+        /// <param name="noc">Width</param>
+        /// <param name="font">Font used to determine mdw.</param>
+        /// <param name="workbook">Workbook for dpi and graphic engine.</param>
+        /// <returns>Width in pixels.</returns>
+        internal static int NoCToPixels(double noc, IXLFont font, XLWorkbook workbook)
+        {
+            var mdw = workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX).RoundToInt();
+            return NoCToPixels(noc, mdw).RoundToInt();
+        }
+
+        /// <summary>
+        /// Convert width to pixels.
+        /// </summary>
+        /// <param name="width">Width from the source file, not NoC that is displayed in Excel as a width.</param>
+        /// <param name="mdw"></param>
+        /// <returns>Number of pixels.</returns>
+        internal static int WidthToPixels(double width, int mdw)
+        {
+            return (width * mdw).RoundToInt();
+        }
+
+        internal static double PixelsToWidth(double width, int mdw)
+        {
+            return Math.Truncate(width * mdw * 256) / 256d;
+        }
+
+        /// <summary>
+        /// Convert width (as a multiple of MDWs) into a NoCs (number displayed in Excel).
+        /// </summary>
+        /// <param name="width">Width in MDWs to convert.</param>
+        /// <param name="font">Font used to determine MDW.</param>
+        /// <param name="workbook">Workbook</param>
+        /// <returns>Width as a number of NoC.</returns>
+        internal static double ConvertWidthToNoC(double width, IXLFont font, XLWorkbook workbook)
+        {
+            var mdw = workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX).RoundToInt();
+            var pixelsWidth = WidthToPixels(width, mdw);
+            var columnWidth = PixelToNoC(pixelsWidth, mdw);
+            return columnWidth;
+        }
+
+        /// <summary>
         /// Convert degrees to radians.
         /// </summary>
         internal static double DegToRad(double angle) => Math.PI * angle / 180.0;
-
-        internal static double CalculateDefaultColumnWidth(XLWorkbook workbook)
-        {
-            double initialCharWidth = 8;
-            double digitWidth = Math.Round(workbook.GraphicEngine.GetMaxDigitWidth(workbook.Style.Font, workbook.DpiX));
-            double originalColumnWidth = Math.Truncate((initialCharWidth * digitWidth + 5) / digitWidth * 256) / 256;
-            double pixelWidth = Math.Truncate(((256 * originalColumnWidth + Math.Truncate(128 / digitWidth)) / 256) * digitWidth);
-            double roundUpToMultiple = (pixelWidth + (8 - pixelWidth % 8));
-            double columnWidth = Math.Round((roundUpToMultiple - 5) / digitWidth,2,MidpointRounding.AwayFromZero);
-            return columnWidth;
-        }
-
-        internal static double CalculateDefaultWorksheetColumnWidthFromBaseColumnWidth(XLWorkbook workbook, IXLFont font,double baseColumnWidth)
-        {
-            double digitWidth = Math.Round(workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX));
-            double originalColumnWidth = Math.Truncate((baseColumnWidth * digitWidth + 5) / digitWidth * 256) / 256;
-            double pixelWidth = Math.Truncate(((256 * originalColumnWidth + Math.Truncate(128 / digitWidth)) / 256) * digitWidth);
-            double roundUpToMultiple = (pixelWidth + (8 - pixelWidth % 8));
-            double columnWidth = Math.Round((roundUpToMultiple - 5) / digitWidth, 2, MidpointRounding.AwayFromZero);
-            return columnWidth;
-        }
-
-        internal static double CalculateDefaultWorksheetColumnWidthFromDefaultColumnWidth(XLWorkbook workbook, IXLFont font, double defaultColumnWidth)
-        {
-            double digitWidth = Math.Round(workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX));
-            double pixelWidth = Math.Truncate(((256 * defaultColumnWidth + Math.Truncate(128 / digitWidth)) / 256) * digitWidth);
-            double columnWidth = Math.Round((pixelWidth - 5) / digitWidth, 2, MidpointRounding.AwayFromZero);
-            return columnWidth;
-        }
-
-        internal static int GetColumnWidthsInPixels(XLWorkbook workbook, IXLFont font, double columnWidth)
-        {
-            double digitWidth = Math.Round(workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX), MidpointRounding.AwayFromZero);
-            double pixelWidth = Math.Round(columnWidth * digitWidth + 5, 0, MidpointRounding.AwayFromZero);
-            return (int)pixelWidth;
-        }
     }
 }
