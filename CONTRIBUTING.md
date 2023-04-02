@@ -38,6 +38,12 @@ Now, to compare 2 similar, but not exact Excel files:
 - In Total Commander, you can also navigate to specific files in the left-hand and right-hand panes and select `File > Compare by Content...`. This will open WinMerge directly.
 - Note that since WinMerge reformats the XML, it does so in a temporary file. If you make changes to the contents of any of the 2 panes in WinMerge and save the file, it will not be saved back into the Excel file.
 
+## Reconciling Test Files
+
+Sometimes you make a change to ClosedXml such as a bugfix, this may result in you have to reconcile the test files. The known good test files are stored as resources in the project under **ClosedCML.Tests -> Resource -> Examples** in there respective directories.
+
+If the generated file doesn't match, but you have confirmed the newly generated file is more correct after a code change. You will have to copy the newly generated file here to make it the new reference file. Make sure to check the new files visually and through XML comparison before overwriting the reference files.
+
 ## Code conventions
 ClosedXML has a fairly large codebase and we therefore want to keep code revisions as clean and tidy as possible. It is therefore important not to introduce unnecessary whitespace changes in your commits.
 
