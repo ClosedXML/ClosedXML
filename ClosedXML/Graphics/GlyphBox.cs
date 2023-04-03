@@ -18,13 +18,14 @@ namespace ClosedXML.Graphics
         /// <summary>
         /// A special glyph box that indicates a line break. Dimensions are kept at 0, so it doesn't affect any calculations.
         /// </summary>
-        internal static GlyphBox LineBreak => default;
+        internal static GlyphBox LineBreak => new(0, 0, 0, true);
 
-        public GlyphBox(float advanceWidth, float emSize, float descent)
+        public GlyphBox(float advanceWidth, float emSize, float descent, bool whiteSpace)
         {
             AdvanceWidth = advanceWidth;
             EmSize = emSize;
             Descent = descent;
+            IsWhiteSpace = whiteSpace;
         }
 
         /// <summary>
@@ -48,6 +49,8 @@ namespace ClosedXML.Graphics
         public float Descent { get; }
 
         internal bool IsLineBreak => AdvanceWidth == 0 && EmSize == 0 && Descent == 0;
+
+        internal bool IsWhiteSpace { get; }
 
         /// <summary>
         /// Get line width of the glyph box. It is calculated as central band with a text and

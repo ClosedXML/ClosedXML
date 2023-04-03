@@ -177,9 +177,12 @@ namespace ClosedXML.Graphics
             // without a TextRenderer that has unacceptable performance.
             var metric = GetMetrics(font);
             var advanceFu = 0;
+            var isWhiteSpace = false;
             for (var i = 0; i < graphemeCluster.Length; ++i)
             {
-                var glyphs = metric.GetGlyphMetrics(new CodePoint(graphemeCluster[i]), ColorFontSupport.None);
+                var codePoint = new CodePoint(graphemeCluster[i]);
+                isWhiteSpace |= CodePoint.IsWhiteSpace(codePoint);
+                var glyphs = metric.GetGlyphMetrics(codePoint, ColorFontSupport.None);
                 foreach (var glyph in glyphs)
                 {
                     advanceFu += glyph.AdvanceWidth;
@@ -192,7 +195,8 @@ namespace ClosedXML.Graphics
             return new GlyphBox(
                 (float)Math.Round(advancePx, MidpointRounding.AwayFromZero),
                 (float)Math.Round(emInPx, MidpointRounding.AwayFromZero),
-                (float)Math.Round(descentPx, MidpointRounding.AwayFromZero));
+                (float)Math.Round(descentPx, MidpointRounding.AwayFromZero),
+                isWhiteSpace);
         }
 
         private FontMetrics GetMetrics(IXLFontBase fontBase)
