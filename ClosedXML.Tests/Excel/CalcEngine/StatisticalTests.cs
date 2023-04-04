@@ -554,6 +554,44 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = (double)workbook.Evaluate(@"=VARP(Data!H:H)");
             Assert.AreEqual(2189.430863, value, tolerance);
         }
+
+        [Test]
+        public void Large()
+        {
+            var ws = workbook.Worksheets.First();
+            XLCellValue value;
+            value = ws.Evaluate(@"=Large(G1:G45, 1)");
+            Assert.AreEqual(96, value);
+
+            value = ws.Evaluate(@"=Large(G1:G45, 7)");
+            Assert.AreEqual(87, value);
+
+            value = ws.Evaluate(@"=Large(G1:G45, 0)");
+            Assert.AreEqual(XLError.NumberInvalid, value);
+
+            value = ws.Evaluate(@"=Large(G1:G45, -1)");
+            Assert.AreEqual(XLError.NumberInvalid, value);
+
+            value = ws.Evaluate("=Large(G1:G45,\"test\")");
+            Assert.AreEqual(XLError.IncompatibleValue, value);
+
+            value = ws.Evaluate("=Large(C:C,7)");
+            Assert.AreEqual(42623, value);
+
+            value = ws.Evaluate("=Large(D:D,7)");
+            Assert.AreEqual(XLError.NumberInvalid, value);
+
+            ws = workbook.Worksheets.Skip(1).First();
+
+            value = ws.Evaluate("=Large(A1:A7,6)");
+            Assert.AreEqual(XLError.NumberInvalid, value);
+
+            value = ws.Evaluate("=Large(A1:A7,5)");
+            Assert.AreEqual(1, value);
+
+        }
+
+
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();
