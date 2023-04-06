@@ -29,7 +29,7 @@ namespace ClosedXML.Examples
                     .CellBelow().SetValue(6);
 
                 // merged header... button is visible
-                ws1.Cell(1, 2).SetValue("Column 1 & 2");
+                ws1.Cell(1, 1).SetValue("Column 1 & 2");
                 ws1.Range(1, 1, 1, 2).Merge();
 
                 ws1.Cell(1, 3).SetValue("Column 3")
@@ -60,7 +60,7 @@ namespace ClosedXML.Examples
                     .CellBelow().SetValue(6);
 
                 // merged header... button is visible
-                ws2.Cell(1, 2).SetValue("Column 1 & 2");
+                ws2.Cell(1, 1).SetValue("Column 1 & 2");
                 ws2.Range(1, 1, 1, 2).Merge();
 
                 ws2.Cell(1, 3).SetValue("Column 3")
