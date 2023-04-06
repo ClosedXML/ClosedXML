@@ -219,6 +219,8 @@ namespace ClosedXML.Excel
         public XLFilterDynamicType DynamicType { get; set; }
         public Double DynamicValue { get; set; }
 
+        public bool HideButton { get; set; }
+
         #endregion IXLFilterColumn Members
 
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
