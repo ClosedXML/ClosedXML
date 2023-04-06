@@ -170,17 +170,11 @@ namespace ClosedXML.Excel
                     Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
             }
 
-            Stylesheet s = null;
-            if (dSpreadsheet.WorkbookPart.WorkbookStylesPart != null &&
-                dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet != null)
-            {
-                s = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet;
-            }
-
-            NumberingFormats numberingFormats = s == null ? null : s.NumberingFormats;
-            Fills fills = s == null ? null : s.Fills;
-            Borders borders = s == null ? null : s.Borders;
-            Fonts fonts = s == null ? null : s.Fonts;
+            Stylesheet s = dSpreadsheet.WorkbookPart.WorkbookStylesPart?.Stylesheet;
+            NumberingFormats numberingFormats = s?.NumberingFormats;
+            Fills fills = s?.Fills;
+            Borders borders = s?.Borders;
+            Fonts fonts = s?.Fonts;
             Int32 dfCount = 0;
             Dictionary<Int32, DifferentialFormat> differentialFormats;
             if (s != null && s.DifferentialFormats != null)
@@ -189,8 +183,7 @@ namespace ClosedXML.Excel
                 differentialFormats = new Dictionary<Int32, DifferentialFormat>();
 
             // If the loaded workbook has a changed "Normal" style, it might affect the default width of a column.
-            var normalStyle = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
-                .FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
+            var normalStyle = s?.CellStyles.Elements<CellStyle>().FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
