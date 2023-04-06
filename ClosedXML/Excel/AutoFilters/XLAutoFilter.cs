@@ -26,6 +26,7 @@ namespace ClosedXML.Excel
         public Boolean Sorted { get; set; }
         public XLSortOrder SortOrder { get; set; }
         public IEnumerable<IXLRangeRow> VisibleRows { get => Range.Rows(r => !r.WorksheetRow().IsHidden); }
+        public IEnumerable<int> ColumnIndicesWithHiddenButtons => _columns.Where(kv => kv.Value.HideButton).Select(kv => kv.Key);
 
         IXLAutoFilter IXLAutoFilter.Clear()
         {

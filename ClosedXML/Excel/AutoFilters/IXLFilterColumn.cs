@@ -57,6 +57,8 @@ namespace ClosedXML.Excel
         XLFilterDynamicType DynamicType { get; set; }
         Double DynamicValue { get; set; }
 
+        bool HideButton { get; set; }
+
         IXLFilterColumn SetFilterType(XLFilterType value);
 
         IXLFilterColumn SetTopBottomValue(Int32 value);

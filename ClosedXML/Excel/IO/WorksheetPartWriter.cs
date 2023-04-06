@@ -1414,6 +1414,13 @@ namespace ClosedXML.Excel.IO
                 autoFilter.Append(filterColumn);
             }
 
+            foreach(var idx in xlAutoFilter.ColumnIndicesWithHiddenButtons)
+            {
+                var filterColumn = new FilterColumn { ColumnId = (UInt32)idx - 1 };
+                filterColumn.ShowButton = false;
+                autoFilter.Append(filterColumn);
+            }
+
             if (xlAutoFilter.Sorted)
             {
                 string reference = null;
