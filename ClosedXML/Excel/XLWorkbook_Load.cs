@@ -2476,7 +2476,7 @@ namespace ClosedXML.Excel
 
                     xlFilterColumn.DynamicValue = filterColumn.DynamicFilter.Val.Value;
                 }
-                else if(!filterColumn.ShowButton)
+                else if(filterColumn.ShowButton != null && !filterColumn.ShowButton.Value)
                 {
                     var xlFilterColumn = autoFilter.Column(column);
                     xlFilterColumn.HideButton = true;
