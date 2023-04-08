@@ -94,7 +94,13 @@ namespace ClosedXML.Examples.Misc
             
             // Hyperlink via formula
             ws.Cell( ++ro, 1 )
-                .SetFormulaA1("=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")");
+                .SetFormulaA1("=HYPERLINK(\"mailto:test@test.com\", \"Send Email through formula\")");
+
+            ws.Cell(++ro, 1)
+                .SetFormulaA1("=HYPERLINK(\"[Hyperlinks.xlsx]Hyperlinks!B2:C4\", \"Link to range through formula\")");
+
+            ws.Cell(++ro, 1)
+                .SetFormulaA1("=HYPERLINK(\"[../Test.xlsx]Sheet1!B2:C4\", \"Link to another file through formula\")");
 
             // List all hyperlinks in a worksheet:
             var hyperlinksInWorksheet = ws.Hyperlinks;

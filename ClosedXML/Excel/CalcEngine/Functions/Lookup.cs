@@ -126,10 +126,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static AnyValue Hyperlink(CalcContext ctx, string linkLocation, ScalarValue? friendlyName)
         {
-            var link = new XLHyperlink(linkLocation);
-            var cell = ctx.Worksheet.Cell(ctx.FormulaAddress);
-            cell.SetHyperlink(link);
-
             return friendlyName?.ToAnyValue() ?? linkLocation;
         }
 

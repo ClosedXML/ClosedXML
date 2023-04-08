@@ -188,19 +188,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Hyperlink()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet();
+            var sheet = wb.AddWorksheet();
 
-            var cell = ws.Cell("B3");
+            var cell = sheet.Cell("B3");
             cell.FormulaA1 = "HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")";
             Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", cell.Value);
-            Assert.True(cell.HasHyperlink);
-            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", cell.GetHyperlink().ExternalAddress.ToString());
+            Assert.False(cell.HasHyperlink);
 
-            cell = ws.Cell("B4");
+            cell = sheet.Cell("B4");
             cell.FormulaA1 = "HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")";
             Assert.AreEqual("jsmith@github.com", cell.Value);
-            Assert.True(cell.HasHyperlink);
-            Assert.AreEqual("mailto:jsmith@github.com", cell.GetHyperlink().ExternalAddress.ToString());
+            Assert.False(cell.HasHyperlink);
+
+            cell = sheet.Cell("B5");
+            cell.FormulaA1 = "HYPERLINK(\"[Test.xlsx]Sheet1!A5\", \"Cell A5\")";
+            Assert.AreEqual("Cell A5", cell.Value);
+            Assert.False(cell.HasHyperlink);
         }
 
         [Test]
