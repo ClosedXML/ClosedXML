@@ -16,3 +16,10 @@ Enum underlaying type
 Enums `XLAlignmentReadingOrderValues`, `XLAlignmentHorizontalValues` and
 `XLAlignmentVerticalValues` now use `byte` as an underlaying type instead of
 `int`. Smaller underlaying type saves memory due to alignment.
+
+**************
+Graphic engine
+**************
+
+Graphic engine has a new method: `IXLGraphicEngine.GetGlyphBox`. See XML doc
+for more details.

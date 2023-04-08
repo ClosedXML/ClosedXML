@@ -58,6 +58,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    :caption: Migrations
 
    migrations/migrate-to-0.100
+   migrations/migrate-to-0.101
 
 .. toctree::
    :maxdepth: 2
