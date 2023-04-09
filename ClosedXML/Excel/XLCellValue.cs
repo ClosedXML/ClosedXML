@@ -414,7 +414,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Try to convert the value to a <see cref="XLDataType.Blank"/> and return it.
-        /// Method succeeds, when value is 
+        /// Method succeeds, when value is
         /// <list type="bullet">
         ///   <item>Type <see cref="XLDataType.Blank"/>.</item>
         ///   <item>Type <see cref="XLDataType.Text"/> and the text is empty.</item>
@@ -435,7 +435,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Try to convert the value to a <see cref="XLDataType.Boolean"/> and return it.
-        /// Method succeeds, when value is 
+        /// Method succeeds, when value is
         /// <list type="bullet">
         ///   <item>Type <see cref="XLDataType.Boolean"/>.</item>
         ///   <item>Type <see cref="XLDataType.Number"/>, then the value of <c>0</c> means <c>false</c> and any other value is <c>true</c>.</item>
@@ -510,7 +510,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Try to convert the value to a <see cref="DateTime"/> and return it.
-        /// Method succeeds, when value is 
+        /// Method succeeds, when value is
         /// <list type="bullet">
         ///   <item>Type <see cref="XLDataType.DateTime"/>.</item>
         ///   <item>Type <see cref="XLDataType.Number"/> and when the number is interpreted is a serial date time, it falls within the DateTime range.</item>
@@ -535,7 +535,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Try to convert the value to a <see cref="TimeSpan"/> and return it.
-        /// Method succeeds, when value is 
+        /// Method succeeds, when value is
         /// <list type="bullet">
         ///   <item>Type <see cref="XLDataType.TimeSpan"/>.</item>
         ///   <item>Type <see cref="XLDataType.Number"/>, the number is interpreted is a time span date time.</item>

@@ -1,12 +1,10 @@
-#nullable disable
-
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
     internal class XLStylizedEmpty : XLStylizedBase, IXLStylized
     {
-        public XLStylizedEmpty(IXLStyle defaultStyle)
+        public XLStylizedEmpty(IXLStyle? defaultStyle)
             : base((defaultStyle as XLStyle)?.Value)
         {
         }

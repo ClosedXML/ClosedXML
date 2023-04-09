@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
                 };
             });
 
-        internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
+        internal static bool ValueSatisfiesCriteria(object? value, object criteria, CalcEngine ce)
         {
             // safety...
             if (value == null)
@@ -46,7 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
             else if (criteria is TimeSpan ts) cdbl = ts.TotalDays;
             else if (criteria is String cs)
             {
-                if (value is string && (value as string).Trim().Length == 0)
+                if (value is string s && s.Trim().Length == 0)
                     return cs.Length == 0;
 
                 if (cs.Length == 0)
@@ -118,9 +116,9 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Abs(vdbl - cdbl) < Double.Epsilon;
         }
 
-        internal static bool ValueIsBlank(object value)
+        internal static bool ValueIsBlank(object? value)
         {
-            if (value == null)
+            if (value is null)
                 return true;
 
             if (value is string s)
@@ -135,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="rangeExpression">Expression referring to the cell range.</param>
         /// <returns>Total number of cells in the range.</returns>
-        internal static long GetTotalCellsCount(XObjectExpression rangeExpression)
+        internal static long GetTotalCellsCount(XObjectExpression? rangeExpression)
         {
             var (columnCount, rowCount) = GetRangeDimensions(rangeExpression);
             return (long)columnCount * (long)rowCount;
@@ -147,7 +145,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="rangeExpression">Expression referring to the cell range.</param>
         /// <returns>A tuple of column and row counts.</returns>
-        internal static (int ColumnCount, int RowCount) GetRangeDimensions(XObjectExpression rangeExpression)
+        internal static (int ColumnCount, int RowCount) GetRangeDimensions(XObjectExpression? rangeExpression)
         {
             var range = (rangeExpression?.Value as CellRangeReference)?.Range;
             if (range == null)
@@ -158,7 +156,7 @@ namespace ClosedXML.Excel.CalcEngine
             return (range.ColumnCount(), range.RowCount());
         }
 
-        internal static bool TryExtractRange(Expression expression, out IXLRange range, out XLError calculationErrorType)
+        internal static bool TryExtractRange(Expression expression, out IXLRange? range, out XLError calculationErrorType)
         {
             range = null;
             calculationErrorType = default;

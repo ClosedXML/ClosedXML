@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
@@ -9,14 +7,14 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotStyleFormats : IXLPivotStyleFormats
     {
-        private readonly IXLPivotField _pivotField;
+        private readonly IXLPivotField? _pivotField;
         private readonly Dictionary<XLPivotStyleFormatElement, IXLPivotStyleFormat> _styleFormats = new Dictionary<XLPivotStyleFormatElement, IXLPivotStyleFormat>();
 
         public XLPivotStyleFormats()
             : this(null)
         { }
 
-        public XLPivotStyleFormats(IXLPivotField pivotField)
+        public XLPivotStyleFormats(IXLPivotField? pivotField)
         {
             this._pivotField = pivotField;
         }

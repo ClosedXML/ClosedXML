@@ -1,12 +1,10 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 namespace ClosedXML.Excel
 {
     internal class XLPivotTableStyleFormats : IXLPivotTableStyleFormats
     {
-        private IXLPivotStyleFormats columnGrandTotalFormats;
-        private IXLPivotStyleFormats rowGrandTotalFormats;
+        private IXLPivotStyleFormats? columnGrandTotalFormats;
+        private IXLPivotStyleFormats? rowGrandTotalFormats;
 
         #region IXLPivotTableStyleFormats members
 

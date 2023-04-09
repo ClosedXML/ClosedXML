@@ -1,6 +1,5 @@
 #nullable disable
 
-using ClosedXML.Excel.CalcEngine;
 using System;
 using System.Globalization;
 
@@ -228,7 +227,7 @@ namespace ClosedXML.Excel
         ///   Deletes the cell comments from this range.
         /// </summary>
         void DeleteComments();
-        
+
         /// <summary>
         /// Set value to all cells in the range.
         /// </summary>

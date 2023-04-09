@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,7 +110,7 @@ namespace ClosedXML.Excel
                     consRanges.ForEach(r => item.Ranges.Add(r));
 
                     var targetCell = item.Ranges.First().FirstCell() as XLCell;
-                    (item as XLConditionalFormat).AdjustFormulas(baseCell, targetCell);
+                    ((XLConditionalFormat)item).AdjustFormulas(baseCell, targetCell);
 
                     similarFormats.ForEach(cf => formats.Remove(cf));
                 }
@@ -132,7 +130,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void ReorderAccordingToOriginalPriority()
         {
-            var reorderedFormats = _conditionalFormats.OrderBy(cf => (cf as XLConditionalFormat).OriginalPriority).ToList();
+            var reorderedFormats = _conditionalFormats.OrderBy(cf => ((XLConditionalFormat)cf).OriginalPriority).ToList();
             _conditionalFormats.Clear();
             _conditionalFormats.AddRange(reorderedFormats);
         }

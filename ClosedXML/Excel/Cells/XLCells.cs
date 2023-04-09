@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +20,7 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLCells(bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate = null)
+        public XLCells(bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
             : base(XLStyle.Default.Value)
         {
             _usedCellsOnly = usedCellsOnly;
@@ -39,7 +37,7 @@ namespace ClosedXML.Excel
             var groupedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
             foreach (var worksheetGroup in groupedAddresses)
             {
-                var ws = worksheetGroup.Key;
+                var ws = worksheetGroup.Key!;
                 var sheetPoints = worksheetGroup.SelectMany(addr => GetAllCellsInRange(addr))
                     .Distinct();
                 foreach (var sheetPoint in sheetPoints)
@@ -77,7 +75,7 @@ namespace ClosedXML.Excel
             var groupedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
             foreach (var worksheetGroup in groupedAddresses)
             {
-                var ws = worksheetGroup.Key;
+                var ws = worksheetGroup.Key!;
 
                 var usedCellsCandidates = GetUsedCellsCandidates(ws);
 

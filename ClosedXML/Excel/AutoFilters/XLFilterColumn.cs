@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 
@@ -242,7 +240,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<Object, Boolean> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter
@@ -313,7 +311,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<Object, Boolean> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter

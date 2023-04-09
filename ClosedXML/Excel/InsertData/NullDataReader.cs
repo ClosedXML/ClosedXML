@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +13,9 @@ namespace ClosedXML.Excel.InsertData
             _count = nulls.Count();
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<object?>> GetData()
         {
-            var res = new object[] { null }.AsEnumerable();
+            var res = new object?[] { null }.AsEnumerable();
             for (int i = 0; i < _count; i++)
             {
                 yield return res;
@@ -29,7 +27,7 @@ namespace ClosedXML.Excel.InsertData
             return 0;
         }
 
-        public string GetPropertyName(int propertyIndex)
+        public string? GetPropertyName(int propertyIndex)
         {
             return null;
         }

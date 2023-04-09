@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -8,12 +6,12 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
-        internal static XLProtectionKey GenerateKey(IXLProtection defaultProtection)
+        internal static XLProtectionKey GenerateKey(IXLProtection? defaultProtection)
         {
             if (defaultProtection == null)
                 return XLProtectionValue.Default.Key;
-            if (defaultProtection is XLProtection)
-                return (defaultProtection as XLProtection).Key;
+            if (defaultProtection is XLProtection protection)
+                return protection.Key;
 
             return new XLProtectionKey
             {
@@ -45,17 +43,17 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
-        public XLProtection(XLStyle style, XLProtectionValue value)
+        public XLProtection(XLStyle? style, XLProtectionValue value)
         {
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
 
-        public XLProtection(XLStyle style, XLProtectionKey key) : this(style, XLProtectionValue.FromKey(ref key))
+        public XLProtection(XLStyle? style, XLProtectionKey key) : this(style, XLProtectionValue.FromKey(ref key))
         {
         }
 
-        public XLProtection(XLStyle style = null, IXLProtection d = null) : this(style, GenerateKey(d))
+        public XLProtection(XLStyle? style = null, IXLProtection? d = null) : this(style, GenerateKey(d))
         {
         }
 

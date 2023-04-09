@@ -1,5 +1,3 @@
-#nullable disable
-
 using ExcelNumberFormat;
 using System;
 using System.Collections;
@@ -338,7 +336,7 @@ namespace ClosedXML.Excel.CalcEngine
                             .Select(c => c.GetString())
                             .Where(s => !string.IsNullOrEmpty(s));
                     else
-                        cellValues = (range as XLRange).CellValues()
+                        cellValues = ((XLRange)range).CellValues()
                             .Select(o => o.ToString(CultureInfo.CurrentCulture));
 
                     values.AddRange(cellValues);

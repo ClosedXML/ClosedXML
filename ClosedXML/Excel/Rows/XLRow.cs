@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Graphics;
 using System;
 using System.Collections.Generic;
@@ -306,7 +304,7 @@ namespace ClosedXML.Excel
         private int CalculateMinRowHeight(int startColumn, int endColumn, IXLGraphicEngine engine, Dpi dpi)
         {
             var glyphs = new List<GlyphBox>();
-            XLStyle cellStyle = null;
+            XLStyle? cellStyle = null;
             var rowHeightPx = 0;
             foreach (var cell in Row(startColumn, endColumn).CellsUsed().Cast<XLCell>())
             {

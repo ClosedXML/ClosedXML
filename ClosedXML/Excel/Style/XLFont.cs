@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Text;
 
@@ -25,15 +23,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal static XLFontKey GenerateKey(IXLFontBase defaultFont)
+        internal static XLFontKey GenerateKey(IXLFontBase? defaultFont)
         {
             if (defaultFont == null)
             {
                 return XLFontValue.Default.Key;
             }
-            else if (defaultFont is XLFont)
+            else if (defaultFont is XLFont font)
             {
-                return (defaultFont as XLFont).Key;
+                return font.Key;
             }
             else
             {
@@ -73,17 +71,17 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
-        public XLFont(XLStyle style, XLFontValue value)
+        public XLFont(XLStyle? style, XLFontValue value)
         {
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
 
-        public XLFont(XLStyle style, XLFontKey key) : this(style, XLFontValue.FromKey(ref key))
+        public XLFont(XLStyle? style, XLFontKey key) : this(style, XLFontValue.FromKey(ref key))
         {
         }
 
-        public XLFont(XLStyle style = null, IXLFont d = null) : this(style, GenerateKey(d))
+        public XLFont(XLStyle? style = null, IXLFont? d = null) : this(style, GenerateKey(d))
         {
         }
 
@@ -338,7 +336,7 @@ namespace ClosedXML.Excel
             return Equals(obj as XLFont);
         }
 
-        public Boolean Equals(IXLFont other)
+        public Boolean Equals(IXLFont? other)
         {
             var otherF = other as XLFont;
             if (otherF == null)

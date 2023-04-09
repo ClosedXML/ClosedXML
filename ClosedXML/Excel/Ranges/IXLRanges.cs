@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 
@@ -26,9 +24,9 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
         /// Null means the entire collection should be cleared.</param>
-        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
-        void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true);
+        void RemoveAll(Predicate<IXLRange>? match = null, bool releaseEventHandlers = true);
 
         Int32 Count { get; }
 
@@ -51,7 +49,6 @@ namespace ClosedXML.Excel
         /// that using Linq expression .Where().
         /// </summary>
         IEnumerable<IXLRange> GetIntersectedRanges(IXLCell cell);
-
 
         IXLStyle Style { get; set; }
 

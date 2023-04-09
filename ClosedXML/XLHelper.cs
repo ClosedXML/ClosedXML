@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -227,7 +225,7 @@ namespace ClosedXML.Excel
             var ws = tableRange.Worksheet;
             var rows = new XLTableRows(ws.Style);
             var inserted = insertFunc(numberOfRows, false);
-            inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, r as XLRangeRow)));
+            inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, (XLRangeRow)r)));
 
             if (expandTable)
                 tableRange.Table.ExpandTableRows(numberOfRows);

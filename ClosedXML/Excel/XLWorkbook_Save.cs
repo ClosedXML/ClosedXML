@@ -27,8 +27,6 @@ using Bold = DocumentFormat.OpenXml.Spreadsheet.Bold;
 using Border = DocumentFormat.OpenXml.Spreadsheet.Border;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
-using Comment = DocumentFormat.OpenXml.Spreadsheet.Comment;
-using Comments = DocumentFormat.OpenXml.Spreadsheet.Comments;
 using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Fill = DocumentFormat.OpenXml.Spreadsheet.Fill;
 using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
@@ -2114,7 +2112,7 @@ namespace ClosedXML.Excel
                     }
                     else if (types.Length == 1 && types.Single() == XLDataType.Text)
                     {
-                        // Default value for ContainsString is true, so no need to set it. 
+                        // Default value for ContainsString is true, so no need to set it.
                         if (ptfi.DistinctValues.Any(v => v.GetText().Length > 255))
                             sharedItems.LongText = true;
 

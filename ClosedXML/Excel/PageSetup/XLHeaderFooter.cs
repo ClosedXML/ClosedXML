@@ -7,9 +7,8 @@ namespace ClosedXML.Excel
 {
     using System.Linq;
 
-    internal class XLHeaderFooter: IXLHeaderFooter
+    internal class XLHeaderFooter : IXLHeaderFooter
     {
-
         public XLHeaderFooter(XLWorksheet worksheet)
         {
             this.Worksheet = worksheet;
@@ -23,9 +22,9 @@ namespace ClosedXML.Excel
         {
             this.Worksheet = worksheet;
             defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
-            Left = new XLHFItem(defaultHF.Left as XLHFItem, this);
-            Center = new XLHFItem(defaultHF.Center as XLHFItem, this);
-            Right = new XLHFItem(defaultHF.Right as XLHFItem, this);
+            Left = new XLHFItem((XLHFItem)defaultHF.Left, this);
+            Center = new XLHFItem((XLHFItem)defaultHF.Center, this);
+            Right = new XLHFItem((XLHFItem)defaultHF.Right, this);
             SetAsInitial();
         }
 

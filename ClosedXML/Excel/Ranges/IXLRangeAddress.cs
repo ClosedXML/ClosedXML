@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 
@@ -46,10 +44,11 @@ namespace ClosedXML.Excel
         /// </summary>
         int RowSpan { get; }
 
-        IXLWorksheet Worksheet { get; }
+        IXLWorksheet? Worksheet { get; }
 
         /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
-        IXLRange AsRange();
+        /// <returns>Range of the address or null, if the range is not a valid address.</returns>
+        IXLRange? AsRange();
 
         Boolean Contains(IXLAddress address);
 

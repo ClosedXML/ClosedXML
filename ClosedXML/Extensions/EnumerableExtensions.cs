@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
@@ -16,15 +14,12 @@ namespace ClosedXML.Excel
                 action(item);
         }
 
-        public static Type GetItemType(this IEnumerable source)
+        public static Type? GetItemType(this IEnumerable source)
         {
-            return GetGenericArgument(source?.GetType());
+            return GetGenericArgument(source.GetType());
 
-            Type GetGenericArgument(Type collectionType)
+            Type? GetGenericArgument(Type collectionType)
             {
-                if (collectionType == null)
-                    return null;
-
                 var ienumerable = collectionType.GetInterfaces()
                     .SingleOrDefault(i => i.GetGenericArguments().Length == 1 &&
                                           i.Name == "IEnumerable`1");

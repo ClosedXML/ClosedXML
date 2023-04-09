@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Attributes;
 using ClosedXML.Extensions;
@@ -25,7 +23,7 @@ namespace ClosedXML.Excel.InsertData
         {
             _data = data?.Cast<object>() ?? throw new ArgumentNullException(nameof(data));
 
-            var itemType = data.GetItemType();
+            var itemType = data.GetItemType()!;
             if (itemType.IsNullableType())
                 itemType = itemType.GetUnderlyingType();
 
@@ -38,7 +36,7 @@ namespace ClosedXML.Excel.InsertData
             _staticMembers = _members.Select(ReflectionExtensions.IsStatic).ToArray();
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<object?>> GetData()
         {
             return _data.Select(GetItemData);
         }
@@ -48,7 +46,7 @@ namespace ClosedXML.Excel.InsertData
             return _members.Length;
         }
 
-        public string GetPropertyName(int propertyIndex)
+        public string? GetPropertyName(int propertyIndex)
         {
             if (propertyIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(propertyIndex), "Property index must be non-negative");
@@ -69,7 +67,7 @@ namespace ClosedXML.Excel.InsertData
             return _data.Count();
         }
 
-        private IEnumerable<object> GetItemData(object item)
+        private IEnumerable<object?> GetItemData(object item)
         {
             for (int i = 0; i < _members.Length; i++)
             {

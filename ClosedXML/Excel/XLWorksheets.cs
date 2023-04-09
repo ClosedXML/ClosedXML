@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +45,7 @@ namespace ClosedXML.Excel
             return _worksheets.ContainsKey(sheetName);
         }
 
-        public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
+        public bool TryGetWorksheet(string sheetName, out IXLWorksheet? worksheet)
         {
             if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out XLWorksheet w))
             {

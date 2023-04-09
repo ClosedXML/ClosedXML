@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -44,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var acceptedPrefix = referenceNode.Prefix?.Accept(context, this);
             return !ReferenceEquals(acceptedPrefix, referenceNode.Prefix)
-                ? new ReferenceNode((PrefixNode)acceptedPrefix, referenceNode.Type, referenceNode.Address)
+                ? new ReferenceNode((PrefixNode?)acceptedPrefix, referenceNode.Type, referenceNode.Address)
                 : referenceNode;
         }
 
@@ -52,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var acceptedPrefix = nameNode.Prefix?.Accept(context, this);
             return !ReferenceEquals(acceptedPrefix, nameNode.Prefix)
-                ? new NameNode((PrefixNode)acceptedPrefix, nameNode.Name)
+                ? new NameNode((PrefixNode?)acceptedPrefix, nameNode.Name)
                 : nameNode;
         }
 
@@ -62,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var acceptedFile = prefix.File?.Accept(context, this);
             return !ReferenceEquals(acceptedFile, prefix.File)
-                ? new PrefixNode((FileNode)acceptedFile, prefix.Sheet, prefix.FirstSheet, prefix.LastSheet)
+                ? new PrefixNode((FileNode?)acceptedFile, prefix.Sheet, prefix.FirstSheet, prefix.LastSheet)
                 : prefix;
         }
 

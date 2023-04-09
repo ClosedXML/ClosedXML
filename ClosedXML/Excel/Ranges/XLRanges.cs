@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
@@ -62,7 +60,7 @@ namespace ClosedXML.Excel
 
         public void Add(IXLRangeBase range)
         {
-            Add(range.AsRange() as XLRange);
+            Add((XLRange)range.AsRange());
         }
 
         public void Add(IXLCell cell)
@@ -88,7 +86,7 @@ namespace ClosedXML.Excel
         /// Null means the entire collection should be cleared.</param>
         /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
-        public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
+        public void RemoveAll(Predicate<IXLRange>? match = null, bool releaseEventHandlers = true)
         {
             foreach (var index in _indexes.Values)
             {
@@ -136,7 +134,7 @@ namespace ClosedXML.Excel
 
         internal IEnumerable<IXLRange> GetIntersectedRanges(in XLRangeAddress rangeAddress)
         {
-            return GetRangeIndex(rangeAddress.Worksheet)
+            return GetRangeIndex(rangeAddress.Worksheet!)
                 .GetIntersectedRanges(rangeAddress);
         }
 
@@ -176,7 +174,7 @@ namespace ClosedXML.Excel
             return AddToNamed(rangeName, XLScope.Workbook, null);
         }
 
-        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
+        public IXLRanges AddToNamed(String rangeName, XLScope scope, String? comment)
         {
             Ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
             return this;
@@ -267,7 +265,7 @@ namespace ClosedXML.Excel
             return Equals(obj as XLRanges);
         }
 
-        public bool Equals(XLRanges other)
+        public bool Equals(XLRanges? other)
         {
             if (other == null)
                 return false;

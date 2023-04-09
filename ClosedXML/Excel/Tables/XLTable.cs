@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
                 _lastRangeAddress = RangeAddress;
 
                 RescanFieldNames();
-                
+
                 return _fieldNames;
             }
         }

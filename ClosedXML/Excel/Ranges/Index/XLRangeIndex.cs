@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.Patterns;
 using System;
 using System.Collections.Generic;
@@ -18,7 +16,7 @@ namespace ClosedXML.Excel.Ranges.Index
         {
             _worksheet = worksheet;
             _rangeList = new List<IXLAddressable>();
-            (_worksheet as XLWorksheet).RegisterRangeIndex(this);
+            ((XLWorksheet)_worksheet).RegisterRangeIndex(this);
         }
 
         #endregion Public Constructors
@@ -50,7 +48,7 @@ namespace ClosedXML.Excel.Ranges.Index
             if (_quadTree == null)
                 InitializeTree();
 
-            return _quadTree.Add(range);
+            return _quadTree!.Add(range);
         }
 
         public bool Contains(in XLAddress address)
@@ -128,7 +126,7 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.Remove(rangeAddress);
         }
 
-        public int RemoveAll(Predicate<IXLAddressable> predicate = null)
+        public int RemoveAll(Predicate<IXLAddressable>? predicate = null)
         {
             predicate = predicate ?? (_ => true);
 
@@ -158,13 +156,13 @@ namespace ClosedXML.Excel.Ranges.Index
 
         private readonly IXLWorksheet _worksheet;
         private int _count = 0;
-        protected Quadrant _quadTree;
+        protected Quadrant? _quadTree;
 
         #endregion Private Fields
 
         #region Private Methods
 
-        private void CheckWorksheet(IXLWorksheet worksheet)
+        private void CheckWorksheet(IXLWorksheet? worksheet)
         {
             if (worksheet != _worksheet)
                 throw new ArgumentException("Range belongs to a different worksheet");
@@ -200,7 +198,7 @@ namespace ClosedXML.Excel.Ranges.Index
             return base.Add(range);
         }
 
-        public int RemoveAll(Predicate<T> predicate)
+        public int RemoveAll(Predicate<T>? predicate)
         {
             predicate = predicate ?? (_ => true);
 

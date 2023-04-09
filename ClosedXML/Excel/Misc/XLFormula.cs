@@ -1,9 +1,6 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -27,15 +24,15 @@ namespace ClosedXML.Excel
         {
             Value = value.ToInvariantString();
         }
-        
+
         public XLFormula(int value)
         {
             Value = value.ToInvariantString();
         }
 
         internal String _value;
-        public String Value 
-        { 
+        public String Value
+        {
             get { return _value; }
             set
             {
@@ -50,7 +47,7 @@ namespace ClosedXML.Excel
                     if (IsFormula)
                         _value = _value.Substring(1);
                 }
-                
+
 
             }
         }

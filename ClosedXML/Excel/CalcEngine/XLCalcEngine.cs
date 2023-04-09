@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,7 +18,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
         /// <param name="uniqueCells">All cells (including newly created blank ones) that are referenced in the formula.</param>
         /// <returns>True if it was possible for get precedent cells, false otherwise (e.g. reference errors).</returns>
-        public bool TryGetPrecedentCells(string expression, XLWorksheet worksheet, out ICollection<XLCell> uniqueCells)
+        public bool TryGetPrecedentCells(string expression, XLWorksheet worksheet, out ICollection<XLCell>? uniqueCells)
         {
             // This sucks and doesn't work for adding/removing named ranges/worksheets. Also, it creates new cells for all found ranges.
             if (string.IsNullOrWhiteSpace(expression))
@@ -38,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
             var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
 
             var precedentCells = new XLCells(usedCellsOnly: false, XLCellsUsedOptions.Contents);
-            foreach (var precedentArea in precedentAreas)
+            foreach (var precedentArea in precedentAreas!)
                 precedentCells.Add(precedentArea);
 
             uniqueCells = new List<XLCell>();
@@ -54,7 +52,7 @@ namespace ClosedXML.Excel.CalcEngine
             return true;
         }
 
-        private bool TryGetPrecedentAreas(string expression, XLWorksheet worksheet, out ICollection<XLRangeAddress> precedentAreas)
+        private bool TryGetPrecedentAreas(string expression, XLWorksheet worksheet, out ICollection<XLRangeAddress>? precedentAreas)
         {
             var formula = Parse(expression);
             var ctx = new PrecedentAreasContext(worksheet);
@@ -66,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             if (rootValue.TryPickT0(out var rootReference, out var _))
-                ctx.AddReference(rootReference);
+                ctx.AddReference(rootReference!);
 
             precedentAreas = ctx.FoundReferences
                 .SelectMany(x => x.Areas)
@@ -152,21 +150,21 @@ namespace ClosedXML.Excel.CalcEngine
 
                 if (isLeftReference && !isRightReference)
                 {
-                    ctx.AddReference(leftReference);
+                    ctx.AddReference(leftReference!);
                     return rightError;
                 }
 
                 if (!isLeftReference && isRightReference)
                 {
-                    ctx.AddReference(rightReference);
+                    ctx.AddReference(rightReference!);
                     return leftError;
                 }
 
                 // Don't add resulting reference into the ctx here, because it still might be turned into an error later (some ranges have many operations A1:B5:C3)
                 return node.Operation switch
                 {
-                    BinaryOp.Range => Reference.RangeOp(leftReference, rightReference, ctx.Worksheet),
-                    BinaryOp.Union => Reference.UnionOp(leftReference, rightReference),
+                    BinaryOp.Range => Reference.RangeOp(leftReference!, rightReference!, ctx.Worksheet),
+                    BinaryOp.Union => Reference.UnionOp(leftReference!, rightReference!),
                     BinaryOp.Intersection => throw new NotImplementedException("Range intersection not implemented."),
                     _ => XLError.CellReference // Binary operation on reference arguments
                 };
@@ -187,7 +185,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var value = node.Expression.Accept(ctx, this);
                 if (!value.TryPickT0(out var reference, out var error))
                     return error;
-                ctx.AddReference(reference);
+                ctx.AddReference(reference!);
                 return XLError.CellReference;
             }
 
@@ -197,7 +195,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     var paramResult = param.Accept(ctx, this);
                     if (paramResult.TryPickT0(out var reference, out _))
-                        ctx.AddReference(reference);
+                        ctx.AddReference(reference!);
                 }
                 return XLError.CellReference;
             }

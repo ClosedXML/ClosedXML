@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +8,7 @@ namespace ClosedXML.Excel.InsertData
     internal class DataTableReader : IInsertDataReader
     {
         private readonly IEnumerable<DataRow> _dataRows;
-        private readonly DataTable _dataTable;
+        private readonly DataTable? _dataTable;
 
         public DataTableReader(DataTable dataTable)
         {
@@ -40,7 +38,7 @@ namespace ClosedXML.Excel.InsertData
             return 0;
         }
 
-        public string GetPropertyName(int propertyIndex)
+        public string? GetPropertyName(int propertyIndex)
         {
             if (propertyIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(propertyIndex), "Property index must be non-negative");

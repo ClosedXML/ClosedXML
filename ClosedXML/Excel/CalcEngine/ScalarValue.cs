@@ -248,7 +248,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (DateTime.TryParseExact(text, new[] { "d-MMM-yyyy", "d-MMMM-yyyy", "d-MMM-yy", "d-MMMM-yy" }, culture, dateStyle, out var dateFormat15))
                 return ToSerialDate(dateFormat15);
 
-            // Since format doesn't have a year, it uses current year 
+            // Since format doesn't have a year, it uses current year
             // Format 16 'd-mmm'
             if (DateTime.TryParseExact(text, new[] { "d-MMM", "d-MMMM" }, culture, dateStyle, out var dateFormat16))
                 return ToSerialDate(dateFormat16);

@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
@@ -49,7 +47,7 @@ namespace ClosedXML.Utils
             return (T)adapter.ColorType;
         }
 
-        public static BooleanValue GetBooleanValue(bool value, bool defaultValue)
+        public static BooleanValue? GetBooleanValue(bool value, bool defaultValue)
         {
             return value == defaultValue ? null : new BooleanValue(value);
         }
@@ -65,7 +63,7 @@ namespace ClosedXML.Utils
         /// <param name="openXMLColor">Color in OpenXML format.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color> colorCache = null)
+        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
         {
             return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor), colorCache);
         }
@@ -76,7 +74,7 @@ namespace ClosedXML.Utils
         /// <param name="openXMLColor">Color in OpenXML format.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color> colorCache = null)
+        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
         {
             return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor), colorCache);
         }
@@ -88,43 +86,40 @@ namespace ClosedXML.Utils
         /// <summary>
         /// Here we perform the actual conversion from OpenXML color to ClosedXML color.
         /// </summary>
-        /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>. 
+        /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>.
         /// Since these types do not implement a common interface we use dynamic.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color> colorCache)
+        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color>? colorCache)
         {
-            XLColor retVal = null;
-            if (openXMLColor != null)
+            XLColor? retVal = null;
+            if (openXMLColor.Rgb != null)
             {
-                if (openXMLColor.Rgb != null)
+                String htmlColor = "#" + openXMLColor.Rgb.Value;
+                if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
                 {
-                    String htmlColor = "#" + openXMLColor.Rgb.Value;
-                    if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
-                    {
-                        thisColor = ColorStringParser.ParseFromArgb(htmlColor);
-                        colorCache?.Add(htmlColor, thisColor);
-                    }
+                    thisColor = ColorStringParser.ParseFromArgb(htmlColor);
+                    colorCache?.Add(htmlColor, thisColor);
+                }
 
-                    retVal = XLColor.FromColor(thisColor);
-                }
-                else if (openXMLColor.Indexed != null && openXMLColor.Indexed <= 64)
-                    retVal = XLColor.FromIndex((Int32)openXMLColor.Indexed.Value);
-                else if (openXMLColor.Theme != null)
-                {
-                    retVal = openXMLColor.Tint != null
-                        ? XLColor.FromTheme((XLThemeColor)openXMLColor.Theme.Value, openXMLColor.Tint.Value)
-                        : XLColor.FromTheme((XLThemeColor)openXMLColor.Theme.Value);
-                }
+                retVal = XLColor.FromColor(thisColor);
+            }
+            else if (openXMLColor.Indexed is not null && openXMLColor.Indexed <= 64)
+                retVal = XLColor.FromIndex((Int32)openXMLColor.Indexed.Value);
+            else if (openXMLColor.Theme is not null)
+            {
+                retVal = openXMLColor.Tint is not null
+                    ? XLColor.FromTheme((XLThemeColor)openXMLColor.Theme.Value, openXMLColor.Tint.Value)
+                    : XLColor.FromTheme((XLThemeColor)openXMLColor.Theme.Value);
             }
             return retVal ?? XLColor.NoColor;
         }
 
         /// <summary>
-        /// Initialize properties of the existing instance of the color in OpenXML format basing on properties of the color 
+        /// Initialize properties of the existing instance of the color in OpenXML format basing on properties of the color
         /// in ClosedXML format.
         /// </summary>
-        /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>. 
+        /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>.
         /// Since these types do not implement a common interface we use dynamic.</param>
         /// <param name="xlColor">Color in ClosedXML format.</param>
         /// <param name="isDifferential">Flag specifying that the color should be saved in

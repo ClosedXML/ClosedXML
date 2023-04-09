@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace ClosedXML.Excel
 {
     using System;
@@ -13,7 +11,7 @@ namespace ClosedXML.Excel
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLRangeRow(XLRangeParameters rangeParameters)
-            : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
+            : base(rangeParameters.RangeAddress, ((XLStyle)rangeParameters.DefaultStyle).Value)
         {
         }
 

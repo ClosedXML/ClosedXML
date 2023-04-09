@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
@@ -14,7 +12,7 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly List<object> _list = new List<object>();
         private readonly bool NumbersOnly;
 
-        private double[] _numericValues;
+        private double[]? _numericValues;
 
         public Tally()
             : this(false)
@@ -28,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             : this(p, false)
         { }
 
-        public Tally(IEnumerable<Expression> p, bool numbersOnly)
+        public Tally(IEnumerable<Expression>? p, bool numbersOnly)
         {
             if (p != null)
             {
@@ -249,7 +247,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         private double[] NumericValuesInternal()
-                    => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesEnumerable().ToArray());
+                    => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesEnumerable().ToArray())!;
 
         // If aggressiveConversion == true, then try to parse non-numeric types to double too
         private bool TryParseToDouble(object value, bool aggressiveConversion, out double d)

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +13,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Only the <see cref="_function"/> or <see cref="_legacyFunction"/> is set.
         /// </summary>
-        private readonly CalcEngineFunction _function;
+        private readonly CalcEngineFunction? _function;
 
         /// <summary>
         /// Only the <see cref="_function"/> or <see cref="_legacyFunction"/> is set.
         /// </summary>
-        private readonly LegacyCalcEngineFunction _legacyFunction;
+        private readonly LegacyCalcEngineFunction? _legacyFunction;
 
         private readonly FunctionFlags _flags;
 
@@ -76,7 +74,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_flags.HasFlag(FunctionFlags.ReturnsArray) && _allowRanges == AllowRange.All)
             {
-                return _function(ctx, args);
+                return _function!(ctx, args);
             }
 
             // Step 1: For scalar parameters of function, determine maximum size of scalar
@@ -155,7 +153,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-            return _function(ctx, args);
+            return _function!(ctx, args);
         }
 
         private void IntersectArguments(CalcContext ctx, Span<AnyValue> args)
