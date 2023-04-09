@@ -40,9 +40,7 @@ Now, to compare 2 similar, but not exact Excel files:
 
 ## Reconciling Test Files
 
-Sometimes you make a change to ClosedXml such as a bugfix, this may result in you have to reconcile the test files. The known good test files are stored as resources in the project under **ClosedCML.Tests -> Resource -> Examples** in there respective directories.
-
-If the generated file doesn't match, but you have confirmed the newly generated file is more correct after a code change. You will have to copy the newly generated file here to make it the new reference file. Make sure to check the new files visually and through XML comparison before overwriting the reference files.
+ClosedXML uses a set of [reference .xlsx files](https://github.com/ClosedXML/ClosedXML/tree/develop/ClosedXML.Tests/Resource) for comparison for some of the unit tests. Sometimes when you update the ClosedXML codebase, e.g. a bugfix, the reference test files maybe become obsolete. When running unit tests and the generated file doesn't match the reference file, you will have to update the reference file. You should do this only after inspecting the differences between the generated and reference files in detail and confirming that each change is indeed the expected behaviour. Check the new files visually (e.g. in Excel) and through XML comparison before overwriting the reference files.
 
 ## Code conventions
 ClosedXML has a fairly large codebase and we therefore want to keep code revisions as clean and tidy as possible. It is therefore important not to introduce unnecessary whitespace changes in your commits.
