@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +54,7 @@ namespace ClosedXML.Excel
 
         #endregion Properties
 
-        protected XLStylizedBase(XLStyleValue styleValue = null)
+        protected XLStylizedBase(XLStyleValue? styleValue = null)
         {
             StyleValue = styleValue ?? XLWorkbook.DefaultStyleValue;
         }

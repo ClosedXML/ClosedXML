@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -11,7 +9,7 @@ namespace ClosedXML.Utils
         private static readonly Regex xHHHHRegex = new Regex("_(x[\\dA-Fa-f]{4})_", RegexOptions.Compiled);
         private static readonly Regex Uppercase_X_HHHHRegex = new Regex("_(X[\\dA-Fa-f]{4})_", RegexOptions.Compiled);
 
-        public static string EncodeString(string encodeStr)
+        public static string? EncodeString(string? encodeStr)
         {
             if (encodeStr == null) return null;
 

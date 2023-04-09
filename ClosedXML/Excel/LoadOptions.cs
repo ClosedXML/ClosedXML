@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organized and cleaned
 using System;
 using System.Drawing;
@@ -17,7 +15,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// A graphics engine that will be used for workbooks without explicitly set engine.
         /// </summary>
-        public static IXLGraphicEngine DefaultGraphicEngine { internal get; set; }
+        public static IXLGraphicEngine? DefaultGraphicEngine { internal get; set; }
 
         /// <summary>
         /// Should all formulas in a workbook be recalculated during load? Default value is <c>false</c>.
@@ -27,7 +25,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Graphic engine used by the workbook.
         /// </summary>
-        public IXLGraphicEngine GraphicEngine { get; set; }
+        public IXLGraphicEngine? GraphicEngine { get; set; }
 
         /// <summary>
         /// DPI for the workbook. Default is 96.

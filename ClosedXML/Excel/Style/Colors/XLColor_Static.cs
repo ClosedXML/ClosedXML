@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.Caching;
 using ClosedXML.Utils;
 using System;
@@ -11,7 +9,7 @@ namespace ClosedXML.Excel
     public partial class XLColor
     {
         private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
-        
+
         /// <summary>
         /// VML palette entries from MS-OI29500. Excel uses Windows system color scheme to determine the actual colors of a palette
         /// entry, but we have no way to get them. Win10 doesn't even have a tool, use Classic Color Panel. We will use the default
@@ -151,7 +149,7 @@ namespace ClosedXML.Excel
             return FromName(colorType);
         }
 
-        private static Dictionary<Int32, XLColor> _indexedColors;
+        private static Dictionary<Int32, XLColor>? _indexedColors;
 
         public static Dictionary<Int32, XLColor> IndexedColors
         {

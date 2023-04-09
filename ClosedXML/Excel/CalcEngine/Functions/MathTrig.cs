@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
@@ -921,8 +919,8 @@ namespace ClosedXML.Excel.CalcEngine
                 else
                 {
                     var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : reference.GetCellsValues(ctx);
+                        ? array!
+                        : reference!.GetCellsValues(ctx);
                     foreach (var value in valuesIterator)
                     {
                         // collections ignore strings and logical, only numbers (and errors) allowed
@@ -947,7 +945,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             // range of values to match the criteria against
             // limit to first column only
-            var rangeColumn = new CellRangeReference(range.Column(1).AsRange()) as IEnumerable;
+            var rangeColumn = new CellRangeReference(range!.Column(1).AsRange()) as IEnumerable;
 
             // range of values to sum up
             var sumRange = p.Count < 3 ?
@@ -980,7 +978,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object SumIfs(List<Expression> p)
         {
             // get parameters
-            var sumRange = p[0] as IEnumerable;
+            var sumRange = (IEnumerable)p[0];
             var sumRangeDimensions = CalcEngineHelpers.GetRangeDimensions(p[0] as XObjectExpression);
 
             var sumRangeValues = new List<object>();

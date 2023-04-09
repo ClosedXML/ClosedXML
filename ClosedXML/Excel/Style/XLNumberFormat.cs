@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -8,13 +6,13 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
-        internal static XLNumberFormatKey GenerateKey(IXLNumberFormat defaultNumberFormat)
+        internal static XLNumberFormatKey GenerateKey(IXLNumberFormat? defaultNumberFormat)
         {
             if (defaultNumberFormat == null)
                 return XLNumberFormatValue.Default.Key;
 
-            if (defaultNumberFormat is XLNumberFormat)
-                return (defaultNumberFormat as XLNumberFormat).Key;
+            if (defaultNumberFormat is XLNumberFormat format)
+                return format.Key;
 
             return new XLNumberFormatKey
             {
@@ -46,17 +44,17 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
-        public XLNumberFormat(XLStyle style, XLNumberFormatValue value)
+        public XLNumberFormat(XLStyle? style, XLNumberFormatValue value)
         {
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
 
-        public XLNumberFormat(XLStyle style, XLNumberFormatKey key) : this(style, XLNumberFormatValue.FromKey(ref key))
+        public XLNumberFormat(XLStyle? style, XLNumberFormatKey key) : this(style, XLNumberFormatValue.FromKey(ref key))
         {
         }
 
-        public XLNumberFormat(XLStyle style = null, IXLNumberFormat d = null) : this(style, GenerateKey(d))
+        public XLNumberFormat(XLStyle? style = null, IXLNumberFormat? d = null) : this(style, GenerateKey(d))
         {
         }
 
@@ -133,7 +131,7 @@ namespace ClosedXML.Excel
             return Equals(obj as IXLNumberFormatBase);
         }
 
-        public bool Equals(IXLNumberFormatBase other)
+        public bool Equals(IXLNumberFormatBase? other)
         {
             var otherN = other as XLNumberFormat;
             if (otherN == null)

@@ -1,11 +1,9 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
     /// <summary>
-    /// An extension methods 
+    /// An extension methods
     /// </summary>
     internal static class ArgumentsExtensions
     {
@@ -52,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             OneOf<TValue, XLError> noElementsResult,
             Func<TValue, TValue, TValue> aggregate,
             Func<ScalarValue, CalcContext, OneOf<TValue, XLError>> convert,
-            Func<ScalarValue, bool> includeCollectionElement = null)
+            Func<ScalarValue, bool>? includeCollectionElement = null)
         {
             var result = initialValue;
             var hasElement = false;
@@ -65,13 +63,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                         return elementError;
 
                     hasElement = true;
-                    result = aggregate(result, elementValue);
+                    result = aggregate(result, elementValue!);
                 }
                 else
                 {
                     var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : reference.GetCellsValues(ctx);
+                        ? array!
+                        : reference!.GetCellsValues(ctx);
                     foreach (var value in valuesIterator)
                     {
                         if (includeCollectionElement is not null && !includeCollectionElement(value))
@@ -82,7 +80,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                             return elementError;
 
                         hasElement = true;
-                        result = aggregate(result, elementValue);
+                        result = aggregate(result, elementValue!);
                     }
                 }
             }

@@ -39,10 +39,11 @@ namespace ClosedXML.Excel
         IXLCells DataCells { get; }
 
         /// <summary>
-        /// Gets the footer cell for the table field.
+        /// Gets the footer cell for the table field. 
         /// </summary>
         /// <value>
-        /// The footer cell.
+        /// The footer cell. <c>null</c>, if the table
+        /// doesn't have set <see cref="IXLTable.ShowTotalsRow"/>.
         /// </value>
         IXLCell TotalsCell { get; }
 
@@ -50,7 +51,8 @@ namespace ClosedXML.Excel
         /// Gets the header cell for the table field.
         /// </summary>
         /// <value>
-        /// The header cell.
+        /// The header cell.<c>null</c>, if the table
+        /// doesn't have set <see cref="IXLTable.ShowHeaderRow"/>.
         /// </value>
         IXLCell HeaderCell { get; }
 

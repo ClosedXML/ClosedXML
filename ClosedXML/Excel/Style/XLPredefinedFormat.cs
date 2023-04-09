@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
@@ -171,7 +169,7 @@ namespace ClosedXML.Excel
             Text = 49
         }
 
-        private static IDictionary<int, string> _formatCodes;
+        private static IDictionary<int, string>? _formatCodes;
 
         internal static IDictionary<int, string> FormatCodes
         {

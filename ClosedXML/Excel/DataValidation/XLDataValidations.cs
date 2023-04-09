@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel.Ranges.Index;
 using System;
@@ -64,7 +62,7 @@ namespace ClosedXML.Excel
         {
             if (!_dataValidations.Remove(dataValidation))
                 return;
-            var xlDataValidation = dataValidation as XLDataValidation;
+            var xlDataValidation = (XLDataValidation) dataValidation;
             xlDataValidation.RangeAdded -= OnRangeAdded;
             xlDataValidation.RangeRemoved -= OnRangeRemoved;
 
@@ -118,7 +116,7 @@ namespace ClosedXML.Excel
         /// For example, if the rule is applied to ranges A1:A3,C1:C3 then this method will
         /// return True for ranges A1:A3, C1:C2, A2:A3, and False for ranges A1:C3, A1:C1, etc.</param>
         /// <returns>True is the data validation rule was found, false otherwise.</returns>
-        public bool TryGet(IXLRangeAddress rangeAddress, out IXLDataValidation dataValidation)
+        public bool TryGet(IXLRangeAddress rangeAddress, out IXLDataValidation? dataValidation)
         {
             dataValidation = null;
             if (rangeAddress == null || !rangeAddress.IsValid)
@@ -210,7 +208,7 @@ namespace ClosedXML.Excel
 
         private void OnRangeAdded(object sender, RangeEventArgs e)
         {
-            ProcessRangeAdded(e.Range, sender as XLDataValidation, skipIntersectionCheck: false);
+            ProcessRangeAdded(e.Range, (XLDataValidation) sender, skipIntersectionCheck: false);
         }
 
         private void OnRangeRemoved(object sender, RangeEventArgs e)

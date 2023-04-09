@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
@@ -18,7 +16,7 @@ namespace ClosedXML.Excel.CalcEngine
     internal class CalcEngine
     {
         private readonly CultureInfo _culture;
-        private ExpressionCache _cache;               // cache with parsed expressions
+        private readonly ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
         private readonly CalculationVisitor _visitor;
 
@@ -56,7 +54,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        internal ScalarValue EvaluateFormula(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        internal ScalarValue EvaluateFormula(string expression, XLWorkbook? wb = null, XLWorksheet? ws = null, IXLAddress? address = null)
         {
             var ctx = new CalcContext(this, _culture, wb, ws, address);
             var result = EvaluateFormula(expression, ctx);
@@ -93,30 +91,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private AnyValue EvaluateFormula(string expression, CalcContext ctx)
         {
-            var x = _cache != null
-                ? _cache[expression]
-                : Parse(expression);
+            var x = _cache[expression];
 
             var result = x.AstRoot.Accept(ctx, _visitor);
             return result;
-        }
-
-        /// <summary>
-        /// Gets or sets whether the calc engine should keep a cache with parsed
-        /// expressions.
-        /// </summary>
-        public bool CacheExpressions
-        {
-            get { return _cache != null; }
-            set
-            {
-                if (value != CacheExpressions)
-                {
-                    _cache = value
-                        ? new ExpressionCache(this)
-                        : null;
-                }
-            }
         }
 
         // build/get static keyword table
@@ -154,17 +132,17 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (collection.TryPickT0(out var array, out var reference))
             {
-                return array[0, 0];
+                return array![0, 0];
             }
 
-            if (reference.TryGetSingleCellValue(out var cellValue, ctx))
+            if (reference!.TryGetSingleCellValue(out var cellValue, ctx))
                 return cellValue;
 
             var intersected = reference.ImplicitIntersection(ctx.FormulaAddress);
             if (!intersected.TryPickT0(out var singleCellReference, out var error))
                 return error;
 
-            if (!singleCellReference.TryGetSingleCellValue(out var singleCellValue, ctx))
+            if (!singleCellReference!.TryGetSingleCellValue(out var singleCellValue, ctx))
                 throw new InvalidOperationException("Got multi cell reference instead of single cell reference.");
 
             return singleCellValue;

@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.Caching;
 using System;
 
@@ -75,7 +73,7 @@ namespace ClosedXML.Excel
             return _hashCode.Value;
         }
 
-        public static bool operator ==(XLStyleValue left, XLStyleValue right)
+        public static bool operator ==(XLStyleValue? left, XLStyleValue? right)
         {
             if (ReferenceEquals(left, right))
                 return true;
@@ -89,7 +87,7 @@ namespace ClosedXML.Excel
             return left.Key.Equals(right.Key);
         }
 
-        public static bool operator !=(XLStyleValue left, XLStyleValue right)
+        public static bool operator !=(XLStyleValue? left, XLStyleValue? right)
         {
             return !(left == right);
         }

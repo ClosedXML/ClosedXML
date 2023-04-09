@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +12,7 @@ namespace ClosedXML.Excel.Ranges.Index
 
         bool Remove(IXLRangeAddress rangeAddress);
 
-        int RemoveAll(Predicate<IXLAddressable> predicate = null);
+        int RemoveAll(Predicate<IXLAddressable>? predicate = null);
 
         IEnumerable<IXLAddressable> GetIntersectedRanges(XLRangeAddress rangeAddress);
 
@@ -34,7 +32,7 @@ namespace ClosedXML.Excel.Ranges.Index
     {
         bool Add(T range);
 
-        int RemoveAll(Predicate<T> predicate = null);
+        int RemoveAll(Predicate<T>? predicate = null);
 
         new IEnumerable<T> GetIntersectedRanges(XLRangeAddress rangeAddress);
 

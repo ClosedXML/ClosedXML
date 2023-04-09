@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
@@ -30,7 +28,7 @@ namespace ClosedXML.Excel.InsertData
             return _data.First().Cast<object>().Count();
         }
 
-        public string GetPropertyName(int propertyIndex)
+        public string? GetPropertyName(int propertyIndex)
         {
             return null;
         }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -11,7 +9,7 @@ namespace ClosedXML.Excel
         {
             String val = cf.Values[1].Value;
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-            var cfStyle = (cf.Style as XLStyle).Value;
+            var cfStyle = ((XLStyle)cf.Style).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
                 conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
 

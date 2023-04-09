@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 
@@ -133,14 +131,14 @@ namespace ClosedXML.Excel.CalcEngine
         {
         }
 
-        public FunctionNode(PrefixNode prefix, string name, List<ValueNode> parms)
+        public FunctionNode(PrefixNode? prefix, string name, List<ValueNode> parms)
         {
             Prefix = prefix;
             Name = name;
             Parameters = parms;
         }
 
-        public PrefixNode Prefix { get; }
+        public PrefixNode? Prefix { get; }
 
         /// <summary>
         /// Name of the function.
@@ -180,7 +178,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// If a file is referenced directly, a path to the file on the disc/UNC/web link, .
         /// </summary>
-        public string Path { get; }
+        public string? Path { get; }
 
         public FileNode(string path)
         {
@@ -206,7 +204,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class PrefixNode : AstNode
     {
-        public PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
+        public PrefixNode(FileNode? file, string sheet, string firstSheet, string lastSheet)
         {
             File = file;
             Sheet = sheet;
@@ -217,7 +215,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// If prefix references data from another file, can be empty.
         /// </summary>
-        public FileNode File { get; }
+        public FileNode? File { get; }
 
         /// <summary>
         /// Name of the sheet, without ! or escaped quotes. Can be empty in some cases (e.g. reference to a named range in an another file).
@@ -256,7 +254,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ReferenceNode : ValueNode
     {
-        public ReferenceNode(PrefixNode prefix, ReferenceItemType type, string address)
+        public ReferenceNode(PrefixNode? prefix, ReferenceItemType type, string address)
         {
             Prefix = prefix;
             Type = type;
@@ -266,7 +264,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// An optional prefix for reference item.
         /// </summary>
-        public PrefixNode Prefix { get; }
+        public PrefixNode? Prefix { get; }
 
         public ReferenceItemType Type { get; }
 
@@ -286,7 +284,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return err;
 
             // TODO: XLRangeAddress can parse all types of reference item type, utilize known type for faster parsing + cache
-            return new Reference(new XLRangeAddress((XLWorksheet)ws, Address));
+            return new Reference(new XLRangeAddress((XLWorksheet)ws!, Address));
         }
     }
 
@@ -297,7 +295,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class NameNode : ValueNode
     {
-        public NameNode(PrefixNode prefix, string name)
+        public NameNode(PrefixNode? prefix, string name)
         {
             Prefix = prefix;
             Name = name;
@@ -306,7 +304,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// An optional prefix for reference item.
         /// </summary>
-        public PrefixNode Prefix { get; }
+        public PrefixNode? Prefix { get; }
 
         public string Name { get; }
 
@@ -320,7 +318,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (!Prefix.GetWorksheet(ctxWs.Workbook).TryPickT0(out var ws, out var err))
                     return err;
 
-                worksheet = (XLWorksheet)ws;
+                worksheet = (XLWorksheet)ws!;
             }
 
             if (!TryGetNameRange(worksheet, out var namedRange))

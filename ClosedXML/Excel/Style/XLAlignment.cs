@@ -1,11 +1,5 @@
-#nullable disable
-
-#region
-
 using System;
 using System.Text;
-
-#endregion
 
 namespace ClosedXML.Excel
 {
@@ -13,7 +7,7 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
-        internal static XLAlignmentKey GenerateKey(IXLAlignment d)
+        internal static XLAlignmentKey GenerateKey(IXLAlignment? d)
         {
             XLAlignmentKey key;
             if (d == null)
@@ -64,17 +58,17 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
-        public XLAlignment(XLStyle style, XLAlignmentValue value)
+        public XLAlignment(XLStyle? style, XLAlignmentValue value)
         {
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
 
-        public XLAlignment(XLStyle style, XLAlignmentKey key) : this(style, XLAlignmentValue.FromKey(ref key))
+        public XLAlignment(XLStyle? style, XLAlignmentKey key) : this(style, XLAlignmentValue.FromKey(ref key))
         {
         }
 
-        public XLAlignment(XLStyle style = null, IXLAlignment d = null) : this(style, GenerateKey(d))
+        public XLAlignment(XLStyle? style = null, IXLAlignment? d = null) : this(style, GenerateKey(d))
         {
         }
 
@@ -308,7 +302,7 @@ namespace ClosedXML.Excel
             return Equals(obj as XLAlignment);
         }
 
-        public bool Equals(IXLAlignment other)
+        public bool Equals(IXLAlignment? other)
         {
             var otherA = other as XLAlignment;
             if (otherA == null)

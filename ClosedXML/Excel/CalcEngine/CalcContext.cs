@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Globalization;
@@ -11,16 +9,16 @@ namespace ClosedXML.Excel.CalcEngine
     internal class CalcContext
     {
         private readonly CalcEngine _calcEngine;
-        private readonly XLWorkbook _workbook;
-        private readonly XLWorksheet _worksheet;
-        private readonly IXLAddress _formulaAddress;
+        private readonly XLWorkbook? _workbook;
+        private readonly XLWorksheet? _worksheet;
+        private readonly IXLAddress? _formulaAddress;
 
         public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLCell cell)
             : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
         {
         }
 
-        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
+        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress)
         {
             _calcEngine = calcEngine;
             _workbook = workbook;
@@ -63,7 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public bool IsArrayCalculation { get; set; }
 
-        internal ScalarValue GetCellValue(XLWorksheet worksheet, int rowNumber, int columnNumber)
+        internal ScalarValue GetCellValue(XLWorksheet? worksheet, int rowNumber, int columnNumber)
         {
             worksheet ??= Worksheet;
             var cell = worksheet.GetCell(rowNumber, columnNumber);

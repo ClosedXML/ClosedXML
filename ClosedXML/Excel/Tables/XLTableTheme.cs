@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -70,14 +68,14 @@ namespace ClosedXML.Excel
         public static readonly XLTableTheme TableStyleDark2 = new XLTableTheme("TableStyleDark2");
         public static readonly XLTableTheme TableStyleDark1 = new XLTableTheme("TableStyleDark1");
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public XLTableTheme(string name)
         {
             this.Name = name;
         }
 
-        private static IEnumerable<XLTableTheme> allThemes;
+        private static IEnumerable<XLTableTheme>? allThemes;
 
         public static IEnumerable<XLTableTheme> GetAllThemes()
         {
@@ -87,25 +85,17 @@ namespace ClosedXML.Excel
                 .ToArray()));
         }
 
-        public static XLTableTheme FromName(string name)
+        public static XLTableTheme? FromName(string name)
         {
             return GetAllThemes().FirstOrDefault(s => s.Name == name);
         }
 
         #region Overrides
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-            XLTableTheme theme = obj as XLTableTheme;
-            if (theme == null)
-            {
-                return false;
-            }
-            return this.Name.Equals(theme.Name);
+            var theme = obj as XLTableTheme;
+            return theme is not null && Name.Equals(theme.Name);
         }
 
         public override int GetHashCode()

@@ -56,7 +56,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null);
 
-
         /// <summary>
         /// Gets the first non-empty column of the range that contains a cell with a value.
         /// </summary>
@@ -70,7 +69,6 @@ namespace ClosedXML.Excel
         /// Gets the last column of the range.
         /// </summary>
         IXLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null);
-
 
         /// <summary>
         /// Gets the last non-empty column of the range that contains a cell with a value.

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -224,7 +222,7 @@ namespace ClosedXML.Excel
 
             // Reusable buffer
             var glyphs = new List<GlyphBox>();
-            XLStyle cellStyle = null;
+            XLStyle? cellStyle = null;
             var columnWidthPx = 0;
             foreach (var cell in Column(startRow, endRow).CellsUsed())
             {
@@ -525,7 +523,7 @@ namespace ClosedXML.Excel
         {
             return Range(firstRow, 1, lastRow, 1).Column(1);
         }
-        
+
         private XLColumn ColumnShift(Int32 columnsToShift)
         {
             return Worksheet.Column(ColumnNumber() + columnsToShift);

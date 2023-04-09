@@ -1,5 +1,3 @@
-#nullable disable
-
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -9,7 +7,6 @@ namespace ClosedXML.Excel.ContentManagers
 {
     internal abstract class XLBaseContentManager
     {
-
     }
 
     internal abstract class XLBaseContentManager<T> : XLBaseContentManager
@@ -18,7 +15,7 @@ namespace ClosedXML.Excel.ContentManagers
     {
         protected readonly IDictionary<T, OpenXmlElement> contents = new Dictionary<T, OpenXmlElement>();
 
-        public OpenXmlElement GetPreviousElementFor(T content)
+        public OpenXmlElement? GetPreviousElementFor(T content)
         {
             var i = content.CastTo<int>();
 

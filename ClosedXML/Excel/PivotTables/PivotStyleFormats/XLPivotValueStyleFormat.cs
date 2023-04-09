@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 
@@ -7,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotValueStyleFormat : XLPivotStyleFormat, IXLPivotValueStyleFormat
     {
-        public XLPivotValueStyleFormat(IXLPivotField field = null, IXLStyle style = null)
+        public XLPivotValueStyleFormat(IXLPivotField? field = null, IXLStyle? style = null)
             : base(field, style)
         { }
 
@@ -18,7 +16,7 @@ namespace ClosedXML.Excel
             return AndWith(field, null);
         }
 
-        public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<XLCellValue> predicate)
+        public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<XLCellValue>? predicate)
         {
             FieldReferences.Add(new PivotLabelFieldReference(field, predicate));
             return this;

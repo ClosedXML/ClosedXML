@@ -1,7 +1,4 @@
-#nullable disable
-
 using System;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -9,16 +6,16 @@ namespace ClosedXML.Excel
     {
         #region static members
 
-        internal static XLFillKey GenerateKey(IXLFill defaultFill)
+        internal static XLFillKey GenerateKey(IXLFill? defaultFill)
         {
             XLFillKey key;
             if (defaultFill == null)
             {
                 key = XLFillValue.Default.Key;
             }
-            else if (defaultFill is XLFill)
+            else if (defaultFill is XLFill fill)
             {
-                key = (defaultFill as XLFill).Key;
+                key = fill.Key;
             }
             else
             {
@@ -55,17 +52,17 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
-        public XLFill(XLStyle style, XLFillValue value)
+        public XLFill(XLStyle? style, XLFillValue value)
         {
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
 
-        public XLFill(XLStyle style, XLFillKey key) : this(style, XLFillValue.FromKey(ref key))
+        public XLFill(XLStyle? style, XLFillKey key) : this(style, XLFillValue.FromKey(ref key))
         {
         }
 
-        public XLFill(XLStyle style = null, IXLFill d = null) : this(style, GenerateKey(d))
+        public XLFill(XLStyle? style = null, IXLFill? d = null) : this(style, GenerateKey(d))
         {
         }
 
@@ -179,7 +176,7 @@ namespace ClosedXML.Excel
             return Equals(obj as XLFill);
         }
 
-        public bool Equals(IXLFill other)
+        public bool Equals(IXLFill? other)
         {
             var otherF = other as XLFill;
             if (otherF == null)

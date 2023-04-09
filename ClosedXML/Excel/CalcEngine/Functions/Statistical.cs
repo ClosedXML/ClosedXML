@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -123,7 +121,7 @@ namespace ClosedXML.Excel.CalcEngine
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
                 return XLError.NoValueAvailable;
 
-            var e = p[0] as XObjectExpression;
+            var e = (XObjectExpression)p[0];
             long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
             long nonBlankCount = 0;
             foreach (var value in e)
@@ -172,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
             var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
             for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2] as XObjectExpression;
+                var criteriaRange = (XObjectExpression)p[criteriaPair * 2];
                 var criterion = p[(criteriaPair * 2) + 1].Evaluate();
                 var criteriaRangeValues = new List<object>();
                 foreach (var value in criteriaRange)

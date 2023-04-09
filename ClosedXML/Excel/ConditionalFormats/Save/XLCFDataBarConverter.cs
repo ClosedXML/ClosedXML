@@ -1,7 +1,4 @@
-#nullable disable
-
 using ClosedXML.Extensions;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 
@@ -17,7 +14,7 @@ namespace ClosedXML.Excel
 
             var conditionalFormatValueObject1 = GetConditionalFormatValueObjectByIndex(cf, 1, ConditionalFormatValueObjectValues.Min);
             var conditionalFormatValueObject2 = GetConditionalFormatValueObjectByIndex(cf, 2, ConditionalFormatValueObjectValues.Max);
-            
+
             var color = new Color();
             switch (cf.Colors[1].ColorType)
             {
@@ -53,7 +50,7 @@ namespace ClosedXML.Excel
             conditionalFormattingRuleExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
             var id = new DocumentFormat.OpenXml.Office2010.Excel.Id
             {
-                Text = (cf as XLConditionalFormat).Id.WrapInBraces()
+                Text = ((XLConditionalFormat) cf).Id.WrapInBraces()
             };
             conditionalFormattingRuleExtension.Append(id);
 

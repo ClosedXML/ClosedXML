@@ -1,8 +1,5 @@
-#nullable disable
-
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -13,7 +10,7 @@ namespace ClosedXML.Excel
             String val = GetQuoted(cf.Values[1]);
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-            var cfStyle = (cf.Style as XLStyle).Value;
+            var cfStyle = ((XLStyle)cf.Style).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
                 conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
 
@@ -37,7 +34,7 @@ namespace ClosedXML.Excel
 
             if (formula.IsFormula ||
                 value.StartsWith("\"") && value.EndsWith("\"") ||
-                Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double num))
+                Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out _))
             {
                 return value;
             }

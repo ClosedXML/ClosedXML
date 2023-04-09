@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +9,7 @@ namespace ClosedXML.Excel
     {
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
 
-        public XLTableRows(IXLStyle defaultStyle) : base((defaultStyle as XLStyle).Value)
+        public XLTableRows(IXLStyle defaultStyle) : base(((XLStyle)defaultStyle).Value)
         {
         }
 

@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Extensions;
 using DocumentFormat.OpenXml.Office.Excel;
 using DocumentFormat.OpenXml.Office2010.Excel;
@@ -10,16 +8,12 @@ namespace ClosedXML.Excel
 {
     internal class XLCFDataBarConverterExtension : IXLCFConverterExtension
     {
-        public XLCFDataBarConverterExtension()
-        {
-        }
-
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, XLWorkbook.SaveContext context)
         {
             ConditionalFormattingRule conditionalFormattingRule = new ConditionalFormattingRule()
             {
                 Type = DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValues.DataBar,
-                Id = (cf as XLConditionalFormat).Id.WrapInBraces()
+                Id = ((XLConditionalFormat)cf).Id.WrapInBraces()
             };
 
             DataBar dataBar = new DataBar()

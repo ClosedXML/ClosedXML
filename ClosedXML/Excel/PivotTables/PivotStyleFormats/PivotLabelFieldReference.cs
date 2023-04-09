@@ -1,5 +1,3 @@
-#nullable disable
-
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -9,13 +7,13 @@ namespace ClosedXML.Excel
 {
     internal class PivotLabelFieldReference : AbstractPivotFieldReference
     {
-        private readonly Predicate<XLCellValue> _predicate;
+        private readonly Predicate<XLCellValue>? _predicate;
 
         public PivotLabelFieldReference(IXLPivotField pivotField)
             : this(pivotField, null)
         { }
 
-        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<XLCellValue> predicate)
+        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<XLCellValue>? predicate)
         {
             PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
             _predicate = predicate;

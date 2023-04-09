@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
                 SparklineGroup.Remove(_location);
 
             _location = cell;
-            (SparklineGroup as XLSparklineGroup).Add(this);
+            ((XLSparklineGroup) SparklineGroup).Add(this);
             return this;
         }
 

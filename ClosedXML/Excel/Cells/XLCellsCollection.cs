@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +133,7 @@ namespace ClosedXML.Excel
 
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
                                             Int32 rowEnd, Int32 columnEnd,
-                                            Func<IXLCell, Boolean> predicate = null)
+                                            Func<IXLCell, Boolean>? predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -154,7 +152,7 @@ namespace ClosedXML.Excel
         }
 
         public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean> predicate = null)
+            Func<IXLCell, Boolean>? predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -177,7 +175,7 @@ namespace ClosedXML.Excel
         }
 
         public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean> predicate = null)
+            Func<IXLCell, Boolean>? predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -206,7 +204,7 @@ namespace ClosedXML.Excel
         }
 
         public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean> predicate = null)
+            Func<IXLCell, Boolean>? predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -228,7 +226,7 @@ namespace ClosedXML.Excel
         }
 
         public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean> predicate = null)
+            Func<IXLCell, Boolean>? predicate = null)
         {
             int maxCo = 0;
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
@@ -286,7 +284,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLCell GetCell(Int32 row, Int32 column)
+        public XLCell? GetCell(Int32 row, Int32 column)
         {
             if (row > MaxRowUsed || column > MaxColumnUsed)
                 return null;
@@ -298,7 +296,7 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public XLCell GetCell(XLSheetPoint sp)
+        public XLCell? GetCell(XLSheetPoint sp)
         {
             return GetCell(sp.Row, sp.Column);
         }

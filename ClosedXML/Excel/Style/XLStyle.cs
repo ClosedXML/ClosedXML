@@ -15,8 +15,8 @@ namespace ClosedXML.Excel
         {
             if (initialStyle == null)
                 return Default.Key;
-            if (initialStyle is XLStyle)
-                return (initialStyle as XLStyle).Key;
+            if (initialStyle is XLStyle style)
+                return style.Key;
 
             return new XLStyleKey
             {

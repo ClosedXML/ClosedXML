@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Drawing;
 
@@ -126,7 +124,7 @@ namespace ClosedXML.Excel
             return "Color Index: " + Indexed;
         }
 
-        public static Boolean operator ==(XLColor left, XLColor right)
+        public static Boolean operator ==(XLColor? left, XLColor? right)
         {
             // If both are null, or both are same instance, return true.
             if (ReferenceEquals(left, right)) return true;
@@ -137,7 +135,7 @@ namespace ClosedXML.Excel
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(XLColor left, XLColor right)
+        public static Boolean operator !=(XLColor? left, XLColor? right)
         {
             return !(left == right);
         }

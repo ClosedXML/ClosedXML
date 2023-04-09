@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -41,7 +39,7 @@ namespace ClosedXML.Excel.Caching
         /// <param name="value">Value from the repository stored under specified key or null if key does
         /// not exist or the entry under this key has already bee GCed.</param>
         /// <returns>True if entry exists and alive, false otherwise.</returns>
-        public bool ContainsKey(ref Tkey key, out Tvalue value)
+        public bool ContainsKey(ref Tkey key, out Tvalue? value)
         {
             if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
@@ -61,9 +59,9 @@ namespace ClosedXML.Excel.Caching
         /// <returns>Entity that is stored in the repository under the specified key
         /// (it can be either the <paramref name="value"/> or another entity that has been added to
         /// the repository before.)</returns>
-        public Tvalue Store(ref Tkey key, Tvalue value)
+        public Tvalue? Store(ref Tkey key, Tvalue value)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
             do
@@ -88,10 +86,10 @@ namespace ClosedXML.Excel.Caching
 
             _storage.TryRemove(key, out WeakReference _);
             var value = _createNew(key);
-            return Store(ref key, value);
+            return Store(ref key, value)!;
         }
 
-        public Tvalue Replace(ref Tkey oldKey, ref Tkey newKey)
+        public Tvalue? Replace(ref Tkey oldKey, ref Tkey newKey)
         {
             if (_storage.TryRemove(oldKey, out WeakReference cachedReference) && cachedReference != null)
             {
@@ -128,7 +126,7 @@ namespace ClosedXML.Excel.Caching
                     return val;
                 })
                 .Where(val => val != null)
-                .GetEnumerator();
+                .GetEnumerator()!;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

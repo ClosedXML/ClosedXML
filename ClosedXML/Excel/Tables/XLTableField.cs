@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +9,10 @@ namespace ClosedXML.Excel
     internal class XLTableField : IXLTableField
     {
         internal XLTotalsRowFunction totalsRowFunction;
-        internal String totalsRowLabel;
+        internal String? totalsRowLabel;
         private readonly XLTable table;
 
-        private IXLRangeColumn _column;
+        private IXLRangeColumn? _column;
         private Int32 index;
         private String name;
 
@@ -55,7 +53,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell HeaderCell
+        public IXLCell? HeaderCell
         {
             get
             {
@@ -88,7 +86,7 @@ namespace ClosedXML.Excel
                 if (name == value) return;
 
                 if (table.ShowHeaderRow)
-                    (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, setTableHeader: false, checkMergedRanges: true);
+                    ((XLCell)table.HeadersRow(false).Cell(Index + 1)).SetValue(value, setTableHeader: false, checkMergedRanges: true);
 
                 table.RenameField(name, value);
                 name = value;
@@ -97,7 +95,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table { get { return table; } }
 
-        public IXLCell TotalsCell
+        public IXLCell? TotalsCell
         {
             get
             {
@@ -138,13 +136,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String TotalsRowLabel
+        public String? TotalsRowLabel
         {
             get { return totalsRowLabel; }
             set
             {
                 totalsRowFunction = XLTotalsRowFunction.None;
-                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, setTableHeader: false, checkMergedRanges:true);
+                ((XLCell)table.TotalsRow().Cell(Index + 1)).SetValue(value, setTableHeader: false, checkMergedRanges: true);
                 totalsRowLabel = value;
             }
         }

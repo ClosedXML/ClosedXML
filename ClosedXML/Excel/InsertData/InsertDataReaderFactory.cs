@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.InsertData
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            if (data?.GetType().GetElementType() == typeof(String))
+            if (data.GetType().GetElementType() == typeof(String))
                 return new SimpleTypeReader(data);
 
             return new ArrayReader(data);

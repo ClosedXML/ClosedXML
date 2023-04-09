@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +9,11 @@ namespace ClosedXML.Excel
     internal class XLRows : XLStylizedBase, IXLRows, IXLStylized
     {
         private readonly List<XLRow> _rowsCollection = new List<XLRow>();
-        private readonly XLWorksheet _worksheet;
+        private readonly XLWorksheet? _worksheet;
 
         private bool IsMaterialized => _lazyEnumerable == null;
 
-        private IEnumerable<XLRow> _lazyEnumerable;
+        private IEnumerable<XLRow>? _lazyEnumerable;
         private IEnumerable<XLRow> Rows => _lazyEnumerable ?? _rowsCollection.AsEnumerable();
 
         /// <summary>
@@ -25,7 +23,7 @@ namespace ClosedXML.Excel
         /// all rows on a worksheet so changing its height will affect all rows.</param>
         /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLRow"/> to support lazy initialization.</param>
-        public XLRows(XLWorksheet worksheet, XLStyleValue defaultStyle = null, IEnumerable<XLRow> lazyEnumerable = null)
+        public XLRows(XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLRow>? lazyEnumerable = null)
             : base(defaultStyle)
         {
             _worksheet = worksheet;

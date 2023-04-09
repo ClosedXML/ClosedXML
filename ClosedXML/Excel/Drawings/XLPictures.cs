@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -121,13 +119,13 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Picture(string pictureName)
         {
-            if (TryGetPicture(pictureName, out IXLPicture p))
-                return p;
+            if (TryGetPicture(pictureName, out IXLPicture? p))
+                return p!;
 
             throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
         }
 
-        public bool TryGetPicture(string pictureName, out IXLPicture picture)
+        public bool TryGetPicture(string pictureName, out IXLPicture? picture)
         {
             var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
             if (matches.Any())
@@ -141,7 +139,7 @@ namespace ClosedXML.Excel.Drawings
 
         internal IXLPicture Add(Stream stream, string name, int Id)
         {
-            var picture = Add(stream) as XLPicture;
+            var picture = (XLPicture)Add(stream);
             picture.SetName(name);
             picture.Id = Id;
             return picture;

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +9,10 @@ namespace ClosedXML.Excel
     internal class XLColumns : XLStylizedBase, IXLColumns, IXLStylized
     {
         private readonly List<XLColumn> _columnsCollection = new List<XLColumn>();
-        private readonly XLWorksheet _worksheet;
+        private readonly XLWorksheet? _worksheet;
         private bool IsMaterialized => _lazyEnumerable == null;
 
-        private IEnumerable<XLColumn> _lazyEnumerable;
+        private IEnumerable<XLColumn>? _lazyEnumerable;
         private IEnumerable<XLColumn> Columns => _lazyEnumerable ?? _columnsCollection.AsEnumerable();
 
         /// <summary>
@@ -24,7 +22,7 @@ namespace ClosedXML.Excel
         /// all columns on a worksheet so changing its width will affect all columns.</param>
         /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLColumn"/> to support lazy initialization.</param>
-        public XLColumns(XLWorksheet worksheet, XLStyleValue defaultStyle = null, IEnumerable<XLColumn> lazyEnumerable = null)
+        public XLColumns(XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLColumn>? lazyEnumerable = null)
             : base(defaultStyle)
         {
             _worksheet = worksheet;
@@ -195,7 +193,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
-        { 
+        {
             var cells = new XLCells(true, options);
             foreach (XLColumn container in Columns)
                 cells.Add(container.RangeAddress);

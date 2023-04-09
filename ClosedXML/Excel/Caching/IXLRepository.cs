@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +26,6 @@ namespace ClosedXML.Excel.Caching
         /// <param name="value">Value to put into the repository if key does not exist.</param>
         /// <returns>Value stored in the repository under the specified <paramref name="key"/>. If key already existed
         /// returned value may differ from the input one.</returns>
-        Tvalue Store(ref Tkey key, Tvalue value);
+        Tvalue? Store(ref Tkey key, Tvalue value);
     }
 }
