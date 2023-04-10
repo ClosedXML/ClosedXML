@@ -28,19 +28,33 @@ namespace ClosedXML.Excel
         Double ColumnWidth { get; set; }
 
         IXLCustomProperties CustomProperties { get; }
+
         Boolean DefaultRightToLeft { get; }
+
         Boolean DefaultShowFormulas { get; }
+
         Boolean DefaultShowGridLines { get; }
+
         Boolean DefaultShowOutlineSymbols { get; }
+
         Boolean DefaultShowRowColHeaders { get; }
+
         Boolean DefaultShowRuler { get; }
+
         Boolean DefaultShowWhiteSpace { get; }
+
         Boolean DefaultShowZeros { get; }
+
         IXLFileSharing FileSharing { get; }
+
         Boolean ForceFullCalculation { get; set; }
+
         Boolean FullCalculationOnLoad { get; set; }
+
         Boolean FullPrecision { get; set; }
+
         Boolean LockStructure { get; set; }
+
         Boolean LockWindows { get; set; }
 
         /// <summary>
@@ -60,7 +74,11 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLPageSetup PageOptions { get; set; }
 
-        IXLPivotSources PivotSources { get; }
+        /// <summary>
+        ///   Gets all pivot caches in a workbook. A one cache can be
+        ///   used by multiple tables. Unused caches are not saved.
+        /// </summary>
+        IXLPivotCaches PivotCaches { get; }
 
         /// <summary>
         ///   Gets or sets the workbook's properties.

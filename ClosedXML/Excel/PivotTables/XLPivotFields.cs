@@ -10,9 +10,9 @@ namespace ClosedXML.Excel
     internal class XLPivotFields : IXLPivotFields
     {
         private readonly Dictionary<String, IXLPivotField> _pivotFields = new Dictionary<string, IXLPivotField>(StringComparer.OrdinalIgnoreCase);
-        private readonly IXLPivotTable _pivotTable;
+        private readonly XLPivotTable _pivotTable;
 
-        internal XLPivotFields(IXLPivotTable pivotTable)
+        internal XLPivotFields(XLPivotTable pivotTable)
         {
             this._pivotTable = pivotTable;
         }
@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotField Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.Source.SourceRangeFields.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.SourceRangeFields.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
 
             var pivotField = new XLPivotField(_pivotTable, sourceName) { CustomName = customName };

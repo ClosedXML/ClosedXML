@@ -1,55 +1,61 @@
 ﻿using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.Patterns;
 using System;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotSourceReference : IXLPivotSourceReference
+    internal class XLPivotSourceReference : IEquatable<XLPivotSourceReference>
     {
-        private IXLRange sourceRange;
-
-        public IXLRange SourceRange
+        public XLPivotSourceReference(IXLRange range)
         {
-            get { return sourceRange; }
-            set
-            {
-                if (value is IXLTable)
-                    SourceType = XLPivotTableSourceType.Table;
-                else
-                    SourceType = XLPivotTableSourceType.Range;
+            SourceType = XLPivotTableSourceType.Range;
+            SourceRange = range;
+        }
 
-                sourceRange = value;
+        public XLPivotSourceReference(IXLTable table)
+        {
+            SourceType = XLPivotTableSourceType.Table;
+            SourceRange = table;
+        }
+
+        public IXLRange SourceRange { get; }
+
+        public IXLTable? SourceTable => SourceRange as IXLTable;
+
+        public XLPivotTableSourceType SourceType { get; }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as XLPivotSourceReference;
+            return Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (SourceRange.GetHashCode() * 397) ^ (int)SourceType;
             }
         }
 
-        public IXLTable SourceTable
+        public bool Equals(XLPivotSourceReference? other)
         {
-            get { return SourceRange as IXLTable; }
-            set { SourceRange = value; }
-        }
+            if (other is null || SourceType != other.SourceType)
+                return false;
 
-        public XLPivotTableSourceType SourceType { get; private set; }
+            if (ReferenceEquals(this, other))
+                return true;
 
-        #region IEquatable interface
-
-        public bool Equals(IXLPivotSourceReference other)
-        {
-            if (this.SourceType != other.SourceType) return false;
-
-            switch (this.SourceType)
+            switch (SourceType)
             {
                 case XLPivotTableSourceType.Table:
-                    return StringComparer.OrdinalIgnoreCase.Equals(SourceTable.Name, other.SourceTable.Name);
+                    return StringComparer.OrdinalIgnoreCase.Equals(SourceTable!.Name, other.SourceTable!.Name);
 
                 case XLPivotTableSourceType.Range:
-                    var rangeAddressComparer = new XLRangeAddressComparer(true);
-                    return rangeAddressComparer.Equals(SourceRange.RangeAddress, other.SourceRange.RangeAddress);
+                    return XLRangeAddressComparer.IgnoreFixed.Equals(SourceRange.RangeAddress, other.SourceRange.RangeAddress);
 
                 default:
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
             }
         }
-
-        #endregion IEquatable interface
     }
 }

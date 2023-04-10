@@ -78,7 +78,7 @@ namespace ClosedXML.Tests
                 pt.ShowContextualTooltips = false;
                 pt.DisplayCaptionsAndDropdowns = false;
                 pt.RepeatRowLabels = true;
-                pt.Source.SaveSourceData = false;
+                pt.PivotCache.SaveSourceData = false;
                 pt.EnableShowDetails = false;
                 pt.ShowColumnHeaders = false;
                 pt.ShowRowHeaders = false;
@@ -103,8 +103,8 @@ namespace ClosedXML.Tests
                 pt.PrintExpandCollapsedButtons = true;
                 pt.PrintTitles = true;
 
-                // TODO pt.RefreshDataOnOpen = false;
-                pt.Source.ItemsToRetainPerField = XLItemsToRetain.Max;
+                pt.PivotCache.RefreshDataOnOpen = false;
+                pt.PivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
                 pt.EnableCellEditing = true;
                 pt.ShowValuesRow = true;
                 pt.ShowRowStripes = true;
@@ -149,10 +149,10 @@ namespace ClosedXML.Tests
                         Assert.AreEqual(true, ptassert.PrintExpandCollapsedButtons, "PrintExpandCollapsedButtons save failure");
                         Assert.AreEqual(true, ptassert.RepeatRowLabels, "RepeatRowLabels save failure");
                         Assert.AreEqual(true, ptassert.PrintTitles, "PrintTitles save failure");
-                        Assert.AreEqual(false, ptassert.Source.SaveSourceData, "SaveSourceData save failure");
+                        Assert.AreEqual(false, ptassert.PivotCache.SaveSourceData, "SaveSourceData save failure");
                         Assert.AreEqual(false, ptassert.EnableShowDetails, "EnableShowDetails save failure");
-                        // TODO Assert.AreEqual(false, ptassert.RefreshDataOnOpen, "RefreshDataOnOpen save failure");
-                        Assert.AreEqual(XLItemsToRetain.Max, ptassert.Source.ItemsToRetainPerField, "ItemsToRetainPerField save failure");
+                        Assert.AreEqual(false, ptassert.PivotCache.RefreshDataOnOpen, "RefreshDataOnOpen save failure");
+                        Assert.AreEqual(XLItemsToRetain.Max, ptassert.PivotCache.ItemsToRetainPerField, "ItemsToRetainPerField save failure");
                         Assert.AreEqual(true, ptassert.EnableCellEditing, "EnableCellEditing save failure");
                         Assert.AreEqual(XLPivotTableTheme.PivotStyleDark13, ptassert.Theme, "Theme save failure");
                         Assert.AreEqual(true, ptassert.ShowValuesRow, "ShowValuesRow save failure");
@@ -246,7 +246,7 @@ namespace ClosedXML.Tests
                     monthPivotField.StyleFormats.Label.Style.Fill.BackgroundColor = XLColor.Amber;
                     monthPivotField.StyleFormats.Header.Style.Font.FontColor = XLColor.Yellow;
                     namePivotField.StyleFormats.DataValuesFormat
-                        .AndWith(monthPivotField, v => v.GetText() == "May")
+                        .AndWith(monthPivotField, v => v.IsText && v.GetText() == "May")
                         .ForValueField(numberOfOrdersPivotValue)
                         .Style.Font.FontColor = XLColor.Green;
 
@@ -508,7 +508,7 @@ namespace ClosedXML.Tests
                 TestHelper.CreateAndCompare(() =>
                 {
                     var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms, validate: false);
+                    wb.SaveAs(ms);
                     return wb;
                 }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
             }
@@ -737,11 +737,11 @@ namespace ClosedXML.Tests
                     var wb = new XLWorkbook(stream);
                     var srcRange = wb.Range("Sheet1!$B$2:$H$207");
 
-                    var pivotSource = wb.PivotSources.Add(srcRange);
+                    var pivotSource = wb.PivotCaches.Add(srcRange);
 
                     foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
                     {
-                        pt.Source = pivotSource;
+                        pt.PivotCache = pivotSource;
                     }
 
                     return wb;
@@ -751,6 +751,8 @@ namespace ClosedXML.Tests
         [Test]
         public void PivotSubtotalsLoadingTest()
         {
+            // Make sure that if the original file has *subtotals*, the subtotals are
+            // turned on even after loading into ClosedXML and then saving the document.
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx")))
                 TestHelper.CreateAndCompare(() =>
                 {
@@ -760,7 +762,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void ClearPivotTableTenderedTange()
+        public void ClearPivotTableRenderedRange()
         {
             // https://github.com/ClosedXML/ClosedXML/pull/856
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx")))
@@ -785,6 +787,34 @@ namespace ClosedXML.Tests
                     Assert.IsTrue(ws.Cell("D5").IsEmpty());
                 }
             }
+        }
+
+        [Test]
+        public void Add_TwoPivotTablesWithSameRangeUseSamePivotCache()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range = ws.FirstCell().InsertData(new object[]
+            {
+                ("Name", "Count"),
+                ("Pie", 14),
+            });
+
+            var rangePivot1 = ws.PivotTables.Add("rangePivot1", ws.Cell("D1"), range);
+            var rangePivot2 = ws.PivotTables.Add("rangePivot2", ws.Cell("D20"), range);
+
+            Assert.AreNotSame(rangePivot1, rangePivot2);
+            Assert.AreSame(rangePivot1.PivotCache, rangePivot2.PivotCache);
+
+            var table = range.CreateTable();
+            var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), table);
+            var tablePivot2 = ws.PivotTables.Add("tablePivot2", ws.Cell("J20"), table);
+
+            Assert.AreNotSame(tablePivot1, tablePivot2);
+            Assert.AreSame(tablePivot1.PivotCache, tablePivot2.PivotCache);
+
+            // Table has a different cache, because unlike range, the size of a table can change.
+            Assert.AreNotSame(rangePivot1.PivotCache, tablePivot2.PivotCache);
         }
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)

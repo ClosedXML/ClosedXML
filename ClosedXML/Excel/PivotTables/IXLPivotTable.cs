@@ -1,7 +1,6 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -23,7 +22,11 @@ namespace ClosedXML.Excel
 
         IXLCell TargetCell { get; set; }
 
-        IXLPivotSource Source { get; set; }
+        /// <summary>
+        /// The cache of data for the pivot table. The pivot table is created
+        /// from cached data, not up-to-date data in a worksheet.
+        /// </summary>
+        IXLPivotCache PivotCache { get; set; }
 
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent

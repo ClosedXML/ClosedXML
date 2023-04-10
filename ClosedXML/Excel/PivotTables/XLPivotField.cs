@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -11,10 +10,11 @@ namespace ClosedXML.Excel
     internal class XLPivotField : IXLPivotField
     {
         private readonly List<XLCellValue> _selectedValues = new();
-        private readonly IXLPivotTable _pivotTable;
-        public XLPivotField(IXLPivotTable pivotTable, string sourceName)
+        private readonly XLPivotTable _pivotTable;
+
+        public XLPivotField(XLPivotTable pivotTable, string sourceName)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
             SortType = XLPivotSortType.Default;
@@ -132,6 +132,6 @@ namespace ClosedXML.Excel
 
         public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
 
-        public Int32 Offset => _pivotTable.Source.SourceRangeFields.ToList().IndexOf(this.SourceName);
+        public Int32 Offset => _pivotTable.PivotCache.SourceRangeFields.IndexOf(this.SourceName);
     }
 }

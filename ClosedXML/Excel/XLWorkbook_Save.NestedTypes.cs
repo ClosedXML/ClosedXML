@@ -27,14 +27,24 @@ namespace ClosedXML.Excel
             }
 
             public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
-            public IDictionary<Guid, PivotSourceInfo> PivotSources { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
             public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
             public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
+
+            /// <summary>
+            /// A free id that can be used by the workbook to reference to a pivot cache.
+            /// The <c>PivotCaches</c> element in a workbook connects the parts with pivot
+            /// cache parts.
+            /// </summary>
             public uint PivotSourceCacheId { get; set; }
+
+            /// <summary>
+            /// A dictionary of extra info for pivot during saving. The key is <see cref="XLPivotCache.Guid"/>.
+            /// </summary>
+            public IDictionary<Guid, PivotSourceInfo> PivotSources { get; }
         }
 
         #endregion Nested type: SaveContext

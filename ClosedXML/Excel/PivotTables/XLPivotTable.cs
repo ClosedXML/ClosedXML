@@ -12,14 +12,13 @@ namespace ClosedXML.Excel
     internal class XLPivotTable : IXLPivotTable
     {
         private String _name;
-        public Guid Guid { get; private set; }
+        public Guid Guid { get; }
 
         public XLPivotTable(IXLWorksheet worksheet)
         {
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
             this.Guid = Guid.NewGuid();
 
-            //Fields = new XLPivotFields(this);
             ReportFilters = new XLPivotFields(this);
             ColumnLabels = new XLPivotFields(this);
             RowLabels = new XLPivotFields(this);
@@ -29,10 +28,9 @@ namespace ClosedXML.Excel
             SetExcelDefaults();
         }
 
+        IXLPivotCache IXLPivotTable.PivotCache { get => PivotCache; set => PivotCache = (XLPivotCache)value; }
         public IXLCell TargetCell { get; set; }
-        public IXLPivotSource Source { get; set; }
-
-        //internal IXLPivotFields Fields { get; private set; }
+        public XLPivotCache PivotCache { get; set; }
         public IXLPivotFields ReportFilters { get; private set; }
         public IXLPivotFields ColumnLabels { get; private set; }
         public IXLPivotFields RowLabels { get; private set; }
@@ -67,17 +65,17 @@ namespace ClosedXML.Excel
 
             int i = 0;
             var pivotTableNames = targetSheet.PivotTables.Select(pvt => pvt.Name).ToList();
-            while (!XLHelper.ValidateName("pivot table", pivotTableName, "", pivotTableNames, out var _))
+            while (!XLHelper.ValidateName("pivot table", pivotTableName, "", pivotTableNames, out _))
             {
                 i++;
-                pivotTableName = this.Name + i.ToInvariantString();
+                pivotTableName = Name + i.ToInvariantString();
             }
 
-            var newPivotTable = (XLPivotTable)targetSheet.PivotTables.Add(pivotTableName, targetCell, this.Source);
+            var newPivotTable = (XLPivotTable)targetSheet.PivotTables.Add(pivotTableName, targetCell, PivotCache);
 
             newPivotTable.RelId = null;
 
-            static void copyPivotField(IXLPivotField originalPivotField, IXLPivotField newPivotField)
+            static void CopyPivotField(IXLPivotField originalPivotField, IXLPivotField newPivotField)
             {
                 newPivotField
                     .SetSort(originalPivotField.SortType)
@@ -96,13 +94,13 @@ namespace ClosedXML.Excel
             }
 
             foreach (var rf in ReportFilters)
-                copyPivotField(rf, newPivotTable.ReportFilters.Add(rf.SourceName, rf.CustomName));
+                CopyPivotField(rf, newPivotTable.ReportFilters.Add(rf.SourceName, rf.CustomName));
 
             foreach (var cl in ColumnLabels)
-                copyPivotField(cl, newPivotTable.ColumnLabels.Add(cl.SourceName, cl.CustomName));
+                CopyPivotField(cl, newPivotTable.ColumnLabels.Add(cl.SourceName, cl.CustomName));
 
             foreach (var rl in RowLabels)
-                copyPivotField(rl, newPivotTable.RowLabels.Add(rl.SourceName, rl.CustomName));
+                CopyPivotField(rl, newPivotTable.RowLabels.Add(rl.SourceName, rl.CustomName));
 
             foreach (var v in Values)
             {

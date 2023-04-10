@@ -10,10 +10,10 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotValues : IXLPivotValues
     {
-        private readonly IXLPivotTable _pivotTable;
+        private readonly XLPivotTable _pivotTable;
         private readonly Dictionary<String, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>(StringComparer.OrdinalIgnoreCase);
 
-        internal XLPivotValues(IXLPivotTable pivotTable)
+        internal XLPivotValues(XLPivotTable pivotTable)
         {
             this._pivotTable = pivotTable;
         }
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotValue Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.Source.SourceRangeFields.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.SourceRangeFields.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
