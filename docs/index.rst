@@ -43,6 +43,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    features/bulk-insert-data
    features/tables
    features/cell-format
+   features/pivot-tables
    features/protect
    features/formulas
    features/functions

@@ -2,7 +2,28 @@
 {
     public enum XLFilterAreaOrder { DownThenOver, OverThenDown }
 
-    public enum XLItemsToRetain { Automatic, None, Max }
+    /// <summary>
+    /// Specifies the number of unused items to allow in a <see cref="IXLPivotCache"/>
+    /// before discarding unused items.
+    /// </summary>
+    public enum XLItemsToRetain
+    {
+        /// <summary>
+        /// The threshold is set automatically based on the number of items.
+        /// </summary>
+        /// <remarks>Default behavior.</remarks>
+        Automatic,
+
+        /// <summary>
+        /// When even one item is unused.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// When all shared items of a filed are unused.
+        /// </summary>
+        Max
+    }
 
     public enum XLPivotSortType
     {
@@ -17,8 +38,6 @@
         AtTop,
         AtBottom
     }
-
-    public enum XLPivotTableSourceType { Range, Table }
 
     public enum XLPivotTableTheme
     {
@@ -108,4 +127,6 @@
         PivotStyleMedium8,
         PivotStyleMedium9
     }
+
+    internal enum XLPivotTableSourceType { Range, Table }
 }

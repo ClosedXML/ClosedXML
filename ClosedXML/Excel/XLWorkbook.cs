@@ -131,6 +131,8 @@ namespace ClosedXML.Excel
 
         internal double DpiY { get; }
 
+        internal XLPivotCaches PivotCachesInternal { get; }
+
         /// <summary>
         /// Notify that workbook data has been changed which means that cached formula values
         /// need to be re-evaluated.
@@ -171,7 +173,10 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLTheme Theme { get; private set; }
 
-        public IXLPivotSources PivotSources { get; private set; }
+        /// <summary>
+        /// All pivot caches in the workbook, whether they have a pivot table or not.
+        /// </summary>
+        public IXLPivotCaches PivotCaches => PivotCachesInternal;
 
         /// <summary>
         ///   Gets or sets the default style for the workbook.
@@ -744,7 +749,7 @@ namespace ClosedXML.Excel
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
-            PivotSources = new XLPivotSources();
+            PivotCachesInternal = new XLPivotCaches();
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;

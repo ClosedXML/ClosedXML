@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -237,9 +238,8 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart, context);
 
-            var cacheRelIds = this.PivotSources
-                  .Cast<XLPivotSource>()
-                  .Select(ps => ps.WorkbookCacheRelId)
+            var cacheRelIds = PivotCachesInternal
+                  .Select<XLPivotCache, String>(ps => ps.WorkbookCacheRelId)
                   .Where(relId => !string.IsNullOrWhiteSpace(relId))
                   .Distinct();
 
@@ -249,7 +249,15 @@ namespace ClosedXML.Excel
                     pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.RemoveAllChildren();
             }
 
-            var allPivotTables = WorksheetsInternal.Cast<XLWorksheet>().SelectMany(ws => ws.PivotTables).ToList();
+            var allPivotTables = WorksheetsInternal.SelectMany<XLWorksheet, IXLPivotTable>(ws => ws.PivotTables).ToList();
+
+            // Phase 1 - Synchronize all pivot cache parts in the document, so each
+            // source that will be saved has all required parts created and relationship
+            // ids are set (in this case `Workbook.PivotCaches` relationship table).
+            // Only sources that are used by a table are saved.
+            SynchronizePivotTableParts(workbookPart, allPivotTables, context);
+
+            // Phase 2 - All parts and relationships are set, fill in the parts.
             if (allPivotTables.Any())
             {
                 GeneratePivotCaches(workbookPart, context);
@@ -331,34 +339,6 @@ namespace ClosedXML.Excel
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
             }
-
-            //Remove orphaned PivotTableCacheDefinitionPart parts
-            var workbookCacheRelIds = allPivotTables
-                .Select(pt => pt.Source.CastTo<XLPivotSource>().WorkbookCacheRelId)
-                .Distinct()
-                .ToList();
-
-            workbookPart
-                .GetPartsOfType<PivotTableCacheDefinitionPart>()
-                .Where(pcdp => !workbookCacheRelIds.Contains(workbookPart.GetIdOfPart(pcdp)))
-                .ToList()
-                .ForEach(pcdp =>
-                {
-                    pcdp.DeletePart(pcdp.PivotTableCacheRecordsPart);
-                    workbookPart.DeletePart(pcdp);
-                });
-
-            if (workbookPart.Workbook.PivotCaches != null)
-            {
-                workbookPart.Workbook.PivotCaches.Elements<PivotCache>()
-                   .Where(pc => !workbookPart.HasPartWithId(pc.Id))
-                   .ToList()
-                   .ForEach(pc => pc.Remove());
-            }
-
-            // Remove empty pivot cache part
-            if (workbookPart.Workbook.PivotCaches != null && !workbookPart.Workbook.PivotCaches.Any())
-                workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
 
             if (options.GenerateCalculationChain)
                 GenerateCalculationChainPartContent(workbookPart, context);
@@ -1840,29 +1820,102 @@ namespace ClosedXML.Excel
             tableDefinitionPart.Table = table;
         }
 
-        private void GeneratePivotCaches(WorkbookPart workbookPart, SaveContext context)
+        private static void SynchronizePivotTableParts(WorkbookPart workbookPart, IReadOnlyList<IXLPivotTable> allPivotTables, SaveContext context)
         {
-            context.PivotSources.Clear();
+            RemoveUnusedPivotCacheDefinitionParts(workbookPart, allPivotTables);
+            AddUsedPivotCacheDefinitionParts(workbookPart, allPivotTables, context);
 
             // Ensure this in workbook.xml:
             //  <pivotCaches>
             //    <pivotCache cacheId="13" r:id="rId3"/>
             //  </pivotCaches>
 
-            if (workbookPart.Workbook.PivotCaches == null)
-                workbookPart.Workbook.InsertAfter(new PivotCaches(), workbookPart.Workbook.CalculationProperties);
+            context.PivotSourceCacheId = 0;
+            var xlUsedCaches = allPivotTables.Select(pt => pt.PivotCache).Distinct().Cast<XLPivotCache>().ToList();
+            if (xlUsedCaches.Any())
+            {
+                // Recreate the workbook pivot cache references to remove previous gunk
+                var pivotCaches = new PivotCaches();
+                workbookPart.Workbook.PivotCaches = pivotCaches;
+
+                foreach (var source in xlUsedCaches)
+                {
+                    var cacheId = context.PivotSourceCacheId++;
+                    source.CacheId = cacheId;
+                    var pivotCache = new PivotCache { CacheId = cacheId, Id = source.WorkbookCacheRelId };
+                    pivotCaches.AppendChild(pivotCache);
+                }
+            }
+            else
+            {
+                // Remove empty pivot cache part
+                if (workbookPart.Workbook.PivotCaches is not null)
+                {
+                    workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
+                }
+            }
+
+            // Remove pivot cache parts that are a part of the loaded document, but aren't used by a pivot table of the xlWorkbook
+            // part of the first phase of saving
+            static void RemoveUnusedPivotCacheDefinitionParts(WorkbookPart workbookPart, IReadOnlyList<IXLPivotTable> allPivotTables)
+            {
+                var workbookCacheRelIds = allPivotTables
+                    .Select(pt => pt.PivotCache.CastTo<XLPivotCache>().WorkbookCacheRelId)
+                    .Distinct()
+                    .ToList();
+
+                var orphanedParts = workbookPart
+                    .GetPartsOfType<PivotTableCacheDefinitionPart>()
+                    .Where(pcdp => !workbookCacheRelIds.Contains(workbookPart.GetIdOfPart(pcdp)))
+                    .ToList();
+
+                foreach (var orphanPart in orphanedParts)
+                {
+                    orphanPart.DeletePart(orphanPart.PivotTableCacheRecordsPart);
+                    workbookPart.DeletePart(orphanPart);
+                };
+
+                // Remove deleted pivot cache parts
+                if (workbookPart.Workbook.PivotCaches is not null)
+                {
+                    workbookPart.Workbook.PivotCaches.Elements<PivotCache>()
+                        .Where(pc => !workbookPart.HasPartWithId(pc.Id))
+                        .ToList()
+                        .ForEach(pc => pc.Remove());
+                }
+            }
+
+            static void AddUsedPivotCacheDefinitionParts(WorkbookPart workbookPart, IReadOnlyList<IXLPivotTable> allPivotTables, SaveContext context)
+            {
+                // Add ids and part for the caches to workbooks
+                // We might get a XLPivotSource with an id of apart that isn't in the file (e.g. loaded from a file and saved to a different one).
+                var newPivotSources = allPivotTables
+                    .Select(pt => pt.PivotCache.CastTo<XLPivotCache>())
+                    .Where(ps => string.IsNullOrEmpty(ps.WorkbookCacheRelId) || !workbookPart.HasPartWithId(ps.WorkbookCacheRelId))
+                    .Distinct()
+                    .ToList();
+
+                foreach (var pivotSource in newPivotSources)
+                {
+                    var cacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    pivotSource.WorkbookCacheRelId = cacheRelId;
+
+                    workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(pivotSource.WorkbookCacheRelId);
+                }
+            }
+        }
+
+        private void GeneratePivotCaches(WorkbookPart workbookPart, SaveContext context)
+        {
+            context.PivotSources.Clear();
 
             var pivotTables = WorksheetsInternal.Cast<XLWorksheet>().SelectMany(ws => ws.PivotTables);
 
-            var pivotCaches = workbookPart.Workbook.PivotCaches;
-
-            context.PivotSourceCacheId = 0;
-            if (pivotCaches.Elements<PivotCache>().Any())
-                context.PivotSourceCacheId = pivotCaches.Elements<PivotCache>().Max(pc => pc.CacheId.Value) + 1;
-
-            var pivotSources = pivotTables.Select(pt => pt.Source).Distinct();
-            foreach (var pivotSource in pivotSources.Cast<XLPivotSource>())
+            var pivotSources = pivotTables.Select(pt => pt.PivotCache).Distinct();
+            foreach (var pivotSource in pivotSources.Cast<XLPivotCache>())
+            {
                 GeneratePivotTableCacheDefinitionPartContent(workbookPart, pivotSource, context);
+            }
         }
 
         private static void GeneratePivotTables(
@@ -1873,10 +1926,9 @@ namespace ClosedXML.Excel
         {
             foreach (var pt in xlWorksheet.PivotTables.Cast<XLPivotTable>())
             {
-                //context.PivotTables.Clear();
-
                 PivotTablePart pivotTablePart;
-                if (String.IsNullOrWhiteSpace(pt.RelId))
+                var createNewPivotTablePart = String.IsNullOrWhiteSpace(pt.RelId);
+                if (createNewPivotTablePart)
                 {
                     var relId = context.RelIdGenerator.GetNext(RelType.Workbook);
                     pt.RelId = relId;
@@ -1889,38 +1941,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        // Generates content of pivotTableCacheDefinitionPart
         private void GeneratePivotTableCacheDefinitionPartContent(
             WorkbookPart workbookPart,
-            XLPivotSource pivotSource,
+            XLPivotCache pivotCache,
             SaveContext context)
         {
-            var pivotTables = WorksheetsInternal
-                .Cast<XLWorksheet>()
-                .SelectMany(ws => ws.PivotTables)
-                .Cast<XLPivotTable>()
-                .Where(pt => pt.Source == pivotSource)
-                .ToList();
+            Debug.Assert(workbookPart.Workbook.PivotCaches is not null);
+            Debug.Assert(!string.IsNullOrEmpty(pivotCache.WorkbookCacheRelId));
 
-            var pivotCaches = workbookPart.Workbook.PivotCaches;
-
-            PivotCache pivotCache;
-            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
-            if (!String.IsNullOrWhiteSpace(pivotSource.WorkbookCacheRelId))
-            {
-                pivotCache = workbookPart.Workbook.PivotCaches.Elements<PivotCache>().Single(pc => pc.Id.Value == pivotSource.WorkbookCacheRelId);
-                pivotTableCacheDefinitionPart = workbookPart.GetPartById(pivotSource.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
-            }
-            else
-            {
-                pivotSource.WorkbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                pivotCache = new PivotCache { CacheId = context.PivotSourceCacheId, Id = pivotSource.WorkbookCacheRelId };
-                context.PivotSourceCacheId++;
-                pivotCaches.AppendChild(pivotCache);
-                pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(pivotSource.WorkbookCacheRelId);
-            }
-
-            pivotSource.CacheId = pivotCache.CacheId.Value;
+            var pivotTableCacheDefinitionPart = (PivotTableCacheDefinitionPart)workbookPart.GetPartById(pivotCache.WorkbookCacheRelId);
 
             var pivotCacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
 
@@ -1963,42 +1992,42 @@ namespace ClosedXML.Excel
 
             #endregion MinRefreshableVersion
 
-            pivotCacheDefinition.SaveData = pivotSource.SaveSourceData;
+            pivotCacheDefinition.SaveData = pivotCache.SaveSourceData;
             pivotCacheDefinition.RefreshOnLoad = true; //pt.RefreshDataOnOpen
 
             var pivotSourceInfo = new PivotSourceInfo
             {
-                Guid = pivotSource.Guid,
+                Guid = pivotCache.Guid,
                 Fields = new Dictionary<String, PivotTableFieldInfo>()
             };
 
-            if (pivotSource.ItemsToRetainPerField == XLItemsToRetain.None)
+            if (pivotCache.ItemsToRetainPerField == XLItemsToRetain.None)
                 pivotCacheDefinition.MissingItemsLimit = 0U;
-            else if (pivotSource.ItemsToRetainPerField == XLItemsToRetain.Max)
+            else if (pivotCache.ItemsToRetainPerField == XLItemsToRetain.Max)
                 pivotCacheDefinition.MissingItemsLimit = XLHelper.MaxRowNumber;
 
             // Begin CacheSource
             var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
             var worksheetSource = new WorksheetSource();
 
-            switch (pivotSource.PivotSourceReference.SourceType)
+            switch (pivotCache.PivotSourceReference.SourceType)
             {
                 case XLPivotTableSourceType.Range:
                     worksheetSource.Name = null;
-                    worksheetSource.Reference = pivotSource.PivotSourceReference.SourceRange.RangeAddress.ToStringRelative(includeSheet: false);
+                    worksheetSource.Reference = pivotCache.PivotSourceReference.SourceRange.RangeAddress.ToStringRelative(includeSheet: false);
 
                     // Do not quote worksheet name with whitespace here - issue #955
-                    worksheetSource.Sheet = pivotSource.PivotSourceReference.SourceRange.RangeAddress.Worksheet.Name;
+                    worksheetSource.Sheet = pivotCache.PivotSourceReference.SourceRange.RangeAddress.Worksheet.Name;
                     break;
 
                 case XLPivotTableSourceType.Table:
-                    worksheetSource.Name = pivotSource.PivotSourceReference.SourceTable.Name;
+                    worksheetSource.Name = pivotCache.PivotSourceReference.SourceTable.Name;
                     worksheetSource.Reference = null;
                     worksheetSource.Sheet = null;
                     break;
 
                 default:
-                    throw new NotSupportedException($"Pivot table source type {pivotSource.PivotSourceReference.SourceType} is not supported.");
+                    throw new NotSupportedException($"Pivot table source type {pivotCache.PivotSourceReference.SourceType} is not supported.");
             }
 
             cacheSource.AppendChild(worksheetSource);
@@ -2014,13 +2043,9 @@ namespace ClosedXML.Excel
                 pivotCacheDefinition.CacheFields = cacheFields;
             }
 
-            foreach (var pivotCachedField in pivotSource.CachedFields)
+            foreach (var cacheFieldName in pivotCache.FieldNames)
             {
-                //var columnNumber = c.ColumnNumber();
-                var columnName = pivotCachedField.Key;
-                var fieldValues = pivotCachedField.Value;
-
-                var isUsedField = pivotTables.Any(pt => pt.ImplementedFields.Any(pf => pf.SourceName.Equals(columnName, StringComparison.OrdinalIgnoreCase)));
+                var fieldValues = pivotCache.GetFieldValues(cacheFieldName);
 
                 var distinctFieldValues = fieldValues
                     .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
@@ -2031,9 +2056,6 @@ namespace ClosedXML.Excel
                     .Distinct()
                     .ToArray();
 
-                var containsBlank = distinctFieldValues.Contains(Blank.Value);
-                var containsNonString = types.Any(t => t != XLDataType.Text);
-
                 // .CacheFields is cleared when workbook is begin saved
                 // So if there are any entries, it would be from previous pivot tables
                 // with an identical source range.
@@ -2041,54 +2063,18 @@ namespace ClosedXML.Excel
                 var cacheField = pivotCacheDefinition
                     .CacheFields
                     .Elements<CacheField>()
-                    .FirstOrDefault(f => f.Name == columnName);
+                    .FirstOrDefault(f => f.Name == cacheFieldName);
 
                 if (cacheField == null)
                 {
                     cacheField = new CacheField
                     {
-                        Name = columnName,
+                        Name = cacheFieldName,
                         SharedItems = new SharedItems()
                     };
                     cacheFields.AppendChild(cacheField);
                 }
                 var sharedItems = cacheField.SharedItems;
-
-                //XLPivotField xlpf;
-                //if (pivotSource.Fields.Contains(columnName))
-                //    xlpf = pivotSource.Fields.Get(columnName) as XLPivotField;
-                //else
-                //    xlpf = pivotSource.Fields.Add(columnName) as XLPivotField;
-
-                //var field = pivotSource.RowLabels
-                //    .Union(pivotSource.ColumnLabels)
-                //    .Union(pivotSource.ReportFilters)
-                //    .FirstOrDefault(f => f.SourceName == columnName);
-
-                //if (field == null)
-                //{
-                //    xlpf.ShowBlankItems = true;
-                //}
-                //else
-                //{
-                //    xlpf.CustomName = field.CustomName;
-                //    xlpf.SortType = field.SortType;
-                //    xlpf.SubtotalCaption = field.SubtotalCaption;
-                //    xlpf.IncludeNewItemsInFilter = field.IncludeNewItemsInFilter;
-                //    xlpf.Outline = field.Outline;
-                //    xlpf.Compact = field.Compact;
-                //    xlpf.SubtotalsAtTop = field.SubtotalsAtTop;
-                //    xlpf.RepeatItemLabels = field.RepeatItemLabels;
-                //    xlpf.InsertBlankLines = field.InsertBlankLines;
-                //    xlpf.ShowBlankItems = field.ShowBlankItems;
-                //    xlpf.InsertPageBreaks = field.InsertPageBreaks;
-                //    xlpf.Collapsed = field.Collapsed;
-                //    xlpf.Subtotals.AddRange(field.Subtotals);
-                //}
-
-                // For a totally blank column, we need to check that all cells in column are unused
-                if (!fieldValues.Any())
-                    containsBlank = true;
 
                 var ptfi = new PivotTableFieldInfo
                 {
@@ -2096,10 +2082,6 @@ namespace ClosedXML.Excel
                     MixedDataType = types.Length > 1,
                     DistinctValues = distinctFieldValues,
                 };
-
-                //var sourceHeaderRow = source.FirstRow().RowNumber();
-                //var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
-                //                                               && cell.Address.RowNumber > sourceHeaderRow);
 
                 if (types.Any())
                 {
@@ -2112,99 +2094,93 @@ namespace ClosedXML.Excel
                     // - containsMixedTypes
                     // - longText
 
-                    sharedItems.ContainsBlank = OpenXmlHelper.GetBooleanValue(containsBlank, false);
+                    // Specifies a boolean value that indicates whether this field contains a blank value.
+                    sharedItems.ContainsBlank = OpenXmlHelper.GetBooleanValue(types.Contains(XLDataType.Blank), false);
 
-                    // It seems this field is required (even when =false) for non-text fields, but can be omitted for text fields
-                    var defaultContainsSemiMixedTypesValue = (isUsedField && containsNonString) ? null : (bool?)false;
-                    sharedItems.ContainsSemiMixedTypes = OpenXmlHelper.GetBooleanValue(containsBlank, defaultContainsSemiMixedTypesValue);
+                    var containsDate = types.Contains(XLDataType.DateTime) || types.Contains(XLDataType.TimeSpan);
+                    sharedItems.ContainsDate = OpenXmlHelper.GetBooleanValue(containsDate, false);
 
-                    sharedItems.ContainsMixedTypes = OpenXmlHelper.GetBooleanValue(types.Length > 1, false);
+                    // Remember: Blank is not a type in OOXML, but is a value
 
-                    // The following attributes are not used unless
-                    // - there is more than one item in sharedItems
-                    // - or the one and only item is not a blank item.
-                    // If the first item is a blank item the data type the field cannot be verified.
+                    // ISO29500: Specifies a boolean value that indicates whether this field contains more than one data type.
+                    // MS-OI29500: In Office, the containsMixedTypes attribute assumes that boolean and error shall be considered part of the string type.
+                    var containsMixedTypes = types
+                        .Where(t => t != XLDataType.Blank)
+                        .Select(t => t is XLDataType.Boolean or XLDataType.Error ? XLDataType.Text : t)
+                        .Distinct()
+                        .Count() > 1;
+                    sharedItems.ContainsMixedTypes = OpenXmlHelper.GetBooleanValue(containsMixedTypes, false);
 
-                    // - containsNumber
-                    // - containsDates
-                    // - containsString
-                    // - containsInteger
-                    if (ptfi.DistinctValues.Count > 1 || ptfi.DistinctValues.Count == 1 && !ptfi.DistinctValues.First().IsBlank)
+                    // ISO29500: Specifies a boolean value that indicates that the field contains at least one value that is not a date.
+                    var containsNonDate = types.Where(t => t != XLDataType.Blank).Any(t => t != XLDataType.DateTime && t != XLDataType.TimeSpan);
+                    sharedItems.ContainsNonDate = OpenXmlHelper.GetBooleanValue(containsNonDate, true);
+
+                    // Excel will have to repair the cache definition, if both @containsNumber and @containsDate are specified. Likely because
+                    // ultimately they are both numbers, but date has preference.
+                    var containsNumber = !containsDate && types.Contains(XLDataType.Number);
+                    sharedItems.ContainsNumber = OpenXmlHelper.GetBooleanValue(containsNumber, false);
+
+                    // @containsInteger has a prerequisite @containsNumber.
+                    // MS-OI29500: In Office, @containsNumber shall be 1 or true when @containsInteger is specified. 
+                    if (containsNumber)
                     {
-                        sharedItems.ContainsNumber = OpenXmlHelper.GetBooleanValue(types.Contains(XLDataType.Number), false);
-                        sharedItems.ContainsDate = OpenXmlHelper.GetBooleanValue(types.Contains(XLDataType.DateTime), false);
-                        sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(types.Contains(XLDataType.Text), true);
-
-                        if (types.Contains(XLDataType.Number))
-                        {
-                            sharedItems.ContainsInteger = OpenXmlHelper
-                                .GetBooleanValue(
-                                    ptfi.DistinctValues
-                                        .Where(v => v.Type == XLDataType.Number)
-                                        .Select(v => v.GetNumber())
-                                        .All(dbl => (dbl % 1) < double.Epsilon),
-                                    false);
-                        }
+                        // MS-OI29500: In Office, a value of 1 or true for the containsInteger attribute indicates this field contains only integer values and does not contain non - integer numeric values.
+                        var onlyIntegers = ptfi.DistinctValues
+                            .Where(v => v.Type == XLDataType.Number)
+                            .Select(v => v.GetNumber())
+                            .All(dbl => (dbl % 1) < double.Epsilon);
+                        sharedItems.ContainsInteger = OpenXmlHelper.GetBooleanValue(onlyIntegers, false);
                     }
 
-                    if (isUsedField)
-                    {
-                        bool hasMissingItem = false;
-                        foreach (var value in ptfi.DistinctValues)
-                        {
-                            if (value.IsBlank)
-                            {
-                                sharedItems.AppendChild(new MissingItem());
-                                hasMissingItem = true;
-                            }
-                            else if (value.Type == XLDataType.Number)
-                                sharedItems.AppendChild(new NumberItem { Val = value.GetNumber() });
-                            else if (value.Type == XLDataType.DateTime)
-                                sharedItems.AppendChild(new DateTimeItem { Val = value.GetDateTime() });
-                            else if (value.Type == XLDataType.Boolean)
-                                sharedItems.AppendChild(new BooleanItem { Val = value.GetBoolean() });
-                            else if (value.Type == XLDataType.Text)
-                                sharedItems.AppendChild(new StringItem { Val = value.GetText() });
-                            else
-                                throw new NotImplementedException();
-                        }
+                    // ISO29500: A value of 1 or true indicates at least one text value, and can also contain a mix of other data types and blank values.
+                    // MS-OI29500: Office expects that the containsSemiMixedTypes attribute is true when the field contains text, blank, boolean or error values.
+                    var containsSemiMixedTypes = types.Any(t => t is XLDataType.Text or XLDataType.Blank or XLDataType.Boolean or XLDataType.Error);
+                    sharedItems.ContainsSemiMixedTypes = OpenXmlHelper.GetBooleanValue(containsSemiMixedTypes, true);
 
-                        if (containsBlank && !hasMissingItem) sharedItems.AppendChild(new MissingItem());
+                    // MS-OI29500: In Office, boolean and error are considered strings in the context of the containsString attribute.
+                    var containsString = types.Any(t => t is XLDataType.Text or XLDataType.Boolean or XLDataType.Error);
+                    sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(containsString, true);
+
+                    sharedItems.Count = (UInt32)ptfi.DistinctValues.Count;
+
+                    var longText = types.Contains(XLDataType.Text) && ptfi.DistinctValues.Any(v => v.IsText && v.GetText().Length > 255);
+                    sharedItems.LongText = OpenXmlHelper.GetBooleanValue(longText, false);
+
+                    // @minDate/@maxDate can be present, only if at least one child is a d element.
+                    if (types.Any(v => v == XLDataType.DateTime || v == XLDataType.TimeSpan))
+                    {
+                        // This is an exception to the "1900 is a leap year". Values are saved correctly, i.e starting at 1899-12-30. TimeSpan as well.
+                        sharedItems.MinDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Min(v => v.GetUnifiedNumber()));
+                        sharedItems.MaxDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Max(v => v.GetUnifiedNumber()));
+                    }
+                    else if (types.Contains(XLDataType.Number))
+                    {
+                        // MS-OI29500: Use else branch, @minValue/@maxValue shouldn't be present, if there is a @minDate/@maxDate.
+
+                        // If the field contains a date, the number values are considered serial date times.
+                        // Don't indicate that date field with numbers contains numbers, Excel would refuse to load the file
+                        sharedItems.MinValue = ptfi.DistinctValues.Where(x => x.IsNumber).Min(v => v.GetNumber());
+                        sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
                     }
 
-                    if (types.Length == 1)
+                    foreach (var value in ptfi.DistinctValues)
                     {
-                        var firstType = types.First();
-
-                        // When there's only one type, we can add some min and max values
-                        if (isUsedField)
+                        OpenXmlElement toAdd = value.Type switch
                         {
-                            if (firstType == XLDataType.Number)
-                            {
-                                sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
-                                sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
-                            }
-                            else if (firstType == XLDataType.DateTime)
-                            {
-                                sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
-                                sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
-                            }
-                        }
+                            XLDataType.Blank => new MissingItem(),
+                            XLDataType.Boolean => new BooleanItem { Val = value.GetBoolean() },
+                            XLDataType.Number => new NumberItem { Val = value.GetNumber() },
+                            XLDataType.Text => new StringItem { Val = value.GetText() },
+                            XLDataType.Error => new ErrorItem { Val = value.GetError().ToDisplayString() },
+                            XLDataType.DateTime => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
+                            XLDataType.TimeSpan => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
+                            _ => throw new InvalidOperationException()
+                        };
+                        sharedItems.AppendChild(toAdd);
                     }
                 }
 
-                if (ptfi.IsTotallyBlankField)
-                {
-                    if (isUsedField)
-                    {
-                        sharedItems.ContainsBlank = OpenXmlHelper.GetBooleanValue(true);
-                        sharedItems.ContainsSemiMixedTypes = OpenXmlHelper.GetBooleanValue(true);
-                        sharedItems.AppendChild(new MissingItem());
-                    }
-
-                }
-                pivotSourceInfo.Fields.Add(columnName, ptfi);
-                 
+                pivotSourceInfo.Fields.Add(cacheFieldName, ptfi);
             }
 
             // End CacheFields
@@ -2228,7 +2204,7 @@ namespace ClosedXML.Excel
             XLPivotTable pt,
             SaveContext context)
         {
-            var pivotSource = pt.Source.CastTo<XLPivotSource>();
+            var pivotSource = pt.PivotCache.CastTo<XLPivotCache>();
 
             var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
             if (!workbookPart.GetPartById(pivotSource.WorkbookCacheRelId).Equals(pivotTableCacheDefinitionPart))
@@ -2323,7 +2299,7 @@ namespace ClosedXML.Excel
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
-            var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.Source.CachedFields.Count) };
+            var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.PivotCache.FieldNames.Count) };
 
             var orderedPageFields = new SortedDictionary<int, PageField>();
             var orderedColumnLabels = new SortedDictionary<int, Field>();
@@ -2346,15 +2322,16 @@ namespace ClosedXML.Excel
             }
 
             // TODO: improve performance as per https://github.com/ClosedXML/ClosedXML/pull/984#discussion_r217266491
-            var sourceFields = pt.Source.CachedFields.Keys.ToList();
-            foreach (var sourceFieldName in sourceFields)
+            var fieldNames = pt.PivotCache.FieldNames;
+            for (var fieldIndex = 0; fieldIndex < fieldNames.Count; ++fieldIndex)
             {
-                var ptfi = pti.Fields[sourceFieldName];
+                var fieldName = fieldNames[fieldIndex];
+                var ptfi = pti.Fields[fieldName];
 
-                if (pt.RowLabels.Contains(sourceFieldName))
+                if (pt.RowLabels.Contains(fieldName))
                 {
-                    var rowLabelIndex = pt.RowLabels.IndexOf(sourceFieldName);
-                    var f = new Field { Index = sourceFields.IndexOf(sourceFieldName) };
+                    var rowLabelIndex = pt.RowLabels.IndexOf(fieldName);
+                    var f = new Field { Index = fieldIndex };
                     orderedRowLabels.Add(rowLabelIndex, f);
 
                     if (ptfi.IsTotallyBlankField)
@@ -2373,11 +2350,11 @@ namespace ClosedXML.Excel
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
                 }
-                else if (pt.ColumnLabels.Contains(sourceFieldName))
+                else if (pt.ColumnLabels.Contains(fieldName))
                 {
-                    var columnlabelIndex = pt.ColumnLabels.IndexOf(sourceFieldName);
-                    var f = new Field { Index = sourceFields.IndexOf(sourceFieldName) };
-                    orderedColumnLabels.Add(columnlabelIndex, f);
+                    var columnLabelIndex = pt.ColumnLabels.IndexOf(fieldName);
+                    var f = new Field { Index = fieldIndex };
+                    orderedColumnLabels.Add(columnLabelIndex, f);
 
                     if (ptfi.IsTotallyBlankField)
                         columnItems.AppendChild(new RowItem());
@@ -2397,20 +2374,21 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var sourceFieldName in sourceFields)
+            for (var fieldIndex = 0; fieldIndex < fieldNames.Count; ++fieldIndex)
             {
-                var xlpf = pt.ImplementedFields.FirstOrDefault(pf1 => pf1.SourceName.Equals(sourceFieldName, StringComparison.OrdinalIgnoreCase));
+                var fieldName = fieldNames[fieldIndex];
+                var xlpf = pt.ImplementedFields.FirstOrDefault(pf => pf.SourceName.Equals(fieldName, StringComparison.OrdinalIgnoreCase));
 
                 if (xlpf == null)
                 {
-                    xlpf = new XLPivotField(pt, sourceFieldName)
+                    xlpf = new XLPivotField(pt, fieldName)
                     {
-                        CustomName = sourceFieldName,
+                        CustomName = fieldName,
                         ShowBlankItems = true,
                     };
                 }
 
-                var ptfi = pti.Fields[sourceFieldName];
+                var ptfi = pti.Fields[fieldName];
 
                 IXLPivotField labelOrFilterField = null;
                 var pf = new PivotField
@@ -2485,7 +2463,7 @@ namespace ClosedXML.Excel
                     var pageField = new PageField
                     {
                         Hierarchy = -1,
-                        Field = sourceFields.IndexOf(sourceFieldName)
+                        Field = fieldIndex
                     };
 
                     if (labelOrFilterField.SelectedValues.Count == 1)
@@ -2686,12 +2664,11 @@ namespace ClosedXML.Excel
             var dataFields = new DataFields();
             foreach (var valueField in pt.Values)
             {
-                if (!pt.Source.CachedFields.TryGetValue(valueField.SourceName, out IList<XLCellValue> values))
+                // Pivot table has a field that has been removed from the source
+                if (!pt.PivotCache.TryGetFieldIndex(valueField.SourceName, out var valueFieldIndex))
+                {
                     continue;
-
-                //var sourceColumn =
-                //    pt.Source.CachedFields.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.SourceName);
-                //if (sourceColumn == null) continue;
+                }
 
                 UInt32 numberFormatId = 0;
                 if (valueField.NumberFormat.NumberFormatId != -1 || context.SharedNumberFormats.ContainsKey(valueField.NumberFormat.NumberFormatId))
@@ -2699,21 +2676,22 @@ namespace ClosedXML.Excel
                 else if (context.SharedNumberFormats.Any(snf => snf.Value.NumberFormat.Format == valueField.NumberFormat.Format))
                     numberFormatId = (UInt32)context.SharedNumberFormats.First(snf => snf.Value.NumberFormat.Format == valueField.NumberFormat.Format).Key;
 
+
                 var df = new DataField
                 {
                     Name = valueField.CustomName,
-                    Field = (UInt32)pt.Source.CachedFields.Keys.ToList().IndexOf(valueField.SourceName),
+                    Field = (UInt32)valueFieldIndex,
                     Subtotal = valueField.SummaryFormula.ToOpenXml(),
                     ShowDataAs = valueField.Calculation.ToOpenXml(),
                     NumberFormatId = numberFormatId
                 };
 
                 if (!String.IsNullOrEmpty(valueField.BaseFieldName)
-                    && pt.Source.CachedFields.TryGetValue(valueField.BaseFieldName, out IList<XLCellValue> baseFieldValues))
+                    && pt.PivotCache.TryGetFieldIndex(valueField.BaseFieldName, out var baseFieldIndex))
                 {
-                    df.BaseField = pt.Source.CachedFields.Keys.ToList().IndexOf(valueField.BaseFieldName);
+                    df.BaseField = baseFieldIndex;
 
-                    var items = baseFieldValues
+                    var items = pt.PivotCache.GetFieldValues(baseFieldIndex)
                         .Distinct()
                         .ToList();
 
@@ -2953,7 +2931,7 @@ namespace ClosedXML.Excel
             pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
             pivotAreaReference.Field = fieldReference.GetFieldOffset();
 
-            var pivotSource = pt.Source.CastTo<XLPivotSource>();
+            var pivotSource = pt.PivotCache.CastTo<XLPivotCache>();
             var matchedOffsets = fieldReference.Match(context.PivotSources[pivotSource.Guid], pt);
             foreach (var o in matchedOffsets)
             {

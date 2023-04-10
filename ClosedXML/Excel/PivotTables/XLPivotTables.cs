@@ -8,47 +8,53 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotTables : IXLPivotTables
     {
-        private readonly Dictionary<String, XLPivotTable> _pivotTables = new Dictionary<string, XLPivotTable>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, XLPivotTable> _pivotTables = new(StringComparer.OrdinalIgnoreCase);
 
-        public XLPivotTables(IXLWorksheet worksheet)
+        public XLPivotTables(XLWorksheet worksheet)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
-        internal void Add(String name, IXLPivotTable pivotTable)
-        {
-            _pivotTables.Add(name, (XLPivotTable)pivotTable);
-        }
+        internal XLWorksheet Worksheet { get; }
 
-        public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotSource pivotSource)
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotCache pivotCache)
         {
-            if (!pivotSource.CachedFields.Any())
-                pivotSource.Refresh();
+            if (!pivotCache.FieldNames.Any())
+                pivotCache.Refresh();
 
-            var pivotTable = new XLPivotTable(this.Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
-                Source = pivotSource
+                PivotCache = (XLPivotCache)pivotCache
             };
+
             _pivotTables.Add(name, pivotTable);
             return pivotTable;
         }
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
-            if (!this.Worksheet.Workbook.PivotSources.TryGet(range, out IXLPivotSource pivotSource))
-                pivotSource = this.Worksheet.Workbook.PivotSources.Add(range);
+            var pivotCaches = Worksheet.Workbook.PivotCachesInternal;
+            var existingPivotCache = pivotCaches.GetAll(range).FirstOrDefault(s => s.PivotSourceReference.SourceTable is null);
+            if (existingPivotCache is null)
+            {
+                existingPivotCache = pivotCaches.Add(range);
+            }
 
-            return Add(name, targetCell, pivotSource);
+            return Add(name, targetCell, existingPivotCache);
         }
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            if (!this.Worksheet.Workbook.PivotSources.TryGet(table, out IXLPivotSource pivotSource))
-                pivotSource = this.Worksheet.Workbook.PivotSources.Add(table);
+            var pivotCaches = Worksheet.Workbook.PivotCachesInternal;
+            var existingPivotCache = pivotCaches.GetAll(table).FirstOrDefault(s => s.PivotSourceReference.SourceTable is not null);
+            if (existingPivotCache is null)
+            {
+                existingPivotCache = pivotCaches.Add(table);
+            }
 
-            return Add(name, targetCell, pivotSource);
+            return Add(name, targetCell, existingPivotCache);
         }
 
         public Boolean Contains(String name)
@@ -66,6 +72,11 @@ namespace ClosedXML.Excel
             _pivotTables.Clear();
         }
 
+        IXLPivotTable IXLPivotTables.PivotTable(String name)
+        {
+            return PivotTable(name);
+        }
+
         public IEnumerator<IXLPivotTable> GetEnumerator()
         {
             return _pivotTables.Values.Cast<IXLPivotTable>().GetEnumerator();
@@ -76,16 +87,15 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public XLPivotTable PivotTable(String name)
+        internal void Add(String name, IXLPivotTable pivotTable)
+        {
+            _pivotTables.Add(name, (XLPivotTable)pivotTable);
+        }
+
+        /// <inheritdoc cref="IXLPivotTables.PivotTable"/>
+        internal XLPivotTable PivotTable(String name)
         {
             return _pivotTables[name];
         }
-
-        IXLPivotTable IXLPivotTables.PivotTable(String name)
-        {
-            return PivotTable(name);
-        }
-
-        public IXLWorksheet Worksheet { get; private set; }
     }
 }
