@@ -89,13 +89,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #endregion
 
         #region Constant.Rule
-        [TestCase("=1", 1)]
-        [TestCase("=1.5", 1.5)]
+        [TestCase("=1", 1)] // int
+        [TestCase("=1.5", 1.5)]  // double
         [TestCase("=1.23e2", 123)]
         [TestCase("=1.23e-1", 0.123)]
         [TestCase("=1.23e+3", 1230)]
+        [TestCase("=032399977109", 32399977109)] // long
+        [TestCase("=9223372036854775808", 9223372036854775808)] // BigInteger (long value + 1)
         public void Constant_can_be_number(string formula, double expectedNumber)
         {
+            // Irony returns number as an object of various types, e.g. int or double
             Assert.AreEqual(expectedNumber, XLWorkbook.EvaluateExpr(formula));
         }
 
