@@ -1,10 +1,10 @@
-﻿using ClosedXML.Excel.CalcEngine.Exceptions;
-using Irony.Ast;
+﻿using Irony.Ast;
 using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using XLParser;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.NamedRange.SetFlag(TermFlags.NoAstNode);
             grammar.VRange.SetFlag(TermFlags.NoAstNode);
             grammar.HRange.SetFlag(TermFlags.NoAstNode);
-            grammar.UDFunctionCall.AstConfig.NodeCreator = CreateUDFunctionNode;
+            grammar.UDFunctionCall.AstConfig.NodeCreator = CreateUserDefinedFunctionNode;
             grammar.UDFName.SetFlag(TermFlags.NoAstNode);
             grammar.StructuredReference.AstConfig.NodeCreator = CreateStructuredReferenceNode;
             grammar.StructuredReference.SetFlag(TermFlags.AstDelayChildren);
@@ -179,7 +179,15 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateNumberNode(AstContext context, ParseTreeNode parseNode)
         {
             var value = parseNode.ChildNodes.Single().Token.Value;
-            parseNode.AstNode = new ScalarNode(value is int intValue ? (double)intValue : (double)value);
+            double number = value switch
+            {
+                int intValue => intValue,
+                double doubleValue => doubleValue,
+                long longValue => longValue,
+                BigInteger bigIntValue => (double)bigIntValue,
+                _ => throw new NotSupportedException($"Unexpected number type {value.GetType()}.")
+            };
+            parseNode.AstNode = new ScalarNode(number);
         }
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
@@ -257,7 +265,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     // ReferenceItem:StructuredReference. TODO: Copy structured reference once implemented
                     For(GrammarNames.StructuredReference),
-                    node => new StructuredReferenceNode(null)
+                    _ => new StructuredReferenceNode(null)
                 },
                 {
                     // ReferenceFunctionCall - Reference + colon + Reference
@@ -314,11 +322,11 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     // Prefix + ReferenceItem:StructuredReference. TODO: Copy structured reference once implemented
                     For(typeof(PrefixNode), GrammarNames.StructuredReference),
-                    node => new StructuredReferenceNode(null)
+                    _ => new StructuredReferenceNode(null)
                 },
                 {
                     For(GrammarNames.DynamicDataExchange),
-                    node => new NotSupportedNode("dynamic data exchange")
+                    _ => new NotSupportedNode("dynamic data exchange")
                 }
             };
         }
@@ -480,7 +488,7 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        private void CreateUDFunctionNode(AstContext context, ParseTreeNode parseNode)
+        private void CreateUserDefinedFunctionNode(AstContext context, ParseTreeNode parseNode)
         {
             var functionName = parseNode.ChildNodes[0].ChildNodes.Single().Token.Text.WithoutLast(1);
 
@@ -491,7 +499,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
-            parseNode.AstNode = new FunctionNode(functionName, arguments); ;
+            parseNode.AstNode = new FunctionNode(functionName, arguments);
         }
 
         private FunctionNode CreateExcelFunctionCallExpression(AstContext ctx, ParseTreeNode nameNode, ParseTreeNode argumentsNode)
@@ -522,7 +530,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AstNodeCreator CreateCopyNode(int childIndex)
         {
-            return (context, parseNode) =>
+            return (_, parseNode) =>
             {
                 var copyNode = parseNode.ChildNodes[childIndex];
                 parseNode.AstNode = copyNode.AstNode;
