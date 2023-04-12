@@ -979,6 +979,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // get parameters
             var sumRange = p[0] as IEnumerable;
+            var sumRangeDimensions = CalcEngineHelpers.GetRangeDimensions(p[0] as XObjectExpression);
 
             var sumRangeValues = new List<object>();
             foreach (var value in sumRange)
@@ -990,6 +991,15 @@ namespace ClosedXML.Excel.CalcEngine
             var tally = new Tally();
 
             int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
+
+            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            {
+                var criterionDimensions = CalcEngineHelpers.GetRangeDimensions(p[criteriaPair * 2 + 1] as XObjectExpression);
+                if (criterionDimensions != sumRangeDimensions)
+                {
+                    return XLError.IncompatibleValue;
+                }
+            }
 
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
