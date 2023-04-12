@@ -4,7 +4,6 @@ using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.Linq;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -1781,6 +1780,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 ws.Cell("A2").FormulaA1 = "DATE(2018,1,1)";
                 Assert.AreEqual(43103, ws.Evaluate("SUM(A1:A2)"));
             }
+        }
+
+        [TestCase(9, "SUMIF(A:B, \"A*\", C:C)")]
+        [TestCase(9, "SUMIF(A1:B6, \"A*\", C1:C6)")]
+        public void SumIf_InputRangeHasMultipleColumns(int expectedOutcome, string formula)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            var data = new object[]
+            {
+                    new { Id = "AA", Id2 = "BA", Value = 2},
+                    new { Id = "AB", Id2 = "BB", Value = 3},
+                    new { Id = "BA", Id2 = "AA", Value = 2},
+                    new { Id = "BB", Id2 = "AB", Value = 1},
+                    new { Id = "AC", Id2 = "AC", Value = 4},
+            };
+            ws.Cell("A1").InsertTable(data);
+
+            Assert.AreEqual(expectedOutcome, ws.Evaluate(formula));
         }
 
         /// <summary>
