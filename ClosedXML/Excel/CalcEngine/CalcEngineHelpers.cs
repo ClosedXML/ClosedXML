@@ -141,5 +141,26 @@ namespace ClosedXML.Excel.CalcEngine
             return (long)(range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
                    (long)(range.LastRow().RowNumber() - range.FirstRow().RowNumber() + 1);
         }
+
+        internal static bool TryExtractRange(Expression expression, out IXLRange range, out XLError calculationErrorType)
+        {
+            range = null;
+            calculationErrorType = default;
+
+            if (expression is not XObjectExpression objectExpression)
+            {
+                calculationErrorType = XLError.NoValueAvailable;
+                return false;
+            }
+
+            if (objectExpression.Value is not CellRangeReference cellRangeReference)
+            {
+                calculationErrorType = XLError.NoValueAvailable;
+                return false;
+            }
+
+            range = cellRangeReference.Range;
+            return true;
+        }
     }
 }

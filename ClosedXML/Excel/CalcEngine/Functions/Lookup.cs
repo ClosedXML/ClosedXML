@@ -58,32 +58,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return RowsOrColumns(value, false);
         }
 
-        private static bool TryExtractRange(Expression expression, out IXLRange range, out XLError calculationErrorType)
-        {
-            range = null;
-            calculationErrorType = default;
-
-            if (!(expression is XObjectExpression objectExpression))
-            {
-                calculationErrorType = XLError.NoValueAvailable;
-                return false;
-            }
-
-            if (!(objectExpression.Value is CellRangeReference cellRangeReference))
-            {
-                calculationErrorType = XLError.NoValueAvailable;
-                return false;
-            }
-
-            range = cellRangeReference.Range;
-            return true;
-        }
-
         private static object Hlookup(List<Expression> p)
         {
             var lookup_value = p[0];
 
-            if (!TryExtractRange(p[1], out var range, out var error))
+            if (!CalcEngineHelpers.TryExtractRange(p[1], out var range, out var error))
                 return error;
 
             var row_index_num = (int)p[2];
@@ -132,7 +111,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Index(List<Expression> p)
         {
             // This is one of the few functions that is "overloaded"
-            if (!TryExtractRange(p[0], out var range, out var error))
+            if (!CalcEngineHelpers.TryExtractRange(p[0], out var range, out var error))
                 return error;
 
             if (range.ColumnCount() > 1 && range.RowCount() > 1)
@@ -188,7 +167,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var lookup_value = p[0];
 
-            if (!TryExtractRange(p[1], out var range, out var error))
+            if (!CalcEngineHelpers.TryExtractRange(p[1], out var range, out var error))
                 return error;
 
             int match_type = 1;
@@ -431,14 +410,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// Find row index of an element with same type as the lookup value. Go from
         /// <paramref name="startRow"/> to the <paramref name="limitRow"/> by a step
         /// of <paramref name="delta"/>. If there isn't any such row, return <c>-1</c>.
-        /// </summary> 
+        /// </summary>
         private static int FindSameTypeRow(Array range, int limitRow, int delta, int startRow, in ScalarValue lookupValue)
         {
             // Although the spec says that elements must be sorted in
             // "ascending order", as follows: ..., -2, -1, 0, 1, 2, ..., A-Z, FALSE, TRUE.
             // In reality, comparison ignores elements of the different type than lookupValue.
             // E.g. search for 2.5 in the {"1", 2, "3", #DIV/0!, 3 } will find the second element 2
-            // Elements with incompatible type are just skipped. 
+            // Elements with incompatible type are just skipped.
             int currentRow;
             for (currentRow = startRow; !lookupValue.HaveSameType(range[currentRow, 0]); currentRow += delta)
             {
