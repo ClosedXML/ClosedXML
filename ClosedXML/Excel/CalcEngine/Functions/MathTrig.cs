@@ -938,13 +938,24 @@ namespace ClosedXML.Excel.CalcEngine
         private static object SumIf(List<Expression> p)
         {
             // get parameters
-            var range = p[0] as IEnumerable;                            // range of values to match the criteria against
+            if (!CalcEngineHelpers.TryExtractRange(p[0], out var range, out var calculationErrorType))
+            {
+                return calculationErrorType;
+            }
+
+            // range of values to match the criteria against
+            // limit to first column only
+            var rangeColumn = new CellRangeReference(range.Column(1).AsRange()) as IEnumerable;
+
+            // range of values to sum up
             var sumRange = p.Count < 3 ?
                 p[0] as XObjectExpression :
-                p[2] as XObjectExpression;   // range of values to sum up
-            var criteria = p[1].Evaluate();                             // the criteria to evaluate
+                p[2] as XObjectExpression;
 
-            var rangeValues = range.Cast<object>().ToList();
+            // the criteria to evaluate
+            var criteria = p[1].Evaluate();
+
+            var rangeValues = rangeColumn.Cast<object>().ToList();
             var sumRangeValues = sumRange.Cast<object>().ToList();
 
             // compute total
