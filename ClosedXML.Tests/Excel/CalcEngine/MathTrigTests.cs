@@ -1922,6 +1922,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
+        [Test]
+        public void SumIfs_MultidimensionalRanges()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertData(new object[]
+            {
+                (10, 10, 1, 2),
+                (20, 15, 2, 4),
+                (30, 20, 3, 6),
+                (40, 25, 4, 8),
+                (50, 30, 5, 10),
+            });
+            Assert.AreEqual(30, ws.Evaluate("SUMIFS(C1:D5,A1:B5,\">20\")"));
+        }
+
         /// <summary>
         /// refers to Example 2 to SumIf from the Excel documentation.
         /// As SumIfs should behave the same if called with three parameters, we can take that example here again.
