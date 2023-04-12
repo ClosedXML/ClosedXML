@@ -2062,6 +2062,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
+        [TestCase("SUMIFS(D1:E5,A1:B5,\"A*\",C1:C5,\">2\")")]
+        [TestCase("SUMIFS(H1:I3,A1:B3,1,D1:F2,2)")]
+        [TestCase("SUMIFS(D:E,A:B,\"A*\",C:C,\">2\")")]
+        public void SumIfs_ReturnsErrorWhenRangeDimensionsAreNotSame(string formula)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula));
+        }
+
         [Test]
         public void SumProduct()
         {
