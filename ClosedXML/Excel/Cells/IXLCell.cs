@@ -278,7 +278,7 @@ namespace ClosedXML.Excel
         Boolean GetBoolean();
 
         /// <summary>
-        /// Gets the cell's value as a Boolean.
+        /// Gets the cell's value as a Double.
         /// </summary>
         /// <remarks>Shortcut for <c>Value.GetNumber()</c></remarks>
         /// <exception cref="InvalidCastException">If the value of the cell is not a number.</exception>
