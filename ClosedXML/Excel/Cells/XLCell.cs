@@ -2028,31 +2028,88 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRange CurrentRegion
+        public IXLRange CurrentRegion => Worksheet.Range(FindCurrentRegion());
+
+        private IXLRangeAddress FindCurrentRegion()
         {
-            get
+            var sheet = Worksheet;
+
+            var minRow = _rowNumber;
+            var minCol = _columnNumber;
+            var maxRow = _rowNumber;
+            var maxCol = _columnNumber;
+
+            bool hasRegionExpanded;
+
+            do
             {
-                return this.Worksheet.Range(FindCurrentRegion(this.AsRange()));
+                hasRegionExpanded = false;
+
+                var borderMinRow = Math.Max(minRow - 1, XLHelper.MinRowNumber);
+                var borderMaxRow = Math.Min(maxRow + 1, XLHelper.MaxRowNumber);
+                var borderMinColumn = Math.Max(minCol - 1, XLHelper.MinColumnNumber);
+                var borderMaxColumn = Math.Min(maxCol + 1, XLHelper.MaxColumnNumber);
+
+                if (minCol > XLHelper.MinColumnNumber &&
+                    !IsVerticalBorderBlank(sheet, borderMinColumn, borderMinRow, borderMaxRow))
+                {
+                    hasRegionExpanded = true;
+                    minCol = borderMinColumn;
+                }
+
+                if (maxCol < XLHelper.MaxColumnNumber &&
+                    !IsVerticalBorderBlank(sheet, borderMaxColumn, borderMinRow, borderMaxRow))
+                {
+                    hasRegionExpanded = true;
+                    maxCol = borderMaxColumn;
+                }
+
+                if (minRow > XLHelper.MinRowNumber &&
+                    !IsHorizontalBorderBlank(sheet, borderMinRow, borderMinColumn, borderMaxColumn))
+                {
+                    hasRegionExpanded = true;
+                    minRow = borderMinRow;
+                }
+
+                if (maxRow < XLHelper.MaxRowNumber &&
+                    !IsHorizontalBorderBlank(sheet, borderMaxRow, borderMinColumn, borderMaxColumn))
+                {
+                    hasRegionExpanded = true;
+                    maxRow = borderMaxRow;
+                }
+            } while (hasRegionExpanded);
+
+            return new XLRangeAddress(
+                new XLAddress(sheet, minRow, minCol, false, false),
+                new XLAddress(sheet, maxRow, maxCol, false, false));
+
+            static bool IsVerticalBorderBlank(XLWorksheet sheet, int borderColumn, int borderMinRow, int borderMaxRow)
+            {
+                for (var row = borderMinRow; row <= borderMaxRow; row++)
+                {
+                    var verticalBorderCell = sheet.Cell(row, borderColumn);
+                    if (!verticalBorderCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
-        }
 
-        internal IXLRangeAddress FindCurrentRegion(IXLRangeBase range)
-        {
-            var rangeAddress = range.RangeAddress;
+            static bool IsHorizontalBorderBlank(XLWorksheet sheet, int borderRow, int borderMinColumn, int borderMaxColumn)
+            {
+                for (var col = borderMinColumn; col <= borderMaxColumn; col++)
+                {
+                    var horizontalBorderCell = sheet.Cell(borderRow, col);
+                    if (!horizontalBorderCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                    {
+                        return false;
+                    }
+                }
 
-            var filledCells = range
-                .SurroundingCells(c => !(c as XLCell).IsEmpty(XLCellsUsedOptions.AllContents))
-                .Concat(this.Worksheet.Range(rangeAddress).Cells());
-
-            var grownRangeAddress = new XLRangeAddress(
-                new XLAddress(this.Worksheet, filledCells.Min(c => c.Address.RowNumber), filledCells.Min(c => c.Address.ColumnNumber), false, false),
-                new XLAddress(this.Worksheet, filledCells.Max(c => c.Address.RowNumber), filledCells.Max(c => c.Address.ColumnNumber), false, false)
-            );
-
-            if (rangeAddress.Equals(grownRangeAddress))
-                return this.Worksheet.Range(grownRangeAddress).RangeAddress;
-            else
-                return FindCurrentRegion(this.Worksheet.Range(grownRangeAddress));
+                return true;
+            }
         }
 
         internal bool IsInferiorMergedCell()

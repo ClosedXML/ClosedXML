@@ -787,6 +787,12 @@ namespace ClosedXML.Tests
 
                 Assert.AreEqual("D7:I12", ws.Cell("D7").CurrentRegion.RangeAddress.ToString());
                 Assert.AreEqual("E8:J13", ws.Cell("J13").CurrentRegion.RangeAddress.ToString());
+
+                // Four corners of a sheet
+                Assert.AreEqual("A1:D3", ws.Cell(1, 1).CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("XFD1:XFD1", ws.Cell(1, XLHelper.MaxColumnNumber).CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("XFD1048576:XFD1048576", ws.Cell(XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber).CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("A1048576:A1048576", ws.Cell(XLHelper.MaxRowNumber, 1).CurrentRegion.RangeAddress.ToString());
             }
         }
 
