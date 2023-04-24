@@ -54,7 +54,7 @@ Engine Creation
 
 ClosedXML contains a ``DefaultGraphicEngine`` that implements the
 ``IXLGraphicEngine``. It is able to read information about png, jpeg, gif,
-baseline tiff, bmp, tiff, emf, wmf and pcx file formats. It uses
+baseline tiff, bmp, tiff, emf, wmf, webp and pcx file formats. It uses
 ``SixLabor.Fonts`` library to measure size of text rendered in a specified
 font. It requires a fallback font that is used, when workbook needs to measure
 a size of a text with a font, that is not available. That happens especially

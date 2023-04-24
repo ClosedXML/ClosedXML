@@ -14,27 +14,11 @@ namespace ClosedXML.Utils
             return b4 << 24 | b3 << 16 | b2 << 8 | b1;
         }
 
-        public static short ReadS16BE(this Stream stream)
-        {
-            var b1 = stream.ReadU8();
-            var b2 = stream.ReadU8();
-            return (short)((b1 << 8) | b2);
-        }
-
         public static short ReadS16LE(this Stream stream)
         {
             var b1 = stream.ReadU8();
             var b2 = stream.ReadU8();
             return (short)((b2 << 8) | b1);
-        }
-
-        public static int ReadS32BE(this Stream stream)
-        {
-            var b1 = stream.ReadU8();
-            var b2 = stream.ReadU8();
-            var b3 = stream.ReadU8();
-            var b4 = stream.ReadU8();
-            return b1 << 24 | b2 << 16 | b3 << 8 | b4;
         }
 
         public static ushort ReadU16BE(this Stream stream)
@@ -87,6 +71,22 @@ namespace ClosedXML.Utils
             return true;
         }
 
+        public static int ReadU24BE(this Stream stream)
+        {
+            if (!TryReadBE(stream, 3, out var result))
+                throw EndOfStreamException();
+
+            return result;
+        }
+
+        public static int ReadU24LE(this Stream stream)
+        {
+            if (!TryReadLE(stream, 3, out var result))
+                throw EndOfStreamException();
+
+            return result;
+        }
+
         public static byte ReadU8(this Stream stream)
         {
             var b = stream.ReadByte();
@@ -108,8 +108,7 @@ namespace ClosedXML.Utils
 
         public static bool TryReadU16BE(this Stream stream, out ushort number)
         {
-            int readNumber;
-            if (TryReadBE(stream, 2, out readNumber))
+            if (TryReadBE(stream, 2, out var readNumber))
             {
                 number = (ushort)readNumber;
                 return true;

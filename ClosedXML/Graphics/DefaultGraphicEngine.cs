@@ -20,6 +20,7 @@ namespace ClosedXML.Graphics
             new BmpInfoReader(),
             new EmfInfoReader(),
             new WmfInfoReader(),
+            new WebpInfoReader(),
             new PcxInfoReader() // Due to poor magic detection, keep last
         };
 
