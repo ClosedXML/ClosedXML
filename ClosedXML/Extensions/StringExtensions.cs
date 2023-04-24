@@ -138,5 +138,18 @@ namespace ClosedXML.Excel
             length = default;
             return false;
         }
+
+        /// <summary>
+        /// Convert a magic text to a number, where the first letter is in the highest byte of the number.
+        /// </summary>
+        internal static UInt32 ToMagicNumber(this string magic)
+        {
+            if (magic.Length > 4)
+            {
+                throw new ArgumentException();
+            }
+
+            return Encoding.ASCII.GetBytes(magic).Select(x => (uint)x).Aggregate((acc, cur) => acc * 256 + cur);
+        }
     }
 }

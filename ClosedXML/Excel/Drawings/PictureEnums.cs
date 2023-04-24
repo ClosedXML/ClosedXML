@@ -17,7 +17,8 @@ namespace ClosedXML.Excel.Drawings
         Pcx,
         Jpeg,
         Emf,
-        Wmf
+        Wmf,
+        Webp
     }
 
     public enum XLPicturePlacement

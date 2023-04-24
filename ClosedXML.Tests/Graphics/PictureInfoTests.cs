@@ -90,6 +90,24 @@ namespace ClosedXML.Tests.Graphics
             AssertVectorImage("SampleImageEmf.emf", XLPictureFormat.Emf, new Size(28844, 28938));
         }
 
+        [Test]
+        public void CanReadExtendedWebp()
+        {
+            AssertRasterImage("SampleImageWebpExtendedFormat.webp", XLPictureFormat.Webp, new Size(188, 231), 72, 72);
+        }
+
+        [Test]
+        public void CanReadLossyWebp()
+        {
+            AssertRasterImage("SampleImageWebpLossy.webp", XLPictureFormat.Webp, new Size(278, 90), 72, 72);
+        }
+
+        [Test]
+        public void CanReadLosslessWebp()
+        {
+            AssertRasterImage("SampleImageWebpLossless.webp", XLPictureFormat.Webp, new Size(395, 136), 72, 72);
+        }
+
         private static void AssertRasterImage(string imageName, XLPictureFormat expectedFormat, Size expectedPxSize, double expectedDpiX, double expectedDpiY)
         {
             AssertImage(imageName, expectedFormat, expectedPxSize, Size.Empty, expectedDpiX, expectedDpiY);
