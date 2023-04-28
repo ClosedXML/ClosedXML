@@ -155,20 +155,31 @@ namespace ClosedXML.Tests
         }
 
         /// <summary>
-        /// Load a file from the <paramref name="loadResourcePath"/>, save it through ClosedXML without modifications
+        /// Load a file from the <paramref name="loadResourcePath"/>, modify it, save it through ClosedXML
         /// and compare the saved file against the <paramref name="expectedOutputResourcePath"/>.
         /// </summary>
         /// <remarks>Useful for checking whether we can load data from Excel and save it while keeping various feature in the OpenXML intact.</remarks>
-        public static void LoadSaveAndCompare(string loadResourcePath, string expectedOutputResourcePath, bool evaluateFormulae = false, bool validate = true)
+        public static void LoadModifyAndCompare(string loadResourcePath, Action<XLWorkbook> modify, string expectedOutputResourcePath, bool evaluateFormulae = false, bool validate = true)
         {
             using var stream = GetStreamFromResource(GetResourcePath(loadResourcePath));
             using var ms = new MemoryStream();
             CreateAndCompare(() =>
             {
                 var wb = new XLWorkbook(stream);
+                modify(wb);
                 wb.SaveAs(ms, validate);
                 return wb;
             }, expectedOutputResourcePath, evaluateFormulae, validate);
+        }
+
+        /// <summary>
+        /// Load a file from the <paramref name="loadResourcePath"/>, save it through ClosedXML without modifications
+        /// and compare the saved file against the <paramref name="expectedOutputResourcePath"/>.
+        /// </summary>
+        /// <remarks>Useful for checking whether we can load data from Excel and save it while keeping various feature in the OpenXML intact.</remarks>
+        public static void LoadSaveAndCompare(string loadResourcePath, string expectedOutputResourcePath, bool evaluateFormulae = false, bool validate = true)
+        {
+            LoadModifyAndCompare(loadResourcePath, _ => { }, expectedOutputResourcePath, evaluateFormulae, validate);
         }
 
         /// <summary>

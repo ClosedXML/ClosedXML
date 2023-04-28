@@ -1,6 +1,4 @@
-using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,16 +48,17 @@ namespace ClosedXML.Excel
 
         internal sealed class RelIdGenerator
         {
-            private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
+            private readonly Dictionary<RelType, HashSet<String>> _relIds = new();
 
             public void AddValues(IEnumerable<String> values, RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out var set))
                 {
-                    list = new List<String>();
-                    _relIds.Add(relType, list);
+                    set = new HashSet<string>();
+                    _relIds.Add(relType, set);
                 }
-                list.AddRange(values.Where(v => !list.Contains(v)));
+
+                set.UnionWith(values);
             }
 
             /// <summary>
@@ -92,19 +91,19 @@ namespace ClosedXML.Excel
 
             public String GetNext(RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out var set))
                 {
-                    list = new List<String>();
-                    _relIds.Add(relType, list);
+                    set = new HashSet<String>();
+                    _relIds.Add(relType, set);
                 }
 
-                Int32 id = list.Count + 1;
+                var id = set.Count + 1;
                 while (true)
                 {
-                    String relId = String.Concat("rId", id);
-                    if (!list.Contains(relId))
+                    var relId = String.Concat("rId", id);
+                    if (!set.Contains(relId))
                     {
-                        list.Add(relId);
+                        set.Add(relId);
                         return relId;
                     }
                     id++;
