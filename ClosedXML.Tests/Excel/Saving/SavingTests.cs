@@ -5,7 +5,6 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -774,6 +773,17 @@ namespace ClosedXML.Tests.Excel.Saving
             {
                 File.Delete(filename);
             }
+        }
+
+        [Test]
+        public void CanAddNewPartsInWorkbookWithDuplicateRelIds()
+        {
+            // Both Sheet1 and drawing have same relIds: rId2
+            // We can add a new worksheet even when there are parts with same relId
+            TestHelper.LoadModifyAndCompare(
+                @"Other\Parts\MultiplePartsHaveNonUniqueRelId-input.xlsx",
+                wb => wb.AddWorksheet(),
+                @"Other\Parts\MultiplePartsHaveNonUniqueRelId-output.xlsx");
         }
     }
 }
