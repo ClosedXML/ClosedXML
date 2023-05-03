@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -79,44 +80,25 @@ namespace ClosedXML.Excel.CalcEngine
 
             return new ConstArray(data);
         }
-    }
 
-    /// <summary>
-    /// An array where all elements have same value.
-    /// </summary>
-    internal class ScalarArray : Array
-    {
-        private readonly ScalarValue _value;
-        private readonly int _width;
-        private readonly int _height;
-
-        public ScalarArray(ScalarValue value, int width, int height)
+        /// <summary>
+        /// Rescale array for calculation of array formulas.
+        /// </summary>
+        public Array Rescale(int rows, int columns)
         {
-            if (width < 1) throw new ArgumentOutOfRangeException(nameof(width));
-            if (height < 1) throw new ArgumentOutOfRangeException(nameof(height));
-            _value = value;
-            _width = width;
-            _height = height;
-        }
+            if (Width == columns && Height == columns)
+                return this;
 
-        public override int Width => _width;
+            if (Width == 1 && Height == 1)
+                return new ScalarArray(this[0, 0], columns, rows);
 
-        public override int Height => _height;
+            if (Width == 1)
+                return new RepeatedColumnArray(this, rows, columns);
 
-        public override ScalarValue this[int y, int x]
-        {
-            get
-            {
-                if (x < 0 || x >= _width || y < 0 || y >= _height)
-                    throw new IndexOutOfRangeException();
+            if (Height == 1)
+                return new RepeatedRowArray(this, rows, columns);
 
-                return _value;
-            }
-        }
-
-        public override IEnumerator<ScalarValue> GetEnumerator()
-        {
-            return Enumerable.Range(0, _width * _height).Select(_ => _value).GetEnumerator();
+            return new ResizedArray(this, rows, columns);
         }
     }
 
@@ -125,7 +107,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ConstArray : Array
     {
-        internal readonly ScalarValue[,] _data;
+        private readonly ScalarValue[,] _data;
 
         public ConstArray(ScalarValue[,] data)
         {
@@ -183,5 +165,154 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Width => _area.ColumnSpan;
 
         public override int Height => _area.RowSpan;
+    }
+
+    internal class RepeatedColumnArray : Array
+    {
+        private readonly Array _columnArray;
+
+        public RepeatedColumnArray(Array oneColumnArray, int rows, int columns)
+        {
+            Debug.Assert(oneColumnArray.Width == 1);
+            _columnArray = oneColumnArray;
+            Width = columns;
+            Height = rows;
+        }
+
+        public override int Width { get; }
+
+        public override int Height { get; }
+
+        public override ScalarValue this[int row, int column]
+        {
+            get
+            {
+                if (row >= Height || column >= Width)
+                    throw new IndexOutOfRangeException();
+
+                if (row >= _columnArray.Height)
+                    return XLError.NoValueAvailable;
+
+                return _columnArray[row, 0];
+            }
+        }
+    }
+
+    internal class RepeatedRowArray : Array
+    {
+        private readonly Array _rowArray;
+
+        internal RepeatedRowArray(Array oneRowArray, int rows, int columns)
+        {
+            Debug.Assert(oneRowArray.Height == 1);
+            _rowArray = oneRowArray;
+            Width = columns;
+            Height = rows;
+        }
+
+        public override int Width { get; }
+
+        public override int Height { get; }
+
+        public override ScalarValue this[int row, int column]
+        {
+            get
+            {
+                if (row >= Height || column >= Width)
+                    throw new IndexOutOfRangeException();
+
+                if (column >= _rowArray.Width)
+                    return XLError.NoValueAvailable;
+
+                return _rowArray[0, column];
+            }
+        }
+    }
+
+    /// <summary>
+    /// A resize array from another array. Extra items without value have <c>#N/A</c>.
+    /// </summary>
+    internal class ResizedArray : Array
+    {
+        private readonly Array _original;
+
+        public ResizedArray(Array original, int rows, int columns)
+        {
+            _original = original;
+            Height = rows;
+            Width = columns;
+        }
+
+        public override int Width { get; }
+
+        public override int Height { get; }
+
+        public override ScalarValue this[int y, int x]
+        {
+            get
+            {
+                if (y >= Height || x >= Width)
+                    throw new IndexOutOfRangeException();
+
+                return y < _original.Height && x < _original.Width
+                    ? _original[y, x]
+                    : XLError.NoValueAvailable;
+            }
+        }
+    }
+
+    /// <summary>
+    /// An array where all elements have same value.
+    /// </summary>
+    internal class ScalarArray : Array
+    {
+        private readonly ScalarValue _value;
+        private readonly int _columns;
+        private readonly int _rows;
+
+        public ScalarArray(ScalarValue value, int columns, int rows)
+        {
+            if (columns < 1) throw new ArgumentOutOfRangeException(nameof(columns));
+            if (rows < 1) throw new ArgumentOutOfRangeException(nameof(rows));
+            _value = value;
+            _columns = columns;
+            _rows = rows;
+        }
+
+        public override int Width => _columns;
+
+        public override int Height => _rows;
+
+        public override ScalarValue this[int y, int x]
+        {
+            get
+            {
+                if (x < 0 || x >= _columns || y < 0 || y >= _rows)
+                    throw new IndexOutOfRangeException();
+
+                return _value;
+            }
+        }
+
+        public override IEnumerator<ScalarValue> GetEnumerator()
+        {
+            return Enumerable.Range(0, _columns * _rows).Select(_ => _value).GetEnumerator();
+        }
+    }
+
+    internal class TransposedArray : Array
+    {
+        private readonly Array _original;
+
+        public TransposedArray(Array original)
+        {
+            _original = original;
+        }
+
+        public override ScalarValue this[int y, int x] => _original[x, y];
+
+        public override int Width => _original.Height;
+
+        public override int Height => _original.Width;
     }
 }

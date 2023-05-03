@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ClosedXML.Extensions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -392,6 +393,19 @@ namespace ClosedXML.Excel.CalcEngine
                     error = XLError.IncompatibleValue;
                     return false;
             }
+        }
+
+        public override string ToString()
+        {
+            return _index switch
+            {
+                BlankValue => "Blank",
+                LogicalValue => _logical.ToString().ToUpper(),
+                NumberValue => _number.ToString(CultureInfo.InvariantCulture),
+                TextValue => _text,
+                ErrorValue => _error.ToDisplayString(),
+                _ => throw new InvalidOperationException("Invalid type of scalar value.")
+            };
         }
     }
 }

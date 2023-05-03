@@ -25,6 +25,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// Function has side effects, e.g. it changes something.
         /// </summary>
         /// <example>HYPERLINK</example>
-        SideEffect = 2
+        SideEffect = 2,
+
+        /// <summary>
+        /// Function returns array. Functions without this flag return a scalar value.
+        /// CalcEngine treats such functions differently for array formulas.
+        /// </summary>
+        ReturnsArray = 4
     }
 }

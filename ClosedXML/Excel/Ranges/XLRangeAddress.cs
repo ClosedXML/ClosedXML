@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -49,8 +48,8 @@ namespace ClosedXML.Excel
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
         {
-            string addressToUse = rangeAddress.Contains("!")
-                ? rangeAddress.Substring(rangeAddress.LastIndexOf("!") + 1)
+            string addressToUse = rangeAddress.Contains('!')
+                ? rangeAddress.Substring(rangeAddress.LastIndexOf('!') + 1)
                 : rangeAddress;
 
             string firstPart;
@@ -221,6 +220,21 @@ namespace ClosedXML.Excel
         {
             var xlAddress = (XLAddress)address;
             return Contains(in xlAddress);
+        }
+
+        /// <summary>
+        /// Does this range contains whole another range?
+        /// </summary>
+        public bool ContainsWhole(IXLRangeAddress range)
+        {
+            if (!range.IsValid)
+                return false;
+
+            return
+                range.FirstAddress.ColumnNumber >= FirstAddress.ColumnNumber &&
+                range.FirstAddress.RowNumber >= FirstAddress.RowNumber &&
+                range.LastAddress.ColumnNumber <= LastAddress.ColumnNumber &&
+                range.LastAddress.RowNumber <= LastAddress.RowNumber;
         }
 
         internal IXLRangeAddress WithoutWorksheet()

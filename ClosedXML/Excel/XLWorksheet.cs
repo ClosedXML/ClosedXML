@@ -1664,7 +1664,7 @@ namespace ClosedXML.Excel
         public XLCellValue Evaluate(String expression, string formulaAddress = null)
         {
             IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
-            return CalcEngine.Evaluate(expression, Workbook, this, address).ToCellValue();
+            return CalcEngine.EvaluateFormula(expression, Workbook, this, address).ToCellValue();
         }
 
         /// <summary>

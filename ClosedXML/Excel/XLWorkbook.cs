@@ -871,7 +871,7 @@ namespace ClosedXML.Excel
 
         public XLCellValue Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression, this).ToCellValue();
+            return CalcEngine.EvaluateFormula(expression, this).ToCellValue();
         }
 
         /// <summary>
@@ -896,7 +896,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public static XLCellValue EvaluateExpr(String expression)
         {
-            return CalcEngineExpr.Evaluate(expression).ToCellValue();
+            return CalcEngineExpr.EvaluateFormula(expression).ToCellValue();
         }
 
         public String Author { get; set; }

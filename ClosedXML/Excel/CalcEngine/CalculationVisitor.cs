@@ -7,6 +7,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private readonly FunctionRegistry _functions;
         private readonly ArrayPool<AnyValue> _argsPool;
+
         public CalculationVisitor(FunctionRegistry functions)
         {
             _functions = functions;
@@ -77,7 +78,9 @@ namespace ClosedXML.Excel.CalcEngine
                 for (var i = 0; i < parameters.Count; ++i)
                     args[i] = parameters[i].Accept(context, this);
 
-                return fn.CallFunction(context, args);
+                return !context.IsArrayCalculation
+                    ? fn.CallFunction(context, args)
+                    : fn.CallAsArray(context, args);
             }
             finally
             {

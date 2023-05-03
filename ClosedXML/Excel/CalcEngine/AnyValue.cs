@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using ClosedXML.Extensions;
 using CollectionValue = ClosedXML.Excel.CalcEngine.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -97,6 +99,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool IsReference => _index == ReferenceValue;
 
+        /// <summary>
+        /// Is the value a scalar (blank, logical, number, text or error).
+        /// </summary>
+        public bool IsScalarType => IsBlank || IsLogical || IsNumber || IsText || IsError;
+
         public bool TryPickScalar(out ScalarValue scalar, out CollectionValue collection)
         {
             scalar = _index switch
@@ -180,6 +187,51 @@ namespace ClosedXML.Excel.CalcEngine
             area = _reference.Areas[0];
             error = default;
             return true;
+        }
+
+        /// <summary>
+        /// <para>
+        /// Try to get a value more in line with an array formula semantic. The output is always
+        /// either single value or an array.
+        /// </para>
+        /// <para>
+        /// Single cell references are turned into a scalar, multi-area references are turned
+        /// into <see cref="XLError.IncompatibleValue"/> and single-area references are turned
+        /// into arrays.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Note the difference in nomenclature: <em>single/multi value</em> vs <em>scalar/collection type</em>.
+        /// </remarks>
+        internal bool TryPickSingleOrMultiValue(out ScalarValue scalar, out Array array, CalcContext ctx)
+        {
+            if (TryPickScalar(out scalar, out var collection))
+            {
+                array = default;
+                return true;
+            }
+
+            // For some weird reason, 1x1 array doesn't count as a scalar, unlike single cell reference
+            // proof {=TYPE(A1+1)} is 1 (scalar), but {=TYPE({1}+1)} is 64 (array).
+            if (collection.TryPickT0(out array, out var reference))
+            {
+                scalar = default;
+                return false;
+            }
+
+            if (reference.TryGetSingleCellValue(out scalar, ctx))
+            {
+                return true;
+            }
+
+            if (reference.Areas.Count > 1)
+            {
+                scalar = XLError.IncompatibleValue;
+                return true;
+            }
+
+            array = new ReferenceArray(reference.Areas[0], ctx);
+            return false;
         }
 
         public TResult Match<TResult>(Func<TResult> transformBlank, Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<XLError, TResult> transformError, Func<Array, TResult> transformArray, Func<Reference, TResult> transformReference)
@@ -481,53 +533,29 @@ namespace ClosedXML.Excel.CalcEngine
                 var isLeftArray = leftCollection.TryPickT0(out var leftArray, out var leftReference);
                 var isRightArray = rightCollection.TryPickT0(out var rightArray, out var rightReference);
 
-                if (isLeftArray && isRightArray)
-                    return leftArray.Apply(rightArray, func, context);
-
-                if (isLeftArray)
+                if (!isLeftArray)
                 {
-                    if (rightReference.TryGetSingleCellValue(out var rightCellValue, context))
-                        return leftArray.Apply(new ScalarArray(rightCellValue, leftArray.Width, leftArray.Height), func, context);
+                    if (leftReference.Areas.Count > 1)
+                        return XLError.IncompatibleValue;
 
-                    if (rightReference.Areas.Count == 1)
-                        return leftArray.Apply(new ReferenceArray(rightReference.Areas[0], context), func, context);
-
-                    return leftArray.Apply(new ScalarArray(XLError.IncompatibleValue, leftArray.Width, leftArray.Height), func, context);
+                    leftArray = new ReferenceArray(leftReference.Areas[0], context);
                 }
 
-                if (isRightArray)
+                if (!isRightArray)
                 {
-                    if (leftReference.TryGetSingleCellValue(out var leftCellValue, context))
-                        return new ScalarArray(leftCellValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
+                    if (rightReference.Areas.Count > 1)
+                        return XLError.IncompatibleValue;
 
-                    if (leftReference.Areas.Count == 1)
-                        return new ReferenceArray(leftReference.Areas[0], context).Apply(rightArray, func, context);
-
-                    return new ScalarArray(XLError.IncompatibleValue, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
+                    rightArray = new ReferenceArray(rightReference.Areas[0], context);
                 }
 
-                // Both are references
-                if (leftReference.Areas.Count > 1 && rightReference.Areas.Count > 1)
-                    return XLError.IncompatibleValue;
+                var combinedRows = Math.Max(leftArray.Height, rightArray.Height);
+                var combinedColumns = Math.Max(leftArray.Width, rightArray.Width);
 
-                if (leftReference.Areas.Count > 1)
-                    return new ScalarArray(XLError.IncompatibleValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
+                var leftRescaledArray = leftArray.Rescale(combinedRows, combinedColumns);
+                var rightRescaledArray = rightArray.Rescale(combinedRows, combinedColumns);
 
-                if (rightReference.Areas.Count > 1)
-                    return new ScalarArray(XLError.IncompatibleValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
-
-                var leftArea = leftReference.Areas[0];
-                var rightArea = rightReference.Areas[0];
-                if (leftArea.IsSingleCell() && rightArea.IsSingleCell())
-                {
-                    var leftCellValue = context.GetCellValue(leftArea.Worksheet, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber);
-                    var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
-                    return func(leftCellValue, rightCellValue, context).ToAnyValue();
-                }
-
-                var leftRefArray = new ReferenceArray(leftArea, context);
-                var rightRefArray = new ReferenceArray(rightArea, context);
-                return leftRefArray.Apply(rightRefArray, func, context);
+                return leftRescaledArray.Apply(rightRescaledArray, func, context);
             }
         }
 
@@ -602,6 +630,46 @@ namespace ClosedXML.Excel.CalcEngine
                         (rightError, _, _) => rightError),
                 (leftError, _) => leftError);
         }
+
+        public override string ToString()
+        {
+            return _index switch
+            {
+                BlankValue => "Blank",
+                LogicalValue => $"Logical: {_logical.ToString().ToUpper()}",
+                NumberValue => $"Number: {_number}",
+                TextValue => $"Text: {_text}",
+                ErrorValue => $"Error: {_error.ToDisplayString()}",
+                ArrayValue => $"Array{_array.Height}x{_array.Width}",
+                ReferenceValue => $"Reference: {string.Join(",", _reference.Areas.Select(a => $"{a.FirstAddress}:{a.LastAddress}"))}",
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        /// <summary>
+        /// Get 2d size of the value. For scalars, it's 1x1, for multi-area references,
+        /// it's also 1x1,because it is converted to <c>#VALUE!</c> error.
+        /// </summary>
+        public (int Rows, int Columns) GetArraySize()
+        {
+            if (IsScalarType)
+                return (1, 1);
+
+            if (TryPickArray(out var array))
+                return (array.Height, array.Width);
+
+            if (TryPickArea(out var area, out _))
+                return (area.RowSpan, area.ColumnSpan);
+
+            // Multi area is just error = scalar
+            return (1, 1);
+        }
+
+        /// <summary>
+        /// Return the array value.
+        /// </summary>
+        /// <exception cref="InvalidCastException" />
+        public Array GetArray() => _index == ArrayValue ? _array : throw new InvalidCastException();
 
         private delegate OneOf<double, XLError> BinaryNumberFunc(double lhs, double rhs);
     }

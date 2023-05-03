@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using ClosedXML.Excel;
-using System.IO;
 
 namespace ClosedXML.Tests.Excel.Cells
 {
@@ -14,15 +13,6 @@ namespace ClosedXML.Tests.Excel.Cells
             var ws = wb.AddWorksheet();
             ws.Cell(1, 1).FormulaA1 = "=B1";
             Assert.AreEqual("B1", ws.Cell(1, 1).FormulaA1);
-        }
-
-        [Test]
-        public void ArrayFormulaIsStrippedOfEqualSign()
-        {
-            using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet();
-            ws.Cell(1, 1).FormulaA1 = "{=E1:H5}";
-            Assert.AreEqual("{E1:H5}", ws.Cell(1, 1).FormulaA1);
         }
 
         [Test]

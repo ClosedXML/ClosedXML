@@ -530,7 +530,7 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            _cellValue = Formula.RecalculateFormula(this, Worksheet).ToCellValue();
+            Formula.ApplyFormula(this);
         }
 
         /// <summary>
@@ -1994,8 +1994,7 @@ namespace ClosedXML.Excel
 
         public Boolean HasFormula => Formula is not null;
 
-        public Boolean HasArrayFormula
-        { get { return FormulaA1.StartsWith("{"); } }
+        public Boolean HasArrayFormula => Formula?.Type == FormulaType.Array;
 
         public IXLRangeAddress FormulaReference
         {
@@ -2196,6 +2195,9 @@ namespace ClosedXML.Excel
         [Flags]
         private enum XLCellFlags : byte
         {
+            /// <summary>
+            /// Should user see a furigana above kanji?
+            /// </summary>
             ShowPhonetic = 1
         }
 
