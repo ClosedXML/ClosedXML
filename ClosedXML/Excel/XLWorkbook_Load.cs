@@ -1714,25 +1714,20 @@ namespace ClosedXML.Excel
                 {
                     xlCell.Formula = XLCellFormula.NormalA1(cellFormula.Text);
                 }
-                else if (formulaType == CellFormulaValues.Array && cellFormula.Reference is not null) // Child cells of an array may have array type, but not ref, that is reserved for parent cell
+                else if (formulaType == CellFormulaValues.Array && cellFormula.Reference is not null) // Child cells of an array may have array type, but not ref, that is reserved for master cell
                 {
                     var aca = cellFormula.AlwaysCalculateArray?.Value ?? false;
 
-                    // Excel displays {=FORMULA} for each cell of array formula, so we do the same... for now.
                     var range = XLSheetRange.Parse(cellFormula.Reference);
-                    xlCell.Formula = XLCellFormula.Array(cellFormula.Text, range, aca);
+                    var arrayFormula = XLCellFormula.Array(cellFormula.Text, range, aca);
 
                     // Because cells are read from top-to-bottom, from left-to-right, none of child cells have
-                    // a formula. Also, Excel doesn't allow change of array data, only through parent formula.
+                    // a formula yet. Also, Excel doesn't allow change of array data, only through parent formula.
                     for (var col = range.FirstPoint.Column; col <= range.LastPoint.Column; ++col)
                     {
                         for (var row = range.FirstPoint.Row; row <= range.LastPoint.Row; ++row)
                         {
-                            // Skip first cell, it is special and children shouldn't need any extra data
-                            if (col == range.FirstPoint.Column && row == range.FirstPoint.Row)
-                                continue;
-                            var arrayFormulaCell = ws.Cell(row, col);
-                            arrayFormulaCell.Formula = XLCellFormula.Array(cellFormula.Text, range, false);
+                            ws.Cell(row, col).Formula = arrayFormula;
                         }
                     }
                 }

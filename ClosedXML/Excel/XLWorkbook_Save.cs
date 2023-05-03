@@ -958,16 +958,13 @@ namespace ClosedXML.Excel
                             cc.Array = true;
                             calculationChain.AppendChild(cc);
 
-                            foreach (var childCell in worksheet.Range(c.FormulaReference.ToString()).Cells())
+                            foreach (var childCell in worksheet.Range(c.FormulaReference).Cells())
                             {
-                                calculationChain.AppendChild(
-                                    new CalculationCell
-                                    {
-                                        CellReference = childCell.Address.ToString(),
-                                        SheetId = worksheet.SheetId,
-                                        InChildChain = true
-                                    }
-                                );
+                                calculationChain.AppendChild(new CalculationCell
+                                {
+                                    CellReference = childCell.Address.ToString(),
+                                    SheetId = worksheet.SheetId,
+                                });
                             }
                         }
                     }

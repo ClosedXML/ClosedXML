@@ -28,7 +28,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ROW", 0, 1, Row, FunctionFlags.Range, AllowRange.All); // Returns the row number of a reference
             ce.RegisterFunction("ROWS", 1, 1, Adapt(Rows), FunctionFlags.Range, AllowRange.All); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
-            //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
+            ce.RegisterFunction("TRANSPOSE", 1, 1, Adapt(Transpose), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Returns the transpose of an array
             ce.RegisterFunction("VLOOKUP", 3, 4, AdaptLastOptional(Vlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
@@ -259,6 +259,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static AnyValue Rows(CalcContext _, AnyValue value)
         {
             return RowsOrColumns(value, true);
+        }
+
+        private static AnyValue Transpose(CalcContext ctx, AnyValue value)
+        {
+            if (value.TryPickSingleOrMultiValue(out var single, out var multi, ctx))
+                return single.ToAnyValue();
+
+            return new TransposedArray(multi);
         }
 
         private static AnyValue Vlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue columnIndex, ScalarValue flagValue)

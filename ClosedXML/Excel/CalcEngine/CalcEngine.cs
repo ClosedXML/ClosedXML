@@ -18,16 +18,15 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly CultureInfo _culture;
         private ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
-        private readonly FunctionRegistry _funcRegistry;      // table with constants and functions (pi, sin, etc)
         private readonly CalculationVisitor _visitor;
 
         public CalcEngine(CultureInfo culture)
         {
             _culture = culture;
-            _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
-            _parser = new FormulaParser(_funcRegistry);
-            _visitor = new CalculationVisitor(_funcRegistry);
+            var funcRegistry = GetFunctionTable();
+            _parser = new FormulaParser(funcRegistry);
+            _visitor = new CalculationVisitor(funcRegistry);
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Evaluates an expression.
+        /// Evaluates a normal formula.
         /// </summary>
         /// <param name="expression">Expression to evaluate.</param>
         /// <param name="wb">Workbook where is formula being evaluated.</param>
@@ -55,14 +54,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public ScalarValue Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        internal ScalarValue EvaluateFormula(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
         {
-            var x = _cache != null
-                ? _cache[expression]
-                : Parse(expression);
-
             var ctx = new CalcContext(this, _culture, wb, ws, address);
-            var result = x.AstRoot.Accept(ctx, _visitor);
+            var result = EvaluateFormula(expression, ctx);
             if (ctx.UseImplicitIntersection)
             {
                 result = result.Match(
@@ -78,16 +73,30 @@ namespace ClosedXML.Excel.CalcEngine
             return ToCellContentValue(result, ctx);
         }
 
-        internal AnyValue EvaluateExpression(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        internal Array EvaluateArrayFormula(string expression, XLCell masterCell)
         {
-            // Yay, copy pasta.
-            var x = _cache != null
-                    ? _cache[expression]
-                    : Parse(expression);
+            var ctx = new CalcContext(this, _culture, masterCell) { IsArrayCalculation = true };
+            var result = EvaluateFormula(expression, ctx);
+            if (result.TryPickSingleOrMultiValue(out var single, out var multi, ctx))
+                return new ScalarArray(single, 1, 1);
 
-            var ctx = new CalcContext(this, _culture, wb, ws, address);
-            var calculatingVisitor = new CalculationVisitor(_funcRegistry);
-            return x.AstRoot.Accept(ctx, calculatingVisitor);
+            return multi;
+        }
+
+        internal AnyValue EvaluateName(string nameFormula, XLWorksheet ws)
+        {
+            var ctx = new CalcContext(this, _culture, ws.Workbook, ws, null);
+            return EvaluateFormula(nameFormula, ctx);
+        }
+
+        private AnyValue EvaluateFormula(string expression, CalcContext ctx)
+        {
+            var x = _cache != null
+                ? _cache[expression]
+                : Parse(expression);
+
+            var result = x.AstRoot.Accept(ctx, _visitor);
+            return result;
         }
 
         /// <summary>

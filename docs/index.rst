@@ -44,6 +44,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    features/tables
    features/cell-format
    features/protect
+   features/formulas
    features/functions
    features/graphic-engine
 
@@ -59,6 +60,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
 
    migrations/migrate-to-0.100
    migrations/migrate-to-0.101
+   migrations/migrate-to-0.102
 
 .. toctree::
    :maxdepth: 2

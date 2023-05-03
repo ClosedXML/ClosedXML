@@ -101,6 +101,30 @@ namespace ClosedXML.Excel
             }
         }
 
+        public String FormulaArrayA1
+        {
+            set
+            {
+                var range = XLSheetRange.FromRangeAddress(RangeAddress);
+                if (Worksheet.MergedRanges.Any(mr => mr.Intersects(this)))
+                    throw new InvalidOperationException("Can't create array function over a merged range.");
+
+                if (Worksheet.Tables.Any(t => t.Intersects(this)))
+                    throw new InvalidOperationException("Can't create array function over a table.");
+
+                if (Cells(false).Any<XLCell>(c => c.HasArrayFormula && !RangeAddress.ContainsWhole(c.FormulaReference)))
+                    throw new InvalidOperationException("Can't create array function that partially covers another array function.");
+
+                var arrayFormula = XLCellFormula.Array(value, range, false);
+                foreach (var cell in Cells(false))
+                    cell.Formula = arrayFormula;
+
+                // Formula is shared across all cells, so it's enough to invalidate master cell
+                var masterCell = FirstCell();
+                masterCell.InvalidateFormula();
+            }
+        }
+
         public String FormulaR1C1
         {
             set

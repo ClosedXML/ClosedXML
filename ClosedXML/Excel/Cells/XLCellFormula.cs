@@ -1,8 +1,10 @@
 ﻿using ClosedXML.Excel.CalcEngine;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Array = ClosedXML.Excel.CalcEngine.Array;
 
 namespace ClosedXML.Excel
 {
@@ -23,6 +25,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a cell formula, not the formula itself (i.e. the tree).
     /// </summary>
+    [DebuggerDisplay("{Type}:{A1}")]
     internal sealed class XLCellFormula
     {
         /// <summary>
@@ -169,15 +172,8 @@ namespace ClosedXML.Excel
                 return true;
             }
 
-            // Normalize array formulas, so we don't throw parsing exception.
-            var formulaText = A1.Trim();
-            if (formulaText.StartsWith("{") && formulaText.EndsWith("}"))
-            {
-                formulaText = formulaText.Substring(1, formulaText.Length - 2);
-            }
-
             var worksheet = cell.Worksheet;
-            if (!worksheet.CalcEngine.TryGetPrecedentCells(formulaText, worksheet, out var precedentCells))
+            if (!worksheet.CalcEngine.TryGetPrecedentCells(A1, worksheet, out var precedentCells))
             {
                 // If we are unable to even determine precedent cells, always recalculate
                 return true;
@@ -224,9 +220,6 @@ namespace ClosedXML.Excel
 
             if (A1.Trim()[0] == '=')
                 return A1.Substring(1);
-
-            if (A1.Trim().StartsWith("{="))
-                return "{" + A1.Substring(2);
 
             return A1;
         }
@@ -432,10 +425,8 @@ namespace ClosedXML.Excel
             return columnPart;
         }
 
-        internal ScalarValue RecalculateFormula(XLCell cell, XLWorksheet worksheet)
+        internal void ApplyFormula(XLCell cell)
         {
-            var fA1 = GetFormulaA1(cell.SheetPoint);
-
             if (IsEvaluating)
             {
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
@@ -444,10 +435,35 @@ namespace ClosedXML.Excel
             try
             {
                 IsEvaluating = true;
-                var result = RecalculateFormula(fA1, cell, worksheet);
-                _lastStatus = new RecalculationStatus(false, worksheet.Workbook.RecalculationCounter);
-                _evaluatedAtVersion = worksheet.Workbook.RecalculationCounter;
-                return result;
+
+                if (Type == FormulaType.Normal)
+                {
+                    var fA1 = GetFormulaA1(cell.SheetPoint);
+                    var result = CalculateNormalFormula(fA1, cell);
+                    cell.SetOnlyValue(result.ToCellValue());
+                }
+                else if (Type == FormulaType.Array)
+                {
+                    var result = CalculateArrayFormula(cell);
+                    for (var rowIdx = 0; rowIdx < result.Height; ++rowIdx)
+                    {
+                        for (var colIdx = 0; colIdx < result.Width; ++colIdx)
+                        {
+                            var cellValue = result[rowIdx, colIdx];
+                            var cellRow = Range.FirstPoint.Row + rowIdx;
+                            var cellColumn = Range.FirstPoint.Column + colIdx;
+                            cell.Worksheet.Cell(cellRow, cellColumn).SetOnlyValue(cellValue.ToCellValue());
+                        }
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException($"Evaluation of {Type} formula not implemented.");
+                }
+
+                var recalculationCounter = cell.Worksheet.Workbook.RecalculationCounter;
+                _lastStatus = new RecalculationStatus(false, recalculationCounter);
+                _evaluatedAtVersion = recalculationCounter;
             }
             finally
             {
@@ -460,13 +476,9 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="fA1">Cell formula to evaluate in A1 format.</param>
         /// <param name="cell">Cell whose formula is being evaluated.</param>
-        /// <param name="worksheet">Worksheet of the cell.</param>
-        /// <returns>Null if formula is empty or null, calculated value otherwise.</returns>
-        private ScalarValue RecalculateFormula(string fA1, XLCell cell, XLWorksheet worksheet)
+        private ScalarValue CalculateNormalFormula(string fA1, XLCell cell)
         {
-            if (fA1[0] == '{')
-                fA1 = fA1.Substring(1, fA1.Length - 2);
-
+            var worksheet = cell.Worksheet;
             string sName;
             string cAddress;
             if (fA1.Contains('!'))
@@ -503,9 +515,20 @@ namespace ClosedXML.Excel
                     return referenceCell.Value;
             }
 
-            var retVal = worksheet.CalcEngine.Evaluate(fA1, worksheet.Workbook, worksheet, cell.Address);
-
+            var retVal = worksheet.CalcEngine.EvaluateFormula(fA1, worksheet.Workbook, worksheet, cell.Address);
             return retVal;
+        }
+
+        /// <summary>
+        /// Calculate array formula and return an array of the array formula range size.
+        /// </summary>
+        private Array CalculateArrayFormula(XLCell masterCell)
+        {
+            var ws = masterCell.Worksheet;
+            var formula = GetFormulaA1(masterCell.SheetPoint);
+            var resultArray = ws.CalcEngine.EvaluateArrayFormula(formula, masterCell);
+            var rescaledArray = resultArray.Rescale(Range.Height, Range.Width);
+            return rescaledArray;
         }
 
         /// <summary>
@@ -548,7 +571,7 @@ namespace ClosedXML.Excel
         {
             return new XLCellFormula
             {
-                A1 = "{" + arrayFormulaA1 + "}",
+                A1 = arrayFormulaA1,
                 R1C1 = null,
                 _type = FormulaType.Array,
                 _flags = aca ? FormulaFlags.AlwaysCalculateArray : FormulaFlags.None,

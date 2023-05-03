@@ -196,7 +196,7 @@ namespace ClosedXML.Excel.CalcEngine
         internal OneOf<Array, XLError> ToArray(CalcContext context)
         {
             if (Areas.Count != 1)
-                throw new NotImplementedException();
+                return XLError.IncompatibleValue;
 
             var area = Areas.Single();
 

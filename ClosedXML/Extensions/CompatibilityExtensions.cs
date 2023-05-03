@@ -1,4 +1,5 @@
 ﻿// This file contains extensions methods that are present in .NET Core, but not in .NET Standard 2.0
+#if !NETSTANDARD2_1_OR_GREATER
 namespace System.IO
 {
     internal static class StreamCompatibilityExtensions
@@ -17,3 +18,16 @@ namespace System.IO
         }
     }
 }
+
+namespace System
+{
+    public static class StringCompatibilityExtensions
+    {
+        public static bool Contains(this string s, char c)
+        {
+            return s.IndexOf(c) >= 0;
+        }
+    }
+}
+
+#endif

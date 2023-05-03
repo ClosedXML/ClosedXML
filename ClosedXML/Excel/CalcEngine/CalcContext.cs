@@ -13,6 +13,11 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly XLWorksheet _worksheet;
         private readonly IXLAddress _formulaAddress;
 
+        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLCell cell)
+            : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
+        {
+        }
+
         public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
         {
             _calcEngine = calcEngine;
@@ -50,6 +55,11 @@ namespace ClosedXML.Excel.CalcEngine
         /// all arguments for scalar functions where passed through implicit intersection before calling the function.
         /// </summary>
         public bool UseImplicitIntersection => true;
+
+        /// <summary>
+        /// Should functions be calculated per item of multi-values argument in the scalar parameters.
+        /// </summary>
+        public bool IsArrayCalculation { get; set; }
 
         internal ScalarValue GetCellValue(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {

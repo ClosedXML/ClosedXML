@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -30,7 +29,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("FALSE & \" to text\"", "FALSE to text")]
         [TestCase("true & \" to text\"", "TRUE to text")]
         [TestCase("false & \" to text\"", "FALSE to text")]
-        [TestCase("TRUE & FALSE", "TRUEFALSE")]
+        [TestCase("TRUE & FALSE", @"TRUEFALSE")]
         public void Concat_ConvertsLogicalToString(string formula, object expectedResult)
         {
             Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
@@ -53,16 +52,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Concat_WithErrorAsOperandReturnsTheError(string formula, XLError expectedError)
         {
             Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
-        }
-
-        [Ignore("Arrays are not implemented")]
-        [TestCase("{1,2} & \"A\"", "1A")]
-        [TestCase("{\"A\",2} & \"B\"", "AB")]
-        [TestCase("{TRUE,2} & \"B\"", "TRUEB")]
-        [TestCase("{#REF!,5} & 1", XLError.CellReference)]
-        public void Concat_UsesFirstElementOfArray(string formula, object expected)
-        {
-            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr(formula));
         }
 
         #endregion
@@ -220,6 +209,66 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Subtraction_CanWorkWithScalars(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, Evaluate(formula));
+        }
+
+        #endregion
+
+        #region Array Operations
+
+        [Test]
+        public void ArraysOperation_MultiAreaReferencesArgumentResultsInScalarError()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cells("A1:A2").Value = 1;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("(A1:A1,A1:A2)+1"));
+            Assert.AreEqual(16, ws.Evaluate("TYPE((A1:A1,A1:A2)+1)")); // The result is a scalar error, not an array of errors
+        }
+
+        [Test]
+        public void ArrayOperation_SameSizeArrayPerformsOperationIndividually()
+        {
+            Assert.AreEqual(6 * 7, XLWorkbook.EvaluateExpr("SUM({1,2,3;4,5,6} + {6,5,4;3,2,1})"));
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("COLUMNS({1,2} + \"A\")"));
+        }
+
+        [Test]
+        public void ArrayOperation_ArrayPlusScalarUpscalesScalarToSizeOfArray()
+        {
+            Assert.AreEqual(18, XLWorkbook.EvaluateExpr("SUM({1,1,1;1,1,1} * 3)"));
+            Assert.AreEqual(15, XLWorkbook.EvaluateExpr("SUM(6 / {2,2,2;3,3,3})"));
+        }
+
+        [Test]
+        public void ArrayOperation_RowOnlyArrayIsRepeatedToHaveSameNumberOfRowsAsOtherArray()
+        {
+            // {3,2} is scaled to {3,2;3,2} of second array
+            Assert.AreEqual(14, XLWorkbook.EvaluateExpr("SUM({3,2}+{1,1;1,1})"));
+            Assert.AreEqual(14, XLWorkbook.EvaluateExpr("SUM({1,1;1,1}+{3,2})"));
+        }
+
+        [Test]
+        public void ArrayOperation_ColumnOnlyArrayIsRepeatedToHaveSameNumberOfColumnsAsOtherArray()
+        {
+            // {3;2} is scaled to {3,3;2,2} of second array
+            Assert.AreEqual(16, XLWorkbook.EvaluateExpr("SUM({3;2}*{1,1;2,3})"));
+            Assert.AreEqual(16, XLWorkbook.EvaluateExpr("SUM({1,1;2,3}*{3;2})"));
+        }
+
+        [Test]
+        public void ArrayOperation_1x1ArrayIsScaledToOtherArray()
+        {
+            Assert.AreEqual(20, XLWorkbook.EvaluateExpr("SUM({2}*{1,2;3,4})"));
+            Assert.AreEqual(20, XLWorkbook.EvaluateExpr("SUM({1,2;3,4}*{2})"));
+        }
+
+        [Test]
+        public void ArrayOperation_DifferentSizedArraysAreUpscaledToContainingSize()
+        {
+            // The extra value are #N/A + value, i.e. #N/A, thus the whole sum is #N/A
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("SUM({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
+            Assert.AreEqual(3, XLWorkbook.EvaluateExpr("ROWS({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
+            Assert.AreEqual(3, XLWorkbook.EvaluateExpr("COLUMNS({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
         }
 
         #endregion

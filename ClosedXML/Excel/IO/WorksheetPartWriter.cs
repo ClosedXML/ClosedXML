@@ -1898,13 +1898,12 @@ namespace ClosedXML.Excel.IO
                             }
 
                             WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
-                            xml.WriteStartElement("f", Main2006SsNs);
 
-                            var formula = xlCell.FormulaA1;
                             var xlFormula = xlCell.Formula;
                             if (xlFormula.Type == FormulaType.DataTable)
                             {
                                 // Data table doesn't write actual text of formula, that is referenced by context
+                                xml.WriteStartElement("f", Main2006SsNs);
                                 xml.WriteAttributeString("t", "dataTable");
                                 xml.WriteAttributeString("ref", xlFormula.Range.ToString());
 
@@ -1933,27 +1932,27 @@ namespace ClosedXML.Excel.IO
                                 // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
                                 // user will see correct values.
                                 xml.WriteAttributeString("ca", TrueValue);
+
+                                xml.WriteEndElement(); // f
                             }
                             else if (xlCell.HasArrayFormula)
                             {
-                                formula = formula.Substring(1, formula.Length - 2);
-                                xml.WriteAttributeString("t", "array");
-
-                                if (xlCell.FormulaReference == null)
-                                    xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
-
-                                if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
+                                var isMasterCell = xlCell.Formula.Range.FirstPoint == xlCell.SheetPoint;
+                                if (isMasterCell)
                                 {
+                                    xml.WriteStartElement("f", Main2006SsNs);
+                                    xml.WriteAttributeString("t", "array");
                                     xml.WriteAttributeString("ref", xlCell.FormulaReference.ToStringRelative());
-                                    xml.WriteString(formula);
+                                    xml.WriteString(xlCell.FormulaA1);
+                                    xml.WriteEndElement(); // f
                                 }
                             }
                             else
                             {
-                                xml.WriteString(formula);
+                                xml.WriteStartElement("f", Main2006SsNs);
+                                xml.WriteString(xlCell.FormulaA1);
+                                xml.WriteEndElement(); // f
                             }
-
-                            xml.WriteEndElement(); // f
 
                             if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
                             {

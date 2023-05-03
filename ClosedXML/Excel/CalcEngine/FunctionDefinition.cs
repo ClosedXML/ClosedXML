@@ -64,6 +64,77 @@ namespace ClosedXML.Excel.CalcEngine
             if (ctx.UseImplicitIntersection)
                 IntersectArguments(ctx, args);
 
+            return EvaluateFunction(ctx, args);
+        }
+
+        /// <summary>
+        /// Evaluate the function with array formula semantic.
+        /// </summary>
+        public AnyValue CallAsArray(CalcContext ctx, Span<AnyValue> args)
+        {
+            if (_flags.HasFlag(FunctionFlags.ReturnsArray) && _allowRanges == AllowRange.All)
+            {
+                return _function(ctx, args);
+            }
+
+            // Step 1: For scalar parameters of function, determine maximum size of scalar
+            // parameters from argument arrays
+            var (totalRows, totalColumns) = GetScalarArgsMaxSize(args);
+
+            // Step 2: Normalize arguments. Single params are converted to array of same size, multi params are converted from scalars
+            for (var i = 0; i < args.Length; ++i)
+            {
+                ref var arg = ref args[i];
+                var argIsSingle = arg.TryPickSingleOrMultiValue(out var single, out var multi, ctx);
+                if (IsParameterSingleValue(i))
+                {
+                    arg = argIsSingle
+                        ? new ScalarArray(single, totalColumns, totalRows)
+                        : multi.Rescale(totalRows, totalColumns);
+                }
+                else
+                {
+                    // 18.17.2.4 When a function expects a multi-valued argument but a single-valued
+                    // expression is passed, that single-valued argument is treated as a 1x1 array.
+                    // If there is an error as a single value, e.g. reference to a single cell, the SUMIF behaves
+                    // as it was converted to 1x1 array and doesn't return error, just because it found an error.
+                    // Ergo: for ranges, we don't immediately return error, just because range parameter contains an error
+                    arg = argIsSingle
+                        ? new ScalarArray(single, 1, 1)
+                        : multi;
+                }
+            }
+
+            // Step 3: For each item in total array, calculate function
+            var result = new ScalarValue[totalRows, totalColumns];
+            for (var row = 0; row < totalRows; ++row)
+            {
+                for (var column = 0; column < totalColumns; ++column)
+                {
+                    var itemArg = new AnyValue[args.Length];
+                    for (var i = 0; i < itemArg.Length; ++i)
+                    {
+                        ref var arg = ref args[i];
+                        itemArg[i] = IsParameterSingleValue(i)
+                            ? arg.GetArray()[row, column].ToAnyValue()
+                            : arg;
+                    }
+
+                    var itemResult = EvaluateFunction(ctx, itemArg);
+
+                    // Even if function returns an array, only the top-left value of array is used
+                    // as a result for the item, per tests with FILTERXML.
+                    result[row, column] = itemResult.TryPickSingleOrMultiValue(out var scalarResult, out var arrayResult, ctx)
+                        ? scalarResult
+                        : arrayResult[0, 0];
+                }
+            }
+
+            return new ConstArray(result);
+        }
+
+        private AnyValue EvaluateFunction(CalcContext ctx, Span<AnyValue> args)
+        {
             if (_legacyFunction is not null)
             {
                 // This creates a some of overhead, but all legacy functions will be migrated in near future
@@ -102,7 +173,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public static AnyValue ConvertLegacyFormulaValueToAnyValue(object result)
+        private static AnyValue ConvertLegacyFormulaValueToAnyValue(object result)
         {
             return result switch
             {
@@ -117,7 +188,7 @@ namespace ClosedXML.Excel.CalcEngine
                 XLError errorType => AnyValue.From(errorType),
                 double[,] array => AnyValue.From(new NumberArray(array)),
                 XLCellValue cellValue => ((ScalarValue)cellValue).ToAnyValue(), // Some functions return directly value of a cell.
-                _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
+                _ => throw new NotImplementedException($"Got a result from some function type {result.GetType().Name} with value {result}.")
             };
         }
 
@@ -156,6 +227,37 @@ namespace ClosedXML.Excel.CalcEngine
                     var ws = area.Worksheet ?? context.Worksheet;
                     return new XObjectExpression(new CellRangeReference(ws.Range(area)));
                 });
+        }
+
+        private (int Rows, int Columns) GetScalarArgsMaxSize(Span<AnyValue> args)
+        {
+            var maxRows = 1;
+            var maxColumns = 1;
+            for (var i = 0; i < args.Length; ++i)
+            {
+                ref var arg = ref args[i];
+                if (IsParameterSingleValue(i))
+                {
+                    var (argRows, argColumns) = arg.GetArraySize();
+                    maxRows = Math.Max(maxRows, argRows);
+                    maxColumns = Math.Max(maxColumns, argColumns);
+                }
+            }
+
+            return (maxRows, maxColumns);
+        }
+
+        private bool IsParameterSingleValue(int paramIndex)
+        {
+            var paramAllowsMultiValues = _allowRanges switch
+            {
+                AllowRange.None => false,
+                AllowRange.Except => !_markedParams.Contains(paramIndex),
+                AllowRange.Only => _markedParams.Contains(paramIndex),
+                AllowRange.All => true,
+                _ => throw new NotSupportedException($"Unexpected value {_allowRanges}")
+            };
+            return !paramAllowsMultiValues;
         }
     }
 }
