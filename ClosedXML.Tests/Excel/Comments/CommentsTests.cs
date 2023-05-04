@@ -30,28 +30,6 @@ namespace ClosedXML.Tests.Excel.Comments
         }
 
         [Test]
-        public void AddingCommentDoesNotAffectCollections()
-        {
-            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
-            ws.Cell("A1").SetValue(10);
-            ws.Cell("A4").SetValue(10);
-            ws.Cell("A5").SetValue(10);
-
-            ws.Rows("1,4").Height = 20;
-
-            Assert.AreEqual(2, ws.Internals.RowsCollection.Count);
-            Assert.AreEqual(3, ws.Internals.CellsCollection.RowsCollection.SelectMany(r => r.Value.Values).Count());
-
-            ws.Cell("A4").GetComment().AddText("Comment");
-            Assert.AreEqual(2, ws.Internals.RowsCollection.Count);
-            Assert.AreEqual(3, ws.Internals.CellsCollection.RowsCollection.SelectMany(r => r.Value.Values).Count());
-
-            ws.Row(1).Delete();
-            Assert.AreEqual(1, ws.Internals.RowsCollection.Count);
-            Assert.AreEqual(2, ws.Internals.CellsCollection.RowsCollection.SelectMany(r => r.Value.Values).Count());
-        }
-
-        [Test]
         public void CopyCommentStyle()
         {
             using (var wb = new XLWorkbook())

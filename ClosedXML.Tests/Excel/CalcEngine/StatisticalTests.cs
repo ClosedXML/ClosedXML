@@ -482,13 +482,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 //Let's pre-initialize cells we need so they didn't affect the result
                 ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
                 ws.Cell("ZZ1000").Value = 1;
-                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
                 var actualResult = (double)ws.Evaluate(formulaA1);
-                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
                 Assert.AreEqual(expectedResult, actualResult, tolerance);
-                Assert.AreEqual(initialCount, cellsCount);
             }
         }
 

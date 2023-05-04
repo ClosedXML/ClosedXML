@@ -5,7 +5,7 @@ using System;
 namespace ClosedXML.Excel
 {
     /// <summary>
-    /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to teh sheet).
+    /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to the sheet).
     /// </summary>
     internal readonly struct XLSheetRange : IEquatable<XLSheetRange>
     {
@@ -14,6 +14,18 @@ namespace ClosedXML.Excel
             FirstPoint = firstPoint;
             LastPoint = lastPoint;
         }
+
+        public XLSheetRange(Int32 rowStart, Int32 columnStart, Int32 rowEnd, Int32 columnEnd)
+            : this(new XLSheetPoint(rowStart, columnStart), new XLSheetPoint(rowEnd, columnEnd))
+        {
+        }
+
+        /// <summary>
+        /// A range that covers whole worksheet.
+        /// </summary>
+        public static readonly XLSheetRange Full = new(
+            new XLSheetPoint(XLHelper.MinRowNumber, XLHelper.MinColumnNumber),
+            new XLSheetPoint(XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber));
 
         /// <summary>
         /// Top-left point of the sheet range.
@@ -99,7 +111,47 @@ namespace ClosedXML.Excel
             return text.Slice(0, len).ToString();
         }
 
-        internal static XLSheetRange FromRangeAddress(IXLRangeAddress address)
+        /// <summary>
+        /// Return a range that contains all cells below the current range.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The range touches the bottom border of the sheet.</exception>
+        internal XLSheetRange BelowRange()
+        {
+            return BelowRange(XLHelper.MaxRowNumber);
+        }
+
+        /// <summary>
+        /// Get a range below the current one <paramref name="rows"/> rows.
+        /// If there isn't enough rows, use as many as possible.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The range touches the bottom border of the sheet.</exception>
+        internal XLSheetRange BelowRange(int rows)
+        {
+            if (LastPoint.Row >= XLHelper.MaxRowNumber)
+                throw new InvalidOperationException("No cells below.");
+
+            rows = Math.Min(rows, XLHelper.MaxRowNumber - LastPoint.Row);
+            return new XLSheetRange(
+                new XLSheetPoint(LastPoint.Row + 1, FirstPoint.Column),
+                new XLSheetPoint(LastPoint.Row + rows, LastPoint.Column));
+        }
+
+        /// <summary>
+        /// Return a range that contains all cells to the right of the range.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The range touches the right border of the sheet.</exception>
+        internal XLSheetRange RightRange()
+        {
+            if (LastPoint.Column == XLHelper.MaxColumnNumber)
+                throw new InvalidOperationException("No cells to the left.");
+
+            return new XLSheetRange(
+                new XLSheetPoint(FirstPoint.Row, LastPoint.Column + 1),
+                new XLSheetPoint(LastPoint.Row, XLHelper.MaxColumnNumber));
+        }
+
+        internal static XLSheetRange FromRangeAddress<T>(T address)
+            where T : IXLRangeAddress
         {
             var firstPoint = XLSheetPoint.FromAddress(address.FirstAddress);
             var lastPoint = XLSheetPoint.FromAddress(address.LastAddress);
@@ -107,6 +159,13 @@ namespace ClosedXML.Excel
                 return new XLSheetRange(lastPoint, firstPoint);
 
             return new XLSheetRange(firstPoint, lastPoint);
+        }
+
+        public bool Contains(XLSheetPoint point)
+        {
+            return
+                point.Row >= FirstPoint.Row && point.Row <= LastPoint.Row &&
+                point.Column >= FirstPoint.Column && point.Column <= LastPoint.Column;
         }
     }
 }

@@ -51,8 +51,7 @@ namespace ClosedXML.Examples.Delete
                 // Put a value in a few cells
                 foreach (var r in Enumerable.Range(1, 5))
                     foreach (var c in Enumerable.Range(1, 5))
-                        ws.Cell(r, c).Value = string.Format("R{0}C{1}", r, c);
-
+                        ws.Cell(r, c).Value = $"R{r}C{c}";
 
                 var blueRow = ws.Rows(1, 2);
                 var redRow = ws.Row(5);

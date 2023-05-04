@@ -64,7 +64,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 var remotelyReliable = ws1.CalcEngine.TryGetPrecedentCells("='Worksheet!'!B2*2", ws1, out var cells);
                 Assert.True(remotelyReliable);
-                Assert.AreSame(expectedCell, cells.Single());
+                Assert.AreEqual(expectedCell, cells.Single());
             }
         }
 

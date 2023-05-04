@@ -147,6 +147,10 @@ namespace ClosedXML.Excel
                 candidates = candidates.Union(
                         worksheet.DataValidations.SelectMany(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
 
+            if (_options.HasFlag(XLCellsUsedOptions.Sparklines))
+                candidates = candidates.Union(
+                    worksheet.SparklineGroups.SelectMany(sg => sg).Select(sl => XLSheetPoint.FromAddress(sl.Location.Address)));
+
             return candidates.Distinct();
         }
 

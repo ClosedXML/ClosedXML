@@ -84,8 +84,8 @@ namespace ClosedXML.Tests.Excel
             var c1_full = wb.Cell("Sheet1!C123");
             var c2_full = wb.Cell("'O'Sheet 2'!B7");
 
-            Assert.AreSame(c1, c1_full);
-            Assert.AreSame(c2, c2_full);
+            Assert.AreEqual(c1, c1_full);
+            Assert.AreEqual(c2, c2_full);
             Assert.NotNull(c1_full);
             Assert.NotNull(c2_full);
         }

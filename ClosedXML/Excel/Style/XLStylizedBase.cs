@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Read-only style property.
         /// </summary>
-        internal XLStyleValue StyleValue { get; private protected set; }
+        internal virtual XLStyleValue StyleValue { get; private protected set; }
         XLStyleValue IXLStylized.StyleValue
         {
             get { return StyleValue; }
@@ -54,9 +56,14 @@ namespace ClosedXML.Excel
 
         #endregion Properties
 
-        protected XLStylizedBase(XLStyleValue? styleValue = null)
+        protected XLStylizedBase(XLStyleValue styleValue)
         {
             StyleValue = styleValue ?? XLWorkbook.DefaultStyleValue;
+        }
+
+        protected XLStylizedBase()
+        {
+            // Ctor only for XLCell that stores `StyleValue` in a slice. 
         }
 
         #region Private methods

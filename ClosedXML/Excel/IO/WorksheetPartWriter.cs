@@ -113,12 +113,11 @@ namespace ClosedXML.Excel.IO
 
             #endregion SheetProperties
 
-            var maxColumn = 0;
-
+            // Empty worksheets have dimension A1 (not A1:A1)
             var sheetDimensionReference = "A1";
-            if (xlWorksheet.Internals.CellsCollection.Count > 0)
+            if (!xlWorksheet.Internals.CellsCollection.IsEmpty)
             {
-                maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
+                var maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
                 var maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
                 sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
                                           maxRow.ToInvariantString();
@@ -346,7 +345,7 @@ namespace ClosedXML.Excel.IO
             #region Columns
 
             var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
-            if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
+            if (xlWorksheet.Internals.CellsCollection.IsEmpty &&
                 xlWorksheet.Internals.ColumnsCollection.Count == 0
                 && worksheetStyleId == 0)
                 worksheet.RemoveAllChildren<Columns>();
@@ -1850,169 +1849,102 @@ namespace ClosedXML.Excel.IO
                     table.TotalsRow().CellsUsed())
                 .Select(cell => cell.Address));
 
-            // Must be enough to hold span and rowNumber as strings
-            var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            foreach (var rowNumber in distinctRows.OrderBy(r => r))
+            // A rather complicated state machine, so rows and cells can be written in a single loop
+            var openedRowNumber = 0;
+            var isRowOpened = false;
+            var cellRef = new char[10]; // Buffer, must be enough to hold span and rowNumber as strings
+            var rows = xlWorksheet.Internals.RowsCollection.Keys.ToList();
+            rows.Sort();
+            var rowPropIndex = 0;
+            uint rowStyleId = 0;
+            foreach (var xlCell in xlWorksheet.Internals.CellsCollection.GetCells())
             {
-                xlWorksheet.Internals.RowsCollection.TryGetValue(rowNumber, out XLRow xlRow);
+                var currentRowNumber = xlCell.SheetPoint.Row;
 
-                var cellRef = new char[10];
-                var cellWritten = false;
-                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(rowNumber, out Dictionary<int, XLCell> cells))
+                // A space between cells can have several rows that don't contain cells,
+                // but have custom properties (e.g. height). Write them out.
+                while (rowPropIndex < rows.Count && rows[rowPropIndex] < currentRowNumber)
                 {
-                    foreach (var xlCell in cells.Values.OrderBy(c => c.Address.ColumnNumber))
+                    if (isRowOpened)
                     {
-                        var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
-
-                        // For saving cells to file, ignore conditional formatting, data validation rules and merged
-                        // ranges. They just bloat the file
-                        var isEmpty = xlCell.IsEmpty(XLCellsUsedOptions.All
-                                                     & ~XLCellsUsedOptions.ConditionalFormats
-                                                     & ~XLCellsUsedOptions.DataValidation
-                                                     & ~XLCellsUsedOptions.MergedRanges);
-
-                        if (isEmpty)
-                            continue;
-
-                        if (!cellWritten)
-                        {
-                            WriteStartRow(xml, xlRow, rowNumber, maxColumn, context);
-                            cellWritten = true;
-                        }
-
-                        Span<Char> cellRefSpan = cellRef;
-                        var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);
-
-                        if (xlCell.HasFormula)
-                        {
-                            String dataType = null;
-                            if (options.EvaluateFormulasBeforeSaving)
-                            {
-                                try
-                                {
-                                    xlCell.Evaluate(false);
-                                    dataType = FormulaDataType[(int)xlCell.DataType];
-                                }
-                                catch
-                                {
-                                    // Do nothing, cell will be left blank. Unimplemented features or functions would stop trying to save a file.
-                                }
-                            }
-
-                            WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
-
-                            var xlFormula = xlCell.Formula;
-                            if (xlFormula.Type == FormulaType.DataTable)
-                            {
-                                // Data table doesn't write actual text of formula, that is referenced by context
-                                xml.WriteStartElement("f", Main2006SsNs);
-                                xml.WriteAttributeString("t", "dataTable");
-                                xml.WriteAttributeString("ref", xlFormula.Range.ToString());
-
-                                var is2D = xlFormula.Is2DDataTable;
-                                if (is2D)
-                                    xml.WriteAttributeString("dt2D", TrueValue);
-
-                                var isDataRowTable = xlFormula.IsRowDataTable;
-                                if (isDataRowTable)
-                                    xml.WriteAttributeString("dtr", TrueValue);
-
-                                xml.WriteAttributeString("r1", xlFormula.Input1.ToString());
-                                var input1Deleted = xlFormula.Input1Deleted;
-                                if (input1Deleted)
-                                    xml.WriteAttributeString("del1", TrueValue);
-
-                                if (is2D)
-                                    xml.WriteAttributeString("r2", xlFormula.Input2.ToString());
-
-                                var input2Deleted = xlFormula.Input2Deleted;
-                                if (input2Deleted)
-                                    xml.WriteAttributeString("del2", TrueValue);
-
-                                // Excel doesn't recalculate table formula on load or on click of a button or any kind of forced recalculation.
-                                // It is necessary to mark some precedent formula dirty (e.g. edit cell formula and enter in Excel).
-                                // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
-                                // user will see correct values.
-                                xml.WriteAttributeString("ca", TrueValue);
-
-                                xml.WriteEndElement(); // f
-                            }
-                            else if (xlCell.HasArrayFormula)
-                            {
-                                var isMasterCell = xlCell.Formula.Range.FirstPoint == xlCell.SheetPoint;
-                                if (isMasterCell)
-                                {
-                                    xml.WriteStartElement("f", Main2006SsNs);
-                                    xml.WriteAttributeString("t", "array");
-                                    xml.WriteAttributeString("ref", xlCell.FormulaReference.ToStringRelative());
-                                    xml.WriteString(xlCell.FormulaA1);
-                                    xml.WriteEndElement(); // f
-                                }
-                            }
-                            else
-                            {
-                                xml.WriteStartElement("f", Main2006SsNs);
-                                xml.WriteString(xlCell.FormulaA1);
-                                xml.WriteEndElement(); // f
-                            }
-
-                            if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
-                            {
-                                WriteCellValue(xml, xlCell, context);
-                            }
-                        }
-                        else if (tableTotalCells.Contains(xlCell.Address))
-                        {
-                            var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
-                            var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
-
-                            // If this is a cell in the totals row that contains a label (xor with function), write label
-                            // Only label can be written. Total functions are basically formulas that use structured
-                            // references and SR are not yet supported, so not yet possible to calculate total values.
-                            if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
-                            {
-                                WriteStartCell(xml, xlCell, cellRef, cellRefLen, "s", styleId);
-
-                                xml.WriteStartElement("v", Main2006SsNs);
-                                xml.WriteValue(xlCell.SharedStringId);
-                                xml.WriteEndElement();
-                            }
-                        }
-                        else
-                        {
-                            // Cell contains only a value
-                            var dataType = GetCellValueType(xlCell);
-                            WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
-
-                            WriteCellValue(xml, xlCell, context);
-                        }
-
-                        xml.WriteEndElement(); // cell
+                        xml.WriteEndElement(); // row
+                        isRowOpened = false;
                     }
-                }
 
-                if (cellWritten)
-                {
-                    xml.WriteEndElement(); // row
-                }
-                else if (xlRow is not null)
-                {
-                    var rowHasCustomProperties =
-                        xlRow.HeightChanged ||
-                        xlRow.IsHidden ||
-                        xlRow.StyleValue != xlWorksheet.StyleValue ||
-                        xlRow.Collapsed ||
-                        xlRow.OutlineLevel > 0;
-
-                    if (rowHasCustomProperties)
+                    var rowNumber = rows[rowPropIndex];
+                    var xlRow = xlWorksheet.Internals.RowsCollection[rowNumber];
+                    if (RowHasCustomProps(xlRow))
                     {
                         WriteStartRow(xml, xlRow, rowNumber, maxColumn, context);
-                        xml.WriteEndElement(); // row
+
+                        isRowOpened = true;
+                        openedRowNumber = rowNumber;
                     }
+
+                    rowPropIndex++;
                 }
+
+                // For saving cells to file, ignore conditional formatting, data validation rules and merged
+                // ranges. They just bloat the file
+                var isEmpty = xlCell.IsEmpty(XLCellsUsedOptions.All
+                                             & ~XLCellsUsedOptions.ConditionalFormats
+                                             & ~XLCellsUsedOptions.DataValidation
+                                             & ~XLCellsUsedOptions.MergedRanges);
+
+                if (isEmpty)
+                    continue;
+
+                if (openedRowNumber != currentRowNumber)
+                {
+                    if (isRowOpened)
+                        xml.WriteEndElement(); // row
+
+                    if (xlWorksheet.Internals.RowsCollection.TryGetValue(currentRowNumber, out var row))
+                    {
+                        rowPropIndex++;
+                        rowStyleId = context.SharedStyles[row.StyleValue].StyleId;
+                    }
+                    else
+                    {
+                        rowStyleId = 0;
+                    }
+
+                    WriteStartRow(xml, row, currentRowNumber, maxColumn, context);
+
+                    isRowOpened = true;
+                    openedRowNumber = currentRowNumber;
+                }
+
+                WriteCell(xml, xlCell, cellRef, context, options, tableTotalCells, rowStyleId);
+            }
+
+            if (isRowOpened)
+                xml.WriteEndElement(); // row
+
+            // Write rows with custom properties after last cell.
+            while (rowPropIndex < rows.Count)
+            {
+                var rowNumber = rows[rowPropIndex];
+                var xlRow = xlWorksheet.Internals.RowsCollection[rowNumber];
+                if (RowHasCustomProps(xlRow))
+                {
+                    WriteStartRow(xml, xlRow, rowNumber, 0, context);
+                    xml.WriteEndElement(); // row
+                }
+
+                rowPropIndex++;
             }
 
             xml.WriteEndElement(); // SheetData
+
+            static bool RowHasCustomProps(XLRow xlRow)
+            {
+                return xlRow.HeightChanged ||
+                    xlRow.IsHidden ||
+                    xlRow.StyleValue != xlRow.Worksheet.StyleValue ||
+                    xlRow.Collapsed ||
+                    xlRow.OutlineLevel > 0;
+            }
 
             static void WriteStartRow(XmlWriter w, XLRow xlRow, int rowNumber, int maxColumn, SaveContext context)
             {
@@ -2105,6 +2037,129 @@ namespace ClosedXML.Excel.IO
                 if (xlCell.ValueMetaIndex is not null)
                     w.WriteAttribute("vm", xlCell.ValueMetaIndex.Value);
             }
+
+            static void WriteCell(XmlWriter xml, XLCell xlCell, char[] cellRef, SaveContext context, SaveOptions options, HashSet<IXLAddress> tableTotalCells, uint rowStyleId)
+            {
+                var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
+
+                Span<Char> cellRefSpan = cellRef;
+                var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);
+
+                if (xlCell.HasFormula)
+                {
+                    String dataType = null;
+                    if (options.EvaluateFormulasBeforeSaving)
+                    {
+                        try
+                        {
+                            xlCell.Evaluate(false);
+                            dataType = FormulaDataType[(int)xlCell.DataType];
+                        }
+                        catch
+                        {
+                            // Do nothing, cell will be left blank. Unimplemented features or functions would stop trying to save a file.
+                        }
+                    }
+
+                    WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
+
+                    var xlFormula = xlCell.Formula;
+                    if (xlFormula.Type == FormulaType.DataTable)
+                    {
+                        // Data table doesn't write actual text of formula, that is referenced by context
+                        xml.WriteStartElement("f", Main2006SsNs);
+                        xml.WriteAttributeString("t", "dataTable");
+                        xml.WriteAttributeString("ref", xlFormula.Range.ToString());
+
+                        var is2D = xlFormula.Is2DDataTable;
+                        if (is2D)
+                            xml.WriteAttributeString("dt2D", TrueValue);
+
+                        var isDataRowTable = xlFormula.IsRowDataTable;
+                        if (isDataRowTable)
+                            xml.WriteAttributeString("dtr", TrueValue);
+
+                        xml.WriteAttributeString("r1", xlFormula.Input1.ToString());
+                        var input1Deleted = xlFormula.Input1Deleted;
+                        if (input1Deleted)
+                            xml.WriteAttributeString("del1", TrueValue);
+
+                        if (is2D)
+                            xml.WriteAttributeString("r2", xlFormula.Input2.ToString());
+
+                        var input2Deleted = xlFormula.Input2Deleted;
+                        if (input2Deleted)
+                            xml.WriteAttributeString("del2", TrueValue);
+
+                        // Excel doesn't recalculate table formula on load or on click of a button or any kind of forced recalculation.
+                        // It is necessary to mark some precedent formula dirty (e.g. edit cell formula and enter in Excel).
+                        // By setting the CalculateCell, we ensure that Excel will calculate values of data table formula on load and
+                        // user will see correct values.
+                        xml.WriteAttributeString("ca", TrueValue);
+
+                        xml.WriteEndElement(); // f
+                    }
+                    else if (xlCell.HasArrayFormula)
+                    {
+                        var isMasterCell = xlCell.Formula.Range.FirstPoint == xlCell.SheetPoint;
+                        if (isMasterCell)
+                        {
+                            xml.WriteStartElement("f", Main2006SsNs);
+                            xml.WriteAttributeString("t", "array");
+                            xml.WriteAttributeString("ref", xlCell.FormulaReference.ToStringRelative());
+                            xml.WriteString(xlCell.FormulaA1);
+                            xml.WriteEndElement(); // f
+                        }
+                    }
+                    else
+                    {
+                        xml.WriteStartElement("f", Main2006SsNs);
+                        xml.WriteString(xlCell.FormulaA1);
+                        xml.WriteEndElement(); // f
+                    }
+
+                    if (options.EvaluateFormulasBeforeSaving && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
+                    {
+                        WriteCellValue(xml, xlCell, context);
+                    }
+
+                    xml.WriteEndElement(); // cell
+                }
+                else if (tableTotalCells.Contains(xlCell.Address))
+                {
+                    var table = xlCell.Worksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                    var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+
+                    // If this is a cell in the totals row that contains a label (xor with function), write label
+                    // Only label can be written. Total functions are basically formulas that use structured
+                    // references and SR are not yet supported, so not yet possible to calculate total values.
+                    if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                    {
+                        WriteStartCell(xml, xlCell, cellRef, cellRefLen, "s", styleId);
+
+                        xml.WriteStartElement("v", Main2006SsNs);
+                        xml.WriteValue(xlCell.SharedStringId);
+                        xml.WriteEndElement();
+                    }
+                    xml.WriteEndElement(); // cell
+                }
+                else if(xlCell.DataType != XLDataType.Blank)
+                {
+                    // Cell contains only a value
+                    var dataType = GetCellValueType(xlCell);
+                    WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
+
+                    WriteCellValue(xml, xlCell, context);
+                    xml.WriteEndElement(); // cell
+                }
+                else if (rowStyleId != styleId)
+                {
+                    // Cell is blank and should be written only if it has different style from parent.
+                    // Non-written cells use inherited style of a row.
+                    WriteStartCell(xml, xlCell, cellRef, cellRefLen, null, styleId);
+                    xml.WriteEndElement(); // cell
+                }
+            }
         }
 
         /// <summary>
@@ -2149,7 +2204,7 @@ namespace ClosedXML.Excel.IO
         {
             var maxColumn = 0;
 
-            if (xlWorksheet.Internals.CellsCollection.Count > 0)
+            if (!xlWorksheet.Internals.CellsCollection.IsEmpty)
             {
                 maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
             }

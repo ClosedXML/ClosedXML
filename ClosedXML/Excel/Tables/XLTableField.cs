@@ -44,9 +44,9 @@ namespace ClosedXML.Excel
             {
                 return Column.Cells(c =>
                 {
-                    if (table.ShowHeaderRow && c == HeaderCell)
+                    if (table.ShowHeaderRow && c.Equals(HeaderCell))
                         return false;
-                    if (table.ShowTotalsRow && c == TotalsCell)
+                    if (table.ShowTotalsRow && c.Equals(TotalsCell))
                         return false;
                     return true;
                 });

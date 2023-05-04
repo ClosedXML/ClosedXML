@@ -415,10 +415,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
-                    RangeAddress.FirstAddress.RowNumber,
-                    RangeAddress.FirstAddress.ColumnNumber,
-                    RangeAddress.LastAddress.RowNumber,
-                    RangeAddress.LastAddress.ColumnNumber,
+                    XLSheetRange.FromRangeAddress(RangeAddress),
                     options);
 
                 return firstColumnUsed == 0 ? null : Column(firstColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
@@ -455,10 +452,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
-                    RangeAddress.FirstAddress.RowNumber,
-                    RangeAddress.FirstAddress.ColumnNumber,
-                    RangeAddress.LastAddress.RowNumber,
-                    RangeAddress.LastAddress.ColumnNumber,
+                    XLSheetRange.FromRangeAddress(RangeAddress),
                     options);
 
                 return lastColumnUsed == 0 ? null : Column(lastColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
@@ -535,13 +529,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 rowFromCells = Worksheet.Internals.CellsCollection.FirstRowUsed(
-                    RangeAddress.FirstAddress.RowNumber,
-                    RangeAddress.FirstAddress.ColumnNumber,
-                    RangeAddress.LastAddress.RowNumber,
-                    RangeAddress.LastAddress.ColumnNumber,
-                    options);
-
-                //Int32 rowFromRows = Worksheet.Internals.RowsCollection.FirstRowUsed(includeFormats);
+                    XLSheetRange.FromRangeAddress(RangeAddress), options);
 
                 return rowFromCells == 0 ? null : Row(rowFromCells - RangeAddress.FirstAddress.RowNumber + 1);
             }
@@ -577,11 +565,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
-                    RangeAddress.FirstAddress.RowNumber,
-                    RangeAddress.FirstAddress.ColumnNumber,
-                    RangeAddress.LastAddress.RowNumber,
-                    RangeAddress.LastAddress.ColumnNumber,
-                    options);
+                    XLSheetRange.FromRangeAddress(RangeAddress), options);
 
                 return lastRowUsed == 0 ? null : Row(lastRowUsed - RangeAddress.FirstAddress.RowNumber + 1);
             }
@@ -754,32 +738,17 @@ namespace ClosedXML.Excel
 
         private void TransposeRange(int squareSide)
         {
-            var cellsToInsert = new Dictionary<XLSheetPoint, XLCell>();
-            var cellsToDelete = new List<XLSheetPoint>();
-            var rngToTranspose = Worksheet.Range(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.FirstAddress.RowNumber + squareSide - 1,
-                RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
-
-            Int32 roCount = rngToTranspose.RowCount();
-            Int32 coCount = rngToTranspose.ColumnCount();
-            for (Int32 ro = 1; ro <= roCount; ro++)
+            var rowOffset = RangeAddress.FirstAddress.RowNumber - 1;
+            var colOffset = RangeAddress.FirstAddress.ColumnNumber - 1;
+            for (var row = 1; row <= squareSide; ++row)
             {
-                for (Int32 co = 1; co <= coCount; co++)
+                for (var col = row + 1; col <= squareSide; ++col)
                 {
-                    var oldCell = rngToTranspose.Cell(ro, co);
-                    var newKey = rngToTranspose.Cell(co, ro).Address;
-                    // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
-                    var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
-                    newCell.CopyFrom(oldCell, XLCellCopyOptions.All);
-                    cellsToInsert.Add(new XLSheetPoint(newKey.RowNumber, newKey.ColumnNumber), newCell);
-                    cellsToDelete.Add(new XLSheetPoint(oldCell.Address.RowNumber, oldCell.Address.ColumnNumber));
+                    var oldAddress = new XLSheetPoint(row + rowOffset, col + colOffset);
+                    var newAddress = new XLSheetPoint(col + colOffset, row + rowOffset);
+                    Worksheet.Internals.CellsCollection.SwapCellsContent(oldAddress, newAddress);
                 }
             }
-
-            cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
         private void TransposeMerged(Int32 squareSide)

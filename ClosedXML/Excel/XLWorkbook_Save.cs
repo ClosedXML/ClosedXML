@@ -3239,9 +3239,9 @@ namespace ClosedXML.Excel
                     xlStyles.Add(s);
                 }
 
-                foreach (var s in worksheet.Internals.CellsCollection.GetCells().Select(c => c.StyleValue))
+                foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
-                    xlStyles.Add(s);
+                    xlStyles.Add(c.StyleValue);
                 }
 
                 foreach (var ptnf in worksheet.PivotTables.SelectMany(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))

@@ -6,7 +6,26 @@ namespace ClosedXML.Excel
 {
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
 
-    public enum XLTransposeOptions { MoveCells, ReplaceCells }
+    /// <summary>
+    /// A behavior of extra outside cells for transpose operation. The option
+    /// is meaningful only for transposition of non-squared ranges, because
+    /// squared ranges can always be transposed without effecting outside cells. 
+    /// </summary>
+    public enum XLTransposeOptions
+    {
+        /// <summary>
+        /// Shift cells of the smaller side to its direction so
+        /// there is a space to transpose other side (e.g. if A1:C5
+        /// range is transposed, move D1:XFD5 are moved 2 columns
+        /// to the right).
+        /// </summary>
+        MoveCells,
+
+        /// <summary>
+        /// Data of the cells are replaced by the transposed cells.
+        /// </summary>
+        ReplaceCells
+    }
 
     public enum XLSearchContents { Values, Formulas, ValuesAndFormulas }
 

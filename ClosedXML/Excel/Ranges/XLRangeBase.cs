@@ -327,7 +327,7 @@ namespace ClosedXML.Excel
                 var firstCellStyle = firstCell.Style;
                 var defaultStyleKey = XLStyle.Default.Key;
                 var cellsUsed =
-                    CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell).ToList();
+                    CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => !c.Equals(firstCell)).ToList();
                 cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
                                                & ~XLClearOptions.MergedRanges
                                                & ~XLClearOptions.NormalFormats));
@@ -411,12 +411,7 @@ namespace ClosedXML.Excel
 
             if (clearOptions == XLClearOptions.All)
             {
-                Worksheet.Internals.CellsCollection.RemoveAll(
-                    RangeAddress.FirstAddress.RowNumber,
-                    RangeAddress.FirstAddress.ColumnNumber,
-                    RangeAddress.LastAddress.RowNumber,
-                    RangeAddress.LastAddress.ColumnNumber
-                );
+                Worksheet.Internals.CellsCollection.Clear(XLSheetRange.FromRangeAddress(RangeAddress));
             }
             return this;
         }
@@ -760,35 +755,8 @@ namespace ClosedXML.Excel
                 );
             }
 
-            var cell = Worksheet.Internals.CellsCollection.GetCell(absRow,
-                                                                   absColumn);
-
-            if (cell != null)
-                return cell;
-
-            var styleValue = this.StyleValue;
-
-            if (styleValue == Worksheet.StyleValue)
-            {
-                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out XLRow row)
-                    && row.StyleValue != Worksheet.StyleValue)
-                    styleValue = row.StyleValue;
-                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out XLColumn column)
-                    && column.StyleValue != Worksheet.StyleValue)
-                    styleValue = column.StyleValue;
-            }
-            var absoluteAddress = new XLAddress(this.Worksheet,
-                                 absRow,
-                                 absColumn,
-                                 cellAddressInRange.FixedRow,
-                                 cellAddressInRange.FixedColumn);
-
-            // If the default style for this range base is empty, but the worksheet
-            // has a default style, use the worksheet's default style
-            XLCell newCell = new XLCell(Worksheet, absoluteAddress, styleValue);
-
-            Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
-            return newCell;
+            var cell = Worksheet.Internals.CellsCollection.GetCell(new XLSheetPoint(absRow, absColumn));
+            return cell;
         }
 
         public Int32 RowCount()
@@ -1104,39 +1072,24 @@ namespace ClosedXML.Excel
 
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => c.Formula is not null))
                     cell.ShiftFormulaColumns(AsRange(), numberOfColumns);
             }
 
-            var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
-            var cellsToDelete = new List<IXLAddress>();
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int lastRow = RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
+            Worksheet.SparklineGroupsInternal.ShiftColumns(XLSheetRange.FromRangeAddress(RangeAddress), numberOfColumns);
 
+            // Inserting and shifting of whole columns is rather inconsistent across the codebase. In some places, the columns collection
+            // is shifted before this method is called and thus the we can't shift column properties again. In others, the code relies on
+            // shifting in this method.
             if (!onlyUsedCells)
             {
                 int lastColumn = Worksheet.Internals.CellsCollection.MaxColumnUsed;
                 if (lastColumn > 0)
                 {
+                    int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
                     for (int co = lastColumn; co >= firstColumn; co--)
                     {
                         int newColumn = co + numberOfColumns;
-                        for (int ro = lastRow; ro >= firstRow; ro--)
-                        {
-                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
-                            if (oldCell == null)
-                                continue;
-
-                            var oldKey = new XLAddress(Worksheet, ro, co, false, false);
-                            var newKey = new XLAddress(Worksheet, ro, newColumn, false, false);
-
-                            oldCell.Address = newKey;
-                            if (newKey.IsValid)
-                                cellsToInsert.Add(newKey, oldCell);
-                            cellsToDelete.Add(oldKey);
-                        }
-
                         if (this.IsEntireColumn())
                         {
                             Worksheet.Column(newColumn).Width = Worksheet.Column(co).Width;
@@ -1144,26 +1097,12 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            else
-            {
-                foreach (
-                    XLCell c in
-                        Worksheet.Internals.CellsCollection.GetCells(firstRow, firstColumn, lastRow,
-                                                                     Worksheet.Internals.CellsCollection.MaxColumnUsed))
-                {
-                    int newColumn = c.Address.ColumnNumber + numberOfColumns;
-                    var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
 
-                    cellsToDelete.Add(c.Address);
-                    c.Address = newKey;
-                    if (newKey.IsValid)
-                        cellsToInsert.Add(newKey, c);
-                }
-            }
+            var insertedRange = new XLSheetRange(
+                XLSheetPoint.FromAddress(RangeAddress.FirstAddress),
+                new XLSheetPoint(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1));
 
-            cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
-            cellsToInsert.ForEach(
-                c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
+            Worksheet.Internals.CellsCollection.InsertAreaAndShiftRight(insertedRange);
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
             Int32 lastRowReturn = RangeAddress.LastAddress.RowNumber;
@@ -1321,41 +1260,21 @@ namespace ClosedXML.Excel
             var asRange = AsRange();
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => c.Formula is not null))
                     cell.ShiftFormulaRows(asRange, numberOfRows);
             }
 
-            var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
-            var cellsToDelete = new List<IXLAddress>();
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = Math.Min(
-                RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1,
-                Worksheet.Internals.CellsCollection.MaxColumnUsed);
+            Worksheet.SparklineGroupsInternal.ShiftRows(XLSheetRange.FromRangeAddress(RangeAddress), numberOfRows);
 
             if (!onlyUsedCells)
             {
                 int lastRow = Worksheet.Internals.CellsCollection.MaxRowUsed;
                 if (lastRow > 0)
                 {
-                    for (int ro = lastRow; ro >= firstRow; ro--)
+                    int firstRow = RangeAddress.FirstAddress.RowNumber;
+                    for (var ro = lastRow; ro >= firstRow; ro--)
                     {
-                        int newRow = ro + numberOfRows;
-
-                        for (int co = lastColumn; co >= firstColumn; co--)
-                        {
-                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
-                            if (oldCell == null)
-                                continue;
-
-                            var oldKey = new XLAddress(Worksheet, ro, co, false, false);
-                            var newKey = new XLAddress(Worksheet, newRow, co, false, false);
-
-                            oldCell.Address = newKey;
-                            if (newKey.IsValid)
-                                cellsToInsert.Add(newKey, oldCell);
-                            cellsToDelete.Add(oldKey);
-                        }
+                        var newRow = ro + numberOfRows;
                         if (this.IsEntireRow())
                         {
                             Worksheet.Row(newRow).Height = Worksheet.Row(ro).Height;
@@ -1363,25 +1282,11 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            else
-            {
-                foreach (
-                    XLCell c in
-                        Worksheet.Internals.CellsCollection.GetCells(firstRow, firstColumn,
-                                                                     Worksheet.Internals.CellsCollection.MaxRowUsed,
-                                                                     lastColumn))
-                {
-                    int newRow = c.Address.RowNumber + numberOfRows;
-                    var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
-                    cellsToDelete.Add(c.Address);
-                    c.Address = newKey;
-                    if (newKey.IsValid)
-                        cellsToInsert.Add(newKey, c);
-                }
-            }
 
-            cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
-            cellsToInsert.ForEach(c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
+            var insertedRange = new XLSheetRange(
+                XLSheetPoint.FromAddress(RangeAddress.FirstAddress),
+                new XLSheetPoint(RangeAddress.FirstAddress.RowNumber + numberOfRows - 1, RangeAddress.LastAddress.ColumnNumber));
+            Worksheet.Internals.CellsCollection.InsertAreaAndShiftDown(insertedRange);
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
             Int32 lastRowReturn = RangeAddress.FirstAddress.RowNumber + numberOfRows - 1;
@@ -1493,69 +1398,24 @@ namespace ClosedXML.Excel
             }
 
             // Range to shift...
-            var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
-            var cellsToDelete = new List<IXLAddress>();
-
             Int32 columnModifier = 0;
             Int32 rowModifier = 0;
-            IEnumerable<XLCell> cellsQuery;
+            var range = XLSheetRange.FromRangeAddress(RangeAddress);
             switch (shiftDeleteCells)
             {
                 case XLShiftDeletedCells.ShiftCellsLeft:
-                    cellsQuery = Worksheet.Internals.CellsCollection.GetCells(
-                        RangeAddress.FirstAddress.RowNumber,
-                        RangeAddress.FirstAddress.ColumnNumber,
-                        RangeAddress.LastAddress.RowNumber,
-                        Worksheet.Internals.CellsCollection.MaxColumnUsed);
-
+                    Worksheet.Internals.CellsCollection.DeleteAreaAndShiftLeft(range);
+                    Worksheet.SparklineGroupsInternal.ShiftColumns(range, -numberOfColumns);
                     columnModifier = ColumnCount();
-
                     break;
 
                 case XLShiftDeletedCells.ShiftCellsUp:
-                    cellsQuery = Worksheet.Internals.CellsCollection.GetCells(
-                        RangeAddress.FirstAddress.RowNumber,
-                        RangeAddress.FirstAddress.ColumnNumber,
-                        Worksheet.Internals.CellsCollection.MaxRowUsed,
-                        RangeAddress.LastAddress.ColumnNumber);
-
+                    Worksheet.Internals.CellsCollection.DeleteAreaAndShiftUp(range);
+                    Worksheet.SparklineGroupsInternal.ShiftRows(range, -numberOfRows);
                     rowModifier = RowCount();
-
-                    break;
-
-                default:
-                    cellsQuery = new XLCell[] { };
                     break;
             }
-
-            foreach (var c in cellsQuery)
-            {
-                // Schedule for removal from CellsCollection
-                cellsToDelete.Add(c.Address);
-
-                // Generate new cell to insert into CellsCollection
-                var newCellAddress = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
-                                           c.Address.ColumnNumber - columnModifier,
-                                           fixedRow: false,
-                                           fixedColumn: false);
-
-                if (newCellAddress.IsValid)
-                {
-                    bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
-                                         ? c.Address.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
-                                         : c.Address.RowNumber > RangeAddress.LastAddress.RowNumber;
-
-                    c.Address = newCellAddress;
-
-                    if (canInsert)
-                        cellsToInsert.Add(newCellAddress, c);
-                }
-            }
-
-            cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
-            cellsToInsert.ForEach(
-                c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
-
+            
             var mergesToRemove = Worksheet.Internals.MergedRanges.Where(Contains).ToList();
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
 
@@ -1873,7 +1733,7 @@ namespace ClosedXML.Excel
             var range2Sp2 = new XLSheetPoint(row2InWs, lastColumn);
 
             Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
+                                                           new XLSheetRange(range2Sp1, range2Sp2));
         }
 
         private int SortRangeRows(int begPoint, int endPoint)
@@ -1941,7 +1801,7 @@ namespace ClosedXML.Excel
             var range2Sp2 = new XLSheetPoint(lastRow, col2InWs);
 
             Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
+                                                           new XLSheetRange(range2Sp1, range2Sp2));
         }
 
         private int SortRangeColumns(int begPoint, int endPoint)
