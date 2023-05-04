@@ -6,416 +6,350 @@ namespace ClosedXML.Excel
 {
     internal class XLCellsCollection
     {
-        internal Dictionary<Int32, Int32> ColumnsUsed { get; } = new Dictionary<int, int>();
-        internal Dictionary<Int32, HashSet<Int32>> Deleted { get; } = new Dictionary<int, HashSet<int>>();
-        internal Dictionary<int, Dictionary<int, XLCell>> RowsCollection { get; } = new Dictionary<int, Dictionary<int, XLCell>>();
+        private readonly XLWorksheet _ws;
+        private readonly List<ISlice> _slices;
 
-        public Int32 MaxColumnUsed;
-        public Int32 MaxRowUsed;
-        public Dictionary<Int32, Int32> RowsUsed = new Dictionary<int, int>();
-
-        public XLCellsCollection()
+        public XLCellsCollection(XLWorksheet ws)
         {
-            Clear();
+            _ws = ws;
+            _slices = new List<ISlice> { ValueSlice, FormulaSlice, StyleSlice, MiscSlice };
         }
 
-        public Int32 Count { get; private set; }
-
-        public void Add(XLSheetPoint sheetPoint, XLCell cell)
+        internal HashSet<int> ColumnsUsedKeys
         {
-            Add(sheetPoint.Row, sheetPoint.Column, cell);
-        }
-
-        public void Add(Int32 row, Int32 column, XLCell cell)
-        {
-            Count++;
-
-            IncrementUsage(RowsUsed, row);
-            IncrementUsage(ColumnsUsed, column);
-
-            if (!RowsCollection.TryGetValue(row, out Dictionary<int, XLCell> columnsCollection))
+            get
             {
-                columnsCollection = new Dictionary<int, XLCell>();
-                RowsCollection.Add(row, columnsCollection);
-            }
-            columnsCollection.Add(column, cell);
-            if (row > MaxRowUsed) MaxRowUsed = row;
-            if (column > MaxColumnUsed) MaxColumnUsed = column;
+                var set = new HashSet<int>();
+                foreach (var slice in _slices)
+                    set.UnionWith(slice.UsedColumns);
 
-            if (Deleted.TryGetValue(row, out HashSet<int> delHash))
-                delHash.Remove(column);
-        }
-
-        private static void IncrementUsage(Dictionary<int, int> dictionary, Int32 key)
-        {
-            if (dictionary.TryGetValue(key, out Int32 value))
-                dictionary[key] = value + 1;
-            else
-                dictionary.Add(key, 1);
-        }
-
-        /// <summary/>
-        /// <returns>True if the number was lowered to zero so MaxColumnUsed or MaxRowUsed may require
-        /// recomputation.</returns>
-        private static bool DecrementUsage(Dictionary<int, int> dictionary, Int32 key)
-        {
-            if (!dictionary.TryGetValue(key, out Int32 count)) return false;
-
-            if (count > 1)
-            {
-                dictionary[key] = count - 1;
-                return false;
-            }
-            else
-            {
-                dictionary.Remove(key);
-                return true;
+                return set;
             }
         }
 
-        public void Clear()
+        internal bool IsEmpty => _slices.All(slice => slice.IsEmpty);
+
+        internal Int32 MaxColumnUsed
         {
-            Count = 0;
-            RowsUsed.Clear();
-            ColumnsUsed.Clear();
-
-            RowsCollection.Clear();
-            MaxRowUsed = 0;
-            MaxColumnUsed = 0;
-        }
-
-        public void Remove(XLSheetPoint sheetPoint)
-        {
-            Remove(sheetPoint.Row, sheetPoint.Column);
-        }
-
-        public void Remove(Int32 row, Int32 column)
-        {
-            Count--;
-            var rowRemoved = DecrementUsage(RowsUsed, row);
-            var columnRemoved = DecrementUsage(ColumnsUsed, column);
-
-            if (rowRemoved && row == MaxRowUsed)
+            get
             {
-                MaxRowUsed = RowsUsed.Keys.Any()
-                    ? RowsUsed.Keys.Max()
-                    : 0;
-            }
+                var max = int.MinValue;
+                foreach (var slice in _slices)
+                    max = Math.Max(max, slice.MaxColumn);
 
-            if (columnRemoved && column == MaxColumnUsed)
-            {
-                MaxColumnUsed = ColumnsUsed.Keys.Any()
-                    ? ColumnsUsed.Keys.Max()
-                    : 0;
-            }
-
-            if (Deleted.TryGetValue(row, out HashSet<Int32> delHash))
-            {
-                if (!delHash.Contains(column))
-                    delHash.Add(column);
-            }
-            else
-            {
-                delHash = new HashSet<int>();
-                delHash.Add(column);
-                Deleted.Add(row, delHash);
-            }
-
-            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
-            {
-                columnsCollection.Remove(column);
-                if (columnsCollection.Count == 0)
-                {
-                    RowsCollection.Remove(row);
-                }
+                return Math.Max(1, max);
             }
         }
 
+        internal Int32 MaxRowUsed
+        {
+            get
+            {
+                var max = int.MinValue;
+                foreach (var slice in _slices)
+                    max = Math.Max(max, slice.MaxRow);
+
+                return Math.Max(1, max);
+            }
+        }
+
+        internal HashSet<int> RowsUsedKeys
+        {
+            get
+            {
+                var set = new HashSet<int>();
+                foreach (var slice in _slices)
+                    set.UnionWith(slice.UsedRows);
+
+                return set;
+            }
+        }
+
+        internal Slice<XLValueSliceContent> ValueSlice { get; } = new();
+
+        internal Slice<XLCellFormula> FormulaSlice { get; } = new();
+
+        internal Slice<XLStyleValue> StyleSlice { get; } = new();
+
+        internal Slice<XLMiscSliceContent> MiscSlice { get; } = new();
+
+        internal XLWorksheet Worksheet => _ws;
+
+        internal void Clear()
+        {
+            Clear(XLSheetRange.Full);
+        }
+
+        internal void Clear(XLSheetRange clearRange)
+        {
+            foreach (var slice in _slices)
+                slice.Clear(clearRange);
+        }
+
+        internal void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete)
+        {
+            foreach (var slice in _slices)
+                slice.DeleteAreaAndShiftLeft(rangeToDelete);
+        }
+
+        internal void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete)
+        {
+            foreach (var slice in _slices)
+                slice.DeleteAreaAndShiftUp(rangeToDelete);
+        }
+
+        internal XLCell GetCell(XLSheetPoint address)
+        {
+            return new XLCell(_ws, address);
+        }
+
+        /// <summary>
+        /// Get all used cells in the worksheet.
+        /// </summary>
+        internal IEnumerable<XLCell> GetCells()
+        {
+            return GetCells(XLSheetRange.Full);
+        }
+
+        /// <summary>
+        /// Get all used cells in the worksheet that satisfy the predicate.
+        /// </summary>
+        internal IEnumerable<XLCell> GetCells(Func<XLCell, Boolean> predicate)
+        {
+            return GetCells(XLSheetRange.Full, predicate);
+        }
+
+        /// <summary>
+        /// Get all used cells in the range that satisfy the predicate.
+        /// </summary>
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
                                             Int32 rowEnd, Int32 columnEnd,
-                                            Func<IXLCell, Boolean>? predicate = null)
+                                            Func<XLCell, Boolean>? predicate = null)
         {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = rowStart; ro <= finalRow; ro++)
+            return GetCells(new XLSheetRange(rowStart, columnStart, rowEnd, columnEnd), predicate);
+        }
+
+        /// <summary>
+        /// Get all used cells in the range that satisfy the predicate.
+        /// </summary>
+        internal IEnumerable<XLCell> GetCells(XLSheetRange range, Func<XLCell, Boolean>? predicate = null)
+        {
+            var enumerator = new CellsEnumerator(range, this);
+
+            while (enumerator.MoveNext())
             {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= finalColumn; co++)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && (predicate == null || predicate(cell)))
-                            yield return cell;
-                    }
-                }
+                var cellAddress = enumerator.Current;
+                var cell = GetCell(cellAddress);
+                if (predicate == null || predicate(cell))
+                    yield return cell;
             }
         }
 
-        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean>? predicate = null)
+        internal IEnumerable<XLCell> GetCellsInColumn(Int32 column)
         {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = rowStart; ro <= finalRow; ro++)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= finalColumn; co++)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(options)
-                            && (predicate == null || predicate(cell)))
-
-                            return ro;
-                    }
-                }
-            }
-
-            return 0;
+            return GetCells(1, column, XLHelper.MaxRowNumber, column);
         }
 
-        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean>? predicate = null)
+        internal IEnumerable<XLCell> GetCellsInRow(Int32 row)
         {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            int firstColumnUsed = finalColumn;
-            var found = false;
-            for (int ro = rowStart; ro <= finalRow; ro++)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= firstColumnUsed; co++)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(options)
-                            && (predicate == null || predicate(cell))
-                            && co <= firstColumnUsed)
-                        {
-                            firstColumnUsed = co;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return found ? firstColumnUsed : 0;
+            return GetCells(row, 1, row, XLHelper.MaxColumnNumber);
         }
 
-        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean>? predicate = null)
+        /// <summary>
+        /// Get cell or null, if cell is not used.
+        /// </summary>
+        internal XLCell? GetUsedCell(XLSheetPoint address)
         {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = finalRow; ro >= rowStart; ro--)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = finalColumn; co >= columnStart; co--)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(options)
-                            && (predicate == null || predicate(cell)))
-
-                            return ro;
-                    }
-                }
-            }
-            return 0;
-        }
-
-        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
-            Func<IXLCell, Boolean>? predicate = null)
-        {
-            int maxCo = 0;
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = finalRow; ro >= rowStart; ro--)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
-                {
-                    for (int co = finalColumn; co >= columnStart && co > maxCo; co--)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(options)
-                            && (predicate == null || predicate(cell)))
-
-                            maxCo = co;
-                    }
-                }
-            }
-            return maxCo;
-        }
-
-        public void RemoveAll(Int32 rowStart, Int32 columnStart,
-                              Int32 rowEnd, Int32 columnEnd)
-        {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = rowStart; ro <= finalRow; ro++)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= finalColumn; co++)
-                    {
-                        if (columnsCollection.ContainsKey(co))
-                            Remove(ro, co);
-                    }
-                }
-            }
-        }
-
-        public IEnumerable<XLSheetPoint> GetSheetPoints(Int32 rowStart, Int32 columnStart,
-                                                        Int32 rowEnd, Int32 columnEnd)
-        {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = rowStart; ro <= finalRow; ro++)
-            {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= finalColumn; co++)
-                    {
-                        if (columnsCollection.ContainsKey(co))
-                            yield return new XLSheetPoint(ro, co);
-                    }
-                }
-            }
-        }
-
-        public XLCell? GetCell(Int32 row, Int32 column)
-        {
-            if (row > MaxRowUsed || column > MaxColumnUsed)
+            if (!IsUsed(address))
                 return null;
 
-            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
-            {
-                return columnsCollection.TryGetValue(column, out XLCell cell) ? cell : null;
-            }
-            return null;
+            return GetCell(address);
         }
 
-        public XLCell? GetCell(XLSheetPoint sp)
+        internal int FirstColumnUsed(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
         {
-            return GetCell(sp.Row, sp.Column);
+            return FindUsedColumn(searchRange, options, predicate, false);
         }
 
-        internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2, XLWorksheet worksheet)
+        internal int FirstRowUsed(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
         {
-            Int32 rowCount = sheetRange1.LastPoint.Row - sheetRange1.FirstPoint.Row + 1;
-            Int32 columnCount = sheetRange1.LastPoint.Column - sheetRange1.FirstPoint.Column + 1;
-            for (int row = 0; row < rowCount; row++)
+            return FindUsedRow(searchRange, options, predicate, false);
+        }
+
+        internal void InsertAreaAndShiftDown(XLSheetRange insertedRange)
+        {
+            foreach (var slice in _slices)
+                slice.InsertAreaAndShiftDown(insertedRange);
+        }
+
+        internal void InsertAreaAndShiftRight(XLSheetRange insertedRange)
+        {
+            foreach (var slice in _slices)
+                slice.InsertAreaAndShiftRight(insertedRange);
+        }
+
+        internal int LastColumnUsed(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
+        {
+            return FindUsedColumn(searchRange, options, predicate, true);
+        }
+
+        internal int LastRowUsed(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
+        {
+            return FindUsedRow(searchRange, options, predicate, true);
+        }
+
+        internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2)
+        {
+            var rowCount = sheetRange1.LastPoint.Row - sheetRange1.FirstPoint.Row + 1;
+            var columnCount = sheetRange1.LastPoint.Column - sheetRange1.FirstPoint.Column + 1;
+            for (var row = 0; row < rowCount; row++)
             {
-                for (int column = 0; column < columnCount; column++)
+                for (var column = 0; column < columnCount; column++)
                 {
                     var sp1 = new XLSheetPoint(sheetRange1.FirstPoint.Row + row, sheetRange1.FirstPoint.Column + column);
                     var sp2 = new XLSheetPoint(sheetRange2.FirstPoint.Row + row, sheetRange2.FirstPoint.Column + column);
-                    var cell1 = GetCell(sp1);
-                    var cell2 = GetCell(sp2);
 
-                    if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
-                    if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
-
-                    //if (cell1 != null)
-                    //{
-                    cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
-                    Remove(sp1);
-                    //if (cell2 != null)
-                    Add(sp1, cell2);
-                    //}
-
-                    //if (cell2 == null) continue;
-
-                    cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
-                    Remove(sp2);
-                    //if (cell1 != null)
-                    Add(sp2, cell1);
+                    SwapCellsContent(sp1, sp2);
                 }
             }
         }
 
-        internal IEnumerable<XLCell> GetCells()
+        private int FindUsedColumn(XLSheetRange range, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate, bool descending)
         {
-            return GetCells(1, 1, MaxRowUsed, MaxColumnUsed);
-        }
+            var usedColumns = Enumerable.Empty<int>();
+            foreach (var slice in _slices)
+                usedColumns = usedColumns.Concat(slice.UsedColumns);
 
-        internal IEnumerable<XLCell> GetCells(Func<XLCell, Boolean> predicate)
-        {
-            for (int ro = 1; ro <= MaxRowUsed; ro++)
+            usedColumns = usedColumns
+                .Where(c => c >= range.FirstPoint.Column && c <= range.LastPoint.Column)
+                .Distinct();
+            usedColumns = descending
+                ? usedColumns.OrderByDescending(x => x)
+                : usedColumns.OrderBy(x => x);
+
+            foreach (var columnNumber in usedColumns)
             {
-                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                var enumerator = new CellsEnumerator(new XLSheetRange(range.FirstPoint.Row, columnNumber, range.LastPoint.Row, columnNumber), this);
+                while (enumerator.MoveNext())
                 {
-                    for (int co = 1; co <= MaxColumnUsed; co++)
+                    var cell = new XLCell(_ws, enumerator.Current);
+                    if (!cell.IsEmpty(options) &&
+                        (predicate == null || predicate(cell)))
                     {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && (predicate == null || predicate(cell)))
-                            yield return cell;
+                        return enumerator.Current.Column;
                     }
                 }
             }
+
+            return 0;
         }
 
-        public Boolean Contains(Int32 row, Int32 column)
+        private int FindUsedRow(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate, bool reverse)
         {
-            return RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
-                && columnsCollection.ContainsKey(column);
-        }
+            var enumerator = new CellsEnumerator(searchRange, this, reverse);
 
-        public Int32 MinRowInColumn(Int32 column)
-        {
-            for (int row = 1; row <= MaxRowUsed; row++)
+            while (enumerator.MoveNext())
             {
-                if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
-                    && columnsCollection.ContainsKey(column))
-
-                    return row;
+                var cellAddress = enumerator.Current;
+                var cell = GetCell(cellAddress);
+                if (!cell.IsEmpty(options)
+                    && (predicate == null || predicate(cell)))
+                    return cellAddress.Row;
             }
 
             return 0;
         }
 
-        public Int32 MaxRowInColumn(Int32 column)
+        private bool IsUsed(XLSheetPoint address)
         {
-            for (int row = MaxRowUsed; row >= 1; row--)
+            // This is different from XLCellUsedOptions, which uses a business logic (e.g. empty string is considered not-used).
+            // Here, we ask whether any slice contains a used elements which might differ from cell used logic.
+            foreach (var slice in _slices)
             {
-                if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
-                    && columnsCollection.ContainsKey(column))
-
-                    return row;
+                if (slice.IsUsed(address))
+                    return true;
             }
 
-            return 0;
+            return false;
         }
 
-        public Int32 MinColumnInRow(Int32 row)
+        internal void SwapCellsContent(XLSheetPoint sp1, XLSheetPoint sp2)
         {
-            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
-                && columnsCollection.Any())
-
-                return columnsCollection.Keys.Min();
-
-            return 0;
+            SwapSliceValue(ValueSlice, sp1, sp2);
+            SwapSliceValue(FormulaSlice, sp1, sp2);
+            SwapSliceValue(StyleSlice, sp1, sp2);
+            SwapSliceValue(MiscSlice, sp1, sp2);
         }
 
-        public Int32 MaxColumnInRow(Int32 row)
+        private static void SwapSliceValue<TElement>(Slice<TElement> slice, XLSheetPoint sp1, XLSheetPoint sp2)
         {
-            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
-                && columnsCollection.Any())
-
-                return columnsCollection.Keys.Max();
-
-            return 0;
+            var restAtSwapPoint1 = slice[sp1];
+            var restAtSwapPoint2 = slice[sp2];
+            slice.Set(sp1, restAtSwapPoint2);
+            slice.Set(sp2, restAtSwapPoint1);
         }
 
-        public IEnumerable<XLCell> GetCellsInColumn(Int32 column)
+        private struct CellsEnumerator
         {
-            return GetCells(1, column, MaxRowUsed, column);
-        }
+            private readonly List<IEnumerator<XLSheetPoint>> _enumerators;
+            private readonly bool _reverse;
 
-        public IEnumerable<XLCell> GetCellsInRow(Int32 row)
-        {
-            return GetCells(row, 1, row, MaxColumnUsed);
+            public CellsEnumerator(XLSheetRange range, XLCellsCollection cellsCollection, bool reverse = false)
+            {
+                Current = new XLSheetPoint(1, 1);
+                _reverse = reverse;
+                var valueEnumerator = cellsCollection.ValueSlice.GetEnumerator(range, reverse);
+                var formulaEnumerator = cellsCollection.FormulaSlice.GetEnumerator(range, reverse);
+                var styleEnumerator = cellsCollection.StyleSlice.GetEnumerator(range, reverse);
+                var kitchenSinkEnumerator = cellsCollection.MiscSlice.GetEnumerator(range, reverse);
+
+                _enumerators = new();
+                if (valueEnumerator.MoveNext())
+                    _enumerators.Add(valueEnumerator);
+                if (formulaEnumerator.MoveNext())
+                    _enumerators.Add(formulaEnumerator);
+                if (styleEnumerator.MoveNext())
+                    _enumerators.Add(styleEnumerator);
+                if (kitchenSinkEnumerator.MoveNext())
+                    _enumerators.Add(kitchenSinkEnumerator);
+            }
+
+            public XLSheetPoint Current { get; private set; }
+
+            public bool MoveNext()
+            {
+                XLSheetPoint? current = null;
+                for (var i = 0; i < _enumerators.Count; ++i)
+                {
+                    var enumerator = _enumerators[i];
+                    if (current is null || (
+                            _reverse
+                                ? enumerator.Current.CompareTo(current.Value) > 0
+                                : enumerator.Current.CompareTo(current.Value) < 0
+                            ))
+                        current = enumerator.Current;
+                }
+
+                if (current == null)
+                    return false;
+
+                Current = current.Value;
+
+                for (var i = _enumerators.Count - 1; i >= 0; --i)
+                {
+                    var enumerator = _enumerators[i];
+                    if (enumerator.Current == current)
+                    {
+                        var isDone = !enumerator.MoveNext();
+                        if (isDone)
+                        {
+                            _enumerators.RemoveAt(i);
+                        }
+                    }
+                }
+
+                return true;
+            }
         }
     }
 }

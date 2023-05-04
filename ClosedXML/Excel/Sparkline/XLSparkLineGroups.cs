@@ -7,20 +7,14 @@ namespace ClosedXML.Excel
 {
     internal class XLSparklineGroups : IXLSparklineGroups
     {
-        #region Public Properties
+        private readonly XLWorksheet _worksheet;
 
-        public IXLWorksheet Worksheet { get; }
-
-        #endregion Public Properties
-
-        #region Public Constructors
-
-        public XLSparklineGroups(IXLWorksheet worksheet)
+        public XLSparklineGroups(XLWorksheet worksheet)
         {
-            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
-        #endregion Public Constructors
+        public IXLWorksheet Worksheet => _worksheet;
 
         #region Public Methods
 
@@ -173,5 +167,53 @@ namespace ClosedXML.Excel
         private readonly List<IXLSparklineGroup> _sparklineGroups = new List<IXLSparklineGroup>();
 
         #endregion Private Fields
+
+        /// <summary>
+        /// Shift address of all sparklines to reflect inserted columns before a range.
+        /// </summary>
+        /// <param name="shiftedRange">Range before which will the columns be inserted. Has same worksheet.</param>
+        /// <param name="numberOfColumns">How many columns, can be positive or negative number.</param>
+        internal void ShiftColumns(XLSheetRange shiftedRange, int numberOfColumns)
+        {
+            foreach (var group in _sparklineGroups)
+            {
+                foreach (var sparkline in group.ToList())
+                {
+                    var originalAddress = XLSheetPoint.FromAddress(sparkline.Location.Address);
+                    if (!originalAddress.InRangeOrToLeft(shiftedRange))
+                        continue;
+
+                    var newAddressColumn = originalAddress.Column + numberOfColumns;
+                    if (newAddressColumn is >= 1 and <= XLHelper.MaxColumnNumber)
+                        sparkline.Location = new XLCell(_worksheet, originalAddress.Row, newAddressColumn);
+                    else
+                        group.Remove(sparkline);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shift address of all sparklines to reflect inserted rows before a range.
+        /// </summary>
+        /// <param name="shiftedRange">Range before which will the rows be inserted. Has same worksheet.</param>
+        /// <param name="numberOfRows">How many rows, can be positive or negative number.</param>
+        internal void ShiftRows(XLSheetRange shiftedRange, int numberOfRows)
+        {
+            foreach (var group in _sparklineGroups)
+            {
+                foreach (var sparkline in group.ToList())
+                {
+                    var originalAddress = XLSheetPoint.FromAddress(sparkline.Location.Address);
+                    if (!originalAddress.InRangeOrBelow(shiftedRange))
+                        continue;
+
+                    var newAddressRow = originalAddress.Row + numberOfRows;
+                    if (newAddressRow is >= 1 and <= XLHelper.MaxRowNumber)
+                        sparkline.Location = new XLCell(_worksheet, newAddressRow, originalAddress.Column);
+                    else
+                        group.Remove(sparkline);
+                }
+            }
+        }
     }
 }

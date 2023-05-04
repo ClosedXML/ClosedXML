@@ -318,7 +318,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual("A1", firstCell.Address.ToString());
             }
         }
@@ -333,7 +333,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
             }
         }
@@ -348,7 +348,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual("A1", firstCell.Address.ToString());
             }
         }
@@ -363,7 +363,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
             }
         }
@@ -378,7 +378,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual("A1", firstCell.Address.ToString());
             }
         }
@@ -393,7 +393,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
                 var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
             }
         }

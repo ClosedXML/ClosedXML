@@ -67,8 +67,8 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection(DefaultProtectionAlgorithm);
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
-            SparklineGroups = new XLSparklineGroups(this);
-            Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
+            SparklineGroupsInternal = new XLSparklineGroups(this);
+            Internals = new XLWorksheetInternals(new XLCellsCollection(this), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
@@ -108,6 +108,8 @@ namespace ClosedXML.Excel
 
         public XLWorksheetInternals Internals { get; private set; }
 
+        internal XLSparklineGroups SparklineGroupsInternal { get; }
+
         public XLRangeFactory RangeFactory
         {
             get { return _rangeFactory; }
@@ -128,7 +130,7 @@ namespace ClosedXML.Excel
             get
             {
                 var columnsUsed = Internals.ColumnsCollection.Keys
-                    .Union(Internals.CellsCollection.ColumnsUsed.Keys)
+                    .Union(Internals.CellsCollection.ColumnsUsedKeys)
                     .Distinct()
                     .OrderBy(c => c)
                     .ToList();
@@ -136,7 +138,7 @@ namespace ClosedXML.Excel
                     yield return Column(col);
 
                 var rowsUsed = Internals.RowsCollection.Keys
-                    .Union(Internals.CellsCollection.RowsUsed.Keys)
+                    .Union(Internals.CellsCollection.RowsUsedKeys)
                     .Distinct()
                     .OrderBy(r => r)
                     .ToList();
@@ -303,7 +305,7 @@ namespace ClosedXML.Excel
         {
             var columnMap = new HashSet<Int32>();
 
-            columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnMap.UnionWith(Internals.CellsCollection.ColumnsUsedKeys);
             columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
             var retVal = new XLColumns(this, StyleValue, columnMap.Select(Column));
@@ -363,7 +365,7 @@ namespace ClosedXML.Excel
         {
             var rowMap = new HashSet<Int32>();
 
-            rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
+            rowMap.UnionWith(Internals.CellsCollection.RowsUsedKeys);
             rowMap.UnionWith(Internals.RowsCollection.Keys);
 
             var retVal = new XLRows(this, StyleValue, rowMap.Select(Row));
@@ -938,7 +940,7 @@ namespace ClosedXML.Excel
         {
             var rows = new XLRows(worksheet: null, StyleValue);
             var rowsUsed = new HashSet<Int32>();
-            foreach (var rowNum in Internals.RowsCollection.Keys.Concat(Internals.CellsCollection.RowsUsed.Keys))
+            foreach (var rowNum in Internals.RowsCollection.Keys.Concat(Internals.CellsCollection.RowsUsedKeys))
             {
                 if (!rowsUsed.Add(rowNum))
                 {
@@ -961,7 +963,7 @@ namespace ClosedXML.Excel
             var columns = new XLColumns(worksheet: null, StyleValue);
             var columnsUsed = new HashSet<Int32>();
             Internals.ColumnsCollection.Keys.ForEach(r => columnsUsed.Add(r));
-            Internals.CellsCollection.ColumnsUsed.Keys.ForEach(r => columnsUsed.Add(r));
+            Internals.CellsCollection.ColumnsUsedKeys.ForEach(r => columnsUsed.Add(r));
             foreach (var columnNum in columnsUsed)
             {
                 var column = Column(columnNum);
@@ -1128,7 +1130,7 @@ namespace ClosedXML.Excel
             {
                 // This is a new column so we're going to reference all
                 // cells in this column to preserve their formatting
-                Internals.RowsCollection.Keys.ForEach(r => Cell(r, columnNumber));
+                Internals.RowsCollection.Keys.ForEach(r => Cell(r, columnNumber).PingStyle());
 
                 column = RangeFactory.CreateColumn(columnNumber);
                 Internals.ColumnsCollection.Add(columnNumber, column);
@@ -1496,8 +1498,7 @@ namespace ClosedXML.Excel
                 {
                     // This is a new row so we're going to reference all
                     // cells in columns of this row to preserve their formatting
-
-                    Internals.ColumnsCollection.Keys.ForEach(c => Cell(rowNumber, c));
+                    Internals.ColumnsCollection.Keys.ForEach(c => Cell(rowNumber, c).PingStyle());
                 }
 
                 row = RangeFactory.CreateRow(rowNumber);
@@ -1623,7 +1624,7 @@ namespace ClosedXML.Excel
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
 
-        public IXLSparklineGroups SparklineGroups { get; private set; }
+        public IXLSparklineGroups SparklineGroups => SparklineGroupsInternal;
 
         private IXLRanges _selectedRanges;
 
@@ -1778,12 +1779,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLCell GetCell(int ro, int co)
         {
-            if (Internals.CellsCollection.MaxRowUsed < ro ||
-                Internals.CellsCollection.MaxColumnUsed < co ||
-                !Internals.CellsCollection.Contains(ro, co))
-                return null;
-
-            return Worksheet.Internals.CellsCollection.GetCell(ro, co);
+            return Worksheet.Internals.CellsCollection.GetUsedCell(new XLSheetPoint(ro, co));
         }
 
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)

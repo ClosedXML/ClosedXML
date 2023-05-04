@@ -122,12 +122,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var a4 = sheet.Cell("A4");
                 a4.FormulaA1 = "=COUNTBLANK(A1:A3)";
 
-                var res1 = a4.Value;
-                sheet.Row(2).InsertRowsAbove(2);
-                var res2 = a4.Value;
+                Assert.AreEqual(3, a4.Value);
 
-                Assert.AreEqual(3, res1);
-                Assert.AreEqual(5, res2);
+                sheet.Row(2).InsertRowsAbove(2);
+
+                Assert.AreEqual(5, sheet.Cell("A6").Value);
             }
         }
 
@@ -137,15 +136,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using (var wb = new XLWorkbook())
             {
                 var sheet = wb.Worksheets.Add("TestSheet");
-                var a4 = sheet.Cell("A4");
-                a4.FormulaA1 = "=COUNTBLANK(A1:A3)";
+                var original = sheet.Cell("A4");
+                original.FormulaA1 = "=COUNTBLANK(A1:A3)";
 
-                Assert.AreEqual(3, (double)a4.Value);
+                Assert.AreEqual(3, original.Value);
 
                 sheet.Row(2).Delete();
 
-                Assert.AreEqual("COUNTBLANK(A1:A2)", a4.FormulaA1);
-                Assert.AreEqual(2, (double)a4.Value);
+                var shifted = sheet.Cell("A3");
+                Assert.AreEqual("COUNTBLANK(A1:A2)", shifted.FormulaA1);
+                Assert.AreEqual(2, shifted.Value);
             }
         }
 

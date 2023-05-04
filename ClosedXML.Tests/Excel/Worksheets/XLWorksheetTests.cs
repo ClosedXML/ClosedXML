@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using System;
 using System.Drawing;
 using System.IO;
@@ -1052,13 +1053,13 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell("AAA50");
-                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                ws.Cell("A1").SetValue(1);
+                ws.Cell("AAA50").SetValue(1);
+                var originalCount = ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count();
 
                 ws.Column(1).InsertColumnsBefore(1);
 
-                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(originalCount, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1068,13 +1069,13 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell("AAA500");
-                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                ws.Cell("A1").SetValue(1);
+                ws.Cell("AAA500").SetValue(1);
+                var originalCount = ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count();
 
                 ws.Row(1).InsertRowsAbove(1);
 
-                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(originalCount, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1084,13 +1085,13 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell("AAA50");
-                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                var a1 = ws.Cell("A1").SetValue(1);
+                ws.Cell("AAA50").SetValue(1);
+                var originalCount = ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count();
 
-                cell1.InsertCellsBefore(1);
+                a1.InsertCellsBefore(1);
 
-                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(originalCount, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1100,13 +1101,13 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell("AAA500");
-                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                var a1 = ws.Cell("A1").SetValue(1);
+                ws.Cell("AAA500").SetValue(1);
+                var originalCount = ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count();
 
-                cell1.InsertCellsAbove(1);
+                a1.InsertCellsAbove(1);
 
-                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(originalCount, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1116,14 +1117,15 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell(1, XLHelper.MaxColumnNumber);
-                var cell3 = ws.Cell(2, XLHelper.MaxColumnNumber);
+                var a1 = ws.Cell("A1").SetValue(1);
+                ws.Cell(1, XLHelper.MaxColumnNumber).SetValue(1);
+                ws.Cell(2, XLHelper.MaxColumnNumber).SetValue(1);
 
-                cell1.InsertCellsBefore(1);
-                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                a1.InsertCellsBefore(1);
+
+                Assert.AreEqual(2, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 ws.Column(1).InsertColumnsBefore(1);
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(1, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1133,14 +1135,15 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A1");
-                var cell2 = ws.Cell(XLHelper.MaxRowNumber, 1);
-                var cell3 = ws.Cell(XLHelper.MaxRowNumber, 2);
+                var a1 = ws.Cell("A1").SetValue(1);
+                ws.Cell(XLHelper.MaxRowNumber, 1).SetValue(1);
+                ws.Cell(XLHelper.MaxRowNumber, 2).SetValue(1);
 
-                cell1.InsertCellsAbove(1);
-                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                a1.InsertCellsAbove(1);
+
+                Assert.AreEqual(2, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
                 ws.Row(1).InsertRowsAbove(1);
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(1, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
             }
         }
 
@@ -1150,12 +1153,12 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("C1");
-                var cell2 = ws.Cell(1, XLHelper.MaxColumnNumber);
+                ws.Cell("C1").SetValue(1);
+                ws.Cell(1, XLHelper.MaxColumnNumber).SetValue(1);
 
                 ws.Column(XLHelper.MaxColumnNumber).Delete();
 
-                Assert.AreEqual(3, (ws as XLWorksheet).Internals.CellsCollection.MaxColumnUsed);
+                Assert.AreEqual(3, ((XLWorksheet)ws).Internals.CellsCollection.MaxColumnUsed);
             }
         }
 
@@ -1165,12 +1168,12 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var cell1 = ws.Cell("A3");
-                var cell2 = ws.Cell(XLHelper.MaxRowNumber, 1);
+                ws.Cell("A3").SetValue(1);
+                ws.Cell(XLHelper.MaxRowNumber, 1).SetValue(1);
 
                 ws.Row(XLHelper.MaxRowNumber).Delete();
 
-                Assert.AreEqual(3, (ws as XLWorksheet).Internals.CellsCollection.MaxRowUsed);
+                Assert.AreEqual(3, ((XLWorksheet)ws).Internals.CellsCollection.MaxRowUsed);
             }
         }
 
@@ -1241,6 +1244,19 @@ namespace ClosedXML.Tests
                 Assert.IsTrue(wb.Worksheets.First().TabActive);
                 Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheets.First().Visibility);
             }
+        }
+
+        [TestCase(XLCellsUsedOptions.NormalFormats, 42)]
+        [TestCase(XLCellsUsedOptions.Contents, 100)]
+        public void FirstColumnUsed_ReturnsFirstColumnWithUsedCell(XLCellsUsedOptions options, int expectedColumn)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell(1, 42).Style.Fill.SetBackgroundColor(XLColor.Green);
+            ws.Cell(1, 100).SetValue(5);
+
+            var column = ws.FirstColumnUsed(options);
+            Assert.AreEqual(expectedColumn, column.ColumnNumber());
         }
     }
 }

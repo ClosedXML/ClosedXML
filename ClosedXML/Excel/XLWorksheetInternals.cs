@@ -19,9 +19,9 @@ namespace ClosedXML.Excel
             MergedRanges = mergedRanges;
         }
 
-        public XLCellsCollection CellsCollection { get; private set; }
-        public XLColumnsCollection ColumnsCollection { get; private set; }
-        public XLRowsCollection RowsCollection { get; private set; }
+        public XLCellsCollection CellsCollection { get; }
+        public XLColumnsCollection ColumnsCollection { get; }
+        public XLRowsCollection RowsCollection { get; }
         public XLRanges MergedRanges { get; internal set; }
 
         // Used by Janitor.Fody

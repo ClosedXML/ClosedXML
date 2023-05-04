@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     /// An point (address) in a worksheet, an equivalent of <c>ST_CellRef</c>.
     /// </summary>
     /// <remarks>Unlike the XLAddress, sheet can never be invalid.</remarks>
-    internal readonly struct XLSheetPoint : IEquatable<XLSheetPoint>
+    internal readonly struct XLSheetPoint : IEquatable<XLSheetPoint>, IComparable<XLSheetPoint>
     {
         public XLSheetPoint(Int32 row, Int32 column)
         {
@@ -157,5 +157,34 @@ namespace ClosedXML.Excel
         /// </summary>
         public static XLSheetPoint FromAddress(IXLAddress address)
             => new(address.RowNumber, address.ColumnNumber);
+
+        public int CompareTo(XLSheetPoint other)
+        {
+            var rowComparison = Row.CompareTo(other.Row);
+            if (rowComparison != 0)
+                return rowComparison;
+
+            return Column.CompareTo(other.Column);
+        }
+
+        /// <summary>
+        /// Is the point within the range or below the range?
+        /// </summary>
+        internal bool InRangeOrBelow(in XLSheetRange range)
+        {
+            return Row >= range.FirstPoint.Row &&
+                   Column >= range.FirstPoint.Column &&
+                   Column <= range.LastPoint.Column;
+        }
+
+        /// <summary>
+        /// Is the point within the range or to the left of the range?
+        /// </summary>
+        internal bool InRangeOrToLeft(in XLSheetRange range)
+        {
+            return Column >= range.FirstPoint.Column &&
+                   Row >= range.FirstPoint.Row &&
+                   Row <= range.LastPoint.Row;
+        }
     }
 }

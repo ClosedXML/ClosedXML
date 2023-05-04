@@ -16,7 +16,7 @@ using ClosedXML.Graphics;
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
-    internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
+    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -53,123 +53,248 @@ namespace ClosedXML.Excel
 
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
-        #region Fields
 
-        private XLCellValue _cellValue;
-        private XLRichText _richText;
+        private readonly XLCellsCollection _cellsCollection;
 
-        internal int SharedStringId { get; set; }
+        private readonly int _rowNumber;
+
+        private readonly int _columnNumber;
+
+        internal XLCell(XLWorksheet worksheet, int row, int column)
+        {
+            _cellsCollection = worksheet.Internals.CellsCollection;
+            _rowNumber = row;
+            _columnNumber = column;
+        }
+
+        internal XLCell(XLWorksheet worksheet, XLSheetPoint point) : this(worksheet, point.Row, point.Column)
+        {
+        }
+
+        public XLWorksheet Worksheet => _cellsCollection.Worksheet;
+
+        public XLAddress Address => new(Worksheet, _rowNumber, _columnNumber, false, false);
+
+        internal XLSheetPoint SheetPoint => new(_rowNumber, _columnNumber);
+
+        #region Slice fields
 
         /// <summary>
         /// A flag indicating if a string should be stored in the shared table or inline.
         /// </summary>
-        public bool ShareString { get; set; }
-
-        private XLComment _comment;
-        private XLHyperlink _hyperlink;
-        private LinkInfo _linkInfo = null;
-
-        public bool SettingHyperlink;
-
-        #endregion Fields
-
-        #region Constructor
-
-        internal XLCell(XLWorksheet worksheet, XLAddress address, XLStyleValue styleValue)
-            : base(styleValue)
+        public bool ShareString
         {
-            Address = address;
-            ShareString = true;
-            Worksheet = worksheet;
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].ShareString;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.ShareString != value)
+                {
+                    var modified = original;
+                    modified.ShareString = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
         }
-
-        public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
-            : this(worksheet, address, (style as XLStyle).Value)
-        {
-        }
-
-        public XLCell(XLWorksheet worksheet, XLAddress address)
-            : this(worksheet, address, XLStyle.Default.Value)
-        {
-        }
-
-        #endregion Constructor
-
-        public XLWorksheet Worksheet { get; }
-
-        private int _rowNumber;
-        private int _columnNumber;
-        private bool _fixedRow;
-        private bool _fixedCol;
-        private XLCellFlags _flags;
 
         /// <summary>
-        /// Sheet point of the cell.
+        /// Overriden <see cref="XLStylizedBase.StyleValue"/>, because we can't store the value
+        /// in the cell.
         /// </summary>
-        public XLSheetPoint SheetPoint => new(_rowNumber, _columnNumber);
-
-        public XLAddress Address
+        internal override XLStyleValue StyleValue
         {
             get
             {
-                return new XLAddress(Worksheet, _rowNumber, _columnNumber, _fixedRow, _fixedCol);
+                var styleValue = _cellsCollection.StyleSlice[_rowNumber, _columnNumber];
+                if (styleValue is not null)
+                    return styleValue;
+
+                // If the slice doesn't contain any value, determine values by inheriting.
+                // Cells that lie on an intersection of a XLColumn and a XLRow have their
+                // style set when column/row is created to avoid problems with correct which
+                // style has precedence. I.e. set column blue, set row red => cell is red.
+                // Swap order the the cell is blue.
+                if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out var row))
+                    return row.StyleValue;
+
+                if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out var column))
+                    return column.StyleValue;
+
+                return Worksheet.StyleValue;
             }
-            internal set
+
+            private protected set => _cellsCollection.StyleSlice.Set(_rowNumber, _columnNumber, value);
+        }
+
+        internal int SharedStringId
+        {
+            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].SharedStringId;
+            set
             {
-                _rowNumber = value.RowNumber;
-                _columnNumber = value.ColumnNumber;
-                _fixedRow = value.FixedRow;
-                _fixedCol = value.FixedColumn;
+                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
+                if (original.SharedStringId != value)
+                {
+                    var modified = new XLValueSliceContent(original.Value, original.ModifiedAtVersion, value);
+                    _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
+        }
+
+        private XLCellValue SliceCellValue
+        {
+            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].Value;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
+                var modified = new XLValueSliceContent(value, original.ModifiedAtVersion, original.SharedStringId);
+                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
+            }
+        }
+
+        private XLRichText SliceRichText
+        {
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].RichText;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.RichText != value)
+                {
+                    var modified = original;
+                    modified.RichText = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
+        }
+
+        private XLComment SliceComment
+        {
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].Comment;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.Comment != value)
+                {
+                    var modified = original;
+                    modified.Comment = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
+        }
+
+        private XLHyperlink SliceHyperlink
+        {
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].Hyperlink;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.Hyperlink != value)
+                {
+                    var modified = original;
+                    modified.Hyperlink = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
+        }
+
+        internal bool SettingHyperlink
+        {
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].SettingHyperlink;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.SettingHyperlink != value)
+                {
+                    var modified = original;
+                    modified.SettingHyperlink = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
             }
         }
 
         internal UInt32? CellMetaIndex
         {
-            get => _linkInfo?.CellMetaIndex;
-            set => (_linkInfo ??= new LinkInfo()).CellMetaIndex = value;
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].CellMetaIndex;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.CellMetaIndex != value)
+                {
+                    var modified = original;
+                    modified.CellMetaIndex = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
         }
 
         internal UInt32? ValueMetaIndex
         {
-            get => _linkInfo?.ValueMetaIndex;
-            set => (_linkInfo ??= new LinkInfo()).ValueMetaIndex = value;
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].ValueMetaIndex;
+            set
+            {
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.ValueMetaIndex != value)
+                {
+                    var modified = original;
+                    modified.ValueMetaIndex = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
+            }
         }
 
         /// <summary>
         /// A formula in the cell. Null, if cell doesn't contain formula.
         /// </summary>
-        internal XLCellFormula Formula { get; set; }
+        internal XLCellFormula Formula
+        {
+            get => _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
+            set
+            {
+                ref readonly var original = ref _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
+                if (original != value)
+                    _cellsCollection.FormulaSlice.Set(_rowNumber, _columnNumber, value);
+            }
+        }
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that
         /// workbook had at the moment of last value or formula change.
         /// </summary>
-        internal long ModifiedAtVersion { get; private set; }
+        internal long ModifiedAtVersion
+        {
+            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].ModifiedAtVersion;
+            private set
+            {
+                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
+                var modified = new XLValueSliceContent(original.Value, value, original.SharedStringId);
+                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
+            }
+        }
+
+        #endregion Slice fields
 
         internal XLComment GetComment()
         {
-            return _comment ?? CreateComment();
+            return SliceComment ?? CreateComment();
         }
 
         internal XLComment CreateComment(int? shapeId = null)
         {
-            _comment = new XLComment(this, shapeId: shapeId);
-            return _comment;
+            return SliceComment = new XLComment(this, shapeId: shapeId);
         }
 
         public XLRichText GetRichText()
         {
-            return _richText ?? CreateRichText();
+            return SliceRichText ?? CreateRichText();
         }
 
         public XLRichText CreateRichText()
         {
             var style = GetStyleForRead();
-            _richText = Value.Type == XLDataType.Blank
+            SliceRichText = Value.Type == XLDataType.Blank
                 ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
                 : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-            _cellValue = _richText.Text;
-            return _richText;
+            SliceCellValue = SliceRichText.Text;
+            return SliceRichText;
         }
 
         #region IXLCell Members
@@ -223,7 +348,7 @@ namespace ClosedXML.Excel
                     break;
             }
 
-            _richText = null;
+            SliceRichText = null;
             FormulaA1 = null;
 
             if (setTableHeader)
@@ -541,7 +666,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal void SetOnlyValue(XLCellValue value)
         {
-            _cellValue = value;
+            SliceCellValue = value;
         }
 
         public IXLCell SetValue(XLCellValue value)
@@ -574,7 +699,7 @@ namespace ClosedXML.Excel
                     Evaluate(false);
                 }
 
-                return _cellValue;
+                return SliceCellValue;
             }
             set => SetValue(value);
         }
@@ -795,7 +920,7 @@ namespace ClosedXML.Excel
             return InsertDataInternal(reader, addHeadings: false, transpose: false);
         }
 
-        public XLDataType DataType => _cellValue.Type;
+        public XLDataType DataType => SliceCellValue.Type;
 
         public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
@@ -817,8 +942,8 @@ namespace ClosedXML.Excel
                 if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
                     SetHyperlink(null);
-                    _richText = null;
-                    _cellValue = Blank.Value;
+                    SliceRichText = null;
+                    SliceCellValue = Blank.Value;
                     FormulaA1 = String.Empty;
                 }
 
@@ -831,7 +956,7 @@ namespace ClosedXML.Excel
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.Comments))
-                    _comment = null;
+                    SliceComment = null;
 
                 if (clearOptions.HasFlag(XLClearOptions.Sparklines))
                 {
@@ -892,21 +1017,21 @@ namespace ClosedXML.Excel
 
         public XLHyperlink GetHyperlink()
         {
-            return _hyperlink ?? CreateHyperlink();
+            return SliceHyperlink ?? CreateHyperlink();
         }
 
         public void SetHyperlink(XLHyperlink hyperlink)
         {
             Worksheet.Hyperlinks.TryDelete(Address);
 
-            _hyperlink = hyperlink;
+            SliceHyperlink = hyperlink;
 
-            if (_hyperlink == null) return;
+            if (SliceHyperlink == null) return;
 
-            _hyperlink.Worksheet = Worksheet;
-            _hyperlink.Cell = this;
+            SliceHyperlink.Worksheet = Worksheet;
+            SliceHyperlink.Cell = this;
 
-            Worksheet.Hyperlinks.Add(_hyperlink);
+            Worksheet.Hyperlinks.Add(SliceHyperlink);
 
             if (SettingHyperlink) return;
 
@@ -977,13 +1102,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLCellValue CachedValue => _cellValue;
+        public XLCellValue CachedValue => SliceCellValue;
 
         IXLRichText IXLCell.GetRichText() => GetRichText();
 
         public bool HasRichText
         {
-            get { return _richText != null; }
+            get { return SliceRichText != null; }
         }
 
         IXLRichText IXLCell.CreateRichText() => CreateRichText();
@@ -992,7 +1117,7 @@ namespace ClosedXML.Excel
 
         public bool HasComment
         {
-            get { return _comment != null; }
+            get { return SliceComment != null; }
         }
 
         IXLComment IXLCell.CreateComment()
@@ -1023,13 +1148,13 @@ namespace ClosedXML.Excel
         {
             bool isValueEmpty;
             if (HasRichText)
-                isValueEmpty = _richText.Length == 0;
+                isValueEmpty = SliceRichText.Length == 0;
             else
             {
-                isValueEmpty = _cellValue.Type switch
+                isValueEmpty = SliceCellValue.Type switch
                 {
                     XLDataType.Blank => true,
-                    XLDataType.Text => _cellValue.GetText().Length == 0,
+                    XLDataType.Text => SliceCellValue.GetText().Length == 0,
                     _ => false
                 };
             }
@@ -1173,7 +1298,7 @@ namespace ClosedXML.Excel
 
         public Boolean Active
         {
-            get { return Worksheet.ActiveCell == this; }
+            get { return ((XLCell)Worksheet.ActiveCell).SheetPoint == SheetPoint; }
             set
             {
                 if (value)
@@ -1191,19 +1316,22 @@ namespace ClosedXML.Excel
 
         public Boolean HasHyperlink
         {
-            get { return _hyperlink != null; }
+            get { return SliceHyperlink != null; }
         }
 
         /// <inheritdoc />
         public Boolean ShowPhonetic
         {
-            get => _flags.HasFlag(XLCellFlags.ShowPhonetic);
+            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].HasPhonetic;
             set
             {
-                if (value)
-                    _flags |= XLCellFlags.ShowPhonetic;
-                else
-                    _flags &= ~XLCellFlags.ShowPhonetic;
+                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
+                if (original.HasPhonetic != value)
+                {
+                    var modified = original;
+                    modified.HasPhonetic = value;
+                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
+                }
             }
         }
 
@@ -1241,6 +1369,14 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+
+        /// <summary>
+        /// Ensure the cell has style set directly on the cell, not inherited from column/row/worksheet styles.
+        /// </summary>
+        internal void PingStyle()
+        {
+            StyleValue = StyleValue;
+        }
 
         public XLRange AsRange()
         {
@@ -1476,11 +1612,11 @@ namespace ClosedXML.Excel
 
         internal void CopyValuesFrom(XLCell source)
         {
-            _cellValue = source._cellValue;
+            SliceCellValue = source.SliceCellValue;
             FormulaR1C1 = source.FormulaR1C1;
-            _richText = source._richText == null ? null : new XLRichText(this, source._richText, source.Style.Font);
-            _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font, source._comment.Style);
-            if (source._hyperlink != null)
+            SliceRichText = source.SliceRichText == null ? null : new XLRichText(this, source.SliceRichText, source.Style.Font);
+            SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
+            if (source.SliceHyperlink != null)
             {
                 SettingHyperlink = true;
                 SetHyperlink(new XLHyperlink(source.GetHyperlink()));
@@ -2134,9 +2270,10 @@ namespace ClosedXML.Excel
         /// <param name="output">List where items are added.</param>
         internal void GetGlyphBoxes(IXLGraphicEngine engine, Dpi dpi, List<GlyphBox> output)
         {
-            if (_richText is not null)
+            var richText = SliceRichText;
+            if (richText is not null)
             {
-                foreach (var richString in _richText)
+                foreach (var richString in richText)
                 {
                     IXLFontBase font = richString;
                     AddGlyphs(richString.Text, font, engine, dpi, output);
@@ -2191,29 +2328,17 @@ namespace ClosedXML.Excel
             }
         }
 
-        /// <summary>
-        /// Flag enum to save space, instead of wasting byte for each flag.
-        /// </summary>
-        [Flags]
-        private enum XLCellFlags : byte
+        public override int GetHashCode()
         {
-            /// <summary>
-            /// Should user see a furigana above kanji?
-            /// </summary>
-            ShowPhonetic = 1
+            unchecked
+            {
+                return (SheetPoint.GetHashCode() * 397) ^ Worksheet.GetHashCode();
+            }
         }
 
-        /// <summary>
-        /// A kitchen sink for information that is for the cell, but is not directly saved in the cell,
-        /// but generally in other parts of the workbook.
-        /// </summary>
-        private class LinkInfo
+        public override bool Equals(object obj)
         {
-            /// <summary> Metadata is not yet supported, so just make sure we can load/save it. </summary>
-            public UInt32? CellMetaIndex { get; set; }
-
-            /// <summary> Metadata is not yet supported, so just make sure we can load/save it. </summary>
-            public UInt32? ValueMetaIndex { get; set; }
+            return obj is XLCell cell && cell.Worksheet == Worksheet && cell.SheetPoint == SheetPoint;
         }
     }
 }
