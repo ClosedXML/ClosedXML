@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Excel.Exceptions;
 using ClosedXML.Extensions;

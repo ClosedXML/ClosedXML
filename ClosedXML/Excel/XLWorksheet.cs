@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;

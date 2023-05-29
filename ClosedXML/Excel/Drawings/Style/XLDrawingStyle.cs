@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace ClosedXML.Excel
 {
     internal class XLDrawingStyle : IXLDrawingStyle

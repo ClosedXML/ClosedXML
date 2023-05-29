@@ -1,3 +1,5 @@
+#nullable disable
+
 // Keep this file CodeMaid organized and cleaned
 using System;
 using System.Drawing;

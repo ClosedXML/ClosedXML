@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.Drawings;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;

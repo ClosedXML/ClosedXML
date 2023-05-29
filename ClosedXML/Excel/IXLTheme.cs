@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace ClosedXML.Excel
 {
     public interface IXLTheme

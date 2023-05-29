@@ -1,3 +1,5 @@
+#nullable disable
+
 using ExcelNumberFormat;
 using System;
 using System.Collections;

@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using DocumentFormat.OpenXml.Spreadsheet;
 

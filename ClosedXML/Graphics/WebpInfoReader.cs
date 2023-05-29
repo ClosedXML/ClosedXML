@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Utils;
 using System;
 using System.Drawing;

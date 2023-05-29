@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.Drawings;
 using System;
 using System.Drawing;

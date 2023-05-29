@@ -1,3 +1,5 @@
+#nullable disable
+
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;

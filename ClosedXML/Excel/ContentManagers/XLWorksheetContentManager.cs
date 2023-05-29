@@ -1,3 +1,5 @@
+#nullable disable
+
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Linq;

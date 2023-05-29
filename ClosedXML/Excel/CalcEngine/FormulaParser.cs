@@ -1,3 +1,5 @@
+#nullable disable
+
 using Irony.Ast;
 using Irony.Parsing;
 using System;

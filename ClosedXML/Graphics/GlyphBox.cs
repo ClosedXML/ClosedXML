@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Diagnostics;
 
 namespace ClosedXML.Graphics

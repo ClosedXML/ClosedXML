@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;

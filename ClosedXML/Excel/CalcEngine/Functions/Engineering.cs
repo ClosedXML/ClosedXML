@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Engineering

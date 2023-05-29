@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Extensions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
