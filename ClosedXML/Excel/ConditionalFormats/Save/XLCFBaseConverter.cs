@@ -1,4 +1,4 @@
-﻿using ClosedXML.Utils;
+using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel

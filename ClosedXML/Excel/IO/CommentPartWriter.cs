@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Collections.Generic;
 using System.IO;

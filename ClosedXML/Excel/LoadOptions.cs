@@ -1,4 +1,4 @@
-﻿// Keep this file CodeMaid organized and cleaned
+// Keep this file CodeMaid organized and cleaned
 using System;
 using System.Drawing;
 using ClosedXML.Graphics;

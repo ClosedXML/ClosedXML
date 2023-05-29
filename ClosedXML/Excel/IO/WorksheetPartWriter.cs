@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.ContentManagers;
+using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Excel.Exceptions;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;

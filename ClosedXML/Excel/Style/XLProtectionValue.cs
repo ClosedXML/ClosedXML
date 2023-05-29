@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.Caching;
+using ClosedXML.Excel.Caching;
 
 namespace ClosedXML.Excel
 {
