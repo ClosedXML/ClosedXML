@@ -1,3 +1,5 @@
+#nullable disable
+
 // Keep this file CodeMaid organised and cleaned
 using System.IO;
 using System.Xml;

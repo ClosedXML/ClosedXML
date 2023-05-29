@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;

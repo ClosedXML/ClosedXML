@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace ClosedXML.Excel.Drawings
 {
     public enum XLMarkerPosition

@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Graphics;
 using System;
 using System.Collections.Generic;

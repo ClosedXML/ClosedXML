@@ -1,3 +1,5 @@
+#nullable disable
+
 using ClosedXML.Excel.Patterns;
 using System;
 using System.Collections.Generic;

@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Runtime.CompilerServices;
 
 namespace ClosedXML.Excel.CalcEngine

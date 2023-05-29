@@ -1,3 +1,5 @@
+#nullable disable
+
 // Keep this file CodeMaid organised and cleaned
 namespace ClosedXML.Excel
 {
