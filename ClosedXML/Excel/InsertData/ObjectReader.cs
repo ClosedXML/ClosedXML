@@ -1,4 +1,4 @@
-﻿// Keep this file CodeMaid organised and cleaned
+// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Attributes;
 using ClosedXML.Extensions;
 using System;

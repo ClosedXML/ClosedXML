@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;

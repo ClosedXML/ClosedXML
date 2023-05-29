@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine
 {
     internal interface IFormulaVisitor<in TContext, out TResult>
     {

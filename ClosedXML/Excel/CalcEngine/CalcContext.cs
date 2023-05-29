@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Globalization;
 using System.Collections.Generic;

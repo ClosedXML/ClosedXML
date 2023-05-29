@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System.Linq;
 
 namespace ClosedXML.Excel.ContentManagers

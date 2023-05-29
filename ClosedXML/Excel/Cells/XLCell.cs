@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.InsertData;
+using ClosedXML.Excel.InsertData;
 using ClosedXML.Extensions;
 using System;
 using System.Collections;

@@ -1,4 +1,4 @@
-﻿// This file contains extensions methods that are present in .NET Core, but not in .NET Standard 2.0
+// This file contains extensions methods that are present in .NET Core, but not in .NET Standard 2.0
 #if !NETSTANDARD2_1_OR_GREATER
 namespace System.IO
 {

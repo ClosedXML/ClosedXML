@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel
+namespace ClosedXML.Excel
 {
     /// <summary>
     /// A formula error.

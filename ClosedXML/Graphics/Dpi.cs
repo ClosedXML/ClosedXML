@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Graphics
+namespace ClosedXML.Graphics
 {
     /// <summary>
     /// A DPI resolution.
