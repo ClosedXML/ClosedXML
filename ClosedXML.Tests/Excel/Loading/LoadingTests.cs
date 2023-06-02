@@ -617,5 +617,31 @@ namespace ClosedXML.Tests.Excel
                 }
             }
         }
+
+        // https://github.com/ClosedXML/ClosedXML/issues/1920
+        [Test]
+        public void CanReadGSheetsFileWithNewCommentsAndSaveAndReadIn()
+        {
+            using var ms = new MemoryStream();
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\GoogleSheets\GoogleDocExportWithComments.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws = wb.Worksheets.First();
+
+
+            Assert.AreEqual(true, ws.Cell("A1").HasComment);
+            Assert.AreEqual("Toook=12", ws.Cell("A1").GetComment().Text);
+
+            Assert.AreEqual(false, ws.Cell("A2").HasComment);
+
+            Assert.AreEqual(true, ws.Cell("A4").HasComment);
+            Assert.AreEqual("assas", ws.Cell("A4").GetComment().Text);
+
+            Assert.AreEqual(true, ws.Cell("A7").HasComment);
+            Assert.AreEqual("12123123" + Environment.NewLine, ws.Cell("A7").GetComment().Text);
+
+
+            wb.SaveAs("TestCommentSave.xlsx");
+
+        }
     }
 }

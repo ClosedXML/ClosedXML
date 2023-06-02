@@ -427,7 +427,10 @@ namespace ClosedXML.Excel
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
                         ShapeIdManager.Add(xlComment.ShapeId);
 
-                        var runs = c.GetFirstChild<CommentText>().Elements<Run>();
+                        //Comments can have characterRuns in them, but they may also just have a text node not in a run
+                        var commentTextNode = c.GetFirstChild<CommentText>();
+
+                        var runs = commentTextNode.Elements<Run>();
                         foreach (var run in runs)
                         {
                             var runProperties = run.RunProperties;
@@ -435,6 +438,13 @@ namespace ClosedXML.Excel
                             var rt = xlComment.AddText(text);
                             LoadFont(runProperties, rt);
                         }
+
+                        if (commentTextNode.Text != null)
+                        {
+                            String text = commentTextNode.Text.Text.FixNewLines();
+                            var rt = xlComment.AddText(text);
+                        }
+
 
                         if (shape != null)
                         {
