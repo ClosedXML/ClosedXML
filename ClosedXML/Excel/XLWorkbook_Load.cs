@@ -185,7 +185,7 @@ namespace ClosedXML.Excel
                 differentialFormats = new Dictionary<Int32, DifferentialFormat>();
 
             // If the loaded workbook has a changed "Normal" style, it might affect the default width of a column.
-            var normalStyle = s?.CellStyles.Elements<CellStyle>().FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
+            var normalStyle = s?.CellStyles?.Elements<CellStyle>().FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
@@ -3055,7 +3055,7 @@ namespace ClosedXML.Excel
         private void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
                                 Fonts fonts, NumberingFormats numberingFormats)
         {
-            if (s == null) return; //No Stylesheet, no Styles
+            if (s == null || s.CellFormats is null) return; //No Stylesheet, no Styles
 
             var cellFormat = (CellFormat)s.CellFormats.ElementAt(styleIndex);
 

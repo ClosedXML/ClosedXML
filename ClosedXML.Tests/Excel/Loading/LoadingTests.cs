@@ -617,5 +617,16 @@ namespace ClosedXML.Tests.Excel
                 }
             }
         }
+
+        [Test]
+        public void CanLoadEmptyStyles()
+        {
+            // Stylesheet part exists, but no style collection elements are present
+            TestHelper.LoadAndAssert(wb =>
+            {
+                using var ms = new MemoryStream();
+                wb.SaveAs(ms, true);
+            }, @"TryToLoad\EmptyStyles.xlsx");
+        }
     }
 }
