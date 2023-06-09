@@ -201,8 +201,12 @@ namespace ClosedXML.Excel
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
 
-                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out String message))
-                    throw new ArgumentException(message, nameof(value));
+
+                var casingOnlyChange = IsNameChangeACasingOnlyChange(oldname, value);
+
+                if (!casingOnlyChange && !TableNameValidator.IsValidTableNameInWorkbook(value, Worksheet, out string message)){
+                    throw new ArgumentException(message);
+                }
 
                 _name = value;
 
@@ -217,6 +221,12 @@ namespace ClosedXML.Excel
                         Worksheet.Tables.Remove(oldname);
                 }
             }
+        }
+
+        private bool IsNameChangeACasingOnlyChange(string oldname, string newName)
+        {
+            return !String.IsNullOrWhiteSpace(oldname) &&
+                   String.Equals(oldname, newName, StringComparison.OrdinalIgnoreCase);
         }
 
         public Boolean ShowTotalsRow
