@@ -3,7 +3,7 @@ using ClosedXML.Excel.Drawings;
 using ClosedXML.Utils;
 using NUnit.Framework;
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.IO;
 using System.Linq;
 using System.Reflection;

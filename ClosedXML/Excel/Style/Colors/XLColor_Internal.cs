@@ -1,7 +1,7 @@
 #nullable disable
 
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 
 namespace ClosedXML.Excel
 {

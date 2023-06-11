@@ -3,7 +3,7 @@
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Utils;
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.IO;
 
 namespace ClosedXML.Graphics

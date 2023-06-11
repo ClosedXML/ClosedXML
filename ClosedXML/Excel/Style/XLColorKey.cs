@@ -1,5 +1,6 @@
 #nullable disable
 
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 
 namespace ClosedXML.Excel
@@ -8,7 +9,7 @@ namespace ClosedXML.Excel
     {
         public XLColorType ColorType { get; set; }
 
-        public System.Drawing.Color Color { get; set; }
+        public SixLabors.ImageSharp.Color Color { get; set; }
 
         public int Indexed { get; set; }
 
@@ -23,7 +24,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Indexed ? Indexed : 0);
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Theme ? (int)ThemeColor : 0);
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Theme ? ThemeTint.GetHashCode() : 0);
-            hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Color ? Color.ToArgb() : 0);
+            hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Color ?  (int)(((Argb32)Color).Argb) : 0);
             return hashCode;
         }
 
@@ -35,7 +36,7 @@ namespace ClosedXML.Excel
                 {
                     // .NET Color.Equals() will return false for Color.FromArgb(255, 255, 255, 255) == Color.White
                     // Therefore we compare the ToArgb() values
-                    return Color.ToArgb() == other.Color.ToArgb();
+                    return (int)(((Argb32)Color).Argb) == (int)(((Argb32)other.Color).Argb);
                 }
                 if (ColorType == XLColorType.Theme)
                 {

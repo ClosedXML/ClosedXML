@@ -3,7 +3,7 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Diagnostics;
-using System.Drawing;
+using SixLabors.ImageSharp;
 
 namespace ClosedXML.Excel.Drawings
 {

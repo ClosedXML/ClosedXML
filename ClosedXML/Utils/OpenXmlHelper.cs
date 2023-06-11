@@ -4,7 +4,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
-using Drawing = System.Drawing;
+using Drawing = SixLabors.ImageSharp;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ClosedXML.Utils
@@ -63,7 +63,7 @@ namespace ClosedXML.Utils
         /// <param name="openXMLColor">Color in OpenXML format.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, SixLabors.ImageSharp.Color>? colorCache = null)
         {
             return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor), colorCache);
         }
@@ -74,7 +74,7 @@ namespace ClosedXML.Utils
         /// <param name="openXMLColor">Color in OpenXML format.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, SixLabors.ImageSharp.Color>? colorCache = null)
         {
             return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor), colorCache);
         }
@@ -90,13 +90,13 @@ namespace ClosedXML.Utils
         /// Since these types do not implement a common interface we use dynamic.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color>? colorCache)
+        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, SixLabors.ImageSharp.Color>? colorCache)
         {
             XLColor? retVal = null;
             if (openXMLColor.Rgb != null)
             {
                 String htmlColor = "#" + openXMLColor.Rgb.Value;
-                if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
+                if (colorCache == null || !colorCache.TryGetValue(htmlColor, out SixLabors.ImageSharp.Color thisColor))
                 {
                     thisColor = ColorStringParser.ParseFromArgb(htmlColor);
                     colorCache?.Add(htmlColor, thisColor);

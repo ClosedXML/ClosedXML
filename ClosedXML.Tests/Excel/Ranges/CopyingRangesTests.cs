@@ -1,6 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Linq;
 
 namespace ClosedXML.Tests

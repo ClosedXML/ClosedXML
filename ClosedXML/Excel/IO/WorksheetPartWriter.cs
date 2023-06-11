@@ -1659,7 +1659,7 @@ namespace ClosedXML.Excel.IO
                     };
 
                     var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
-                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new System.Drawing.Point(picture.Width, picture.Height));
+                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new SixLabors.ImageSharp.Point(picture.Width, picture.Height));
                     tMark = new Xdr.ToMarker
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnNumber - 1).ToInvariantString()),

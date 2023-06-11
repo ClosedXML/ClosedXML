@@ -2,7 +2,8 @@ using ClosedXML.Excel.Caching;
 using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ClosedXML.Excel
 {
@@ -64,17 +65,17 @@ namespace ClosedXML.Excel
 
         public static XLColor FromArgb(Int32 argb)
         {
-            return FromColor(Color.FromArgb(argb));
+            return FromColor(new Argb32((uint)argb));
         }
 
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
-            return FromColor(Color.FromArgb(r, g, b));
+            return FromColor(new Argb32(r, g, b));
         }
 
         public static XLColor FromArgb(Int32 a, Int32 r, Int32 g, Int32 b)
         {
-            return FromColor(Color.FromArgb(a, r, g, b));
+            return FromColor(new Argb32(r, g, b, a));
         }
 
         /// <summary>
@@ -84,13 +85,14 @@ namespace ClosedXML.Excel
         {
             unchecked
             {
-                return FromColor(Color.FromArgb(rgb | (int)0xFF000000));
+                return FromColor(new Argb32((uint)rgb | (uint)0xFF000000));
             }
         }
 
         public static XLColor FromName(String name)
         {
-            return FromColor(Color.FromName(name));
+            var colorObj = new Color();
+            return FromColor((Color)colorObj.GetType().GetField(name).GetValue(colorObj));
         }
 
         public static XLColor FromHtml(String htmlColor)

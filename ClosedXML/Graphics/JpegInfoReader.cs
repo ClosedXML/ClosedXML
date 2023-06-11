@@ -1,7 +1,7 @@
 #nullable disable
 
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.IO;
 using System.Linq;
 using System.Text;

@@ -2,7 +2,8 @@
 
 // Keep this file CodeMaid organised and cleaned
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ClosedXML.Excel
 {
@@ -14,13 +15,13 @@ namespace ClosedXML.Excel
         {
             byte[] bytes = new byte[4];
 
-            bytes[0] = color.A;
+            bytes[0] = ((Argb32)color).A;
 
-            bytes[1] = color.R;
+            bytes[1] = ((Argb32)color).R;
 
-            bytes[2] = color.G;
+            bytes[2] = ((Argb32)color).G;
 
-            bytes[3] = color.B;
+            bytes[3] = ((Argb32)color).B;
 
             char[] chars = new char[bytes.Length * 2];
 

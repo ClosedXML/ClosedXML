@@ -1,5 +1,6 @@
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ClosedXML.Excel
 {
@@ -87,7 +88,7 @@ namespace ClosedXML.Excel
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
-                return Color.A / 255.0;
+                return ((Argb32)Color).A / 255.0;
             }
         }
 

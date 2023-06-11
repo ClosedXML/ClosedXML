@@ -2,7 +2,7 @@
 
 using ClosedXML.Utils;
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.IO;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;

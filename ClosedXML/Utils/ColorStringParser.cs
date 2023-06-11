@@ -1,8 +1,9 @@
 #nullable disable
 
 using System;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using System.Globalization;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ClosedXML.Utils
 {
@@ -15,19 +16,19 @@ namespace ClosedXML.Utils
 
             if (argbColor.Length == 8)
             {
-                return Color.FromArgb(
+                return new Color(new Argb32(
                     ReadHex(argbColor, 0, 2),
                     ReadHex(argbColor, 2, 2),
                     ReadHex(argbColor, 4, 2),
-                    ReadHex(argbColor, 6, 2));
+                    ReadHex(argbColor, 6, 2)));
             }
 
             if (argbColor.Length == 6)
             {
-                return Color.FromArgb(
+                return new Color(new Argb32(
                     ReadHex(argbColor, 0, 2),
                     ReadHex(argbColor, 2, 2),
-                    ReadHex(argbColor, 4, 2));
+                    ReadHex(argbColor, 4, 2)));
             }
 
             if (argbColor.Length == 3)
@@ -35,10 +36,10 @@ namespace ClosedXML.Utils
                 var r = ReadHex(argbColor, 0, 1);
                 var g = ReadHex(argbColor, 1, 1);
                 var b = ReadHex(argbColor, 2, 1);
-                return Color.FromArgb(
+                return new Color(new Argb32(
                     (r << 4) | r,
                     (g << 4) | g,
-                    (b << 4) | b);
+                    (b << 4) | b));
             }
 
             throw new FormatException($"Unable to parse color {argbColor}.");

@@ -44,7 +44,7 @@ namespace ClosedXML.Examples.Styles
             ro++;
 
             // FromColor(Color color)
-            ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromColor(Color.Red);
+            ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromName("Red");
             ws.Cell(ro, 2).Value = "XLColor.FromColor(Color.Red)";
 
             ro++;
