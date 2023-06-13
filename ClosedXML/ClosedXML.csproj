@@ -20,6 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Graphics\Fonts\CarlitoBare-Bold.ttf" />
+    <EmbeddedResource Include="Graphics\Fonts\CarlitoBare-BoldItalic.ttf" />
+    <EmbeddedResource Include="Graphics\Fonts\CarlitoBare-Italic.ttf" />
+    <EmbeddedResource Include="Graphics\Fonts\CarlitoBare-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\resources\logo\nuget-logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>

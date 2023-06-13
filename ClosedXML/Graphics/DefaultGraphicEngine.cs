@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Reflection;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using SixLabors.Fonts;
@@ -12,6 +13,13 @@ namespace ClosedXML.Graphics
 {
     public class DefaultGraphicEngine : IXLGraphicEngine
     {
+        /// <summary>
+        /// Carlito is a Calibri metric compatible font. This is a version stripped of everything but metric information
+        /// to keep the embedded file small. It is reasonably accurate for many alphabets (contains 2531 glyphs). It has
+        /// no glyph outlines, no TTF instructions, no substitutions, glyph positioning ect. It is created from Carlito
+        /// font through strip-fonts.sh script.
+        /// </summary>
+        private const string EmbeddedFontName = "CarlitoBare";
         private const float FontMetricSize = 16f;
         private readonly ImageInfoReader[] _imageReaders =
         {
@@ -44,7 +52,7 @@ namespace ClosedXML.Graphics
         /// <summary>
         /// Get a singleton instance of the engine that uses <c>Microsoft Sans Serif</c> as a fallback font.
         /// </summary>
-        public static Lazy<DefaultGraphicEngine> Instance { get; } = new(() => new DefaultGraphicEngine("Microsoft Sans Serif"));
+        public static Lazy<DefaultGraphicEngine> Instance { get; } = new(() => new("Microsoft Sans Serif"));
 
         /// <summary>
         /// Initialize a new instance of the engine.
@@ -55,7 +63,10 @@ namespace ClosedXML.Graphics
             if (string.IsNullOrWhiteSpace(fallbackFont))
                 throw new ArgumentException(nameof(fallbackFont));
 
-            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => SystemFonts.Collection);
+            var fontCollection = new FontCollection();
+            AddEmbeddedFont(fontCollection);
+
+            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts());
             _fallbackFont = fallbackFont;
             _loadFont = LoadFont;
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
@@ -68,7 +79,7 @@ namespace ClosedXML.Graphics
         /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
         /// <param name="useSystemFonts">Should engine try to use system fonts? If false, system fonts won't be loaded which can significantly speed up library startup.</param>
         /// <param name="fontStreams">Extra fonts that should be loaded to the engine.</param>
-        private DefaultGraphicEngine(Stream fallbackFontStream, bool useSystemFonts, params Stream[] fontStreams)
+        private DefaultGraphicEngine(Stream fallbackFontStream, bool useSystemFonts, Stream[] fontStreams)
         {
             if (fallbackFontStream is null)
                 throw new ArgumentNullException(nameof(fallbackFontStream));
@@ -77,6 +88,7 @@ namespace ClosedXML.Graphics
                 throw new ArgumentNullException(nameof(fontStreams));
 
             var fontCollection = new FontCollection();
+            AddEmbeddedFont(fontCollection);
             var fallbackFamily = fontCollection.Add(fallbackFontStream);
             foreach (var fontStream in fontStreams)
                 fontCollection.Add(fontStream);
@@ -216,14 +228,33 @@ namespace ClosedXML.Graphics
 
         private Font LoadFont(MetricId metricId)
         {
+            // First try the specified fallback font. On windows, unknown fonts should use MS Sans Serif
             if (!_fontCollection.Value.TryGet(metricId.Name, out var fontFamily) &&
                 !_fontCollection.Value.TryGet(_fallbackFont, out fontFamily))
-                throw new ArgumentException($"Unable to find font {metricId.Name} or fallback font {_fallbackFont}. " +
-                                            "Install missing fonts or specify a different fallback font through " +
-                                            "'LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(\"Fallback font name\")'. " +
-                                            "Additional information is available at https://closedxml.readthedocs.io/en/latest/tips/missing-font.html page.");
+            {
+                // If not present, e.g. it's unlikely to be present on Linux, use embedded font as an ultimate fallback.
+                fontFamily = _fontCollection.Value.Get(EmbeddedFontName);
+            }
 
             return fontFamily.CreateFont(FontMetricSize); // Size is irrelevant for metric
+        }
+
+        private void AddEmbeddedFont(FontCollection fontCollection)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            const string resourcePath = "ClosedXML.Graphics.Fonts.CarlitoBare-{0}.ttf";
+
+            using var regular = assembly.GetManifestResourceStream(string.Format(resourcePath, "Regular"))!;
+            fontCollection.Add(regular);
+
+            using var bold = assembly.GetManifestResourceStream(string.Format(resourcePath, "Bold"))!;
+            fontCollection.Add(bold);
+
+            using var italic = assembly.GetManifestResourceStream(string.Format(resourcePath, "Italic"))!;
+            fontCollection.Add(italic);
+
+            using var boldItalic = assembly.GetManifestResourceStream(string.Format(resourcePath, "BoldItalic"))!;
+            fontCollection.Add(boldItalic);
         }
 
         private double CalculateMaxDigitWidth(MetricId metricId)

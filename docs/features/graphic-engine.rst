@@ -85,7 +85,7 @@ ClosedXML uses this engine, if no other is specified.
      - *Microsoft Sans Serif*
      - No
      - Yes
-	 - Used on windows environments. Will likely throw an exception on non-Windows environments, unless Microsoft fonts were installed.
+	 - Used on windows environments.
 
    * - ``new DefaultGraphicEngine(string fallbackFontName)``
      - Depends on provided font name
@@ -119,6 +119,37 @@ startup time in some test cases and didn't in others. *SixLabors.Fonts* read
 data in small chunks (generally less than 4 bytes) and in some cases, it might
 be better just to read whole file into memory and pass it to the the engine
 (e.g. ``DefaultGraphicEngine.CreateOnlyWithFonts(new MemoryStream(File.ReadAllBytes("Carlito.ttf")))``).
+
+Fallback and embedded font
+==========================
+
+A font is required for a significant amount of features. There is no
+standardized list of fonts available on every environment and workbook
+can contain text that use unavailable fonts.
+
+To ensure there is always some font present, there is one embedded in the
+assembly. It is a stripped version of a Carlito font (Calibri metric compatible
+font) that contains basically only metric information of glyphs (i.e. no glyph
+outlines, no ligatures or other substitions and various font features).
+
+The embedded font uses a different name from Carlito to avoid potential name
+collision.
+
+.. image:: img/graphic-engine-font-fallback.png
+   :alt: Flowchart how font is selected
+   
+This should achieve the following goals:
+
+* On Windows, fallback font is *Microsoft Sans Serif*. That is how Excel
+  behaves and there could be some suble consequnces if embedded font was used.
+  E.g. different default pixel width of a column, if font of a normal style
+  of a workbook isn't present and fallback has to be used due to difference of
+  maximum digit width.
+* On environments without a font or with a limited font selection, an embedded
+  font that is metric-compatible with Calibri will be used. That will produce
+  correct column widths for `AdjustToContent` methods.
+* User can use a specific fallback font that is present at the environment.
+
 
 Set engine
 ==========
