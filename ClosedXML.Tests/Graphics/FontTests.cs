@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+using System;
+using ClosedXML.Excel;
 using ClosedXML.Graphics;
 using NUnit.Framework;
 
@@ -54,6 +55,19 @@ namespace ClosedXML.Tests.Graphics
             var nonExistentFontHeight = _engine.GetTextHeight(nonExistentFont, 96);
             var fallbackFontHeight = _engine.GetTextHeight(fallbackFont, 96);
             Assert.That(nonExistentFontHeight, Is.EqualTo(fallbackFontHeight));
+        }
+
+        [Test]
+        public void UseEmbeddedFontWhenFallbackFontIsNotPresent()
+        {
+            var nonExistentFont = new DummyFont("SomeNonExistentFont", 11);
+            var engine = new DefaultGraphicEngine("NonExistentFallbackFont");
+            Span<int> text = stackalloc int[1] { '8' };
+
+            var box = engine.GetGlyphBox(text, nonExistentFont, new Dpi(96, 96));
+
+            // Max digit width of CarlitoBare is 7, unlike MS Sans Serif which is 8
+            Assert.AreEqual(7, box.AdvanceWidth);
         }
 
         [TestCase]
