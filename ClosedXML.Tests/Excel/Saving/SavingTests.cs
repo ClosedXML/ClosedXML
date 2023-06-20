@@ -785,5 +785,22 @@ namespace ClosedXML.Tests.Excel.Saving
                 wb => wb.AddWorksheet(),
                 @"Other\Parts\MultiplePartsHaveNonUniqueRelId-output.xlsx");
         }
+
+        [Test]
+        public void WorksheetWithDrawingCanBeModified()
+        {
+            // Issue 2080: Drawing was loading the workbook DOM from the worksheet part and
+            // the OpenXML SDK was ignoring worksheet changes saved through streaming, but used
+            // the eager loaded DOM instead.
+            // Saved file doesn't contain shape because it's not yet supported (#1252)
+            TestHelper.LoadModifyAndCompare(
+                @"Other\Parts\WorksheetWithDrawingCanBeModified-input.xlsx",
+                wb =>
+                {
+                    var ws = wb.Worksheets.Single();
+                    ws.Cell("A1").Value = "B";
+                },
+                @"Other\Parts\WorksheetWithDrawingCanBeModified-output.xlsx");
+        }
     }
 }
