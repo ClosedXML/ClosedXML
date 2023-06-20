@@ -1191,11 +1191,11 @@ namespace ClosedXML.Excel.IO
             }
 
             // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
-            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null
-                && !worksheetPart.DrawingsPart.Parts.Any())
+            var hasCharts = worksheetPart.DrawingsPart is not null && worksheetPart.DrawingsPart.Parts.Any();
+            if (worksheetPart.DrawingsPart is not null && !xlWorksheet.Pictures.Any() && !hasCharts)
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
-                worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheet.RemoveChild(worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
                 worksheetPart.DeletePart(worksheetPart.DrawingsPart);
                 cm.SetElement(XLWorksheetContents.Drawing, null);
             }
