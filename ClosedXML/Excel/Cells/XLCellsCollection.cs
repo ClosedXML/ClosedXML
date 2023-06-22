@@ -275,18 +275,10 @@ namespace ClosedXML.Excel
 
         internal void SwapCellsContent(XLSheetPoint sp1, XLSheetPoint sp2)
         {
-            SwapSliceValue(ValueSlice, sp1, sp2);
-            SwapSliceValue(FormulaSlice, sp1, sp2);
-            SwapSliceValue(StyleSlice, sp1, sp2);
-            SwapSliceValue(MiscSlice, sp1, sp2);
-        }
-
-        private static void SwapSliceValue<TElement>(Slice<TElement> slice, XLSheetPoint sp1, XLSheetPoint sp2)
-        {
-            var restAtSwapPoint1 = slice[sp1];
-            var restAtSwapPoint2 = slice[sp2];
-            slice.Set(sp1, restAtSwapPoint2);
-            slice.Set(sp2, restAtSwapPoint1);
+            ValueSlice.Swap(sp1, sp2);
+            FormulaSlice.Swap(sp1, sp2);
+            StyleSlice.Swap(sp1, sp2);
+            MiscSlice.Swap(sp1, sp2);
         }
 
         private struct CellsEnumerator
