@@ -128,27 +128,14 @@ namespace ClosedXML.Excel
 
         internal int SharedStringId
         {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].SharedStringId;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                if (original.SharedStringId != value)
-                {
-                    var modified = new XLValueSliceContent(original.Value, original.ModifiedAtVersion, value);
-                    _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
+            get => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetShareStringId(SheetPoint, value);
         }
 
         private XLCellValue SliceCellValue
         {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].Value;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                var modified = new XLValueSliceContent(value, original.ModifiedAtVersion, original.SharedStringId);
-                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
-            }
+            get => _cellsCollection.ValueSlice.GetCellValue(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
         }
 
         private XLRichText SliceRichText
@@ -261,13 +248,8 @@ namespace ClosedXML.Excel
         /// </summary>
         internal long ModifiedAtVersion
         {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].ModifiedAtVersion;
-            private set
-            {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                var modified = new XLValueSliceContent(original.Value, value, original.SharedStringId);
-                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
-            }
+            get => _cellsCollection.ValueSlice.GetModifiedAtVersion(SheetPoint);
+            private set => _cellsCollection.ValueSlice.SetModifiedAtVersion(SheetPoint, value);
         }
 
         #endregion Slice fields
