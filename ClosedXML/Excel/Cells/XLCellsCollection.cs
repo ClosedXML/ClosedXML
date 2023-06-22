@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal Slice<XLValueSliceContent> ValueSlice { get; } = new();
+        internal ValueSlice ValueSlice { get; } = new();
 
         internal Slice<XLCellFormula> FormulaSlice { get; } = new();
 
