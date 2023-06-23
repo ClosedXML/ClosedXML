@@ -1,6 +1,7 @@
 #nullable disable
 
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
@@ -8,6 +9,7 @@ namespace ClosedXML.Excel
     /// An point (address) in a worksheet, an equivalent of <c>ST_CellRef</c>.
     /// </summary>
     /// <remarks>Unlike the XLAddress, sheet can never be invalid.</remarks>
+    [DebuggerDisplay("{XLHelper.GetColumnLetterFromNumber(Column)}{Row}")]
     internal readonly struct XLSheetPoint : IEquatable<XLSheetPoint>, IComparable<XLSheetPoint>
     {
         public XLSheetPoint(Int32 row, Int32 column)

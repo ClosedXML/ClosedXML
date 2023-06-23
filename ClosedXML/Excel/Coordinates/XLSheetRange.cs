@@ -1,12 +1,14 @@
 #nullable disable
 
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
     /// <summary>
     /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to the sheet).
     /// </summary>
+    [DebuggerDisplay("{XLHelper.GetColumnLetterFromNumber(FirstPoint.Column)}{FirstPoint.Row}:{XLHelper.GetColumnLetterFromNumber(LastPoint.Column)}{LastPoint.Row}")]
     internal readonly struct XLSheetRange : IEquatable<XLSheetRange>
     {
         public XLSheetRange(XLSheetPoint firstPoint, XLSheetPoint lastPoint)
@@ -40,6 +42,10 @@ namespace ClosedXML.Excel
         public int Width => LastPoint.Column - FirstPoint.Column + 1;
 
         public int Height => LastPoint.Row - FirstPoint.Row + 1;
+
+        public int RightColumn => LastPoint.Column;
+
+        public int BottomRow => LastPoint.Row;
 
         public override bool Equals(object obj)
         {
@@ -166,6 +172,30 @@ namespace ClosedXML.Excel
             return
                 point.Row >= FirstPoint.Row && point.Row <= LastPoint.Row &&
                 point.Column >= FirstPoint.Column && point.Column <= LastPoint.Column;
+        }
+
+        /// <summary>
+        /// Create a new range from this one by taking a number of rows from the bottom row up.
+        /// </summary>
+        /// <param name="rows">How many rows to take, must be at least one.</param>
+        public XLSheetRange SliceFromBottom(int rows)
+        {
+            if (rows < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(new XLSheetPoint(BottomRow - rows + 1, FirstPoint.Column), LastPoint);
+        }
+
+        /// <summary>
+        /// Create a new range from this one by taking a number of rows from the bottom row up.
+        /// </summary>
+        /// <param name="columns">How many columns to take, must be at least one.</param>
+        public XLSheetRange SliceFromRight(int columns)
+        {
+            if (columns < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(new XLSheetPoint(FirstPoint.Row, RightColumn - columns + 1), LastPoint);
         }
     }
 }

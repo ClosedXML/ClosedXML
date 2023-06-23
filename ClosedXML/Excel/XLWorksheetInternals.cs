@@ -27,6 +27,7 @@ namespace ClosedXML.Excel
         // Used by Janitor.Fody
         private void DisposeManaged()
         {
+            CellsCollection.ValueSlice.DereferenceSlice();
             CellsCollection.Clear();
             ColumnsCollection.Clear();
             RowsCollection.Clear();
