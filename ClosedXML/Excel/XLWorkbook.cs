@@ -133,6 +133,8 @@ namespace ClosedXML.Excel
 
         internal XLPivotCaches PivotCachesInternal { get; }
 
+        internal SharedStringTable SharedStringTable { get; } = new();
+
         /// <summary>
         /// Notify that workbook data has been changed which means that cached formula values
         /// need to be re-evaluated.

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -7,11 +8,12 @@ namespace ClosedXML.Excel
     /// </summary>
     internal class ValueSlice : ISlice
     {
-        private readonly Slice<XLValueSliceContent> _values;
+        private readonly Slice<XLValueSliceContent> _values = new();
+        private readonly SharedStringTable _sst;
 
-        internal ValueSlice()
+        internal ValueSlice(SharedStringTable sst)
         {
-            _values = new();
+            _sst = sst;
         }
 
         public bool IsEmpty => _values.IsEmpty;
@@ -42,18 +44,69 @@ namespace ClosedXML.Excel
 
         internal XLCellValue GetCellValue(XLSheetPoint point)
         {
-            return _values[point].Value;
+            ref readonly var cellValue = ref _values[point];
+            var type = cellValue.Type;
+            var value = cellValue.Value;
+            return type switch
+            {
+                XLDataType.Blank => Blank.Value,
+                XLDataType.Boolean => value != 0,
+                XLDataType.Number => value,
+                XLDataType.Text => _sst[(int)value],
+                XLDataType.Error => (XLError)value,
+                XLDataType.DateTime => XLCellValue.FromSerialDateTime(value),
+                XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(value),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
-        internal void SetCellValue(XLSheetPoint point, XLCellValue value)
+        internal void SetCellValue(XLSheetPoint point, XLCellValue cellValue)
         {
             ref readonly var original = ref _values[point];
-            var modified = new XLValueSliceContent(value, original.ModifiedAtVersion, original.SharedStringId);
+
+            double value;
+            if (cellValue.Type == XLDataType.Text)
+            {
+                if (original.Type == XLDataType.Text)
+                {
+                    // Change references. Increase first and then decrease to have fewer shuffles assigning same value to a cell.
+                    var originalStringId = (int)original.Value;
+                    value = _sst.IncreaseRef(cellValue.GetText());
+                    _sst.DecreaseRef(originalStringId);
+                }
+                else
+                {
+                    // The original value wasn't a text -> just increase ref count to a new text
+                    value = _sst.IncreaseRef(cellValue.GetText());
+                }
+            }
+            else
+            {
+                // New value isn't a text
+                if (original.Type == XLDataType.Text)
+                {
+                    // Dereference original text
+                    var originalStringId = (int)original.Value;
+                    _sst.DecreaseRef(originalStringId);
+                }
+
+                if (cellValue.IsUnifiedNumber)
+                    value = cellValue.GetUnifiedNumber();
+                else if (cellValue.IsBoolean)
+                    value = cellValue.GetBoolean() ? 1 : 0;
+                else if (cellValue.IsError)
+                    value = (int)cellValue.GetError();
+                else
+                    value = 0; // blank
+            }
+
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId);
             _values.Set(point, in modified);
         }
 
         internal int GetShareStringId(XLSheetPoint point)
         {
+            // This is the public id, separate from real sharedStringId stored in a value
             return _values[point].SharedStringId;
         }
 
@@ -62,7 +115,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.SharedStringId != sharedStringId)
             {
-                var modified = new XLValueSliceContent(original.Value, original.ModifiedAtVersion, sharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId);
                 _values.Set(point, in modified);
             }
         }
@@ -77,20 +130,29 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.ModifiedAtVersion != modifiedAtVersion)
             {
-                var modified = new XLValueSliceContent(original.Value, modifiedAtVersion, original.SharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId);
                 _values.Set(point, in modified);
             }
         }
 
         private readonly struct XLValueSliceContent
         {
-            public readonly XLCellValue Value;
-            public readonly long ModifiedAtVersion;
-            public readonly int SharedStringId;
+            /// <summary>
+            /// A cell value in a very compact representation. The value is interpreted depending on a type.
+            /// </summary>
+            internal readonly double Value;
 
-            public XLValueSliceContent(XLCellValue value, long modifiedAtVersion, int sharedStringId)
+            /// <summary>
+            /// Type of a cell <see cref="Value"/>.
+            /// </summary>
+            internal readonly XLDataType Type;
+            internal readonly long ModifiedAtVersion;
+            internal readonly int SharedStringId;
+
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId)
             {
                 Value = value;
+                Type = type;
                 ModifiedAtVersion = modifiedAtVersion;
                 SharedStringId = sharedStringId;
             }

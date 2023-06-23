@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -7,6 +8,22 @@ namespace ClosedXML.Tests.Excel.Cells
     [TestFixture]
     public class SharedStringTableTests
     {
+        [Test]
+        public void SameStringIsNotStoredTwice()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            var ws2 = wb.AddWorksheet();
+            var txt1 = "Hello";
+            var txt2 = new StringBuilder("Hel").Append("lo").ToString();
+            Assert.AreNotSame(txt1, txt2);
+
+            ws1.Cell(1, 1).Value = txt1;
+            ws2.Cell(1, 1).Value = txt2;
+
+            Assert.AreSame(ws1.Cell(1, 1).Value.GetText(), ws2.Cell(1, 1).Value.GetText());
+        }
+
         [Test]
         public void CanAccessTextThroughId()
         {
