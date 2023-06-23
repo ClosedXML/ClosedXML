@@ -14,6 +14,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("AND", 1, int.MaxValue, And, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
             ce.RegisterFunction("IF", 2, 3, AdaptLastOptional(If, false), FunctionFlags.Scalar);
+            ce.RegisterFunction("IFS", 2, 256, Ifs, FunctionFlags.Scalar);
             ce.RegisterFunction("IFERROR", 2, 2, Adapt(IfError), FunctionFlags.Scalar);
             ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or, FunctionFlags.Range, AllowRange.All);
@@ -55,6 +56,26 @@ namespace ClosedXML.Excel.CalcEngine
                 return error;
 
             return value ? valueIfTrue : valueIfFalse;
+        }
+        
+        private static AnyValue Ifs(CalcContext ctx, Span<AnyValue> arg)
+        {
+            if (arg.Length % 2 != 0)
+                return XLError.IncompatibleValue;
+
+            for (var i = 0; i < arg.Length; i += 2)
+            {
+                if (!arg[i].TryPickScalar(out var scalar, out _))
+                    return XLError.IncompatibleValue;
+                
+                if (!scalar.TryCoerceLogicalOrBlankOrNumberOrText(out var value, out var error))
+                    return error;
+
+                if (value)
+                    return arg[i + 1];
+            }
+
+            return XLError.NoValueAvailable;
         }
 
         private static AnyValue IfError(ScalarValue potentialError, ScalarValue alternative)
