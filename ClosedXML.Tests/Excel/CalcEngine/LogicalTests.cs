@@ -199,6 +199,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(false, ws.Evaluate("ISREF(IFERROR(#VALUE!, A1))"));
         }
 
+        [TestCase("TRUE, 1", 1)]
+        [TestCase("FALSE, 1, TRUE, 4", 4)]
+        [TestCase("FALSE, \"a\", FALSE, 200, TRUE, \"B\"", "B")]
+        public void Ifs(string valueFormula, object expectedResult)
+        {
+            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr($"IFS({valueFormula})"));
+        }
+
+        [Test]
+        public void Ifs_IncorrectArgCount()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("IFS(FALSE, 1, FALSE)"));
+        }
+
         [TestCase("TRUE", false)]
         [TestCase("FALSE", true)]
         [TestCase("IF(TRUE,,)", true)] // Blank
