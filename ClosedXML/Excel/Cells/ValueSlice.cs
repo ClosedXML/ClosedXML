@@ -26,17 +26,53 @@ namespace ClosedXML.Excel
 
         public IEnumerable<int> UsedRows => _values.UsedRows;
 
-        public void Clear(XLSheetRange range) => _values.Clear(range);
+        public void Clear(XLSheetRange range)
+        {
+            DereferenceTextInRange(range);
+            _values.Clear(range);
+        }
 
-        public void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete) => _values.DeleteAreaAndShiftLeft(rangeToDelete);
+        public void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete)
+        {
+            DereferenceTextInRange(rangeToDelete);
+            _values.DeleteAreaAndShiftLeft(rangeToDelete);
+        }
 
-        public void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete) => _values.DeleteAreaAndShiftUp(rangeToDelete);
+        public void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete)
+        {
+            DereferenceTextInRange(rangeToDelete);
+            _values.DeleteAreaAndShiftUp(rangeToDelete);
+        }
 
         public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false) => _values.GetEnumerator(range, reverse);
 
-        public void InsertAreaAndShiftDown(XLSheetRange range) => _values.InsertAreaAndShiftDown(range);
+        public void InsertAreaAndShiftDown(XLSheetRange range)
+        {
+            // Only pushed out references have to be dereferenced, other text references just move.
+            if (range.BottomRow < XLHelper.MaxRowNumber)
+            {
+                var belowRange = range.BelowRange();
+                var pushedOutRows = Math.Min(range.Height, belowRange.Height);
+                var pushedOutRange = belowRange.SliceFromBottom(pushedOutRows);
+                DereferenceTextInRange(pushedOutRange);
+            }
 
-        public void InsertAreaAndShiftRight(XLSheetRange range) => _values.InsertAreaAndShiftRight(range);
+            _values.InsertAreaAndShiftDown(range);
+        }
+
+        public void InsertAreaAndShiftRight(XLSheetRange range)
+        {
+            // Only pushed out references have to be dereferenced, other text references just move.
+            if (range.RightColumn < XLHelper.MaxColumnNumber)
+            {
+                var rightRange = range.RightRange();
+                var pushedOutColumns = Math.Min(range.Width, rightRange.Width);
+                var pushedOutRange = rightRange.SliceFromRight(pushedOutColumns);
+                DereferenceTextInRange(pushedOutRange);
+            }
+
+            _values.InsertAreaAndShiftRight(range);
+        }
 
         public bool IsUsed(XLSheetPoint address) => _values.IsUsed(address);
 
@@ -132,6 +168,27 @@ namespace ClosedXML.Excel
             {
                 var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId);
                 _values.Set(point, in modified);
+            }
+        }
+
+        /// <summary>
+        /// Prepare for worksheet removal, dereference all tests in a slice.
+        /// </summary>
+        internal void DereferenceSlice() => DereferenceTextInRange(XLSheetRange.Full);
+
+        private void DereferenceTextInRange(XLSheetRange range)
+        {
+            // Dereference all texts in the range, so the ref count is kept correct.
+            using var e = _values.GetEnumerator(range);
+            while (e.MoveNext())
+            {
+                ref readonly var value = ref _values[e.Current];
+                if (value.Type == XLDataType.Text)
+                {
+                    _sst.DecreaseRef((int)value.Value);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId);
+                    _values.Set(e.Current, in blank);
+                }
             }
         }
 
