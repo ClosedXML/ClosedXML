@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.102.0-rc</Version>
+    <Version>0.102.0</Version>
   </PropertyGroup>
 
   <!-- Set common properties regarding assembly information and nuget packages -->
   <PropertyGroup>
     <Product>ClosedXML</Product>
 
-    <Authors>Francois Botha, Jan Havlíček, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
-    <Owners>Francois Botha, Jan Havlíček, Aleksei Pankratev</Owners>
+    <Authors>Jan Havlíček, Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
+    <Owners>Jan Havlíček, Francois Botha, Aleksei Pankratev</Owners>
     <Company />
 
     <Copyright>MIT</Copyright>

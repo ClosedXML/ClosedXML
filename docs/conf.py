@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../ClosedXML'))
 project = 'ClosedXML'
 
 # The full version, including alpha/beta/rc tags
-release = '0.97.1-preview'
+release = '0.102.0'
 
 # -- General configuration ---------------------------------------------------
 
