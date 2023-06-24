@@ -210,7 +210,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Ifs_IncorrectArgCount()
         {
-            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("IFS(FALSE, 1, FALSE)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("IFS(FALSE, 1, FALSE)"));
         }
 
         [TestCase("TRUE", false)]

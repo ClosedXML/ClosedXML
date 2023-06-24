@@ -61,7 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue Ifs(CalcContext ctx, Span<AnyValue> arg)
         {
             if (arg.Length % 2 != 0)
-                return XLError.NameNotRecognized;
+                return XLError.IncompatibleValue;
 
             for (var i = 0; i < arg.Length; i += 2)
             {
