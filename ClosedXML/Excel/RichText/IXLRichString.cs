@@ -13,13 +13,6 @@ namespace ClosedXML.Excel
     {
         String Text { get; set; }
 
-        /// <summary>
-        /// Determines a theme font scheme the rich string belongs to. If the string belongs
-        /// to a scheme and user changes theme in Excel, the font of the string will switch
-        /// to the new theme font.
-        /// </summary>
-        XLFontScheme FontScheme { get; set; }
-
         IXLRichString SetBold(); IXLRichString SetBold(Boolean value);
         IXLRichString SetItalic(); IXLRichString SetItalic(Boolean value);
         IXLRichString SetUnderline(); IXLRichString SetUnderline(XLFontUnderlineValues value);
@@ -32,7 +25,7 @@ namespace ClosedXML.Excel
         IXLRichString SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
         IXLRichString SetFontCharSet(XLFontCharSet value);
 
-        /// <inheritdoc cref="FontScheme"/>
+        /// <inheritdoc cref="IXLFontBase.FontScheme"/>
         IXLRichString SetFontScheme(XLFontScheme value);
     }
 }

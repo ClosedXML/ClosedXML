@@ -25,7 +25,8 @@ namespace ClosedXML.Excel
             FontColor = XLColor.FromArgb(0, 0, 0).Key,
             FontName = "Calibri",
             FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss,
-            FontCharSet = XLFontCharSet.Default
+            FontCharSet = XLFontCharSet.Default,
+            FontScheme = XLFontScheme.None
         };
         internal static readonly XLFontValue Default = FromKey(ref DefaultKey);
 
@@ -52,6 +53,8 @@ namespace ClosedXML.Excel
         public XLFontFamilyNumberingValues FontFamilyNumbering { get { return Key.FontFamilyNumbering; } }
 
         public XLFontCharSet FontCharSet { get { return Key.FontCharSet; } }
+
+        public XLFontScheme FontScheme { get { return Key.FontScheme; } }
 
         private XLFontValue(XLFontKey key)
         {

@@ -19,8 +19,6 @@ namespace ClosedXML.Excel
 
         public String Text { get; set; }
 
-        public XLFontScheme FontScheme { get; set; }
-
         public IXLRichString AddText(String text)
         {
             return _withRichString.AddText(text);
@@ -41,8 +39,8 @@ namespace ClosedXML.Excel
         public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
-
         public XLFontCharSet FontCharSet { get; set; }
+        public XLFontScheme FontScheme { get; set; }
 
         public IXLRichString SetBold()
         {

@@ -2137,10 +2137,16 @@ namespace ClosedXML.Excel
             }
 
             var verticalTextAlignment = fontSource.Elements<VerticalTextAlignment>().FirstOrDefault();
+            if (verticalTextAlignment is not null)
+            {
+                fontBase.VerticalAlignment = verticalTextAlignment.Val is not null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
+            }
 
-            if (verticalTextAlignment == null) return;
-
-            fontBase.VerticalAlignment = verticalTextAlignment.Val != null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
+            var fontScheme = fontSource.Elements<FontScheme>().FirstOrDefault();
+            if (fontScheme is not null)
+            {
+                fontBase.FontScheme = fontScheme.Val is not null ? fontScheme.Val.Value.ToClosedXml() : XLFontScheme.None;
+            }
         }
 
         private Int32 lastRow;
@@ -3301,6 +3307,13 @@ namespace ClosedXML.Excel
                         xlFont.VerticalAlignment = font.VerticalTextAlignment.Val != null
                                                     ? (font.VerticalTextAlignment).Val.Value.ToClosedXml()
                                                     : XLFontVerticalTextAlignmentValues.Baseline;
+                    }
+
+                    if (font.FontScheme is not null)
+                    {
+                        xlFont.FontScheme = font.FontScheme.Val is not null
+                            ? font.FontScheme.Val.Value.ToClosedXml()
+                            : XLFontScheme.None;
                     }
 
                     xlStyle.Font = xlFont;

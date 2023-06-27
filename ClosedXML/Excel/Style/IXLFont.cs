@@ -177,6 +177,10 @@ namespace ClosedXML.Excel
 
         IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 
+        /// <inheritdoc cref="IXLFontBase.FontCharSet"/>
         IXLStyle SetFontCharSet(XLFontCharSet value);
+
+        /// <inheritdoc cref="IXLFontBase.FontScheme"/>
+        IXLStyle SetFontScheme(XLFontScheme value);
     }
 }
