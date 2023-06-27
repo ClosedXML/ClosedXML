@@ -46,9 +46,9 @@ namespace ClosedXML.Excel
         XLFontCharSet FontCharSet { get; set; }
 
         /// <summary>
-        /// Determines a theme font scheme a text belongs to. If the text belongs
-        /// to a scheme and user changes theme in Excel, the font of the text will switch
-        /// to the new theme font.
+        /// Determines a theme font scheme a text belongs to. If the text belongs to a scheme and user changes theme
+        /// in Excel, the font of the text will switch to the new theme font. Scheme font has precedence and will be
+        /// used instead of a set font.
         /// </summary>
         XLFontScheme FontScheme { get; set; }
     }
