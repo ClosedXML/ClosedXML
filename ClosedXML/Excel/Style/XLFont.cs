@@ -47,7 +47,8 @@ namespace ClosedXML.Excel
                     FontColor = defaultFont.FontColor.Key,
                     FontName = defaultFont.FontName,
                     FontFamilyNumbering = defaultFont.FontFamilyNumbering,
-                    FontCharSet = defaultFont.FontCharSet
+                    FontCharSet = defaultFont.FontCharSet,
+                    FontScheme = defaultFont.FontScheme
                 };
             }
         }
@@ -206,6 +207,15 @@ namespace ClosedXML.Excel
             }
         }
 
+        public XLFontScheme FontScheme
+        {
+            get { return Key.FontScheme; }
+            set
+            {
+                Modify(k => { k.FontScheme = value; return k; });
+            }
+        }
+
         public IXLStyle SetBold()
         {
             Bold = true;
@@ -302,6 +312,12 @@ namespace ClosedXML.Excel
             return _style;
         }
 
+        public IXLStyle SetFontScheme(XLFontScheme value)
+        {
+            FontScheme = value;
+            return _style;
+        }
+
         #endregion IXLFont Members
 
         #region Overridden
@@ -328,6 +344,10 @@ namespace ClosedXML.Excel
             sb.Append(FontName);
             sb.Append("-");
             sb.Append(FontFamilyNumbering.ToString());
+            sb.Append("-");
+            sb.Append(FontCharSet.ToString());
+            sb.Append("-");
+            sb.Append(FontScheme.ToString());
             return sb.ToString();
         }
 

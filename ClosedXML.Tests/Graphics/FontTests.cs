@@ -134,6 +134,8 @@ namespace ClosedXML.Tests.Graphics
             public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; } = XLFontFamilyNumberingValues.NotApplicable;
 
             public XLFontCharSet FontCharSet { get; set; } = XLFontCharSet.Default;
+
+            public XLFontScheme FontScheme { get; set; }
         }
     }
 }

@@ -40,6 +40,7 @@ namespace ClosedXML.Excel
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
         public XLFontCharSet FontCharSet { get; set; }
+        public XLFontScheme FontScheme { get; set; }
 
         public IXLPhonetics SetBold() { Bold = true; return this; }
 
@@ -72,6 +73,8 @@ namespace ClosedXML.Excel
         public IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
 
         public IXLPhonetics SetFontCharSet(XLFontCharSet value) { FontCharSet = value; return this; }
+
+        public IXLPhonetics SetFontScheme(XLFontScheme value) { FontScheme = value; return this; }
 
         public IXLPhonetics Add(String text, Int32 start, Int32 end)
         {
@@ -129,10 +132,11 @@ namespace ClosedXML.Excel
                 && Strikethrough == other.Strikethrough
                 && VerticalAlignment == other.VerticalAlignment
                 && Shadow == other.Shadow
-                && FontSize == other.FontSize
+                && FontSize.Equals(other.FontSize)
                 && FontColor.Equals(other.FontColor)
                 && FontName == other.FontName
-                && FontFamilyNumbering == other.FontFamilyNumbering;
+                && FontFamilyNumbering == other.FontFamilyNumbering
+                && FontScheme == other.FontScheme;
         }
     }
 }

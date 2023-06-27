@@ -27,8 +27,8 @@ namespace ClosedXML.Excel
         public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
-
         public XLFontCharSet FontCharSet { get; set; }
+        public XLFontScheme FontScheme { get; set; }
 
         public IXLDrawingStyle SetBold()
         {
@@ -123,6 +123,12 @@ namespace ClosedXML.Excel
         public IXLDrawingStyle SetFontCharSet(XLFontCharSet value)
         {
             FontCharSet = value;
+            return _style;
+        }
+
+        public IXLDrawingStyle SetFontScheme(XLFontScheme value)
+        {
+            FontScheme = value;
             return _style;
         }
     }

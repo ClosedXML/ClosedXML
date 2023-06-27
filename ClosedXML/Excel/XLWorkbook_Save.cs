@@ -4033,6 +4033,10 @@ namespace ClosedXML.Excel
                 ? new FontCharSet { Val = (Int32)fontInfo.Font.FontCharSet }
                 : null;
 
+            var fontScheme = (fontInfo.Font.FontScheme != XLFontValue.Default.FontScheme || ignoreMod) && fontInfo.Font.FontScheme != XLFontScheme.None
+                ? new DocumentFormat.OpenXml.Spreadsheet.FontScheme { Val = fontInfo.Font.FontScheme.ToOpenXmlEnum() }
+                : null;
+
             if (bold != null)
                 font.AppendChild(bold);
             if (italic != null)
@@ -4055,6 +4059,8 @@ namespace ClosedXML.Excel
                 font.AppendChild(fontFamilyNumbering);
             if (fontCharSet != null)
                 font.AppendChild(fontCharSet);
+            if (fontScheme != null)
+                font.AppendChild(fontScheme);
 
             return font;
         }
@@ -4087,6 +4093,8 @@ namespace ClosedXML.Excel
                 nf.FontName = f.FontName.Val;
             if (f.FontFamilyNumbering != null)
                 nf.FontFamilyNumbering = (XLFontFamilyNumberingValues)f.FontFamilyNumbering.Val.Value;
+            if (f.FontScheme?.Val != null)
+                nf.FontScheme = f.FontScheme.Val.Value.ToClosedXml();
 
             return nf.Equals(xlFont.Key);
         }
