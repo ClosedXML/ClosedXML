@@ -74,12 +74,17 @@ namespace ClosedXML.Excel.IO
                 worksheet = new Worksheet();
             }
 
-            if (
-                !worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+            if (worksheet.NamespaceDeclarations.All(ns => ns.Value != RelationshipsNs))
+                worksheet.AddNamespaceDeclaration("r", RelationshipsNs);
+
+            // We store the x14ac:dyDescent attribute (if set by a xlRow) in a row element. It's an optional attribute and it
+            // needs a declared namespace. To avoid writing namespace to each <x:row> element during streaming, write it to
+            // every sheet part ahead of time. The namespace has to be marked as ignorable, because OpenXML SDK validator will
+            // refuse to validate it because it's an optional extension (see ISO29500 part 3).
+            if (worksheet.NamespaceDeclarations.All(ns => ns.Value != X14Ac2009SsNs))
             {
-                worksheet.AddNamespaceDeclaration("r",
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                worksheet.AddNamespaceDeclaration("x14ac", X14Ac2009SsNs);
+                worksheet.SetAttribute(new OpenXmlAttribute("mc", "Ignorable", MarkupCompatibilityNs, "x14ac"));
             }
 
             #endregion Worksheet
