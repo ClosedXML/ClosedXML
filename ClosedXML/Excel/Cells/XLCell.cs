@@ -140,17 +140,8 @@ namespace ClosedXML.Excel
 
         private XLRichText SliceRichText
         {
-            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].RichText;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
-                if (original.RichText != value)
-                {
-                    var modified = original;
-                    modified.RichText = value;
-                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
+            get => _cellsCollection.ValueSlice.GetRichText(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetRichText(SheetPoint, value);
         }
 
         private XLComment SliceComment

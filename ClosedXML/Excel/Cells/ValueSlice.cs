@@ -136,8 +136,23 @@ namespace ClosedXML.Excel
                     value = 0; // blank
             }
 
-            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId);
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId, original.RichText);
             _values.Set(point, in modified);
+        }
+
+        internal XLRichText GetRichText(XLSheetPoint point)
+        {
+            return _values[point].RichText;
+        }
+
+        internal void SetRichText(XLSheetPoint point, XLRichText richText)
+        {
+            ref readonly var original = ref _values[point];
+            if (original.RichText != richText)
+            {
+                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, original.SharedStringId, richText);
+                _values.Set(point, in modified);
+            }
         }
 
         internal int GetShareStringId(XLSheetPoint point)
@@ -151,7 +166,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.SharedStringId != sharedStringId)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId, original.RichText);
                 _values.Set(point, in modified);
             }
         }
@@ -166,7 +181,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.ModifiedAtVersion != modifiedAtVersion)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId, original.RichText);
                 _values.Set(point, in modified);
             }
         }
@@ -186,7 +201,7 @@ namespace ClosedXML.Excel
                 if (value.Type == XLDataType.Text)
                 {
                     _sst.DecreaseRef((int)value.Value);
-                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId, value.RichText);
                     _values.Set(e.Current, in blank);
                 }
             }
@@ -205,13 +220,15 @@ namespace ClosedXML.Excel
             internal readonly XLDataType Type;
             internal readonly long ModifiedAtVersion;
             internal readonly int SharedStringId;
+            internal readonly XLRichText RichText;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId)
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, XLRichText richText)
             {
                 Value = value;
                 Type = type;
                 ModifiedAtVersion = modifiedAtVersion;
                 SharedStringId = sharedStringId;
+                RichText = richText;
             }
         }
     }
