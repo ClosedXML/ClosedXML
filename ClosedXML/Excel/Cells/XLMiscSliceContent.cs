@@ -11,9 +11,9 @@
             set => _inlineString = !value;
         }
 
-        internal XLComment Comment { get; set; }
+        internal XLComment? Comment { get; set; }
 
-        internal XLHyperlink Hyperlink { get; set; }
+        internal XLHyperlink? Hyperlink { get; set; }
 
         internal uint? CellMetaIndex { get; set; }
 

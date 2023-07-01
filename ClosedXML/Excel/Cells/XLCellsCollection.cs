@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
 
         internal Slice<XLCellFormula> FormulaSlice { get; } = new();
 
-        internal Slice<XLStyleValue> StyleSlice { get; } = new();
+        internal Slice<XLStyleValue?> StyleSlice { get; } = new();
 
         internal Slice<XLMiscSliceContent> MiscSlice { get; } = new();
 

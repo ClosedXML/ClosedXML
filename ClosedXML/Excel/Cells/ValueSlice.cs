@@ -140,15 +140,15 @@ namespace ClosedXML.Excel
             _values.Set(point, in modified);
         }
 
-        internal XLRichText GetRichText(XLSheetPoint point)
+        internal XLImmutableRichText? GetRichText(XLSheetPoint point)
         {
             return _values[point].RichText;
         }
 
-        internal void SetRichText(XLSheetPoint point, XLRichText richText)
+        internal void SetRichText(XLSheetPoint point, XLImmutableRichText? richText)
         {
             ref readonly var original = ref _values[point];
-            if (original.RichText != richText)
+            if (!ReferenceEquals(original.RichText, richText))
             {
                 var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, original.SharedStringId, richText);
                 _values.Set(point, in modified);
@@ -220,9 +220,9 @@ namespace ClosedXML.Excel
             internal readonly XLDataType Type;
             internal readonly long ModifiedAtVersion;
             internal readonly int SharedStringId;
-            internal readonly XLRichText RichText;
+            internal readonly XLImmutableRichText? RichText;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, XLRichText richText)
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, XLImmutableRichText? richText)
             {
                 Value = value;
                 Type = type;

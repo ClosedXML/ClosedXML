@@ -138,7 +138,7 @@ namespace ClosedXML.Excel
             set => _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
         }
 
-        private XLRichText SliceRichText
+        private XLImmutableRichText SliceRichText
         {
             get => _cellsCollection.ValueSlice.GetRichText(SheetPoint);
             set => _cellsCollection.ValueSlice.SetRichText(SheetPoint, value);
@@ -257,17 +257,24 @@ namespace ClosedXML.Excel
 
         public XLRichText GetRichText()
         {
-            return SliceRichText ?? CreateRichText();
+            var sliceRichText = SliceRichText;
+            if (sliceRichText is not null)
+                return new XLRichText(this, sliceRichText);
+
+            return CreateRichText();
         }
 
         public XLRichText CreateRichText()
         {
-            var style = GetStyleForRead();
-            SliceRichText = Value.Type == XLDataType.Blank
-                ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
-                : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-            SliceCellValue = SliceRichText.Text;
-            return SliceRichText;
+            var font = new XLFont(GetStyleForRead().Font.Key);
+
+            // Don't include rich text string with 0 length to a new rich text
+            var richText = DataType == XLDataType.Blank
+                ? new XLRichText(this, font)
+                : new XLRichText(this, GetFormattedString(), font);
+            SliceRichText = new XLImmutableRichText(richText);
+            SliceCellValue = richText.Text;
+            return richText;
         }
 
         #region IXLCell Members
@@ -1079,10 +1086,7 @@ namespace ClosedXML.Excel
 
         IXLRichText IXLCell.GetRichText() => GetRichText();
 
-        public bool HasRichText
-        {
-            get { return SliceRichText != null; }
-        }
+        public bool HasRichText => SliceRichText is not null;
 
         IXLRichText IXLCell.CreateRichText() => CreateRichText();
 
@@ -1121,7 +1125,7 @@ namespace ClosedXML.Excel
         {
             bool isValueEmpty;
             if (HasRichText)
-                isValueEmpty = SliceRichText.Length == 0;
+                isValueEmpty = SliceRichText.Text.Length == 0;
             else
             {
                 isValueEmpty = SliceCellValue.Type switch
@@ -1587,7 +1591,7 @@ namespace ClosedXML.Excel
         {
             SliceCellValue = source.SliceCellValue;
             FormulaR1C1 = source.FormulaR1C1;
-            SliceRichText = source.SliceRichText == null ? null : new XLRichText(this, source.SliceRichText, source.Style.Font);
+            SliceRichText = source.SliceRichText;
             SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
             if (source.SliceHyperlink != null)
             {
@@ -2246,10 +2250,11 @@ namespace ClosedXML.Excel
             var richText = SliceRichText;
             if (richText is not null)
             {
-                foreach (var richString in richText)
+                foreach (var richTextRun in richText.Runs)
                 {
-                    IXLFontBase font = richString;
-                    AddGlyphs(richString.Text, font, engine, dpi, output);
+                    var text = richText.GetRunText(richTextRun);
+                    var font = new XLFont(richTextRun.Font.Key);
+                    AddGlyphs(text, font, engine, dpi, output);
                 }
             }
             else
