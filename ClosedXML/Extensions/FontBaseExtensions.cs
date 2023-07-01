@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 
 namespace ClosedXML.Excel
@@ -19,6 +17,7 @@ namespace ClosedXML.Excel
             font.FontName = sourceFont.FontName;
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
             font.FontCharSet = sourceFont.FontCharSet;
+            font.FontScheme = sourceFont.FontScheme;
         }
     }
 }

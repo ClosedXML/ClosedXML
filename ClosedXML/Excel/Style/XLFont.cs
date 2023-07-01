@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace ClosedXML.Excel
@@ -82,7 +83,26 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLFont(XLStyle? style = null, IXLFont? d = null) : this(style, GenerateKey(d))
+        /// <summary>
+        /// Create a new font that is attached to a style and the changes to the font object are propagated to the style.
+        /// </summary>
+        /// <param name="style">The container style that will be modified by changes of created <c>XLFont</c>.</param>
+        public XLFont(XLStyle style) : this(style, GenerateKey(style.Font))
+        {
+        }
+
+        /// <summary>
+        /// Create a new font. The changes to the object are not propagated to a style.
+        /// </summary>
+        public XLFont(IXLFontBase font) : this(null, GenerateKey(font))
+        {
+        }
+
+        public XLFont(XLFontKey key) : this(null, XLFontValue.FromKey(ref key))
+        {
+        }
+
+        private XLFont() : this(null, GenerateKey(null))
         {
         }
 
@@ -337,7 +357,7 @@ namespace ClosedXML.Excel
             sb.Append("-");
             sb.Append(Shadow.ToString());
             sb.Append("-");
-            sb.Append(FontSize.ToString());
+            sb.Append(FontSize.ToString(CultureInfo.InvariantCulture));
             sb.Append("-");
             sb.Append(FontColor);
             sb.Append("-");
