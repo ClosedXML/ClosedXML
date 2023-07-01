@@ -5,8 +5,6 @@
         // Must be as flag for inline string, so the default value is false => ShareString is true by default 
         private bool _inlineString;
 
-        internal XLRichText RichText { get; set; }
-
         internal bool ShareString
         {
             get => !_inlineString;
