@@ -273,7 +273,6 @@ namespace ClosedXML.Excel
                 ? new XLRichText(this, font)
                 : new XLRichText(this, GetFormattedString(), font);
             SliceRichText = new XLImmutableRichText(richText);
-            SliceCellValue = richText.Text;
             return richText;
         }
 
@@ -328,7 +327,6 @@ namespace ClosedXML.Excel
                     break;
             }
 
-            SliceRichText = null;
             FormulaA1 = null;
 
             if (setTableHeader)
@@ -922,7 +920,6 @@ namespace ClosedXML.Excel
                 if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
                     SetHyperlink(null);
-                    SliceRichText = null;
                     SliceCellValue = Blank.Value;
                     FormulaA1 = String.Empty;
                 }
@@ -1123,18 +1120,12 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            bool isValueEmpty;
-            if (HasRichText)
-                isValueEmpty = SliceRichText.Text.Length == 0;
-            else
+            var isValueEmpty = SliceCellValue.Type switch
             {
-                isValueEmpty = SliceCellValue.Type switch
-                {
-                    XLDataType.Blank => true,
-                    XLDataType.Text => SliceCellValue.GetText().Length == 0,
-                    _ => false
-                };
-            }
+                XLDataType.Blank => true,
+                XLDataType.Text => SliceCellValue.GetText().Length == 0,
+                _ => false
+            };
 
             if (!isValueEmpty || HasFormula)
                 return false;
@@ -1589,9 +1580,14 @@ namespace ClosedXML.Excel
 
         internal void CopyValuesFrom(XLCell source)
         {
-            SliceCellValue = source.SliceCellValue;
+            // Rich text is basically a super set of a value. Setting a value would override rich text and vice versa.
+            var sourceRichText = source.SliceRichText;
+            if (sourceRichText is null)
+                SliceCellValue = source.SliceCellValue;
+            else
+                SliceRichText = sourceRichText;
+
             FormulaR1C1 = source.FormulaR1C1;
-            SliceRichText = source.SliceRichText;
             SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
             if (source.SliceHyperlink != null)
             {

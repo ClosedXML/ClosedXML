@@ -136,23 +136,38 @@ namespace ClosedXML.Excel
                     value = 0; // blank
             }
 
-            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId, original.RichText);
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId);
             _values.Set(point, in modified);
         }
 
         internal XLImmutableRichText? GetRichText(XLSheetPoint point)
         {
-            return _values[point].RichText;
+            ref readonly var cellValue = ref _values[point];
+            if (cellValue.Type != XLDataType.Text)
+                return null;
+
+            var value = cellValue.Value;
+            return _sst.GetRichText((int)value);
         }
 
-        internal void SetRichText(XLSheetPoint point, XLImmutableRichText? richText)
+        internal void SetRichText(XLSheetPoint point, XLImmutableRichText richText)
         {
+            if (richText is null)
+                throw new ArgumentNullException(nameof(richText));
+
             ref readonly var original = ref _values[point];
-            if (!ReferenceEquals(original.RichText, richText))
+
+            // If original value was a text (no matter if plain or rich text),
+            // dereference because it's being replaced.
+            if (original.Type == XLDataType.Text)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, original.SharedStringId, richText);
-                _values.Set(point, in modified);
+                var originalId = (int)original.Value;
+                _sst.DecreaseRef(originalId);
             }
+
+            var richTextId = _sst.IncreaseRef(richText);
+            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.SharedStringId);
+            _values.Set(point, modified);
         }
 
         internal int GetShareStringId(XLSheetPoint point)
@@ -166,7 +181,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.SharedStringId != sharedStringId)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId, original.RichText);
+                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId);
                 _values.Set(point, in modified);
             }
         }
@@ -181,7 +196,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.ModifiedAtVersion != modifiedAtVersion)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId, original.RichText);
+                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId);
                 _values.Set(point, in modified);
             }
         }
@@ -201,7 +216,7 @@ namespace ClosedXML.Excel
                 if (value.Type == XLDataType.Text)
                 {
                     _sst.DecreaseRef((int)value.Value);
-                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId, value.RichText);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId);
                     _values.Set(e.Current, in blank);
                 }
             }
@@ -220,15 +235,13 @@ namespace ClosedXML.Excel
             internal readonly XLDataType Type;
             internal readonly long ModifiedAtVersion;
             internal readonly int SharedStringId;
-            internal readonly XLImmutableRichText? RichText;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, XLImmutableRichText? richText)
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId)
             {
                 Value = value;
                 Type = type;
                 ModifiedAtVersion = modifiedAtVersion;
                 SharedStringId = sharedStringId;
-                RichText = richText;
             }
         }
     }
