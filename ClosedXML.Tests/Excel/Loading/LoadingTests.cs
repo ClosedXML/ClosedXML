@@ -520,6 +520,31 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CorrectlyLoadThemeColors()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\ThemeColors\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                var c = ws.Cell("A1");
+                var themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent2, themeColor);
+                Assert.AreEqual("FFED7D31", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
+
+                c = ws.Cell("A2");
+                themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent4, themeColor);
+                Assert.AreEqual("FFFFC000", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
+
+                c = ws.Cell("A3");
+                themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent6, themeColor);
+                Assert.AreEqual("FF70AD47", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
+            }
+        }
+
+        [Test]
         public void CorrectlyLoadMergedCellsBorder()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\MergedCellsBorder\inputfile.xlsx")))

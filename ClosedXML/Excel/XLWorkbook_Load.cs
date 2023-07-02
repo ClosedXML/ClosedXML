@@ -101,6 +101,8 @@ namespace ClosedXML.Excel
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
             }
 
+            LoadWorkbookTheme(dSpreadsheet.WorkbookPart?.ThemePart, this);
+
             if (dSpreadsheet.CustomFilePropertiesPart != null)
             {
                 foreach (var m in dSpreadsheet.CustomFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
@@ -2809,6 +2811,76 @@ namespace ClosedXML.Excel
 
                 slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
                     .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+            }
+        }
+
+        private static void LoadWorkbookTheme(ThemePart tp, XLWorkbook wb)
+        {
+            if (tp == null) return;
+
+            var colorScheme = tp.Theme.ThemeElements.ColorScheme;
+            if (colorScheme != null)
+            {
+                var background1 = colorScheme.Light1Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(background1))
+                {
+                    wb.Theme.Background1 = XLColor.FromHtml("#FF" + background1);
+                }
+                var text1 = colorScheme.Dark1Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(text1))
+                {
+                    wb.Theme.Text1 = XLColor.FromHtml("#FF" + text1);
+                }
+                var background2 = colorScheme.Light2Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(background2))
+                {
+                    wb.Theme.Background2 = XLColor.FromHtml("#FF" + background2);
+                }
+                var text2 = colorScheme.Dark2Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(text2))
+                {
+                    wb.Theme.Text2 = XLColor.FromHtml("#FF" + text2);
+                }
+                var accent1 = colorScheme.Accent1Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent1))
+                {
+                    wb.Theme.Accent1 = XLColor.FromHtml("#FF" + accent1);
+                }
+                var accent2 = colorScheme.Accent2Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent2))
+                {
+                    wb.Theme.Accent2 = XLColor.FromHtml("#FF" + accent2);
+                }
+                var accent3 = colorScheme.Accent3Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent3))
+                {
+                    wb.Theme.Accent3 = XLColor.FromHtml("#FF" + accent3);
+                }
+                var accent4 = colorScheme.Accent4Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent4))
+                {
+                    wb.Theme.Accent4 = XLColor.FromHtml("#FF" + accent4);
+                }
+                var accent5 = colorScheme.Accent5Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent5))
+                {
+                    wb.Theme.Accent5 = XLColor.FromHtml("#FF" + accent5);
+                }
+                var accent6 = colorScheme.Accent6Color?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(accent6))
+                {
+                    wb.Theme.Accent6 = XLColor.FromHtml("#FF" + accent6);
+                }
+                var hyperlink = colorScheme.Hyperlink?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(hyperlink))
+                {
+                    wb.Theme.Hyperlink = XLColor.FromHtml("#FF" + hyperlink);
+                }
+                var followedHyperlink = colorScheme.FollowedHyperlinkColor?.RgbColorModelHex?.Val?.Value;
+                if (!string.IsNullOrEmpty(followedHyperlink))
+                {
+                    wb.Theme.FollowedHyperlink = XLColor.FromHtml("#FF" + followedHyperlink);
+                }
             }
         }
 
