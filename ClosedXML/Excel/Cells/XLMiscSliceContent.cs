@@ -2,15 +2,6 @@
 {
     internal struct XLMiscSliceContent
     {
-        // Must be as flag for inline string, so the default value is false => ShareString is true by default 
-        private bool _inlineString;
-
-        internal bool ShareString
-        {
-            get => !_inlineString;
-            set => _inlineString = !value;
-        }
-
         internal XLComment? Comment { get; set; }
 
         internal XLHyperlink? Hyperlink { get; set; }

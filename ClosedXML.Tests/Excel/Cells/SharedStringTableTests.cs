@@ -28,7 +28,7 @@ namespace ClosedXML.Tests.Excel.Cells
         public void CanAccessTextThroughId()
         {
             var sst = new SharedStringTable();
-            var id = sst.IncreaseRef("test");
+            var id = sst.IncreaseRef("test", false);
             Assert.AreEqual("test", sst[id]);
             Assert.AreEqual(1, sst.Count);
         }
@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.Cells
         public void TextsWithoutReferenceAreRemoved()
         {
             var sst = new SharedStringTable();
-            var id = sst.IncreaseRef("test");
+            var id = sst.IncreaseRef("test", false);
             sst.DecreaseRef(id);
 
             Assert.AreEqual(0, sst.Count);
@@ -49,9 +49,9 @@ namespace ClosedXML.Tests.Excel.Cells
         {
             const string text = "test";
             var sst = new SharedStringTable();
-            var id = sst.IncreaseRef(text);
+            var id = sst.IncreaseRef(text, false);
 
-            sst.IncreaseRef(text);
+            sst.IncreaseRef(text, false);
             Assert.AreEqual(text, sst[id]);
             Assert.AreEqual(1, sst.Count);
 
@@ -59,7 +59,7 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.AreEqual(text, sst[id]);
             Assert.AreEqual(1, sst.Count);
 
-            sst.IncreaseRef(text);
+            sst.IncreaseRef(text, false);
             Assert.AreEqual(text, sst[id]);
             Assert.AreEqual(1, sst.Count);
 
@@ -75,16 +75,16 @@ namespace ClosedXML.Tests.Excel.Cells
         public void FreedIdCanBeReusedForDifferentText()
         {
             var sst = new SharedStringTable();
-            sst.IncreaseRef("zero");
-            var originalId = sst.IncreaseRef("original");
-            var laterId = sst.IncreaseRef("two");
+            sst.IncreaseRef("zero", false);
+            var originalId = sst.IncreaseRef("original", false);
+            var laterId = sst.IncreaseRef("two", false);
 
             Assert.That(laterId, Is.GreaterThan(originalId));
 
             sst.DecreaseRef(originalId);
             Assert.Throws<ArgumentException>(() => _ = sst[originalId]);
 
-            var replacementId = sst.IncreaseRef("replacement");
+            var replacementId = sst.IncreaseRef("replacement", false);
             Assert.AreEqual(originalId, replacementId);
             Assert.AreEqual("replacement", sst[replacementId]);
         }
@@ -93,7 +93,7 @@ namespace ClosedXML.Tests.Excel.Cells
         public void DereferencingFreedIdThrows()
         {
             var sst = new SharedStringTable();
-            var id = sst.IncreaseRef("test");
+            var id = sst.IncreaseRef("test", false);
             sst.DecreaseRef(id);
             Assert.Throws<InvalidOperationException>(() => sst.DecreaseRef(id));
         }

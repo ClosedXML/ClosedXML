@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
