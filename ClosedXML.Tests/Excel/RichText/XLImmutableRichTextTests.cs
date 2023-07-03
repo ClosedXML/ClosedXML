@@ -22,25 +22,25 @@ namespace ClosedXML.Tests.Excel.RichText
                 .Add(@"konnichi wa", 0, 6); // world in hiragana
 
             // Assert equal
-            var immutableRichText = new XLImmutableRichText(richText);
-            var equalImmutableRichText = new XLImmutableRichText(richText);
+            var immutableRichText = XLImmutableRichText.Create(richText);
+            var equalImmutableRichText = XLImmutableRichText.Create(richText);
             Assert.AreEqual(immutableRichText, equalImmutableRichText);
 
             // Different font of a first run
             richText.ElementAt(0).SetBold(false);
-            var withDifferentTextRunFont = new XLImmutableRichText(richText);
+            var withDifferentTextRunFont = XLImmutableRichText.Create(richText);
             Assert.AreNotEqual(immutableRichText, withDifferentTextRunFont);
             richText.ElementAt(0).SetBold(true);
 
             // Different phonetic properties
             richText.Phonetics.SetAlignment(XLPhoneticAlignment.Left);
-            var withDifferentPhoneticsProps = new XLImmutableRichText(richText);
+            var withDifferentPhoneticsProps = XLImmutableRichText.Create(richText);
             Assert.AreNotEqual(immutableRichText, withDifferentPhoneticsProps);
             richText.Phonetics.SetAlignment(XLPhoneticAlignment.Distributed);
 
             // Different phonetic runs
             richText.Phonetics.Add("せかい", 6, 8);
-            var withDifferentTextPhonetics = new XLImmutableRichText(richText);
+            var withDifferentTextPhonetics = XLImmutableRichText.Create(richText);
             Assert.AreNotEqual(immutableRichText, withDifferentTextPhonetics);
         }
     }

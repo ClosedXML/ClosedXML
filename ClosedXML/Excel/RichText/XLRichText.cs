@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
 
             _cell.SetOnlyValue(Text);
             var point = _cell.SheetPoint;
-            var richText = new XLImmutableRichText(this);
+            var richText = XLImmutableRichText.Create(this);
             _cell.Worksheet.Internals.CellsCollection.ValueSlice.SetRichText(point, richText);
         }
     }

@@ -263,7 +263,7 @@ namespace ClosedXML.Excel
             var richText = DataType == XLDataType.Blank
                 ? new XLRichText(this, font)
                 : new XLRichText(this, GetFormattedString(), font);
-            SliceRichText = new XLImmutableRichText(richText);
+            SliceRichText = XLImmutableRichText.Create(richText);
             return richText;
         }
 
