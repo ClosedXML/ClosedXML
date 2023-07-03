@@ -10,24 +10,25 @@ namespace ClosedXML.Excel.IO
 {
     internal class TextSerializer
     {
-        internal static void WriteRichTextElements(XmlWriter w, XLCell cell, SaveContext context)
+        internal static void WriteRichTextElements(XmlWriter w, XLImmutableRichText richText, SaveContext context)
         {
-            var richText = cell.GetRichText();
-            foreach (var rt in richText)
+            foreach (var textRun in richText.Runs)
             {
-                if (!String.IsNullOrEmpty(rt.Text))
+                var text = richText.GetRunText(textRun);
+                if (text.Length > 0)
                 {
-                    WriteRun(w, rt);
+                    WriteRun(w, text, textRun.Font);
                 }
             }
 
-            if (richText.HasPhonetics)
+            if (richText.PhoneticsProperties is not null)
             {
-                foreach (var p in richText.Phonetics)
+                var phoneticsProps = richText.PhoneticsProperties.Value;
+                foreach (var p in richText.PhoneticRuns)
                 {
                     w.WriteStartElement("rPh", Main2006SsNs);
-                    w.WriteAttribute("sb", p.Start);
-                    w.WriteAttribute("eb", p.End);
+                    w.WriteAttribute("sb", p.StartIndex);
+                    w.WriteAttribute("eb", p.EndIndex);
 
                     w.WriteStartElement("t", Main2006SsNs);
                     if (p.Text.PreserveSpaces())
@@ -38,40 +39,44 @@ namespace ClosedXML.Excel.IO
                     w.WriteEndElement(); // rPh
                 }
 
-                var fontKey = XLFont.GenerateKey(richText.Phonetics);
-                var f = XLFontValue.FromKey(ref fontKey);
-
-                if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
+                var font = phoneticsProps.Font;
+                if (!context.SharedFonts.TryGetValue(font, out FontInfo fi))
                 {
-                    fi = new FontInfo { Font = f };
-                    context.SharedFonts.Add(f, fi);
+                    fi = new FontInfo { Font = font };
+                    context.SharedFonts.Add(font, fi);
                 }
 
                 w.WriteStartElement("phoneticPr", Main2006SsNs);
                 w.WriteAttribute("fontId", fi.FontId);
 
-                if (richText.Phonetics.Alignment != XLPhoneticAlignment.Left)
-                    w.WriteAttributeString("alignment", richText.Phonetics.Alignment.ToOpenXmlString());
+                if (phoneticsProps.Alignment != XLPhoneticAlignment.Left)
+                    w.WriteAttributeString("alignment", phoneticsProps.Alignment.ToOpenXmlString());
 
-                if (richText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
-                    w.WriteAttributeString("type", richText.Phonetics.Type.ToOpenXmlString());
+                if (phoneticsProps.Type != XLPhoneticType.FullWidthKatakana)
+                    w.WriteAttributeString("type", phoneticsProps.Type.ToOpenXmlString());
 
                 w.WriteEndElement(); // phoneticPr
             }
         }
 
-        internal static void WriteRun(XmlWriter w, XLRichString rt)
+        internal static void WriteRun(XmlWriter w, XLImmutableRichText richText, XLImmutableRichText.RichTextRun run)
+        {
+            var runText = richText.GetRunText(run);
+            WriteRun(w, runText, run.Font);
+        }
+
+        private static void WriteRun(XmlWriter w, string text, XLFontValue font)
         {
             w.WriteStartElement("r", Main2006SsNs);
             w.WriteStartElement("rPr", Main2006SsNs);
 
-            if (rt.Bold)
+            if (font.Bold)
                 w.WriteEmptyElement("b");
 
-            if (rt.Italic)
+            if (font.Italic)
                 w.WriteEmptyElement("i");
 
-            if (rt.Strikethrough)
+            if (font.Strikethrough)
                 w.WriteEmptyElement("strike");
 
             // Three attributes are not stored/written:
@@ -80,31 +85,31 @@ namespace ClosedXML.Excel.IO
             // * extend - legacy compatibility setting for pre-xlsx Excels
             // None have sensible descriptions.
 
-            if (rt.Shadow)
+            if (font.Shadow)
                 w.WriteEmptyElement("shadow");
 
-            if (rt.Underline != XLFontUnderlineValues.None)
-                WriteRunProperty(w, "u", rt.Underline.ToOpenXmlString());
+            if (font.Underline != XLFontUnderlineValues.None)
+                WriteRunProperty(w, "u", font.Underline.ToOpenXmlString());
 
-            WriteRunProperty(w, @"vertAlign", rt.VerticalAlignment.ToOpenXmlString());
-            WriteRunProperty(w, "sz", rt.FontSize);
-            w.WriteColor("color", rt.FontColor);
-            WriteRunProperty(w, "rFont", rt.FontName);
-            WriteRunProperty(w, "family", (Int32)rt.FontFamilyNumbering);
+            WriteRunProperty(w, @"vertAlign", font.VerticalAlignment.ToOpenXmlString());
+            WriteRunProperty(w, "sz", font.FontSize);
+            w.WriteColor("color", font.FontColor);
+            WriteRunProperty(w, "rFont", font.FontName);
+            WriteRunProperty(w, "family", (Int32)font.FontFamilyNumbering);
 
-            if (rt.FontCharSet != XLFontCharSet.Default)
-                WriteRunProperty(w, "charset", (int)rt.FontCharSet);
+            if (font.FontCharSet != XLFontCharSet.Default)
+                WriteRunProperty(w, "charset", (int)font.FontCharSet);
 
-            if (rt.FontScheme != XLFontScheme.None)
-                WriteRunProperty(w, "scheme", rt.FontScheme.ToOpenXml());
+            if (font.FontScheme != XLFontScheme.None)
+                WriteRunProperty(w, "scheme", font.FontScheme.ToOpenXml());
 
             w.WriteEndElement(); // rPr
 
             w.WriteStartElement("t", Main2006SsNs);
-            if (rt.Text.PreserveSpaces())
+            if (text.PreserveSpaces())
                 w.WritePreserveSpaceAttr();
 
-            w.WriteString(rt.Text);
+            w.WriteString(text);
 
             w.WriteEndElement(); // t
             w.WriteEndElement(); // r

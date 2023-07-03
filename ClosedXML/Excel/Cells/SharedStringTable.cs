@@ -98,9 +98,22 @@ namespace ClosedXML.Excel
         internal List<int> GetConsecutiveMap()
         {
             var map = new List<int>(_table.Count);
-            var a = 0;
+            var mappedStringId = 0;
             for (var i = 0; i < _table.Count; ++i)
-                map.Add(_table[i].RefCount > 0 && !_table[i].Text.Inline && !(_table[i].Text.Value is string s && s.Length == 0) ? a++ : -1);
+            {
+                var entry = _table[i];
+                var isShared =
+                    entry.RefCount > 0 && // Only used entry can be written to sst
+                    !entry.Text.Inline && // Inline texts shouldn't be written to sst
+                    !(
+                        (entry.Text.Value is string s && s.Length == 0)  // empty strings shouldn't be written to sst.
+                        ||
+                        (entry.Text.Value is XLImmutableRichText rt && rt.Text.Length == 0)  // empty rich text shouldn't be written to sst.
+                    );
+
+                map.Add(isShared ? mappedStringId++ : -1);
+            }
+
             return map;
         }
 
