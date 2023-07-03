@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
                     value = 0; // blank
             }
 
-            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId, original.Inline);
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.Inline);
             _values.Set(point, in modified);
         }
 
@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
             }
 
             var richTextId = _sst.IncreaseRef(richText, original.Inline);
-            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.SharedStringId, original.Inline);
+            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.Inline);
             _values.Set(point, modified);
         }
 
@@ -203,24 +203,17 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var modified = new XLValueSliceContent(cellValue, original.Type, original.ModifiedAtVersion, original.SharedStringId, inlineString);
+            var modified = new XLValueSliceContent(cellValue, original.Type, original.ModifiedAtVersion, inlineString);
             _values.Set(point, in modified);
         }
 
         internal int GetShareStringId(XLSheetPoint point)
         {
-            // This is the public id, separate from real sharedStringId stored in a value
-            return _values[point].SharedStringId;
-        }
+            ref readonly var value = ref _values[point];
+            if (value.Type != XLDataType.Text)
+                throw new InvalidOperationException($"Asking for a shared string id of a non-text cell {point}.");
 
-        internal void SetShareStringId(XLSheetPoint point, int sharedStringId)
-        {
-            ref readonly var original = ref _values[point];
-            if (original.SharedStringId != sharedStringId)
-            {
-                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId, original.Inline);
-                _values.Set(point, in modified);
-            }
+            return (int)_values[point].Value;
         }
 
         internal long GetModifiedAtVersion(XLSheetPoint point)
@@ -233,7 +226,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.ModifiedAtVersion != modifiedAtVersion)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId, original.Inline);
+                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.Inline);
                 _values.Set(point, in modified);
             }
         }
@@ -253,7 +246,7 @@ namespace ClosedXML.Excel
                 if (value.Type == XLDataType.Text)
                 {
                     _sst.DecreaseRef((int)value.Value);
-                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId, value.Inline);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.Inline);
                     _values.Set(e.Current, in blank);
                 }
             }
@@ -271,15 +264,13 @@ namespace ClosedXML.Excel
             /// </summary>
             internal readonly XLDataType Type;
             internal readonly long ModifiedAtVersion;
-            internal readonly int SharedStringId;
             internal readonly bool Inline;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, bool inline)
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, bool inline)
             {
                 Value = value;
                 Type = type;
                 ModifiedAtVersion = modifiedAtVersion;
-                SharedStringId = sharedStringId;
                 Inline = inline;
             }
         }

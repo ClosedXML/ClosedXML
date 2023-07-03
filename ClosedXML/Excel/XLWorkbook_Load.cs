@@ -1891,7 +1891,6 @@ namespace ClosedXML.Excel
                     && Int32.TryParse(cellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
                     && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                 {
-                    xlCell.SharedStringId = sharedStringId;
                     var sharedString = sharedStrings[sharedStringId];
 
                     SetCellText(xlCell, sharedString);

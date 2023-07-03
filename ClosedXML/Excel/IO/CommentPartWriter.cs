@@ -64,8 +64,9 @@ namespace ClosedXML.Excel.IO
                 // Excel ignores the shapeId attribute.
 
                 xml.WriteStartElement("text", Main2006SsNs);
-                foreach (var rt in comment)
-                    TextSerializer.WriteRun(xml, rt);
+                var richText = XLImmutableRichText.Create(comment);
+                foreach (var run in richText.Runs)
+                    TextSerializer.WriteRun(xml, richText, run);
 
                 xml.WriteEndElement(); // text
                 xml.WriteEndElement(); // comment

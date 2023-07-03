@@ -1263,16 +1263,18 @@ namespace ClosedXML.Excel.IO
                     {
                         if (xlCell.ShareString)
                         {
+                            var sharedStringId = context.SstMap[xlCell.SharedStringId];
                             w.WriteStartElement("v", Main2006SsNs);
-                            w.WriteValue(xlCell.SharedStringId);
+                            w.WriteValue(sharedStringId);
                             w.WriteEndElement();
                         }
                         else
                         {
                             w.WriteStartElement("is", Main2006SsNs);
-                            if (xlCell.HasRichText)
+                            var richText = xlCell.RichText;
+                            if (richText is not null)
                             {
-                                TextSerializer.WriteRichTextElements(w, xlCell, context);
+                                TextSerializer.WriteRichTextElements(w, richText, context);
                             }
                             else
                             {
