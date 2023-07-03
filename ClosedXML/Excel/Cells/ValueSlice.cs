@@ -107,13 +107,13 @@ namespace ClosedXML.Excel
                 {
                     // Change references. Increase first and then decrease to have fewer shuffles assigning same value to a cell.
                     var originalStringId = (int)original.Value;
-                    value = _sst.IncreaseRef(cellValue.GetText());
+                    value = _sst.IncreaseRef(cellValue.GetText(), original.Inline);
                     _sst.DecreaseRef(originalStringId);
                 }
                 else
                 {
                     // The original value wasn't a text -> just increase ref count to a new text
-                    value = _sst.IncreaseRef(cellValue.GetText());
+                    value = _sst.IncreaseRef(cellValue.GetText(), original.Inline);
                 }
             }
             else
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
                     value = 0; // blank
             }
 
-            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId);
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.SharedStringId, original.Inline);
             _values.Set(point, in modified);
         }
 
@@ -165,9 +165,46 @@ namespace ClosedXML.Excel
                 _sst.DecreaseRef(originalId);
             }
 
-            var richTextId = _sst.IncreaseRef(richText);
-            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.SharedStringId);
+            var richTextId = _sst.IncreaseRef(richText, original.Inline);
+            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.SharedStringId, original.Inline);
             _values.Set(point, modified);
+        }
+
+        internal bool GetShareString(XLSheetPoint point)
+        {
+            return !_values[point].Inline;
+        }
+
+        internal void SetShareString(XLSheetPoint point, bool shareString)
+        {
+            var inlineString = !shareString;
+            ref readonly var original = ref _values[point];
+            if (original.Inline == inlineString)
+                return;
+
+            var cellValue = original.Value;
+            if (original.Type == XLDataType.Text)
+            {
+                // Because inline is a part of SST, we have to update stringIds when inline flag changes.
+                var originalStringId = (int)cellValue;
+                var richText = _sst.GetRichText(originalStringId);
+                if (richText is not null)
+                {
+                    // Cell is storing rich text
+                    _sst.DecreaseRef(originalStringId);
+                    cellValue = _sst.IncreaseRef(richText, inlineString);
+                }
+                else
+                {
+                    // Cell is storing plain text.
+                    var originalString = _sst[originalStringId];
+                    _sst.DecreaseRef(originalStringId);
+                    cellValue = _sst.IncreaseRef(originalString, inlineString);
+                }
+            }
+
+            var modified = new XLValueSliceContent(cellValue, original.Type, original.ModifiedAtVersion, original.SharedStringId, inlineString);
+            _values.Set(point, in modified);
         }
 
         internal int GetShareStringId(XLSheetPoint point)
@@ -181,7 +218,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.SharedStringId != sharedStringId)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, original.ModifiedAtVersion, sharedStringId, original.Inline);
                 _values.Set(point, in modified);
             }
         }
@@ -196,7 +233,7 @@ namespace ClosedXML.Excel
             ref readonly var original = ref _values[point];
             if (original.ModifiedAtVersion != modifiedAtVersion)
             {
-                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId);
+                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.SharedStringId, original.Inline);
                 _values.Set(point, in modified);
             }
         }
@@ -216,7 +253,7 @@ namespace ClosedXML.Excel
                 if (value.Type == XLDataType.Text)
                 {
                     _sst.DecreaseRef((int)value.Value);
-                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.SharedStringId, value.Inline);
                     _values.Set(e.Current, in blank);
                 }
             }
@@ -235,13 +272,15 @@ namespace ClosedXML.Excel
             internal readonly XLDataType Type;
             internal readonly long ModifiedAtVersion;
             internal readonly int SharedStringId;
+            internal readonly bool Inline;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId)
+            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, int sharedStringId, bool inline)
             {
                 Value = value;
                 Type = type;
                 ModifiedAtVersion = modifiedAtVersion;
                 SharedStringId = sharedStringId;
+                Inline = inline;
             }
         }
     }

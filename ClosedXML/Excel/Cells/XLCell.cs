@@ -84,17 +84,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public bool ShareString
         {
-            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].ShareString;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
-                if (original.ShareString != value)
-                {
-                    var modified = original;
-                    modified.ShareString = value;
-                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
+            get => _cellsCollection.ValueSlice.GetShareString(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetShareString(SheetPoint, value);
         }
 
         /// <summary>
