@@ -15,50 +15,13 @@ namespace ClosedXML.Excel
     {
         private readonly RichTextRun[] _runs;
         private readonly PhoneticRun[] _phoneticRuns;
-
-        /// <summary>
-        /// Create an immutable rich text with same content as the original <paramref name="richText"/>.
-        /// </summary>
-        internal XLImmutableRichText(XLRichText richText)
+        
+        private XLImmutableRichText(string text, RichTextRun[] runs, PhoneticRun[] phoneticRuns, PhoneticProperties? phoneticsProps)
         {
-            Text = richText.Text;
-            _runs = new RichTextRun[richText.Count];
-            var runIdx = 0;
-            var charStartIdx = 0;
-            foreach (var richString in richText)
-            {
-                _runs[runIdx++] = new RichTextRun(richString, charStartIdx, richString.Text.Length);
-                charStartIdx += richString.Text.Length;
-            }
-
-            if (richText.HasPhonetics)
-            {
-                var rtPhonetics = richText.Phonetics;
-                _phoneticRuns = new PhoneticRun[rtPhonetics.Count];
-                var phoneticRunIdx = 0;
-                var prevPhoneticEndIdx = 0;
-                foreach (var phonetic in richText.Phonetics)
-                {
-                    if (phonetic.Start >= Text.Length)
-                        throw new ArgumentException("Phonetic run start index must be within the text boundaries.");
-
-                    if (phonetic.End > Text.Length)
-                        throw new ArgumentException("Phonetic run end index must be at most length of a text.");
-
-                    if (phonetic.Start < prevPhoneticEndIdx)
-                        throw new ArgumentException("Phonetic runs must be in ascending order and can't overlap.");
-
-                    _phoneticRuns[phoneticRunIdx++] = new PhoneticRun(phonetic.Text, phonetic.Start, phonetic.End);
-                    prevPhoneticEndIdx = phonetic.End;
-                }
-
-                PhoneticsProperties = new PhoneticProperties(rtPhonetics);
-            }
-            else
-            {
-                _phoneticRuns = Array.Empty<PhoneticRun>();
-                PhoneticsProperties = null;
-            }
+            Text = text;
+            _runs = runs;
+            _phoneticRuns = phoneticRuns;
+            PhoneticsProperties = phoneticsProps;
         }
 
         /// <summary>
@@ -118,6 +81,55 @@ namespace ClosedXML.Excel
 
         internal string GetRunText(RichTextRun run) => Text.Substring(run.StartIndex, run.Length);
 
+        /// <summary>
+        /// Create an immutable rich text with same content as the original <paramref name="formattedText"/>.
+        /// </summary>
+        internal static XLImmutableRichText Create<T>(XLFormattedText<T> formattedText)
+        {
+            var text = formattedText.Text;
+            var runs = new RichTextRun[formattedText.Count];
+            var runIdx = 0;
+            var charStartIdx = 0;
+            foreach (var richString in formattedText)
+            {
+                runs[runIdx++] = new RichTextRun(richString, charStartIdx, richString.Text.Length);
+                charStartIdx += richString.Text.Length;
+            }
+
+            PhoneticRun[] phoneticRuns;
+            PhoneticProperties? phoneticProps;
+            if (formattedText.HasPhonetics)
+            {
+                var rtPhonetics = formattedText.Phonetics;
+                phoneticRuns = new PhoneticRun[rtPhonetics.Count];
+                var phoneticRunIdx = 0;
+                var prevPhoneticEndIdx = 0;
+                foreach (var phonetic in formattedText.Phonetics)
+                {
+                    if (phonetic.Start >= text.Length)
+                        throw new ArgumentException("Phonetic run start index must be within the text boundaries.");
+
+                    if (phonetic.End > text.Length)
+                        throw new ArgumentException("Phonetic run end index must be at most length of a text.");
+
+                    if (phonetic.Start < prevPhoneticEndIdx)
+                        throw new ArgumentException("Phonetic runs must be in ascending order and can't overlap.");
+
+                    phoneticRuns[phoneticRunIdx++] = new PhoneticRun(phonetic.Text, phonetic.Start, phonetic.End);
+                    prevPhoneticEndIdx = phonetic.End;
+                }
+
+                phoneticProps = new PhoneticProperties(formattedText.Phonetics);
+            }
+            else
+            {
+                phoneticRuns = Array.Empty<PhoneticRun>();
+                phoneticProps = null;
+            }
+
+            return new XLImmutableRichText(text, runs, phoneticRuns, phoneticProps);
+        }
+        
         internal readonly struct RichTextRun : IEquatable<RichTextRun>
         {
             internal readonly int StartIndex;
