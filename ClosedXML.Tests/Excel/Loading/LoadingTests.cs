@@ -66,6 +66,26 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CorrectlyLoadValidationWithSheetReference()
+        {
+            // Arrange
+            var path = TestHelper.GetResourcePath(@"TryToLoad\ValidationWithSheetReference.xlsx");
+            using var stream = TestHelper.GetStreamFromResource(path);
+
+            // Act
+            using var wb = new XLWorkbook(stream);
+
+            // Assert
+            var ws = wb.Worksheet("UI Sheet");
+            var B2 = ws.Cell("B2");
+            Assert.AreEqual(XLAllowedValues.List, B2.GetDataValidation().AllowedValues);
+            Assert.AreEqual("$E$1:$E$4", B2.GetDataValidation().Value);
+            var A2 = ws.Cell("A2");
+            Assert.AreEqual(XLAllowedValues.List, A2.GetDataValidation().AllowedValues);
+            Assert.AreEqual("ValuesSheet!$A$1:$A$4", A2.GetDataValidation().Value);
+        }
+
+        [Test]
         public void CanLoadAndManipulateFileWithEmptyTable()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EmptyTable.xlsx")))

@@ -2666,6 +2666,32 @@ namespace ClosedXML.Excel
                 return;
             }
 
+            foreach (var dvs in extensions
+                .Descendants<X14.DataValidations>()
+                .SelectMany(dataValidations => dataValidations.Descendants<X14.DataValidation>()))
+            {
+                String txt = dvs.ReferenceSequence.InnerText;
+                if (String.IsNullOrWhiteSpace(txt)) continue;
+                foreach (var rangeAddress in txt.Split(' '))
+                {
+                    var dvt = new XLDataValidation(ws.Range(rangeAddress));
+                    ws.DataValidations.Add(dvt, skipIntersectionsCheck: true);
+                    if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
+                    if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
+                    if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
+                    if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
+                    if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
+                    if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
+                    if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
+                    if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
+                    if (dvs.ErrorStyle != null) dvt.ErrorStyle = dvs.ErrorStyle.Value.ToClosedXml();
+                    if (dvs.Type != null) dvt.AllowedValues = dvs.Type.Value.ToClosedXml();
+                    if (dvs.Operator != null) dvt.Operator = dvs.Operator.Value.ToClosedXml();
+                    if (dvs.DataValidationForumla1 != null) dvt.MinValue = dvs.DataValidationForumla1.InnerText;
+                    if (dvs.DataValidationForumla2 != null) dvt.MaxValue = dvs.DataValidationForumla2.InnerText;
+                }
+            }
+
             foreach (var conditionalFormattingRule in extensions
                 .Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
                 .Where(cf =>
