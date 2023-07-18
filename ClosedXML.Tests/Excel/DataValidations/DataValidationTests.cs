@@ -9,6 +9,30 @@ namespace ClosedXML.Tests.Excel.DataValidations
     [TestFixture]
     public class DataValidationTests
     {
+
+        [Test]
+        public void Validation_Reference_List_Values_From_Separate_Sheet()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet valuesSheet = wb.Worksheets.Add("ValuesSheet");
+            IXLCell cell = valuesSheet.Cell("E1");
+            cell.SetValue("Value 1");
+            cell = cell.CellBelow();
+            cell.SetValue("Value 2");
+            cell = cell.CellBelow();
+            cell.SetValue("Value 3");
+            cell = cell.CellBelow();
+            cell.SetValue("Value 4");
+
+            IXLWorksheet uiSheet = wb.Worksheets.Add("UI Sheet");
+            uiSheet.Cell("A1").SetValue("Cell below has validation with references to the 'ValuesSheet'.");
+            cell = uiSheet.Cell("A2");
+            cell.GetDataValidation().List(valuesSheet.Range("ValuesSheet!$E$1:$E$4"));
+
+            Assert.AreEqual(XLAllowedValues.List, cell.GetDataValidation().AllowedValues);
+            Assert.AreEqual("ValuesSheet!$E$1:$E$4", cell.GetDataValidation().Value);
+        }
+
         [Test]
         public void Validation_1()
         {
