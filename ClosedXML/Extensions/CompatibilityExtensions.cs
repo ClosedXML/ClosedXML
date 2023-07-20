@@ -23,7 +23,7 @@ namespace System.IO
 
 namespace System
 {
-    public static class StringCompatibilityExtensions
+    internal static class StringCompatibilityExtensions
     {
         public static bool Contains(this string s, char c)
         {
