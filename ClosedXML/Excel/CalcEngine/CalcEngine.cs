@@ -36,8 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Formula Parse(string expression)
         {
-            var cst = _parser.ParseCst(expression);
-            return _parser.ConvertToAst(cst);
+            return _parser.GetAst(expression);
         }
 
         /// <summary>

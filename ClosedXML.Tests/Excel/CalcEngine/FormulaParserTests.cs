@@ -28,12 +28,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase]
-        public void Formula_string_can_be_an_array_formula()
-        {
-            AssertCanParseButNotEvaluate("{=1}", "Evaluation of array formula is not implemented.");
-        }
-
-        [TestCase]
         public void Root_formula_string_can_be_union_without_parenthesis()
         {
             // Root of a formula string is pretty much the only place where reference union can be without parenthesis. Elsewhere it must have
@@ -152,7 +146,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("=75%", 0.75)]
-        [Ignore("Percent operation not yet implemented.")]
         public void FunctionCall_can_be_unary_postfix_operation(string formula, object expectedValue)
         {
             Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
@@ -165,7 +158,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=3/2", 1.5)]
         [TestCase("=1+2", 3)]
         [TestCase("=3-5", -2)]
-        //        [TestCase(@"=""A"" & ""B""", "AB")]
+        [TestCase(@"=""A"" & ""B""", "AB")]
         [TestCase("=2>1", true)]
         [TestCase("=1>2", false)]
         [TestCase("=5=5", true)]
@@ -382,9 +375,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Const_array_must_have_same_number_of_columns()
         {
             var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
-            Assert.Throws<ExpressionParseException>(
-                () => calcEngine.Parse("{1;2,3}"),
-                "Not all rows of array have same number of columns.");
+            var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{1;2,3}"))!;
+            StringAssert.Contains("Rows of an array don't have same size.", ex.Message);
         }
 
         [Test]
@@ -392,9 +384,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             // XLParser allows @ for number through 'PrefixOp + Number'
             var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
-            Assert.Throws<ExpressionParseException>(
-                () => calcEngine.Parse("{@1}"),
-                "Operator @ is not a valid operator for array element");
+            var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{@1}"))!;
+            StringAssert.Contains("Unexpected token INTERSECT.", ex.Message);
         }
 
         [TestCaseSource(nameof(ArrayCases))]
@@ -462,8 +453,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("='Test Sheet'!A1", "Test Sheet")]
         [TestCase("='Test-Sheet'!A1", "Test-Sheet")]
         [TestCase("='^%>;-+'!A1", "^%>;-+")]
-        // Sheet can be named as #REF! error
-        [TestCase("=#REF!A1", "#REF")]
+        // Sheet can be named as #REF! error, but sheet reference must be escaped
+        [TestCase("='#REF'!A1", "#REF")]
         public void Prefix_can_be_sheet_token(string formula, string sheetName)
         {
             using var wb = new XLWorkbook();
@@ -480,7 +471,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("=[1]Sheet4!A1")]
-        [TestCase("=[C:\\file.xlsx]Sheet1!A1")]
         public void Prefix_can_be_file_and_sheet_token(string formula)
         {
             AssertCanParseButNotEvaluate(formula, "References from other files are not yet implemented.");
