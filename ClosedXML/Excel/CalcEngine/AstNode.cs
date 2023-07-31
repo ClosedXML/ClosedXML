@@ -1,3 +1,4 @@
+using ClosedXML.Parser;
 using System;
 using System.Collections.Generic;
 
@@ -127,11 +128,11 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FunctionNode : ValueNode
     {
-        public FunctionNode(string name, List<ValueNode> parms) : this(null, name, parms)
+        public FunctionNode(string name, IReadOnlyList<ValueNode> parms) : this(null, name, parms)
         {
         }
 
-        public FunctionNode(PrefixNode? prefix, string name, List<ValueNode> parms)
+        public FunctionNode(PrefixNode? prefix, string name, IReadOnlyList<ValueNode> parms)
         {
             Prefix = prefix;
             Name = name;
@@ -145,7 +146,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public string Name { get; }
 
-        public List<ValueNode> Parameters { get; }
+        /// <summary>
+        /// AST nodes for arguments of the function.
+        /// </summary>
+        public IReadOnlyList<ValueNode> Parameters { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -204,7 +208,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class PrefixNode : AstNode
     {
-        public PrefixNode(FileNode? file, string sheet, string firstSheet, string lastSheet)
+        public PrefixNode(FileNode? file, string? sheet, string? firstSheet, string? lastSheet)
         {
             File = file;
             Sheet = sheet;
@@ -218,19 +222,19 @@ namespace ClosedXML.Excel.CalcEngine
         public FileNode? File { get; }
 
         /// <summary>
-        /// Name of the sheet, without ! or escaped quotes. Can be empty in some cases (e.g. reference to a named range in an another file).
+        /// Name of the sheet, without ! or escaped quotes. Can be null in some cases e.g. reference to a named range in an another file).
         /// </summary>
-        public string Sheet { get; }
+        public string? Sheet { get; }
 
         /// <summary>
         /// If the prefix is for 3D reference, name of first sheet. Empty otherwise.
         /// </summary>
-        public string FirstSheet { get; }
+        public string? FirstSheet { get; }
 
         /// <summary>
         /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
         /// </summary>
-        public string LastSheet { get; }
+        public string? LastSheet { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
@@ -342,19 +346,45 @@ namespace ClosedXML.Excel.CalcEngine
         }
     }
 
-    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet supported and
-    // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
     internal class StructuredReferenceNode : ValueNode
     {
-        public StructuredReferenceNode(PrefixNode prefix)
+        public StructuredReferenceNode(PrefixNode? prefix, string? table, StructuredReferenceArea area, string? firstColumn, string? lastColumn)
         {
             Prefix = prefix;
+            Table = table;
+            Area = area;
+            FirstColumn = firstColumn;
+            LastColumn = lastColumn;
         }
 
         /// <summary>
         /// Can be empty if no prefix available.
         /// </summary>
-        public PrefixNode Prefix { get; }
+        public PrefixNode? Prefix { get; }
+
+        /// <summary>
+        /// Table of the reference. It can be empty, if formula using the reference is within
+        /// the table itself (e.g. total formulas).
+        /// </summary>
+        public string? Table { get; }
+
+        /// <summary>
+        /// Area of the table that is considered for the range of cell of reference.
+        /// </summary>
+        public StructuredReferenceArea Area { get; }
+
+        /// <summary>
+        /// First column of column range. If the reference refers to the whole table,
+        /// the value is null.
+        /// </summary>
+        public string? FirstColumn { get; }
+
+        /// <summary>
+        /// Last column of column range. If structured reference refers only to one column,
+        /// it is same as <see cref="FirstColumn"/>. If the reference refers to the whole table,
+        /// the value is null.
+        /// </summary>
+        public string? LastColumn { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }

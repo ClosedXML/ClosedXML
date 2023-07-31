@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel.CalcEngine
