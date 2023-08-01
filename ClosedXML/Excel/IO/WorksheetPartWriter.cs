@@ -306,6 +306,39 @@ namespace ClosedXML.Excel.IO
 
             #endregion SheetViews
 
+            #region IgnoredErrors
+            {
+                if (xlWorksheet.IgnoredErrors.Any() &&
+                    !worksheet.Elements<IgnoredErrors>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.IgnoredErrors);
+                    worksheet.InsertAfter(new IgnoredErrors(), previousElement);
+                }
+
+                var ignoredErrorsElement = worksheet.Elements<IgnoredErrors>().FirstOrDefault();
+                if (ignoredErrorsElement != null)
+                {
+                    var items2Delete = ignoredErrorsElement.ChildElements.OfType<IgnoredError>().Where(x => XLIgnoredErrorOpenXmlMapper.IsKnownIgnoredError(x));
+                    foreach (var item in items2Delete)
+                        ignoredErrorsElement.RemoveChild(item);
+
+                    var item2Add = XLIgnoredErrorOpenXmlMapper.GetOpenXmlIgnoredErrors(xlWorksheet);
+                    foreach (var item in item2Add)
+                        ignoredErrorsElement.AppendChild(item);
+
+                    if (ignoredErrorsElement.HasChildren)
+                    {
+                        cm.SetElement(XLWorksheetContents.IgnoredErrors, ignoredErrorsElement);
+                    }
+                    else
+                    {
+                        worksheet.RemoveChild(ignoredErrorsElement);
+                        cm.SetElement(XLWorksheetContents.IgnoredErrors, null);
+                    }
+                }
+            }
+            #endregion IgnoredErrors
+
             var maxOutlineColumn = 0;
             if (xlWorksheet.ColumnCount() > 0)
                 maxOutlineColumn = xlWorksheet.GetMaxColumnOutline();

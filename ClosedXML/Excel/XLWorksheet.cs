@@ -60,6 +60,8 @@ namespace ClosedXML.Excel
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
             SheetView = new XLSheetView(this);
+            IgnoredErrors = new XLIgnoredErrors(this);
+
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
@@ -552,6 +554,10 @@ namespace ClosedXML.Excel
 
         public XLSheetView SheetView { get; private set; }
 
+        IXLIgnoredErrors IXLWorksheet.IgnoredErrors { get => IgnoredErrors; }
+
+        public XLIgnoredErrors IgnoredErrors { get; private set; }
+
         public IXLTables Tables { get; private set; }
 
         public IXLTable Table(Int32 index)
@@ -605,6 +611,7 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(targetSheet, SheetView);
+            targetSheet.IgnoredErrors = new XLIgnoredErrors(targetSheet, IgnoredErrors);
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
