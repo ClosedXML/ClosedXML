@@ -674,25 +674,15 @@ namespace ClosedXML.Excel
             foreach (var xlSheet in WorksheetsInternal.OrderBy<XLWorksheet, int>(w => w.Position))
             {
                 string rId;
-                if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
+                if (String.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
-                    rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-
-                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
-                        rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-
-                    xlSheet.SheetId = Int32.Parse(rId.Substring(3));
-                    xlSheet.RelId = rId;
+                    // Sheet isn't from loaded file and hasn't been saved yet.
+                    rId = xlSheet.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
                 }
                 else
                 {
-                    if (String.IsNullOrWhiteSpace(xlSheet.RelId))
-                    {
-                        rId = String.Concat("rId", xlSheet.SheetId);
-                        context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                    }
-                    else
-                        rId = xlSheet.RelId;
+                    // Keep same r:id from previous file
+                    rId = xlSheet.RelId;
                 }
 
                 if (workbook.Sheets.Cast<Sheet>().All(s => s.Id != rId))
@@ -701,7 +691,7 @@ namespace ClosedXML.Excel
                     {
                         Name = xlSheet.Name,
                         Id = rId,
-                        SheetId = (UInt32)xlSheet.SheetId
+                        SheetId = xlSheet.SheetId
                     };
 
                     workbook.Sheets.AppendChild(newSheet);
@@ -788,7 +778,7 @@ namespace ClosedXML.Excel
             var definedNames = new DefinedNames();
             foreach (var worksheet in WorksheetsInternal)
             {
-                var wsSheetId = (UInt32)worksheet.SheetId;
+                var wsSheetId = worksheet.SheetId;
                 UInt32 sheetId = 0;
                 foreach (var s in workbook.Sheets.Elements<Sheet>().TakeWhile(s => s.SheetId != wsSheetId))
                 {
@@ -962,7 +952,7 @@ namespace ClosedXML.Excel
                             var cc = new CalculationCell
                             {
                                 CellReference = c.Address.ToString(),
-                                SheetId = worksheet.SheetId
+                                SheetId = (Int32)worksheet.SheetId
                             };
 
                             cc.Array = true;
@@ -973,7 +963,7 @@ namespace ClosedXML.Excel
                                 calculationChain.AppendChild(new CalculationCell
                                 {
                                     CellReference = childCell.Address.ToString(),
-                                    SheetId = worksheet.SheetId,
+                                    SheetId = (Int32)worksheet.SheetId,
                                 });
                             }
                         }
@@ -983,7 +973,7 @@ namespace ClosedXML.Excel
                         calculationChain.AppendChild(new CalculationCell
                         {
                             CellReference = c.Address.ToString(),
-                            SheetId = worksheet.SheetId
+                            SheetId = (Int32)worksheet.SheetId
                         });
                     }
                 }

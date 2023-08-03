@@ -68,9 +68,11 @@ namespace ClosedXML.Excel
             foreach (var pc in PivotCachesInternal)
                 pc.WorkbookCacheRelId = null;
 
-            foreach (var ws in Worksheets.Cast<XLWorksheet>())
+            var sheetId = 1u;
+            foreach (var ws in WorksheetsInternal)
             {
-                ws.SheetId = 0;
+                // Ensure unique sheetId for each sheet. 
+                ws.SheetId = sheetId++;
                 ws.RelId = null;
 
                 foreach (var pt in ws.PivotTables.Cast<XLPivotTable>())
@@ -212,10 +214,9 @@ namespace ClosedXML.Excel
                 }
 
                 var sheetName = dSheet.Name;
-
-                var ws = (XLWorksheet)WorksheetsInternal.Add(sheetName, position);
+                var sheetId = dSheet.SheetId.Value;
+                var ws = WorksheetsInternal.Add(sheetName, position, sheetId);
                 ws.RelId = dSheet.Id;
-                ws.SheetId = (Int32)dSheet.SheetId.Value;
 
                 if (dSheet.State != null)
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
@@ -1638,7 +1639,7 @@ namespace ClosedXML.Excel
                     {
                         if (area.Contains("["))
                         {
-                            var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == (localSheetId + 1));
+                            var ws = WorksheetsInternal.FirstOrDefault<XLWorksheet>(w => w.SheetId == (localSheetId + 1));
                             if (ws != null)
                             {
                                 ws.PageSetup.PrintAreas.Add(area);

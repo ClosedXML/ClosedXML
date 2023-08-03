@@ -13,6 +13,11 @@ namespace ClosedXML.Excel
         private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>(StringComparer.OrdinalIgnoreCase);
         internal ICollection<String> Deleted { get; private set; }
 
+        /// <summary>
+        /// SheetId that will be assigned to next created sheet.
+        /// </summary>
+        private UInt32 _nextSheetId = 1;
+
         #region Constructor
 
         public XLWorksheets(XLWorkbook workbook)
@@ -93,7 +98,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(String sheetName)
         {
-            var sheet = new XLWorksheet(sheetName, _workbook);
+            var sheet = new XLWorksheet(sheetName, _workbook, GetNextSheetId());
             Add(sheetName, sheet);
             sheet._position = _worksheets.Count + _workbook.UnsupportedSheets.Count;
             return sheet;
@@ -101,9 +106,17 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(String sheetName, Int32 position)
         {
+            return Add(sheetName, position, GetNextSheetId());
+        }
+
+        internal XLWorksheet Add(String sheetName, Int32 position, UInt32 sheetId)
+        {
             _worksheets.Values.Where(w => w._position >= position).ForEach(w => w._position += 1);
             _workbook.UnsupportedSheets.Where(w => w.Position >= position).ForEach(w => w.Position += 1);
-            var sheet = new XLWorksheet(sheetName, _workbook);
+
+            // If the loaded sheetId is greater than current, just make sure our next sheetId is even bigger.
+            _nextSheetId = Math.Max(_nextSheetId, sheetId + 1);
+            var sheet = new XLWorksheet(sheetName, _workbook, sheetId);
             Add(sheetName, sheet);
             sheet._position = position;
             return sheet;
@@ -204,6 +217,8 @@ namespace ClosedXML.Excel
             }
             return sheetName;
         }
+
+        private UInt32 GetNextSheetId() => _nextSheetId++;
 
         #endregion Private members
     }

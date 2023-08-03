@@ -134,6 +134,23 @@ namespace ClosedXML.Tests
         }
 
         [Test]
+        public void SheetIdIsNotReused()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = (XLWorksheet)wb.AddWorksheet();
+            var ws2 = (XLWorksheet)wb.AddWorksheet();
+            var ws3 = (XLWorksheet)wb.AddWorksheet();
+
+            Assert.AreEqual(1, ws1.SheetId);
+            Assert.AreEqual(2, ws2.SheetId);
+            Assert.AreEqual(3, ws3.SheetId);
+
+            ws3.Delete();
+            var ws4 = (XLWorksheet)wb.AddWorksheet();
+            Assert.AreEqual(4, ws4.SheetId);
+        }
+
+        [Test]
         public void AddingDuplicateSheetNameThrowsException()
         {
             using (var wb = new XLWorkbook())
