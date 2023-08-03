@@ -671,7 +671,7 @@ namespace ClosedXML.Excel
                 sheet.Name = wks.Name;
             }
 
-            foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
+            foreach (var xlSheet in WorksheetsInternal.OrderBy<XLWorksheet, int>(w => w.Position))
             {
                 string rId;
                 if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
