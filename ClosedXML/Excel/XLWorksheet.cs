@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLWorksheet(String sheetName, XLWorkbook workbook)
+        public XLWorksheet(String sheetName, XLWorkbook workbook, UInt32 sheetId)
             : base(
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
@@ -46,6 +46,7 @@ namespace ClosedXML.Excel
                 (workbook.Style as XLStyle).Value)
         {
             Workbook = workbook;
+            SheetId = sheetId;
             InvalidAddress = new XLAddress(this, 0, 0, false, false);
 
             var firstAddress = new XLAddress(this, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
@@ -151,8 +152,26 @@ namespace ClosedXML.Excel
 
         internal Boolean ColumnWidthChanged { get; set; }
 
-        public Int32 SheetId { get; set; }
+        /// <summary>
+        /// <para>
+        /// The id of a sheet that is unique across the workbook, kept across load/save.
+        /// The ids of sheets are not reused. That is important for referencing the sheet
+        /// range/point through sheetId. If sheetIds were reused, references would refer
+        /// to the wrong sheet after the original sheetId was reused. Excel also doesn't
+        /// reuse sheetIds.
+        /// </para>
+        /// <para>
+        /// Referencing sheet through non-reused sheetIds means that reference can survive
+        /// sheet renaming without any changes. Always &gt; 0 (Excel will crash on 0).
+        /// </para>
+        /// </summary>
+        internal UInt32 SheetId { get; set; }
 
+        /// <summary>
+        /// A cached <c>r:id</c> of the sheet from the file. If the sheet is a new one (not
+        /// yet saved), the value is null until workbook is saved. Use <see cref="SheetId"/>
+        /// instead is possible. Mostly for removing deleted sheet parts during save.
+        /// </summary>
         internal String RelId { get; set; }
 
         public XLDataValidations DataValidations { get; private set; }
