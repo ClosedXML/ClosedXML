@@ -258,11 +258,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ReferenceNode : ValueNode
     {
-        public ReferenceNode(PrefixNode? prefix, ReferenceItemType type, string address)
+        public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea)
         {
             Prefix = prefix;
-            Type = type;
-            Address = address;
+            Type = GetReferenceType(referenceArea);
+            Address = referenceArea.GetDisplayStringA1();
+            ReferenceArea = referenceArea;
         }
 
         /// <summary>
@@ -277,6 +278,11 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public string Address { get; }
 
+        /// <summary>
+        /// An area from a parser.
+        /// </summary>
+        public ReferenceArea ReferenceArea { get; }
+
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
         public AnyValue GetReference(CalcContext ctx)
@@ -289,6 +295,19 @@ namespace ClosedXML.Excel.CalcEngine
 
             // TODO: XLRangeAddress can parse all types of reference item type, utilize known type for faster parsing + cache
             return new Reference(new XLRangeAddress((XLWorksheet)ws!, Address));
+        }
+
+        private static ReferenceItemType GetReferenceType(ReferenceArea area)
+        {
+            // If row is not specified, then it's only range of rows.
+            if (area.First.ColumnType == ReferenceAxisType.None)
+                return ReferenceItemType.HRange;
+
+            // If column is not specified, then it's only range of columns.
+            if (area.First.RowType == ReferenceAxisType.None)
+                return ReferenceItemType.VRange;
+
+            return ReferenceItemType.Cell;
         }
     }
 

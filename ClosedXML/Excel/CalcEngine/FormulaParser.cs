@@ -108,26 +108,20 @@ namespace ClosedXML.Excel.CalcEngine
 
             public ValueNode Reference(List<FormulaFlags> context, ReferenceArea area)
             {
-                var type = GetReferenceType(area);
-                var address = area.GetDisplayStringA1();
-                return new ReferenceNode(null, type, address);
+                return new ReferenceNode(null, area);
             }
 
             public ValueNode SheetReference(List<FormulaFlags> context, string sheet, ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, sheet, null, null);
-                var type = GetReferenceType(area);
-                var address = area.GetDisplayStringA1();
-                return new ReferenceNode(prefixNode, type, address);
+                return new ReferenceNode(prefixNode, area);
             }
 
             public ValueNode Reference3D(List<FormulaFlags> context, string firstSheet, string lastSheet,
                 ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, null, firstSheet, lastSheet);
-                var type = GetReferenceType(area);
-                var address = area.GetDisplayStringA1();
-                return new ReferenceNode(prefixNode, type, address);
+                return new ReferenceNode(prefixNode, area);
             }
 
             public ValueNode ExternalSheetReference(List<FormulaFlags> context, int workbookIndex, string sheet,
@@ -135,9 +129,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var fileNode = new FileNode(workbookIndex);
                 var prefixNode = new PrefixNode(fileNode, sheet, null, null);
-                var type = GetReferenceType(area);
-                var address = area.GetDisplayStringA1();
-                return new ReferenceNode(prefixNode, type, address);
+                return new ReferenceNode(prefixNode, area);
             }
 
             public ValueNode ExternalReference3D(List<FormulaFlags> context, int workbookIndex, string firstSheet,
@@ -145,9 +137,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var fileNode = new FileNode(workbookIndex);
                 var prefixNode = new PrefixNode(fileNode, null, firstSheet, lastSheet);
-                var type = GetReferenceType(area);
-                var address = area.GetDisplayStringA1();
-                return new ReferenceNode(prefixNode, type, address);
+                return new ReferenceNode(prefixNode, area);
             }
 
             public ValueNode Function(List<FormulaFlags> context, ReadOnlySpan<char> name,
@@ -269,19 +259,6 @@ namespace ClosedXML.Excel.CalcEngine
             public ValueNode Nested(List<FormulaFlags> context, ValueNode node)
             {
                 return node;
-            }
-
-            private static ReferenceItemType GetReferenceType(ReferenceArea area)
-            {
-                // If row is not specified, then it's only range of rows.
-                if (area.First.ColumnType == ReferenceAxisType.None)
-                    return ReferenceItemType.HRange;
-
-                // If column is not specified, then it's only range of columns.
-                if (area.First.RowType == ReferenceAxisType.None)
-                    return ReferenceItemType.VRange;
-
-                return ReferenceItemType.Cell;
             }
 
             private FunctionNode GetFunctionNode(List<FormulaFlags> context, PrefixNode? prefixNode, string functionName,
