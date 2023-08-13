@@ -261,7 +261,6 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea)
         {
             Prefix = prefix;
-            Type = GetReferenceType(referenceArea);
             Address = referenceArea.GetDisplayStringA1();
             ReferenceArea = referenceArea;
         }
@@ -270,9 +269,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// An optional prefix for reference item.
         /// </summary>
         public PrefixNode? Prefix { get; }
-
-        public ReferenceItemType Type { get; }
-
+        
         /// <summary>
         /// An address of a reference that corresponds to <see cref="Type"/>. Always without sheet (that is in the prefix).
         /// </summary>
@@ -296,22 +293,7 @@ namespace ClosedXML.Excel.CalcEngine
             // TODO: XLRangeAddress can parse all types of reference item type, utilize known type for faster parsing + cache
             return new Reference(new XLRangeAddress((XLWorksheet)ws!, Address));
         }
-
-        private static ReferenceItemType GetReferenceType(ReferenceArea area)
-        {
-            // If row is not specified, then it's only range of rows.
-            if (area.First.ColumnType == ReferenceAxisType.None)
-                return ReferenceItemType.HRange;
-
-            // If column is not specified, then it's only range of columns.
-            if (area.First.RowType == ReferenceAxisType.None)
-                return ReferenceItemType.VRange;
-
-            return ReferenceItemType.Cell;
-        }
     }
-
-    internal enum ReferenceItemType { Cell, VRange, HRange }
 
     /// <summary>
     /// A name node in the formula. Name can refers to a generic formula, in most cases a reference, but it can be any kind of calculation (e.g. <c>A1+7</c>).
