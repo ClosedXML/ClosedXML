@@ -306,6 +306,8 @@ namespace ClosedXML.Excel
             var glyphs = new List<GlyphBox>();
             XLStyle? cellStyle = null;
             var rowHeightPx = 0;
+            var workbookMdw = (int)Math.Round(engine.GetMaxDigitWidth(Worksheet.Workbook.Style.Font, dpi.X));
+
             foreach (var cell in Row(startColumn, endColumn).CellsUsed().Cast<XLCell>())
             {
                 // Clear maintains capacity -> reduce need for GC
@@ -319,7 +321,14 @@ namespace ClosedXML.Excel
                     cellStyle = (XLStyle)cell.Style;
 
                 cell.GetGlyphBoxes(engine, dpi, glyphs);
-                var cellHeightPx = (int)Math.Ceiling(GetContentHeight(cellStyle.Alignment.TextRotation, glyphs));
+                var cellMdw = engine.GetMaxDigitWidth(cellStyle.Font, dpi.X);
+                cellMdw = Math.Round(cellMdw, MidpointRounding.AwayFromZero);
+                var columnWidthPx = XLHelper.NoCToPixels(cell.WorksheetColumn().Width, workbookMdw);
+                var pixelPadding = 2 * Math.Ceiling(cellMdw / 4) + 1;
+                var contentWidthPx = Math.Floor(columnWidthPx - pixelPadding);
+                var cellHeightPx = (int)Math.Ceiling(
+                    GetContentHeight(cellStyle.Alignment.TextRotation, cellStyle.Alignment.WrapText, contentWidthPx,
+                                     glyphs));
 
                 rowHeightPx = Math.Max(cellHeightPx, rowHeightPx);
             }
@@ -327,25 +336,103 @@ namespace ClosedXML.Excel
             return rowHeightPx;
         }
 
-        private static double GetContentHeight(int textRotationDeg, List<GlyphBox> glyphs)
+        private static double GetContentHeight(int textRotationDeg, bool wrapText, double maxWidthPx,
+                                               List<GlyphBox> glyphs)
         {
             if (textRotationDeg == 0)
             {
                 var textHeight = 0d;
                 var lineMaxHeight = 0d;
-                foreach (var glyph in glyphs)
+
+                if (!wrapText)
                 {
-                    if (!glyph.IsLineBreak)
+                    foreach (var glyph in glyphs)
                     {
-                        var cellHeightPx = glyph.LineHeight;
-                        lineMaxHeight = Math.Max(cellHeightPx, lineMaxHeight);
+                        if (!glyph.IsLineBreak)
+                        {
+                            var cellHeightPx = glyph.LineHeight;
+                            lineMaxHeight = Math.Max(cellHeightPx, lineMaxHeight);
+                        }
+                        else
+                        {
+                            // At the end of each line, add height of the line to total height.
+                            textHeight += lineMaxHeight;
+                            lineMaxHeight = 0d;
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    var clusterWidth = 0d;
+                    var clusterHeight = 0d;
+                    var whiteSpaceCluster = false;
+                    var lineWidth = 0d;
+
+                    void AppendClusterToLine()
                     {
-                        // At the end of each line, add height of the line to total height.
+                        lineMaxHeight = Math.Max(clusterHeight, lineMaxHeight);
+                        lineWidth += clusterWidth;
+
+                        clusterWidth = 0;
+                        clusterHeight = 0;
+                    }
+
+                    void NewLine()
+                    {
                         textHeight += lineMaxHeight;
                         lineMaxHeight = 0d;
+                        lineWidth = 0d;
                     }
+
+                    foreach (var glyph in glyphs)
+                    {
+                        if (!glyph.IsLineBreak)
+                        {
+                            if (glyph.IsWhiteSpace != whiteSpaceCluster)
+                            {
+                                // Starting new cluster (word or white space)
+
+                                if (lineWidth + clusterWidth <= maxWidthPx)
+                                    AppendClusterToLine();
+                                else
+                                {
+                                    if (!whiteSpaceCluster)
+                                        AppendClusterToLine();
+                                    else
+                                    {
+                                        // Drop whitespace cluster at the end of line
+                                        clusterWidth = 0;
+                                        clusterHeight = 0;
+                                    }
+
+                                    NewLine();
+                                }
+
+                                whiteSpaceCluster = glyph.IsWhiteSpace;
+                            }
+
+                            if (lineWidth + clusterWidth + glyph.AdvanceWidth > maxWidthPx && !whiteSpaceCluster)
+                                NewLine();
+
+                            if (clusterWidth + glyph.AdvanceWidth > maxWidthPx && !whiteSpaceCluster)
+                            {
+                                // This word is too long to fit into a single line, make line for a fragment of it.
+                                AppendClusterToLine();
+                                NewLine();
+                            }
+
+                            clusterWidth += glyph.AdvanceWidth;
+                            clusterHeight = Math.Max(glyph.LineHeight, clusterHeight);
+                        }
+                        else
+                        {
+                            AppendClusterToLine();
+                            NewLine();
+                        }
+                    }
+
+                    // Count last word of last line
+                    AppendClusterToLine();
                 }
 
                 // If the last line ends without EOL, it must be also counted
