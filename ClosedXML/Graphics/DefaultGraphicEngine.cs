@@ -158,7 +158,7 @@ namespace ClosedXML.Graphics
 
         private double GetDescent(IXLFontBase font, double dpiY, FontMetrics metrics)
         {
-            return PointsToPixels(-metrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
+            return PointsToPixels(-metrics.VerticalMetrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
         public double GetMaxDigitWidth(IXLFontBase fontBase, double dpiX)
@@ -171,13 +171,13 @@ namespace ClosedXML.Graphics
         public double GetTextHeight(IXLFontBase font, double dpiY)
         {
             var metrics = GetMetrics(font);
-            return PointsToPixels((metrics.Ascender - 2 * metrics.Descender) * font.FontSize / metrics.UnitsPerEm, dpiY);
+            return PointsToPixels((metrics.VerticalMetrics.Ascender - 2 * metrics.VerticalMetrics.Descender) * font.FontSize / metrics.UnitsPerEm, dpiY);
         }
 
         public double GetTextWidth(string text, IXLFontBase fontBase, double dpiX)
         {
             var font = GetFont(fontBase);
-            var dimensionsPx = TextMeasurer.Measure(text, new TextOptions(font)
+            var dimensionsPx = TextMeasurer.MeasureAdvance(text, new TextOptions(font)
             {
                 Dpi = 72, // Normalize DPI, so 1px is 1pt
                 KerningMode = KerningMode.None
@@ -194,11 +194,21 @@ namespace ClosedXML.Graphics
             var advanceFu = 0;
             for (var i = 0; i < graphemeCluster.Length; ++i)
             {
-                var glyphs = metric.GetGlyphMetrics(new CodePoint(graphemeCluster[i]), ColorFontSupport.None);
+                var containsMetrics = metric.TryGetGlyphMetrics(
+                    new CodePoint(graphemeCluster[i]),
+                    TextAttributes.None,
+                    TextDecorations.None,
+                    LayoutMode.HorizontalTopBottom,
+                    ColorFontSupport.None,
+                    out var glyphs);
+
+                // As of SixLabors.Fonts 1.0.0, the TryGetGlyphMetrics method never fails. It returns .notdef glyph 0
+                // as a fallback glyph, but it might change in the future.
+                if (!containsMetrics)
+                    continue;
+
                 foreach (var glyph in glyphs)
-                {
                     advanceFu += glyph.AdvanceWidth;
-                }
             }
 
             var emInPx = font.FontSize / 72d * dpi.X;
@@ -264,7 +274,16 @@ namespace ClosedXML.Graphics
             var maxWidth = int.MinValue;
             for (var c = '0'; c <= '9'; ++c)
             {
-                var glyphMetrics = metrics.GetGlyphMetrics(new CodePoint(c), ColorFontSupport.None);
+                var containsMetrics = metrics.TryGetGlyphMetrics(
+                    new CodePoint(c),
+                    TextAttributes.None,
+                    TextDecorations.None,
+                    LayoutMode.HorizontalTopBottom,
+                    ColorFontSupport.None,
+                    out var glyphMetrics);
+                if (!containsMetrics)
+                    continue;
+
                 var glyphAdvance = 0;
                 foreach (var glyphMetric in glyphMetrics)
                     glyphAdvance += glyphMetric.AdvanceWidth;
