@@ -40,7 +40,7 @@
     </PackageReference>
     <PackageReference Include="Janitor.Fody" Version="1.8.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
     <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
     <PackageReference Include="XLParser" Version="1.5.2" />
