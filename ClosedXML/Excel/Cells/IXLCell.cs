@@ -370,6 +370,11 @@ namespace ClosedXML.Excel
         String GetFormattedString(CultureInfo culture = null);
 
         /// <summary>
+        /// Gets the format string used by <see cref="GetFormattedString"/> to format and render the numeric value of a cell.
+        /// </summary>
+        String GetFormat();
+
+        /// <summary>
         /// Returns a hyperlink for the cell, if any, or creates a new instance is there is no hyperlink.
         /// </summary>
         XLHyperlink GetHyperlink();
