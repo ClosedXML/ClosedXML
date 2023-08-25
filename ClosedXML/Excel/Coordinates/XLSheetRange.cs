@@ -215,8 +215,8 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Create a new sheet range that is a result of range operator (:)
-        /// of this sheet range and 
+        /// Create a new sheet range that is a result of range operator (<c>:</c>)
+        /// of this sheet range and <paramref name="otherRange"/>
         /// </summary>
         /// <param name="otherRange">The other range.</param>
         /// <returns>A range that contains both this range and <paramref name="otherRange"/>.</returns>
@@ -233,7 +233,7 @@ namespace ClosedXML.Excel
         /// Do an intersection between this range and other range.
         /// </summary>
         /// <param name="other">Other range.</param>
-        /// <returns>The intersection if exists or null, if intersection doesn't exist.</returns>
+        /// <returns>The intersection range if it exists and is non-empty or null, if intersection doesn't exist.</returns>
         public XLSheetRange? Intersect(XLSheetRange other)
         {
             var leftColumn = Math.Max(LeftColumn, other.LeftColumn);

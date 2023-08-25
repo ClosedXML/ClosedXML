@@ -1,11 +1,11 @@
 #nullable disable
 
-using ClosedXML.Excel.CalcEngine;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClosedXML.Excel.CalcEngine;
 using Array = ClosedXML.Excel.CalcEngine.Array;
 
 namespace ClosedXML.Excel
@@ -181,7 +181,7 @@ namespace ClosedXML.Excel
                 return true;
             }
 
-            foreach (var precedentCell in precedentCells)
+            foreach (var precedentCell in precedentCells!)
             {
                 // the affecting cell was modified after this one was evaluated
                 // e.g. cell now has a different value than it had at the last evaluation.
@@ -707,5 +707,17 @@ namespace ClosedXML.Excel
             /// </summary>
             internal long Version { get; }
         };
+
+        /// <summary>
+        /// Get a lazy initialized AST for the formula.
+        /// </summary>
+        /// <param name="engine">Engine to parse the formula into AST, if necessary.</param>
+        public Formula GetAst(CalcEngine.CalcEngine engine)
+        {
+            // TODO: Add caching for lazy initialization.
+            var a1 = GetFormulaA1(Range.FirstPoint);
+            var ast = engine.Parse(a1);
+            return ast;
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.Coordinates
@@ -10,7 +7,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
     public class XLSheetAreaTests
     {
         [Test]
-        public void Equality_uses_case_insensitive_comparison_for_sheet_name()
+        public void Sheet_name_is_compared_case_insensitive()
         {
             var upperCase = new XLSheetArea("NAME", new XLSheetRange(1, 2, 3, 4));
             var lowerCase = new XLSheetArea("name", new XLSheetRange(1, 2, 3, 4));
@@ -21,14 +18,14 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [Test]
         public void Intersection_produces_range_intersection_in_same_sheet()
         {
-            var left = new XLSheetArea("THIS", XLSheetRange.Parse("A1:C3"));
-            var rightSameSheet = new XLSheetArea("this", XLSheetRange.Parse("B2:D4"));
-            var rightDifferentSheet = new XLSheetArea("Different", XLSheetRange.Parse("B2:D4"));
+            var sheetArea1 = new XLSheetArea("SHEET", XLSheetRange.Parse("A1:C3"));
+            var sheetArea2 = new XLSheetArea("sheet", XLSheetRange.Parse("B2:D4"));
+            var otherSheetArea = new XLSheetArea("Other", XLSheetRange.Parse("B2:D4"));
 
-            var sameSheetIntersection = left.Intersect(rightSameSheet);
-            Assert.AreEqual(new XLSheetArea("this", XLSheetRange.Parse("B2:C3")), sameSheetIntersection);
+            var sameSheetIntersection = sheetArea1.Intersect(sheetArea2);
+            Assert.AreEqual(new XLSheetArea("sheet", XLSheetRange.Parse("B2:C3")), sameSheetIntersection);
 
-            var differentSheetIntersection = left.Intersect(rightDifferentSheet);
+            var differentSheetIntersection = sheetArea1.Intersect(otherSheetArea);
             Assert.Null(differentSheetIntersection);
         }
     }

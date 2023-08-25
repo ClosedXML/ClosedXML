@@ -22,6 +22,9 @@ namespace ClosedXML.Excel
 
         public XLName(string sheetName, string name)
         {
+            if (string.IsNullOrEmpty(sheetName))
+                throw new ArgumentException(nameof(sheetName));
+
             if (name.Any(char.IsWhiteSpace))
                 throw new ArgumentException("Name can't contain whitespace.");
 
@@ -40,10 +43,12 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLName other)
         {
-            if (SheetName is null ^ other.SheetName is null)
+            var differentScope = SheetName is null ^ other.SheetName is null;
+            if (differentScope)
                 return false;
 
-            if (SheetName is null && other.SheetName is null)
+            var bothWorkbookScope = SheetName is null && other.SheetName is null;
+            if (bothWorkbookScope)
                 return XLHelper.NameComparer.Equals(Name, other.Name);
 
             return XLHelper.NameComparer.Equals(Name, other.Name) &&
