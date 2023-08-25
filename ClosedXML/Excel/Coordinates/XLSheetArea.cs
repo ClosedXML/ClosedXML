@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal readonly struct XLSheetArea : IEquatable<XLSheetArea>
     {
         /// <summary>
-        /// Name of the sheet. Sheet may exist or not (e.g. deleted).
+        /// Name of the sheet. Sheet may exist or not (e.g. deleted). Never null.
         /// </summary>
         public readonly string Name;
 
@@ -19,6 +19,9 @@ namespace ClosedXML.Excel
 
         public XLSheetArea(String name, XLSheetRange area)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException(nameof(name));
+
             Name = name;
             Area = area;
         }
@@ -37,7 +40,6 @@ namespace ClosedXML.Excel
         {
             unchecked
             {
-               
                 return (XLHelper.SheetComparer.GetHashCode(Name) * 397) ^ Area.GetHashCode();
             }
         }
@@ -57,6 +59,11 @@ namespace ClosedXML.Excel
                 return null;
 
             return new XLSheetArea(Name, intersectionRange.Value);
+        }
+
+        public override string ToString()
+        {
+            return $"{Name}!{Area}";
         }
     }
 }
