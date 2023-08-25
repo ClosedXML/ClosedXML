@@ -41,8 +41,26 @@ namespace ClosedXML.Excel
 
         public int Height => LastPoint.Row - FirstPoint.Row + 1;
 
+        /// <summary>
+        /// The left column number of the range. From 1 to <see cref="XLHelper.MaxColumnNumber"/>.
+        /// </summary>
+        public int LeftColumn => FirstPoint.Column;
+
+        /// <summary>
+        /// The right column number of the range. From 1 to <see cref="XLHelper.MaxColumnNumber"/>.
+        /// Greater or equal to <see cref="LeftColumn"/>.
+        /// </summary>
         public int RightColumn => LastPoint.Column;
 
+        /// <summary>
+        /// The top row number of the range. From 1 to <see cref="XLHelper.MaxRowNumber"/>.
+        /// </summary>
+        public int TopRow => FirstPoint.Row;
+
+        /// <summary>
+        /// The bottom row number of the range. From 1 to <see cref="XLHelper.MaxRowNumber"/>.
+        /// Greater or equal to <see cref="TopRow"/>.
+        /// </summary>
         public int BottomRow => LastPoint.Row;
 
         public override bool Equals(object obj)
@@ -194,6 +212,39 @@ namespace ClosedXML.Excel
                 throw new ArgumentOutOfRangeException();
 
             return new XLSheetRange(new XLSheetPoint(FirstPoint.Row, RightColumn - columns + 1), LastPoint);
+        }
+
+        /// <summary>
+        /// Create a new sheet range that is a result of range operator (:)
+        /// of this sheet range and 
+        /// </summary>
+        /// <param name="otherRange">The other range.</param>
+        /// <returns>A range that contains both this range and <paramref name="otherRange"/>.</returns>
+        public XLSheetRange Range(XLSheetRange otherRange)
+        {
+            var topRow = Math.Min(TopRow, otherRange.TopRow);
+            var leftColumn = Math.Min(LeftColumn, otherRange.LeftColumn);
+            var bottomRow = Math.Max(BottomRow, otherRange.BottomRow);
+            var rightColumn = Math.Max(RightColumn, otherRange.RightColumn);
+            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+        }
+
+        /// <summary>
+        /// Do an intersection between this range and other range.
+        /// </summary>
+        /// <param name="other">Other range.</param>
+        /// <returns>The intersection if exists or null, if intersection doesn't exist.</returns>
+        public XLSheetRange? Intersect(XLSheetRange other)
+        {
+            var leftColumn = Math.Max(LeftColumn, other.LeftColumn);
+            var rightColumn = Math.Min(RightColumn, other.RightColumn);
+            var topRow = Math.Max(TopRow, other.TopRow);
+            var bottomRow = Math.Min(BottomRow, other.BottomRow);
+
+            if (bottomRow < topRow || rightColumn < leftColumn)
+                return null;
+
+            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
         }
     }
 }

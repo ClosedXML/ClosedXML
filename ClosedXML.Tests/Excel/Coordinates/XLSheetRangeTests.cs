@@ -44,5 +44,35 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var r = XLSheetRange.Parse(cellRef);
             Assert.AreEqual(expected, r.ToString());
         }
+
+        [TestCase("A1", "A1", "A1")]
+        [TestCase("A1", "B3", "A1:B3")]
+        [TestCase("C2", "B3", "B2:C3")]
+        [TestCase("I6:J9", "L7", "I6:L9")]
+        [TestCase("B2:B4", "A3:C3", "A2:C4")]
+        [TestCase("B2:C3", "E5:F6", "B2:F6")]
+        public void RangeOperation(string leftOperand, string rightOperand, string expectedRange)
+        {
+            var left = XLSheetRange.Parse(leftOperand);
+            var right = XLSheetRange.Parse(rightOperand);
+            var expected = XLSheetRange.Parse(expectedRange);
+
+            Assert.AreEqual(expected, left.Range(right));
+        }
+
+        [TestCase("A1", "A1", "A1")]
+        [TestCase("A1", "A2", null)]
+        [TestCase("B1:B3", "A2:C2", "B2")]
+        [TestCase("A1:A3", "B2:C2", null)]
+        [TestCase("A1:D6", "B2:C3", "B2:C3")]
+        [TestCase("A1:C6", "B4:E10", "B4:C6")]
+        public void IntersectOperation(string leftOperand, string rightOperand, string expectedRange)
+        {
+            var left = XLSheetRange.Parse(leftOperand);
+            var right = XLSheetRange.Parse(rightOperand);
+            var expected = expectedRange is null ? (XLSheetRange?)null : XLSheetRange.Parse(expectedRange);
+
+            Assert.AreEqual(expected, left.Intersect(right));
+        }
     }
 }
