@@ -26,6 +26,8 @@ namespace ClosedXML.Excel
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
+        internal static StringComparer SheetComparer = StringComparer.OrdinalIgnoreCase;
+
         internal static readonly Regex RCSimpleRegex = new Regex(
             @"^(r(((-\d)?\d*)|\[(-\d)?\d*\]))?(c(((-\d)?\d*)|\[(-\d)?\d*\]))?$"
             , RegexOptions.IgnoreCase | RegexOptions.Compiled);
