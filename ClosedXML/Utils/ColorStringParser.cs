@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -42,6 +40,20 @@ namespace ClosedXML.Utils
             }
 
             throw new FormatException($"Unable to parse color {argbColor}.");
+        }
+
+        /// <summary>
+        /// Parse RRGGBB color.
+        /// </summary>
+        internal static Color ParseFromRgb(string rgbColor)
+        {
+            if (rgbColor.Length != 6)
+                throw new FormatException();
+
+            return Color.FromArgb(
+                ReadHex(rgbColor, 0, 2),
+                ReadHex(rgbColor, 2, 2),
+                ReadHex(rgbColor, 4, 2));
         }
 
         private static int ReadHex(string text, int start, int length)
