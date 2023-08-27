@@ -88,6 +88,17 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Parse a color in a RRGGBB hexadecimal format. It is used
+        /// to parse colors of <c>ST_HexColorRGB</c> type from the XML.
+        /// </summary>
+        /// <param name="hexColorRgb">A 6 character long hexadecimal number.</param>
+        /// <returns>Parsed color with full opacity.</returns>
+        internal static XLColor FromHexRgb(String hexColorRgb)
+        {
+            return FromColor(ColorStringParser.ParseFromRgb(hexColorRgb));
+        }
+
         public static XLColor FromName(String name)
         {
             return FromColor(Color.FromName(name));
