@@ -554,6 +554,13 @@ namespace ClosedXML.Excel.CalcEngine
                 var combinedRows = Math.Max(leftArray.Height, rightArray.Height);
                 var combinedColumns = Math.Max(leftArray.Width, rightArray.Width);
 
+                if (!isLeftArray && !isRightArray && combinedRows == 1 && combinedColumns == 1)
+                {
+                    // We're dealing with 2 references and each reference is referencing only a single cell.
+                    // So we want to treat them like scalars so other calcs that depend on this calc don't have to deal with 1x1 Arrays.
+                    return func(leftArray[0, 0], rightArray[0, 0], context).ToAnyValue();
+                }
+
                 var leftRescaledArray = leftArray.Rescale(combinedRows, combinedColumns);
                 var rightRescaledArray = rightArray.Rescale(combinedRows, combinedColumns);
 

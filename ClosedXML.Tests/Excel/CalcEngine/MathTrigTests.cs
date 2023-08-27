@@ -1407,6 +1407,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Round_References()
+        {
+            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Cell("A1").SetValue(1);
+            ws.Cell("A2").SetValue(2);
+            ws.Cell("A3").SetValue(3);
+            ws.Cell("A4").SetValue(4);
+            ws.Cell("A5").SetValue(5);
+            ws.Cell("A6").SetValue(2);
+
+            // References are treated differently to constant values within calculations by the calc engine,
+            // so let's make sure to include a test to validate that everything keeps working in the future
+            ws.Cell("A8").FormulaA1 = "ROUND((A1*A$2+A3*A$4)/(A$5+A$6),0)"; // (1 * 2 + 3 * 4) / (5 + 3) = 1.75
+            var actual = ws.Cell("A8").Value;
+
+            Assert.AreEqual(2.0, actual);
+        }
+
+        [Test]
         public void RoundDown()
         {
             object actual = XLWorkbook.EvaluateExpr("RoundDown(3.2, 0)");
