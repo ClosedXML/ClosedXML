@@ -1419,10 +1419,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // References are treated differently to constant values within calculations by the calc engine,
             // so let's make sure to include a test to validate that everything keeps working in the future
-            ws.Cell("A8").FormulaA1 = "ROUND((A1*A$2+A3*A$4)/(A$5+A$6),0)"; // (1 * 2 + 3 * 4) / (5 + 3) = 1.75
+            ws.Cell("A8").FormulaA1 = "ROUND((-A1*A$2+A3*A$4)/(A$5+A$6),0)"; // (-1 * 2 + 3 * 4) / (5 + 3) = 1.25
             var actual = ws.Cell("A8").Value;
 
-            Assert.AreEqual(2.0, actual);
+            Assert.AreEqual(1.0, actual);
         }
 
         [Test]
