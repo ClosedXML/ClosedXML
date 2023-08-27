@@ -344,13 +344,31 @@ namespace ClosedXML.Excel.CalcEngine
             if (value.TryPickScalar(out var scalar, out var collection))
                 return UnaryArithmeticOp(scalar, operatorFn, context).ToAnyValue();
 
-            return collection.Match(
-                array => array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context)),
-                reference => reference
-                    .Apply(cellValue => UnaryArithmeticOp(cellValue, operatorFn, context), context)
-                    .Match<AnyValue>(
-                        array => array,
-                        error => error));
+            if (collection.TryPickT0(out var array, out var reference))
+            {
+                return array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context));
+            }
+            else
+            {
+                var result = reference.Apply(cellValue => UnaryArithmeticOp(cellValue, operatorFn, context), context);
+                if (result.TryPickT0(out var referenceArray, out var error))
+                {
+                    if (referenceArray.Width == 1 && referenceArray.Height == 1)
+                    {
+                        // We're dealing with a references that is referencing only a single cell.
+                        // So we want to treat it like a scalar so other calcs that depend on this calc don't have to deal with 1x1 Arrays.
+                        return referenceArray[0, 0].ToAnyValue();
+                    }
+                    else
+                    {
+                        return referenceArray;
+                    }
+                }
+                else
+                {
+                    return error;
+                }
+            }
         }
 
         private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, CalcContext ctx)
