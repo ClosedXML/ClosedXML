@@ -175,7 +175,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(expectedDirtyFlag, dirtyCell.Formula?.IsDirty);
         }
 
-        private static CellFormulaDependencies GetDependencies(string formula)
+        private static FormulaDependencies GetDependencies(string formula)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
