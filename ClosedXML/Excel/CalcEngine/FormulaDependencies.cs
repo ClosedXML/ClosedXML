@@ -6,7 +6,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// A list of objects a cell formula depends on. If one of them changes,
     /// the formula value might no longer be accurate and needs to be recalculated.
     /// </summary>
-    internal class CellFormulaDependencies
+    internal class FormulaDependencies
     {
         private readonly HashSet<XLSheetArea> _areas = new();
         private readonly HashSet<XLName> _names = new();

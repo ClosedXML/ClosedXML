@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// The result. Visitor adds all areas/names formula depends on to this.
         /// </summary>
-        internal CellFormulaDependencies Dependencies { get; } = new();
+        internal FormulaDependencies Dependencies { get; } = new();
 
         /// <summary>
         /// Add areas to a list of areas the formula depends on. Disregards duplicate entries.

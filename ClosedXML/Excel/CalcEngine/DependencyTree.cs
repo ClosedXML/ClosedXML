@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// The source of the truth, a storage of formula dependencies. The dependency tree is
         /// constructed from this collection.
         /// </summary>
-        private readonly Dictionary<XLCellFormula, CellFormulaDependencies> _dependencies = new();
+        private readonly Dictionary<XLCellFormula, FormulaDependencies> _dependencies = new();
 
         /// <summary>
         /// Visitor to extract precedents of formulas.
@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="formula">The cell formula.</param>
         /// <returns>Added cell formula dependencies.</returns>
         /// <exception cref="ArgumentException">Formula already is in the tree.</exception>
-        internal CellFormulaDependencies AddFormula(XLSheetArea formulaArea, XLCellFormula formula)
+        internal FormulaDependencies AddFormula(XLSheetArea formulaArea, XLCellFormula formula)
         {
             var precedents = GetFormulaPrecedents(formulaArea, formula);
 
@@ -113,7 +113,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private CellFormulaDependencies GetFormulaPrecedents(XLSheetArea formulaArea, XLCellFormula formula)
+        private FormulaDependencies GetFormulaPrecedents(XLSheetArea formulaArea, XLCellFormula formula)
         {
             var ast = formula.GetAst(_engine);
             var context = new DependenciesContext(formulaArea);
