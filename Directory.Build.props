@@ -35,7 +35,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SignAssembly>true</SignAssembly>
+    
+    <!-- RBush is not strongly named and won't be. Disable signing, until I make a strongly named fork of RBush -->
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SourceRoot)/ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 

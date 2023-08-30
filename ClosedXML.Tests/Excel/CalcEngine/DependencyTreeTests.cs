@@ -24,6 +24,157 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             CollectionAssert.AreEquivalent(expectedNames, dependencies.Names);
         }
 
+        [Test]
+        public void Mark_dirty_single_chain_is_fully_marked()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws = wb.AddWorksheet();
+            AddFormula(tree, ws, "A2", "=A1");
+            AddFormula(tree, ws, "A3", "=A2");
+            AddFormula(tree, ws, "A4", "=A3");
+
+            MarkDirty(tree, ws, "A1");
+            AssertDirty(ws, "A2", "A3", "A4");
+        }
+
+        [Test]
+        public void Mark_dirty_split_and_join_is_fully_marked()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws1 = wb.AddWorksheet();
+            AddFormula(tree, ws1, "B2", "=B1");
+            AddFormula(tree, ws1, "C1", "=B2");
+            AddFormula(tree, ws1, "C3", "=B2");
+            AddFormula(tree, ws1, "D2", "=C1 + C3");
+
+            MarkDirty(tree, ws1, "B1");
+            AssertDirty(ws1, "B2", "C1", "C3", "D2");
+        }
+
+        [Test]
+        public void Mark_dirty_uses_correct_sheet()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws1 = wb.AddWorksheet("Sheet1");
+            var ws2 = wb.AddWorksheet("Sheet2");
+
+            // Make a chain, where each cell is on an opposite sheet
+            AddFormula(tree, ws1, "B1", "=Sheet2!A1");
+            AddFormula(tree, ws2, "C1", "=Sheet1!B1");
+            AddFormula(tree, ws1, "D1", "=Sheet2!C1");
+            AddFormula(tree, ws2, "E1", "=Sheet1!D1");
+
+            // Formulas on opposite sheet
+            AddFormula(tree, ws2, "B1", "=Sheet1!A1");
+            AddFormula(tree, ws1, "C1", "=Sheet2!B1");
+            AddFormula(tree, ws2, "D1", "=Sheet1!C1");
+            AddFormula(tree, ws1, "E1", "=Sheet2!D1");
+
+            MarkDirty(tree, ws2, "A1");
+            AssertDirty(ws1, "B1", "D1");
+            AssertDirty(ws2, "C1", "E1");
+
+            AssertNotDirty(ws1, "C1", "E1");
+            AssertNotDirty(ws2, "B1", "D1");
+        }
+
+        [Test]
+        public void Mark_dirty_stops_at_dirty_cell()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws = wb.AddWorksheet();
+            AddFormula(tree, ws, "A2", "=A1");
+            AddFormula(tree, ws, "A3", "=A2");
+            AddFormula(tree, ws, "A4", "=A3");
+
+            // Mark the middle one dirty, but A4 is still clear
+            ((XLCell)ws.Cell("A3")).Formula.IsDirty = true;
+
+            MarkDirty(tree, ws, "A1");
+            AssertDirty(ws, "A2", "A3");
+            AssertNotDirty(ws, "A4"); // Propagation stopped at the dirty cell A3.
+        }
+
+        [Test]
+        public void Mark_dirty_wont_crash_on_cycle()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws = wb.AddWorksheet();
+            AddFormula(tree, ws, "B1", "=D1 + A1");
+            AddFormula(tree, ws, "C1", "=B1");
+            AddFormula(tree, ws, "D1", "=C1");
+
+            // Tail depending on the cycle
+            AddFormula(tree, ws, "E1", "=D1");
+
+            MarkDirty(tree, ws, "A1");
+            AssertDirty(ws, "B1", "C1", "D1", "E1");
+        }
+
+        [Test]
+        public void Mark_dirty_affects_precedents_with_partial_overlap()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws = wb.AddWorksheet();
+            AddFormula(tree, ws, "D1", "=A1:B3");
+
+            // B3:D4 overlaps with A1:B3 in B3
+            MarkDirty(tree, ws, "B3:D4");
+            AssertDirty(ws, "D1");
+        }
+
+        [Test]
+        public void Mark_dirty_can_affect_multiple_chains_at_once()
+        {
+            using var wb = new XLWorkbook();
+            var tree = new DependencyTree(wb.CalcEngine);
+            var ws = wb.AddWorksheet();
+            AddFormula(tree, ws, "B1", "=A1");
+            AddFormula(tree, ws, "B2", "=A2");
+            AddFormula(tree, ws, "B3", "=A3");
+
+            MarkDirty(tree, ws, "A2:A3");
+            AssertDirty(ws, "B2", "B3");
+            AssertNotDirty(ws, "B1");
+        }
+
+        private static void AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
+        {
+            var cell = (XLCell)sheet.Cell(address);
+            cell.FormulaA1 = formula;
+            var cellArea = new XLSheetArea(sheet.Name, new XLSheetRange(cell.SheetPoint, cell.SheetPoint));
+            tree.AddFormula(cellArea, cell.Formula);
+        }
+
+        private static void MarkDirty(DependencyTree tree, IXLWorksheet sheet, string range)
+        {
+            var area = new XLSheetArea(sheet.Name, XLSheetRange.Parse(range));
+            tree.MarkDirty(area);
+        }
+
+        private static void AssertDirty(IXLWorksheet sheet, params string[] dirtyRanges)
+        {
+            AssertDirtyFlag(true, sheet, dirtyRanges);
+        }
+        private static void AssertNotDirty(IXLWorksheet sheet, params string[] dirtyRanges)
+        {
+            AssertDirtyFlag(false, sheet, dirtyRanges);
+        }
+
+        private static void AssertDirtyFlag(bool expectedDirtyFlag, IXLWorksheet sheet, params string[] dirtyRanges)
+        {
+            var ws = (XLWorksheet)sheet;
+            foreach (var dirtyRange in dirtyRanges)
+            foreach (var dirtyCell in ws.Cells(dirtyRange))
+                Assert.AreEqual(expectedDirtyFlag, dirtyCell.Formula?.IsDirty);
+        }
+
         private static CellFormulaDependencies GetDependencies(string formula)
         {
             using var wb = new XLWorkbook();
@@ -32,7 +183,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var cell = ws.Cell("A1");
             cell.SetFormulaA1(formula);
 
-            var dependencies = tree.AddFormula((XLWorksheet)ws, ((XLCell)cell).Formula);
+            var cellFormula = ((XLCell)cell).Formula;
+            var dependencies = tree.AddFormula(new XLSheetArea(ws.Name, cellFormula.Range), cellFormula);
             return dependencies;
         }
 
