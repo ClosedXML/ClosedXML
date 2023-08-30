@@ -27,7 +27,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a cell formula, not the formula itself (i.e. the tree).
     /// </summary>
-    [DebuggerDisplay("{Type}:{A1}")]
+    [DebuggerDisplay("Cell:{Range} - Type: {Type} - Formula: {A1}")]
     internal sealed class XLCellFormula
     {
         /// <summary>
@@ -73,6 +73,12 @@ namespace ClosedXML.Excel
         internal bool IsEvaluating { get; private set; }
 
         /// <summary>
+        /// Is this formula dirty, i.e. is it potentially out of date due to changes
+        /// to precedent cells?
+        /// </summary>
+        internal bool IsDirty { get; set; }
+
+        /// <summary>
         /// Formula in A1 notation. Either this or <see cref="R1C1"/> must be set (potentially
         /// both, due to conversion from one notation to another).
         /// </summary>
@@ -89,6 +95,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Range for array and data table formulas, otherwise default value.
         /// </summary>
+        /// <remarks>Doesn't contain sheet, so it doesn't have to deal with
+        /// sheet renames and moving formula around.</remarks>
         internal XLSheetRange Range { get; set; }
 
         /// <summary>
@@ -718,6 +726,11 @@ namespace ClosedXML.Excel
             var a1 = GetFormulaA1(Range.FirstPoint);
             var ast = engine.Parse(a1);
             return ast;
+        }
+
+        public override string ToString()
+        {
+            return A1 ?? R1C1;
         }
     }
 }

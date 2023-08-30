@@ -17,20 +17,20 @@ namespace ClosedXML.Extensions
         /// <returns>Converted absolute range.</returns>
         public static XLSheetRange ToSheetRange(this ReferenceArea area, XLSheetPoint anchor)
         {
-            var firstRow = ToAbsolutePosition(area.First.RowType, area.First.RowValue, anchor.Row, XLHelper.MinRowNumber);
-            var firstCol = ToAbsolutePosition(area.First.ColumnType, area.First.ColumnValue, anchor.Column, XLHelper.MinColumnNumber);
-            var lastRow = ToAbsolutePosition(area.Second.RowType, area.Second.RowValue, anchor.Row, XLHelper.MaxRowNumber);
-            var lastCol = ToAbsolutePosition(area.Second.ColumnType, area.Second.ColumnValue, anchor.Column, XLHelper.MaxColumnNumber);
+            var firstRow = ToAbsolutePositionA1(area.First.RowType, area.First.RowValue, XLHelper.MinRowNumber);
+            var firstCol = ToAbsolutePositionA1(area.First.ColumnType, area.First.ColumnValue, XLHelper.MinColumnNumber);
+            var lastRow = ToAbsolutePositionA1(area.Second.RowType, area.Second.RowValue, XLHelper.MaxRowNumber);
+            var lastCol = ToAbsolutePositionA1(area.Second.ColumnType, area.Second.ColumnValue, XLHelper.MaxColumnNumber);
 
             return new XLSheetRange(firstRow, firstCol, lastRow, lastCol);
         }
 
-        private static int ToAbsolutePosition(ReferenceAxisType axisType, int position, int anchorPosition, int defaultPosition)
+        private static int ToAbsolutePositionA1(ReferenceAxisType axisType, int position, int defaultPosition)
         {
             return axisType switch
             {
                 ReferenceAxisType.Absolute => position,
-                ReferenceAxisType.Relative => anchorPosition + position,
+                ReferenceAxisType.Relative => position,
                 ReferenceAxisType.None => defaultPosition,
                 _ => throw new NotSupportedException()
             };
