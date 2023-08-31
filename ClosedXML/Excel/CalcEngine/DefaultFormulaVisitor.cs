@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var acceptedPrefix = referenceNode.Prefix?.Accept(context, this);
             return !ReferenceEquals(acceptedPrefix, referenceNode.Prefix)
-                ? new ReferenceNode((PrefixNode?)acceptedPrefix, referenceNode.ReferenceArea)
+                ? new ReferenceNode((PrefixNode?)acceptedPrefix, referenceNode.ReferenceArea, referenceNode.Style)
                 : referenceNode;
         }
 
