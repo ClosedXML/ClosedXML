@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
 {
     internal class XLNamedRanges : IXLNamedRanges
     {
-        private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, XLNamedRange> _namedRanges = new(XLHelper.NameComparer);
 
         internal XLWorkbook Workbook { get; set; }
 
@@ -31,9 +31,11 @@ namespace ClosedXML.Excel
 
         #region IXLNamedRanges Members
 
-        public IXLNamedRange NamedRange(String rangeName)
+        IXLNamedRange IXLNamedRanges.NamedRange(String rangeName) => NamedRange(rangeName);
+
+        internal XLNamedRange NamedRange(String rangeName)
         {
-            if (_namedRanges.TryGetValue(rangeName, out IXLNamedRange range))
+            if (_namedRanges.TryGetValue(rangeName, out XLNamedRange range))
                 return range;
 
             return null;
@@ -82,7 +84,7 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsValidRangeAddress(rangeAddress))
                     {
-                        IXLRange range = null;
+                        IXLRange range;
                         if (Scope == XLNamedRangeScope.Worksheet)
                             range = Worksheet.Range(rangeAddress);
                         else if (Scope == XLNamedRangeScope.Workbook)
@@ -122,7 +124,7 @@ namespace ClosedXML.Excel
             return namedRange;
         }
 
-        public IXLNamedRange Add(String rangeName, IXLNamedRange namedRange)
+        internal XLNamedRange Add(String rangeName, XLNamedRange namedRange)
         {
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
@@ -181,12 +183,17 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetValue(String name, out IXLNamedRange range)
         {
-            if (_namedRanges.TryGetValue(name, out range)) return true;
+            if (_namedRanges.TryGetValue(name, out var rangeInternal))
+            {
+                range = rangeInternal;
+                return true;
+            }
 
-            if (Scope == XLNamedRangeScope.Workbook)
-                range = Workbook.NamedRange(name);
+            range = Scope == XLNamedRangeScope.Workbook
+                ? Workbook.NamedRange(name)
+                : null;
 
-            return range != null;
+            return range is not null;
         }
 
         public Boolean Contains(String name)
@@ -202,7 +209,6 @@ namespace ClosedXML.Excel
         internal void OnWorksheetDeleted(string worksheetName)
         {
             _namedRanges.Values
-                .Cast<XLNamedRange>()
                 .ForEach(nr => nr.OnWorksheetDeleted(worksheetName));
         }
     }
