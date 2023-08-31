@@ -7,11 +7,11 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class FormulaParser
     {
-        private readonly AstFactoryA1 _nodeFactory;
+        private readonly AstFactory _nodeFactory;
 
         public FormulaParser(FunctionRegistry functionRegistry)
         {
-            _nodeFactory = new AstFactoryA1(functionRegistry);
+            _nodeFactory = new AstFactory(functionRegistry, XLReferenceStyle.A1);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Factory to create abstract syntax tree for a formula in A1 notation.
         /// </summary>
-        private sealed class AstFactoryA1 : IAstFactory<ScalarValue, ValueNode, List<FormulaFlags>>
+        private sealed class AstFactory : IAstFactory<ScalarValue, ValueNode, List<FormulaFlags>>
         {
             /// <summary>
             /// A prefix for so-called future functions. Excel can add functions, but to avoid name collisions,
@@ -56,10 +56,12 @@ namespace ClosedXML.Excel.CalcEngine
             private const string DefaultFunctionNameSpace = "_xlfn";
 
             private readonly FunctionRegistry _functionRegistry;
+            private readonly XLReferenceStyle _style;
 
-            internal AstFactoryA1(FunctionRegistry functionRegistry)
+            internal AstFactory(FunctionRegistry functionRegistry, XLReferenceStyle style)
             {
                 _functionRegistry = functionRegistry;
+                _style = style;
             }
 
             public ScalarValue LogicalValue(List<FormulaFlags> context, bool logical) => logical;
@@ -108,20 +110,20 @@ namespace ClosedXML.Excel.CalcEngine
 
             public ValueNode Reference(List<FormulaFlags> context, ReferenceArea area)
             {
-                return new ReferenceNode(null, area);
+                return new ReferenceNode(null, area, _style);
             }
 
             public ValueNode SheetReference(List<FormulaFlags> context, string sheet, ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, sheet, null, null);
-                return new ReferenceNode(prefixNode, area);
+                return new ReferenceNode(prefixNode, area, _style);
             }
 
             public ValueNode Reference3D(List<FormulaFlags> context, string firstSheet, string lastSheet,
                 ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, null, firstSheet, lastSheet);
-                return new ReferenceNode(prefixNode, area);
+                return new ReferenceNode(prefixNode, area, _style);
             }
 
             public ValueNode ExternalSheetReference(List<FormulaFlags> context, int workbookIndex, string sheet,
@@ -129,7 +131,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var fileNode = new FileNode(workbookIndex);
                 var prefixNode = new PrefixNode(fileNode, sheet, null, null);
-                return new ReferenceNode(prefixNode, area);
+                return new ReferenceNode(prefixNode, area, _style);
             }
 
             public ValueNode ExternalReference3D(List<FormulaFlags> context, int workbookIndex, string firstSheet,
@@ -137,7 +139,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var fileNode = new FileNode(workbookIndex);
                 var prefixNode = new PrefixNode(fileNode, null, firstSheet, lastSheet);
-                return new ReferenceNode(prefixNode, area);
+                return new ReferenceNode(prefixNode, area, _style);
             }
 
             public ValueNode Function(List<FormulaFlags> context, ReadOnlySpan<char> name,
