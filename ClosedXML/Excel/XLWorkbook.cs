@@ -165,10 +165,12 @@ namespace ClosedXML.Excel
             get { return WorksheetsInternal; }
         }
 
+        internal XLNamedRanges NamedRangesInternal { get; }
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
-        public IXLNamedRanges NamedRanges { get; private set; }
+        public IXLNamedRanges NamedRanges => NamedRangesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
@@ -750,7 +752,7 @@ namespace ClosedXML.Excel
             ShowZeros = DefaultShowZeros;
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
-            NamedRanges = new XLNamedRanges(this);
+            NamedRangesInternal = new XLNamedRanges(this);
             PivotCachesInternal = new XLPivotCaches();
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
