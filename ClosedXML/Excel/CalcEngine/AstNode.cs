@@ -258,12 +258,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ReferenceNode : ValueNode
     {
-        public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea, XLReferenceStyle style)
+        public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea, bool isA1)
         {
             Prefix = prefix;
             Address = referenceArea.GetDisplayStringA1();
             ReferenceArea = referenceArea;
-            Style = style;
+            IsA1 = isA1;
         }
 
         /// <summary>
@@ -282,9 +282,9 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceArea ReferenceArea { get; }
 
         /// <summary>
-        /// Reference style used by <see cref="ReferenceArea"/>.
+        /// Is the reference in A1 style? If <c>false</c>, then it is R1C1.
         /// </summary>
-        public XLReferenceStyle Style { get; }
+        public bool IsA1 { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 

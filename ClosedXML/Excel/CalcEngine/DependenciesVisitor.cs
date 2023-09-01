@@ -270,7 +270,8 @@ namespace ClosedXML.Excel.CalcEngine
                 sheetName = context.FormulaArea.Name;
             }
 
-            var sheetRange = node.ReferenceArea.ToSheetRange(context.FormulaArea.Area.FirstPoint);
+            var anchor = context.FormulaArea.Area.FirstPoint;
+            var sheetRange = node.ReferenceArea.ToSheetRange(anchor, node.IsA1);
             return new List<XLSheetArea> { new(sheetName, sheetRange) };
         }
 
