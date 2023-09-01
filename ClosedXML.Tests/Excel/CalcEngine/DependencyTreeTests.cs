@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
@@ -25,10 +26,102 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Name_range_is_added_to_dependencies_of_formula()
+        {
+            var dependencies = GetDependencies("name + D2", init: wb =>
+            {
+                wb.NamedRanges.Add("name", "Sheet!$B$4+Sheet!$C$6");
+            });
+            CollectionAssert.AreEquivalent(new XLSheetArea[]
+            {
+                new("Sheet", XLSheetRange.Parse("D2")),
+                new("Sheet", XLSheetRange.Parse("B4")),
+                new("Sheet", XLSheetRange.Parse("C6"))
+            }, dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+        }
+
+        [Test]
+        public void Name_range_that_is_reference_is_propagated_to_formula()
+        {
+            var dependencies = GetDependencies("B3:name", init: wb =>
+            {
+                wb.NamedRanges.Add("name", "Sheet!$D$7");
+            });
+            CollectionAssert.AreEquivalent(new XLSheetArea[]
+            {
+                new("Sheet", XLSheetRange.Parse("B3:D7")),
+            }, dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+        }
+
+        [Test]
+        public void Name_range_can_used_another_name_range()
+        {
+            var dependencies = GetDependencies("outer", init: wb =>
+            {
+                wb.NamedRanges.Add("outer", "Sheet!$D$7 + inner");
+                wb.NamedRanges.Add("inner", "Sheet!$B$1");
+            });
+            CollectionAssert.AreEquivalent(new XLSheetArea[]
+            {
+                new("Sheet", XLSheetRange.Parse("D7")),
+                new("Sheet", XLSheetRange.Parse("B1")),
+            }, dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("outer"), new XLName("inner") }, dependencies.Names);
+        }
+
+        [Test]
+        public void Name_range_that_is_not_a_reference_can_be_added_to_dependency_tree_without_exception()
+        {
+            var dependencies = GetDependencies("name", init: wb =>
+            {
+                wb.NamedRanges.Add("name", "1+3");
+            });
+            CollectionAssert.IsEmpty(dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+        }
+
+        [Test]
+        public void Name_range_can_be_sheet_scoped_even_without_specified_sheet()
+        {
+            // Formula that references a name that is ambiguous between workbook and worksheet scoped one.
+            const string formula = "name";
+            var dependencies = GetDependencies(formula, init: wb =>
+            {
+                // Define two names, the local one should be selected
+                wb.Worksheet("Sheet").NamedRanges.Add("name", "Sheet!$A$1");
+                wb.NamedRanges.Add("name", "Sheet!$B$10");
+            });
+            CollectionAssert.AreEquivalent(new XLSheetArea[]
+            {
+                new("Sheet", XLSheetRange.Parse("A1"))
+            }, dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+        }
+
+        [Test]
+        [Ignore("A1 to R1C1 conversion not yet implemented and the name formula must be parsed")]
+        public void Name_range_that_uses_relative_reference_determines_actual_precedent_areas_through_cell_location()
+        {
+            var dependencies = GetDependencies("name", "D8", init: wb =>
+            {
+                wb.NamedRanges.Add("name", "Sheet!B4"); // equivalent of R[3]C[2]
+            });
+            CollectionAssert.AreEquivalent(new XLSheetArea[]
+            {
+                new("Sheet", XLSheetRange.Parse("F7")), // D4 (formula cell) + R[3]C[2] (name relative reference) = F7
+            }, dependencies.Areas);
+            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+        }
+
+        #region Mark dirty
+
+        [Test]
         public void Mark_dirty_single_chain_is_fully_marked()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
@@ -42,7 +135,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_split_and_join_is_fully_marked()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws1 = wb.AddWorksheet();
             AddFormula(tree, ws1, "B2", "=B1");
             AddFormula(tree, ws1, "C1", "=B2");
@@ -57,7 +150,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_uses_correct_sheet()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws1 = wb.AddWorksheet("Sheet1");
             var ws2 = wb.AddWorksheet("Sheet2");
 
@@ -85,7 +178,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_stops_at_dirty_cell()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
@@ -103,7 +196,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_wont_crash_on_cycle()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "B1", "=D1 + A1");
             AddFormula(tree, ws, "C1", "=B1");
@@ -120,7 +213,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_affects_precedents_with_partial_overlap()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "D1", "=A1:B3");
 
@@ -133,7 +226,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_can_affect_multiple_chains_at_once()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb.CalcEngine);
+            var tree = new DependencyTree(wb);
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "B1", "=A1");
             AddFormula(tree, ws, "B2", "=A2");
@@ -143,6 +236,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AssertDirty(ws, "B2", "B3");
             AssertNotDirty(ws, "B1");
         }
+
+        #endregion
 
         private static void AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
         {
@@ -171,16 +266,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var ws = (XLWorksheet)sheet;
             foreach (var dirtyRange in dirtyRanges)
-            foreach (var dirtyCell in ws.Cells(dirtyRange))
-                Assert.AreEqual(expectedDirtyFlag, dirtyCell.Formula?.IsDirty);
+            {
+                foreach (var dirtyCell in ws.Cells(dirtyRange))
+                {
+                    Assert.AreEqual(expectedDirtyFlag, dirtyCell.Formula?.IsDirty);
+                }
+            }
         }
 
-        private static FormulaDependencies GetDependencies(string formula)
+        private static FormulaDependencies GetDependencies(string formula, string formulaAddress = "A1", Action<XLWorkbook> init = null)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
-            var tree = new DependencyTree(wb.CalcEngine);
-            var cell = ws.Cell("A1");
+            init?.Invoke(wb);
+            var tree = new DependencyTree(wb);
+            var cell = ws.Cell(formulaAddress);
             cell.SetFormulaA1(formula);
 
             var cellFormula = ((XLCell)cell).Formula;

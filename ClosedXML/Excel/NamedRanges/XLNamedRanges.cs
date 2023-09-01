@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// A collection of a named ranges, either for workbook or for worksheet.
+    /// </summary>
     internal class XLNamedRanges : IXLNamedRanges
     {
         private readonly Dictionary<String, XLNamedRange> _namedRanges = new(XLHelper.NameComparer);

@@ -286,9 +286,34 @@ namespace ClosedXML.Excel.CalcEngine
                 : new XLName(node.Name);
             context.AddName(name);
 
-            // Dependency tree for the formula should be redone, if name changes.
-            // TODO: Name references should be included in formula areas.
+            // First, try to interpret name as a sheet scoped name.
+            sheetName = node.Prefix?.Sheet ?? context.FormulaArea.Name;
+            if (context.Workbook.TryGetWorksheet(sheetName, out var sheet) &&
+                sheet.NamedRanges.TryGetValue(node.Name, out var sheetNamedRange))
+            {
+                return VisitName(sheetNamedRange!);
+            }
+
+            // Name is not a sheet scoped one, try workbook scoped one
+            if (context.Workbook.NamedRanges.TryGetValue(node.Name, out var bookNamedRange))
+            {
+                return VisitName(bookNamedRange!);
+            }
+
+            // Name is not found in the workbook
             return null;
+
+            List<XLSheetArea>? VisitName(IXLNamedRange namedRange)
+            {
+                // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
+                var namedFormula = namedRange.RefersTo;
+                var ast = context.Workbook.CalcEngine.Parse(namedFormula);
+                var nameReferences = ast.AstRoot.Accept(context, this);
+
+                // If the formula returned a reference, propagate it, rather
+                // than add to the context (required for `A1:name` ).
+                return nameReferences;
+            }
         }
 
         public List<XLSheetArea>? Visit(DependenciesContext context, StructuredReferenceNode node)

@@ -28,6 +28,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DependencyTree
     {
+        private readonly XLWorkbook _workbook;
+
         /// <summary>
         /// The source of the truth, a storage of formula dependencies. The dependency tree is
         /// constructed from this collection.
@@ -49,10 +51,11 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         private readonly Dictionary<string, SheetDependencyTree> _sheetTrees = new(XLHelper.SheetComparer);
 
-        public DependencyTree(CalcEngine engine)
+        public DependencyTree(XLWorkbook workbook)
         {
+            _workbook = workbook;
             _visitor = new DependenciesVisitor();
-            _engine = engine;
+            _engine = workbook.CalcEngine;
         }
 
         /// <summary>
@@ -116,7 +119,7 @@ namespace ClosedXML.Excel.CalcEngine
         private FormulaDependencies GetFormulaPrecedents(XLSheetArea formulaArea, XLCellFormula formula)
         {
             var ast = formula.GetAst(_engine);
-            var context = new DependenciesContext(formulaArea);
+            var context = new DependenciesContext(formulaArea, _workbook);
             var rootReference = ast.AstRoot.Accept(context, _visitor);
 
             // If formula references are propagated to the root, make sure to add them.

@@ -34,6 +34,8 @@ namespace ClosedXML.Extensions
                 col2 = R1C1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, anchor.Column, XLHelper.MaxColumnNumber, XLHelper.MaxColumnNumber);
             }
 
+            // Points in the token `area` don't have to be in top left and bottom right corners,
+            // e.g. D4:A1 or D1:A4. Normalize coordinates, so the sheet range has expected corners.
             var colStart = Math.Min(col1, col2);
             var colEnd = Math.Max(col1, col2);
             var rowStart = Math.Min(row1, row2);

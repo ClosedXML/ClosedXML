@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public FormulaParser(FunctionRegistry functionRegistry)
         {
-            _nodeFactory = new AstFactory(functionRegistry, true);
+            _nodeFactory = new AstFactory(functionRegistry, isA1: true);
         }
 
         /// <summary>
