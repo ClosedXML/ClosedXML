@@ -14,14 +14,14 @@ namespace ClosedXML.Tests.Extensions
         [TestCaseSource(nameof(A1TestCases))]
         public void ToSheetPoint_converts_a1_reference_to_sheet_range(ReferenceArea tokenArea, XLSheetRange expectedRange)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(default, true));
+            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(default, isA1: true));
         }
 
         [Test]
         [TestCaseSource(nameof(R1C1TestCases))]
         public void ToSheetPoint_converts_r1c1_reference_to_sheet_range(XLSheetPoint anchor, ReferenceArea tokenArea, XLSheetRange expectedRange)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(anchor, false));
+            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(anchor, isA1: false));
         }
 
         public static IEnumerable<object[]> A1TestCases()
@@ -145,7 +145,7 @@ namespace ClosedXML.Tests.Extensions
             {
                 new XLSheetPoint(1, 10), // R1C10
                 new ReferenceArea(Relative, -16370, Relative, 0), // R[0]C[16370]
-                new XLSheetRange(1, 24, 1, 24) // RC24
+                new XLSheetRange(1, 24, 1, 24) // R1C24
             };
 
             // Looping: when relative row adjusted to anchor is above the max row, it loops back

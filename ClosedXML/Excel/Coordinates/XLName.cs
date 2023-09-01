@@ -69,5 +69,11 @@ namespace ClosedXML.Excel
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            var isWorkbookScoped = SheetName is null;
+            return isWorkbookScoped ? Name : $"{SheetName}!{Name}";
+        }
     }
 }
