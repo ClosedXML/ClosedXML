@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -214,6 +215,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #endregion
 
         #region Array Operations
+
+        [Test]
+        public void ArraysOperation_BinaryOperationBetweenAreaReferenceAndSingleCellReferenceShouldWork()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Test1");
+            ws.Cell("A1").Value = new DateTime(2021, 1, 15);
+            ws.Cell("A2").Value = new DateTime(2021, 1, 10);
+            ws.Cell("B1").Value = new DateTime(2021, 1, 5);
+            Assert.AreEqual(5, ws.Evaluate("MIN(A1:A2-B1)"));
+        }
 
         [Test]
         public void ArraysOperation_MultiAreaReferencesArgumentResultsInScalarError()
