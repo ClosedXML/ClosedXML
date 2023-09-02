@@ -88,7 +88,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public Array Rescale(int rows, int columns)
         {
-            if (Width == columns && Height == columns)
+            if (Width == columns && Height == rows)
                 return this;
 
             if (Width == 1 && Height == 1)
