@@ -229,13 +229,9 @@ namespace ClosedXML.Excel
 
         private void ProcessRangeRemoved(IXLRange range)
         {
-            var entry = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
-                .SingleOrDefault(e => Equals(e.RangeAddress, range.RangeAddress));
-
-            if (entry != null)
-            {
-                _dataValidationIndex.Remove(entry.RangeAddress);
-            }
+            var entries = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
+                .Where(e => Equals(e.RangeAddress, range.RangeAddress));
+            entries.ToArray().ForEach(entry => _dataValidationIndex.Remove(entry.RangeAddress));
         }
 
         private void SplitExistingRanges(IXLRangeAddress rangeAddress)

@@ -66,6 +66,20 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CorrectlySaveWorkbookWithSheedReferencedValidationsAfterSavingAndLoadingIt() {
+            // Arrange
+            var path = TestHelper.GetResourcePath(@"TryToLoad\ValidationLoadAndSave.xlsx");
+            using var stream = TestHelper.GetStreamFromResource(path);
+            using var wb = new XLWorkbook(stream);
+
+            // Act
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
+            using var wb2 = new XLWorkbook(ms);
+            wb2.SaveAs(ms);
+        }
+
+        [Test]
         public void CorrectlyLoadValidationWithSheetReference()
         {
             // Arrange
