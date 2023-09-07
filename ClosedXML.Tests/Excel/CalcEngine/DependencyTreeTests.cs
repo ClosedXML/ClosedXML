@@ -9,6 +9,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     internal class DependencyTreeTests
     {
+        #region Add formula to dependency tree
+
         [Test]
         [TestCaseSource(nameof(AreaDependenciesTestCases))]
         public void Area_dependencies_are_extracted_from_formula(string formula, IReadOnlyList<XLSheetArea> expectedAreas)
@@ -114,6 +116,51 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
         }
+
+        #endregion
+
+        #region Remove formula from dependency tree
+
+        [Test]
+        public void Remove_formula_from_dependency_tree()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var tree = new DependencyTree(wb);
+            var cellFormula = AddFormula(tree, ws, "B3", "=C4");
+            Assert.False(tree.IsEmpty);
+
+            // Remove inserted formula removes the dependent and also removes the precedent
+            // area from the tree because there is no formula depending on it.
+            tree.RemoveFormula(cellFormula);
+            Assert.True(tree.IsEmpty);
+
+            // Removing already removed formula doesn't throw.
+            Assert.DoesNotThrow(() => tree.RemoveFormula(cellFormula));
+            Assert.True(tree.IsEmpty);
+        }
+
+        [Test]
+        public void Removing_formula_doesnt_remove_precedent_area_from_tree_when_another_formula_depends_on_the_area()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var tree = new DependencyTree(wb);
+            var cellFormulaA1 = AddFormula(tree, ws, "A1", "=C4 + B1");
+            var cellFormulaA2 = AddFormula(tree, ws, "A2", "=B1 / C4");
+            Assert.False(tree.IsEmpty);
+
+            // Remove first formula, but the precedent area is still used
+            // by second formula so it is not removed.
+            tree.RemoveFormula(cellFormulaA1);
+            Assert.False(tree.IsEmpty);
+
+            // Remove second formula
+            tree.RemoveFormula(cellFormulaA2);
+            Assert.True(tree.IsEmpty);
+        }
+
+        #endregion
 
         #region Mark dirty
 
@@ -239,12 +286,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
-        private static void AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
+        private static XLCellFormula AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
         {
             var cell = (XLCell)sheet.Cell(address);
             cell.FormulaA1 = formula;
             var cellArea = new XLSheetArea(sheet.Name, new XLSheetRange(cell.SheetPoint, cell.SheetPoint));
             tree.AddFormula(cellArea, cell.Formula);
+            return cell.Formula;
         }
 
         private static void MarkDirty(DependencyTree tree, IXLWorksheet sheet, string range)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RBush;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -58,6 +59,8 @@ namespace ClosedXML.Excel.CalcEngine
             _engine = workbook.CalcEngine;
         }
 
+        internal bool IsEmpty => _sheetTrees.All(sheetTree => sheetTree.Value.IsEmpty) && _dependencies.Count == 0;
+
         /// <summary>
         /// Add a formula to the dependency tree.
         /// </summary>
@@ -88,9 +91,28 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
+        /// Remove formula from the dependency tree.
+        /// </summary>
+        /// <param name="formula">Formula to remove.</param>
+        internal void RemoveFormula(XLCellFormula formula)
+        {
+            if (!_dependencies.TryGetValue(formula, out var dependencies))
+                return;
+
+            _dependencies.Remove(formula);
+            foreach (var precedentArea in dependencies.Areas)
+            {
+                if (!_sheetTrees.TryGetValue(precedentArea.Name, out var sheetTree))
+                    throw new InvalidOperationException($"Dependency tree for sheet '{precedentArea.Name}' not found.");
+
+                sheetTree.RemoveDependent(precedentArea.Area, formula);
+            }
+        }
+
+        /// <summary>
         /// Mark all formulas that depend (directly or transitively) on the area as dirty.
         /// </summary>
-        public void MarkDirty(XLSheetArea dirtyArea)
+        internal void MarkDirty(XLSheetArea dirtyArea)
         {
             // BFS vs DFS: Although the longest chain found in the wild is 1000
             // formulas long, attacker could supply malicious excel with recursion
@@ -165,6 +187,26 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _dependents.Add(dependent);
             }
+
+            internal void RemoveDependent(XLCellFormula formula)
+            {
+                for (var i = 0; i < _dependents.Count; ++i)
+                {
+                    var dependent = _dependents[i];
+
+                    // several different formulas can depend on same area,
+                    // remove only dependent of the formula.
+                    if (dependent.Formula != formula)
+                        continue;
+
+                    // Remove from list by moving the last element to the removed
+                    // element place and decrease capacity.
+                    _dependents[i] = _dependents[_dependents.Count - 1];
+
+                    // Remove last item, capacity is unchanged, only list size is updated.
+                    _dependents.RemoveAt(_dependents.Count - 1);
+                }
+            }
         }
 
         /// <summary>
@@ -182,20 +224,20 @@ namespace ClosedXML.Excel.CalcEngine
             /// </summary>
             internal readonly XLSheetArea FormulaArea;
 
-            /// <summary>
-            /// The formula that is affected by changes in precedent area.
-            /// </summary>
-            private readonly XLCellFormula _formula;
-
             internal Dependent(XLSheetArea formulaArea, XLCellFormula formula)
             {
                 FormulaArea = formulaArea;
-                _formula = formula;
+                Formula = formula;
             }
 
-            internal bool IsDirty => _formula.IsDirty;
+            /// <summary>
+            /// The formula that is affected by changes in precedent area.
+            /// </summary>
+            internal XLCellFormula Formula { get; }
 
-            internal bool MarkDirty() => _formula.IsDirty = true;
+            internal bool IsDirty => Formula.IsDirty;
+
+            internal bool MarkDirty() => Formula.IsDirty = true;
         }
 
         /// <summary>
@@ -222,6 +264,8 @@ namespace ClosedXML.Excel.CalcEngine
                 _precedentAreas = new Dictionary<XLSheetRange, AreaDependents>();
             }
 
+            internal bool IsEmpty => _tree.Count == 0;
+
             internal void AddDependent(XLSheetRange precedentRange, Dependent dependent)
             {
                 if (!_precedentAreas.TryGetValue(precedentRange, out var precedentArea))
@@ -239,6 +283,25 @@ namespace ClosedXML.Excel.CalcEngine
             internal IReadOnlyList<AreaDependents> FindDependentsAreas(XLSheetRange dirtyRange)
             {
                 return _tree.Search(ToEnvelope(dirtyRange));
+            }
+
+            /// <summary>
+            /// Remove a dependency of <paramref name="formula"/> on a
+            /// <paramref name="precedentRange"/> from the sheet dependency tree.
+            /// </summary>
+            /// <param name="precedentRange">A precedent area in the sheet.</param>
+            /// <param name="formula">Formula depending on the <paramref name="precedentRange"/>.</param>
+            internal void RemoveDependent(XLSheetRange precedentRange, XLCellFormula formula)
+            {
+                if (!_precedentAreas.TryGetValue(precedentRange, out var precedentArea))
+                    return;
+
+                precedentArea.RemoveDependent(formula);
+                if (precedentArea.Dependents.Count == 0)
+                {
+                    _tree.Delete(precedentArea);
+                    _precedentAreas.Remove(precedentRange);
+                }
             }
 
             private static Envelope ToEnvelope(XLSheetRange range)
