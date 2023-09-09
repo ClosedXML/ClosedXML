@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -69,12 +70,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void NonexistentSheetsMeanUnreliablePrecednetCells()
+        public void NonexistentSheetsMeanUnreliablePrecedentCells()
         {
             using var wb = new XLWorkbook();
             var ws = (XLWorksheet)wb.AddWorksheet();
             var remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=Sheet2!A1", ws, out var cells);
             Assert.False(remotelyReliable);
+        }
+
+        [Test]
+        public void PrecedentCellsRejectsFileReferences()
+        {
+            using var wb = new XLWorkbook();
+            var ws = (XLWorksheet)wb.AddWorksheet("Sheet1");
+            Assert.Throws(Is.TypeOf<NotImplementedException>().And.Message.EqualTo("References from other files are not yet implemented."), () => ws.CalcEngine.TryGetPrecedentCells("='[1]Sheet1'!A1", ws, out var cells));
         }
     }
 }

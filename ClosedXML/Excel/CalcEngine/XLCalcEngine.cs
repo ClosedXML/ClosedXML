@@ -111,8 +111,8 @@ namespace ClosedXML.Excel.CalcEngine
                 if (node.Prefix is null)
                     return new Reference(new XLRangeAddress(null, node.Address));
 
-                if (ctx.Worksheet.Workbook.TryGetWorksheet(node.Prefix?.Sheet, out var ws))
-                    return new Reference(new XLRangeAddress((XLWorksheet)ws, node.Address));
+                if (node.Prefix.GetWorksheet(ctx.Worksheet.Workbook).TryPickT0(out var ws, out _))
+                    return new Reference(new XLRangeAddress((XLWorksheet)ws!, node.Address));
 
                 ctx.HasReferenceErrors = true;
                 return XLError.CellReference;
