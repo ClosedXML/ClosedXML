@@ -13,7 +13,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Enumerating_empty_chain()
         {
             var chain = new XLCalculationChain();
-            CollectionAssert.IsEmpty(GetList(chain));
+            CollectionAssert.IsEmpty(chain.GetPoints());
         }
 
         [Test]
@@ -32,24 +32,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 expectedPoints.Add(point);
             }
 
-            CollectionAssert.AreEqual(expectedPoints, GetList(chain));
+            CollectionAssert.AreEqual(expectedPoints, chain.GetPoints());
         }
-
-        [Test]
-        public void Enumeration_ends_on_target()
-        {
-            var chain = new XLCalculationChain();
-            var a1 = new XLBookPoint(1, new XLSheetPoint(1, 1));
-            var b1 = new XLBookPoint(1, new XLSheetPoint(1, 2));
-            var c1 = new XLBookPoint(1, new XLSheetPoint(1, 3));
-
-            chain.AddLast(a1);
-            chain.AddLast(b1);
-            chain.AddLast(c1);
-
-            CollectionAssert.AreEqual(new[] { a1, b1 }, GetList(chain, b1));
-        }
-
+        
         [Test]
         public void Remove_throws_on_missing_point()
         {
@@ -75,19 +60,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Remove point in the middle
             chain.Remove(c1);
-            CollectionAssert.AreEqual(new[] { a1, b1, d1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { a1, b1, d1 }, chain.GetPoints());
 
             // Remove last point in the sequence
             chain.Remove(d1);
-            CollectionAssert.AreEqual(new[] { a1, b1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { a1, b1 }, chain.GetPoints());
 
             // Remove head
             chain.Remove(a1);
-            CollectionAssert.AreEqual(new[] { b1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { b1 }, chain.GetPoints());
 
             // Remove the only remaining
             chain.Remove(b1);
-            CollectionAssert.IsEmpty(GetList(chain));
+            CollectionAssert.IsEmpty(chain.GetPoints());
         }
 
         [Test]
@@ -100,17 +85,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Add as tail for single link chain
             var b1 = new XLBookPoint(1, new XLSheetPoint(1, 2));
             chain.AddAfter(a1, b1);
-            CollectionAssert.AreEqual(new[] { a1, b1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { a1, b1 }, chain.GetPoints());
 
             // Add as tail for multi link chain
             var c1 = new XLBookPoint(1, new XLSheetPoint(1, 3));
             chain.AddAfter(b1, c1);
-            CollectionAssert.AreEqual(new[] { a1, b1, c1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { a1, b1, c1 }, chain.GetPoints());
 
             // Add somewhere in the middle
             var d1 = new XLBookPoint(1, new XLSheetPoint(1, 4));
             chain.AddAfter(b1, d1);
-            CollectionAssert.AreEqual(new[] { a1, b1, d1, c1 }, GetList(chain));
+            CollectionAssert.AreEqual(new[] { a1, b1, d1, c1 }, chain.GetPoints());
         }
 
         [Test]
@@ -126,68 +111,58 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var d1 = new XLBookPoint(1, new XLSheetPoint(1, 4));
             chain.AddLast(d1);
 
-            var enumerator = chain.GetEnumerator(null);
-            Assert.True(enumerator.MoveAhead());
-            Assert.AreEqual(a1, enumerator.Point);
+            Assert.True(chain.MoveAhead());
+            Assert.AreEqual(a1, chain.Current);
 
             // a,b,c,d -> d,a,b,c
-            enumerator.MoveToFront(d1);
-            Assert.AreEqual(d1, enumerator.Point);
-            Assert.AreEqual(new[] { d1, a1, b1, c1 }, GetList(chain));
+            chain.MoveToCurrent(d1);
+            Assert.AreEqual(d1, chain.Current);
+            Assert.AreEqual(new[] { d1, a1, b1, c1 }, chain.GetPoints());
 
             // d,a,b,c -> b,d,a,c
-            enumerator.MoveToFront(b1);
-            Assert.AreEqual(b1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, d1, a1, c1 }, GetList(chain));
+            chain.MoveToCurrent(b1);
+            Assert.AreEqual(b1, chain.Current);
+            Assert.AreEqual(new[] { b1, d1, a1, c1 }, chain.GetPoints());
 
-            Assert.True(enumerator.MoveAhead());
-            Assert.AreEqual(d1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, d1, a1, c1 }, GetList(chain));
+            Assert.True(chain.MoveAhead());
+            Assert.AreEqual(d1, chain.Current);
+            Assert.AreEqual(new[] { b1, d1, a1, c1 }, chain.GetPoints());
 
             // d,a,c -> a,d,c
-            enumerator.MoveToFront(a1);
-            Assert.AreEqual(a1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, a1, d1, c1 }, GetList(chain));
+            chain.MoveToCurrent(a1);
+            Assert.AreEqual(a1, chain.Current);
+            Assert.AreEqual(new[] { b1, a1, d1, c1 }, chain.GetPoints());
 
             // Move A1 to front when it's already at front
-            enumerator.MoveToFront(a1);
-            Assert.AreEqual(a1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, a1, d1, c1 }, GetList(chain));
+            chain.MoveToCurrent(a1);
+            Assert.AreEqual(a1, chain.Current);
+            Assert.AreEqual(new[] { b1, a1, d1, c1 }, chain.GetPoints());
 
             // a,d,c -> c,a,d
-            enumerator.MoveToFront(c1);
-            Assert.AreEqual(c1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, c1, a1, d1 }, GetList(chain));
+            chain.MoveToCurrent(c1);
+            Assert.AreEqual(c1, chain.Current);
+            Assert.AreEqual(new[] { b1, c1, a1, d1 }, chain.GetPoints());
 
-            Assert.True(enumerator.MoveAhead());
-            Assert.AreEqual(a1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, c1, a1, d1 }, GetList(chain));
+            Assert.True(chain.MoveAhead());
+            Assert.AreEqual(a1, chain.Current);
+            Assert.AreEqual(new[] { b1, c1, a1, d1 }, chain.GetPoints());
 
             // a,d -> d,a
-            enumerator.MoveToFront(d1);
-            Assert.AreEqual(d1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetList(chain));
+            chain.MoveToCurrent(d1);
+            Assert.AreEqual(d1, chain.Current);
+            Assert.AreEqual(new[] { b1, c1, d1, a1 }, chain.GetPoints());
 
-            Assert.True(enumerator.MoveAhead());
-            Assert.AreEqual(a1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetList(chain));
+            Assert.True(chain.MoveAhead());
+            Assert.AreEqual(a1, chain.Current);
+            Assert.AreEqual(new[] { b1, c1, d1, a1 }, chain.GetPoints());
 
             // a -> a
-            enumerator.MoveToFront(a1);
-            Assert.AreEqual(a1, enumerator.Point);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetList(chain));
+            chain.MoveToCurrent(a1);
+            Assert.AreEqual(a1, chain.Current);
+            Assert.AreEqual(new[] { b1, c1, d1, a1 }, chain.GetPoints());
 
-            Assert.False(enumerator.MoveAhead());
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetList(chain));
-        }
-
-        private static IEnumerable<XLBookPoint> GetList(XLCalculationChain chain, XLBookPoint? target = null)
-        {
-            var enumerator = chain.GetEnumerator(target);
-            while (enumerator.MoveAhead())
-            {
-                yield return enumerator.Point;
-            }
+            Assert.False(chain.MoveAhead());
+            Assert.AreEqual(new[] { b1, c1, d1, a1 }, chain.GetPoints());
         }
     }
 }

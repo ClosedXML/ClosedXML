@@ -20,6 +20,11 @@ namespace ClosedXML.Excel.CalcEngine
     /// again. It might have encounter another not-yet-calculated formula or it
     /// will finish and the calculation chain moves to the next one.
     /// </para>
+    /// <para>
+    /// Chain can be traversed through <see cref="Current"/>, <see cref="MoveAhead"/>,
+    /// <see cref="MoveToCurrent"/> and <see cref="Reset"/>, but only one enumeration
+    /// can go on at the time due to cycle detection.
+    /// </para>
     /// </summary>
     internal class XLCalculationChain
     {
@@ -47,6 +52,13 @@ namespace ClosedXML.Excel.CalcEngine
         /// constantly switching the links in a loop.</para>
         /// </summary>
         private readonly Dictionary<XLBookPoint, Link> _nodeMap = new();
+
+        private XLBookPoint? _current;
+
+        /// <summary>
+        /// The address of a current of the chain.
+        /// </summary>
+        internal XLBookPoint Current => _current!.Value;
 
         /// <summary>
         /// Add a new link at the beginning of a chain.
@@ -130,7 +142,7 @@ namespace ClosedXML.Excel.CalcEngine
         internal void Remove(XLBookPoint point)
         {
             if (!_nodeMap.TryGetValue(point, out var pointLink))
-                throw PointNotInChain(point, this);
+                throw PointNotInChain(point);
 
             // Point is in the chain and there is exactly one link -> clear all.
             if (_nodeMap.Count == 1)
@@ -166,126 +178,109 @@ namespace ClosedXML.Excel.CalcEngine
             _tail = null;
         }
 
-        internal Enumerator GetEnumerator(XLBookPoint? target)
+        /// <summary>
+        /// Enumerate all points in the chain.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<XLBookPoint> GetPoints()
         {
-            return new Enumerator(this, target);
+            if (_head is null)
+                yield break;
+
+            var current = _head.Value;
+            do
+            {
+                yield return current;
+                current = _nodeMap[current].Next;
+            } while (current != _head.Value);
         }
 
-        private static InvalidOperationException PointNotInChain(XLBookPoint point, XLCalculationChain chain)
+        internal void Reset()
         {
-            var exception = new InvalidOperationException($"Book point {point} is not in the chain.");
-            exception.Data.Add("Chain", string.Join(", ", chain._nodeMap.Select(n => $"{n.Key}(prev:{n.Value.Previous},next:{n.Value.Next})")));
-            return exception;
+            _current = null;
         }
 
         /// <summary>
-        /// Enumerator over the chain during chain calculation.
+        /// Mark current link as complete and move ahead to the next one.
         /// </summary>
-        internal struct Enumerator
+        /// <returns>
+        /// <c>true</c> if the enumerator moved ahead, <c>false</c> if
+        /// there are no more links and chain has moved passed target or
+        /// looped completely.
+        /// </returns>
+        internal bool MoveAhead()
         {
-            private readonly XLCalculationChain _chain;
-
-            /// <summary>
-            /// Point after which to stop the enumeration.
-            /// </summary>
-            private readonly XLBookPoint? _target;
-
-            private XLBookPoint? _current;
-
-            /// <summary>
-            /// The address of a current formula of the chain.
-            /// </summary>
-            internal readonly XLBookPoint Point => _current!.Value;
-
-            internal Enumerator(XLCalculationChain chain, XLBookPoint? target)
+            // First move
+            if (_current is null)
             {
-                _chain = chain;
-                _target = target;
-                _current = null;
-            }
-
-            /// <summary>
-            /// Mark current link as complete and move ahead to the next one.
-            /// </summary>
-            /// <returns>
-            /// <c>true</c> if the enumerator moved ahead, <c>false</c> if
-            /// there are no more links and chain has moved passed target or
-            /// looped completely.
-            /// </returns>
-            internal bool MoveAhead()
-            {
-                // First move
-                if (_current is null)
-                {
-                    var isChainEmpty = _chain._head is null;
-                    if (isChainEmpty)
-                        return false;
-
-                    _current = _chain._head;
-                    return true;
-                }
-
-                // Subsequent move
-                var currentPoint = _current.Value;
-                if (_target is not null && currentPoint == _target.Value)
-                {
-                    // The target cell and all its predecessors have been
-                    // calculated.
+                var isChainEmpty = _head is null;
+                if (isChainEmpty)
                     return false;
-                }
 
-                if (!_chain._nodeMap.TryGetValue(currentPoint, out var currentLink))
-                    throw PointNotInChain(currentPoint, _chain);
-
-                var nextPoint = currentLink.Next;
-                Debug.Assert(_chain._nodeMap[nextPoint].Previous == currentPoint);
-                if (nextPoint == _chain._head!.Value)
-                {
-                    // Whole chain has been calculated.
-                    return false;
-                }
-
-                _current = nextPoint;
+                _current = _head;
                 return true;
             }
 
-            /// <summary>
-            /// Move the <paramref name="pointToMove"/> before current front
-            /// as the new front to be calculated.
-            /// </summary>
-            /// <param name="pointToMove">
-            /// The point of a chain to moved to the front. Should always be
-            /// after the current front.
-            /// </param>
-            internal void MoveToFront(XLBookPoint pointToMove)
+            // Subsequent move
+            var currentPoint = _current.Value;
+            if (!_nodeMap.TryGetValue(currentPoint, out var currentLink))
+                throw PointNotInChain(currentPoint);
+
+            var nextPoint = currentLink.Next;
+            Debug.Assert(_nodeMap[nextPoint].Previous == currentPoint);
+            if (nextPoint == _head!.Value)
             {
-                if (_current is null)
-                    throw new InvalidOperationException("Enumerator not at a link.");
-
-                var currentPoint = _current.Value;
-
-                // If we are not moving anything, adding and removing doesn't
-                // change chain, plus we avoid problems with moving in a
-                // single/double link chain.
-                if (currentPoint == pointToMove)
-                    return;
-
-                // If head is also front, moving before front means moving before head
-                if (_chain._head == currentPoint)
-                {
-                    _chain.Remove(pointToMove);
-                    _chain.AddFirst(pointToMove);
-                }
-                else
-                {
-                    // Front is not a head = move a link after prev of current front.
-                    _chain.Remove(pointToMove);
-                    var anchor = _chain._nodeMap[currentPoint].Previous;
-                    _chain.AddAfter(anchor, pointToMove);
-                }
-
-                _current = pointToMove;
+                // Whole chain has been calculated.
+                return false;
             }
+
+            _current = nextPoint;
+            return true;
+        }
+
+        /// <summary>
+        /// Move the <paramref name="pointToMove"/> before the current point
+        /// as the new current to be calculated.
+        /// </summary>
+        /// <param name="pointToMove">
+        /// The point of a chain to moved to the current. Should always be in
+        /// the chain after the current.
+        /// </param>
+        internal void MoveToCurrent(XLBookPoint pointToMove)
+        {
+            if (_current is null)
+                throw new InvalidOperationException("Enumerator not at a link.");
+
+            var currentPoint = _current.Value;
+
+            // If we are not moving anything, adding and removing doesn't
+            // change chain, plus we avoid problems with moving in a
+            // single/double link chain.
+            if (currentPoint == pointToMove)
+                return;
+
+            // If head is also current, moving before the current means moving before head
+            if (_head == currentPoint)
+            {
+                Remove(pointToMove);
+                AddFirst(pointToMove);
+            }
+            else
+            {
+                // Current is not a head = move a link after prev of current.
+                Remove(pointToMove);
+                var anchor = _nodeMap[currentPoint].Previous;
+                AddAfter(anchor, pointToMove);
+            }
+
+            _current = pointToMove;
+        }
+
+        private InvalidOperationException PointNotInChain(XLBookPoint point)
+        {
+            var exception = new InvalidOperationException($"Book point {point} is not in the chain.");
+            exception.Data.Add("Chain", string.Join(", ", _nodeMap.Select(n => $"{n.Key}(prev:{n.Value.Previous},next:{n.Value.Next})")));
+            return exception;
         }
 
         private readonly struct Link
