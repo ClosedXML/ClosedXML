@@ -22,8 +22,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </para>
     /// <para>
     /// Chain can be traversed through <see cref="Current"/>, <see cref="MoveAhead"/>,
-    /// <see cref="MoveToCurrent"/> and <see cref="Reset"/>, but only one enumeration
-    /// can go on at the time due to cycle detection.
+    /// <see cref="MoveToCurrent"/> and <see cref="Reset"/>, but only one traversal
+    /// can go on at the same time due to shared info about cycle detection.
     /// </para>
     /// </summary>
     internal class XLCalculationChain
@@ -56,14 +56,27 @@ namespace ClosedXML.Excel.CalcEngine
         private XLBookPoint? _current;
 
         /// <summary>
+        /// 1 based position of <see cref="_current"/>, if there is a traversal
+        /// in progress (0 otherwise).
+        /// </summary>
+        private int _currentPosition;
+
+        /// <summary>
         /// The address of a current of the chain.
         /// </summary>
         internal XLBookPoint Current => _current!.Value;
 
         /// <summary>
+        /// Is there a cycle in the chain? Detected when a link has appeared
+        /// as a current more than once and the current hasn't moved in the
+        /// meantime.
+        /// </summary>
+        internal bool IsCurrentInCycle { get; private set; }
+
+        /// <summary>
         /// Add a new link at the beginning of a chain.
         /// </summary>
-        internal void AddFirst(XLBookPoint point)
+        private void AddFirst(XLBookPoint point, int lastPosition)
         {
             if (_head is null || _tail is null)
             {
@@ -71,14 +84,17 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            Insert(point, _tail.Value, _head.Value);
+            Insert(point, lastPosition, _tail.Value, _head.Value);
             _head = point;
         }
+
+        /// <inheritdoc cref="AddLast(XLBookPoint,int)"/>
+        internal void AddLast(XLBookPoint point) => AddLast(point, 0);
 
         /// <summary>
         /// Append formula at the end of the chain.
         /// </summary>
-        internal void AddLast(XLBookPoint point)
+        private void AddLast(XLBookPoint point, int lastPosition)
         {
             if (_head is null || _tail is null)
             {
@@ -86,7 +102,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            Insert(point, _tail.Value, _head.Value);
+            Insert(point, lastPosition, _tail.Value, _head.Value);
             _tail = point;
         }
 
@@ -96,7 +112,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void Init(XLBookPoint point)
         {
             Debug.Assert(_nodeMap.Count == 0 && _head is null && _tail is null);
-            _nodeMap.Add(point, new Link(point, point));
+            _nodeMap.Add(point, new Link(point, point, 0));
             _head = _tail = point;
         }
 
@@ -105,15 +121,15 @@ namespace ClosedXML.Excel.CalcEngine
         /// <paramref name="prev"/> and <paramref name="next"/>.
         /// Don't update head or tail.
         /// </summary>
-        private void Insert(XLBookPoint point, XLBookPoint prev, XLBookPoint next)
+        private void Insert(XLBookPoint point, int lastPosition, XLBookPoint prev, XLBookPoint next)
         {
-            _nodeMap.Add(point, new Link(prev, next));
+            _nodeMap.Add(point, new Link(prev, next, lastPosition));
 
             var prevLink = _nodeMap[prev];
-            _nodeMap[prev] = new Link(prevLink.Previous, point);
+            _nodeMap[prev] = new Link(prevLink.Previous, point, prevLink.LastPosition);
 
             var nextLink = _nodeMap[next];
-            _nodeMap[next] = new Link(point, nextLink.Next);
+            _nodeMap[next] = new Link(point, nextLink.Next, nextLink.LastPosition);
         }
 
         /// <summary>
@@ -124,11 +140,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// The anchor point after which will be the new point added.
         /// </param>
         /// <param name="point">Point to add to the chain.</param>
-        internal void AddAfter(XLBookPoint anchor, XLBookPoint point)
+        /// <param name="lastPosition">The last position of the point in the chain.</param>
+        internal void AddAfter(XLBookPoint anchor, XLBookPoint point, int lastPosition)
         {
             var prevLink = _nodeMap[anchor];
             var next = prevLink.Next;
-            Insert(point, anchor, next);
+            Insert(point, lastPosition, anchor, next);
 
             if (anchor == _tail!.Value)
                 _tail = point;
@@ -137,9 +154,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Remove point from the chain.
         /// </summary>
-        /// <param name="point">Point to remove.</param>
+        /// <param name="point">Link to remove.</param>
+        /// <returns>Last position of the removed link.</returns>
         /// <exception cref="InvalidOperationException">Point is not a part of the chain.</exception>
-        internal void Remove(XLBookPoint point)
+        internal int Remove(XLBookPoint point)
         {
             if (!_nodeMap.TryGetValue(point, out var pointLink))
                 throw PointNotInChain(point);
@@ -148,7 +166,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (_nodeMap.Count == 1)
             {
                 Clear();
-                return;
+                return pointLink.LastPosition;
             }
 
             if (point == _head!.Value)
@@ -159,13 +177,14 @@ namespace ClosedXML.Excel.CalcEngine
 
             var prevLink = _nodeMap[pointLink.Previous];
             Debug.Assert(prevLink.Next == point);
-            _nodeMap[pointLink.Previous] = new Link(prevLink.Previous, pointLink.Next);
+            _nodeMap[pointLink.Previous] = new Link(prevLink.Previous, pointLink.Next, prevLink.LastPosition);
 
             var nextLink = _nodeMap[pointLink.Next];
             Debug.Assert(nextLink.Previous == point);
-            _nodeMap[pointLink.Next] = new Link(pointLink.Previous, nextLink.Next);
+            _nodeMap[pointLink.Next] = new Link(pointLink.Previous, nextLink.Next, nextLink.LastPosition);
 
             _nodeMap.Remove(point);
+            return pointLink.LastPosition;
         }
 
         /// <summary>
@@ -179,10 +198,9 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Enumerate all points in the chain.
+        /// Enumerate all links in the chain.
         /// </summary>
-        /// <returns></returns>
-        internal IEnumerable<XLBookPoint> GetPoints()
+        internal IEnumerable<(XLBookPoint Point, int LastPosition)> GetLinks()
         {
             if (_head is null)
                 yield break;
@@ -190,23 +208,36 @@ namespace ClosedXML.Excel.CalcEngine
             var current = _head.Value;
             do
             {
-                yield return current;
-                current = _nodeMap[current].Next;
+                var link = _nodeMap[current];
+                yield return new ValueTuple<XLBookPoint, int>(current, link.LastPosition);
+                current = link.Next;
             } while (current != _head.Value);
         }
 
         internal void Reset()
         {
+            if (_current is null)
+                return;
+
+            var point = _current.Value;
+            var link = _nodeMap[point];
+            while (link.LastPosition != 0)
+            {
+                _nodeMap[point] = new Link(link.Previous, link.Next, 0);
+                point = link.Next;
+                link = _nodeMap[point];
+            }
+
             _current = null;
+            _currentPosition = 0;
         }
 
         /// <summary>
-        /// Mark current link as complete and move ahead to the next one.
+        /// Mark current link as complete and move ahead to the next link.
         /// </summary>
         /// <returns>
         /// <c>true</c> if the enumerator moved ahead, <c>false</c> if
-        /// there are no more links and chain has moved passed target or
-        /// looped completely.
+        /// there are no more links and chain has looped completely.
         /// </returns>
         internal bool MoveAhead()
         {
@@ -218,6 +249,7 @@ namespace ClosedXML.Excel.CalcEngine
                     return false;
 
                 _current = _head;
+                _currentPosition = 1;
                 return true;
             }
 
@@ -225,6 +257,11 @@ namespace ClosedXML.Excel.CalcEngine
             var currentPoint = _current.Value;
             if (!_nodeMap.TryGetValue(currentPoint, out var currentLink))
                 throw PointNotInChain(currentPoint);
+
+            // Clear up the last position, the current point is being moved to done
+            // and clearing will ensure next traversal won't be affected.
+            if (currentLink.LastPosition != 0)
+                _nodeMap[currentPoint] = new Link(currentLink.Previous, currentLink.Next, 0);
 
             var nextPoint = currentLink.Next;
             Debug.Assert(_nodeMap[nextPoint].Previous == currentPoint);
@@ -234,7 +271,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return false;
             }
 
+            // Since we moved, the new last position is greater than all others
+            // and thus can't be in the cycle.
+            IsCurrentInCycle = false;
             _current = nextPoint;
+            _currentPosition++;
             return true;
         }
 
@@ -260,19 +301,22 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
 
             // If head is also current, moving before the current means moving before head
+            var pointToMoveLastPosition = Remove(pointToMove);
             if (_head == currentPoint)
             {
-                Remove(pointToMove);
-                AddFirst(pointToMove);
+                AddFirst(pointToMove, pointToMoveLastPosition);
             }
             else
             {
                 // Current is not a head = move a link after prev of current.
-                Remove(pointToMove);
                 var anchor = _nodeMap[currentPoint].Previous;
-                AddAfter(anchor, pointToMove);
+                AddAfter(anchor, pointToMove, pointToMoveLastPosition);
             }
 
+            var shiftedLink = _nodeMap[currentPoint];
+            _nodeMap[currentPoint] = new Link(shiftedLink.Previous, shiftedLink.Next, _currentPosition);
+
+            IsCurrentInCycle = _currentPosition == pointToMoveLastPosition;
             _current = pointToMove;
         }
 
@@ -289,10 +333,41 @@ namespace ClosedXML.Excel.CalcEngine
 
             internal readonly XLBookPoint Next;
 
-            public Link(XLBookPoint previous, XLBookPoint next)
+            /// <summary>
+            /// <para>
+            /// What was the 1-based position of the link in the chain the last
+            /// time the link has been current. Only used when link is pushed
+            /// to the back, otherwise it's <c>0</c>.
+            /// </para>
+            /// <para>
+            /// The last position of a link is only updated when
+            /// <list type="bullet">
+            /// <item>
+            /// Link is moved from current to the back - that means link
+            /// will be moved to current again at some point in the future
+            /// and if chain hasn't processed even one link in the meantime,
+            /// there is a cycle.
+            /// </item>
+            /// <item>
+            /// Link is marked as done and current moves past it. The last
+            /// position should be cleared as not to confuse next traversal.
+            /// </item>
+            /// <item>
+            /// Chain traversal is reset - links in front of current may still
+            /// have set their last position, because other links have been
+            /// moved to the current as a supporting links.
+            /// </item>
+            /// </list>
+            /// </para>
+            /// </summary>
+            /// <remarks>Used for cycle detection.</remarks>
+            internal readonly int LastPosition;
+
+            public Link(XLBookPoint previous, XLBookPoint next, int lastPosition)
             {
                 Previous = previous;
                 Next = next;
+                LastPosition = lastPosition;
             }
         }
     }
