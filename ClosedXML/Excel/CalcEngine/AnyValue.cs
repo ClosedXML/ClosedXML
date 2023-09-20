@@ -506,8 +506,8 @@ namespace ClosedXML.Excel.CalcEngine
             var unifiedRows = Math.Max(leftArray.Height, rightArray.Height);
             var unifiedColumns = Math.Max(leftArray.Width, rightArray.Width);
 
-            var leftBroadcastedArray = leftArray.Rescale(unifiedRows, unifiedColumns);
-            var rightBroadcastedArray = rightArray.Rescale(unifiedRows, unifiedColumns);
+            var leftBroadcastedArray = leftArray.Broadcast(unifiedRows, unifiedColumns);
+            var rightBroadcastedArray = rightArray.Broadcast(unifiedRows, unifiedColumns);
 
             return leftBroadcastedArray.Apply(rightBroadcastedArray, func, context);
         }

@@ -84,9 +84,9 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Rescale array for calculation of array formulas.
+        /// Broadcast array for calculation of array formulas.
         /// </summary>
-        public Array Rescale(int rows, int columns)
+        public Array Broadcast(int rows, int columns)
         {
             if (Width == columns && Height == columns)
                 return this;
