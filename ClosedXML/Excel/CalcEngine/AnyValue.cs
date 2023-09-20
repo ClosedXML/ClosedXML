@@ -508,82 +508,31 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue BinaryOperation(in AnyValue left, in AnyValue right, BinaryFunc func, CalcContext context)
         {
-            var isLeftScalar = left.TryPickScalar(out var leftScalar, out var leftCollection);
-            var isRightScalar = right.TryPickScalar(out var rightScalar, out var rightCollection);
+            var isLeftSingle = left.TryPickSingleOrMultiValue(out var leftSingle, out var leftArray, context);
+            var isRightSingle = right.TryPickSingleOrMultiValue(out var rightSingle, out var rightArray, context);
 
-            if (isLeftScalar && isRightScalar)
-                return func(in leftScalar, in rightScalar, context).ToAnyValue();
+            if (isLeftSingle && isRightSingle)
+                return func(in leftSingle, in rightSingle, context).ToAnyValue();
 
-            if (isLeftScalar)
+            if (isLeftSingle)
             {
-                // Right side is an array
-                if (rightCollection.TryPickT0(out var rightArray, out var rightReference))
-                    return new ScalarArray(leftScalar, rightArray.Width, rightArray.Height).Apply(rightArray, func, context);
-
-                // Right side is a reference
-                if (rightReference.TryGetSingleCellValue(out var rightCellValue, context))
-                    return func(in leftScalar, in rightCellValue, context).ToAnyValue();
-
-                var referenceArrayResult = rightReference.ToArray(context);
-                if (!referenceArrayResult.TryPickT0(out var rightRefArray, out var rightError))
-                    return rightError;
-
-                return new ScalarArray(leftScalar, rightRefArray.Width, rightRefArray.Height).Apply(rightRefArray, func, context);
+                var broadcastedLeftArray = new ScalarArray(leftSingle, rightArray.Width, rightArray.Height);
+                return broadcastedLeftArray.Apply(rightArray, func, context);
             }
 
-            if (isRightScalar)
+            if (isRightSingle)
             {
-                // Left side is an array
-                if (leftCollection.TryPickT0(out var leftArray, out var leftReference))
-                    return leftArray.Apply(new ScalarArray(rightScalar, leftArray.Width, leftArray.Height), func, context);
-
-                // Left side is a reference
-                if (leftReference.TryGetSingleCellValue(out var leftCellValue, context))
-                    return func(leftCellValue, rightScalar, context).ToAnyValue();
-
-                var referenceArrayResult = leftReference.ToArray(context);
-                if (!referenceArrayResult.TryPickT0(out var leftRefArray, out var leftError))
-                    return leftError;
-
-                return leftRefArray.Apply(new ScalarArray(rightScalar, leftRefArray.Width, leftRefArray.Height), func, context);
+                var broadcastedRightArray = new ScalarArray(rightSingle, leftArray.Width, leftArray.Height);
+                return leftArray.Apply(broadcastedRightArray, func, context);
             }
 
-            // Both are aggregates
-            {
-                var isLeftArray = leftCollection.TryPickT0(out var leftArray, out var leftReference);
-                var isRightArray = rightCollection.TryPickT0(out var rightArray, out var rightReference);
+            var unifiedRows = Math.Max(leftArray.Height, rightArray.Height);
+            var unifiedColumns = Math.Max(leftArray.Width, rightArray.Width);
 
-                if (!isLeftArray)
-                {
-                    if (leftReference.Areas.Count > 1)
-                        return XLError.IncompatibleValue;
+            var leftBroadcastedArray = leftArray.Rescale(unifiedRows, unifiedColumns);
+            var rightBroadcastedArray = rightArray.Rescale(unifiedRows, unifiedColumns);
 
-                    leftArray = new ReferenceArray(leftReference.Areas[0], context);
-                }
-
-                if (!isRightArray)
-                {
-                    if (rightReference.Areas.Count > 1)
-                        return XLError.IncompatibleValue;
-
-                    rightArray = new ReferenceArray(rightReference.Areas[0], context);
-                }
-
-                var combinedRows = Math.Max(leftArray.Height, rightArray.Height);
-                var combinedColumns = Math.Max(leftArray.Width, rightArray.Width);
-
-                if (!isLeftArray && !isRightArray && combinedRows == 1 && combinedColumns == 1)
-                {
-                    // We're dealing with 2 references and each reference is referencing only a single cell.
-                    // So we want to treat them like scalars so other calcs that depend on this calc don't have to deal with 1x1 Arrays.
-                    return func(leftArray[0, 0], rightArray[0, 0], context).ToAnyValue();
-                }
-
-                var leftRescaledArray = leftArray.Rescale(combinedRows, combinedColumns);
-                var rightRescaledArray = rightArray.Rescale(combinedRows, combinedColumns);
-
-                return leftRescaledArray.Apply(rightRescaledArray, func, context);
-            }
+            return leftBroadcastedArray.Apply(rightBroadcastedArray, func, context);
         }
 
         private static ScalarValue BinaryArithmeticOp(in ScalarValue left, in ScalarValue right, BinaryNumberFunc func, CalcContext ctx)
