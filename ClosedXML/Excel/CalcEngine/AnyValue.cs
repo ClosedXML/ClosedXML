@@ -341,34 +341,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue UnaryOperation(in AnyValue value, Func<double, double> operatorFn, CalcContext context)
         {
-            if (value.TryPickScalar(out var scalar, out var collection))
-                return UnaryArithmeticOp(scalar, operatorFn, context).ToAnyValue();
+            var isSingle = value.TryPickSingleOrMultiValue(out var single, out var array, context);
+            if (isSingle)
+                return UnaryArithmeticOp(single, operatorFn, context).ToAnyValue();
 
-            if (collection.TryPickT0(out var array, out var reference))
-            {
-                return array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context));
-            }
-            else
-            {
-                var result = reference.Apply(cellValue => UnaryArithmeticOp(cellValue, operatorFn, context), context);
-                if (result.TryPickT0(out var referenceArray, out var error))
-                {
-                    if (referenceArray.Width == 1 && referenceArray.Height == 1)
-                    {
-                        // We're dealing with a references that is referencing only a single cell.
-                        // So we want to treat it like a scalar so other calcs that depend on this calc don't have to deal with 1x1 Arrays.
-                        return referenceArray[0, 0].ToAnyValue();
-                    }
-                    else
-                    {
-                        return referenceArray;
-                    }
-                }
-                else
-                {
-                    return error;
-                }
-            }
+            return array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context));
         }
 
         private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, CalcContext ctx)
