@@ -537,8 +537,8 @@ namespace ClosedXML.Excel
             var ws = masterCell.Worksheet;
             var formula = GetFormulaA1(masterCell.SheetPoint);
             var resultArray = ws.CalcEngine.EvaluateArrayFormula(formula, masterCell);
-            var rescaledArray = resultArray.Rescale(Range.Height, Range.Width);
-            return rescaledArray;
+            var broadcastedArray = resultArray.Broadcast(Range.Height, Range.Width);
+            return broadcastedArray;
         }
 
         /// <summary>

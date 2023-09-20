@@ -90,7 +90,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     arg = argIsSingle
                         ? new ScalarArray(single, totalColumns, totalRows)
-                        : multi.Rescale(totalRows, totalColumns);
+                        : multi.Broadcast(totalRows, totalColumns);
                 }
                 else
                 {
