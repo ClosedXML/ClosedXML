@@ -213,19 +213,16 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLCellFormula Formula
         {
-            get => _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
+            get => _cellsCollection.FormulaSlice.Get(SheetPoint);
             set
             {
-                ref readonly var original = ref _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
-                if (ReferenceEquals(original, value))
-                    return;
+                _cellsCollection.FormulaSlice.Set(SheetPoint, value);
 
                 // Because text values of evaluated formulas are stored in a worksheet part, mark it as inlined string and store in sst.
                 // If we are clearing formula, we should enable shareString back on, because it is a default position.
                 // If we are setting formula, we should disable shareString (=inline), because it must be written to the worksheet part
                 var clearFormula = value is null;
                 ShareString = clearFormula;
-                _cellsCollection.FormulaSlice.Set(_rowNumber, _columnNumber, value);
             }
         }
 
