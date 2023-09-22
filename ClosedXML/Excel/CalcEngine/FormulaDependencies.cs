@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FormulaDependencies
     {
-        private readonly HashSet<XLSheetArea> _areas = new();
+        private readonly HashSet<XLBookArea> _areas = new();
         private readonly HashSet<XLName> _names = new();
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// result for unusual formulas, but if a value in an areas changes, the dependent
         /// formula should be marked as dirty.
         /// </summary>
-        public IReadOnlyCollection<XLSheetArea> Areas => _areas;
+        public IReadOnlyCollection<XLBookArea> Areas => _areas;
 
         /// <summary>
         /// A collection of names in the formula. If a name changes (added, deleted),
@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public IReadOnlyCollection<XLName> Names => _names;
         
-        internal void AddAreas(List<XLSheetArea> sheetAreas)
+        internal void AddAreas(List<XLBookArea> sheetAreas)
         {
             _areas.UnionWith(sheetAreas);
         }

@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DependenciesContext
     {
-        internal DependenciesContext(XLSheetArea formulaArea, XLWorkbook workbook)
+        internal DependenciesContext(XLBookArea formulaArea, XLWorkbook workbook)
         {
             FormulaArea = formulaArea;
             Workbook = workbook;
@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// An area of a formula, in most cases just one cell, for array formulas area of cells.
         /// </summary>
-        internal XLSheetArea FormulaArea { get; }
+        internal XLBookArea FormulaArea { get; }
 
         internal XLWorkbook Workbook { get; }
 
@@ -29,7 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add areas to a list of areas the formula depends on. Disregards duplicate entries.
         /// </summary>
-        internal void AddAreas(List<XLSheetArea> sheetAreas) => Dependencies.AddAreas(sheetAreas);
+        internal void AddAreas(List<XLBookArea> sheetAreas) => Dependencies.AddAreas(sheetAreas);
 
         /// <summary>
         /// Add name to a list of names the formula depends on. Disregards duplicate entries.

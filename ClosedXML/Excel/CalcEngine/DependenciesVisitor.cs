@@ -27,21 +27,21 @@ namespace ClosedXML.Excel.CalcEngine
     /// range operator.
     /// </para>
     /// </summary>
-    internal class DependenciesVisitor : IFormulaVisitor<DependenciesContext, List<XLSheetArea>?>
+    internal class DependenciesVisitor : IFormulaVisitor<DependenciesContext, List<XLBookArea>?>
     {
-        public List<XLSheetArea>? Visit(DependenciesContext context, ScalarNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, ScalarNode node)
         {
             // Scalar node can't contain sub-nodes or references.
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, ArrayNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, ArrayNode node)
         {
             // Array node can't contain sub-nodes or references.
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, UnaryNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, UnaryNode node)
         {
             var sheetAreas = node.Expression.Accept(context, this);
 
@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.CalcEngine
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, BinaryNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, BinaryNode node)
         {
             // Only range operations transform ranges
             var leftAreas = node.LeftExpression.Accept(context, this);
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 if (node.Operation == BinaryOp.Range)
                 {
-                    var rangeResult = new List<XLSheetArea>();
+                    var rangeResult = new List<XLBookArea>();
 
                     // Create a new range from both operands. It must deal with
                     // situation where there are multiple sheets for both operands,
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel.CalcEngine
                         for (var i = 1; i < sheetAreas.Count; ++i)
                             rangeArea = rangeArea.Range(sheetAreas[i].Area);
 
-                        rangeResult.Add(new XLSheetArea(sheetGroup.Key, rangeArea));
+                        rangeResult.Add(new XLBookArea(sheetGroup.Key, rangeArea));
                     }
 
                     // It's enough to return result of range operation. Operands can
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
                         // change, it doesn't affect the formula, because cells outside
                         // intersection are never used.
                         if (intersection is not null)
-                            return new List<XLSheetArea> { intersection.Value };
+                            return new List<XLBookArea> { intersection.Value };
 
                         return null;
                     }
@@ -160,7 +160,7 @@ namespace ClosedXML.Excel.CalcEngine
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, FunctionNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, FunctionNode node)
         {
             // According to grammar, ref functions are: CHOOSE, IF, INDEX, INDIRECT, OFFSET
             // Only these functions are allowed to return references, per grammar.
@@ -216,7 +216,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // Any of arguments can be propagated -> propagate all.
                 // Initialize list as null to reduce allocations
-                List<XLSheetArea>? parametersReference = null;
+                List<XLBookArea>? parametersReference = null;
                 for (var i = 1; i < node.Parameters.Count; ++i)
                 {
                     var parameterReference = node.Parameters[i].Accept(context, this);
@@ -243,12 +243,12 @@ namespace ClosedXML.Excel.CalcEngine
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, NotSupportedNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, NotSupportedNode node)
         {
             return null;
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, ReferenceNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, ReferenceNode node)
         {
             var prefix = node.Prefix;
             string sheetName;
@@ -272,10 +272,10 @@ namespace ClosedXML.Excel.CalcEngine
 
             var anchor = context.FormulaArea.Area.FirstPoint;
             var sheetRange = node.ReferenceArea.ToSheetRange(anchor, node.IsA1);
-            return new List<XLSheetArea> { new(sheetName, sheetRange) };
+            return new List<XLBookArea> { new(sheetName, sheetRange) };
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, NameNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, NameNode node)
         {
             // External references are not supported for names
             if (node.Prefix?.File is not null)
@@ -303,7 +303,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Name is not found in the workbook
             return null;
 
-            List<XLSheetArea>? VisitName(IXLNamedRange namedRange)
+            List<XLBookArea>? VisitName(IXLNamedRange namedRange)
             {
                 // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
                 var namedFormula = namedRange.RefersTo;
@@ -316,18 +316,18 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public List<XLSheetArea>? Visit(DependenciesContext context, StructuredReferenceNode node)
+        public List<XLBookArea>? Visit(DependenciesContext context, StructuredReferenceNode node)
         {
             // TODO: Structured reference should be evaluated into a reference and propagated.
             return null;
         }
 
-        public List<XLSheetArea> Visit(DependenciesContext context, PrefixNode node)
+        public List<XLBookArea> Visit(DependenciesContext context, PrefixNode node)
         {
             throw new InvalidOperationException("Should never be called.");
         }
 
-        public List<XLSheetArea> Visit(DependenciesContext context, FileNode node)
+        public List<XLBookArea> Visit(DependenciesContext context, FileNode node)
         {
             throw new InvalidOperationException("Should never be called.");
         }

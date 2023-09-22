@@ -68,7 +68,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="formula">The cell formula.</param>
         /// <returns>Added cell formula dependencies.</returns>
         /// <exception cref="ArgumentException">Formula already is in the tree.</exception>
-        internal FormulaDependencies AddFormula(XLSheetArea formulaArea, XLCellFormula formula)
+        internal FormulaDependencies AddFormula(XLBookArea formulaArea, XLCellFormula formula)
         {
             var precedents = GetFormulaPrecedents(formulaArea, formula);
 
@@ -112,12 +112,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Mark all formulas that depend (directly or transitively) on the area as dirty.
         /// </summary>
-        internal void MarkDirty(XLSheetArea dirtyArea)
+        internal void MarkDirty(XLBookArea dirtyArea)
         {
             // BFS vs DFS: Although the longest chain found in the wild is 1000
             // formulas long, attacker could supply malicious excel with recursion
             // leading to stack overflow => use queue even with extra allocation cost.
-            var queue = new Queue<XLSheetArea>();
+            var queue = new Queue<XLBookArea>();
             queue.Enqueue(dirtyArea);
             while (queue.Count > 0)
             {
@@ -138,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private FormulaDependencies GetFormulaPrecedents(XLSheetArea formulaArea, XLCellFormula formula)
+        private FormulaDependencies GetFormulaPrecedents(XLBookArea formulaArea, XLCellFormula formula)
         {
             var ast = formula.GetAst(_engine);
             var context = new DependenciesContext(formulaArea, _workbook);
@@ -222,9 +222,9 @@ namespace ClosedXML.Excel.CalcEngine
             /// doesn't contain it's address to make it easier add/delete
             /// rows/cols.
             /// </summary>
-            internal readonly XLSheetArea FormulaArea;
+            internal readonly XLBookArea FormulaArea;
 
-            internal Dependent(XLSheetArea formulaArea, XLCellFormula formula)
+            internal Dependent(XLBookArea formulaArea, XLCellFormula formula)
             {
                 FormulaArea = formulaArea;
                 Formula = formula;

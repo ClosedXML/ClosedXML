@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A specification of an area (rectangular range) of a sheet.
     /// </summary>
-    internal readonly struct XLSheetArea : IEquatable<XLSheetArea>
+    internal readonly struct XLBookArea : IEquatable<XLBookArea>
     {
         /// <summary>
         /// Name of the sheet. Sheet may exist or not (e.g. deleted). Never null.
@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public readonly XLSheetRange Area;
 
-        public XLSheetArea(String name, XLSheetRange area)
+        public XLBookArea(String name, XLSheetRange area)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException(nameof(name));
@@ -26,14 +26,14 @@ namespace ClosedXML.Excel
             Area = area;
         }
 
-        public bool Equals(XLSheetArea other)
+        public bool Equals(XLBookArea other)
         {
             return Area == other.Area && XLHelper.SheetComparer.Equals(Name, other.Name);
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is XLSheetArea other && Equals(other);
+            return obj is XLBookArea other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="other">The area that is being intersected with this one.</param>
         /// <returns>The intersection (=same sheet and has non-empty intersection) or null if intersection isn't possible.</returns>
-        public XLSheetArea? Intersect(XLSheetArea other)
+        public XLBookArea? Intersect(XLBookArea other)
         {
             if (!XLHelper.SheetComparer.Equals(Name, other.Name))
                 return null;
@@ -58,7 +58,7 @@ namespace ClosedXML.Excel
             if (intersectionRange is null)
                 return null;
 
-            return new XLSheetArea(Name, intersectionRange.Value);
+            return new XLBookArea(Name, intersectionRange.Value);
         }
 
         public override string ToString()
