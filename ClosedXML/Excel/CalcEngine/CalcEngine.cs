@@ -19,6 +19,8 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parserA1;
         private readonly CalculationVisitor _visitor;
+        private readonly DependencyTree? _dependencyTree;
+        private readonly XLCalculationChain? _chain;
 
         public CalcEngine(CultureInfo culture)
         {
@@ -27,6 +29,8 @@ namespace ClosedXML.Excel.CalcEngine
             var funcRegistry = GetFunctionTable();
             _parserA1 = new FormulaParser(funcRegistry);
             _visitor = new CalculationVisitor(funcRegistry);
+            _dependencyTree = null;
+            _chain = null;
         }
 
         /// <summary>
@@ -37,6 +41,41 @@ namespace ClosedXML.Excel.CalcEngine
         public Formula Parse(string expression)
         {
             return _parserA1.GetAst(expression);
+        }
+
+        internal void AddArrayFormula(XLSheetRange range, XLCellFormula arrayFormula, XLWorksheet sheet)
+        {
+            if (_chain is not null && _dependencyTree is not null)
+            {
+                _dependencyTree.AddFormula(new XLBookArea(sheet.Name, range), arrayFormula, sheet.Workbook);
+                _chain.AppendArea(sheet.SheetId, range);
+            }
+        }
+
+        /// <summary>
+        /// Add a formula to the calc engine to manage dirty tracking and evaluation.
+        /// </summary>
+        internal void AddNormalFormula(XLBookPoint point, string sheetName, XLCellFormula formula, XLWorkbook workbook)
+        {
+            if (_chain is not null && _dependencyTree is not null)
+            {
+                var pointArea = new XLBookArea(sheetName, new XLSheetRange(point.Point, point.Point));
+                _dependencyTree.AddFormula(pointArea, formula, workbook);
+                _chain.AddLast(point);
+            }
+        }
+
+        /// <summary>
+        /// Remove formula from dependency tree (=precedents won't mark
+        /// it as dirty) and remove <paramref name="point"/> from the chain.
+        /// </summary>
+        internal void RemoveFormula(XLBookPoint point, XLCellFormula formula)
+        {
+            if (_chain is not null && _dependencyTree is not null)
+            {
+                _dependencyTree.RemoveFormula(formula);
+                _chain.Remove(point);
+            }
         }
 
         /// <summary>

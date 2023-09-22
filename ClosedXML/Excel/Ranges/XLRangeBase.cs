@@ -118,8 +118,21 @@ namespace ClosedXML.Excel
                     throw new InvalidOperationException("Can't create array function that partially covers another array function.");
 
                 var arrayFormula = XLCellFormula.Array(value, range, false);
-                foreach (var cell in Cells(false))
-                    cell.Formula = arrayFormula;
+
+                var formulaSlice = Worksheet.Internals.CellsCollection.FormulaSlice;
+                formulaSlice.SetArray(range, arrayFormula);
+
+                // If formula evaluates to a text, it is stored directly in a worksheet, not in SST. Thus
+                // when the switch to formula happens, disable shared string and enable when formula is removed.
+                var valueSlice = Worksheet.Internals.CellsCollection.ValueSlice;
+                var clearFormula = value is null;
+                for (var row = range.TopRow; row <= range.BottomRow; ++row)
+                {
+                    for (var col = range.LeftColumn; col <= range.RightColumn; ++col)
+                    {
+                        valueSlice.SetShareString(new XLSheetPoint(row, col), clearFormula);
+                    }
+                }
 
                 // Formula is shared across all cells, so it's enough to invalidate master cell
                 var masterCell = FirstCell();
@@ -1415,7 +1428,7 @@ namespace ClosedXML.Excel
                     rowModifier = RowCount();
                     break;
             }
-            
+
             var mergesToRemove = Worksheet.Internals.MergedRanges.Where(Contains).ToList();
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
 

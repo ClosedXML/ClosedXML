@@ -13,6 +13,7 @@ namespace ClosedXML.Excel
         {
             _ws = ws;
             ValueSlice = new ValueSlice(ws.Workbook.SharedStringTable);
+            FormulaSlice = new FormulaSlice(ws);
             _slices = new List<ISlice> { ValueSlice, FormulaSlice, StyleSlice, MiscSlice };
         }
 
@@ -68,7 +69,7 @@ namespace ClosedXML.Excel
 
         internal ValueSlice ValueSlice { get; }
 
-        internal FormulaSlice FormulaSlice { get; } = new();
+        internal FormulaSlice FormulaSlice { get; }
 
         internal Slice<XLStyleValue?> StyleSlice { get; } = new();
 
