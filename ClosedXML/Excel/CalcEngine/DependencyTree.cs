@@ -29,8 +29,6 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DependencyTree
     {
-        private readonly XLWorkbook _workbook;
-
         /// <summary>
         /// The source of the truth, a storage of formula dependencies. The dependency tree is
         /// constructed from this collection.
@@ -43,20 +41,13 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly DependenciesVisitor _visitor;
 
         /// <summary>
-        /// Engine to get AST of not-yet parsed formulas.
-        /// </summary>
-        private readonly CalcEngine _engine;
-
-        /// <summary>
         /// A dependency tree for each sheet (key is sheet name).
         /// </summary>
         private readonly Dictionary<string, SheetDependencyTree> _sheetTrees = new(XLHelper.SheetComparer);
 
-        public DependencyTree(XLWorkbook workbook)
+        public DependencyTree()
         {
-            _workbook = workbook;
             _visitor = new DependenciesVisitor();
-            _engine = workbook.CalcEngine;
         }
 
         internal bool IsEmpty => _sheetTrees.All(sheetTree => sheetTree.Value.IsEmpty) && _dependencies.Count == 0;
@@ -66,11 +57,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="formulaArea">Area of a formula, for normal cells 1x1, for array can be larger.</param>
         /// <param name="formula">The cell formula.</param>
+        /// <param name="workbook">Workbook that is used to find precedents (names ect.).</param>
         /// <returns>Added cell formula dependencies.</returns>
         /// <exception cref="ArgumentException">Formula already is in the tree.</exception>
-        internal FormulaDependencies AddFormula(XLBookArea formulaArea, XLCellFormula formula)
+        internal FormulaDependencies AddFormula(XLBookArea formulaArea, XLCellFormula formula, XLWorkbook workbook)
         {
-            var precedents = GetFormulaPrecedents(formulaArea, formula);
+            var precedents = GetFormulaPrecedents(formulaArea, formula, workbook);
 
             _dependencies.Add(formula, precedents);
 
@@ -138,10 +130,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private FormulaDependencies GetFormulaPrecedents(XLBookArea formulaArea, XLCellFormula formula)
+        private FormulaDependencies GetFormulaPrecedents(XLBookArea formulaArea, XLCellFormula formula, XLWorkbook workbook)
         {
-            var ast = formula.GetAst(_engine);
-            var context = new DependenciesContext(formulaArea, _workbook);
+            var ast = formula.GetAst(workbook.CalcEngine);
+            var context = new DependenciesContext(formulaArea, workbook);
             var rootReference = ast.AstRoot.Accept(context, _visitor);
 
             // If formula references are propagated to the root, make sure to add them.
