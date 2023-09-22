@@ -92,6 +92,21 @@ namespace ClosedXML.Excel.CalcEngine
         internal void AddLast(XLBookPoint point) => AddLast(point, 0);
 
         /// <summary>
+        /// Add all cells from the area to the end of the chain.
+        /// </summary>
+        /// <exception cref="ArgumentException">If chain already contains a cell from the area.</exception>
+        internal void AppendArea(uint sheetId, XLSheetRange range)
+        {
+            for (var row = range.TopRow; row <= range.BottomRow; ++row)
+            {
+                for (var col = range.LeftColumn; col <= range.RightColumn; ++col)
+                {
+                    AddLast(new XLBookPoint(sheetId, new XLSheetPoint(row, col)));
+                }
+            }
+        }
+
+        /// <summary>
         /// Append formula at the end of the chain.
         /// </summary>
         private void AddLast(XLBookPoint point, int lastPosition)
