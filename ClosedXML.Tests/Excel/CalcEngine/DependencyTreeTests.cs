@@ -126,7 +126,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var cellFormula = AddFormula(tree, ws, "B3", "=C4");
             Assert.False(tree.IsEmpty);
 
@@ -145,7 +145,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var cellFormulaA1 = AddFormula(tree, ws, "A1", "=C4 + B1");
             var cellFormulaA2 = AddFormula(tree, ws, "A2", "=B1 / C4");
             Assert.False(tree.IsEmpty);
@@ -168,7 +168,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_single_chain_is_fully_marked()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
@@ -182,7 +182,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_split_and_join_is_fully_marked()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws1 = wb.AddWorksheet();
             AddFormula(tree, ws1, "B2", "=B1");
             AddFormula(tree, ws1, "C1", "=B2");
@@ -197,7 +197,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_uses_correct_sheet()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws1 = wb.AddWorksheet("Sheet1");
             var ws2 = wb.AddWorksheet("Sheet2");
 
@@ -225,7 +225,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_stops_at_dirty_cell()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
@@ -243,7 +243,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_wont_crash_on_cycle()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "B1", "=D1 + A1");
             AddFormula(tree, ws, "C1", "=B1");
@@ -260,7 +260,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_affects_precedents_with_partial_overlap()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "D1", "=A1:B3");
 
@@ -273,7 +273,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Mark_dirty_can_affect_multiple_chains_at_once()
         {
             using var wb = new XLWorkbook();
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
             AddFormula(tree, ws, "B1", "=A1");
             AddFormula(tree, ws, "B2", "=A2");
@@ -291,7 +291,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var cell = (XLCell)sheet.Cell(address);
             cell.FormulaA1 = formula;
             var cellArea = new XLBookArea(sheet.Name, new XLSheetRange(cell.SheetPoint, cell.SheetPoint));
-            tree.AddFormula(cellArea, cell.Formula);
+            tree.AddFormula(cellArea, cell.Formula, sheet.Workbook);
             return cell.Formula;
         }
 
@@ -327,12 +327,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
             init?.Invoke(wb);
-            var tree = new DependencyTree(wb);
+            var tree = new DependencyTree();
             var cell = ws.Cell(formulaAddress);
             cell.SetFormulaA1(formula);
 
             var cellFormula = ((XLCell)cell).Formula;
-            var dependencies = tree.AddFormula(new XLBookArea(ws.Name, cellFormula.Range), cellFormula);
+            var dependencies = tree.AddFormula(new XLBookArea(ws.Name, cellFormula.Range), cellFormula, wb);
             return dependencies;
         }
 
