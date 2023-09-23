@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -36,7 +38,7 @@ namespace ClosedXML.Excel.CalcEngine
                     new XLAddress(maxRow, maxColumn, fixedRow: false, fixedColumn: false)
                 );
 
-            foreach (var c in trimmedRange.CellValues())
+            foreach (var c in CellValues(trimmedRange))
                 yield return c.ToObject();
         }
 
@@ -58,6 +60,33 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _evaluating = false;
             }
+        }
+
+        internal IEnumerable<XLCellValue> CellValues() => CellValues(Range);
+
+        private static IEnumerable<XLCellValue> CellValues(IXLRangeBase range)
+        {
+            var sheet = (XLWorksheet)range.Worksheet;
+            for (int ro = range.RangeAddress.FirstAddress.RowNumber; ro <= range.RangeAddress.LastAddress.RowNumber; ro++)
+            {
+                for (int co = range.RangeAddress.FirstAddress.ColumnNumber; co <= range.RangeAddress.LastAddress.ColumnNumber; co++)
+                {
+                    var value = GetCellValue(sheet, ro, co);
+                    yield return value;
+                }
+            }
+        }
+
+        private static XLCellValue GetCellValue(XLWorksheet sheet, int ro, int co)
+        {
+            var cell = sheet.GetCell(ro, co);
+            if (cell is null)
+                return Blank.Value;
+
+            if (cell.Formula is null || !cell.Formula.IsDirty)
+                return cell.CachedValue;
+
+            throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(ro, co)));
         }
     }
 }

@@ -119,5 +119,22 @@ namespace ClosedXML.Excel
             if (arrayFormula is not null)
                 _engine.AddArrayFormula(range, arrayFormula, _sheet);
         }
+
+        internal Slice<XLCellFormula>.Enumerator GetForwardEnumerator(XLSheetRange range)
+        {
+            return new Slice<XLCellFormula>.Enumerator(_formulas!, range);
+        }
+
+        /// <summary>
+        /// Mark all formulas in a range as dirty.
+        /// </summary>
+        internal void MarkDirty(XLSheetRange range)
+        {
+            using var enumerator = GetForwardEnumerator(range);
+            while (enumerator.MoveNext())
+            {
+                enumerator.Current.IsDirty = true;
+            }
+        }
     }
 }

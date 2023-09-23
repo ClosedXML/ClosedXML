@@ -2,6 +2,9 @@ using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using ClosedXML.Excel.CalcEngine.Exceptions;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -18,16 +21,18 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly CultureInfo _culture;
         private readonly ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parserA1;
+        private readonly FormulaParser _parserR1C1;
         private readonly CalculationVisitor _visitor;
-        private readonly DependencyTree? _dependencyTree;
-        private readonly XLCalculationChain? _chain;
+        private DependencyTree? _dependencyTree;
+        private XLCalculationChain? _chain;
 
         public CalcEngine(CultureInfo culture)
         {
             _culture = culture;
             _cache = new ExpressionCache(this);
             var funcRegistry = GetFunctionTable();
-            _parserA1 = new FormulaParser(funcRegistry);
+            _parserA1 = new FormulaParser(funcRegistry, isA1: true);
+            _parserR1C1 = new FormulaParser(funcRegistry, isA1: false);
             _visitor = new CalculationVisitor(funcRegistry);
             _dependencyTree = null;
             _chain = null;
@@ -41,6 +46,11 @@ namespace ClosedXML.Excel.CalcEngine
         public Formula Parse(string expression)
         {
             return _parserA1.GetAst(expression);
+        }
+
+        public Formula ParseR1C1(string expression)
+        {
+            return _parserR1C1.GetAst(expression);
         }
 
         internal void AddArrayFormula(XLSheetRange range, XLCellFormula arrayFormula, XLWorksheet sheet)
@@ -78,6 +88,144 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        internal void OnAddedSheet(XLWorksheet sheet)
+        {
+            _dependencyTree?.AddSheetTree(sheet);
+        }
+
+        internal void OnDeletingSheet(XLWorksheet sheet)
+        {
+            Purge(sheet.Workbook.WorksheetsInternal);
+        }
+
+        public void OnWorksheetShiftedRows(XLRange range, int rowsShifted)
+        {
+            Purge(range.Worksheet.Workbook.WorksheetsInternal);
+        }
+
+        private void Purge(XLWorksheets sheets)
+        {
+            _dependencyTree = null;
+            _chain = null;
+            // Mark everything as dirty, because there can be stale values
+            foreach (var sheet in sheets)
+            {
+                using var enumerator =
+                    sheet.Internals.CellsCollection.FormulaSlice.GetForwardEnumerator(XLSheetRange.Full);
+                while (enumerator.MoveNext())
+                {
+                    enumerator.Current!.IsDirty = true;
+                }
+            }
+        }
+
+        internal void MarkDirty(XLWorksheet sheet, XLSheetPoint point)
+        {
+            if (_dependencyTree is not null)
+            {
+                var bookArea = new XLBookArea(sheet.Name, new XLSheetRange(point, point));
+                _dependencyTree.MarkDirty(bookArea);
+            }
+        }
+
+        internal void Evaluate(XLWorkbook wb)
+        {
+            // Lazy, so initialize chain from wb, if it is empty
+            if (_chain is null || _dependencyTree is null)
+            {
+                _chain = XLCalculationChain.CreateFrom(wb);
+                _dependencyTree = DependencyTree.CreateFrom(wb);
+            }
+
+            var sheetIdMap = wb.WorksheetsInternal
+                .ToDictionary<XLWorksheet, uint, (XLWorksheet Sheet, ValueSlice ValueSlice, FormulaSlice FormulaSlice)>(
+                    sheet => sheet.SheetId,
+                    sheet => (sheet, sheet.Internals.CellsCollection.ValueSlice, sheet.Internals.CellsCollection.FormulaSlice));
+
+            _chain.Reset();
+            if (!_chain.MoveAhead())
+                return;
+
+            while (true)
+            {
+                var current = _chain.Current;
+                if (!sheetIdMap.TryGetValue(current.SheetId, out var sheetInfo))
+                {
+                    throw new InvalidOperationException($"Unable to find sheet with sheetId {current.SheetId} for a point ${current.Point}.");
+                }
+
+                if (_chain.IsCurrentInCycle)
+                {
+                    throw new InvalidOperationException($"Formula in a cell '${sheetInfo.Sheet.Name}'!${current.Point} is part of a cycle.");
+                }
+
+                var cellFormula = sheetInfo.FormulaSlice.Get(current.Point);
+                if (cellFormula is null)
+                {
+                    throw new InvalidOperationException($"Calculation chain contains a '${sheetInfo.Sheet.Name}'!${current.Point}, but the cell doesn't contain formula.");
+                }
+
+                if (cellFormula.IsDirty)
+                {
+                    try
+                    {
+                        ApplyFormula(cellFormula, current.Point, sheetInfo.Sheet, sheetInfo.ValueSlice);
+                    }
+                    catch (GettingDataException ex)
+                    {
+                        _chain.MoveToCurrent(ex.Point);
+                        continue;
+                    }
+
+                    cellFormula.IsDirty = false;
+                }
+
+                if (!_chain.MoveAhead())
+                {
+                    _chain.Reset();
+                    return;
+                }
+            }
+        }
+
+        private void ApplyFormula(XLCellFormula formula, XLSheetPoint appliedPoint, XLWorksheet sheet, ValueSlice valueSlice)
+        {
+            var formulaText = formula.GetFormulaA1(appliedPoint);
+            if (formula.Type == FormulaType.Normal)
+            {
+                var single = EvaluateFormula(formulaText, sheet.Workbook, sheet, new XLAddress(sheet, appliedPoint.Row, appliedPoint.Column, true, true));
+                valueSlice.SetCellValue(appliedPoint, single.ToCellValue());
+            }
+            else if (formula.Type == FormulaType.Array)
+            {
+                // The point can be any point in an array, so we can't use it.
+                var range = formula.Range;
+                var leftTopCorner = range.FirstPoint;
+                var masterCell = sheet.Cell(leftTopCorner.Row, leftTopCorner.Column);
+                var array = EvaluateArrayFormula(formulaText, masterCell);
+
+                // The array from formula can be smaller or larger than the
+                // range of cells it should fit into. Broadcast it to the size.
+                var result = array.Broadcast(range.Height, range.Width);
+
+                // Copy value to the value slice
+                for (var rowIdx = 0; rowIdx < result.Height; ++rowIdx)
+                {
+                    for (var colIdx = 0; colIdx < result.Width; ++colIdx)
+                    {
+                        var cellValue = result[rowIdx, colIdx];
+                        var row = range.FirstPoint.Row + rowIdx;
+                        var column = range.FirstPoint.Column + colIdx;
+                        valueSlice.SetCellValue(new XLSheetPoint(row, column), cellValue.ToCellValue());
+                    }
+                }
+            }
+            else
+            {
+                throw new NotImplementedException($"Evaluation of formula type '{formula.Type}' is not supported.");
+            }
+        }
+
         /// <summary>
         /// Evaluates a normal formula.
         /// </summary>
@@ -85,6 +233,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="wb">Workbook where is formula being evaluated.</param>
         /// <param name="ws">Worksheet where is formula being evaluated.</param>
         /// <param name="address">Address of formula.</param>
+        /// <param name="recursive">Should the data necessary for this formula (not deeper ones)
+        /// be calculated recursively? Used only for non-cell calculations</param>
         /// <returns>The value of the expression.</returns>
         /// <remarks>
         /// If you are going to evaluate the same expression several times,
@@ -92,9 +242,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        internal ScalarValue EvaluateFormula(string expression, XLWorkbook? wb = null, XLWorksheet? ws = null, IXLAddress? address = null)
+        internal ScalarValue EvaluateFormula(string expression, XLWorkbook? wb = null, XLWorksheet? ws = null, IXLAddress? address = null, bool recursive = false)
         {
-            var ctx = new CalcContext(this, _culture, wb, ws, address);
+            var ctx = new CalcContext(this, _culture, wb, ws, address, recursive);
             var result = EvaluateFormula(expression, ctx);
             if (ctx.UseImplicitIntersection)
             {

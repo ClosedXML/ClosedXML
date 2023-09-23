@@ -8,10 +8,12 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FormulaParser
     {
         private readonly AstFactory _nodeFactory;
+        private readonly bool _isA1;
 
-        public FormulaParser(FunctionRegistry functionRegistry)
+        public FormulaParser(FunctionRegistry functionRegistry, bool isA1)
         {
-            _nodeFactory = new AstFactory(functionRegistry, isA1: true);
+            _nodeFactory = new AstFactory(functionRegistry, isA1);
+            _isA1 = isA1;
         }
 
         /// <summary>
@@ -26,8 +28,10 @@ namespace ClosedXML.Excel.CalcEngine
             try
             {
                 var ctx = new List<FormulaFlags>();
-                var root = FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaA1(formula, ctx,
-                    _nodeFactory);
+                
+                var root = _isA1
+                    ? FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaA1(formula, ctx, _nodeFactory)
+                    : FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaR1C1(formula, ctx, _nodeFactory);
                 var flags = ctx.Contains(FormulaFlags.HasSubtotal)
                     ? FormulaFlags.HasSubtotal
                     : FormulaFlags.None;

@@ -874,10 +874,10 @@ namespace ClosedXML.Tests
                 A2.FormulaA1 = "A1 + 1";
 
                 Assert.Throws(
-                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("cycle"),
                     () => _ = A1.Value);
                 Assert.Throws(
-                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("cycle"),
                     () => _ = A2.Value);
             }
         }

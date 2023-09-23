@@ -1917,6 +1917,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
+        // TODO: Nuke CellRangeReference along with XObjectExpression. It takes values directly from recursively evaluated cells
         [Test]
         public void SumIf_ReturnsCorrectValues_WhenFormulaBelongToSameRange()
         {
@@ -1940,7 +1941,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(3, value);
             }
         }
-
+        
         [Test]
         public void SumIfs_MultidimensionalRanges()
         {
@@ -1956,7 +1957,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             Assert.AreEqual(30, ws.Evaluate("SUMIFS(C1:D5,A1:B5,\">20\")"));
         }
-
+        
         /// <summary>
         /// refers to Example 2 to SumIf from the Excel documentation.
         /// As SumIfs should behave the same if called with three parameters, we can take that example here again.
@@ -2002,7 +2003,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(expectedResult, actualResult);
             }
         }
-
+        
         /// <summary>
         /// refers to Example 1 to SumIf from the Excel documentation.
         /// As SumIfs should behave the same if called with three parameters, but in a different order
@@ -2159,7 +2160,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var actual = (double)XLWorkbook.EvaluateExpr($"TRUNC({input.ToString(CultureInfo.InvariantCulture)}, {digits})");
             Assert.AreEqual(expectedResult, actual);
         }
-
+        /**/
         private static IXLWorksheet AddWorksheetWithCellValues(XLWorkbook wb, params XLCellValue[] values)
         {
             var ws = wb.AddWorksheet();

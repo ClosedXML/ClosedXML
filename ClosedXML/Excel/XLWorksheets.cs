@@ -128,6 +128,8 @@ namespace ClosedXML.Excel
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", sheetName), nameof(sheetName));
 
             _worksheets.Add(sheetName, sheet);
+
+            _workbook.NotifyWorksheetAdded(sheet);
         }
 
         public void Delete(String sheetName)

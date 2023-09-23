@@ -105,7 +105,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return _index switch
             {
-                BlankValue => Excel.Blank.Value,
+                BlankValue => 0, // The result value of a formula calculation can be blank, but result of formula in a cell value is never blank, but 0.
                 LogicalValue => _logical,
                 NumberValue => _number,
                 TextValue => _text,

@@ -155,7 +155,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.That(() => _ = ws.Cell("A2").Value,
                 Throws.TypeOf<InvalidOperationException>()
-                    .With.Message.EqualTo("Cell A2 is a part of circular reference."));
+                    .With.Message.EqualTo("Formula in a cell '$Sheet1'!$A1 is part of a cycle."));
         }
     }
 }

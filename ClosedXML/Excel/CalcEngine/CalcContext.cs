@@ -12,18 +12,20 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly XLWorkbook? _workbook;
         private readonly XLWorksheet? _worksheet;
         private readonly IXLAddress? _formulaAddress;
+        private readonly bool _recursive;
 
         public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLCell cell)
             : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
         {
         }
 
-        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress)
+        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress, bool recursive = false)
         {
             _calcEngine = calcEngine;
             _workbook = workbook;
             _worksheet = worksheet;
             _formulaAddress = formulaAddress;
+            _recursive = recursive;
             Culture = culture;
         }
 
@@ -61,17 +63,20 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public bool IsArrayCalculation { get; set; }
 
-        internal ScalarValue GetCellValue(XLWorksheet? worksheet, int rowNumber, int columnNumber)
+        internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
-            worksheet ??= Worksheet;
-            var cell = worksheet.GetCell(rowNumber, columnNumber);
+            sheet ??= Worksheet;
+            var cell = sheet.GetCell(rowNumber, columnNumber);
             if (cell is null)
                 return ScalarValue.Blank;
 
-            if (cell.IsEvaluating)
-                throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
+            if (cell.Formula is null || !cell.Formula.IsDirty)
+                return cell.CachedValue;
 
-            return cell.Value;
+            if (_recursive)
+                return cell.Value;
+
+            throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(rowNumber, columnNumber)));
         }
 
         /// <summary>

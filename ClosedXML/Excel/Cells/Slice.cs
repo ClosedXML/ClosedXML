@@ -294,7 +294,7 @@ namespace ClosedXML.Excel
         /// Enumerator that returns used values from a specified range.
         /// </summary>
         [DebuggerDisplay("{Point}:{Current}")]
-        private class Enumerator : IEnumerator<XLSheetPoint>
+        internal class Enumerator : IEnumerator<XLSheetPoint>
         {
             private readonly XLSheetRange _range;
             private Lut<TElement>.LutEnumerator _columnsEnumerator;

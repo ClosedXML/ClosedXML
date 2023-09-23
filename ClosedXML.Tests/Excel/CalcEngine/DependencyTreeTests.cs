@@ -288,8 +288,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         private static XLCellFormula AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
         {
+            // Set directly, so the cell is not marked as a dirty.
             var cell = (XLCell)sheet.Cell(address);
-            cell.FormulaA1 = formula;
+            cell.Formula = XLCellFormula.NormalA1(formula);
             var cellArea = new XLBookArea(sheet.Name, new XLSheetRange(cell.SheetPoint, cell.SheetPoint));
             tree.AddFormula(cellArea, cell.Formula, sheet.Workbook);
             return cell.Formula;
