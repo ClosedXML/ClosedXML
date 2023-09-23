@@ -557,6 +557,7 @@ namespace ClosedXML.Excel
         {
             IsDeleted = true;
             (Workbook.NamedRanges as XLNamedRanges).OnWorksheetDeleted(Name);
+            Workbook.NotifyWorksheetDeleting(this);
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
@@ -1322,6 +1323,7 @@ namespace ClosedXML.Excel
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
+            Workbook.CalcEngine.OnWorksheetShiftedRows(range, rowsShifted);
         }
 
         private void ShiftPageBreaksRows(XLRange range, int rowsShifted)
@@ -1667,7 +1669,7 @@ namespace ClosedXML.Excel
         public XLCellValue Evaluate(String expression, string formulaAddress = null)
         {
             IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
-            return CalcEngine.EvaluateFormula(expression, Workbook, this, address).ToCellValue();
+            return CalcEngine.EvaluateFormula(expression, Workbook, this, address, true).ToCellValue();
         }
 
         /// <summary>
@@ -1773,24 +1775,6 @@ namespace ClosedXML.Excel
             };
 
             cell.SetValue(newValue, setTableHeader: true, checkMergedRanges: false);
-        }
-
-        /// <summary>
-        /// Get a cell value not initializing it if it has not been initialized yet.
-        /// </summary>
-        /// <param name="ro">Row number</param>
-        /// <param name="co">Column number</param>
-        internal XLCellValue GetCellValue(int ro, int co)
-        {
-            var cell = GetCell(ro, co);
-            if (cell is null)
-                return Blank.Value;
-
-            // LEGACY: This is deeply suspicious, this only exists so the legacy formulas can get cell value
-            if (cell.IsEvaluating)
-                return Blank.Value;
-
-            return cell.Value;
         }
 
         /// <summary>

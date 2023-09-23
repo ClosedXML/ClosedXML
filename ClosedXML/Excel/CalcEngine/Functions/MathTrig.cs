@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -956,18 +957,33 @@ namespace ClosedXML.Excel.CalcEngine
             var criteria = p[1].Evaluate();
 
             var rangeValues = rangeColumn.Cast<object>().ToList();
-            var sumRangeValues = sumRange.Cast<object>().ToList();
+            using var sumRangeEnumerator = sumRange.Cast<object>().GetEnumerator();
 
             // compute total
             var ce = new CalcEngine(CultureInfo.CurrentCulture);
             var tally = new Tally();
-            for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
+            for (var i = 0; i < rangeValues.Count; i++)
             {
-                var targetValue = i < rangeValues.Count ? rangeValues[i] : string.Empty;
+                // TODO: Replace this mess completely
+                var targetValue = rangeValues[i];
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce))
                 {
-                    var value = i < sumRangeValues.Count ? sumRangeValues[i] : 0d;
+                    if (!sumRangeEnumerator.MoveNext())
+                        break;
+                    var value = sumRangeEnumerator.Current!;
                     tally.AddValue(value);
+                }
+                else
+                {
+                    try
+                    {
+                        if (!sumRangeEnumerator.MoveNext())
+                            break;
+                    }
+                    catch (GettingDataException)
+                    {
+                        // The referenced cell uses a dirty formula, but we are not using the value, so eat the exception.
+                    }
                 }
             }
 

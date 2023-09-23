@@ -3,6 +3,7 @@
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Graphics;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -898,8 +899,10 @@ namespace ClosedXML.Excel
         /// </summary>
         public void RecalculateAllFormulas()
         {
-            InvalidateFormulas();
-            Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
+            foreach (var sheet in WorksheetsInternal)
+                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+
+            CalcEngine.Evaluate(this);
         }
 
         private static XLCalcEngine _calcEngineExpr;
@@ -1031,6 +1034,22 @@ namespace ClosedXML.Excel
         IXLElementProtection IXLProtectable.Unprotect(String password)
         {
             return Unprotect(password);
+        }
+
+        /// <summary>
+        /// Notify various component of a workbook that sheet has been added.
+        /// </summary>
+        internal void NotifyWorksheetAdded(XLWorksheet newSheet)
+        {
+            _calcEngine.OnAddedSheet(newSheet);
+        }
+
+        /// <summary>
+        /// Notify various component of a workbook that sheet is about to be removed.
+        /// </summary>
+        internal void NotifyWorksheetDeleting(XLWorksheet sheet)
+        {
+            _calcEngine.OnDeletingSheet(sheet);
         }
 
         public override string ToString()

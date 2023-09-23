@@ -385,10 +385,21 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void LoadingOptions()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\ExternalLinks\WorkbookWithExternalLink.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\Misc\Formulas.xlsx")))
             {
-                Assert.DoesNotThrow(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false }));
-                Assert.Throws<NotImplementedException>(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true }));
+                Assert.DoesNotThrow(() =>
+                {
+                    // The value in the file is blank and kept.
+                    using var wb = new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false });
+                    Assert.AreEqual(Blank.Value, wb.Worksheets.Single().Cell("C2").CachedValue);
+                });
+
+                Assert.DoesNotThrow(() =>
+                {
+                    // The value in the file is blank, but recalculation sets it to correct 3.
+                    using var wb = new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true });
+                    Assert.AreEqual(3, wb.Worksheets.Single().Cell("C2").CachedValue);
+                });
 
                 Assert.AreEqual(30, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiX);
                 Assert.AreEqual(14, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiY);

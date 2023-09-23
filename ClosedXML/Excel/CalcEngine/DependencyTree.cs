@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DocumentFormat.OpenXml.Spreadsheet;
 using RBush;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -52,6 +53,48 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal bool IsEmpty => _sheetTrees.All(sheetTree => sheetTree.Value.IsEmpty) && _dependencies.Count == 0;
 
+        internal static DependencyTree CreateFrom(XLWorkbook workbook)
+        {
+            var tree = new DependencyTree();
+
+            // Add tree before adding formulas, because formula can reference any sheet.
+            foreach (var sheet in workbook.WorksheetsInternal)
+                tree.AddSheetTree(sheet);
+
+            foreach (var sheet in workbook.WorksheetsInternal)
+            {
+                using var enumerator = sheet.Internals.CellsCollection.FormulaSlice.GetForwardEnumerator(XLSheetRange.Full);
+                while (enumerator.MoveNext())
+                {
+                    // Enumerators skips default elements, in this case nulls
+                    var formula = enumerator.Current!;
+                    var point = enumerator.Point;
+                    if (formula.Type == FormulaType.Normal)
+                    {
+                        var bookArea = new XLBookArea(sheet.Name, new XLSheetRange(point, point));
+                        tree.AddFormula(bookArea, formula, workbook);
+                    }
+                    else if (formula.Type == FormulaType.Array)
+                    {
+                        // Ignore all non-master cells
+                        var isMasterCell = formula.Range.FirstPoint == point;
+                        if (isMasterCell)
+                        {
+                            var bookArea = new XLBookArea(sheet.Name, formula.Range);
+                            tree.AddFormula(bookArea, formula, workbook);
+                        }
+                    }
+                    else
+                    {
+                        // TODO
+                        throw new NotSupportedException();
+                    }
+                }
+            }
+
+            return tree;
+        }
+
         /// <summary>
         /// Add a formula to the dependency tree.
         /// </summary>
@@ -71,6 +114,7 @@ namespace ClosedXML.Excel.CalcEngine
                 // Add dependency to its sheet dependency tree
                 if (!_sheetTrees.TryGetValue(precedentArea.Name, out var sheetTree))
                 {
+                    // TODO: Remove, already done elsewhere
                     sheetTree = new SheetDependencyTree();
                     _sheetTrees.Add(precedentArea.Name, sheetTree);
                 }
@@ -99,6 +143,11 @@ namespace ClosedXML.Excel.CalcEngine
 
                 sheetTree.RemoveDependent(precedentArea.Area, formula);
             }
+        }
+
+        public void AddSheetTree(XLWorksheet sheet)
+        {
+            _sheetTrees.Add(sheet.Name, new SheetDependencyTree());
         }
 
         /// <summary>

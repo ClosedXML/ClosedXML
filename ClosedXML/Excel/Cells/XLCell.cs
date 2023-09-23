@@ -124,7 +124,11 @@ namespace ClosedXML.Excel
         private XLCellValue SliceCellValue
         {
             get => _cellsCollection.ValueSlice.GetCellValue(SheetPoint);
-            set => _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
+            set
+            {
+                _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
+            }
         }
 
         private XLImmutableRichText SliceRichText
@@ -223,6 +227,7 @@ namespace ClosedXML.Excel
                 // If we are setting formula, we should disable shareString (=inline), because it must be written to the worksheet part
                 var clearFormula = value is null;
                 ShareString = clearFormula;
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
             }
         }
 
@@ -1068,7 +1073,8 @@ namespace ClosedXML.Excel
                     return false;
                 }
 
-                return Formula.NeedsRecalculation(this);
+                return Formula.IsDirty;
+//                return Formula.NeedsRecalculation(this);
             }
         }
 

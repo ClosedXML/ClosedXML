@@ -74,6 +74,23 @@ namespace ClosedXML.Excel.CalcEngine
         internal bool IsCurrentInCycle { get; private set; }
 
         /// <summary>
+        /// Create a new chain filled with all formulas from the workbook.
+        /// </summary>
+        internal static XLCalculationChain CreateFrom(XLWorkbook wb)
+        {
+            var chain = new XLCalculationChain();
+            foreach (var sheet in wb.WorksheetsInternal)
+            {
+                var formulaSlice = sheet.Internals.CellsCollection.FormulaSlice;
+                using var e = formulaSlice.GetEnumerator(XLSheetRange.Full);
+                while (e.MoveNext())
+                    chain.AddLast(new XLBookPoint(sheet.SheetId, e.Current));
+            }
+
+            return chain;
+        }
+
+        /// <summary>
         /// Add a new link at the beginning of a chain.
         /// </summary>
         private void AddFirst(XLBookPoint point, int lastPosition)
@@ -313,7 +330,12 @@ namespace ClosedXML.Excel.CalcEngine
             // change chain, plus we avoid problems with moving in a
             // single/double link chain.
             if (currentPoint == pointToMove)
+            {
+                // But it basically means that currentPoint depends on pointToMove
+                // thus cell depends on itself and that is a cycle.
+                IsCurrentInCycle = true;
                 return;
+            }
 
             // If head is also current, moving before the current means moving before head
             var pointToMoveLastPosition = Remove(pointToMove);

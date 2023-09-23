@@ -216,6 +216,7 @@ namespace ClosedXML.Excel
 
         internal void Invalidate(XLWorksheet worksheet)
         {
+            IsDirty = true;
             _lastStatus = new(true, worksheet.Workbook.RecalculationCounter);
         }
 
@@ -437,6 +438,10 @@ namespace ClosedXML.Excel
 
         internal void ApplyFormula(XLCell cell)
         {
+            var wb = cell.Worksheet.Workbook;
+            wb.CalcEngine.Evaluate(wb);
+            return;
+            /*
             if (IsEvaluating)
             {
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
@@ -478,7 +483,7 @@ namespace ClosedXML.Excel
             finally
             {
                 IsEvaluating = false;
-            }
+            }*/
         }
 
         /// <summary>
@@ -722,9 +727,9 @@ namespace ClosedXML.Excel
         /// <param name="engine">Engine to parse the formula into AST, if necessary.</param>
         public Formula GetAst(CalcEngine.CalcEngine engine)
         {
-            // TODO: Add caching for lazy initialization.
-            var a1 = GetFormulaA1(Range.FirstPoint);
-            var ast = engine.Parse(a1);
+            var ast = A1 is not null
+                ? engine.Parse(A1)
+                : engine.ParseR1C1(R1C1);
             return ast;
         }
 
