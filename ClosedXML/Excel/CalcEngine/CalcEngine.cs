@@ -50,6 +50,9 @@ namespace ClosedXML.Excel.CalcEngine
             return _parser.GetAst(expression, false);
         }
 
+        /// <summary>
+        /// Add an array formula to the calc engine to manage dirty tracking and evaluation.
+        /// </summary>
         internal void AddArrayFormula(XLSheetRange range, XLCellFormula arrayFormula, XLWorksheet sheet)
         {
             if (_chain is not null && _dependencyTree is not null)
@@ -75,6 +78,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Remove formula from dependency tree (=precedents won't mark
         /// it as dirty) and remove <paramref name="point"/> from the chain.
+        /// Note that even if formula is used by many cells (e.g. array formula),
+        /// it is fully removed from dependency tree, but each cells referencing
+        /// the formula must be removed individually from calc chain.
         /// </summary>
         internal void RemoveFormula(XLBookPoint point, XLCellFormula formula)
         {
