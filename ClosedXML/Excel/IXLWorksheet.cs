@@ -447,7 +447,7 @@ namespace ClosedXML.Excel
         XLCellValue Evaluate(String expression, string formulaAddress = null);
 
         /// <summary>
-        /// Force recalculation of all cell formulas.
+        /// Force recalculation of all cell formulas in the sheet while leaving other sheets without change, even if they are dirty.
         /// </summary>
         void RecalculateAllFormulas();
 

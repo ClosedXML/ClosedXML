@@ -1275,5 +1275,41 @@ namespace ClosedXML.Tests
             var column = ws.FirstColumnUsed(options);
             Assert.AreEqual(expectedColumn, column.ColumnNumber());
         }
+
+        [Test]
+        public void RecalculateAllFormulas_recalculates_all_formulas_in_sheet_and_leaves_rest_dirty()
+        {
+            using var wb = new XLWorkbook();
+            var test = wb.AddWorksheet();
+            var other = wb.AddWorksheet("other");
+
+            other.Cell("A1").Value = 7;
+            other.Cell("A2").FormulaA1 = "A1+3";
+            Assert.AreEqual(10.0, other.Cell("A2").Value);
+
+            // Change the value, but without recalculation, the value stays the same
+            other.Cell("A1").Value = 5;
+            Assert.True(other.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(10.0, other.Cell("A2").CachedValue);
+
+            test.Cell("A1").FormulaA1 = "other!A2+5";
+            test.Cell("A2").FormulaA1 = "1+2";
+
+            Assert.AreEqual(Blank.Value, test.Cell("A1").CachedValue);
+            Assert.AreEqual(Blank.Value, test.Cell("A2").CachedValue);
+
+            test.RecalculateAllFormulas();
+
+            // Formulas in other sheets kept the value
+            Assert.True(other.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(10.0, other.Cell("A2").CachedValue);
+
+            // Formulas in test sheet were recalculated
+            Assert.False(test.Cell("A1").NeedsRecalculation);
+            Assert.AreEqual(15.0, test.Cell("A1").CachedValue);
+
+            Assert.False(test.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(3.0, test.Cell("A2").CachedValue);
+        }
     }
 }

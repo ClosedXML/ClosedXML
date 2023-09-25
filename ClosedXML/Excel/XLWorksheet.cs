@@ -1672,12 +1672,10 @@ namespace ClosedXML.Excel
             return CalcEngine.EvaluateFormula(expression, Workbook, this, address, true).ToCellValue();
         }
 
-        /// <summary>
-        /// Force recalculation of all cell formulas.
-        /// </summary>
         public void RecalculateAllFormulas()
         {
-            CellsUsed().ForEach<XLCell>(cell => cell.Evaluate(true));
+            Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+            Workbook.CalcEngine.Recalculate(Workbook, SheetId);
         }
 
         public String Author { get; set; }

@@ -3,7 +3,6 @@
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Graphics;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -902,7 +901,7 @@ namespace ClosedXML.Excel
             foreach (var sheet in WorksheetsInternal)
                 sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
 
-            CalcEngine.Evaluate(this);
+            CalcEngine.Recalculate(this, null);
         }
 
         private static XLCalcEngine _calcEngineExpr;

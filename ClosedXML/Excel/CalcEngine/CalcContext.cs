@@ -1,5 +1,4 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +62,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public bool IsArrayCalculation { get; set; }
 
+        /// <summary>
+        /// Sheet that is being recalculated. If set, formula can read dirty
+        /// values from other sheets, but not from the sheetId in prop.
+        /// </summary>
+        public uint? RecalculateSheetId { get; set; }
+
         internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
             sheet ??= Worksheet;
@@ -73,6 +78,13 @@ namespace ClosedXML.Excel.CalcEngine
             if (cell.Formula is null || !cell.Formula.IsDirty)
                 return cell.CachedValue;
 
+            // Used when only one sheet should be recalculated, leaving other sheets with their data.
+            if (RecalculateSheetId is not null && sheet.SheetId != RecalculateSheetId.Value)
+                return cell.CachedValue;
+
+            // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
+            // These functions are not a part of calculation chain and thus reordering a chain
+            // for them doesn't make sense.
             if (_recursive)
                 return cell.Value;
 

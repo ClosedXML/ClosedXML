@@ -595,12 +595,7 @@ namespace ClosedXML.Excel
                 ? value.GetUnifiedNumber().ToExcelFormat(format)
                 : value.ToString(CultureInfo.CurrentCulture);
         }
-
-        /// <summary>
-        /// Flag showing that the cell is in formula evaluation state.
-        /// </summary>
-        internal bool IsEvaluating => Formula is not null && Formula.IsEvaluating;
-
+        
         public void InvalidateFormula()
         {
             Worksheet.Workbook.InvalidateFormulas();
@@ -610,7 +605,7 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            Formula.Invalidate(Worksheet);
+            Formula.IsDirty = true;
         }
 
         /// <summary>
@@ -633,7 +628,9 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            Formula.ApplyFormula(this);
+            // TODO: Only one cell, somehow
+            var wb = Worksheet.Workbook;
+            wb.CalcEngine.Recalculate(wb, null);
         }
 
         /// <summary>

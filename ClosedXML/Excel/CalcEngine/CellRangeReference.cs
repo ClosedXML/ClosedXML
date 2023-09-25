@@ -47,7 +47,7 @@ namespace ClosedXML.Excel.CalcEngine
         // ** implementation
         private object GetValue(IXLCell cell)
         {
-            if (_evaluating || ((XLCell)cell).IsEvaluating)
+            if (_evaluating)
             {
                 throw new InvalidOperationException($"Circular Reference occurred during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
             }
