@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
                     value = 0; // blank
             }
 
-            var modified = new XLValueSliceContent(value, cellValue.Type, original.ModifiedAtVersion, original.Inline);
+            var modified = new XLValueSliceContent(value, cellValue.Type, original.Inline);
             _values.Set(point, in modified);
         }
 
@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
             }
 
             var richTextId = _sst.IncreaseRef(richText, original.Inline);
-            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.ModifiedAtVersion, original.Inline);
+            var modified = new XLValueSliceContent(richTextId, XLDataType.Text, original.Inline);
             _values.Set(point, modified);
         }
 
@@ -203,7 +203,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var modified = new XLValueSliceContent(cellValue, original.Type, original.ModifiedAtVersion, inlineString);
+            var modified = new XLValueSliceContent(cellValue, original.Type, inlineString);
             _values.Set(point, in modified);
         }
 
@@ -214,21 +214,6 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException($"Asking for a shared string id of a non-text cell {point}.");
 
             return (int)_values[point].Value;
-        }
-
-        internal long GetModifiedAtVersion(XLSheetPoint point)
-        {
-            return _values[point].ModifiedAtVersion;
-        }
-
-        internal void SetModifiedAtVersion(XLSheetPoint point, long modifiedAtVersion)
-        {
-            ref readonly var original = ref _values[point];
-            if (original.ModifiedAtVersion != modifiedAtVersion)
-            {
-                var modified = new XLValueSliceContent(original.Value, original.Type, modifiedAtVersion, original.Inline);
-                _values.Set(point, in modified);
-            }
         }
 
         /// <summary>
@@ -246,7 +231,7 @@ namespace ClosedXML.Excel
                 if (value.Type == XLDataType.Text)
                 {
                     _sst.DecreaseRef((int)value.Value);
-                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.ModifiedAtVersion, value.Inline);
+                    var blank = new XLValueSliceContent(0, XLDataType.Blank, value.Inline);
                     _values.Set(e.Current, in blank);
                 }
             }
@@ -263,14 +248,12 @@ namespace ClosedXML.Excel
             /// Type of a cell <see cref="Value"/>.
             /// </summary>
             internal readonly XLDataType Type;
-            internal readonly long ModifiedAtVersion;
             internal readonly bool Inline;
 
-            internal XLValueSliceContent(double value, XLDataType type, long modifiedAtVersion, bool inline)
+            internal XLValueSliceContent(double value, XLDataType type, bool inline)
             {
                 Value = value;
                 Type = type;
-                ModifiedAtVersion = modifiedAtVersion;
                 Inline = inline;
             }
         }

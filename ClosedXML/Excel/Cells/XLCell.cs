@@ -231,16 +231,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that
-        /// workbook had at the moment of last value or formula change.
-        /// </summary>
-        internal long ModifiedAtVersion
-        {
-            get => _cellsCollection.ValueSlice.GetModifiedAtVersion(SheetPoint);
-            private set => _cellsCollection.ValueSlice.SetModifiedAtVersion(SheetPoint, value);
-        }
-
         #endregion Slice fields
 
         internal XLComment GetComment()
@@ -599,7 +589,6 @@ namespace ClosedXML.Excel
         public void InvalidateFormula()
         {
             Worksheet.Workbook.InvalidateFormulas();
-            ModifiedAtVersion = Worksheet.Workbook.RecalculationCounter;
             if (Formula is null)
             {
                 return;
