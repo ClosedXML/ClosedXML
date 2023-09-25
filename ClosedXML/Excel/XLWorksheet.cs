@@ -1193,6 +1193,18 @@ namespace ClosedXML.Excel
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
             RemoveInvalidSparklines();
+            if (columnsShifted > 0)
+            {
+                var area = XLSheetRange
+                    .FromRangeAddress(range.RangeAddress)
+                    .ExtendRight(columnsShifted - 1);
+                Workbook.CalcEngine.OnInsertAreaAndShiftRight(range.Worksheet, area);
+            }
+            else if (columnsShifted < 0)
+            {
+                var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+                Workbook.CalcEngine.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
+            }
         }
 
         private void ShiftPageBreaksColumns(XLRange range, int columnsShifted)
@@ -1323,7 +1335,18 @@ namespace ClosedXML.Excel
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
-            Workbook.CalcEngine.OnWorksheetShiftedRows(range, rowsShifted);
+            if (rowsShifted > 0)
+            {
+                var area = XLSheetRange
+                    .FromRangeAddress(range.RangeAddress)
+                    .ExtendBelow(rowsShifted - 1);
+                Workbook.CalcEngine.OnInsertAreaAndShiftDown(range.Worksheet, area);
+            }
+            else if (rowsShifted < 0)
+            {
+                var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+                Workbook.CalcEngine.OnDeleteAreaAndShiftUp(range.Worksheet, area);
+            }
         }
 
         private void ShiftPageBreaksRows(XLRange range, int rowsShifted)
