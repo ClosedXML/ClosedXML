@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -128,7 +127,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        internal void Evaluate(XLWorkbook wb)
+        /// <summary>
+        /// Recalculate a workbook or a sheet.
+        /// </summary>
+        internal void Recalculate(XLWorkbook wb, uint? recalculateSheetId)
         {
             // Lazy, so initialize chain from wb, if it is empty
             if (_chain is null || _dependencyTree is null)
@@ -142,58 +144,77 @@ namespace ClosedXML.Excel.CalcEngine
                     sheet => sheet.SheetId,
                     sheet => (sheet, sheet.Internals.CellsCollection.ValueSlice, sheet.Internals.CellsCollection.FormulaSlice));
 
-            _chain.Reset();
-            if (!_chain.MoveAhead())
-                return;
-
-            while (true)
+            // Each outer loop moves chain one cell ahead.
+            while (_chain.MoveAhead())
             {
-                var current = _chain.Current;
-                if (!sheetIdMap.TryGetValue(current.SheetId, out var sheetInfo))
+                // Inner loop that pushes supporting formulas ahead of current.
+                // It ends when a cell has been calculated and thus chain can move ahead.
+                while (true)
                 {
-                    throw new InvalidOperationException($"Unable to find sheet with sheetId {current.SheetId} for a point ${current.Point}.");
-                }
+                    var current = _chain.Current;
+                    var sheetId = current.SheetId;
 
-                if (_chain.IsCurrentInCycle)
-                {
-                    throw new InvalidOperationException($"Formula in a cell '${sheetInfo.Sheet.Name}'!${current.Point} is part of a cycle.");
-                }
+                    // Skip dirty cells from sheets that are not being recalculated
+                    if (recalculateSheetId is not null && sheetId != recalculateSheetId.Value)
+                    {
+                        // Even though cell is dirty, it's in the ignored sheet and
+                        // thus chain can move ahead.
+                        break;
+                    }
 
-                var cellFormula = sheetInfo.FormulaSlice.Get(current.Point);
-                if (cellFormula is null)
-                {
-                    throw new InvalidOperationException($"Calculation chain contains a '${sheetInfo.Sheet.Name}'!${current.Point}, but the cell doesn't contain formula.");
-                }
+                    if (!sheetIdMap.TryGetValue(sheetId, out var sheetInfo))
+                    {
+                        throw new InvalidOperationException($"Unable to find sheet with sheetId {sheetId} for a point ${current.Point}.");
+                    }
 
-                if (cellFormula.IsDirty)
-                {
+                    if (_chain.IsCurrentInCycle)
+                    {
+                        throw new InvalidOperationException($"Formula in a cell '${sheetInfo.Sheet.Name}'!${current.Point} is part of a cycle.");
+                    }
+
+                    var cellFormula = sheetInfo.FormulaSlice.Get(current.Point);
+                    if (cellFormula is null)
+                    {
+                        throw new InvalidOperationException($"Calculation chain contains a '${sheetInfo.Sheet.Name}'!${current.Point}, but the cell doesn't contain formula.");
+                    }
+
+                    if (!cellFormula.IsDirty)
+                        break;
+
                     try
                     {
-                        ApplyFormula(cellFormula, current.Point, sheetInfo.Sheet, sheetInfo.ValueSlice);
+                        ApplyFormula(cellFormula, current.Point, sheetInfo.Sheet, sheetInfo.ValueSlice,
+                            recalculateSheetId);
+                        cellFormula.IsDirty = false;
+
+                        // Break out of the inner loop, a dirty cell has been
+                        // calculated and thus chain can move ahead.
+                        break;
                     }
                     catch (GettingDataException ex)
                     {
                         _chain.MoveToCurrent(ex.Point);
-                        continue;
                     }
-
-                    cellFormula.IsDirty = false;
-                }
-
-                if (!_chain.MoveAhead())
-                {
-                    _chain.Reset();
-                    return;
                 }
             }
+
+            // Super important to clean up the chain for next recalculation.
+            // Chain contains shared data and not cleaning it would cause hard
+            // to diagnose issues.
+            _chain.Reset();
         }
 
-        private void ApplyFormula(XLCellFormula formula, XLSheetPoint appliedPoint, XLWorksheet sheet, ValueSlice valueSlice)
+        private void ApplyFormula(XLCellFormula formula, XLSheetPoint appliedPoint, XLWorksheet sheet, ValueSlice valueSlice, uint? recalculateSheetId)
         {
             var formulaText = formula.GetFormulaA1(appliedPoint);
             if (formula.Type == FormulaType.Normal)
             {
-                var single = EvaluateFormula(formulaText, sheet.Workbook, sheet, new XLAddress(sheet, appliedPoint.Row, appliedPoint.Column, true, true));
+                var single = EvaluateFormula(
+                    formulaText,
+                    sheet.Workbook,
+                    sheet,
+                    new XLAddress(sheet, appliedPoint.Row, appliedPoint.Column, true, true),
+                    recalculateSheetId: recalculateSheetId);
                 valueSlice.SetCellValue(appliedPoint, single.ToCellValue());
             }
             else if (formula.Type == FormulaType.Array)
@@ -202,7 +223,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var range = formula.Range;
                 var leftTopCorner = range.FirstPoint;
                 var masterCell = sheet.Cell(leftTopCorner.Row, leftTopCorner.Column);
-                var array = EvaluateArrayFormula(formulaText, masterCell);
+                var array = EvaluateArrayFormula(formulaText, masterCell, recalculateSheetId);
 
                 // The array from formula can be smaller or larger than the
                 // range of cells it should fit into. Broadcast it to the size.
@@ -235,6 +256,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="address">Address of formula.</param>
         /// <param name="recursive">Should the data necessary for this formula (not deeper ones)
         /// be calculated recursively? Used only for non-cell calculations</param>
+        /// <param name="recalculateSheetId">
+        /// If set, calculation  will allow dirty reads from other sheets than the passed one.
+        /// </param>
         /// <returns>The value of the expression.</returns>
         /// <remarks>
         /// If you are going to evaluate the same expression several times,
@@ -242,9 +266,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        internal ScalarValue EvaluateFormula(string expression, XLWorkbook? wb = null, XLWorksheet? ws = null, IXLAddress? address = null, bool recursive = false)
+        internal ScalarValue EvaluateFormula(string expression, XLWorkbook? wb = null, XLWorksheet? ws = null, IXLAddress? address = null, bool recursive = false, uint? recalculateSheetId = null)
         {
-            var ctx = new CalcContext(this, _culture, wb, ws, address, recursive);
+            var ctx = new CalcContext(this, _culture, wb, ws, address, recursive)
+            {
+                RecalculateSheetId = recalculateSheetId
+            };
             var result = EvaluateFormula(expression, ctx);
             if (ctx.UseImplicitIntersection)
             {
@@ -261,9 +288,13 @@ namespace ClosedXML.Excel.CalcEngine
             return ToCellContentValue(result, ctx);
         }
 
-        internal Array EvaluateArrayFormula(string expression, XLCell masterCell)
+        private Array EvaluateArrayFormula(string expression, XLCell masterCell, uint? recalculateSheetId)
         {
-            var ctx = new CalcContext(this, _culture, masterCell) { IsArrayCalculation = true };
+            var ctx = new CalcContext(this, _culture, masterCell)
+            {
+                IsArrayCalculation = true,
+                RecalculateSheetId = recalculateSheetId
+            };
             var result = EvaluateFormula(expression, ctx);
             if (result.TryPickSingleOrMultiValue(out var single, out var multi, ctx))
                 return new ScalarArray(single, 1, 1);
