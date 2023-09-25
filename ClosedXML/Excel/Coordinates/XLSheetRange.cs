@@ -6,7 +6,6 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to the sheet).
     /// </summary>
-    [DebuggerDisplay("{XLHelper.GetColumnLetterFromNumber(FirstPoint.Column)}{FirstPoint.Row}:{XLHelper.GetColumnLetterFromNumber(LastPoint.Column)}{LastPoint.Row}")]
     internal readonly struct XLSheetRange : IEquatable<XLSheetRange>
     {
         public XLSheetRange(XLSheetPoint firstPoint, XLSheetPoint lastPoint)
@@ -170,6 +169,26 @@ namespace ClosedXML.Excel
             return new XLSheetRange(
                 new XLSheetPoint(FirstPoint.Row, LastPoint.Column + 1),
                 new XLSheetPoint(LastPoint.Row, XLHelper.MaxColumnNumber));
+        }
+
+        /// <summary>
+        /// Return a range that contains additional number of rows below.
+        /// </summary>
+        internal XLSheetRange ExtendBelow(int rows)
+        {
+            Debug.Assert(rows >= 0);
+            var row = Math.Min(LastPoint.Row + rows, XLHelper.MaxRowNumber);
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(row, LastPoint.Column));
+        }
+
+        /// <summary>
+        /// Return a range that contains additional number of columns to the right.
+        /// </summary>
+        internal XLSheetRange ExtendRight(int columns)
+        {
+            Debug.Assert(columns >= 0);
+            var column = Math.Min(LastPoint.Column + columns, XLHelper.MaxColumnNumber);
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(LastPoint.Row, column));
         }
 
         internal static XLSheetRange FromRangeAddress<T>(T address)

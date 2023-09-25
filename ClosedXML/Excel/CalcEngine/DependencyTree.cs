@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DocumentFormat.OpenXml.Spreadsheet;
 using RBush;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -111,16 +110,15 @@ namespace ClosedXML.Excel.CalcEngine
 
             foreach (var precedentArea in precedents.Areas)
             {
-                // Add dependency to its sheet dependency tree
-                if (!_sheetTrees.TryGetValue(precedentArea.Name, out var sheetTree))
+                // Add dependency to its sheet dependency tree. The formula might contain
+                // a dependency for a sheet that doesn't exist in a workbook. Such dependencies
+                // are ignored, until sheet is added.
+                if (_sheetTrees.TryGetValue(precedentArea.Name, out var sheetTree))
                 {
-                    // TODO: Remove, already done elsewhere
-                    sheetTree = new SheetDependencyTree();
-                    _sheetTrees.Add(precedentArea.Name, sheetTree);
+                    // Dependent worksheet exists
+                    var dependent = new Dependent(formulaArea, formula);
+                    sheetTree.AddDependent(precedentArea.Area, dependent);
                 }
-
-                var dependent = new Dependent(formulaArea, formula);
-                sheetTree.AddDependent(precedentArea.Area, dependent);
             }
 
             return precedents;
@@ -145,7 +143,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public void AddSheetTree(XLWorksheet sheet)
+        public void AddSheetTree(IXLWorksheet sheet)
         {
             _sheetTrees.Add(sheet.Name, new SheetDependencyTree());
         }

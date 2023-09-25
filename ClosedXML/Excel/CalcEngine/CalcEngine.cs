@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <para>This class has three extensibility points:</para>
     /// <para>Use the <b>RegisterFunction</b> method to define custom functions.</para>
     /// </remarks>
-    internal class CalcEngine
+    internal class CalcEngine : ISheetListener
     {
         private readonly CultureInfo _culture;
         private readonly ExpressionCache _cache;               // cache with parsed expressions
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal void OnAddedSheet(XLWorksheet sheet)
         {
-            _dependencyTree?.AddSheetTree(sheet);
+            Purge(sheet.Workbook.WorksheetsInternal);
         }
 
         internal void OnDeletingSheet(XLWorksheet sheet)
@@ -101,9 +101,24 @@ namespace ClosedXML.Excel.CalcEngine
             Purge(sheet.Workbook.WorksheetsInternal);
         }
 
-        public void OnWorksheetShiftedRows(XLRange range, int rowsShifted)
+        public void OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange area)
         {
-            Purge(range.Worksheet.Workbook.WorksheetsInternal);
+            Purge(sheet.Workbook.WorksheetsInternal);
+        }
+
+        public void OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange area)
+        {
+            Purge(sheet.Workbook.WorksheetsInternal);
+        }
+
+        public void OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            Purge(sheet.Workbook.WorksheetsInternal);
+        }
+
+        public void OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            Purge(sheet.Workbook.WorksheetsInternal);
         }
 
         private void Purge(XLWorksheets sheets)

@@ -127,6 +127,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var tree = new DependencyTree();
+            tree.AddSheetTree(ws);
             var cellFormula = AddFormula(tree, ws, "B3", "=C4");
             Assert.False(tree.IsEmpty);
 
@@ -146,6 +147,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var tree = new DependencyTree();
+            tree.AddSheetTree(ws);
             var cellFormulaA1 = AddFormula(tree, ws, "A1", "=C4 + B1");
             var cellFormulaA2 = AddFormula(tree, ws, "A2", "=B1 / C4");
             Assert.False(tree.IsEmpty);
@@ -170,6 +172,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
             AddFormula(tree, ws, "A4", "=A3");
@@ -183,14 +186,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
-            var ws1 = wb.AddWorksheet();
-            AddFormula(tree, ws1, "B2", "=B1");
-            AddFormula(tree, ws1, "C1", "=B2");
-            AddFormula(tree, ws1, "C3", "=B2");
-            AddFormula(tree, ws1, "D2", "=C1 + C3");
+            var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
+            AddFormula(tree, ws, "B2", "=B1");
+            AddFormula(tree, ws, "C1", "=B2");
+            AddFormula(tree, ws, "C3", "=B2");
+            AddFormula(tree, ws, "D2", "=C1 + C3");
 
-            MarkDirty(tree, ws1, "B1");
-            AssertDirty(ws1, "B2", "C1", "C3", "D2");
+            MarkDirty(tree, ws, "B1");
+            AssertDirty(ws, "B2", "C1", "C3", "D2");
         }
 
         [Test]
@@ -199,7 +203,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws1 = wb.AddWorksheet("Sheet1");
+            tree.AddSheetTree(ws1);
             var ws2 = wb.AddWorksheet("Sheet2");
+            tree.AddSheetTree(ws2);
 
             // Make a chain, where each cell is on an opposite sheet
             AddFormula(tree, ws1, "B1", "=Sheet2!A1");
@@ -227,6 +233,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
             AddFormula(tree, ws, "A2", "=A1");
             AddFormula(tree, ws, "A3", "=A2");
             AddFormula(tree, ws, "A4", "=A3");
@@ -245,6 +252,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
             AddFormula(tree, ws, "B1", "=D1 + A1");
             AddFormula(tree, ws, "C1", "=B1");
             AddFormula(tree, ws, "D1", "=C1");
@@ -262,6 +270,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
             AddFormula(tree, ws, "D1", "=A1:B3");
 
             // B3:D4 overlaps with A1:B3 in B3
@@ -275,6 +284,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var tree = new DependencyTree();
             var ws = wb.AddWorksheet();
+            tree.AddSheetTree(ws);
             AddFormula(tree, ws, "B1", "=A1");
             AddFormula(tree, ws, "B2", "=A2");
             AddFormula(tree, ws, "B3", "=A3");
