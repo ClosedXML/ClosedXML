@@ -133,14 +133,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var counterBeforeSetter = wb.RecalculationCounter;
             Assert.False(ws.Cell("A1").NeedsRecalculation);
             Assert.False(ws.Cell("A2").NeedsRecalculation);
 
             ws.Range("A1:A2").FormulaArrayA1 = "ABS(-3)";
 
-            var counterAfterSetter = wb.RecalculationCounter;
-            Assert.AreEqual(counterBeforeSetter + 1, counterAfterSetter);
             Assert.True(ws.Cell("A1").NeedsRecalculation);
             Assert.True(ws.Cell("A2").NeedsRecalculation);
         }

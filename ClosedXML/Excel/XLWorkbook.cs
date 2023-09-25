@@ -119,12 +119,6 @@ namespace ClosedXML.Excel
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
 
-        /// <summary>
-        /// Counter increasing at workbook data change. Serves to determine if the cell formula
-        /// has to be recalculated.
-        /// </summary>
-        internal long RecalculationCounter { get; private set; }
-
         internal IXLGraphicEngine GraphicEngine { get; }
 
         internal double DpiX { get; }
@@ -134,15 +128,6 @@ namespace ClosedXML.Excel
         internal XLPivotCaches PivotCachesInternal { get; }
 
         internal SharedStringTable SharedStringTable { get; } = new();
-
-        /// <summary>
-        /// Notify that workbook data has been changed which means that cached formula values
-        /// need to be re-evaluated.
-        /// </summary>
-        internal void InvalidateFormulas()
-        {
-            RecalculationCounter++;
-        }
 
         #region Nested Type : XLLoadSource
 

@@ -124,6 +124,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
+        /// Only cells with formula may return <c>true</c>, value cells always return <c>false</c>.
         /// </summary>
         Boolean NeedsRecalculation { get; }
 

@@ -588,7 +588,6 @@ namespace ClosedXML.Excel
         
         public void InvalidateFormula()
         {
-            Worksheet.Workbook.InvalidateFormulas();
             if (Formula is null)
             {
                 return;
