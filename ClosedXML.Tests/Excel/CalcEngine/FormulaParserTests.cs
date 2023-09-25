@@ -374,7 +374,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Const_array_must_have_same_number_of_columns()
         {
-            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            var calcEngine = new ClosedXML.Excel.CalcEngine.CalcEngine(CultureInfo.InvariantCulture);
             var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{1;2,3}"))!;
             StringAssert.Contains("Rows of an array don't have same size.", ex.Message);
         }
@@ -383,7 +383,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Const_array_cant_contain_implicit_intersection_operator()
         {
             // XLParser allows @ for number through 'PrefixOp + Number'
-            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            var calcEngine = new ClosedXML.Excel.CalcEngine.CalcEngine(CultureInfo.InvariantCulture);
             var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{@1}"))!;
             StringAssert.Contains("Unexpected token INTERSECT.", ex.Message);
         }
@@ -392,7 +392,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Const_array_can_have_only_scalars(string formula, object expected)
         {
             var expectedArray = (ConstArray)expected;
-            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            var calcEngine = new ClosedXML.Excel.CalcEngine.CalcEngine(CultureInfo.InvariantCulture);
 
             var ast = calcEngine.Parse(formula);
 
@@ -482,7 +482,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
+            var calcEngine = new ClosedXML.Excel.CalcEngine.CalcEngine(CultureInfo.InvariantCulture);
             _ = calcEngine.Parse(formula);
             Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => ws.Evaluate(formula, "A1"));
         }
