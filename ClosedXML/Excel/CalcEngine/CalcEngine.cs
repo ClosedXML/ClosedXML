@@ -19,8 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private readonly CultureInfo _culture;
         private readonly ExpressionCache _cache;               // cache with parsed expressions
-        private readonly FormulaParser _parserA1;
-        private readonly FormulaParser _parserR1C1;
+        private readonly FormulaParser _parser;
         private readonly CalculationVisitor _visitor;
         private DependencyTree? _dependencyTree;
         private XLCalculationChain? _chain;
@@ -30,8 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
             _culture = culture;
             _cache = new ExpressionCache(this);
             var funcRegistry = GetFunctionTable();
-            _parserA1 = new FormulaParser(funcRegistry, isA1: true);
-            _parserR1C1 = new FormulaParser(funcRegistry, isA1: false);
+            _parser = new FormulaParser(funcRegistry);
             _visitor = new CalculationVisitor(funcRegistry);
             _dependencyTree = null;
             _chain = null;
@@ -44,12 +42,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Formula Parse(string expression)
         {
-            return _parserA1.GetAst(expression);
+            return _parser.GetAst(expression, true);
         }
 
         public Formula ParseR1C1(string expression)
         {
-            return _parserR1C1.GetAst(expression);
+            return _parser.GetAst(expression, false);
         }
 
         internal void AddArrayFormula(XLSheetRange range, XLCellFormula arrayFormula, XLWorksheet sheet)

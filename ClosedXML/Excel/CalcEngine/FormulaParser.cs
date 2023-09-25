@@ -7,19 +7,19 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class FormulaParser
     {
-        private readonly AstFactory _nodeFactory;
-        private readonly bool _isA1;
+        private readonly AstFactory _nodeFactoryA1;
+        private readonly AstFactory _nodeFactoryR1C1;
 
-        public FormulaParser(FunctionRegistry functionRegistry, bool isA1)
+        public FormulaParser(FunctionRegistry functionRegistry)
         {
-            _nodeFactory = new AstFactory(functionRegistry, isA1);
-            _isA1 = isA1;
+            _nodeFactoryA1 = new AstFactory(functionRegistry, true);
+            _nodeFactoryR1C1 = new AstFactory(functionRegistry, false);
         }
 
         /// <summary>
         /// Parse a formula into an abstract syntax tree.
         /// </summary>
-        public Formula GetAst(string formula)
+        public Formula GetAst(string formula, bool isA1)
         {
             // Equality sign at the beginning of formula is only visualization in the GUI, real formulas don't have it.
             if (formula.Length > 0 && formula[0] == '=')
@@ -29,9 +29,9 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var ctx = new List<FormulaFlags>();
                 
-                var root = _isA1
-                    ? FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaA1(formula, ctx, _nodeFactory)
-                    : FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaR1C1(formula, ctx, _nodeFactory);
+                var root = isA1
+                    ? FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaA1(formula, ctx, _nodeFactoryA1)
+                    : FormulaParser<ScalarValue, ValueNode, List<FormulaFlags>>.CellFormulaR1C1(formula, ctx, _nodeFactoryR1C1);
                 var flags = ctx.Contains(FormulaFlags.HasSubtotal)
                     ? FormulaFlags.HasSubtotal
                     : FormulaFlags.None;
