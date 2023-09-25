@@ -509,7 +509,7 @@ namespace ClosedXML.Excel
         /// Get a lazy initialized AST for the formula.
         /// </summary>
         /// <param name="engine">Engine to parse the formula into AST, if necessary.</param>
-        public Formula GetAst(CalcEngine.CalcEngine engine)
+        public Formula GetAst(XLCalcEngine engine)
         {
             var ast = A1 is not null
                 ? engine.Parse(A1)

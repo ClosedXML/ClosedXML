@@ -881,11 +881,11 @@ namespace ClosedXML.Excel
             return Worksheets.Add(dataTable, sheetName, tableName);
         }
 
-        private CalcEngine.CalcEngine _calcEngine;
+        private XLCalcEngine _calcEngine;
 
-        internal CalcEngine.CalcEngine CalcEngine
+        internal XLCalcEngine CalcEngine
         {
-            get { return _calcEngine ??= new CalcEngine.CalcEngine(CultureInfo.CurrentCulture); }
+            get { return _calcEngine ??= new XLCalcEngine(CultureInfo.CurrentCulture); }
         }
 
         public XLCellValue Evaluate(String expression)
@@ -904,12 +904,12 @@ namespace ClosedXML.Excel
             CalcEngine.Recalculate(this, null);
         }
 
-        private static CalcEngine.CalcEngine _calcEngineExpr;
+        private static XLCalcEngine _calcEngineExpr;
         private SpreadsheetDocumentType _spreadsheetDocumentType;
 
-        private static CalcEngine.CalcEngine CalcEngineExpr
+        private static XLCalcEngine CalcEngineExpr
         {
-            get { return _calcEngineExpr ??= new CalcEngine.CalcEngine(CultureInfo.InvariantCulture); }
+            get { return _calcEngineExpr ??= new XLCalcEngine(CultureInfo.InvariantCulture); }
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <para>This class has three extensibility points:</para>
     /// <para>Use the <b>RegisterFunction</b> method to define custom functions.</para>
     /// </remarks>
-    internal class CalcEngine : ISheetListener
+    internal class XLCalcEngine : ISheetListener
     {
         private readonly CultureInfo _culture;
         private readonly ExpressionCache _cache;               // cache with parsed expressions
@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
         private DependencyTree? _dependencyTree;
         private XLCalculationChain? _chain;
 
-        public CalcEngine(CultureInfo culture)
+        public XLCalcEngine(CultureInfo culture)
         {
             _culture = culture;
             _cache = new ExpressionCache(this);

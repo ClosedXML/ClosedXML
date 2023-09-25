@@ -1687,7 +1687,7 @@ namespace ClosedXML.Excel
 
         public IXLCell ActiveCell { get; set; }
 
-        internal ClosedXML.Excel.CalcEngine.CalcEngine CalcEngine => Workbook.CalcEngine;
+        private XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
         public XLCellValue Evaluate(String expression, string formulaAddress = null)
         {

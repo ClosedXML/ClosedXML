@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using DocumentFormat.OpenXml.Wordprocessing;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
     internal class FormulaSlice : ISlice
     {
         private readonly XLWorksheet _sheet;
-        private readonly CalcEngine.CalcEngine _engine;
+        private readonly XLCalcEngine _engine;
         private readonly Slice<XLCellFormula?> _formulas = new();
 
         public FormulaSlice(XLWorksheet sheet)

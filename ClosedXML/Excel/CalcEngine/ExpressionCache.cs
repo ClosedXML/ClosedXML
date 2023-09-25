@@ -14,9 +14,9 @@ namespace ClosedXML.Excel.CalcEngine
     internal sealed class ExpressionCache
     {
         private readonly ConditionalWeakTable<string, Formula> _cache;
-        private readonly CalcEngine _ce;
+        private readonly XLCalcEngine _ce;
 
-        public ExpressionCache(CalcEngine ce)
+        public ExpressionCache(XLCalcEngine ce)
         {
             _ce = ce;
             _cache = new ConditionalWeakTable<string, Formula>();

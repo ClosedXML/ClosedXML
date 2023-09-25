@@ -321,7 +321,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
-        public AnyValue GetValue(XLWorksheet ctxWs, CalcEngine engine)
+        public AnyValue GetValue(XLWorksheet ctxWs, XLCalcEngine engine)
         {
             var worksheet = ctxWs;
             if (Prefix is not null)
