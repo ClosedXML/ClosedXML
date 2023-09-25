@@ -64,29 +64,35 @@ namespace ClosedXML.Excel.CalcEngine
 
         /// <summary>
         /// Sheet that is being recalculated. If set, formula can read dirty
-        /// values from other sheets, but not from the sheetId in prop.
+        /// values from other sheets, but not from this sheetId.
         /// </summary>
         public uint? RecalculateSheetId { get; set; }
 
         internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
             sheet ??= Worksheet;
-            var cell = sheet.GetCell(rowNumber, columnNumber);
-            if (cell is null)
-                return ScalarValue.Blank;
+            var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
+            var point = new XLSheetPoint(rowNumber, columnNumber);
+            var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
 
-            if (cell.Formula is null || !cell.Formula.IsDirty)
-                return cell.CachedValue;
+            if (formula is null)
+                return valueSlice.GetCellValue(point);
+
+            if (!formula.IsDirty)
+                return valueSlice.GetCellValue(point);
 
             // Used when only one sheet should be recalculated, leaving other sheets with their data.
             if (RecalculateSheetId is not null && sheet.SheetId != RecalculateSheetId.Value)
-                return cell.CachedValue;
+                return valueSlice.GetCellValue(point);
 
             // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
             // These functions are not a part of calculation chain and thus reordering a chain
             // for them doesn't make sense.
             if (_recursive)
+            {
+                var cell = sheet.GetCell(rowNumber, columnNumber);
                 return cell.Value;
+            }
 
             throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(rowNumber, columnNumber)));
         }
