@@ -65,8 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
                 using var enumerator = sheet.Internals.CellsCollection.FormulaSlice.GetForwardEnumerator(XLSheetRange.Full);
                 while (enumerator.MoveNext())
                 {
-                    // Enumerators skips default elements, in this case nulls
-                    var formula = enumerator.Current!;
+                    var formula = enumerator.Current;
                     var point = enumerator.Point;
                     if (formula.Type == FormulaType.Normal)
                     {
