@@ -1061,19 +1061,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
-        public bool NeedsRecalculation
-        {
-            get
-            {
-                if (Formula is null)
-                {
-                    return false;
-                }
-
-                return Formula.IsDirty;
-//                return Formula.NeedsRecalculation(this);
-            }
-        }
+        public bool NeedsRecalculation => Formula is not null && Formula.IsDirty;
 
         public XLCellValue CachedValue => SliceCellValue;
 
