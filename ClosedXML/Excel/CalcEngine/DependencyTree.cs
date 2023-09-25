@@ -84,8 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
                     else
                     {
-                        // TODO
-                        throw new NotSupportedException();
+                        // TODO: Implement other formulas. Don't throw on data table or shared formulas.
                     }
                 }
             }
@@ -142,7 +141,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public void AddSheetTree(IXLWorksheet sheet)
+        internal void AddSheetTree(IXLWorksheet sheet)
         {
             _sheetTrees.Add(sheet.Name, new SheetDependencyTree());
         }

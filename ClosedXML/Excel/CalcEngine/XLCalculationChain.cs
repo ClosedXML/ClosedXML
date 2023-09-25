@@ -82,9 +82,9 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var sheet in wb.WorksheetsInternal)
             {
                 var formulaSlice = sheet.Internals.CellsCollection.FormulaSlice;
-                using var e = formulaSlice.GetEnumerator(XLSheetRange.Full);
+                using var e = formulaSlice.GetForwardEnumerator(XLSheetRange.Full);
                 while (e.MoveNext())
-                    chain.AddLast(new XLBookPoint(sheet.SheetId, e.Current));
+                    chain.AddLast(new XLBookPoint(sheet.SheetId, e.Point));
             }
 
             return chain;
