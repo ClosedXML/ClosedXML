@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     /// <summary>
-    /// Tests that calc engine adjusts it's internal state in response to changes of workbook structure.
+    /// Tests that calc engine adjusts its internal state in response to changes of workbook structure.
     /// </summary>
     [TestFixture]
     internal class CalcEngineListenerTests
@@ -70,7 +66,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.False(ws.Cell("A3").NeedsRecalculation);
             Assert.False(ws.Cell("B3").NeedsRecalculation);
 
-            // Dependency tree should pick up change
+            // Dependency tree should pick up the change
             ws.Cell("C1").FormulaA1 = "2+2";
             Assert.True(ws.Cell("A3").NeedsRecalculation);
             Assert.True(ws.Cell("B3").NeedsRecalculation);
@@ -93,7 +89,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(12.0, ws.Cell("A1").Value);
             Assert.False(ws.Cell("E2").NeedsRecalculation);
 
-            // Dependency tree should pick up change
+            // Dependency tree should pick up the change
             ws.Cell("A3").FormulaA1 = "2+2";
             Assert.True(ws.Cell("E2").NeedsRecalculation);
             Assert.True(ws.Cell("A1").NeedsRecalculation);
@@ -115,9 +111,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(12.0, ws.Cell("C2").Value);
             Assert.False(ws.Cell("B2").NeedsRecalculation);
-            Assert.False(ws.Cell("A5").NeedsRecalculation);
+            Assert.False(ws.Cell("A2").NeedsRecalculation);
 
-            // Dependency tree should pick up change
+            // Dependency tree should pick up the change
             ws.Cell("A5").FormulaA1 = "2+2";
             Assert.True(ws.Cell("B2").NeedsRecalculation);
             Assert.True(ws.Cell("C2").NeedsRecalculation);
@@ -141,7 +137,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.False(ws.Cell("B2").NeedsRecalculation);
             Assert.False(ws.Cell("A1").NeedsRecalculation);
 
-            // Dependency tree should pick up change
+            // Dependency tree should pick up the change
             ws.Cell("A1").FormulaA1 = "2+2";
             Assert.True(ws.Cell("B2").NeedsRecalculation);
             Assert.True(ws.Cell("A3").NeedsRecalculation);

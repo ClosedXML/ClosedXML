@@ -42,12 +42,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Formula Parse(string expression)
         {
-            return _parser.GetAst(expression, true);
+            return _parser.GetAst(expression, isA1: true);
         }
 
         public Formula ParseR1C1(string expression)
         {
-            return _parser.GetAst(expression, false);
+            return _parser.GetAst(expression, isA1: false);
         }
 
         /// <summary>
@@ -125,15 +125,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             _dependencyTree = null;
             _chain = null;
+
             // Mark everything as dirty, because there can be stale values
             foreach (var sheet in sheets)
             {
-                using var enumerator =
-                    sheet.Internals.CellsCollection.FormulaSlice.GetForwardEnumerator(XLSheetRange.Full);
-                while (enumerator.MoveNext())
-                {
-                    enumerator.Current!.IsDirty = true;
-                }
+                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
             }
         }
 
@@ -274,7 +270,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="ws">Worksheet where is formula being evaluated.</param>
         /// <param name="address">Address of formula.</param>
         /// <param name="recursive">Should the data necessary for this formula (not deeper ones)
-        /// be calculated recursively? Used only for non-cell calculations</param>
+        /// be calculated recursively? Used only for non-cell calculations.</param>
         /// <param name="recalculateSheetId">
         /// If set, calculation  will allow dirty reads from other sheets than the passed one.
         /// </param>
