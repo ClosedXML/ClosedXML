@@ -94,26 +94,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal override XLStyleValue StyleValue
         {
-            get
-            {
-                var styleValue = _cellsCollection.StyleSlice[_rowNumber, _columnNumber];
-                if (styleValue is not null)
-                    return styleValue;
-
-                // If the slice doesn't contain any value, determine values by inheriting.
-                // Cells that lie on an intersection of a XLColumn and a XLRow have their
-                // style set when column/row is created to avoid problems with correct which
-                // style has precedence. I.e. set column blue, set row red => cell is red.
-                // Swap order the the cell is blue.
-                if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out var row))
-                    return row.StyleValue;
-
-                if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out var column))
-                    return column.StyleValue;
-
-                return Worksheet.StyleValue;
-            }
-
+            get => Worksheet.GetStyleValue(SheetPoint);
             private protected set => _cellsCollection.StyleSlice.Set(_rowNumber, _columnNumber, value);
         }
 
@@ -286,34 +267,7 @@ namespace ClosedXML.Excel
             if (checkMergedRanges && IsInferiorMergedCell())
                 return this;
 
-            switch (value.Type)
-            {
-                case XLDataType.DateTime:
-                    SetOnlyValue(value);
-                    SetDateTimeFormat(StyleValue, value.GetUnifiedNumber() % 1 == 0);
-                    break;
-                case XLDataType.TimeSpan:
-                    SetOnlyValue(value);
-                    SetTimeSpanFormat(StyleValue);
-                    break;
-                case XLDataType.Text:
-                    var text = value.GetText();
-                    if (text.Length > 0 && text[0] == '\'')
-                    {
-                        text = text.Substring(1);
-                        SetOnlyValue(text);
-                        Style.SetIncludeQuotePrefix();
-                    }
-                    else
-                        SetOnlyValue(value);
-
-                    if (text.AsSpan().Contains(Environment.NewLine.AsSpan(), StringComparison.Ordinal) && !StyleValue.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-                    break;
-                default:
-                    SetOnlyValue(value);
-                    break;
-            }
+            SetValueAndStyle(value);
 
             FormulaA1 = null;
 
@@ -372,6 +326,29 @@ namespace ClosedXML.Excel
                 field = table.Field(fieldIndex);
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Set value of a cell and its format (if necessary) from the passed value.
+        /// It doesn't clear formulas or checks merged cells or tables.
+        /// </summary>
+        private void SetValueAndStyle(XLCellValue value)
+        {
+            var modifiedStyleValue = Worksheet.GetStyleForValue(value, SheetPoint);
+            if (modifiedStyleValue is not null)
+                StyleValue = modifiedStyleValue;
+
+            // Modify value after style, because we might strip the '
+            if (value.Type == XLDataType.Text)
+            {
+                var text = value.GetText();
+                if (text.Length > 0 && text[0] == '\'')
+                {
+                    value = text.Substring(1);
+                }
+            }
+
+            SetOnlyValue(value);
         }
 
         public Boolean GetBoolean() => Value.GetBoolean();
@@ -585,7 +562,7 @@ namespace ClosedXML.Excel
                 ? value.GetUnifiedNumber().ToExcelFormat(format)
                 : value.ToString(CultureInfo.CurrentCulture);
         }
-        
+
         public void InvalidateFormula()
         {
             if (Formula is null)
@@ -690,7 +667,7 @@ namespace ClosedXML.Excel
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
             return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
         }
-        
+
         public IXLTable InsertTable(DataTable data)
         {
             return InsertTable(data, null, true);
@@ -1403,18 +1380,6 @@ namespace ClosedXML.Excel
             List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
-        }
-
-        private void SetDateTimeFormat(XLStyleValue style, Boolean onlyDatePart)
-        {
-            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
-        }
-
-        private void SetTimeSpanFormat(XLStyleValue style)
-        {
-            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = 46;
         }
 
         internal string GetFormulaR1C1(string value)
