@@ -1769,7 +1769,7 @@ namespace ClosedXML.Excel
 
         internal IXLTable InsertTable(XLSheetPoint origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
-            if (createTable && Tables.Any<XLTable>(t => t.Contains(this)))
+            if (createTable && Tables.Any<XLTable>(t => t.Area.Contains(origin)))
                 throw new InvalidOperationException($"This cell '{origin}' is already part of a table.");
 
             var range = InsertData(origin, reader, addHeadings, transpose);

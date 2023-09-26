@@ -14,15 +14,9 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Name}")]
     internal class XLTable : XLRange, IXLTable
     {
-        #region Private fields
-
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
-
-        #endregion Private fields
-
-        #region Constructor
 
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
@@ -32,9 +26,6 @@ namespace ClosedXML.Excel
         {
             InitializeValues(false);
         }
-
-        #endregion Constructor
-
         public override XLRangeType RangeType
         {
             get { return XLRangeType.Table; }
@@ -57,6 +48,11 @@ namespace ClosedXML.Excel
                 return _fieldNames;
             }
         }
+
+        /// <summary>
+        /// Area of the range, including headings and totals, if table has them.
+        /// </summary>
+        internal XLSheetRange Area => XLSheetRange.FromRangeAddress(RangeAddress);
 
         private void RescanFieldNames()
         {
