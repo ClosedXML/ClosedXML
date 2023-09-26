@@ -19,9 +19,9 @@ namespace ClosedXML.Excel.InsertData
             _itemType = data.GetItemType().GetUnderlyingType();
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetData()
         {
-            return _data.Select(item => new[] { item }.Cast<object>());
+            return _data.Select(item => new[] { item }.Select(XLCellValue.FromInsertedObject));
         }
 
         public int GetPropertiesCount()

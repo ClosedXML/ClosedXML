@@ -15,9 +15,9 @@ namespace ClosedXML.Excel.InsertData
             _data = data ?? throw new ArgumentNullException(nameof(data));
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetData()
         {
-            return _data.Select(item => item.Cast<object>());
+            return _data.Select(item => item.Cast<object>().Select(XLCellValue.FromInsertedObject));
         }
 
         public int GetPropertiesCount()

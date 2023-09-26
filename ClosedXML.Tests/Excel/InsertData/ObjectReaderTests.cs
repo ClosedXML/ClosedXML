@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel;
 
 namespace ClosedXML.Tests.Excel.InsertData
 {
@@ -163,7 +164,7 @@ namespace ClosedXML.Tests.Excel.InsertData
 
             Assert.AreEqual(0, lastRecord[0]);
             Assert.AreEqual(0, lastRecord[1]);
-            Assert.AreEqual(null, lastRecord[2]);
+            Assert.AreEqual(Blank.Value, lastRecord[2]);
         }
 
         [Test]
@@ -179,9 +180,9 @@ namespace ClosedXML.Tests.Excel.InsertData
             Assert.AreEqual(2, firstRecord[1]);
             Assert.AreEqual(3, firstRecord[2]);
 
-            Assert.AreEqual(null, lastRecord[0]);
-            Assert.AreEqual(null, lastRecord[1]);
-            Assert.AreEqual(null, lastRecord[2]);
+            Assert.AreEqual(Blank.Value, lastRecord[0]);
+            Assert.AreEqual(Blank.Value, lastRecord[1]);
+            Assert.AreEqual(Blank.Value, lastRecord[2]);
         }
 
         [Test]

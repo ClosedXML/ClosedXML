@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel;
 
 namespace ClosedXML.Tests.Excel.InsertData
 {
@@ -50,7 +51,7 @@ namespace ClosedXML.Tests.Excel.InsertData
             var result = reader.GetData();
 
             Assert.AreEqual(1, result.First().Single());
-            Assert.AreEqual(null, result.Last().Single());
+            Assert.AreEqual(Blank.Value, result.Last().Single());
         }
     }
 }

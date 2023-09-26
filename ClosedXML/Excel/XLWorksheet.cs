@@ -1889,38 +1889,10 @@ namespace ClosedXML.Excel
             return range;
         }
 
-        internal void SetValue<T>(T value, int ro, int co)
+        private void SetValue(XLCellValue value, int ro, int co)
         {
             var cell = Cell(ro, co);
-
-            // Thanks to magic of JIT compiler, generic method is compiled as a separate method
-            // for each T, so the whole switch removes types that don't match T and the whole
-            // switch is actually reduced only to the code for specific T (=no switch for value types).
-            XLCellValue newValue = value switch
-            {
-                null => Blank.Value,
-                Blank blankValue => blankValue,
-                Boolean logical => logical,
-                SByte number => number,
-                Byte number => number,
-                Int16 number => number,
-                UInt16 number => number,
-                Int32 number => number,
-                UInt32 number => number,
-                Int64 number => number,
-                UInt64 number => number,
-                Single number => number,
-                Double number => number,
-                Decimal number => number,
-                String text => text,
-                XLError error => error,
-                DateTime date => date,
-                DateTimeOffset dateOfs => dateOfs.DateTime,
-                TimeSpan timeSpan => timeSpan,
-                _ => value.ToString() // Other things, like chars ect are just turned to string
-            };
-
-            cell.SetValue(newValue, setTableHeader: true, checkMergedRanges: false);
+            cell.SetValue(value, setTableHeader: true, checkMergedRanges: false);
         }
 
         /// <summary>

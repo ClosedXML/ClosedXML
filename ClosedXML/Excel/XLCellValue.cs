@@ -218,6 +218,37 @@ namespace ClosedXML.Excel
             };
         }
 
+        /// <summary>
+        /// A function used during data insertion to convert an <c>object</c> to <c>XLCellValue</c>.
+        /// </summary>
+        internal static XLCellValue FromInsertedObject(object value)
+        {
+            XLCellValue convertedValue = value switch
+            {
+                null => Blank.Value,
+                Blank blankValue => blankValue,
+                Boolean logical => logical,
+                SByte number => number,
+                Byte number => number,
+                Int16 number => number,
+                UInt16 number => number,
+                Int32 number => number,
+                UInt32 number => number,
+                Int64 number => number,
+                UInt64 number => number,
+                Single number => number,
+                Double number => number,
+                Decimal number => number,
+                String text => text,
+                XLError error => error,
+                DateTime date => date,
+                DateTimeOffset dateOfs => dateOfs.DateTime,
+                TimeSpan timeSpan => timeSpan,
+                _ => value.ToString() // Other things, like chars ect are just turned to string
+            };
+            return convertedValue;
+        }
+
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
 
