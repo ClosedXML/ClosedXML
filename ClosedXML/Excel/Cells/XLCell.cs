@@ -688,25 +688,9 @@ namespace ClosedXML.Excel
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertTableInternal(reader, tableName, createTable, addHeadings, transpose);
+            return Worksheet.InsertTableInternal(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
         }
-
-        private IXLTable InsertTableInternal(IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings,
-            Boolean transpose)
-        {
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
-
-            var range = Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings, transpose);
-
-            if (createTable)
-                // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-            else
-                // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
-        }
-
+        
         public IXLTable InsertTable(DataTable data)
         {
             return InsertTable(data, null, true);
@@ -734,7 +718,7 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
+            return Worksheet.InsertTableInternal(SheetPoint, reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
         public XLTableCellType TableCellType()
