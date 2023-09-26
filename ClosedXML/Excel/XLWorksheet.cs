@@ -573,7 +573,9 @@ namespace ClosedXML.Excel
 
         public XLSheetView SheetView { get; private set; }
 
-        public IXLTables Tables { get; private set; }
+        IXLTables IXLWorksheet.Tables => Tables;
+
+        public XLTables Tables { get; }
 
         public IXLTable Table(Int32 index)
         {
