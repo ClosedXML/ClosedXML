@@ -93,5 +93,31 @@ namespace ClosedXML.Excel
         }
 
         private int? _hashCode;
+
+        internal XLStyleValue WithAlignment(Func<XLAlignmentValue, XLAlignmentValue> modify)
+        {
+            return WithAlignment(modify(Alignment));
+        }
+
+        internal XLStyleValue WithAlignment(XLAlignmentValue alignment)
+        {
+            var keyCopy = Key;
+            keyCopy.Alignment = alignment.Key;
+            return FromKey(ref keyCopy);
+        }
+
+        internal XLStyleValue WithIncludeQuotePrefix(bool includeQuotePrefix)
+        {
+            var keyCopy = Key;
+            keyCopy.IncludeQuotePrefix = includeQuotePrefix;
+            return FromKey(ref keyCopy);
+        }
+
+        internal XLStyleValue WithNumberFormat(XLNumberFormatValue numberFormat)
+        {
+            var keyCopy = Key;
+            keyCopy.NumberFormat = numberFormat.Key;
+            return FromKey(ref keyCopy);
+        }
     }
 }

@@ -2004,5 +2004,91 @@ namespace ClosedXML.Excel
             var rangeKey = new XLRangeKey(XLRangeType.Range, rangeAddress);
             _rangeRepository.Remove(ref rangeKey);
         }
+
+        /// <summary>
+        /// Get the actual style for a point in the sheet.
+        /// </summary>
+        internal XLStyleValue GetStyleValue(XLSheetPoint point)
+        {
+            var styleValue = Internals.CellsCollection.StyleSlice[point];
+            if (styleValue is not null)
+                return styleValue;
+
+            // If the slice doesn't contain any value, determine values by inheriting.
+            // Cells that lie on an intersection of a XLColumn and a XLRow have their
+            // style set when column/row is created to avoid problems with correct which
+            // style has precedence. I.e. set column blue, set row red => cell is red.
+            // Swap order the the cell is blue.
+            if (Internals.RowsCollection.TryGetValue(point.Row, out var row))
+                return row.StyleValue;
+
+            if (Internals.ColumnsCollection.TryGetValue(point.Column, out var column))
+                return column.StyleValue;
+
+            return StyleValue;
+        }
+
+        /// <summary>
+        /// Get a style that should be used for a <paramref name="value"/>,
+        /// if the value is set to the <paramref name="point"/>.
+        /// </summary>
+        internal XLStyleValue GetStyleForValue(XLCellValue value, XLSheetPoint point)
+        {
+            // Because StyleValue property retrieves value from a slice,
+            // access it only if necessary. This happens during ever cell
+            // of modification and thus is performance critical.
+            switch (value.Type)
+            {
+                case XLDataType.DateTime:
+                    {
+                        var onlyDatePart = value.GetUnifiedNumber() % 1 == 0;
+                        var styleValue = GetStyleValue(point);
+                        if (styleValue.NumberFormat.Format.Length == 0 &&
+                            styleValue.NumberFormat.NumberFormatId == 0)
+                        {
+                            var dateTimeNumberFormat = styleValue.NumberFormat.WithNumberFormatId(onlyDatePart ? 14 : 22);
+                            return styleValue.WithNumberFormat(dateTimeNumberFormat);
+                        }
+                    }
+                    break;
+
+                case XLDataType.TimeSpan:
+                    {
+                        var styleValue = GetStyleValue(point);
+                        if (styleValue.NumberFormat.Format.Length == 0 && styleValue.NumberFormat.NumberFormatId == 0)
+                        {
+                            var durationNumberFormat = styleValue.NumberFormat.WithNumberFormatId(46);
+                            return styleValue.WithNumberFormat(durationNumberFormat);
+                        }
+                    }
+                    break;
+
+                case XLDataType.Text:
+                    {
+                        var text = value.GetText();
+                        XLStyleValue styleValue = null;
+                        if (text.Length > 0 && text[0] == '\'')
+                        {
+                            styleValue = GetStyleValue(point);
+                            styleValue = styleValue.WithIncludeQuotePrefix(true);
+                        }
+
+                        var containsNewLine = text.AsSpan()
+                            .Contains(Environment.NewLine.AsSpan(), StringComparison.Ordinal);
+                        if (containsNewLine)
+                        {
+                            styleValue ??= GetStyleValue(point);
+                            if (!styleValue.Alignment.WrapText)
+                            {
+                                styleValue = styleValue.WithAlignment(static alignment => alignment.WithWrapText(true));
+                            }
+                        }
+
+                        return styleValue;
+                    }
+            }
+
+            return null;
+        }
     }
 }

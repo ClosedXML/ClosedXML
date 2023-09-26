@@ -64,5 +64,12 @@ namespace ClosedXML.Excel
         {
             return 990326508 + Key.GetHashCode();
         }
+
+        internal XLAlignmentValue WithWrapText(bool wrapText)
+        {
+            var keyCopy = Key;
+            keyCopy.WrapText = wrapText;
+            return FromKey(ref keyCopy);
+        }
     }
 }
