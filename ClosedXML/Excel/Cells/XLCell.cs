@@ -697,7 +697,7 @@ namespace ClosedXML.Excel
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
-            var range = InsertDataInternal(reader, addHeadings, transpose);
+            var range = Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings, transpose);
 
             if (createTable)
                 // Create a table and save it in the file
@@ -737,113 +737,6 @@ namespace ClosedXML.Excel
             return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        internal XLRange InsertDataInternal(IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
-        {
-            if (reader == null)
-                return null;
-
-            var currentRowNumber = _rowNumber;
-            var currentColumnNumber = _columnNumber;
-            var maximumColumnNumber = currentColumnNumber;
-            var maximumRowNumber = currentRowNumber;
-
-            if (transpose)
-            {
-                maximumColumnNumber += reader.GetRecordsCount() - 1;
-                maximumRowNumber += reader.GetPropertiesCount() - 1;
-            }
-            else
-            {
-                maximumColumnNumber += reader.GetPropertiesCount() - 1;
-                maximumRowNumber += reader.GetRecordsCount() - 1;
-            }
-
-            // Inline functions to handle looping with transposing
-            //////////////////////////////////////////////////////
-            void incrementFieldPosition()
-            {
-                if (transpose)
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
-                else
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
-            }
-
-            void incrementRecordPosition()
-            {
-                if (transpose)
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
-                else
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
-            }
-
-            void resetRecordPosition()
-            {
-                if (transpose)
-                    currentRowNumber = _rowNumber;
-                else
-                    currentColumnNumber = _columnNumber;
-            }
-            //////////////////////////////////////////////////////
-
-            var empty = maximumRowNumber <= _rowNumber ||
-                        maximumColumnNumber <= _columnNumber;
-
-            if (!empty)
-            {
-                Worksheet.Range(
-                        _rowNumber,
-                        _columnNumber,
-                        maximumRowNumber,
-                        maximumColumnNumber)
-                    .Clear();
-            }
-
-            if (addHeadings)
-            {
-                for (int i = 0; i < reader.GetPropertiesCount(); i++)
-                {
-                    var propertyName = reader.GetPropertyName(i);
-                    Worksheet.SetValue(propertyName, currentRowNumber, currentColumnNumber);
-                    incrementFieldPosition();
-                }
-
-                incrementRecordPosition();
-            }
-
-            var data = reader.GetData();
-
-            foreach (var item in data)
-            {
-                resetRecordPosition();
-                foreach (var value in item)
-                {
-                    Worksheet.SetValue(value, currentRowNumber, currentColumnNumber);
-                    incrementFieldPosition();
-                }
-                incrementRecordPosition();
-            }
-
-            var range = Worksheet.Range(
-                _rowNumber,
-                _columnNumber,
-                maximumRowNumber,
-                maximumColumnNumber);
-
-            return range;
-        }
-
         public XLTableCellType TableCellType()
         {
             var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
@@ -869,7 +762,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertDataInternal(reader, addHeadings: false, transpose: transpose);
+            return Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -878,7 +771,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
-            return InsertDataInternal(reader, addHeadings: false, transpose: false);
+            return Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings: false, transpose: false);
         }
 
         public XLDataType DataType => SliceCellValue.Type;

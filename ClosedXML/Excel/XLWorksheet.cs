@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel.InsertData;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
@@ -1762,6 +1763,113 @@ namespace ClosedXML.Excel
         public override Boolean IsEntireColumn()
         {
             return true;
+        }
+
+        internal XLRange InsertDataInternal(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
+        {
+            if (reader == null)
+                return null;
+
+            var currentRowNumber = origin.Row;
+            var currentColumnNumber = origin.Column;
+            var maximumColumnNumber = currentColumnNumber;
+            var maximumRowNumber = currentRowNumber;
+
+            if (transpose)
+            {
+                maximumColumnNumber += reader.GetRecordsCount() - 1;
+                maximumRowNumber += reader.GetPropertiesCount() - 1;
+            }
+            else
+            {
+                maximumColumnNumber += reader.GetPropertiesCount() - 1;
+                maximumRowNumber += reader.GetRecordsCount() - 1;
+            }
+
+            // Inline functions to handle looping with transposing
+            //////////////////////////////////////////////////////
+            void incrementFieldPosition()
+            {
+                if (transpose)
+                {
+                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
+                    currentRowNumber++;
+                }
+                else
+                {
+                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
+                    currentColumnNumber++;
+                }
+            }
+
+            void incrementRecordPosition()
+            {
+                if (transpose)
+                {
+                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
+                    currentColumnNumber++;
+                }
+                else
+                {
+                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
+                    currentRowNumber++;
+                }
+            }
+
+            void resetRecordPosition()
+            {
+                if (transpose)
+                    currentRowNumber = origin.Row;
+                else
+                    currentColumnNumber = origin.Column;
+            }
+            //////////////////////////////////////////////////////
+
+            var empty = maximumRowNumber <= origin.Row ||
+                        maximumColumnNumber <= origin.Column;
+
+            if (!empty)
+            {
+                Range(
+                        origin.Row,
+                        origin.Column,
+                        maximumRowNumber,
+                        maximumColumnNumber)
+                    .Clear();
+            }
+
+            if (addHeadings)
+            {
+                for (int i = 0; i < reader.GetPropertiesCount(); i++)
+                {
+                    var propertyName = reader.GetPropertyName(i);
+                    SetValue(propertyName, currentRowNumber, currentColumnNumber);
+                    incrementFieldPosition();
+                }
+
+                incrementRecordPosition();
+            }
+
+            var data = reader.GetData();
+
+            foreach (var item in data)
+            {
+                resetRecordPosition();
+                foreach (var value in item)
+                {
+                    SetValue(value, currentRowNumber, currentColumnNumber);
+                    incrementFieldPosition();
+                }
+                incrementRecordPosition();
+            }
+
+            var range = Range(
+                origin.Row,
+                origin.Column,
+                maximumRowNumber,
+                maximumColumnNumber);
+
+            return range;
         }
 
         internal void SetValue<T>(T value, int ro, int co)
