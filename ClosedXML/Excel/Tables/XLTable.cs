@@ -200,8 +200,8 @@ namespace ClosedXML.Excel
 
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
-
-                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out String message))
+                var tableNames = Worksheet.Tables.Select<XLTable, string>(t => t.Name);
+                if (!XLHelper.ValidateName("table", value, oldname, tableNames, out String message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;

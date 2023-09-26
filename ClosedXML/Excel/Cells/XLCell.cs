@@ -327,7 +327,7 @@ namespace ClosedXML.Excel
 
             Boolean SetTableHeaderValue(XLCellValue newFieldName)
             {
-                foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
+                foreach (var table in Worksheet.Tables.Where<XLTable>(t => t.ShowHeaderRow))
                 {
                     if (TryGetField(out var field, table, table.RangeAddress.FirstAddress.RowNumber))
                     {
@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
 
             Boolean SetTableTotalsRowLabel(XLCellValue value)
             {
-                foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
+                foreach (var table in Worksheet.Tables.Where<XLTable>(t => t.ShowTotalsRow))
                 {
                     if (TryGetField(out var field, table, table.RangeAddress.LastAddress.RowNumber))
                     {
@@ -714,7 +714,7 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
                 throw new InvalidOperationException($"Table name cannot be a valid Cell Address '{tableName}'.");
 
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+            if (createTable && this.Worksheet.Tables.Any<XLTable>(t => t.Contains(this)))
                 throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
@@ -723,7 +723,7 @@ namespace ClosedXML.Excel
 
         public XLTableCellType TableCellType()
         {
-            var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
+            var table = this.Worksheet.Tables.FirstOrDefault<XLTable>(t => t.AsRange().Contains(this));
             if (table == null) return XLTableCellType.None;
 
             if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Header;

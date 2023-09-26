@@ -575,7 +575,7 @@ namespace ClosedXML.Excel
 
         IXLTables IXLWorksheet.Tables => Tables;
 
-        public XLTables Tables { get; }
+        internal XLTables Tables { get; }
 
         public IXLTable Table(Int32 index)
         {
@@ -1592,7 +1592,7 @@ namespace ClosedXML.Excel
         private void CheckRangeNotOverlappingOtherEntities(XLRange range)
         {
             // Check that the range doesn't overlap with any existing tables
-            var firstOverlappingTable = Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
+            var firstOverlappingTable = Tables.FirstOrDefault<XLTable>(t => t.RangeUsed().Intersects(range));
             if (firstOverlappingTable != null)
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
 
@@ -1769,7 +1769,7 @@ namespace ClosedXML.Excel
 
         internal IXLTable InsertTable(XLSheetPoint origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
-            if (createTable && Tables.Any(t => t.Contains(this)))
+            if (createTable && Tables.Any<XLTable>(t => t.Contains(this)))
                 throw new InvalidOperationException($"This cell '{origin}' is already part of a table.");
 
             var range = InsertData(origin, reader, addHeadings, transpose);

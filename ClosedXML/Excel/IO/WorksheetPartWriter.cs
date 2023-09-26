@@ -1767,7 +1767,7 @@ namespace ClosedXML.Excel.IO
 
         private static void PopulateTablePartReferences(XLTables xlTables, Worksheet worksheet, XLWorksheetContentManager cm)
         {
-            var emptyTable = xlTables.FirstOrDefault(t => t.DataRange == null);
+            var emptyTable = xlTables.FirstOrDefault<XLTable>(t => t.DataRange is null);
             if (emptyTable != null)
                 throw new EmptyTableException($"Table '{emptyTable.Name}' should have at least 1 row.");
 
@@ -1791,7 +1791,7 @@ namespace ClosedXML.Excel.IO
                 tableParts.AppendChild(new TablePart { Id = xlTable.RelId });
             }
 
-            tableParts.Count = (UInt32)xlTables.Count();
+            tableParts.Count = (UInt32)xlTables.Count<XLTable>();
         }
 
         /// <summary>
@@ -1851,7 +1851,7 @@ namespace ClosedXML.Excel.IO
 
             var tableTotalCells = new HashSet<IXLAddress>(
                 xlWorksheet.Tables
-                .Where(table => table.ShowTotalsRow)
+                .Where<XLTable>(table => table.ShowTotalsRow)
                 .SelectMany(table =>
                     table.TotalsRow().CellsUsed())
                 .Select(cell => cell.Address));
@@ -2134,7 +2134,7 @@ namespace ClosedXML.Excel.IO
                 }
                 else if (tableTotalCells.Contains(xlCell.Address))
                 {
-                    var table = xlCell.Worksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                    var table = xlCell.Worksheet.Tables.First<XLTable>(t => t.AsRange().Contains(xlCell));
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
 
                     // If this is a cell in the totals row that contains a label (xor with function), write label
