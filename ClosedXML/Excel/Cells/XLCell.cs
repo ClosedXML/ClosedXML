@@ -688,7 +688,7 @@ namespace ClosedXML.Excel
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertTableInternal(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
+            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
         }
         
         public IXLTable InsertTable(DataTable data)
@@ -718,7 +718,7 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertTableInternal(SheetPoint, reader, tableName, createTable, addHeadings: true, transpose: false);
+            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
         public XLTableCellType TableCellType()
@@ -746,7 +746,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings: false, transpose: transpose);
+            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -755,7 +755,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
-            return Worksheet.InsertDataInternal(SheetPoint, reader, addHeadings: false, transpose: false);
+            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: false);
         }
 
         public XLDataType DataType => SliceCellValue.Type;

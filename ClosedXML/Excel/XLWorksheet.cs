@@ -1765,12 +1765,12 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        internal IXLTable InsertTableInternal(XLSheetPoint origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
+        internal IXLTable InsertTable(XLSheetPoint origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             if (createTable && Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException($"This cell '{origin}' is already part of a table.");
 
-            var range = InsertDataInternal(origin, reader, addHeadings, transpose);
+            var range = InsertData(origin, reader, addHeadings, transpose);
 
             if (createTable)
                 // Create a table and save it in the file
@@ -1780,7 +1780,7 @@ namespace ClosedXML.Excel
                 return tableName == null ? range.AsTable() : range.AsTable(tableName);
         }
 
-        internal XLRange InsertDataInternal(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
+        internal XLRange InsertData(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
             if (reader == null)
                 return null;
