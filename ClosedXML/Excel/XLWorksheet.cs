@@ -1784,9 +1784,6 @@ namespace ClosedXML.Excel
 
         internal XLRange InsertData(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
-            if (reader == null)
-                return null;
-
             var currentRowNumber = origin.Row;
             var currentColumnNumber = origin.Column;
             var maximumColumnNumber = currentColumnNumber;
