@@ -1784,58 +1784,106 @@ namespace ClosedXML.Excel
 
         internal XLRange InsertData(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
+            if (!transpose)
+            {
+                // Prepare data. Heading is basically just another row of data, so unify it.
+                var rows = reader.GetData();
+                var propCount = reader.GetPropertiesCount();
+                if (addHeadings)
+                {
+                    var headings = new XLCellValue[propCount];
+                    for (var i = 0; i < propCount; i++)
+                        headings[i] = reader.GetPropertyName(i);
+
+                    rows = new[] { headings }.Concat(rows);
+                }
+
+                var valueSlice = Internals.CellsCollection.ValueSlice;
+                var styleSlice = Internals.CellsCollection.StyleSlice;
+
+                // A buffer to avoid multiple enumerations of the source.
+                var rowBuffer = new List<XLCellValue>();
+                var maximumColumn = origin.Column;
+                var rowNumber = origin.Row;
+                foreach (var row in rows)
+                {
+                    rowBuffer.AddRange(row);
+
+                    // InsertData should also clear data and if row doesn't have enough data,
+                    // fill in the rest. Only fill up to the props to be consistent. We can't
+                    // know how long any next row will be, so props are used as a source of truth
+                    // for which columns should be cleared.
+                    for (var i = rowBuffer.Count; i < propCount; ++i)
+                        rowBuffer.Add(Blank.Value);
+
+                    // Each row can have different number of values, so we have to check every row.
+                    maximumColumn = Math.Max(origin.Column + rowBuffer.Count - 1, maximumColumn);
+                    if (maximumColumn > XLHelper.MaxColumnNumber || rowNumber > XLHelper.MaxRowNumber)
+                        throw new ArgumentException("Data would write out of the sheet.");
+
+                    var column = origin.Column;
+                    for (var i = 0; i < rowBuffer.Count; ++i)
+                    {
+                        var value = rowBuffer[i];
+                        var point = new XLSheetPoint(rowNumber, column);
+                        var modifiedStyle = GetStyleForValue(value, point);
+                        if (modifiedStyle is not null)
+                        {
+                            if (value.IsText && value.GetText()[0] == '\'')
+                                value = value.GetText().Substring(1);
+
+                            styleSlice.Set(point, modifiedStyle);
+                        }
+
+                        valueSlice.SetCellValue(point, value);
+                        column++;
+                    }
+
+                    rowBuffer.Clear();
+                    rowNumber++;
+                }
+
+                // If there is no row, rowNumber is kept at origin instead of last row + 1 .
+                var lastRow = Math.Max(rowNumber - 1, origin.Row);
+                var insertedArea = new XLSheetRange(origin, new XLSheetPoint(lastRow, maximumColumn));
+
+                // If inserted area affected a table, we must fix headings and totals, because these values
+                // are duplicated. Basically the table values are the truth and cells are a reflection of the
+                // truth, but here we inserted shadow first.
+                foreach (var table in Tables)
+                    table.RefreshFieldsFromCells(insertedArea);
+
+                // Return area that contains all inserted cells, no matter how jagged were data.
+                return Range(
+                    insertedArea.FirstPoint.Row,
+                    insertedArea.FirstPoint.Column,
+                    insertedArea.LastPoint.Row,
+                    insertedArea.LastPoint.Column);
+            }
+
+            // Only non transposed
             var currentRowNumber = origin.Row;
             var currentColumnNumber = origin.Column;
-            var maximumColumnNumber = currentColumnNumber;
-            var maximumRowNumber = currentRowNumber;
-
-            if (transpose)
-            {
-                maximumColumnNumber += reader.GetRecordsCount() - 1;
-                maximumRowNumber += reader.GetPropertiesCount() - 1;
-            }
-            else
-            {
-                maximumColumnNumber += reader.GetPropertiesCount() - 1;
-                maximumRowNumber += reader.GetRecordsCount() - 1;
-            }
+            var maximumColumnNumber = currentColumnNumber + reader.GetRecordsCount() - 1;
+            var maximumRowNumber = currentRowNumber + reader.GetPropertiesCount() - 1;
 
             // Inline functions to handle looping with transposing
             //////////////////////////////////////////////////////
             void incrementFieldPosition()
             {
-                if (transpose)
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
-                else
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
+                maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
+                currentRowNumber++;
             }
 
             void incrementRecordPosition()
             {
-                if (transpose)
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
-                else
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
+                maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
+                currentColumnNumber++;
             }
 
             void resetRecordPosition()
             {
-                if (transpose)
-                    currentRowNumber = origin.Row;
-                else
-                    currentColumnNumber = origin.Column;
+                currentRowNumber = origin.Row;
             }
             //////////////////////////////////////////////////////
 

@@ -222,6 +222,18 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Create a new range from this one by taking a number of rows from the top row down.
+        /// </summary>
+        /// <param name="rows">How many rows to take, must be at least one.</param>
+        public XLSheetRange SliceFromTop(int rows)
+        {
+            if (rows < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(TopRow + rows - 1, LastPoint.Column));
+        }
+
+        /// <summary>
         /// Create a new range from this one by taking a number of rows from the bottom row up.
         /// </summary>
         /// <param name="columns">How many columns to take, must be at least one.</param>
