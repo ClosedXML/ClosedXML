@@ -1798,33 +1798,7 @@ namespace ClosedXML.Excel
 
             if (transpose)
             {
-                // Rather memory inefficient, but the original code also materialized
-                // data through Linq/required multiple enumerations.
-                var destination = new List<List<XLCellValue>>();
-
-                var sourceRow = 1;
-                foreach (var row in rows)
-                {
-                    var sourceColumn = 1;
-                    foreach (var sourceValue in row)
-                    {
-                        // The original has `sourceValue` at [sourceRow, sourceColumn]
-                        var destinationRowCount = destination.Count;
-                        if (sourceColumn > destinationRowCount)
-                            destination.Add(new List<XLCellValue>());
-
-                        // There can be jagged arrays and the destination can have spaces between columns.
-                        var destinationRow = destination[sourceColumn - 1];
-                        while (destinationRow.Count < sourceRow - 1)
-                            destinationRow.Add(Blank.Value);
-
-                        destinationRow.Add(sourceValue);
-                        sourceColumn++;
-                    }
-                    sourceRow++;
-                }
-
-                rows = destination;
+                rows = TransposeJaggedArray(rows);
             }
 
             var valueSlice = Internals.CellsCollection.ValueSlice;
@@ -1891,6 +1865,38 @@ namespace ClosedXML.Excel
                 insertedArea.FirstPoint.Column,
                 insertedArea.LastPoint.Row,
                 insertedArea.LastPoint.Column);
+
+            // Rather memory inefficient, but the original code also materialized
+            // data through Linq/required multiple enumerations.
+            static List<List<XLCellValue>> TransposeJaggedArray(IEnumerable<IEnumerable<XLCellValue>> enumerable)
+            {
+                var destination = new List<List<XLCellValue>>();
+
+                var sourceRow = 1;
+                foreach (var row in enumerable)
+                {
+                    var sourceColumn = 1;
+                    foreach (var sourceValue in row)
+                    {
+                        // The original has `sourceValue` at [sourceRow, sourceColumn]
+                        var destinationRowCount = destination.Count;
+                        if (sourceColumn > destinationRowCount)
+                            destination.Add(new List<XLCellValue>());
+
+                        // There can be jagged arrays and the destination can have spaces between columns.
+                        var destinationRow = destination[sourceColumn - 1];
+                        while (destinationRow.Count < sourceRow - 1)
+                            destinationRow.Add(Blank.Value);
+
+                        destinationRow.Add(sourceValue);
+                        sourceColumn++;
+                    }
+
+                    sourceRow++;
+                }
+
+                return destination;
+            }
         }
 
         /// <summary>
