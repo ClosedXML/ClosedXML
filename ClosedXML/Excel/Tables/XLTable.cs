@@ -63,9 +63,11 @@ namespace ClosedXML.Excel
                 _fieldNames = new Dictionary<string, IXLTableField>();
                 var headersRow = HeadersRow(false);
                 Int32 cellPos = 0;
-                foreach (var cell in headersRow.Cells())
+                foreach (XLCell cell in headersRow.Cells())
                 {
-                    var name = cell.GetString();
+                    var cellValue = cell.CachedValue;
+                    var name = cellValue.ToString(CultureInfo.CurrentCulture);
+
                     if (oldFieldNames.TryGetValue(name, out IXLTableField tableField))// && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
                     {
                         (tableField as XLTableField).Index = cellPos;
@@ -78,12 +80,19 @@ namespace ClosedXML.Excel
                     if (String.IsNullOrEmpty(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
-                        (cell as XLCell).SetValue(name, false, false);
                     }
                     if (_fieldNames.ContainsKey(name))
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
 
                     _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
+
+                    // Field names are the source of the truth that is projected
+                    // to the cells and field names can be only text. Fix the cell,
+                    // so cell fulfills its job of being dependent on the field name.
+                    if (!cellValue.Equals(name))
+                    {
+                        cell.SetValue(name, false, false);
+                    }
                 }
             }
             else
@@ -247,7 +256,7 @@ namespace ClosedXML.Excel
             return HeadersRow(true);
         }
 
-        internal IXLRangeRow HeadersRow(Boolean scanForNewFieldsNames)
+        internal XLRangeRow HeadersRow(Boolean scanForNewFieldsNames)
         {
             if (!ShowHeaderRow) return null;
 
@@ -1011,7 +1020,7 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Update headers fields and totals fields by data from the cells.
+        /// Update headers fields and totals fields by data from the cells. Do not add a new fields or names.
         /// </summary>
         /// <param name="refreshArea">Area that contains cells with changed values that might affect header and totals fields.</param>
         internal void RefreshFieldsFromCells(XLSheetRange refreshArea)

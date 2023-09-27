@@ -683,7 +683,9 @@ namespace ClosedXML.Tests.Excel
 
             // The non-string data inserted to headers were converted to strings and used as a field names.
             Assert.AreEqual("#VALUE!", table.Field(0).Name);
+            Assert.AreEqual("#VALUE!", ws.Cell("A1").Value);
             Assert.AreEqual("7", table.Field(1).Name);
+            Assert.AreEqual("7", ws.Cell("B1").Value);
         }
 
         [Test]
