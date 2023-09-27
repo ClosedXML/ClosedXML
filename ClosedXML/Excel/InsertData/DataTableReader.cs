@@ -51,10 +51,5 @@ namespace ClosedXML.Excel.InsertData
 
             return _dataTable.Columns[propertyIndex].Caption;
         }
-
-        public int GetRecordsCount()
-        {
-            return _dataRows.Count();
-        }
     }
 }
