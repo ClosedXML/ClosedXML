@@ -135,9 +135,14 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal void MarkDirty(XLWorksheet sheet, XLSheetPoint point)
         {
+            MarkDirty(sheet, new XLSheetRange(point, point));
+        }
+
+        internal void MarkDirty(XLWorksheet sheet, XLSheetRange area)
+        {
             if (_dependencyTree is not null)
             {
-                var bookArea = new XLBookArea(sheet.Name, new XLSheetRange(point, point));
+                var bookArea = new XLBookArea(sheet.Name, area);
                 _dependencyTree.MarkDirty(bookArea);
             }
         }
