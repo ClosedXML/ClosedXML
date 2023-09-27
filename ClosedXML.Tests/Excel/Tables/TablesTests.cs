@@ -665,6 +665,28 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void OverwritingTableHeaders()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var table = ws.Cell("A1").InsertTable(new object[]
+            {
+                ("Header 1", "Header 2"),
+                (1, 2)
+            }, true);
+
+            // Overwrite the headers of the table with non-string values
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (XLError.IncompatibleValue, 7)
+            });
+
+            // The non-string data inserted to headers were converted to strings and used as a field names.
+            Assert.AreEqual("#VALUE!", table.Field(0).Name);
+            Assert.AreEqual("7", table.Field(1).Name);
+        }
+
+        [Test]
         public void OverwritingTableTotalsRow()
         {
             using (var wb = new XLWorkbook())

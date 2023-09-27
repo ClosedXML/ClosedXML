@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -1006,6 +1007,55 @@ namespace ClosedXML.Excel
                         else
                             c.Value = cell.Value;
                     });
+            }
+        }
+
+        /// <summary>
+        /// Update headers fields and totals fields by data from the cells.
+        /// </summary>
+        /// <param name="refreshArea">Area that contains cells with changed values that might affect header and totals fields.</param>
+        internal void RefreshFieldsFromCells(XLSheetRange refreshArea)
+        {
+            var tableArea = Area;
+            if (ShowTotalsRow)
+            {
+                var totalsRow = tableArea.SliceFromBottom(1);
+                var intersection = totalsRow.Intersect(refreshArea);
+                if (intersection is not null)
+                {
+                    var totalsRowNumber = totalsRow.BottomRow;
+                    var valueSlice = Worksheet.Internals.CellsCollection.ValueSlice;
+                    for (var column = intersection.Value.LeftColumn; column <= intersection.Value.RightColumn; ++column)
+                    {
+                        var fieldIndex = column - totalsRow.LeftColumn;
+                        var field = Field(fieldIndex);
+                        var value = valueSlice.GetCellValue(new XLSheetPoint(totalsRowNumber, column));
+
+                        // Convert value to text, because Excel always converts values to text when replacing totals row.
+                        field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
+                    }
+                }
+            }
+
+            if (ShowHeaderRow)
+            {
+                var headersRow = Area.SliceFromTop(1);
+                var intersection = headersRow.Intersect(refreshArea);
+                if (intersection is not null)
+                {
+                    var headersRowNumber = headersRow.TopRow;
+                    var valueSlice = Worksheet.Internals.CellsCollection.ValueSlice;
+                    for (var column = intersection.Value.LeftColumn; column <= intersection.Value.RightColumn; ++column)
+                    {
+                        var fieldIndex = column - headersRow.LeftColumn;
+                        var field = Field(fieldIndex);
+                        var value = valueSlice.GetCellValue(new XLSheetPoint(headersRowNumber, column));
+
+                        // Convert to text, because headers row of a table can be only
+                        // string in OOXML and Excel converts it to string as well.
+                        field.Name = value.ToString(CultureInfo.CurrentCulture);
+                    }
+                }
             }
         }
 
