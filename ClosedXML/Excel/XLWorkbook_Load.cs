@@ -1758,18 +1758,12 @@ namespace ClosedXML.Excel
         {
             Int32 styleIndex = cell.StyleIndex != null ? Int32.Parse(cell.StyleIndex.InnerText) : 0;
 
-            XLAddress cellAddress;
-            if (cell.CellReference == null)
-            {
-                cellAddress = new XLAddress(ws, rowIndex, ++lastColumnNumber, false, false);
-            }
-            else
-            {
-                cellAddress = XLAddress.Create(ws, cell.CellReference.Value);
-                lastColumnNumber = cellAddress.ColumnNumber;
-            }
+            var cellAddress = cell.CellReference?.Value is { } cellRef
+                ? XLSheetPoint.Parse(cellRef)
+                : new XLSheetPoint(rowIndex, lastColumnNumber + 1);
+            lastColumnNumber = cellAddress.Column;
 
-            var xlCell = ws.Cell(in cellAddress);
+            var xlCell = ws.Cell(cellAddress.Row, cellAddress.Column);
             var dataType = cell.DataType?.Value ?? CellValues.Number;
 
             if (styleList.TryGetValue(styleIndex, out IXLStyle style))
@@ -1831,8 +1825,7 @@ namespace ClosedXML.Excel
                         xlCell.Formula = formula;
 
                         // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
-                        var xlCellSheetPoint = new XLSheetPoint(cellAddress.RowNumber, cellAddress.ColumnNumber);
-                        var formulaR1C1 = formula.GetFormulaR1C1(xlCellSheetPoint);
+                        var formulaR1C1 = formula.GetFormulaR1C1(cellAddress);
                         sharedFormulasR1C1.Add(cellFormula.SharedIndex.Value, formulaR1C1);
                     }
                     else
