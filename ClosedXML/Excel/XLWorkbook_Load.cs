@@ -864,7 +864,7 @@ namespace ClosedXML.Excel
                                     if (!(pivotTableDefinition.PivotFields.ElementAt(pageField.Field.Value) is PivotField pf))
                                         continue;
 
-                                   var cacheFieldValues = pivotSource.GetFieldValues(pageField.Field.Value);
+                                    var cacheFieldValues = pivotSource.GetFieldValues(pageField.Field.Value);
 
                                     var filterName = pf.Name?.Value ?? pivotSource.FieldNames[pageField.Field.Value];
 
@@ -1787,26 +1787,33 @@ namespace ClosedXML.Excel
             var cellFormula = cell.CellFormula;
             if (cellFormula is not null)
             {
+                var formulaSlice = ws.Internals.CellsCollection.FormulaSlice;
+                var valueSlice = ws.Internals.CellsCollection.ValueSlice;
+                XLCellFormula formula = null;
+
                 // bx attribute of cell formula is not ever used, per MS-OI29500 2.1.620
                 var formulaType = cellFormula.FormulaType?.Value ?? CellFormulaValues.Normal;
                 if (formulaType == CellFormulaValues.Normal)
                 {
-                    xlCell.Formula = XLCellFormula.NormalA1(cellFormula.Text);
+                    formula = XLCellFormula.NormalA1(cellFormula.Text);
+                    formulaSlice.Set(cellAddress, formula);
+                    valueSlice.SetShareString(cellAddress, false);
                 }
                 else if (formulaType == CellFormulaValues.Array && cellFormula.Reference is not null) // Child cells of an array may have array type, but not ref, that is reserved for master cell
                 {
                     var aca = cellFormula.AlwaysCalculateArray?.Value ?? false;
 
-                    var range = XLSheetRange.Parse(cellFormula.Reference);
-                    var arrayFormula = XLCellFormula.Array(cellFormula.Text, range, aca);
-
                     // Because cells are read from top-to-bottom, from left-to-right, none of child cells have
                     // a formula yet. Also, Excel doesn't allow change of array data, only through parent formula.
-                    for (var col = range.FirstPoint.Column; col <= range.LastPoint.Column; ++col)
+                    var arrayArea = XLSheetRange.Parse(cellFormula.Reference);
+                    formula = XLCellFormula.Array(cellFormula.Text, arrayArea, aca);
+                    formulaSlice.SetArray(arrayArea, formula);
+
+                    for (var col = arrayArea.FirstPoint.Column; col <= arrayArea.LastPoint.Column; ++col)
                     {
-                        for (var row = range.FirstPoint.Row; row <= range.LastPoint.Row; ++row)
+                        for (var row = arrayArea.FirstPoint.Row; row <= arrayArea.LastPoint.Row; ++row)
                         {
-                            ws.Cell(row, col).Formula = arrayFormula;
+                            valueSlice.SetShareString(cellAddress, false);
                         }
                     }
                 }
@@ -1821,8 +1828,9 @@ namespace ClosedXML.Excel
                     {
                         // Spec: The first formula in a group of shared formulas is saved
                         // in the f element.This is considered the 'master' formula cell.
-                        var formula = XLCellFormula.NormalA1(cellFormula.Text);
-                        xlCell.Formula = formula;
+                        formula = XLCellFormula.NormalA1(cellFormula.Text);
+                        formulaSlice.Set(cellAddress, formula);
+                        valueSlice.SetShareString(cellAddress, false);
 
                         // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
                         var formulaR1C1 = formula.GetFormulaR1C1(cellAddress);
@@ -1832,7 +1840,9 @@ namespace ClosedXML.Excel
                     {
                         // Spec: The formula expression for a cell that is specified to be part of a shared formula
                         // (and is not the master) shall be ignored, and the master formula shall override.
-                        xlCell.FormulaR1C1 = sharedR1C1Formula;
+                        formula = XLCellFormula.NormalR1C1(sharedR1C1Formula);
+                        formulaSlice.Set(cellAddress, formula);
+                        valueSlice.SetShareString(cellAddress, false);
                     }
                 }
                 else if (formulaType == CellFormulaValues.DataTable && cellFormula.Reference is not null)
@@ -1846,21 +1856,25 @@ namespace ClosedXML.Excel
                         // Input 2 is only used for 2D tables
                         var input2Deleted = cellFormula.Input2Deleted?.Value ?? false;
                         var input2 = XLSheetPoint.Parse(cellFormula.R2);
-                        xlCell.Formula = XLCellFormula.DataTable2D(range, input1, input1Deleted, input2, input2Deleted);
+                        formula = XLCellFormula.DataTable2D(range, input1, input1Deleted, input2, input2Deleted);
+                        formulaSlice.Set(cellAddress, formula);
                     }
                     else
                     {
                         var isRowDataTable = cellFormula.DataTableRow?.Value ?? false;
-                        xlCell.Formula = XLCellFormula.DataTable1D(range, input1, input1Deleted, isRowDataTable);
+                        formula = XLCellFormula.DataTable1D(range, input1, input1Deleted, isRowDataTable);
+                        formulaSlice.Set(cellAddress, formula);
                     }
+
+                    valueSlice.SetShareString(cellAddress, false);
                 }
 
                 // If the cell doesn't contain value, we should invalidate it, otherwise rely on the stored value.
                 // The value is likely more reliable. It should be set when cellFormula.CalculateCell is set or
-                // when value is missing.
-                if (cell.CellValue?.Text is null)
+                // when value is missing. Formula can be null in some cases, e.g. slave cells of array formula.
+                if (formula is not null && cell.CellValue?.Text is null)
                 {
-                    xlCell.InvalidateFormula();
+                    formula.IsDirty = true;
                 }
             }
             // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
