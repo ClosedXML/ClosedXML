@@ -386,6 +386,10 @@ namespace ClosedXML.Excel
             return IsNumber && _value.Equals(other);
         }
 
+        /// <summary>
+        /// Is the cell value text and is equal to the <paramref name="other"/>?
+        /// Text comparison is case sensitive.
+        /// </summary>
         public bool Equals(string other)
         {
             return IsText && _text == other;
