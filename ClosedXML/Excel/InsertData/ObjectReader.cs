@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.InsertData
             _staticMembers = _members.Select(ReflectionExtensions.IsStatic).ToArray();
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return _data.Select(item => GetItemData(item).Select(XLCellValue.FromInsertedObject));
         }

@@ -126,14 +126,14 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(ObjectWithAttributes);
-            Assert.AreEqual(2, reader.GetData().Count());
+            Assert.AreEqual(2, reader.GetRecords().Count());
         }
 
         [Test]
         public void CanReadValues_FromObject()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(ObjectWithAttributes);
-            var result = reader.GetData();
+            var result = reader.GetRecords();
 
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();
@@ -153,7 +153,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanReadValues_FromStruct()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(Structs);
-            var result = reader.GetData();
+            var result = reader.GetRecords();
 
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();
@@ -171,7 +171,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanReadValues_FromNullableStruct()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(NullableStructs);
-            var result = reader.GetData();
+            var result = reader.GetRecords();
 
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();

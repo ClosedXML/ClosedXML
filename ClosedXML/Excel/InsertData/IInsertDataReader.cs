@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.InsertData
         /// <summary>
         /// Get a collection of records, each as a collection of values, extracted from a source.
         /// </summary>
-        IEnumerable<IEnumerable<XLCellValue>> GetData();
+        IEnumerable<IEnumerable<XLCellValue>> GetRecords();
 
         /// <summary>
         /// Get the number of properties to use as a table with.

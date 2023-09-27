@@ -57,11 +57,11 @@ namespace ClosedXML.Excel.InsertData
             }
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             foreach (var reader in _readers)
             {
-                foreach (var item in reader.GetData())
+                foreach (var item in reader.GetRecords())
                 {
                     yield return item;
                 }
