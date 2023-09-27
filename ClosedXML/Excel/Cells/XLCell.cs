@@ -273,59 +273,12 @@ namespace ClosedXML.Excel
 
             if (setTableHeader)
             {
-                if (SetTableHeaderValue(value)) return this;
-                if (SetTableTotalsRowLabel(value)) return this;
+                var cellRange = new XLSheetRange(SheetPoint, SheetPoint);
+                foreach (var table in Worksheet.Tables)
+                    table.RefreshFieldsFromCells(cellRange);
             }
 
             return this;
-
-            Boolean SetTableHeaderValue(XLCellValue newFieldName)
-            {
-                foreach (var table in Worksheet.Tables.Where<XLTable>(t => t.ShowHeaderRow))
-                {
-                    if (TryGetField(out var field, table, table.RangeAddress.FirstAddress.RowNumber))
-                    {
-                        field.Name = newFieldName.ToString(CultureInfo.CurrentCulture);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            Boolean SetTableTotalsRowLabel(XLCellValue value)
-            {
-                foreach (var table in Worksheet.Tables.Where<XLTable>(t => t.ShowTotalsRow))
-                {
-                    if (TryGetField(out var field, table, table.RangeAddress.LastAddress.RowNumber))
-                    {
-                        field.TotalsRowFunction = XLTotalsRowFunction.None;
-                        field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            Boolean TryGetField(out IXLTableField field, IXLTable table, int rowNumber)
-            {
-                var tableRange = table.RangeAddress;
-                var tableInTotalsRow = rowNumber == Address.RowNumber;
-                if (!tableInTotalsRow)
-                {
-                    field = null;
-                    return false;
-                }
-
-                var fieldIndex = Address.ColumnNumber - tableRange.FirstAddress.ColumnNumber;
-                var tableContainsCell = fieldIndex >= 0 && fieldIndex < tableRange.ColumnSpan;
-                if (!tableContainsCell)
-                {
-                    field = null;
-                    return false;
-                }
-                field = table.Field(fieldIndex);
-                return true;
-            }
         }
 
         /// <summary>
