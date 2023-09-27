@@ -36,10 +36,5 @@ namespace ClosedXML.Excel.InsertData
 
             return _itemType.Name;
         }
-
-        public int GetRecordsCount()
-        {
-            return _data.Count();
-        }
     }
 }

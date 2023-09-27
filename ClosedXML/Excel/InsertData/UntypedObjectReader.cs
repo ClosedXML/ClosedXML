@@ -78,11 +78,6 @@ namespace ClosedXML.Excel.InsertData
             return GetFirstNonNullReader()?.GetPropertyName(propertyIndex);
         }
 
-        public int GetRecordsCount()
-        {
-            return _data.Count();
-        }
-
         private IInsertDataReader GetFirstNonNullReader()
         {
             return _readers.FirstOrDefault(r => !(r is NullDataReader));

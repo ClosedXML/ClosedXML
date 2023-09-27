@@ -126,7 +126,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(ObjectWithAttributes);
-            Assert.AreEqual(2, reader.GetRecordsCount());
+            Assert.AreEqual(2, reader.GetData().Count());
         }
 
         [Test]

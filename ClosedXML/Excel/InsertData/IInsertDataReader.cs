@@ -23,10 +23,5 @@ namespace ClosedXML.Excel.InsertData
         /// Get the title of the property with the specified index.
         /// </summary>
         string? GetPropertyName(int propertyIndex);
-
-        /// <summary>
-        /// Get the total number of records.
-        /// </summary>
-        int GetRecordsCount();
     }
 }

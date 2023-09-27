@@ -62,11 +62,6 @@ namespace ClosedXML.Excel.InsertData
             return fieldName;
         }
 
-        public int GetRecordsCount()
-        {
-            return _data.Count();
-        }
-
         private IEnumerable<object?> GetItemData(object item)
         {
             for (int i = 0; i < _members.Length; i++)

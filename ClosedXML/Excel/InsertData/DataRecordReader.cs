@@ -44,11 +44,6 @@ namespace ClosedXML.Excel.InsertData
             return _columns[propertyIndex];
         }
 
-        public int GetRecordsCount()
-        {
-            return _inMemoryData.Length;
-        }
-
         private IEnumerable<IEnumerable<XLCellValue>> ReadToEnd(IEnumerable<IDataRecord> data)
         {
             foreach (var dataRecord in data)
