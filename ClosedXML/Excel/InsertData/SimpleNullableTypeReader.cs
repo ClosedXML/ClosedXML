@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.InsertData
             _itemType = data.GetItemType().GetUnderlyingType();
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return _data.Select(item => new[] { item }.Select(XLCellValue.FromInsertedObject));
         }

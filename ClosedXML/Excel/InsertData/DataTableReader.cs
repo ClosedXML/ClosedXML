@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.InsertData
             _dataTable = _dataRows.FirstOrDefault()?.Table;
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return _dataRows.Select(r => r.ItemArray.Select(XLCellValue.FromInsertedObject));
         }

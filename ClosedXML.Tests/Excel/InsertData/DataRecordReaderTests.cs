@@ -61,14 +61,14 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
-            Assert.AreEqual(3, reader.GetData().Count());
+            Assert.AreEqual(3, reader.GetRecords().Count());
         }
 
         [Test]
         public void CanGetData()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
-            var result = reader.GetData().ToArray();
+            var result = reader.GetRecords().ToArray();
 
             Assert.AreEqual("Value 1", result.First().First());
             Assert.AreEqual(100, result.First().Last());

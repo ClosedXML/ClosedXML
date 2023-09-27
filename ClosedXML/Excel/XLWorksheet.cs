@@ -1785,7 +1785,7 @@ namespace ClosedXML.Excel
         internal XLRange InsertData(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
             // Prepare data. Heading is basically just another row of data, so unify it.
-            var rows = reader.GetData();
+            var rows = reader.GetRecords();
             var propCount = reader.GetPropertiesCount();
             if (addHeadings)
             {

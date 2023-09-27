@@ -54,7 +54,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(_data);
-            Assert.AreEqual(9, reader.GetData().Count());
+            Assert.AreEqual(9, reader.GetRecords().Count());
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(_data);
 
-            var result = reader.GetData().ToArray();
+            var result = reader.GetRecords().ToArray();
 
             Assert.AreEqual(new XLCellValue[] { Blank.Value }, result[0]);
             Assert.AreEqual(new XLCellValue[] { "Value 2", "Value 1", 4, 3 }, result[1]);

@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.InsertData
             _inMemoryData = ReadToEnd(data).ToArray();
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return _inMemoryData;
         }

@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.InsertData
             _count = nulls.Count();
         }
 
-        public IEnumerable<IEnumerable<XLCellValue>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return Enumerable.Repeat(_row, _count);
         }
