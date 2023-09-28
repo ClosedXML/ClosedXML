@@ -438,7 +438,7 @@ namespace ClosedXML.Excel
                             var runProperties = run.RunProperties;
                             String text = run.Text.InnerText.FixNewLines();
                             var rt = xlComment.AddText(text);
-                            LoadFont(runProperties, rt);
+                            OpenXmlHelper.LoadFont(runProperties, rt);
                         }
 
                         if (shape != null)
@@ -1155,10 +1155,10 @@ namespace ClosedXML.Excel
                 if (format.FormatId != null)
                 {
                     var df = differentialFormats[(Int32)format.FormatId.Value];
-                    LoadFont(df.Font, style.Font);
-                    LoadFill(df.Fill, style.Fill, differentialFillFormat: true);
-                    LoadBorder(df.Border, style.Border);
-                    LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
+                    OpenXmlHelper.LoadFont(df.Font, style.Font);
+                    OpenXmlHelper.LoadFill(df.Fill, style.Fill, differentialFillFormat: true);
+                    OpenXmlHelper.LoadBorder(df.Border, style.Border);
+                    OpenXmlHelper.LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
                 }
 
                 styleFormat.Style = style;
@@ -2073,7 +2073,7 @@ namespace ClosedXML.Excel
                     if (fontScheme != null && fontScheme.Val is not null)
                         rt.SetFontScheme(fontScheme.Val.Value.ToClosedXml());
 
-                    LoadFont(runProperties, rt);
+                    OpenXmlHelper.LoadFont(runProperties, rt);
                 }
             }
 
@@ -2090,7 +2090,7 @@ namespace ClosedXML.Excel
                 if (pp.Type != null)
                     xlCell.GetRichText().Phonetics.Type = pp.Type.Value.ToClosedXml();
 
-                LoadFont(pp, xlCell.GetRichText().Phonetics);
+                OpenXmlHelper.LoadFont(pp, xlCell.GetRichText().Phonetics);
             }
 
             // Load phonetic runs
@@ -2099,141 +2099,6 @@ namespace ClosedXML.Excel
             {
                 xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
                                               (Int32)pr.EndingBaseIndex.Value);
-            }
-        }
-
-        private static void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
-        {
-            if (nfSource == null) return;
-
-            if (nfSource.NumberFormatId != null && nfSource.NumberFormatId.Value < XLConstants.NumberOfBuiltInStyles)
-                nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
-            else if (nfSource.FormatCode != null)
-                nf.Format = nfSource.FormatCode.Value;
-        }
-
-        private static void LoadBorder(Border borderSource, IXLBorder border)
-        {
-            if (borderSource == null) return;
-
-            LoadBorderValues(borderSource.DiagonalBorder, border.SetDiagonalBorder, border.SetDiagonalBorderColor);
-
-            if (borderSource.DiagonalUp != null)
-                border.DiagonalUp = borderSource.DiagonalUp.Value;
-            if (borderSource.DiagonalDown != null)
-                border.DiagonalDown = borderSource.DiagonalDown.Value;
-
-            LoadBorderValues(borderSource.LeftBorder, border.SetLeftBorder, border.SetLeftBorderColor);
-            LoadBorderValues(borderSource.RightBorder, border.SetRightBorder, border.SetRightBorderColor);
-            LoadBorderValues(borderSource.TopBorder, border.SetTopBorder, border.SetTopBorderColor);
-            LoadBorderValues(borderSource.BottomBorder, border.SetBottomBorder, border.SetBottomBorderColor);
-        }
-
-        private static void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<XLColor, IXLStyle> setColor)
-        {
-            if (source != null)
-            {
-                if (source.Style != null)
-                    setBorder(source.Style.Value.ToClosedXml());
-                if (source.Color != null)
-                    setColor(source.Color.ToClosedXMLColor());
-            }
-        }
-
-        // Differential fills store the patterns differently than other fills
-        // Actually differential fills make more sense. bg is bg and fg is fg
-        // 'Other' fills store the bg color in the fg field when pattern type is solid
-        private static void LoadFill(Fill openXMLFill, IXLFill closedXMLFill, Boolean differentialFillFormat)
-        {
-            if (openXMLFill == null || openXMLFill.PatternFill == null) return;
-
-            if (openXMLFill.PatternFill.PatternType != null)
-                closedXMLFill.PatternType = openXMLFill.PatternFill.PatternType.Value.ToClosedXml();
-            else
-                closedXMLFill.PatternType = XLFillPatternValues.Solid;
-
-            switch (closedXMLFill.PatternType)
-            {
-                case XLFillPatternValues.None:
-                    break;
-
-                case XLFillPatternValues.Solid:
-                    if (differentialFillFormat)
-                    {
-                        if (openXMLFill.PatternFill.BackgroundColor != null)
-                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
-                        else
-                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
-                    }
-                    else
-                    {
-                        // yes, source is foreground!
-                        if (openXMLFill.PatternFill.ForegroundColor != null)
-                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
-                        else
-                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
-                    }
-                    break;
-
-                default:
-                    if (openXMLFill.PatternFill.ForegroundColor != null)
-                        closedXMLFill.PatternColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
-
-                    if (openXMLFill.PatternFill.BackgroundColor != null)
-                        closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
-                    else
-                        closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
-                    break;
-            }
-        }
-
-        private static void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
-        {
-            if (fontSource == null) return;
-
-            fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
-            var fontColor = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault();
-            if (fontColor != null)
-                fontBase.FontColor = fontColor.ToClosedXMLColor();
-
-            var fontFamilyNumbering =
-                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
-            if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
-                fontBase.FontFamilyNumbering =
-                    (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
-            var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
-            if (runFont != null)
-            {
-                if (runFont.Val != null)
-                    fontBase.FontName = runFont.Val;
-            }
-            var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
-            if (fontSize != null)
-            {
-                if ((fontSize).Val != null)
-                    fontBase.FontSize = (fontSize).Val;
-            }
-
-            fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
-            fontBase.Shadow = GetBoolean(fontSource.Elements<Shadow>().FirstOrDefault());
-            fontBase.Strikethrough = GetBoolean(fontSource.Elements<Strike>().FirstOrDefault());
-
-            var underline = fontSource.Elements<Underline>().FirstOrDefault();
-            if (underline != null)
-            {
-                fontBase.Underline = underline.Val != null ? underline.Val.Value.ToClosedXml() : XLFontUnderlineValues.Single;
-            }
-
-            var verticalTextAlignment = fontSource.Elements<VerticalTextAlignment>().FirstOrDefault();
-            if (verticalTextAlignment is not null)
-            {
-                fontBase.VerticalAlignment = verticalTextAlignment.Val is not null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
-            }
-
-            var fontScheme = fontSource.Elements<FontScheme>().FirstOrDefault();
-            if (fontScheme is not null)
-            {
-                fontBase.FontScheme = fontScheme.Val is not null ? fontScheme.Val.Value.ToClosedXml() : XLFontScheme.None;
             }
         }
 
@@ -2771,11 +2636,11 @@ namespace ClosedXML.Excel
 
                 if (fr.FormatId != null)
                 {
-                    LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
-                    LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
+                    OpenXmlHelper.LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                    OpenXmlHelper.LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
                         differentialFillFormat: true);
-                    LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
-                    LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat,
+                    OpenXmlHelper.LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
+                    OpenXmlHelper.LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat,
                         conditionalFormat.Style.NumberFormat);
                 }
 
@@ -3356,7 +3221,7 @@ namespace ClosedXML.Excel
                 if (fill.PatternFill != null)
                 {
                     var xlFill = new XLFill();
-                    LoadFill(fill, xlFill, differentialFillFormat: false);
+                    OpenXmlHelper.LoadFill(fill, xlFill, differentialFillFormat: false);
                     xlStyle.Fill = xlFill.Key;
                 }
             }
@@ -3455,7 +3320,7 @@ namespace ClosedXML.Excel
                 var xlFont = xlStyle.Font;
                 if (font != null)
                 {
-                    xlFont.Bold = GetBoolean(font.Bold);
+                    xlFont.Bold = OpenXmlHelper.GetBoolean(font.Bold);
 
                     if (font.Color != null)
                         xlFont.FontColor = font.Color.ToClosedXMLColor().Key;
@@ -3476,9 +3341,9 @@ namespace ClosedXML.Excel
                             xlFont.FontSize = (font.FontSize).Val;
                     }
 
-                    xlFont.Italic = GetBoolean(font.Italic);
-                    xlFont.Shadow = GetBoolean(font.Shadow);
-                    xlFont.Strikethrough = GetBoolean(font.Strike);
+                    xlFont.Italic = OpenXmlHelper.GetBoolean(font.Italic);
+                    xlFont.Shadow = OpenXmlHelper.GetBoolean(font.Shadow);
+                    xlFont.Strikethrough = OpenXmlHelper.GetBoolean(font.Strike);
 
                     if (font.Underline != null)
                     {
@@ -3537,18 +3402,6 @@ namespace ClosedXML.Excel
         private static Boolean UInt32HasValue(UInt32Value value)
         {
             return value != null && value.HasValue;
-        }
-
-        private static Boolean GetBoolean(BooleanPropertyType property)
-        {
-            if (property != null)
-            {
-                if (property.Val != null)
-                    return property.Val;
-                return true;
-            }
-
-            return false;
         }
 
         private static Exception MissingRequiredAttr(string attributeName)
