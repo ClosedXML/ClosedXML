@@ -61,22 +61,20 @@ namespace ClosedXML.Utils
         /// Convert color in OpenXML representation to ClosedXML type.
         /// </summary>
         /// <param name="openXMLColor">Color in OpenXML format.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this ColorType openXMLColor)
         {
-            return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor), colorCache);
+            return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor));
         }
 
         /// <summary>
         /// Convert color in OpenXML representation to ClosedXML type.
         /// </summary>
         /// <param name="openXMLColor">Color in OpenXML format.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor)
         {
-            return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor), colorCache);
+            return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor));
         }
 
         #endregion Public Methods
@@ -88,20 +86,13 @@ namespace ClosedXML.Utils
         /// </summary>
         /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>.
         /// Since these types do not implement a common interface we use dynamic.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color>? colorCache)
+        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor)
         {
             XLColor? retVal = null;
-            if (openXMLColor.Rgb != null)
+            if (openXMLColor.Rgb?.Value is not null)
             {
-                String htmlColor = "#" + openXMLColor.Rgb.Value;
-                if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
-                {
-                    thisColor = ColorStringParser.ParseFromArgb(htmlColor);
-                    colorCache?.Add(htmlColor, thisColor);
-                }
-
+                var thisColor = ColorStringParser.ParseFromArgb(openXMLColor.Rgb.Value);
                 retVal = XLColor.FromColor(thisColor);
             }
             else if (openXMLColor.Indexed is not null && openXMLColor.Indexed <= 64)

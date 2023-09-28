@@ -48,7 +48,7 @@ namespace ClosedXML.Utils
         internal static Color ParseFromRgb(string rgbColor)
         {
             if (rgbColor.Length != 6)
-                throw new FormatException();
+                throw new FormatException("Color should have 6 chars.");
 
             ReadOnlySpan<char> rgbSpan = rgbColor.AsSpan();
 
