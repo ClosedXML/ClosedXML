@@ -393,7 +393,7 @@ namespace ClosedXML.Excel
             }
         }
         
-        private void GenerateWorkbookPartContent(WorkbookPart workbookPart, SaveOptions options, SaveContext context)
+        private static void GenerateWorkbookPartContent(WorkbookPart workbookPart, XLWorkbook xlWorkbook, SaveOptions options, SaveContext context)
         {
             if (workbookPart.Workbook == null)
                 workbookPart.Workbook = new Workbook();
@@ -415,7 +415,7 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
-            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(this.Use1904DateSystem, false);
+            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(xlWorkbook.Use1904DateSystem, false);
 
             if (options.FilterPrivacy.HasValue)
                 workbook.WorkbookProperties.FilterPrivacy = OpenXmlHelper.GetBooleanValue(options.FilterPrivacy.Value, false);
@@ -427,8 +427,8 @@ namespace ClosedXML.Excel
             if (workbook.FileSharing == null)
                 workbook.FileSharing = new FileSharing();
 
-            workbook.FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValue(this.FileSharing.ReadOnlyRecommended, false);
-            workbook.FileSharing.UserName = String.IsNullOrWhiteSpace(this.FileSharing.UserName) ? null : StringValue.FromString(this.FileSharing.UserName);
+            workbook.FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValue(xlWorkbook.FileSharing.ReadOnlyRecommended, false);
+            workbook.FileSharing.UserName = String.IsNullOrWhiteSpace(xlWorkbook.FileSharing.UserName) ? null : StringValue.FromString(xlWorkbook.FileSharing.UserName);
 
             if (!workbook.FileSharing.HasChildren && !workbook.FileSharing.HasAttributes)
                 workbook.FileSharing = null;
@@ -437,14 +437,14 @@ namespace ClosedXML.Excel
 
             #region WorkbookProtection
 
-            if (this.Protection.IsProtected)
+            if (xlWorkbook.Protection.IsProtected)
             {
                 if (workbook.WorkbookProtection == null)
                     workbook.WorkbookProtection = new WorkbookProtection();
 
                 var workbookProtection = workbook.WorkbookProtection;
 
-                var protection = this.Protection;
+                var protection = xlWorkbook.Protection;
 
                 workbookProtection.WorkbookPassword = null;
                 workbookProtection.WorkbookAlgorithmName = null;
@@ -481,7 +481,7 @@ namespace ClosedXML.Excel
             if (workbook.Sheets == null)
                 workbook.Sheets = new Sheets();
 
-            var worksheets = WorksheetsInternal;
+            var worksheets = xlWorkbook.WorksheetsInternal;
             workbook.Sheets.Elements<Sheet>().Where(s => worksheets.Deleted.Contains(s.Id)).ToList().ForEach(
                 s => s.Remove());
 
@@ -489,14 +489,14 @@ namespace ClosedXML.Excel
             {
                 var sheetId = (Int32)sheet.SheetId.Value;
 
-                if (WorksheetsInternal.All<XLWorksheet>(w => w.SheetId != sheetId)) continue;
+                if (xlWorkbook.WorksheetsInternal.All<XLWorksheet>(w => w.SheetId != sheetId)) continue;
 
-                var wks = WorksheetsInternal.Single<XLWorksheet>(w => w.SheetId == sheetId);
+                var wks = xlWorkbook.WorksheetsInternal.Single<XLWorksheet>(w => w.SheetId == sheetId);
                 wks.RelId = sheet.Id;
                 sheet.Name = wks.Name;
             }
 
-            foreach (var xlSheet in WorksheetsInternal.OrderBy<XLWorksheet, int>(w => w.Position))
+            foreach (var xlSheet in xlWorkbook.WorksheetsInternal.OrderBy<XLWorksheet, int>(w => w.Position))
             {
                 string rId;
                 if (String.IsNullOrWhiteSpace(xlSheet.RelId))
@@ -524,25 +524,25 @@ namespace ClosedXML.Excel
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
-                                join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value
+                                join worksheet in ((IEnumerable<XLWorksheet>)xlWorkbook.WorksheetsInternal) on sheet.Id.Value
                                     equals worksheet.RelId
                                 orderby worksheet.Position
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
             var activeTab =
-                (from us in UnsupportedSheets where us.IsActive select (UInt32)us.Position - 1).FirstOrDefault();
+                (from us in xlWorkbook.UnsupportedSheets where us.IsActive select (UInt32)us.Position - 1).FirstOrDefault();
             var foundVisible = false;
 
-            var totalSheets = sheetElements.Count() + UnsupportedSheets.Count;
+            var totalSheets = sheetElements.Count() + xlWorkbook.UnsupportedSheets.Count;
             for (var p = 1; p <= totalSheets; p++)
             {
-                if (UnsupportedSheets.All(us => us.Position != p))
+                if (xlWorkbook.UnsupportedSheets.All(us => us.Position != p))
                 {
-                    var sheet = sheetElements.ElementAt(p - UnsupportedSheets.Count(us => us.Position <= p) - 1);
+                    var sheet = sheetElements.ElementAt(p - xlWorkbook.UnsupportedSheets.Count(us => us.Position <= p) - 1);
                     workbook.Sheets.RemoveChild(sheet);
                     workbook.Sheets.AppendChild(sheet);
-                    var xlSheet = Worksheet(sheet.Name);
+                    var xlSheet = xlWorkbook.Worksheet(sheet.Name);
                     if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
                         sheet.State = xlSheet.Visibility.ToOpenXml();
                     else
@@ -557,7 +557,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    var sheetId = UnsupportedSheets.First(us => us.Position == p).SheetId;
+                    var sheetId = xlWorkbook.UnsupportedSheets.First(us => us.Position == p).SheetId;
                     var sheet = workbook.Sheets.Elements<Sheet>().First(s => s.SheetId == sheetId);
                     workbook.Sheets.RemoveChild(sheet);
                     workbook.Sheets.AppendChild(sheet);
@@ -601,7 +601,7 @@ namespace ClosedXML.Excel
             }
 
             var definedNames = new DefinedNames();
-            foreach (var worksheet in WorksheetsInternal)
+            foreach (var worksheet in xlWorkbook.WorksheetsInternal)
             {
                 var wsSheetId = worksheet.SheetId;
                 UInt32 sheetId = 0;
@@ -702,7 +702,7 @@ namespace ClosedXML.Excel
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (var nr in NamedRanges.OfType<XLNamedRange>())
+            foreach (var nr in xlWorkbook.NamedRanges.OfType<XLNamedRange>())
             {
                 var refersTo = string.Join(",", nr.RangeList
                     .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
@@ -726,20 +726,20 @@ namespace ClosedXML.Excel
             if (workbook.CalculationProperties == null)
                 workbook.CalculationProperties = new CalculationProperties { CalculationId = 125725U };
 
-            if (CalculateMode == XLCalculateMode.Default)
+            if (xlWorkbook.CalculateMode == XLCalculateMode.Default)
                 workbook.CalculationProperties.CalculationMode = null;
             else
-                workbook.CalculationProperties.CalculationMode = CalculateMode.ToOpenXml();
+                workbook.CalculationProperties.CalculationMode = xlWorkbook.CalculateMode.ToOpenXml();
 
-            if (ReferenceStyle == XLReferenceStyle.Default)
+            if (xlWorkbook.ReferenceStyle == XLReferenceStyle.Default)
                 workbook.CalculationProperties.ReferenceMode = null;
             else
-                workbook.CalculationProperties.ReferenceMode = ReferenceStyle.ToOpenXml();
+                workbook.CalculationProperties.ReferenceMode = xlWorkbook.ReferenceStyle.ToOpenXml();
 
-            if (CalculationOnSave) workbook.CalculationProperties.CalculationOnSave = CalculationOnSave;
-            if (ForceFullCalculation) workbook.CalculationProperties.ForceFullCalculation = ForceFullCalculation;
-            if (FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = FullCalculationOnLoad;
-            if (FullPrecision) workbook.CalculationProperties.FullPrecision = FullPrecision;
+            if (xlWorkbook.CalculationOnSave) workbook.CalculationProperties.CalculationOnSave = xlWorkbook.CalculationOnSave;
+            if (xlWorkbook.ForceFullCalculation) workbook.CalculationProperties.ForceFullCalculation = xlWorkbook.ForceFullCalculation;
+            if (xlWorkbook.FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = xlWorkbook.FullCalculationOnLoad;
+            if (xlWorkbook.FullPrecision) workbook.CalculationProperties.FullPrecision = xlWorkbook.FullPrecision;
         }
 
         private void SetPackageProperties(OpenXmlPackage document)
