@@ -237,7 +237,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private readonly struct XLValueSliceContent
+        private readonly struct XLValueSliceContent : IEquatable<XLValueSliceContent>
         {
             /// <summary>
             /// A cell value in a very compact representation. The value is interpreted depending on a type.
@@ -255,6 +255,27 @@ namespace ClosedXML.Excel
                 Value = value;
                 Type = type;
                 Inline = inline;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is XLValueSliceContent valueContent && Equals(valueContent);
+            }
+
+            public bool Equals(XLValueSliceContent other)
+            {
+                return Value.Equals(other.Value) && Type == other.Type && Inline == other.Inline;
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = Value.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (int)Type;
+                    hashCode = (hashCode * 397) ^ Inline.GetHashCode();
+                    return hashCode;
+                }
             }
         }
     }
