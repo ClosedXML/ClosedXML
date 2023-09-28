@@ -2102,7 +2102,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
+        private static void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
         {
             if (nfSource == null) return;
 
@@ -2112,7 +2112,7 @@ namespace ClosedXML.Excel
                 nf.Format = nfSource.FormatCode.Value;
         }
 
-        private void LoadBorder(Border borderSource, IXLBorder border)
+        private static void LoadBorder(Border borderSource, IXLBorder border)
         {
             if (borderSource == null) return;
 
@@ -2129,7 +2129,7 @@ namespace ClosedXML.Excel
             LoadBorderValues(borderSource.BottomBorder, border.SetBottomBorder, border.SetBottomBorderColor);
         }
 
-        private void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<XLColor, IXLStyle> setColor)
+        private static void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<XLColor, IXLStyle> setColor)
         {
             if (source != null)
             {
@@ -2143,7 +2143,7 @@ namespace ClosedXML.Excel
         // Differential fills store the patterns differently than other fills
         // Actually differential fills make more sense. bg is bg and fg is fg
         // 'Other' fills store the bg color in the fg field when pattern type is solid
-        private void LoadFill(Fill openXMLFill, IXLFill closedXMLFill, Boolean differentialFillFormat)
+        private static void LoadFill(Fill openXMLFill, IXLFill closedXMLFill, Boolean differentialFillFormat)
         {
             if (openXMLFill == null || openXMLFill.PatternFill == null) return;
 
@@ -2187,7 +2187,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
+        private static void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
         {
             if (fontSource == null) return;
 
