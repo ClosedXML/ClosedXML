@@ -1,6 +1,5 @@
 using System;
-using System.Drawing;
-using System.Globalization;
+using Color = System.Drawing.Color;
 
 namespace ClosedXML.Utils
 {
@@ -8,31 +7,32 @@ namespace ClosedXML.Utils
     {
         public static Color ParseFromArgb(string argbColor)
         {
-            if (argbColor[0] == '#')
-                argbColor = argbColor.Substring(1);
+            ReadOnlySpan<char> argb = argbColor.AsSpan();
+            if (argb[0] == '#')
+                argb = argb.Slice(1);
 
-            if (argbColor.Length == 8)
+            if (argb.Length == 8)
             {
                 return Color.FromArgb(
-                    ReadHex(argbColor, 0, 2),
-                    ReadHex(argbColor, 2, 2),
-                    ReadHex(argbColor, 4, 2),
-                    ReadHex(argbColor, 6, 2));
+                    ReadHex(argb, 0, 2),
+                    ReadHex(argb, 2, 2),
+                    ReadHex(argb, 4, 2),
+                    ReadHex(argb, 6, 2));
             }
 
-            if (argbColor.Length == 6)
+            if (argb.Length == 6)
             {
                 return Color.FromArgb(
-                    ReadHex(argbColor, 0, 2),
-                    ReadHex(argbColor, 2, 2),
-                    ReadHex(argbColor, 4, 2));
+                    ReadHex(argb, 0, 2),
+                    ReadHex(argb, 2, 2),
+                    ReadHex(argb, 4, 2));
             }
 
-            if (argbColor.Length == 3)
+            if (argb.Length == 3)
             {
-                var r = ReadHex(argbColor, 0, 1);
-                var g = ReadHex(argbColor, 1, 1);
-                var b = ReadHex(argbColor, 2, 1);
+                var r = ReadHex(argb, 0, 1);
+                var g = ReadHex(argb, 1, 1);
+                var b = ReadHex(argb, 2, 1);
                 return Color.FromArgb(
                     (r << 4) | r,
                     (g << 4) | g,
@@ -50,15 +50,32 @@ namespace ClosedXML.Utils
             if (rgbColor.Length != 6)
                 throw new FormatException();
 
+            ReadOnlySpan<char> rgbSpan = rgbColor.AsSpan();
+
             return Color.FromArgb(
-                ReadHex(rgbColor, 0, 2),
-                ReadHex(rgbColor, 2, 2),
-                ReadHex(rgbColor, 4, 2));
+                ReadHex(rgbSpan, 0, 2),
+                ReadHex(rgbSpan, 2, 2),
+                ReadHex(rgbSpan, 4, 2));
         }
 
-        private static int ReadHex(string text, int start, int length)
+        private static int ReadHex(ReadOnlySpan<char> text, int start, int length)
         {
-            return Int32.Parse(text.Substring(start, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            var value = 0;
+            for (var i = start; i < start + length; ++i)
+            {
+                var c = text[i];
+                int b = c switch
+                {
+                    >= '0' and <= '9' => '0',
+                    >= 'A' and <= 'F' => 'A' - 10,
+                    >= 'a' and <= 'f' => 'a' - 10,
+                    _ => throw new FormatException($"Unable to parse {text.ToString()}.")
+                };
+                var charValue = c - b;
+                value = value * 16 + charValue;
+            }
+
+            return value;
         }
     }
 }
