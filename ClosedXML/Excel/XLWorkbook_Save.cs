@@ -221,7 +221,7 @@ namespace ClosedXML.Excel
                                              document.AddNewPart<ExtendedFilePropertiesPart>(
                                                  context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            GenerateExtendedFilePropertiesPartContent(extendedFilePropertiesPart);
+            GenerateExtendedFilePropertiesPartContent(extendedFilePropertiesPart, this);
 
             GenerateWorkbookPartContent(workbookPart, options, context);
 
@@ -405,7 +405,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void GenerateExtendedFilePropertiesPartContent(ExtendedFilePropertiesPart extendedFilePropertiesPart)
+        private static void GenerateExtendedFilePropertiesPartContent(ExtendedFilePropertiesPart extendedFilePropertiesPart, XLWorkbook workbook)
         {
             if (extendedFilePropertiesPart.Properties == null)
                 extendedFilePropertiesPart.Properties = new Properties();
@@ -443,8 +443,8 @@ namespace ClosedXML.Excel
             var vTVectorTwo = properties.TitlesOfParts.VTVector;
 
             var modifiedWorksheets =
-                ((IEnumerable<XLWorksheet>)WorksheetsInternal).Select(w => new { w.Name, Order = w.Position }).ToList();
-            var modifiedNamedRanges = GetModifiedNamedRanges();
+                ((IEnumerable<XLWorksheet>)workbook.WorksheetsInternal).Select(w => new { w.Name, Order = w.Position }).ToList();
+            var modifiedNamedRanges = GetModifiedNamedRanges(workbook);
             var modifiedWorksheetsCount = modifiedWorksheets.Count;
             var modifiedNamedRangesCount = modifiedNamedRanges.Count;
 
@@ -460,27 +460,27 @@ namespace ClosedXML.Excel
             foreach (var vTlpstr7 in modifiedNamedRanges.Select(nr => new VTLPSTR { Text = nr }))
                 vTVectorTwo.AppendChild(vTlpstr7);
 
-            if (Properties.Manager != null)
+            if (workbook.Properties.Manager != null)
             {
-                if (!String.IsNullOrWhiteSpace(Properties.Manager))
+                if (!String.IsNullOrWhiteSpace(workbook.Properties.Manager))
                 {
                     if (properties.Manager == null)
                         properties.Manager = new Manager();
 
-                    properties.Manager.Text = Properties.Manager;
+                    properties.Manager.Text = workbook.Properties.Manager;
                 }
                 else
                     properties.Manager = null;
             }
 
-            if (Properties.Company == null) return;
+            if (workbook.Properties.Company == null) return;
 
-            if (!String.IsNullOrWhiteSpace(Properties.Company))
+            if (!String.IsNullOrWhiteSpace(workbook.Properties.Company))
             {
                 if (properties.Company == null)
                     properties.Company = new Company();
 
-                properties.Company.Text = Properties.Company;
+                properties.Company.Text = workbook.Properties.Company;
             }
             else
                 properties.Company = null;
@@ -520,17 +520,17 @@ namespace ClosedXML.Excel
             }
         }
 
-        private List<string> GetModifiedNamedRanges()
+        private static List<string> GetModifiedNamedRanges(XLWorkbook workbook)
         {
             var namedRanges = new List<String>();
-            foreach (var w in WorksheetsInternal)
+            foreach (var w in workbook.WorksheetsInternal)
             {
                 var wName = w.Name;
                 namedRanges.AddRange(w.NamedRanges.Select(n => wName + "!" + n.Name));
                 namedRanges.Add(w.Name + "!Print_Area");
                 namedRanges.Add(w.Name + "!Print_Titles");
             }
-            namedRanges.AddRange(NamedRanges.Select(n => n.Name));
+            namedRanges.AddRange(workbook.NamedRanges.Select(n => n.Name));
             return namedRanges;
         }
 
