@@ -1818,7 +1818,6 @@ namespace ClosedXML.Excel
 
             // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
             // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
-
             var cellHasValue = reader.IsStartElement("v");
             if (cellHasValue)
             {
@@ -1842,7 +1841,7 @@ namespace ClosedXML.Excel
                 formula.IsDirty = true;
             }
 
-            // Ignore inline string element, 
+            // Inline text is dealt separately, because it is in a separate element.
             var cellHasInlineString = reader.IsStartElement("is");
             if (cellHasInlineString)
             {
@@ -2271,8 +2270,8 @@ namespace ClosedXML.Excel
             if (dyDescent is not null)
                 xlRow.DyDescent = dyDescent.Value;
 
-            var hiddenAttr = attributes.GetBoolAttribute("hidden", false);
-            if (hiddenAttr)
+            var hidden = attributes.GetBoolAttribute("hidden", false);
+            if (hidden)
                 xlRow.Hide();
 
             var collapsed = attributes.GetBoolAttribute("collapsed", false);
@@ -3552,11 +3551,6 @@ namespace ClosedXML.Excel
             }
 
             return false;
-        }
-
-        private static Exception UnexpectedStreamEnd()
-        {
-            throw new InvalidOperationException("The stream should have contain more XML elements, but has ended instead.");
         }
 
         private static Exception MissingRequiredAttr(string attributeName)

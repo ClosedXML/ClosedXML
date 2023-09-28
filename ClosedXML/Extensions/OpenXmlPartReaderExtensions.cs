@@ -14,15 +14,10 @@ namespace ClosedXML.Extensions
             return reader.LocalName == localName && reader.NamespaceUri == OpenXmlConst.Main2006SsNs && reader.IsStartElement;
         }
 
-        internal static bool IsEndElement(this OpenXmlPartReader reader, string localName)
-        {
-            return reader.LocalName == localName && reader.NamespaceUri == OpenXmlConst.Main2006SsNs && reader.IsEndElement;
-        }
-
         internal static void MoveAhead(this OpenXmlPartReader reader)
         {
             if (!reader.Read())
-                throw new InvalidOperationException("Unexpected end of stream");
+                throw new InvalidOperationException("Unexpected end of stream.");
         }
 
         internal static string? GetAttribute(this ReadOnlyCollection<OpenXmlAttribute> attributes, string name)
