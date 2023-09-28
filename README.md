@@ -16,6 +16,36 @@ The public API is still not stable and it is a very good idea to **read release 
 * [Migration guide for 0.100](https://closedxml.readthedocs.io/en/latest/migrations/migrate-to-0.100.html)
 * [Release notes for 0.97](https://github.com/ClosedXML/ClosedXML/releases/tag/0.97.0)
 
+### Performance
+
+Performance matters mostly for large files. For small files, few ms here or there doesn't matter. The presented data are from generally develop branch (currently [0.103-beta](https://github.com/ClosedXML/ClosedXML/commit/5f7c0d9461352a6a468e5299bfef6eaf82bf37da)).
+
+<details>
+  <summary>Runtime details</summary>
+```
+BenchmarkDotNet v0.13.8, Windows 11 (10.0.22621.2283/22H2/2022Update/SunValley2)
+AMD Ryzen 5 5500U with Radeon Graphics, 1 CPU, 12 logical and 6 physical cores
+.NET SDK 8.0.100-rc.1.23463.5
+  [Host] : .NET 7.0.11 (7.0.1123.42427), X64 RyuJIT AVX2
+```
+</details>
+
+#### Save
+
+| Description                  |     Rows  |           Columns      | Time/Memory to insert data | Save workbook | Total time/memory | 
+|------------------------------|-----------|------------------------|----------------------------|------------------------------|---|
+| Mixed (text/number) workbook.<br>[Gist](https://gist.github.com/jahav/bdc5fe3c90f25544ca6ae1394bbe3561) |   250 000 | 15 | 1.619 sec / 117 MiB |  6.343 sec |  7.962 sec /  477 MiB |
+| Text only workbook. [Gist](https://gist.github.com/jahav/257bb2ffd5ab7adfded7e669290d8151)              | 1 000 000 | 10 | 6.302 sec / 402 MiB  | 17.134 sec | 23.436 sec / 1880 MiB |
+
+#### Load
+
+| Description                                                        |  Rows     | Columns | Time to load data | Used memory |
+|--------------------------------------------------------------------|-----------|---------|-------------------|-------------|
+| Load mixed workbook (10 text/5 number columns). |   250 000 |      15 |        15.648 sec |     236 MiB |
+| Text only workbook.                                                | 1 000 000 |      10 |       49.046 sec  |     801 MiB |
+
+Load tests used files created during save test.
+
 ### Frequent answers
 - If you get an exception `Unable to find font font name or fallback font fallback font name. Install missing fonts or specify a different fallback font through ‘LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine(“Fallback font name”)’`, see help page about [missing fonts](https://closedxml.readthedocs.io/en/latest/tips/missing-font.html).
 - ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
