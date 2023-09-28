@@ -1528,7 +1528,7 @@ namespace ClosedXML.Excel
                 if (b.DiagonalBorder.Style != null)
                     nb.DiagonalBorder = b.DiagonalBorder.Style.Value.ToClosedXml();
                 if (b.DiagonalBorder.Color != null)
-                    nb.DiagonalBorderColor = b.DiagonalBorder.Color.ToClosedXMLColor(_colorList).Key;
+                    nb.DiagonalBorderColor = b.DiagonalBorder.Color.ToClosedXMLColor().Key;
             }
 
             if (b.LeftBorder != null)
@@ -1536,7 +1536,7 @@ namespace ClosedXML.Excel
                 if (b.LeftBorder.Style != null)
                     nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
                 if (b.LeftBorder.Color != null)
-                    nb.LeftBorderColor = b.LeftBorder.Color.ToClosedXMLColor(_colorList).Key;
+                    nb.LeftBorderColor = b.LeftBorder.Color.ToClosedXMLColor().Key;
             }
 
             if (b.RightBorder != null)
@@ -1544,7 +1544,7 @@ namespace ClosedXML.Excel
                 if (b.RightBorder.Style != null)
                     nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
                 if (b.RightBorder.Color != null)
-                    nb.RightBorderColor = b.RightBorder.Color.ToClosedXMLColor(_colorList).Key;
+                    nb.RightBorderColor = b.RightBorder.Color.ToClosedXMLColor().Key;
             }
 
             if (b.TopBorder != null)
@@ -1552,7 +1552,7 @@ namespace ClosedXML.Excel
                 if (b.TopBorder.Style != null)
                     nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
                 if (b.TopBorder.Color != null)
-                    nb.TopBorderColor = b.TopBorder.Color.ToClosedXMLColor(_colorList).Key;
+                    nb.TopBorderColor = b.TopBorder.Color.ToClosedXMLColor().Key;
             }
 
             if (b.BottomBorder != null)
@@ -1560,7 +1560,7 @@ namespace ClosedXML.Excel
                 if (b.BottomBorder.Style != null)
                     nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
                 if (b.BottomBorder.Color != null)
-                    nb.BottomBorderColor = b.BottomBorder.Color.ToClosedXMLColor(_colorList).Key;
+                    nb.BottomBorderColor = b.BottomBorder.Color.ToClosedXMLColor().Key;
             }
 
             return nb.Equals(xlBorder.Key);
@@ -1808,7 +1808,7 @@ namespace ClosedXML.Excel
             if (f.FontSize != null)
                 nf.FontSize = f.FontSize.Val;
             if (f.Color != null)
-                nf.FontColor = f.Color.ToClosedXMLColor(_colorList).Key;
+                nf.FontColor = f.Color.ToClosedXMLColor().Key;
             if (f.FontName != null)
                 nf.FontName = f.FontName.Val;
             if (f.FontFamilyNumbering != null)

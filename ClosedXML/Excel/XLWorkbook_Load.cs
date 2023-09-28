@@ -30,8 +30,6 @@ namespace ClosedXML.Excel
 
     public partial class XLWorkbook
     {
-        private readonly Dictionary<String, Color> _colorList = new Dictionary<string, Color>();
-
         private void Load(String file)
         {
             LoadSheets(file);
@@ -2138,7 +2136,7 @@ namespace ClosedXML.Excel
                 if (source.Style != null)
                     setBorder(source.Style.Value.ToClosedXml());
                 if (source.Color != null)
-                    setColor(source.Color.ToClosedXMLColor(_colorList));
+                    setColor(source.Color.ToClosedXMLColor());
             }
         }
 
@@ -2163,7 +2161,7 @@ namespace ClosedXML.Excel
                     if (differentialFillFormat)
                     {
                         if (openXMLFill.PatternFill.BackgroundColor != null)
-                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor(_colorList);
+                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
                         else
                             closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     }
@@ -2171,7 +2169,7 @@ namespace ClosedXML.Excel
                     {
                         // yes, source is foreground!
                         if (openXMLFill.PatternFill.ForegroundColor != null)
-                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor(_colorList);
+                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
                         else
                             closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     }
@@ -2179,10 +2177,10 @@ namespace ClosedXML.Excel
 
                 default:
                     if (openXMLFill.PatternFill.ForegroundColor != null)
-                        closedXMLFill.PatternColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor(_colorList);
+                        closedXMLFill.PatternColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
 
                     if (openXMLFill.PatternFill.BackgroundColor != null)
-                        closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor(_colorList);
+                        closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
                     else
                         closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     break;
@@ -2196,7 +2194,7 @@ namespace ClosedXML.Excel
             fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
             var fontColor = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault();
             if (fontColor != null)
-                fontBase.FontColor = fontColor.ToClosedXMLColor(_colorList);
+                fontBase.FontColor = fontColor.ToClosedXMLColor();
 
             var fontFamilyNumbering =
                 fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
@@ -2878,7 +2876,7 @@ namespace ClosedXML.Excel
                 if (xlConditionalFormat != null)
                 {
                     var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
-                    xlConditionalFormat.Colors.Add(negativeFillColor.ToClosedXMLColor(_colorList));
+                    xlConditionalFormat.Colors.Add(negativeFillColor.ToClosedXMLColor());
                 }
             }
 
@@ -3049,7 +3047,7 @@ namespace ClosedXML.Excel
             }
             foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
             {
-                conditionalFormat.Colors.Add(c.ToClosedXMLColor(_colorList));
+                conditionalFormat.Colors.Add(c.ToClosedXMLColor());
             }
         }
 
@@ -3106,7 +3104,7 @@ namespace ClosedXML.Excel
             if (sheetProperty == null) return;
 
             if (sheetProperty.TabColor != null)
-                ws.TabColor = sheetProperty.TabColor.ToClosedXMLColor(_colorList);
+                ws.TabColor = sheetProperty.TabColor.ToClosedXMLColor();
 
             if (sheetProperty.OutlineProperties != null)
             {
@@ -3406,7 +3404,7 @@ namespace ClosedXML.Excel
                             xlBorder.BottomBorder = bottomBorder.Style.Value.ToClosedXml();
 
                         if (bottomBorder.Color != null)
-                            xlBorder.BottomBorderColor = bottomBorder.Color.ToClosedXMLColor(_colorList).Key;
+                            xlBorder.BottomBorderColor = bottomBorder.Color.ToClosedXMLColor().Key;
                     }
                     var topBorder = border.TopBorder;
                     if (topBorder != null)
@@ -3414,7 +3412,7 @@ namespace ClosedXML.Excel
                         if (topBorder.Style != null)
                             xlBorder.TopBorder = topBorder.Style.Value.ToClosedXml();
                         if (topBorder.Color != null)
-                            xlBorder.TopBorderColor = topBorder.Color.ToClosedXMLColor(_colorList).Key;
+                            xlBorder.TopBorderColor = topBorder.Color.ToClosedXMLColor().Key;
                     }
                     var leftBorder = border.LeftBorder;
                     if (leftBorder != null)
@@ -3422,7 +3420,7 @@ namespace ClosedXML.Excel
                         if (leftBorder.Style != null)
                             xlBorder.LeftBorder = leftBorder.Style.Value.ToClosedXml();
                         if (leftBorder.Color != null)
-                            xlBorder.LeftBorderColor = leftBorder.Color.ToClosedXMLColor(_colorList).Key;
+                            xlBorder.LeftBorderColor = leftBorder.Color.ToClosedXMLColor().Key;
                     }
                     var rightBorder = border.RightBorder;
                     if (rightBorder != null)
@@ -3430,7 +3428,7 @@ namespace ClosedXML.Excel
                         if (rightBorder.Style != null)
                             xlBorder.RightBorder = rightBorder.Style.Value.ToClosedXml();
                         if (rightBorder.Color != null)
-                            xlBorder.RightBorderColor = rightBorder.Color.ToClosedXMLColor(_colorList).Key;
+                            xlBorder.RightBorderColor = rightBorder.Color.ToClosedXMLColor().Key;
                     }
                     var diagonalBorder = border.DiagonalBorder;
                     if (diagonalBorder != null)
@@ -3438,7 +3436,7 @@ namespace ClosedXML.Excel
                         if (diagonalBorder.Style != null)
                             xlBorder.DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml();
                         if (diagonalBorder.Color != null)
-                            xlBorder.DiagonalBorderColor = diagonalBorder.Color.ToClosedXMLColor(_colorList).Key;
+                            xlBorder.DiagonalBorderColor = diagonalBorder.Color.ToClosedXMLColor().Key;
                         if (border.DiagonalDown != null)
                             xlBorder.DiagonalDown = border.DiagonalDown;
                         if (border.DiagonalUp != null)
@@ -3460,7 +3458,7 @@ namespace ClosedXML.Excel
                     xlFont.Bold = GetBoolean(font.Bold);
 
                     if (font.Color != null)
-                        xlFont.FontColor = font.Color.ToClosedXMLColor(_colorList).Key;
+                        xlFont.FontColor = font.Color.ToClosedXMLColor().Key;
 
                     if (font.FontFamilyNumbering != null && (font.FontFamilyNumbering).Val != null)
                     {
