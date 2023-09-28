@@ -218,7 +218,7 @@ namespace ClosedXML.Excel
                                      workbookPart.AddNewPart<WorkbookStylesPart>(
                                          context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            GenerateWorkbookStylesPartContent(workbookStylesPart, context);
+            GenerateWorkbookStylesPartContent(workbookStylesPart, this, context);
 
             var cacheRelIds = PivotCachesInternal
                   .Select<XLPivotCache, String>(ps => ps.WorkbookCacheRelId)
@@ -896,7 +896,7 @@ namespace ClosedXML.Excel
 
         #region GenerateWorkbookStylesPartContent
 
-        private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        private static void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, XLWorkbook workbook, SaveContext context)
         {
             var defaultStyle = DefaultStyleValue;
 
@@ -947,7 +947,7 @@ namespace ClosedXML.Excel
             var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
             var xlStyles = new HashSet<XLStyleValue>();
 
-            foreach (var worksheet in WorksheetsInternal)
+            foreach (var worksheet in workbook.WorksheetsInternal)
             {
                 xlStyles.Add(worksheet.StyleValue);
                 foreach (var s in worksheet.Internals.ColumnsCollection.Select(c => c.Value.StyleValue))
@@ -1062,15 +1062,13 @@ namespace ClosedXML.Excel
             context.SharedStyles.Clear();
             newSharedStyles.ForEach(kp => context.SharedStyles.Add(kp.Key, kp.Value));
 
-            AddDifferentialFormats(workbookStylesPart, context);
+            AddDifferentialFormats(workbookStylesPart, workbook, context);
         }
 
         /// <summary>
         /// Populates the differential formats that are currently in the file to the SaveContext
         /// </summary>
-        /// <param name="workbookStylesPart">The workbook styles part.</param>
-        /// <param name="context">The context.</param>
-        private void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        private static void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, XLWorkbook workbook, SaveContext context)
         {
             if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
@@ -1079,7 +1077,7 @@ namespace ClosedXML.Excel
             differentialFormats.RemoveAllChildren();
             FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
 
-            foreach (var ws in Worksheets)
+            foreach (var ws in workbook.Worksheets)
             {
                 foreach (var cf in ws.ConditionalFormats)
                 {
@@ -1118,7 +1116,7 @@ namespace ClosedXML.Excel
                 workbookStylesPart.Stylesheet.DifferentialFormats = null;
         }
 
-        private void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats,
+        private static void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats,
             Dictionary<XLStyleValue, int> dictionary)
         {
             dictionary.Clear();
@@ -1414,7 +1412,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Dictionary<XLBorderValue, BorderInfo> ResolveBorders(WorkbookStylesPart workbookStylesPart,
+        private static Dictionary<XLBorderValue, BorderInfo> ResolveBorders(WorkbookStylesPart workbookStylesPart,
             Dictionary<XLBorderValue, BorderInfo> sharedBorders)
         {
             if (workbookStylesPart.Stylesheet.Borders == null)
@@ -1514,7 +1512,7 @@ namespace ClosedXML.Excel
             return border;
         }
 
-        private bool BordersAreEqual(Border b, XLBorderValue xlBorder)
+        private static bool BordersAreEqual(Border b, XLBorderValue xlBorder)
         {
             var nb = XLBorderValue.Default.Key;
             if (b.DiagonalUp != null)
@@ -1566,7 +1564,7 @@ namespace ClosedXML.Excel
             return nb.Equals(xlBorder.Key);
         }
 
-        private Dictionary<XLFillValue, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
+        private static Dictionary<XLFillValue, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
             Dictionary<XLFillValue, FillInfo> sharedFills)
         {
             if (workbookStylesPart.Stylesheet.Fills == null)
@@ -1678,7 +1676,7 @@ namespace ClosedXML.Excel
             return fill;
         }
 
-        private bool FillsAreEqual(Fill f, XLFillValue xlFill, Boolean fromDifferentialFormat)
+        private static bool FillsAreEqual(Fill f, XLFillValue xlFill, Boolean fromDifferentialFormat)
         {
             var nF = new XLFill(null);
 
@@ -1687,7 +1685,7 @@ namespace ClosedXML.Excel
             return nF.Key.Equals(xlFill.Key);
         }
 
-        private void ResolveFonts(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        private static void ResolveFonts(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
             if (workbookStylesPart.Stylesheet.Fonts == null)
                 workbookStylesPart.Stylesheet.Fonts = new Fonts();
@@ -1785,7 +1783,7 @@ namespace ClosedXML.Excel
             return font;
         }
 
-        private bool FontsAreEqual(Font f, XLFontValue xlFont)
+        private static bool FontsAreEqual(Font f, XLFontValue xlFont)
         {
             var nf = XLFontValue.Default.Key;
             nf.Bold = f.Bold != null;
