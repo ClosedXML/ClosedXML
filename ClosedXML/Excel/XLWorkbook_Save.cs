@@ -3,18 +3,14 @@
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.CustomProperties;
 using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Validation;
-using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -28,7 +24,6 @@ using Bold = DocumentFormat.OpenXml.Spreadsheet.Bold;
 using Border = DocumentFormat.OpenXml.Spreadsheet.Border;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
-using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Fill = DocumentFormat.OpenXml.Spreadsheet.Fill;
 using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
 using FontCharSet = DocumentFormat.OpenXml.Spreadsheet.FontCharSet;
@@ -36,7 +31,6 @@ using Fonts = DocumentFormat.OpenXml.Spreadsheet.Fonts;
 using FontScheme = DocumentFormat.OpenXml.Drawing.FontScheme;
 using FontSize = DocumentFormat.OpenXml.Spreadsheet.FontSize;
 using ForegroundColor = DocumentFormat.OpenXml.Spreadsheet.ForegroundColor;
-using Format = DocumentFormat.OpenXml.Spreadsheet.Format;
 using GradientFill = DocumentFormat.OpenXml.Drawing.GradientFill;
 using GradientStop = DocumentFormat.OpenXml.Drawing.GradientStop;
 using Italic = DocumentFormat.OpenXml.Spreadsheet.Italic;
@@ -54,7 +48,6 @@ using TopBorder = DocumentFormat.OpenXml.Spreadsheet.TopBorder;
 using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
 using Vml = DocumentFormat.OpenXml.Vml;
-using ClosedXML.Excel.Cells;
 using ClosedXML.Excel.IO;
 using Boolean = System.Boolean;
 
@@ -340,9 +333,14 @@ namespace ClosedXML.Excel
             }
 
             if (options.GenerateCalculationChain)
-                GenerateCalculationChainPartContent(workbookPart, context);
+            {
+                CalculationChainPartWriter.GenerateContent(workbookPart, this, context);
+            }
             else
-                DeleteCalculationChainPartContent(workbookPart, context);
+            {
+                if (workbookPart.CalculationChainPart is not null)
+                    workbookPart.DeletePart(workbookPart.CalculationChainPart);
+            }
 
             if (workbookPart.ThemePart == null)
             {
@@ -752,72 +750,6 @@ namespace ClosedXML.Excel
             if (ForceFullCalculation) workbook.CalculationProperties.ForceFullCalculation = ForceFullCalculation;
             if (FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = FullCalculationOnLoad;
             if (FullPrecision) workbook.CalculationProperties.FullPrecision = FullPrecision;
-        }
-
-        private void DeleteCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
-        {
-            if (workbookPart.CalculationChainPart != null)
-                workbookPart.DeletePart(workbookPart.CalculationChainPart);
-        }
-
-        private void GenerateCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
-        {
-            if (workbookPart.CalculationChainPart == null)
-                workbookPart.AddNewPart<CalculationChainPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-
-            if (workbookPart.CalculationChainPart.CalculationChain == null)
-                workbookPart.CalculationChainPart.CalculationChain = new CalculationChain();
-
-            var calculationChain = workbookPart.CalculationChainPart.CalculationChain;
-            calculationChain.RemoveAllChildren<CalculationCell>();
-
-            foreach (var worksheet in WorksheetsInternal)
-            {
-                foreach (var c in worksheet.Internals.CellsCollection.GetCells().Where(c => c.HasFormula))
-                {
-                    if (c.Formula.Type == FormulaType.DataTable)
-                    {
-                        // Do nothing, Excel doesn't generate calc chain for data table
-                    }
-                    else if (c.HasArrayFormula)
-                    {
-                        if (c.FormulaReference == null)
-                            c.FormulaReference = c.AsRange().RangeAddress;
-
-                        if (c.FormulaReference.FirstAddress.Equals(c.Address))
-                        {
-                            var cc = new CalculationCell
-                            {
-                                CellReference = c.Address.ToString(),
-                                SheetId = (Int32)worksheet.SheetId
-                            };
-
-                            cc.Array = true;
-                            calculationChain.AppendChild(cc);
-
-                            foreach (var childCell in worksheet.Range(c.FormulaReference).Cells())
-                            {
-                                calculationChain.AppendChild(new CalculationCell
-                                {
-                                    CellReference = childCell.Address.ToString(),
-                                    SheetId = (Int32)worksheet.SheetId,
-                                });
-                            }
-                        }
-                    }
-                    else
-                    {
-                        calculationChain.AppendChild(new CalculationCell
-                        {
-                            CellReference = c.Address.ToString(),
-                            SheetId = (Int32)worksheet.SheetId
-                        });
-                    }
-                }
-            }
-
-            if (!calculationChain.Any())
-                workbookPart.DeletePart(workbookPart.CalculationChainPart);
         }
 
         private void GenerateThemePartContent(ThemePart themePart)
