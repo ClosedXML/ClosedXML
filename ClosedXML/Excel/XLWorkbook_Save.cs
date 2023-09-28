@@ -50,7 +50,6 @@ using Properties = DocumentFormat.OpenXml.ExtendedProperties.Properties;
 using RightBorder = DocumentFormat.OpenXml.Spreadsheet.RightBorder;
 using Shadow = DocumentFormat.OpenXml.Spreadsheet.Shadow;
 using Strike = DocumentFormat.OpenXml.Spreadsheet.Strike;
-using Table = DocumentFormat.OpenXml.Spreadsheet.Table;
 using TopBorder = DocumentFormat.OpenXml.Spreadsheet.TopBorder;
 using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
@@ -315,7 +314,7 @@ namespace ClosedXML.Excel
                 if (!hasAnyVmlElements && vmlDrawingPart != null)
                     worksheetPart.DeletePart(vmlDrawingPart);
 
-                var xlTables = (XLTables)worksheet.Tables;
+                var xlTables = worksheet.Tables;
 
                 // The way forward is to have 2-phase save, this is a start of that
                 // concept for tables:
@@ -324,13 +323,13 @@ namespace ClosedXML.Excel
                 // table has a corresponding part and part that don't are deleted.
                 // This phase doesn't modify the content, it only ensures that RelIds are set
                 // corresponding parts exist and the parts that don't exist are removed
-                SynchronizeTableParts(xlTables, worksheetPart, context);
+                TablePartWriter.SynchronizeTableParts(xlTables, worksheetPart, context);
 
                 // Phase 2 - At this point, all pieces must have corresponding parts
                 // The only way to link between parts is through RelIds that were already
                 // set in phase 1. The phase 2 is all about content of individual parts.
                 // Each part should have individual writer.
-                GenerateTableParts(xlTables, worksheetPart, context);
+                TablePartWriter.GenerateTableParts(xlTables, worksheetPart, context);
 
                 WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
 
@@ -403,39 +402,6 @@ namespace ClosedXML.Excel
                 }
 
                 return xdoc.Root.HasElements;
-            }
-        }
-
-        private static void SynchronizeTableParts(XLTables tables, WorksheetPart worksheetPart, SaveContext context)
-        {
-            // Remove table definition parts that are not a part of workbook
-            foreach (var tableDefinitionPart in worksheetPart.GetPartsOfType<TableDefinitionPart>().ToList())
-            {
-                var partId = worksheetPart.GetIdOfPart(tableDefinitionPart);
-                var xlWorkbookContainsTable = tables.Cast<XLTable>().Any(t => t.RelId == partId);
-                if (!xlWorkbookContainsTable)
-                {
-                    worksheetPart.DeletePart(tableDefinitionPart);
-                }
-            }
-
-            foreach (var xlTable in tables.Cast<XLTable>())
-            {
-                if (String.IsNullOrEmpty(xlTable.RelId))
-                {
-                    xlTable.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                    worksheetPart.AddNewPart<TableDefinitionPart>(xlTable.RelId);
-                }
-            }
-        }
-
-        private static void GenerateTableParts(XLTables tables, WorksheetPart worksheetPart, SaveContext context)
-        {
-            foreach (var xlTable in tables.Cast<XLTable>())
-            {
-                var relId = xlTable.RelId;
-                var tableDefinitionPart = (TableDefinitionPart)worksheetPart.GetPartById(relId);
-                GenerateTableDefinitionPartContent(tableDefinitionPart, xlTable, context);
             }
         }
 
@@ -1670,144 +1636,6 @@ namespace ClosedXML.Excel
             document.PackageProperties.Keywords = Properties.Keywords;
             document.PackageProperties.Description = Properties.Comments;
             document.PackageProperties.ContentStatus = Properties.Status;
-        }
-
-        private static string GetTableName(String originalTableName, SaveContext context)
-        {
-            var tableName = originalTableName.RemoveSpecialCharacters();
-            var name = tableName;
-            if (context.TableNames.Contains(name))
-            {
-                var i = 1;
-                name = tableName + i.ToInvariantString();
-                while (context.TableNames.Contains(name))
-                {
-                    i++;
-                    name = tableName + i.ToInvariantString();
-                }
-            }
-
-            context.TableNames.Add(name);
-            return name;
-        }
-
-        private static void GenerateTableDefinitionPartContent(TableDefinitionPart tableDefinitionPart, XLTable xlTable, SaveContext context)
-        {
-            context.TableId++;
-            var reference = xlTable.RangeAddress.FirstAddress + ":" + xlTable.RangeAddress.LastAddress;
-            var tableName = GetTableName(xlTable.Name, context);
-            var table = new Table
-            {
-                Id = context.TableId,
-                Name = tableName,
-                DisplayName = tableName,
-                Reference = reference
-            };
-
-            if (!xlTable.ShowHeaderRow)
-                table.HeaderRowCount = 0;
-
-            if (xlTable.ShowTotalsRow)
-                table.TotalsRowCount = 1;
-            else
-                table.TotalsRowShown = false;
-
-            var tableColumns = new TableColumns { Count = (UInt32)xlTable.ColumnCount() };
-
-            UInt32 columnId = 0;
-            foreach (var xlField in xlTable.Fields)
-            {
-                columnId++;
-                var fieldName = xlField.Name;
-                var tableColumn = new TableColumn
-                {
-                    Id = columnId,
-                    Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(Environment.NewLine, "_x000a_")
-                };
-
-                // https://github.com/ClosedXML/ClosedXML/issues/513
-                if (xlField.IsConsistentStyle())
-                {
-                    var style = (xlField.Column.Cells()
-                        .Skip(xlTable.ShowHeaderRow ? 1 : 0)
-                        .First()
-                        .Style as XLStyle).Value;
-
-                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.TryGetValue(style, out Int32 id))
-                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(id));
-                }
-                else
-                    tableColumn.DataFormatId = null;
-
-                if (xlField.IsConsistentFormula())
-                {
-                    string formula = xlField.Column.Cells()
-                        .Skip(xlTable.ShowHeaderRow ? 1 : 0)
-                        .First()
-                        .FormulaA1;
-
-                    while (formula.StartsWith("=") && formula.Length > 1)
-                        formula = formula.Substring(1);
-
-                    if (!String.IsNullOrWhiteSpace(formula))
-                    {
-                        tableColumn.CalculatedColumnFormula = new CalculatedColumnFormula
-                        {
-                            Text = formula
-                        };
-                    }
-                }
-                else
-                    tableColumn.CalculatedColumnFormula = null;
-
-                if (xlTable.ShowTotalsRow)
-                {
-                    if (xlField.TotalsRowFunction != XLTotalsRowFunction.None)
-                    {
-                        tableColumn.TotalsRowFunction = xlField.TotalsRowFunction.ToOpenXml();
-
-                        if (xlField.TotalsRowFunction == XLTotalsRowFunction.Custom)
-                            tableColumn.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
-                    }
-
-                    if (!String.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
-                        tableColumn.TotalsRowLabel = xlField.TotalsRowLabel;
-                }
-                tableColumns.AppendChild(tableColumn);
-            }
-
-            var tableStyleInfo1 = new TableStyleInfo
-            {
-                ShowFirstColumn = xlTable.EmphasizeFirstColumn,
-                ShowLastColumn = xlTable.EmphasizeLastColumn,
-                ShowRowStripes = xlTable.ShowRowStripes,
-                ShowColumnStripes = xlTable.ShowColumnStripes
-            };
-
-            if (xlTable.Theme != XLTableTheme.None)
-                tableStyleInfo1.Name = xlTable.Theme.Name;
-
-            if (xlTable.ShowAutoFilter)
-            {
-                var autoFilter1 = new AutoFilter();
-                if (xlTable.ShowTotalsRow)
-                {
-                    xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
-                        xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
-                        xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
-                }
-                else
-                    xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
-
-                WorksheetPartWriter.PopulateAutoFilter(xlTable.AutoFilter, autoFilter1);
-
-                table.AppendChild(autoFilter1);
-            }
-
-            table.AppendChild(tableColumns);
-            table.AppendChild(tableStyleInfo1);
-
-            tableDefinitionPart.Table = table;
         }
 
         private static void SynchronizePivotTableParts(WorkbookPart workbookPart, IReadOnlyList<IXLPivotTable> allPivotTables, SaveContext context)
