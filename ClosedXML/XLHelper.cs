@@ -207,6 +207,9 @@ namespace ClosedXML.Excel
 
         public static Boolean IsValidRangeAddress(String rangeAddress)
         {
+            if (String.IsNullOrWhiteSpace(rangeAddress))
+                return false;
+
             return A1SimpleRegex.IsMatch(rangeAddress);
         }
 

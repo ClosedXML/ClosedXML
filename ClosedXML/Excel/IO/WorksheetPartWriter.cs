@@ -822,6 +822,13 @@ namespace ClosedXML.Excel.IO
 
             #region DataValidations
 
+            const string dataValidationsExtensionUri = "{CCE6A557-97BC-4b89-ADB6-D9C93CAAB3DF}";
+            List<X14.DataValidation> dataValidationsExtensionTemp = new List<X14.DataValidation>();
+
+            // Saving of data validations happens in 2 phases because depending on the data validation
+            // content, it gets saved into 1 of 2 possible locations in the XML structure.
+            // First phase, save all the data validations that aren't references to other sheets into
+            // the standard data validations section.
             if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
             {
                 worksheet.RemoveAllChildren<DataValidations>();
@@ -844,6 +851,7 @@ namespace ClosedXML.Excel.IO
                     xlWorksheet.DataValidations.Consolidate();
                 }
 
+                UInt32 dataValidationCount = 0;
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
                     var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
@@ -851,28 +859,147 @@ namespace ClosedXML.Excel.IO
                     if (sequence.Length > 0)
                         sequence = sequence.Substring(0, sequence.Length - 1);
 
-                    var dataValidation = new DataValidation
+                    bool hasReferenceToAnotherSheet = false;
+                    if (XLHelper.IsValidRangeAddress(dv.MinValue) && dv.MinValue.Contains('!'))
                     {
-                        AllowBlank = dv.IgnoreBlanks,
-                        Formula1 = new Formula1(dv.MinValue),
-                        Formula2 = new Formula2(dv.MaxValue),
-                        Type = dv.AllowedValues.ToOpenXml(),
-                        ShowErrorMessage = dv.ShowErrorMessage,
-                        Prompt = dv.InputMessage,
-                        PromptTitle = dv.InputTitle,
-                        ErrorTitle = dv.ErrorTitle,
-                        Error = dv.ErrorMessage,
-                        ShowDropDown = !dv.InCellDropdown,
-                        ShowInputMessage = dv.ShowInputMessage,
-                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                        Operator = dv.Operator.ToOpenXml(),
-                        SequenceOfReferences =
-                            new ListValue<StringValue> { InnerText = sequence }
-                    };
+                        var range = xlWorksheet.Workbook.Range(dv.MinValue);
+                        if (range != null)
+                        {
+                            if (range.Worksheet != xlWorksheet)
+                            {
+                                hasReferenceToAnotherSheet = true;
+                            }
+                            else
+                            {
+                                // The spec wants us to include references to ranges on the same worksheet without the sheet name
+                                dv.MinValue = range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, false);
+                            }
+                        }
+                    }
+                    if (!hasReferenceToAnotherSheet && XLHelper.IsValidRangeAddress(dv.MaxValue) && dv.MaxValue.Contains('!'))
+                    {
+                        var range = xlWorksheet.Workbook.Range(dv.MaxValue);
+                        if (range != null)
+                        {
+                            if (range.Worksheet != xlWorksheet)
+                            {
+                                hasReferenceToAnotherSheet = true;
+                            }
+                            else
+                            {
+                                // The spec wants us to include references to ranges on the same worksheet without the sheet name
+                                dv.MaxValue = range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, false);
+                            }
+                        }
+                    }
 
-                    dataValidations.AppendChild(dataValidation);
+                    if (hasReferenceToAnotherSheet)
+                    {
+                        // We're dealing with a data validation that references another sheet so has to be saved to extensions
+                        var dataValidation = new X14.DataValidation
+                        {
+                            AllowBlank = dv.IgnoreBlanks,
+                            DataValidationForumla1 = !string.IsNullOrWhiteSpace(dv.MinValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(dv.MinValue)) : null,
+                            DataValidationForumla2 = !string.IsNullOrWhiteSpace(dv.MaxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(dv.MaxValue)) : null,
+                            Type = dv.AllowedValues.ToOpenXml(),
+                            ShowErrorMessage = dv.ShowErrorMessage,
+                            Prompt = dv.InputMessage,
+                            PromptTitle = dv.InputTitle,
+                            ErrorTitle = dv.ErrorTitle,
+                            Error = dv.ErrorMessage,
+                            ShowDropDown = !dv.InCellDropdown,
+                            ShowInputMessage = dv.ShowInputMessage,
+                            ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                            Operator = dv.Operator.ToOpenXml(),
+                            ReferenceSequence = new OfficeExcel.ReferenceSequence() { Text = sequence }
+                        };
+
+                        dataValidationsExtensionTemp.Add(dataValidation);
+                    }
+                    else
+                    {
+                        // We're dealing with a standard data validation
+                        var dataValidation = new DataValidation
+                        {
+                            AllowBlank = dv.IgnoreBlanks,
+                            Formula1 = new Formula1(dv.MinValue),
+                            Formula2 = new Formula2(dv.MaxValue),
+                            Type = dv.AllowedValues.ToOpenXml(),
+                            ShowErrorMessage = dv.ShowErrorMessage,
+                            Prompt = dv.InputMessage,
+                            PromptTitle = dv.InputTitle,
+                            ErrorTitle = dv.ErrorTitle,
+                            Error = dv.ErrorMessage,
+                            ShowDropDown = !dv.InCellDropdown,
+                            ShowInputMessage = dv.ShowInputMessage,
+                            ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                            Operator = dv.Operator.ToOpenXml(),
+                            SequenceOfReferences = new ListValue<StringValue> { InnerText = sequence }
+                        };
+
+                        dataValidations.AppendChild(dataValidation);
+                        dataValidationCount++;
+                    }
                 }
-                dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
+                dataValidations.Count = dataValidationCount;
+            }
+
+            // Second phase, save all the data validations that reference other sheets into the worksheet extensions.
+            if (dataValidationsExtensionTemp.Count == 0)
+            {
+                var worksheetExtensionList = worksheet.Elements<WorksheetExtensionList>().FirstOrDefault();
+                var worksheetExtension = worksheetExtensionList?.Elements<WorksheetExtension>()
+                    .FirstOrDefault(ext => string.Equals(ext.Uri, dataValidationsExtensionUri, StringComparison.InvariantCultureIgnoreCase));
+
+                worksheetExtension?.RemoveAllChildren<X14.DataValidations>();
+
+                if (worksheetExtensionList != null)
+                {
+                    if (worksheetExtension != null && !worksheetExtension.HasChildren)
+                    {
+                        worksheetExtensionList.RemoveChild(worksheetExtension);
+                    }
+
+                    if (!worksheetExtensionList.HasChildren)
+                    {
+                        worksheet.RemoveChild(worksheetExtensionList);
+                        cm.SetElement(XLWorksheetContents.WorksheetExtensionList, null);
+                    }
+                }
+            }
+            else
+            {
+                if (!worksheet.Elements<WorksheetExtensionList>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
+                    worksheet.InsertAfter(new WorksheetExtensionList(), previousElement);
+                }
+
+                var worksheetExtensionList = worksheet.Elements<WorksheetExtensionList>().First();
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
+
+                var extensionDataValidations = worksheetExtensionList.Descendants<X14.DataValidations>().SingleOrDefault();
+
+                if (extensionDataValidations == null || !extensionDataValidations.Any())
+                {
+                    var worksheetExtension1 = new WorksheetExtension() { Uri = dataValidationsExtensionUri };
+                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtensionList.Append(worksheetExtension1);
+
+                    extensionDataValidations = new X14.DataValidations();
+                    extensionDataValidations.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    worksheetExtension1.Append(extensionDataValidations);
+                }
+                else
+                {
+                    extensionDataValidations.RemoveAllChildren();
+                }
+
+                foreach (var extensionData in dataValidationsExtensionTemp)
+                {
+                    extensionDataValidations.AppendChild(extensionData);
+                }
+                extensionDataValidations.Count = extensionDataValidations.Count;
             }
 
             #endregion DataValidations
