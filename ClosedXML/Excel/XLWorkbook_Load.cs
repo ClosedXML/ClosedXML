@@ -488,7 +488,7 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
 
-            PivotTableCacheDefinitionPartReader.Load(dSpreadsheet, sheets, this, differentialFormats);
+            PivotTableCacheDefinitionPartReader.Load(dSpreadsheet.WorkbookPart, sheets, this, differentialFormats);
         }
 
         /// <summary>

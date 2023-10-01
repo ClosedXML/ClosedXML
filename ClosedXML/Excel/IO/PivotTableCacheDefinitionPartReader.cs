@@ -13,10 +13,9 @@ namespace ClosedXML.Excel.IO
 {
     internal class PivotTableCacheDefinitionPartReader
     {
-        internal static void Load(SpreadsheetDocument dSpreadsheet, Sheets sheets, XLWorkbook workbook, Dictionary<int, DifferentialFormat> differentialFormats)
+        internal static void Load(WorkbookPart workbookPart, Sheets sheets, XLWorkbook workbook, Dictionary<int, DifferentialFormat> differentialFormats)
         {
-            foreach (var pivotTableCacheDefinitionPart in dSpreadsheet.WorkbookPart
-                         .GetPartsOfType<PivotTableCacheDefinitionPart>())
+            foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
             {
                 if (pivotTableCacheDefinitionPart?.PivotCacheDefinition?.CacheSource?.WorksheetSource != null)
                 {
@@ -30,7 +29,7 @@ namespace ClosedXML.Excel.IO
                     // If WorkbookCacheRelId already has a value, it means the pivot source is being reused
                     if (string.IsNullOrWhiteSpace(pivotCache.WorkbookCacheRelId))
                     {
-                        pivotCache.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
+                        pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
                     }
 
                     if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
@@ -66,7 +65,7 @@ namespace ClosedXML.Excel.IO
             // Delay loading of pivot tables until all sheets have been loaded
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
-                var worksheetPart = (WorksheetPart)dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id);
+                var worksheetPart = (WorksheetPart)workbookPart.GetPartById(dSheet.Id);
 
                 if (worksheetPart is not null)
                 {
@@ -75,7 +74,7 @@ namespace ClosedXML.Excel.IO
                     foreach (var pivotTablePart in worksheetPart.PivotTableParts)
                     {
                         var cache = pivotTablePart.PivotTableCacheDefinitionPart;
-                        var cacheDefinitionRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(cache);
+                        var cacheDefinitionRelId = workbookPart.GetIdOfPart(cache);
 
                         var pivotSource = workbook.PivotCachesInternal
                             .FirstOrDefault<XLPivotCache>(ps => ps.WorkbookCacheRelId == cacheDefinitionRelId);
@@ -836,6 +835,9 @@ namespace ClosedXML.Excel.IO
                                 throw PartStructureException.MissingAttribute();
 
                             var xlSharedItems = fieldsSharedItems[columnIdx];
+                            if (index >= xlSharedItems.Count)
+                                throw PartStructureException.IncorrectAttributeValue();
+
                             fieldRecords.AddIndex(index, xlSharedItems);
                             break;
 
