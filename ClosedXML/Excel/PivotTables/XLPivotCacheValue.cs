@@ -62,7 +62,8 @@ namespace ClosedXML.Excel
 
         internal static XLPivotCacheValue ForIndex(uint index)
         {
-            return new XLPivotCacheValue(XLPivotCacheValueType.Index, BitConverter.Int64BitsToDouble(index));
+            var intIndex = checked((int)index);
+            return new XLPivotCacheValue(XLPivotCacheValueType.Index, BitConverter.Int64BitsToDouble(intIndex));
         }
 
         public XLCellValue GetCellValue(List<string> stringStorage, XLPivotCacheSharedItems sharedItems)
@@ -90,8 +91,7 @@ namespace ClosedXML.Excel
                     return new DateTime(ticks);
 
                 case XLPivotCacheValueType.Index:
-                    var uintIndex = unchecked((uint)BitConverter.DoubleToInt64Bits(_value));
-                    var intIndex = checked((int)uintIndex);
+                    var intIndex = unchecked((int)BitConverter.DoubleToInt64Bits(_value));
                     return sharedItems[intIndex];
 
                 default:
