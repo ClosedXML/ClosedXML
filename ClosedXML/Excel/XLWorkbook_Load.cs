@@ -95,13 +95,14 @@ namespace ClosedXML.Excel
             SetProperties(dSpreadsheet);
 
             SharedStringItem[] sharedStrings = null;
-            if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Any())
+            var workbookPart = dSpreadsheet.WorkbookPart;
+            if (workbookPart.GetPartsOfType<SharedStringTablePart>().Any())
             {
-                var shareStringPart = dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                var shareStringPart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
             }
 
-            LoadWorkbookTheme(dSpreadsheet.WorkbookPart?.ThemePart, this);
+            LoadWorkbookTheme(workbookPart?.ThemePart, this);
 
             if (dSpreadsheet.CustomFilePropertiesPart != null)
             {
@@ -127,20 +128,20 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
+            var wbProps = workbookPart.Workbook.WorkbookProperties;
             if (wbProps != null)
                 Use1904DateSystem = OpenXmlHelper.GetBooleanValueAsBool(wbProps.Date1904, false);
 
-            var wbFilesharing = dSpreadsheet.WorkbookPart.Workbook.FileSharing;
+            var wbFilesharing = workbookPart.Workbook.FileSharing;
             if (wbFilesharing != null)
             {
                 FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValueAsBool(wbFilesharing.ReadOnlyRecommended, false);
                 FileSharing.UserName = wbFilesharing.UserName?.Value;
             }
 
-            LoadWorkbookProtection(dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection, this);
+            LoadWorkbookProtection(workbookPart.Workbook.WorkbookProtection, this);
 
-            var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
+            var calculationProperties = workbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
             {
                 var calculateMode = calculationProperties.CalculationMode;
@@ -178,7 +179,7 @@ namespace ClosedXML.Excel
                     Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
             }
 
-            Stylesheet s = dSpreadsheet.WorkbookPart.WorkbookStylesPart?.Stylesheet;
+            Stylesheet s = workbookPart.WorkbookStylesPart?.Stylesheet;
             NumberingFormats numberingFormats = s?.NumberingFormats;
             Fills fills = s?.Fills;
             Borders borders = s?.Borders;
@@ -200,14 +201,14 @@ namespace ClosedXML.Excel
                 ColumnWidth = CalculateColumnWidth(8, Style.Font, this);
             }
 
-            var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
+            var sheets = workbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
                 position++;
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
 
-                var worksheetPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+                var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
 
                 if (worksheetPart == null)
                 {
@@ -465,7 +466,7 @@ namespace ClosedXML.Excel
                 #endregion LoadComments
             }
 
-            var workbook = dSpreadsheet.WorkbookPart.Workbook;
+            var workbook = workbookPart.Workbook;
 
             var bookViews = workbook.BookViews;
             if (bookViews != null && bookViews.FirstOrDefault() is WorkbookView workbookView)
@@ -488,7 +489,7 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
 
-            PivotTableCacheDefinitionPartReader.Load(dSpreadsheet.WorkbookPart, sheets, this, differentialFormats);
+            PivotTableCacheDefinitionPartReader.Load(workbookPart, sheets, this, differentialFormats);
         }
 
         /// <summary>
