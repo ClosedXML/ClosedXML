@@ -509,7 +509,8 @@ namespace ClosedXML.Excel.IO
                 {
                     df.BaseField = baseFieldIndex;
 
-                    var items = pt.PivotCache.GetFieldValues(baseFieldIndex)
+                    var items = pt.PivotCache.GetFieldSharedItems(baseFieldIndex)
+                        .GetCellValues()
                         .Distinct()
                         .ToList();
 
