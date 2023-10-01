@@ -21,21 +21,6 @@ namespace ClosedXML.Excel
             _stringStorage = new List<string>();
         }
 
-        internal XLCellValue this[int index]
-        {
-            get
-            {
-                if (index >= _values.Count)
-                {
-                    Console.Write("");
-                }
-
-                return _values[index].GetCellValue(_stringStorage, _sharedItems);
-            }
-        }
-
-        internal int Count => _values.Count;
-
         internal void AddMissing()
         {
             _values.Add(XLPivotCacheValue.ForMissing());
