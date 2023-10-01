@@ -15,8 +15,6 @@ namespace ClosedXML.Excel.IO
     {
         internal static void Load(SpreadsheetDocument dSpreadsheet, Sheets sheets, XLWorkbook workbook, Dictionary<int, DifferentialFormat> differentialFormats)
         {
-            #region Pivot tables
-
             foreach (var pivotTableCacheDefinitionPart in dSpreadsheet.WorkbookPart
                          .GetPartsOfType<PivotTableCacheDefinitionPart>())
             {
@@ -47,105 +45,14 @@ namespace ClosedXML.Excel.IO
                         }
                     }
 
-                    if (pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields != null)
+
+                    if (pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields is { } cacheFields)
                     {
-                        foreach (var cf in pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields
-                                     .Elements<CacheField>())
+                        var sharedItems = ReadCacheFields(cacheFields, pivotCache);
+                        if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
                         {
-                            var fieldName = cf.Name.Value;
-                            if (pivotCache.ContainsField(fieldName))
-                            {
-                                // We don't allow duplicate field names... but what do we do if we find one? Let's just skip it.
-                                continue;
-                            }
-
-                            var items = new List<XLCellValue>();
-                            if (cf.SharedItems?.Any() ?? false)
-                            {
-                                // If there are no shared items, the cache record won't contain field items
-                                // referencing the shared items
-                                foreach (var item in cf.SharedItems.Elements())
-                                {
-                                    // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.shareditems.aspx
-                                    switch (item)
-                                    {
-                                        case NumberItem numberItem:
-                                            items.Add(numberItem.Val.Value);
-                                            break;
-
-                                        case BooleanItem booleanItem:
-                                            items.Add(booleanItem.Val.Value);
-                                            break;
-
-                                        case DateTimeItem dateTimeItem:
-                                            items.Add(dateTimeItem.Val.Value);
-                                            break;
-
-                                        case StringItem stringItem:
-                                            items.Add(stringItem.Val.Value);
-                                            break;
-
-                                        case ErrorItem errorItem:
-                                            if (!XLErrorParser.TryParseError(errorItem.Val.Value, out var error))
-                                                throw new InvalidOperationException($"Unknown error {errorItem.Val.Value}.");
-
-                                            items.Add(error);
-                                            break;
-
-                                        case MissingItem:
-                                            items.Add(Blank.Value);
-                                            break;
-                                    }
-                                }
-                            }
-
-                            pivotCache.AddCachedField(fieldName, items);
-                        }
-                    }
-
-                    if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords != null)
-                    {
-                        foreach (var record in pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart.PivotCacheRecords
-                                     .Elements<PivotCacheRecord>())
-                        {
-                            for (int i = 0; i < record.ChildElements.Count; i++)
-                            {
-                                var items = pivotCache.GetFieldValues(i);
-                                var item = record.ElementAt(i);
-
-                                switch (item)
-                                {
-                                    //case FieldItem fieldItem:
-                                    //    var sharedString = sharedStrings[fieldItem.Val];
-                                    //    items.Add(sharedString.Text);
-                                    //    break;
-
-                                    case NumberItem numberItem:
-                                        items.Add(numberItem.Val.Value);
-                                        break;
-
-                                    case BooleanItem booleanItem:
-                                        items.Add(booleanItem.Val.Value);
-                                        break;
-
-                                    case DateTimeItem dateTimeItem:
-                                        items.Add(dateTimeItem.Val.Value);
-                                        break;
-
-                                    case StringItem stringItem:
-                                        items.Add(stringItem.Val.Value);
-                                        break;
-
-                                    case ErrorItem:
-                                        //TODO: create specific new class to represent this?
-                                        //items.Add(null);
-                                        throw new NotImplementedException();
-
-                                    case MissingItem:
-                                        items.Add(Blank.Value);
-                                        break;
-                                }
-                            }
+                            var records = ReadRecords(recordsPart, sharedItems);
+                            pivotCache.LoadRecords(records);
                         }
                     }
 
@@ -434,7 +341,7 @@ namespace ClosedXML.Excel.IO
                                     if (!(pivotTableDefinition.PivotFields.ElementAt(pageField.Field.Value) is PivotField pf))
                                         continue;
 
-                                    var cacheFieldValues = pivotSource.GetFieldValues(pageField.Field.Value);
+                                    var cacheFieldValues = pivotSource.GetFieldSharedItems(pageField.Field.Value);
 
                                     var filterName = pf.Name?.Value ?? pivotSource.FieldNames[pageField.Field.Value];
 
@@ -452,7 +359,7 @@ namespace ClosedXML.Excel.IO
                                     }
                                     else if ((pageField.Item?.HasValue ?? false)
                                              && pf.Items.Any()
-                                             && cacheFieldValues.Any())
+                                             && cacheFieldValues.Count > 0)
                                     {
                                         if (!(pf.Items.ElementAt(Convert.ToInt32(pageField.Item.Value)) is Item item))
                                             continue;
@@ -479,8 +386,6 @@ namespace ClosedXML.Excel.IO
                     }
                 }
             }
-
-            #endregion Pivot tables
         }
 
         private static XLPivotSourceReference ParsePivotSourceReference(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, XLWorkbook workbook)
@@ -682,7 +587,7 @@ namespace ClosedXML.Excel.IO
                                 Predicate<XLCellValue> predicate = null;
                                 if (pt.PivotCache.TryGetFieldIndex(additionalFieldName, out var index))
                                 {
-                                    var values = pt.PivotCache.GetFieldValues(index);
+                                    var values = pt.PivotCache.GetFieldSharedItems(index);
                                     if (fieldItemValue < values.Count)
                                     {
                                         predicate = o => o.ToString() == values[fieldItemValue].ToString();
@@ -764,6 +669,183 @@ namespace ClosedXML.Excel.IO
                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                     pivotField.SetCollapsed();
             }
+        }
+
+        private static List<XLPivotCacheSharedItems> ReadCacheFields(CacheFields cacheFields, XLPivotCache pivotCache)
+        {
+            var sharedItems = new List<XLPivotCacheSharedItems>();
+            foreach (var cacheField in cacheFields.Elements<CacheField>())
+            {
+                if (cacheField.Name?.Value is not { } fieldName)
+                    throw PartStructureException.MissingAttribute();
+
+                if (pivotCache.ContainsField(fieldName))
+                {
+                    // We don't allow duplicate field names... but what do we do if we find one? Let's just skip it.
+                    continue;
+                }
+
+                var fieldSharedItems = cacheField.SharedItems is not null
+                    ? ReadSharedItems(cacheField)
+                    : new XLPivotCacheSharedItems();
+
+                pivotCache.AddCachedField(fieldName, fieldSharedItems);
+                sharedItems.Add(fieldSharedItems);
+            }
+
+            return sharedItems;
+        }
+
+        private static XLPivotCacheSharedItems ReadSharedItems(CacheField cacheField)
+        {
+            var sharedItems = new XLPivotCacheSharedItems();
+
+            // If there are no shared items, the cache record can't contain field items
+            // referencing the shared items.
+            if (cacheField.SharedItems is not { } fieldSharedItems)
+                return sharedItems;
+
+            foreach (var item in fieldSharedItems.Elements())
+            {
+                // Shared items can't contain element of type index (`x`),
+                // because index references shared items. That is main reason
+                // for rather significant duplication with reading records.
+                switch (item)
+                {
+                    case MissingItem:
+                        sharedItems.AddMissing();
+                        break;
+
+                    case NumberItem numberItem:
+                        if (numberItem.Val?.Value is not { } number)
+                            throw PartStructureException.MissingAttribute();
+
+                        sharedItems.AddNumber(number);
+                        break;
+
+                    case BooleanItem booleanItem:
+                        if (booleanItem.Val?.Value is not { } boolean)
+                            throw PartStructureException.MissingAttribute();
+
+                        sharedItems.AddBoolean(boolean);
+                        break;
+
+                    case ErrorItem errorItem:
+                        if (errorItem.Val?.Value is not { } errorText)
+                            throw PartStructureException.MissingAttribute();
+
+                        if (!XLErrorParser.TryParseError(errorText, out var error))
+                            throw PartStructureException.IncorrectAttributeFormat();
+
+                        sharedItems.AddError(error);
+                        break;
+
+                    case StringItem stringItem:
+                        if (stringItem.Val?.Value is not { } text)
+                            throw PartStructureException.MissingAttribute();
+
+                        sharedItems.AddString(text);
+                        break;
+
+                    case DateTimeItem dateTimeItem:
+                        if (dateTimeItem.Val?.Value is not { } dateTime)
+                            throw PartStructureException.MissingAttribute();
+
+                        sharedItems.AddDateTime(dateTime);
+                        break;
+
+                    default:
+                        throw PartStructureException.ExpectedElementNotFound();
+                }
+            }
+
+            return sharedItems;
+        }
+
+        private static List<XLPivotCacheValues> ReadRecords(PivotCacheRecords recordsPart, List<XLPivotCacheSharedItems> fieldsSharedItems)
+        {
+            var recordCount = recordsPart.Count?.Value is not null
+                ? checked((int)recordsPart.Count.Value)
+                : 0;
+
+            var fieldsCount = fieldsSharedItems.Count;
+            var records = new List<XLPivotCacheValues>(fieldsCount);
+            for (var fieldIdx = 0; fieldIdx < fieldsCount; ++fieldIdx)
+            {
+                var fieldSharedItems = fieldsSharedItems[fieldIdx];
+                records.Add(new XLPivotCacheValues(fieldSharedItems, new List<XLPivotCacheValue>(recordCount)));
+            }
+
+            foreach (var record in recordsPart.Elements<PivotCacheRecord>())
+            {
+                var recordColumns = record.ChildElements.Count;
+                if (recordColumns != fieldsCount)
+                    throw PartStructureException.IncorrectElementsCount();
+
+                for (var columnIdx = 0; columnIdx < recordColumns; columnIdx++)
+                {
+                    var fieldRecords = records[columnIdx];
+                    var sharedItem = record.ElementAt(columnIdx);
+
+                    switch (sharedItem)
+                    {
+                        case MissingItem:
+                            fieldRecords.AddMissing();
+                            break;
+
+                        case NumberItem numberItem:
+                            if (numberItem.Val?.Value is not { } number)
+                                throw PartStructureException.MissingAttribute();
+
+                            fieldRecords.AddNumber(number);
+                            break;
+
+                        case BooleanItem booleanItem:
+                            if (booleanItem.Val?.Value is not { } boolean)
+                                throw PartStructureException.MissingAttribute();
+
+                            fieldRecords.AddBoolean(boolean);
+                            break;
+
+                        case ErrorItem errorItem:
+                            if (errorItem.Val?.Value is not { } errorText)
+                                throw PartStructureException.MissingAttribute();
+
+                            if (!XLErrorParser.TryParseError(errorText, out var error))
+                                throw PartStructureException.IncorrectAttributeFormat();
+
+                            fieldRecords.AddError(error);
+                            break;
+
+                        case StringItem stringItem:
+                            if (stringItem.Val?.Value is not { } text)
+                                throw PartStructureException.MissingAttribute();
+
+                            fieldRecords.AddString(text);
+                            break;
+
+                        case DateTimeItem dateTimeItem:
+                            if (dateTimeItem.Val?.Value is not { } dateTime)
+                                throw PartStructureException.MissingAttribute();
+
+                            fieldRecords.AddDateTime(dateTime);
+                            break;
+
+                        case FieldItem indexItem:
+                            if (indexItem.Val?.Value is not { } index)
+                                throw PartStructureException.MissingAttribute();
+
+                            var xlSharedItems = fieldsSharedItems[columnIdx];
+                            fieldRecords.AddIndex(index, xlSharedItems);
+                            break;
+
+                        default:
+                            throw PartStructureException.ExpectedElementNotFound();
+                    }
+                }
+            }
+
+            return records;
         }
     }
 }

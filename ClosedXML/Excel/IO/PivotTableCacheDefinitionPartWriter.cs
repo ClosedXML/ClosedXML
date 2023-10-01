@@ -120,9 +120,10 @@ namespace ClosedXML.Excel.IO
 
             foreach (var cacheFieldName in pivotCache.FieldNames)
             {
-                var fieldValues = pivotCache.GetFieldValues(cacheFieldName);
+                var fieldValues = pivotCache.GetFieldSharedItems(cacheFieldName);
 
                 var distinctFieldValues = fieldValues
+                    .GetCellValues()
                     .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
                     .ToArray();
 
@@ -153,7 +154,7 @@ namespace ClosedXML.Excel.IO
 
                 var ptfi = new PivotTableFieldInfo
                 {
-                    IsTotallyBlankField = !fieldValues.Any(),
+                    IsTotallyBlankField = fieldValues.Count == 0,
                     MixedDataType = types.Length > 1,
                     DistinctValues = distinctFieldValues,
                 };
@@ -216,7 +217,7 @@ namespace ClosedXML.Excel.IO
                     var containsString = types.Any(t => t is XLDataType.Text or XLDataType.Boolean or XLDataType.Error);
                     sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(containsString, true);
 
-                    sharedItems.Count = (UInt32)ptfi.DistinctValues.Count;
+                    sharedItems.Count = (UInt32)distinctFieldValues.Length;
 
                     var longText = types.Contains(XLDataType.Text) && ptfi.DistinctValues.Any(v => v.IsText && v.GetText().Length > 255);
                     sharedItems.LongText = OpenXmlHelper.GetBooleanValue(longText, false);
@@ -238,7 +239,7 @@ namespace ClosedXML.Excel.IO
                         sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
                     }
 
-                    foreach (var value in ptfi.DistinctValues)
+                    foreach (var value in distinctFieldValues)
                     {
                         OpenXmlElement toAdd = value.Type switch
                         {

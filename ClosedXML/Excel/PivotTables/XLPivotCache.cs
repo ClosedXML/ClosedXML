@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +8,16 @@ namespace ClosedXML.Excel
     {
         private readonly Dictionary<String, Int32> _fieldIndexes = new(StringComparer.OrdinalIgnoreCase);
         private readonly List<String> _fieldNames = new();
-        private readonly List<List<XLCellValue>> _fieldValues = new();
+
+        /// <summary>
+        /// Length is a number of fields, in same order as <see cref="_fieldNames"/>.
+        /// </summary>
+        private readonly List<XLPivotCacheSharedItems> _fieldSharedItems = new();
+
+        /// <summary>
+        /// Length is a number of fields, in same order as <see cref="_fieldNames"/>.
+        /// </summary>
+        private List<XLPivotCacheValues> _records = new();
 
         public XLPivotCache(IXLRange sourceRange)
             : this(new XLPivotSourceReference(sourceRange))
@@ -41,14 +50,57 @@ namespace ClosedXML.Excel
         {
             _fieldIndexes.Clear();
             _fieldNames.Clear();
-            _fieldValues.Clear();
+            _fieldSharedItems.Clear();
 
+            _records.Clear();
             foreach (var column in PivotSourceReference.SourceRange.Columns())
             {
                 var header = column.FirstCell().GetFormattedString();
-                var values = column.Cells().Skip(1).Select(c => c.Value).Distinct().ToList();
+                var sharedItems = new XLPivotCacheSharedItems();
+                var values = column.Cells().Skip(1).Select(c => c.Value).Distinct();
 
-                AddField(AdjustedFieldName(header), values);
+                var fieldRecords = new XLPivotCacheValues(sharedItems, new List<XLPivotCacheValue>());
+                foreach (var value in values)
+                {
+                    switch (value.Type)
+                    {
+                        case XLDataType.Blank:
+                            sharedItems.AddMissing();
+                            fieldRecords.AddMissing();
+                            break;
+                        case XLDataType.Boolean:
+                            sharedItems.AddBoolean(value.GetBoolean());
+                            fieldRecords.AddBoolean(value.GetBoolean());
+                            break;
+                        case XLDataType.Number:
+                            sharedItems.AddNumber(value.GetNumber());
+                            fieldRecords.AddNumber(value.GetNumber());
+                            break;
+                        case XLDataType.Text:
+                            sharedItems.AddString(value.GetText());
+                            fieldRecords.AddString(value.GetText());
+                            break;
+                        case XLDataType.Error:
+                            sharedItems.AddError(value.GetError());
+                            fieldRecords.AddError(value.GetError());
+                            break;
+                        case XLDataType.DateTime:
+                            sharedItems.AddDateTime(value.GetDateTime());
+                            fieldRecords.AddDateTime(value.GetDateTime());
+                            break;
+                        case XLDataType.TimeSpan:
+                            // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
+                            var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
+                            fieldRecords.AddDateTime(adjustedTimeSpan);
+                            sharedItems.AddDateTime(adjustedTimeSpan);
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
+
+                AddField(AdjustedFieldName(header), sharedItems);
+                _records.Add(fieldRecords);
             }
 
             return this;
@@ -90,14 +142,14 @@ namespace ClosedXML.Excel
 
         internal String? WorkbookCacheRelId { get; set; }
 
-        internal XLPivotCache AddCachedField(String fieldName, List<XLCellValue> items)
+        internal XLPivotCache AddCachedField(String fieldName, XLPivotCacheSharedItems fieldSharedItems)
         {
             if (_fieldNames.Contains(fieldName, StringComparer.OrdinalIgnoreCase))
             {
                 throw new ArgumentException($"Source already contains field {fieldName}.");
             }
 
-            AddField(fieldName, items);
+            AddField(fieldName, fieldSharedItems);
             return this;
         }
 
@@ -114,15 +166,15 @@ namespace ClosedXML.Excel
 
         internal bool ContainsField(String fieldName) => _fieldIndexes.ContainsKey(fieldName);
         
-        internal IReadOnlyList<XLCellValue> GetFieldValues(String fieldName)
+        internal XLPivotCacheSharedItems GetFieldSharedItems(string fieldName)
         {
-            var index = _fieldIndexes[fieldName];
-            return _fieldValues[index];
+            var fieldIndex = _fieldIndexes[fieldName];
+            return _fieldSharedItems[fieldIndex];
         }
 
-        internal IList<XLCellValue> GetFieldValues(int fieldIndex)
+        internal XLPivotCacheSharedItems GetFieldSharedItems(int fieldIndex)
         {
-            return _fieldValues[fieldIndex];
+            return _fieldSharedItems[fieldIndex];
         }
 
         private String AdjustedFieldName(String header)
@@ -138,16 +190,21 @@ namespace ClosedXML.Excel
             return modifiedHeader;
         }
 
-        private void AddField(String fieldName, List<XLCellValue> items)
+        private void AddField(String fieldName, XLPivotCacheSharedItems fieldSharedItems)
         {
             _fieldIndexes.Add(fieldName, _fieldNames.Count);
             _fieldNames.Add(fieldName);
-            _fieldValues.Add(items);
+            _fieldSharedItems.Add(fieldSharedItems);
         }
 
         private void SetExcelDefaults()
         {
             SaveSourceData = true;
+        }
+
+        internal void LoadRecords(List<XLPivotCacheValues> records)
+        {
+            _records = records;
         }
     }
 }
