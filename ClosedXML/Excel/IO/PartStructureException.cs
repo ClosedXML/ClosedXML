@@ -3,7 +3,7 @@ using System;
 namespace ClosedXML.Excel.IO
 {
     /// <summary>
-    /// An exception throw from parser when there is a problem with data in XML.
+    /// An exception thrown from parser when there is a problem with data in XML.
     /// The exception messages are rather generic and not very helpful, but they
     /// aren't supposed to be. If this exception is thrown, there is either
     /// a problem with producer of a workbook or ClosedXML. Both should do
@@ -17,12 +17,7 @@ namespace ClosedXML.Excel.IO
 
         internal static Exception ExpectedElementNotFound()
         {
-            return new PartStructureException($"The structure of XML expected a certain kind of element, but it isn't there.");
-        }
-
-        internal static Exception UintToIntConversion()
-        {
-            return new PartStructureException($"The structure of XML expected a certain kind of element, but it isn't there.");
+            return new PartStructureException("The structure of XML expected a certain kind of element, but it isn't there.");
         }
 
         internal static Exception IncorrectElementsCount()
@@ -32,12 +27,12 @@ namespace ClosedXML.Excel.IO
 
         internal static Exception MissingAttribute()
         {
-            return new PartStructureException("XML doesn't contain The attribute has an incorrect format.");
+            return new PartStructureException("XML doesn't contain a required attribute.");
         }
 
         internal static Exception IncorrectAttributeFormat()
         {
-            return new PartStructureException($"The attribute has an incorrect format.");
+            return new PartStructureException("The attribute has a value in an incorrect format.");
         }
 
         internal static Exception IncorrectAttributeValue()
