@@ -32,9 +32,9 @@ namespace ClosedXML.Excel
         /// </summary>
         String,
 
-        // TODO: Does excel allows full range of xsd:dateTime? Zulu, offsets ect?
         /// <summary>
-        /// Value is a date time.
+        /// Value is a date time. Although the value can be in theory <c>csd:dateTime</c> (i.e. with offsets and zulu),
+        /// the time offsets are not permitted (Excel refused to load cache data) and zulu is ignored.
         /// </summary>
         DateTime,
 
