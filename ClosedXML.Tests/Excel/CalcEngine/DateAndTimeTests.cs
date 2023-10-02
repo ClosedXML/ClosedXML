@@ -489,6 +489,17 @@ namespace ClosedXML.Tests.Excel.DataValidations
         }
 
         [Test]
+        public void Year_BlankValue()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").FormulaA1 = @"=YEAR(A1)";
+            var valueA2 = ws.Cell("A2").Value;
+            Assert.AreEqual(1900, valueA2);
+        }
+
+        [Test]
         public void Yearfrac_1_base0()
         {
             var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",0)");

@@ -141,6 +141,16 @@ namespace ClosedXML.Excel.CalcEngine
             // evaluate
             var v = x.Evaluate();
 
+            // handle blank
+            if (v == null)
+            {
+                // Date functions handle blank mostly as 0 which is serial
+                // datetime for Jan 0, 1900, but that is non-representable.
+                // Use 1899-12-31, although it requires fixes for various
+                // functions like DAY, MONTH and YEAR.
+                return 0d.ToSerialDateTime();
+            }
+
             // handle dates
             if (v is DateTime dt)
             {
