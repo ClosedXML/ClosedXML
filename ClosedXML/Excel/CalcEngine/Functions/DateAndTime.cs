@@ -382,6 +382,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var date = (DateTime)p[0];
 
+            // Serial date time values from [0, 1) are from 1899-12-31,
+            // but Excel represents them as 1900-01-00.
+            if (date.Date == 0d.ToSerialDateTime())
+                return 1900;
+
             return date.Year;
         }
 
