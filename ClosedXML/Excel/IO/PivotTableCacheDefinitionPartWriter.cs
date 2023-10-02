@@ -118,16 +118,17 @@ namespace ClosedXML.Excel.IO
                 pivotCacheDefinition.CacheFields = cacheFields;
             }
 
-            foreach (var cacheFieldName in pivotCache.FieldNames)
+            for (var fieldIdx = 0; fieldIdx < pivotCache.FieldNames.Count; ++fieldIdx)
             {
-                var fieldValues = pivotCache.GetFieldSharedItems(cacheFieldName);
+                var cacheFieldName = pivotCache.FieldNames[fieldIdx];
+                var fieldSharedItems = pivotCache.GetFieldSharedItems(fieldIdx);
 
-                var distinctFieldValues = fieldValues
+                var distinctFieldSharedItems = fieldSharedItems
                     .GetCellValues()
                     .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
                     .ToArray();
 
-                var types = distinctFieldValues
+                var types = distinctFieldSharedItems
                     .Select(v => v.Type)
                     .Distinct()
                     .ToArray();
@@ -154,9 +155,9 @@ namespace ClosedXML.Excel.IO
 
                 var ptfi = new PivotTableFieldInfo
                 {
-                    IsTotallyBlankField = fieldValues.Count == 0,
+                    IsTotallyBlankField = fieldSharedItems.Count == 0,
                     MixedDataType = types.Length > 1,
-                    DistinctValues = distinctFieldValues,
+                    DistinctValues = distinctFieldSharedItems,
                 };
 
                 if (types.Any())
@@ -217,7 +218,7 @@ namespace ClosedXML.Excel.IO
                     var containsString = types.Any(t => t is XLDataType.Text or XLDataType.Boolean or XLDataType.Error);
                     sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(containsString, true);
 
-                    sharedItems.Count = (UInt32)distinctFieldValues.Length;
+                    sharedItems.Count = (UInt32)distinctFieldSharedItems.Length;
 
                     var longText = types.Contains(XLDataType.Text) && ptfi.DistinctValues.Any(v => v.IsText && v.GetText().Length > 255);
                     sharedItems.LongText = OpenXmlHelper.GetBooleanValue(longText, false);
@@ -239,7 +240,7 @@ namespace ClosedXML.Excel.IO
                         sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
                     }
 
-                    foreach (var value in distinctFieldValues)
+                    foreach (var value in distinctFieldSharedItems)
                     {
                         OpenXmlElement toAdd = value.Type switch
                         {
