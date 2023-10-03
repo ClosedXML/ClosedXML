@@ -8,10 +8,8 @@ namespace ClosedXML.Excel
     /// </summary>
     internal readonly struct XLPivotCacheValue
     {
-        private readonly XLPivotCacheValueType _type;
-
         /// <summary>
-        /// A memory used to hold value of a <see cref="_type"/>. Its
+        /// A memory used to hold value of a <see cref="Type"/>. Its
         /// interpretation depends on the type. It doesn't hold value
         /// for strings directly, because GC doesn't allow aliasing
         /// same 8 bytes for number or references. For strings, it contains
@@ -21,9 +19,11 @@ namespace ClosedXML.Excel
 
         private XLPivotCacheValue(XLPivotCacheValueType type, double value)
         {
-            _type = type;
+            Type = type;
             _value = value;
         }
+
+        internal XLPivotCacheValueType Type { get; }
 
         internal static XLPivotCacheValue ForMissing()
         {
@@ -55,6 +55,19 @@ namespace ClosedXML.Excel
             return new XLPivotCacheValue(XLPivotCacheValueType.String, BitConverter.Int64BitsToDouble(index));
         }
 
+        internal static XLPivotCacheValue ForText(string text, Dictionary<string, int> stringMap, List<string> storage)
+        {
+            if (!stringMap.TryGetValue(text, out var index))
+            {
+                index = storage.Count;
+                storage.Add(text);
+                stringMap.Add(text, index);
+                return new XLPivotCacheValue(XLPivotCacheValueType.String, BitConverter.Int64BitsToDouble(index));
+            }
+
+            return new XLPivotCacheValue(XLPivotCacheValueType.String, BitConverter.Int64BitsToDouble(index));
+        }
+
         internal static XLPivotCacheValue ForDateTime(DateTime dateTime)
         {
             return new XLPivotCacheValue(XLPivotCacheValueType.DateTime, BitConverter.Int64BitsToDouble(dateTime.Ticks));
@@ -62,13 +75,12 @@ namespace ClosedXML.Excel
 
         internal static XLPivotCacheValue ForIndex(uint index)
         {
-            var intIndex = checked((int)index);
-            return new XLPivotCacheValue(XLPivotCacheValueType.Index, BitConverter.Int64BitsToDouble(intIndex));
+            return new XLPivotCacheValue(XLPivotCacheValueType.Index, BitConverter.Int64BitsToDouble(index));
         }
 
         public XLCellValue GetCellValue(List<string> stringStorage, XLPivotCacheSharedItems sharedItems)
         {
-            switch (_type)
+            switch (Type)
             {
                 case XLPivotCacheValueType.Missing:
                     return Blank.Value;
@@ -83,20 +95,32 @@ namespace ClosedXML.Excel
                     return (XLError)_value;
 
                 case XLPivotCacheValueType.String:
-                    var stringIndex = unchecked((int)BitConverter.DoubleToInt64Bits(_value));
-                    return stringStorage[stringIndex];
+                    return GetText(stringStorage);
 
                 case XLPivotCacheValueType.DateTime:
-                    var ticks = BitConverter.DoubleToInt64Bits(_value);
-                    return new DateTime(ticks);
+                    return GetDateTime();
 
                 case XLPivotCacheValueType.Index:
-                    var intIndex = unchecked((int)BitConverter.DoubleToInt64Bits(_value));
+                    var intIndex = unchecked((uint)BitConverter.DoubleToInt64Bits(_value));
                     return sharedItems[intIndex];
 
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        internal double GetNumber() => _value;
+
+        internal string GetText(IReadOnlyList<string> stringStorage)
+        {
+            var stringIndex = unchecked((int)BitConverter.DoubleToInt64Bits(_value));
+            return stringStorage[stringIndex];
+        }
+
+        public DateTime GetDateTime()
+        {
+            var ticks = BitConverter.DoubleToInt64Bits(_value);
+            return new DateTime(ticks);
         }
     }
 }

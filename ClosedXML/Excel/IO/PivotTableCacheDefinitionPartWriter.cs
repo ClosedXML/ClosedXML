@@ -118,19 +118,15 @@ namespace ClosedXML.Excel.IO
                 pivotCacheDefinition.CacheFields = cacheFields;
             }
 
-            for (var fieldIdx = 0; fieldIdx < pivotCache.FieldNames.Count; ++fieldIdx)
+            for (var fieldIdx = 0; fieldIdx < pivotCache.FieldCount; ++fieldIdx)
             {
                 var cacheFieldName = pivotCache.FieldNames[fieldIdx];
+                var fieldValues = pivotCache.GetFieldValues(fieldIdx);
                 var fieldSharedItems = pivotCache.GetFieldSharedItems(fieldIdx);
 
                 var distinctFieldSharedItems = fieldSharedItems
                     .GetCellValues()
                     .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
-                    .ToArray();
-
-                var types = distinctFieldSharedItems
-                    .Select(v => v.Type)
-                    .Distinct()
                     .ToArray();
 
                 // .CacheFields is cleared when workbook is begin saved
@@ -156,105 +152,118 @@ namespace ClosedXML.Excel.IO
                 var ptfi = new PivotTableFieldInfo
                 {
                     IsTotallyBlankField = fieldSharedItems.Count == 0,
-                    MixedDataType = types.Length > 1,
+                    MixedDataType = distinctFieldSharedItems
+                        .Select(v => v.Type)
+                        .Distinct()
+                        .Count() > 1,
                     DistinctValues = distinctFieldSharedItems,
                 };
 
-                if (types.Any())
+                var stats = fieldValues.Stats;
+
+                sharedItems.Count = fieldValues.SharedCount != 0 ? checked((uint)fieldValues.SharedCount) : null;
+
+                // https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.shareditems?view=openxml-2.8.1#remarks
+                // The following attributes are not required or used if there are no items in sharedItems.
+                // - containsBlank
+                // - containsSemiMixedTypes
+                // - containsMixedTypes
+                // - longText
+
+                // Specifies a boolean value that indicates whether this field contains a blank value.
+                sharedItems.ContainsBlank = OpenXmlHelper.GetBooleanValue(stats.ContainsBlank, false);
+
+                sharedItems.ContainsDate = OpenXmlHelper.GetBooleanValue(stats.ContainsDate, false);
+
+                // Remember: Blank is not a type in OOXML, but is a value
+                var typesCount = 0;
+                if (stats.ContainsNumber)
+                    typesCount++;
+
+                if (stats.ContainsString)
+                    typesCount++;
+
+                if (stats.ContainsDate)
+                    typesCount++;
+
+                // ISO29500: Specifies a boolean value that indicates whether this field contains more than one data type.
+                // MS-OI29500: In Office, the containsMixedTypes attribute assumes that boolean and error shall be considered part of the string type.
+                sharedItems.ContainsMixedTypes = OpenXmlHelper.GetBooleanValue(typesCount > 1, false);
+
+                // ISO29500: Specifies a boolean value that indicates that the field contains at least one value that is not a date.
+                var containsNonDate = stats.ContainsString || stats.ContainsNumber;
+                sharedItems.ContainsNonDate = OpenXmlHelper.GetBooleanValue(containsNonDate, true);
+
+                // Excel will have to repair the cache definition, if both @containsNumber and @containsDate are specified. Likely because
+                // ultimately they are both numbers, but date has preference.
+                if (stats.ContainsDate)
                 {
-                    sharedItems.Count = null;
+                    // If the field contains a date, the number values are considered serial date times.
 
-                    // https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.shareditems?view=openxml-2.8.1#remarks
-                    // The following attributes are not required or used if there are no items in sharedItems.
-                    // - containsBlank
-                    // - containsSemiMixedTypes
-                    // - containsMixedTypes
-                    // - longText
+                    // This is an exception to the "1900 is a leap year". Values are saved correctly, i.e starting at 1899-12-30.
+                    long? minValueAsDateTime = stats.MinValue is not null ? DateTime.FromOADate(stats.MinValue.Value).Ticks : null;
+                    long? maxValueAsDateTime = stats.MaxValue is not null ? DateTime.FromOADate(stats.MaxValue.Value).Ticks : null;
 
-                    // Specifies a boolean value that indicates whether this field contains a blank value.
-                    sharedItems.ContainsBlank = OpenXmlHelper.GetBooleanValue(types.Contains(XLDataType.Blank), false);
-
-                    var containsDate = types.Contains(XLDataType.DateTime) || types.Contains(XLDataType.TimeSpan);
-                    sharedItems.ContainsDate = OpenXmlHelper.GetBooleanValue(containsDate, false);
-
-                    // Remember: Blank is not a type in OOXML, but is a value
-
-                    // ISO29500: Specifies a boolean value that indicates whether this field contains more than one data type.
-                    // MS-OI29500: In Office, the containsMixedTypes attribute assumes that boolean and error shall be considered part of the string type.
-                    var containsMixedTypes = types
-                        .Where(t => t != XLDataType.Blank)
-                        .Select(t => t is XLDataType.Boolean or XLDataType.Error ? XLDataType.Text : t)
-                        .Distinct()
-                        .Count() > 1;
-                    sharedItems.ContainsMixedTypes = OpenXmlHelper.GetBooleanValue(containsMixedTypes, false);
-
-                    // ISO29500: Specifies a boolean value that indicates that the field contains at least one value that is not a date.
-                    var containsNonDate = types.Where(t => t != XLDataType.Blank).Any(t => t != XLDataType.DateTime && t != XLDataType.TimeSpan);
-                    sharedItems.ContainsNonDate = OpenXmlHelper.GetBooleanValue(containsNonDate, true);
-
-                    // Excel will have to repair the cache definition, if both @containsNumber and @containsDate are specified. Likely because
-                    // ultimately they are both numbers, but date has preference.
-                    var containsNumber = !containsDate && types.Contains(XLDataType.Number);
-                    sharedItems.ContainsNumber = OpenXmlHelper.GetBooleanValue(containsNumber, false);
-
-                    // @containsInteger has a prerequisite @containsNumber.
-                    // MS-OI29500: In Office, @containsNumber shall be 1 or true when @containsInteger is specified. 
-                    if (containsNumber)
-                    {
-                        // MS-OI29500: In Office, a value of 1 or true for the containsInteger attribute indicates this field contains only integer values and does not contain non - integer numeric values.
-                        var onlyIntegers = ptfi.DistinctValues
-                            .Where(v => v.Type == XLDataType.Number)
-                            .Select(v => v.GetNumber())
-                            .All(dbl => (dbl % 1) < double.Epsilon);
-                        sharedItems.ContainsInteger = OpenXmlHelper.GetBooleanValue(onlyIntegers, false);
-                    }
-
-                    // ISO29500: A value of 1 or true indicates at least one text value, and can also contain a mix of other data types and blank values.
-                    // MS-OI29500: Office expects that the containsSemiMixedTypes attribute is true when the field contains text, blank, boolean or error values.
-                    var containsSemiMixedTypes = types.Any(t => t is XLDataType.Text or XLDataType.Blank or XLDataType.Boolean or XLDataType.Error);
-                    sharedItems.ContainsSemiMixedTypes = OpenXmlHelper.GetBooleanValue(containsSemiMixedTypes, true);
-
-                    // MS-OI29500: In Office, boolean and error are considered strings in the context of the containsString attribute.
-                    var containsString = types.Any(t => t is XLDataType.Text or XLDataType.Boolean or XLDataType.Error);
-                    sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(containsString, true);
-
-                    sharedItems.Count = (UInt32)distinctFieldSharedItems.Length;
-
-                    var longText = types.Contains(XLDataType.Text) && ptfi.DistinctValues.Any(v => v.IsText && v.GetText().Length > 255);
-                    sharedItems.LongText = OpenXmlHelper.GetBooleanValue(longText, false);
+                    long? minDateTicks = Min(stats.MinDate?.Ticks, minValueAsDateTime);
+                    long? maxDateTicks = Max(stats.MaxDate?.Ticks, maxValueAsDateTime);
 
                     // @minDate/@maxDate can be present, only if at least one child is a d element.
-                    if (types.Any(v => v == XLDataType.DateTime || v == XLDataType.TimeSpan))
-                    {
-                        // This is an exception to the "1900 is a leap year". Values are saved correctly, i.e starting at 1899-12-30. TimeSpan as well.
-                        sharedItems.MinDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Min(v => v.GetUnifiedNumber()));
-                        sharedItems.MaxDate = DateTime.FromOADate(ptfi.DistinctValues.Where(x => x.IsUnifiedNumber).Max(v => v.GetUnifiedNumber()));
-                    }
-                    else if (types.Contains(XLDataType.Number))
-                    {
-                        // MS-OI29500: Use else branch, @minValue/@maxValue shouldn't be present, if there is a @minDate/@maxDate.
+                    sharedItems.MinDate = minDateTicks is not null ? new DateTime(minDateTicks.Value) : null;
+                    sharedItems.MaxDate = maxDateTicks is not null ? new DateTime(maxDateTicks.Value) : null;
 
-                        // If the field contains a date, the number values are considered serial date times.
-                        // Don't indicate that date field with numbers contains numbers, Excel would refuse to load the file
-                        sharedItems.MinValue = ptfi.DistinctValues.Where(x => x.IsNumber).Min(v => v.GetNumber());
-                        sharedItems.MaxValue = ptfi.DistinctValues.Where(x => x.IsNumber).Max(v => v.GetNumber());
+                    static long? Min(long? val1, long? val2)
+                    {
+                        if (val1 is null || val2 is null)
+                            return val1 ?? val2;
+
+                        return Math.Min(val1.Value, val2.Value);
                     }
 
-                    foreach (var value in distinctFieldSharedItems)
+                    static long? Max(long? val1, long? val2)
                     {
-                        OpenXmlElement toAdd = value.Type switch
-                        {
-                            XLDataType.Blank => new MissingItem(),
-                            XLDataType.Boolean => new BooleanItem { Val = value.GetBoolean() },
-                            XLDataType.Number => new NumberItem { Val = value.GetNumber() },
-                            XLDataType.Text => new StringItem { Val = value.GetText() },
-                            XLDataType.Error => new ErrorItem { Val = value.GetError().ToDisplayString() },
-                            XLDataType.DateTime => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
-                            XLDataType.TimeSpan => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
-                            _ => throw new InvalidOperationException()
-                        };
-                        sharedItems.AppendChild(toAdd);
+                        if (val1 is null || val2 is null)
+                            return val1 ?? val2;
+
+                        return Math.Max(val1.Value, val2.Value);
                     }
+                }
+                else if (stats.ContainsNumber)
+                {
+                    // Don't indicate that date field with numbers contains numbers, Excel would refuse to load the file
+                    sharedItems.ContainsNumber = OpenXmlHelper.GetBooleanValue(stats.ContainsNumber, false);
+
+                    // @containsInteger has a prerequisite @containsNumber, MS-OI29500: In Office, @containsNumber shall be 1 or true when @containsInteger is specified.
+                    // MS-OI29500: In Office, a value of 1 or true for the containsInteger attribute indicates this field contains only integer values and does not contain non - integer numeric values.
+                    sharedItems.ContainsInteger = OpenXmlHelper.GetBooleanValue(stats.ContainsInteger, false);
+
+                    sharedItems.MinValue = stats.MinValue;
+                    sharedItems.MaxValue = stats.MaxValue;
+                }
+
+                // ISO29500: A value of 1 or true indicates at least one text value, and can also contain a mix of other data types and blank values.
+                // MS-OI29500: Office expects that the containsSemiMixedTypes attribute is true when the field contains text, blank, boolean or error values.
+                var containsSemiMixedTypes = stats.ContainsString || stats.ContainsBlank;
+                sharedItems.ContainsSemiMixedTypes = OpenXmlHelper.GetBooleanValue(containsSemiMixedTypes, true);
+
+                // MS-OI29500: In Office, boolean and error are considered strings in the context of the containsString attribute.
+                sharedItems.ContainsString = OpenXmlHelper.GetBooleanValue(stats.ContainsString, true);
+
+                sharedItems.LongText = OpenXmlHelper.GetBooleanValue(stats.LongText, false);
+
+                foreach (var value in distinctFieldSharedItems)
+                {
+                    OpenXmlElement toAdd = value.Type switch
+                    {
+                        XLDataType.Blank => new MissingItem(),
+                        XLDataType.Boolean => new BooleanItem { Val = value.GetBoolean() },
+                        XLDataType.Number => new NumberItem { Val = value.GetNumber() },
+                        XLDataType.Text => new StringItem { Val = value.GetText() },
+                        XLDataType.Error => new ErrorItem { Val = value.GetError().ToDisplayString() },
+                        XLDataType.DateTime => new DateTimeItem { Val = value.GetDateTime() },
+                        XLDataType.TimeSpan => new DateTimeItem { Val = DateTime.FromOADate(value.GetUnifiedNumber()) },
+                        _ => throw new InvalidOperationException()
+                    };
+                    sharedItems.AppendChild(toAdd);
                 }
 
                 pivotSourceInfo.Fields.Add(cacheFieldName, ptfi);

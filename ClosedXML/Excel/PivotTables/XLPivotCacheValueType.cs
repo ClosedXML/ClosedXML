@@ -7,9 +7,9 @@ namespace ClosedXML.Excel
     internal enum XLPivotCacheValueType
     {
         /// <summary>
-        /// A blank value.
+        /// A blank value. Keep at 0 so newly allocated arrays of values have a value of missing.
         /// </summary>
-        Missing,
+        Missing = 0,
 
         /// <summary>
         /// Double precision number, not <c>NaN</c> or <c>infinity</c>.

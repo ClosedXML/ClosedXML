@@ -17,26 +17,20 @@ namespace ClosedXML.Excel
     /// </summary>
     internal class XLPivotCacheSharedItems
     {
-        private readonly List<XLPivotCacheValue> _values;
+        private readonly List<XLPivotCacheValue> _values = new();
 
         /// <summary>
         /// Storage of strings to save 8 bytes per <c>XLPivotCacheValue</c>
         /// (reference can't be aliased with a number).
         /// </summary>
-        private readonly List<string> _stringStorage;
+        private readonly List<string> _stringStorage = new();
 
-        internal XLPivotCacheSharedItems()
-            : this(new List<XLPivotCacheValue>(), new List<string>())
-        {
-        }
+        /// <summary>
+        /// Strings in a pivot table are case insensitive.
+        /// </summary>
+        private readonly Dictionary<string, int> _stringMap = new(StringComparer.OrdinalIgnoreCase);
 
-        internal XLPivotCacheSharedItems(List<XLPivotCacheValue> values, List<string> stringStorage)
-        {
-            _values = values;
-            _stringStorage = stringStorage;
-        }
-
-        internal XLCellValue this[int index] => _values[index].GetCellValue(_stringStorage, this);
+        internal XLCellValue this[uint index] => GetValue(index).GetCellValue(_stringStorage, this);
 
         internal int Count => _values.Count;
 
@@ -62,7 +56,13 @@ namespace ClosedXML.Excel
 
         internal void AddString(string text)
         {
-            _values.Add(XLPivotCacheValue.ForText(text, _stringStorage));
+            // Shared items doesn't distinguish between two texts that differ only in case.
+            if (!_stringMap.ContainsKey(text))
+            {
+                var index = _stringStorage.Count;
+                _values.Add(XLPivotCacheValue.ForText(text, _stringStorage));
+                _stringMap.Add(text, index);
+            }
         }
 
         internal void AddDateTime(DateTime dateTime)
@@ -76,6 +76,17 @@ namespace ClosedXML.Excel
             {
                 yield return value.GetCellValue(_stringStorage, this);
             }
+        }
+
+        internal XLPivotCacheValue GetValue(uint index)
+        {
+            return _values[checked((int)index)];
+        }
+
+        internal string GetStringValue(uint index)
+        {
+            var value = GetValue(index);
+            return value.GetText(_stringStorage);
         }
     }
 }
