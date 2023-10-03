@@ -12,12 +12,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Length is a number of fields, in same order as <see cref="_fieldNames"/>.
         /// </summary>
-        private readonly List<XLPivotCacheSharedItems> _fieldSharedItems = new();
-
-        /// <summary>
-        /// Length is a number of fields, in same order as <see cref="_fieldNames"/>.
-        /// </summary>
-        private List<XLPivotCacheValues> _records = new();
+        private readonly List<XLPivotCacheValues> _values = new();
 
         public XLPivotCache(IXLRange sourceRange)
             : this(new XLPivotSourceReference(sourceRange))
@@ -46,13 +41,17 @@ namespace ClosedXML.Excel
 
         public Boolean SaveSourceData { get; set; }
 
+        /// <summary>
+        /// Number of fields in the cache.
+        /// </summary>
+        internal int FieldCount => _fieldNames.Count;
+
         public IXLPivotCache Refresh()
         {
             _fieldIndexes.Clear();
             _fieldNames.Clear();
-            _fieldSharedItems.Clear();
+            _values.Clear();
 
-            _records.Clear();
             foreach (var column in PivotSourceReference.SourceRange.Columns())
             {
                 var header = column.FirstCell().GetFormattedString();
@@ -99,8 +98,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                AddField(AdjustedFieldName(header), sharedItems);
-                _records.Add(fieldRecords);
+                AddField(AdjustedFieldName(header), fieldRecords);
             }
 
             return this;
@@ -142,14 +140,14 @@ namespace ClosedXML.Excel
 
         internal String? WorkbookCacheRelId { get; set; }
 
-        internal XLPivotCache AddCachedField(String fieldName, XLPivotCacheSharedItems fieldSharedItems)
+        internal XLPivotCache AddCachedField(String fieldName, XLPivotCacheValues fieldValues)
         {
             if (_fieldNames.Contains(fieldName, StringComparer.OrdinalIgnoreCase))
             {
                 throw new ArgumentException($"Source already contains field {fieldName}.");
             }
 
-            AddField(fieldName, fieldSharedItems);
+            AddField(fieldName, fieldValues);
             return this;
         }
 
@@ -166,15 +164,22 @@ namespace ClosedXML.Excel
 
         internal bool ContainsField(String fieldName) => _fieldIndexes.ContainsKey(fieldName);
         
-        internal XLPivotCacheSharedItems GetFieldSharedItems(string fieldName)
+        internal XLPivotCacheValues GetFieldValues(int fieldIndex)
         {
-            var fieldIndex = _fieldIndexes[fieldName];
-            return _fieldSharedItems[fieldIndex];
+            return _values[fieldIndex];
         }
 
         internal XLPivotCacheSharedItems GetFieldSharedItems(int fieldIndex)
         {
-            return _fieldSharedItems[fieldIndex];
+            return _values[fieldIndex].SharedItems;
+        }
+
+        internal void AllocateRecordCapacity(int recordCount)
+        {
+            foreach (var fieldValues in _values)
+            {
+                fieldValues.AllocateCapacity(recordCount);
+            }
         }
 
         private String AdjustedFieldName(String header)
@@ -190,21 +195,16 @@ namespace ClosedXML.Excel
             return modifiedHeader;
         }
 
-        private void AddField(String fieldName, XLPivotCacheSharedItems fieldSharedItems)
+        private void AddField(String fieldName, XLPivotCacheValues fieldValues)
         {
             _fieldIndexes.Add(fieldName, _fieldNames.Count);
             _fieldNames.Add(fieldName);
-            _fieldSharedItems.Add(fieldSharedItems);
+            _values.Add(fieldValues);
         }
 
         private void SetExcelDefaults()
         {
             SaveSourceData = true;
-        }
-
-        internal void LoadRecords(List<XLPivotCacheValues> records)
-        {
-            _records = records;
         }
     }
 }

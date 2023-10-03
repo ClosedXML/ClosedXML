@@ -47,11 +47,10 @@ namespace ClosedXML.Excel.IO
 
                     if (pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields is { } cacheFields)
                     {
-                        var sharedItems = ReadCacheFields(cacheFields, pivotCache);
+                        ReadCacheFields(cacheFields, pivotCache);
                         if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
                         {
-                            var records = ReadRecords(recordsPart, sharedItems);
-                            pivotCache.LoadRecords(records);
+                            ReadRecords(recordsPart, pivotCache);
                         }
                     }
 
@@ -371,7 +370,7 @@ namespace ClosedXML.Excel.IO
                                         if (!OpenXmlHelper.GetBooleanValueAsBool(item.Hidden, false)
                                             && (item.Index?.HasValue ?? false))
                                         {
-                                            var value = cacheFieldValues[(int)item.Index.Value];
+                                            var value = cacheFieldValues[item.Index.Value];
                                             rf.AddSelectedValue(value);
                                         }
                                     }
@@ -569,12 +568,12 @@ namespace ClosedXML.Excel.IO
                                 continue; // already handled
 
                             var fieldItem = reference.OfType<FieldItem>().First();
-                            var fieldItemValue = (int)fieldItem.Val.Value;
+                            var fieldItemValue = fieldItem.Val.Value;
 
                             if (fieldIndex == -2)
                             {
                                 styleFormat = (styleFormat as XLPivotValueStyleFormat)
-                                    .ForValueField(pt.Values.ElementAt(fieldItemValue))
+                                    .ForValueField(pt.Values.ElementAt(checked((int)fieldItemValue)))
                                     as XLPivotValueStyleFormat;
                             }
                             else
@@ -670,9 +669,8 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        private static List<XLPivotCacheSharedItems> ReadCacheFields(CacheFields cacheFields, XLPivotCache pivotCache)
+        private static void ReadCacheFields(CacheFields cacheFields, XLPivotCache pivotCache)
         {
-            var sharedItems = new List<XLPivotCacheSharedItems>();
             foreach (var cacheField in cacheFields.Elements<CacheField>())
             {
                 if (cacheField.Name?.Value is not { } fieldName)
@@ -684,15 +682,44 @@ namespace ClosedXML.Excel.IO
                     continue;
                 }
 
+                var fieldStats = ReadCacheFieldStats(cacheField);
                 var fieldSharedItems = cacheField.SharedItems is not null
                     ? ReadSharedItems(cacheField)
                     : new XLPivotCacheSharedItems();
 
-                pivotCache.AddCachedField(fieldName, fieldSharedItems);
-                sharedItems.Add(fieldSharedItems);
+                var fieldValues = new XLPivotCacheValues(fieldSharedItems, fieldStats);
+                pivotCache.AddCachedField(fieldName, fieldValues);
             }
+        }
 
-            return sharedItems;
+        private static XLPivotCacheValuesStats ReadCacheFieldStats(CacheField cacheField)
+        {
+            var sharedItems = cacheField.SharedItems;
+
+            // Various statistics about the records of the field, not just shared items.
+            var containsBlank = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.ContainsBlank, false);
+            var containsNumber = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.ContainsNumber, false);
+            var containsOnlyInteger = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.ContainsInteger, false);
+            var minValue = sharedItems?.MinValue?.Value;
+            var maxValue = sharedItems?.MaxValue?.Value;
+            var containsDate = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.ContainsDate, false);
+            var minDate = sharedItems?.MinDate?.Value;
+            var maxDate = sharedItems?.MaxDate?.Value;
+            var containsString = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.ContainsString, true);
+            var longText = OpenXmlHelper.GetBooleanValueAsBool(sharedItems?.LongText, false);
+
+            // The containsMixedTypes, containsNonDate and containsSemiMixedTypes are derived from primary stats.
+            return new XLPivotCacheValuesStats(
+                containsBlank,
+                containsNumber,
+                containsOnlyInteger,
+                minValue,
+                maxValue,
+                containsString,
+                longText,
+                containsDate,
+                minDate,
+                maxDate);
         }
 
         private static XLPivotCacheSharedItems ReadSharedItems(CacheField cacheField)
@@ -761,49 +788,44 @@ namespace ClosedXML.Excel.IO
             return sharedItems;
         }
 
-        private static List<XLPivotCacheValues> ReadRecords(PivotCacheRecords recordsPart, List<XLPivotCacheSharedItems> fieldsSharedItems)
+        private static void ReadRecords(PivotCacheRecords recordsPart, XLPivotCache pivotCache)
         {
+            // Number of records can be rather large, preallocate capacity to avoid reallocation.
             var recordCount = recordsPart.Count?.Value is not null
                 ? checked((int)recordsPart.Count.Value)
                 : 0;
+            pivotCache.AllocateRecordCapacity(recordCount);
 
-            var fieldsCount = fieldsSharedItems.Count;
-            var records = new List<XLPivotCacheValues>(fieldsCount);
-            for (var fieldIdx = 0; fieldIdx < fieldsCount; ++fieldIdx)
-            {
-                var fieldSharedItems = fieldsSharedItems[fieldIdx];
-                records.Add(new XLPivotCacheValues(fieldSharedItems, new List<XLPivotCacheValue>(recordCount)));
-            }
-
+            var fieldsCount = pivotCache.FieldCount;
             foreach (var record in recordsPart.Elements<PivotCacheRecord>())
             {
                 var recordColumns = record.ChildElements.Count;
                 if (recordColumns != fieldsCount)
                     throw PartStructureException.IncorrectElementsCount();
 
-                for (var columnIdx = 0; columnIdx < recordColumns; columnIdx++)
+                for (var fieldIdx = 0; fieldIdx < fieldsCount; ++fieldIdx)
                 {
-                    var fieldRecords = records[columnIdx];
-                    var sharedItem = record.ElementAt(columnIdx);
+                    var fieldValues = pivotCache.GetFieldValues(fieldIdx);
+                    var recordItem = record.ElementAt(fieldIdx);
 
-                    switch (sharedItem)
+                    switch (recordItem)
                     {
                         case MissingItem:
-                            fieldRecords.AddMissing();
+                            fieldValues.AddMissing();
                             break;
 
                         case NumberItem numberItem:
                             if (numberItem.Val?.Value is not { } number)
                                 throw PartStructureException.MissingAttribute();
 
-                            fieldRecords.AddNumber(number);
+                            fieldValues.AddNumber(number);
                             break;
 
                         case BooleanItem booleanItem:
                             if (booleanItem.Val?.Value is not { } boolean)
                                 throw PartStructureException.MissingAttribute();
 
-                            fieldRecords.AddBoolean(boolean);
+                            fieldValues.AddBoolean(boolean);
                             break;
 
                         case ErrorItem errorItem:
@@ -813,32 +835,31 @@ namespace ClosedXML.Excel.IO
                             if (!XLErrorParser.TryParseError(errorText, out var error))
                                 throw PartStructureException.IncorrectAttributeFormat();
 
-                            fieldRecords.AddError(error);
+                            fieldValues.AddError(error);
                             break;
 
                         case StringItem stringItem:
                             if (stringItem.Val?.Value is not { } text)
                                 throw PartStructureException.MissingAttribute();
 
-                            fieldRecords.AddString(text);
+                            fieldValues.AddString(text);
                             break;
 
                         case DateTimeItem dateTimeItem:
                             if (dateTimeItem.Val?.Value is not { } dateTime)
                                 throw PartStructureException.MissingAttribute();
 
-                            fieldRecords.AddDateTime(dateTime);
+                            fieldValues.AddDateTime(dateTime);
                             break;
 
                         case FieldItem indexItem:
                             if (indexItem.Val?.Value is not { } index)
                                 throw PartStructureException.MissingAttribute();
 
-                            var xlSharedItems = fieldsSharedItems[columnIdx];
-                            if (index >= xlSharedItems.Count)
+                            if (index >= fieldValues.SharedCount)
                                 throw PartStructureException.IncorrectAttributeValue();
 
-                            fieldRecords.AddIndex(index, xlSharedItems);
+                            fieldValues.AddIndex(index);
                             break;
 
                         default:
@@ -846,8 +867,6 @@ namespace ClosedXML.Excel.IO
                     }
                 }
             }
-
-            return records;
         }
     }
 }
