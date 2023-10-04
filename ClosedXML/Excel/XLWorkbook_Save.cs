@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
 
                 WorksheetPartWriter.GenerateWorksheetPartContent(partIsEmpty, worksheetPart, worksheet, options, context);
 
-                if (worksheet.PivotTables.Any())
+                if (worksheet.PivotTables.Any<XLPivotTable>())
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
@@ -492,10 +492,10 @@ namespace ClosedXML.Excel
         {
             context.PivotSources.Clear();
 
-            var pivotTables = WorksheetsInternal.Cast<XLWorksheet>().SelectMany(ws => ws.PivotTables);
+            var pivotTables = WorksheetsInternal.SelectMany<XLWorksheet, XLPivotTable>(ws => ws.PivotTables);
 
             var pivotSources = pivotTables.Select(pt => pt.PivotCache).Distinct();
-            foreach (var pivotSource in pivotSources.Cast<XLPivotCache>())
+            foreach (var pivotSource in pivotSources)
             {
                 PivotTableCacheDefinitionPartWriter.GenerateContent(workbookPart, pivotSource, context);
             }

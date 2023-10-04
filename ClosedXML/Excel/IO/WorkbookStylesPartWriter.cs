@@ -81,7 +81,7 @@ namespace ClosedXML.Excel.IO
                     xlStyles.Add(c.StyleValue);
                 }
 
-                foreach (var ptnf in worksheet.PivotTables.SelectMany(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))
+                foreach (var ptnf in worksheet.PivotTables.SelectMany<XLPivotTable, IXLPivotValueFormat>(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))
                     pivotTableNumberFormats.Add(ptnf);
             }
 

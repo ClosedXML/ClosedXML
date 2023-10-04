@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotTables : IXLPivotTables
+    internal class XLPivotTables : IXLPivotTables, IEnumerable<XLPivotTable>
     {
         private readonly Dictionary<String, XLPivotTable> _pivotTables = new(StringComparer.OrdinalIgnoreCase);
 
@@ -77,14 +77,24 @@ namespace ClosedXML.Excel
             return PivotTable(name);
         }
 
-        public IEnumerator<IXLPivotTable> GetEnumerator()
+        IEnumerator<IXLPivotTable> IEnumerable<IXLPivotTable>.GetEnumerator()
         {
-            return _pivotTables.Values.Cast<IXLPivotTable>().GetEnumerator();
+            return GetEnumerator();
+        }
+
+        IEnumerator<XLPivotTable> IEnumerable<XLPivotTable>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public Dictionary<string, XLPivotTable>.ValueCollection.Enumerator GetEnumerator()
+        {
+            return _pivotTables.Values.GetEnumerator();
         }
 
         internal void Add(String name, IXLPivotTable pivotTable)
