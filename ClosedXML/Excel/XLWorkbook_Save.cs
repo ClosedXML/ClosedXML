@@ -16,9 +16,9 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using Path = System.IO.Path;
-using Properties = DocumentFormat.OpenXml.ExtendedProperties.Properties;
 using ClosedXML.Excel.IO;
 using Boolean = System.Boolean;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel
                 return xdoc.Root.HasElements;
             }
         }
-        
+
         private void SetPackageProperties(OpenXmlPackage document)
         {
             var created = Properties.Created == DateTime.MinValue ? DateTime.Now : Properties.Created;
@@ -494,10 +494,21 @@ namespace ClosedXML.Excel
 
             var pivotTables = WorksheetsInternal.SelectMany<XLWorksheet, XLPivotTable>(ws => ws.PivotTables);
 
-            var pivotSources = pivotTables.Select(pt => pt.PivotCache).Distinct();
-            foreach (var pivotSource in pivotSources)
+            var xlPivotCaches = pivotTables.Select(pt => pt.PivotCache).Distinct();
+            foreach (var xlPivotCache in xlPivotCaches)
             {
-                PivotTableCacheDefinitionPartWriter.GenerateContent(workbookPart, pivotSource, context);
+                Debug.Assert(workbookPart.Workbook.PivotCaches is not null);
+                Debug.Assert(!string.IsNullOrEmpty(xlPivotCache.WorkbookCacheRelId));
+
+                var pivotTableCacheDefinitionPart = (PivotTableCacheDefinitionPart)workbookPart.GetPartById(xlPivotCache.WorkbookCacheRelId);
+
+                PivotTableCacheDefinitionPartWriter.GenerateContent(pivotTableCacheDefinitionPart, xlPivotCache, context);
+
+                var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any()
+                    ? pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Single()
+                    : pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
+
+                PivotTableCacheRecordsPartWriter.WriteContent(pivotTableCacheRecordsPart, xlPivotCache);
             }
         }
 

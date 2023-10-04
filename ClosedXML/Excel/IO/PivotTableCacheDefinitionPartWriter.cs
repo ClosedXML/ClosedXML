@@ -7,7 +7,6 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
@@ -17,15 +16,10 @@ namespace ClosedXML.Excel.IO
     internal class PivotTableCacheDefinitionPartWriter
     {
         internal static void GenerateContent(
-            WorkbookPart workbookPart,
+            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart,
             XLPivotCache pivotCache,
             SaveContext context)
         {
-            Debug.Assert(workbookPart.Workbook.PivotCaches is not null);
-            Debug.Assert(!string.IsNullOrEmpty(pivotCache.WorkbookCacheRelId));
-
-            var pivotTableCacheDefinitionPart = (PivotTableCacheDefinitionPart)workbookPart.GetPartById(pivotCache.WorkbookCacheRelId);
-
             var pivotCacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
 
             if (pivotCacheDefinition == null)
@@ -161,7 +155,7 @@ namespace ClosedXML.Excel.IO
 
                 var stats = fieldValues.Stats;
 
-                sharedItems.Count = fieldValues.SharedCount != 0 ? checked((uint)fieldValues.SharedCount) : null;
+                sharedItems.Count = fieldValues.SharedCount != 0 ? checked((uint)distinctFieldSharedItems.Length) : null;
 
                 // https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.shareditems?view=openxml-2.8.1#remarks
                 // The following attributes are not required or used if there are no items in sharedItems.
@@ -270,16 +264,6 @@ namespace ClosedXML.Excel.IO
             }
 
             // End CacheFields
-
-            var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any() ?
-                pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().First() :
-                pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
-
-            var pivotCacheRecords = new PivotCacheRecords();
-            pivotCacheRecords.AddNamespaceDeclaration("r",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-            pivotTableCacheRecordsPart.PivotCacheRecords = pivotCacheRecords;
-
             context.PivotSources.Add(pivotSourceInfo.Guid, pivotSourceInfo);
         }
     }

@@ -17,6 +17,8 @@ namespace ClosedXML.Excel.IO
 
         public const string RelationshipsNs = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
 
+        public const string RevisionNs = "http://schemas.microsoft.com/office/spreadsheetml/2014/revision";
+
         /// <summary>
         /// Valid and shorter than normal true.
         /// </summary>

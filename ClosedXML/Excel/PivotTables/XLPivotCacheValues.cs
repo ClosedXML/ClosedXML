@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel
@@ -165,6 +166,17 @@ namespace ClosedXML.Excel
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        internal XLPivotCacheValue GetValue(int recordIdx)
+        {
+            return _values[recordIdx];
+        }
+
+        internal string GetText(XLPivotCacheValue value)
+        {
+            Debug.Assert(value.Type == XLPivotCacheValueType.String);
+            return value.GetText(_stringStorage);
         }
 
         internal void AllocateCapacity(int recordCount)
