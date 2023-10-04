@@ -20,9 +20,9 @@ namespace ClosedXML.Excel.IO
             WorkbookPart workbookPart,
             PivotTablePart pivotTablePart,
             XLPivotTable pt,
-            XLWorkbook.SaveContext context)
+            SaveContext context)
         {
-            var pivotSource = pt.PivotCache.CastTo<XLPivotCache>();
+            var pivotSource = pt.PivotCache;
 
             var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
             if (!workbookPart.GetPartById(pivotSource.WorkbookCacheRelId).Equals(pivotTableCacheDefinitionPart))

@@ -46,6 +46,8 @@ namespace ClosedXML.Excel
         /// </summary>
         internal int FieldCount => _fieldNames.Count;
 
+        internal int RecordCount => _fieldNames.Count > 0 ? _values[0].Count : 0;
+
         public IXLPivotCache Refresh()
         {
             _fieldIndexes.Clear();
@@ -56,7 +58,7 @@ namespace ClosedXML.Excel
             {
                 var header = column.FirstCell().GetFormattedString();
                 var sharedItems = new XLPivotCacheSharedItems();
-                var values = column.Cells().Skip(1).Select(c => c.Value).Distinct();
+                var values = column.Cells().Skip(1).Select(c => c.Value);
 
                 var fieldRecords = new XLPivotCacheValues(sharedItems, new List<XLPivotCacheValue>());
                 foreach (var value in values)

@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
             return new XLPivotCacheValue(XLPivotCacheValueType.Index, BitConverter.Int64BitsToDouble(index));
         }
 
-        public XLCellValue GetCellValue(List<string> stringStorage, XLPivotCacheSharedItems sharedItems)
+        internal XLCellValue GetCellValue(List<string> stringStorage, XLPivotCacheSharedItems sharedItems)
         {
             switch (Type)
             {
@@ -111,16 +111,31 @@ namespace ClosedXML.Excel
 
         internal double GetNumber() => _value;
 
+        internal Boolean GetBoolean()
+        {
+            return _value != 0;
+        }
+
+        internal XLError GetError()
+        {
+            return (XLError)_value;
+        }
+
         internal string GetText(IReadOnlyList<string> stringStorage)
         {
             var stringIndex = unchecked((int)BitConverter.DoubleToInt64Bits(_value));
             return stringStorage[stringIndex];
         }
 
-        public DateTime GetDateTime()
+        internal DateTime GetDateTime()
         {
             var ticks = BitConverter.DoubleToInt64Bits(_value);
             return new DateTime(ticks);
+        }
+
+        internal uint GetIndex()
+        {
+            return unchecked((uint)BitConverter.DoubleToInt64Bits(_value));
         }
     }
 }
