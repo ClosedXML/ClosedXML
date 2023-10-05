@@ -1562,6 +1562,8 @@ namespace ClosedXML.Excel
                 Char c = f[i];
                 if (c == '"')
                     i = f.IndexOf('"', i + 1);
+                else if (c == '[')
+                    i = f.IndexOf(']', i + 1);
                 else if (c == '0' || c == '#' || c == '?')
                     return XLDataType.Number;
                 else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
