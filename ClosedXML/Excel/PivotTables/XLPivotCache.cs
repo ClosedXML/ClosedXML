@@ -118,19 +118,6 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        internal IList<String> SourceRangeFields
-        {
-            get
-            {
-                // TODO: Once pivot cache is filled with values, replace with fields of a cache.
-                return PivotSourceReference.SourceRange
-                  .FirstRow()
-                  .Cells()
-                  .Select(c => c.GetString())
-                  .ToList();
-            }
-        }
-
         /// <summary>
         /// Pivot cache definition id from the file.
         /// </summary>

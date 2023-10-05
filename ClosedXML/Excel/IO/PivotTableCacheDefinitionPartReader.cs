@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Cells;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -310,15 +311,13 @@ namespace ClosedXML.Excel.IO
 
                                         if (df.BaseField?.Value != null)
                                         {
-                                            var col = pt.PivotCache.PivotSourceReference.SourceRange.Column(df.BaseField.Value +
-                                                1);
+                                            var items = pt.PivotCache
+                                                .GetFieldValues(df.BaseField.Value)
+                                                .GetCellValues()
+                                                .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
+                                                .ToList();
 
-                                            var items = col.CellsUsed()
-                                                .Select(c => c.Value)
-                                                .Skip(1) // Skip header column
-                                                .Distinct().ToList();
-
-                                            pivotValue.BaseFieldName = col.FirstCell().GetValue<string>();
+                                            pivotValue.BaseFieldName = pt.PivotCache.FieldNames[df.BaseField.Value];
 
                                             if (df.BaseItem?.Value != null)
                                             {
@@ -507,7 +506,10 @@ namespace ClosedXML.Excel.IO
                     }
                     else
                     {
-                        var fieldName = pt.PivotCache.SourceRangeFields.ElementAt(fieldIndex);
+                        if (fieldIndex >= pt.PivotCache.FieldCount)
+                            throw PartStructureException.IncorrectAttributeValue();
+
+                        var fieldName = pt.PivotCache.FieldNames[fieldIndex];
                         field = (XLPivotField)pt.ImplementedFields.SingleOrDefault(f => f.SourceName.Equals(fieldName));
 
                         if (field is null)
@@ -572,13 +574,14 @@ namespace ClosedXML.Excel.IO
 
                             if (fieldIndex == -2)
                             {
+                                // A value of -2 indicates the 'data' field.
                                 styleFormat = (styleFormat as XLPivotValueStyleFormat)
                                     .ForValueField(pt.Values.ElementAt(checked((int)fieldItemValue)))
                                     as XLPivotValueStyleFormat;
                             }
-                            else
+                            else if (fieldIndex >= 0 && fieldIndex < pt.PivotCache.FieldCount)
                             {
-                                var additionalFieldName = pt.PivotCache.SourceRangeFields.ElementAt(fieldIndex);
+                                var additionalFieldName = pt.PivotCache.FieldNames[fieldIndex];
                                 var additionalField = pt.ImplementedFields
                                     .Single(f => f.SourceName == additionalFieldName);
 
@@ -595,6 +598,10 @@ namespace ClosedXML.Excel.IO
                                 styleFormat = (styleFormat as XLPivotValueStyleFormat)
                                     .AndWith(additionalField, predicate)
                                     as XLPivotValueStyleFormat;
+                            }
+                            else
+                            {
+                                throw PartStructureException.IncorrectAttributeValue();
                             }
                         }
                     }
