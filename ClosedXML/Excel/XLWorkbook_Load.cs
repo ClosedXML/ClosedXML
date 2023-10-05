@@ -1537,7 +1537,8 @@ namespace ClosedXML.Excel
         private static XLDataType GetNumberDataType(XLNumberFormatValue numberFormat)
         {
             var numberFormatId = numberFormat.NumberFormatId;
-            if (numberFormatId == 46U)
+            if (numberFormatId == 46U ||
+                (numberFormatId >= 18 && numberFormatId <= 21))
                 return XLDataType.TimeSpan;
 
             if ((numberFormatId >= 14 && numberFormatId <= 22) ||
@@ -1563,11 +1564,34 @@ namespace ClosedXML.Excel
                 if (c == '"')
                     i = f.IndexOf('"', i + 1);
                 else if (c == '[')
+                {
+                    // #1742 We need to skip locale prefixes in DateTime formats [...]
                     i = f.IndexOf(']', i + 1);
+                    if (i == -1)
+                        return null;
+                }
                 else if (c == '0' || c == '#' || c == '?')
                     return XLDataType.Number;
-                else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
+                else if (c == 'y' || c == 'd')
                     return XLDataType.DateTime;
+                else if (c == 'h' || c == 's')
+                    return XLDataType.TimeSpan;
+                else if (c == 'm')
+                {
+                    // Excel treats "m" immediately after "hh" or "h" or immediately before "ss" or "s" as minutes, otherwise as a month value
+                    // We can ignore the "hh" or "h" prefixes as these would have been detected by the preceding condition above.
+                    // So we just need to make sure any 'm' is followed immediately by "ss" or "s" (excluding placeholders) to detect a timespan value
+                    for (Int32 j = i+1; j < length; j++)
+                    {
+                        if (f[j] == 'm')
+                            continue;
+                        else if (f[j] == 's')
+                            return XLDataType.TimeSpan;
+                        else if ((f[j] >= 'a' && f[j] <= 'z') || (f[j] >= '0' && f[j] <= '9'))
+                            return XLDataType.DateTime;
+                    }
+                    return XLDataType.DateTime;
+                }
             }
             return null;
         }
