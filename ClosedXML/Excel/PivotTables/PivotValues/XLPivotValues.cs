@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     internal class XLPivotValues : IXLPivotValues
     {
         private readonly XLPivotTable _pivotTable;
-        private readonly Dictionary<String, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, IXLPivotValue> _pivotValues = new(StringComparer.OrdinalIgnoreCase);
 
         internal XLPivotValues(XLPivotTable pivotTable)
         {
@@ -25,8 +25,8 @@ namespace ClosedXML.Excel
 
         public IXLPivotValue Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.SourceRangeFields.Contains(sourceName))
-                throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.FieldNames.Contains(sourceName))
+                throw new ArgumentOutOfRangeException(nameof(sourceName), $"The column '{sourceName}' does not appear in the source range.");
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
             _pivotValues.Add(customName, pivotValue);
