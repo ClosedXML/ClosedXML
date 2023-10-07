@@ -81,16 +81,17 @@ namespace ClosedXML.Excel.IO
 
             switch (pivotCache.PivotSourceReference.SourceType)
             {
-                case XLPivotTableSourceType.Range:
+                case XLPivotTableSourceType.Area:
+                    var bookArea = pivotCache.PivotSourceReference.Area!.Value;
                     worksheetSource.Name = null;
-                    worksheetSource.Reference = pivotCache.PivotSourceReference.SourceRange.RangeAddress.ToStringRelative(includeSheet: false);
+                    worksheetSource.Reference = bookArea.Area.ToString();
 
                     // Do not quote worksheet name with whitespace here - issue #955
-                    worksheetSource.Sheet = pivotCache.PivotSourceReference.SourceRange.RangeAddress.Worksheet.Name;
+                    worksheetSource.Sheet = bookArea.Name;
                     break;
 
-                case XLPivotTableSourceType.Table:
-                    worksheetSource.Name = pivotCache.PivotSourceReference.SourceTable.Name;
+                case XLPivotTableSourceType.Named:
+                    worksheetSource.Name = pivotCache.PivotSourceReference.Name!;
                     worksheetSource.Reference = null;
                     worksheetSource.Sheet = null;
                     break;

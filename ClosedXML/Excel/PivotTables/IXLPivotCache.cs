@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ClosedXML.Excel.Exceptions;
 
 namespace ClosedXML.Excel
 {
@@ -48,6 +49,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Refresh data in the pivot source from the source reference data.
         /// </summary>
+        /// <exception cref="InvalidReferenceException">The data source for the pivot table can't be found.</exception>
         IXLPivotCache Refresh();
 
         /// <inheritdoc cref="ItemsToRetainPerField"/>

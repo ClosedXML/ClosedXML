@@ -33,18 +33,18 @@ namespace ClosedXML.Excel.IO
                         pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
                     }
 
-                    if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
+                    var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
+                    if (cacheDefinition.MissingItemsLimit is not null)
                     {
-                        if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == 0U)
+                        if (cacheDefinition.MissingItemsLimit == 0U)
                         {
                             pivotCache.ItemsToRetainPerField = XLItemsToRetain.None;
                         }
-                        else if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == XLHelper.MaxRowNumber)
+                        else if (cacheDefinition.MissingItemsLimit == XLHelper.MaxRowNumber)
                         {
                             pivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
                         }
                     }
-
 
                     if (pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields is { } cacheFields)
                     {
@@ -311,16 +311,15 @@ namespace ClosedXML.Excel.IO
 
                                         if (df.BaseField?.Value != null)
                                         {
-                                            var items = pt.PivotCache
-                                                .GetFieldValues(df.BaseField.Value)
-                                                .GetCellValues()
-                                                .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
-                                                .ToList();
-
                                             pivotValue.BaseFieldName = pt.PivotCache.FieldNames[df.BaseField.Value];
 
                                             if (df.BaseItem?.Value != null)
                                             {
+                                                var items = pt.PivotCache
+                                                    .GetFieldValues(df.BaseField.Value)
+                                                    .GetCellValues()
+                                                    .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
+                                                    .ToList();
                                                 var bi = (int)df.BaseItem.Value;
                                                 if (bi.Between(0, items.Count - 1))
                                                     pivotValue.BaseItemValue = items[(int)df.BaseItem.Value];
@@ -401,31 +400,20 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
+            // Source data of pivot cache are from a table or a named range.
             if (wss.Name is not null)
             {
-                // Table or named range
-                var table = workbook.Worksheets
-                    .SelectMany(ws1 => ws1.Tables)
-                    .FirstOrDefault(t => t.Name.Equals(wss.Name.Value));
-
-                return table is not null
-                    ? new XLPivotSourceReference(table)
-                    : new XLPivotSourceReference(workbook.Range(wss.Name.Value));
+                return new XLPivotSourceReference(wss.Name);
             }
 
-            if (wss.Sheet is not null && wss.Reference is not null)
+            // Source data of pivot cache are from an area of a workbook.
+            if (wss.Reference is not null && wss.Sheet is not null)
             {
-                // Skip sources that used data from deleted worksheets
-                if (!workbook.TryGetWorksheet(wss.Sheet.Value, out var sourceSheet))
-                {
-                    return null;
-                }
-
-                var range = workbook.Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
-                return new XLPivotSourceReference(range);
+                var bookArea = new XLBookArea(wss.Sheet, XLSheetRange.Parse(wss.Reference));
+                return new XLPivotSourceReference(bookArea);
             }
 
-            throw new NotImplementedException();
+            throw PartStructureException.MissingAttribute();
         }
 
         private static void LoadPivotStyleFormats(XLPivotTable pt, PivotTableDefinition ptd, Dictionary<Int32, DifferentialFormat> differentialFormats)

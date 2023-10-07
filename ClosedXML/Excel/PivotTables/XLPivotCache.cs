@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using ClosedXML.Excel.Exceptions;
 
 namespace ClosedXML.Excel
 {
     internal class XLPivotCache : IXLPivotCache
     {
+        private readonly XLWorkbook _workbook;
         private readonly Dictionary<String, Int32> _fieldIndexes = new(StringComparer.OrdinalIgnoreCase);
         private readonly List<String> _fieldNames = new();
 
@@ -14,18 +17,9 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly List<XLPivotCacheValues> _values = new();
 
-        public XLPivotCache(IXLRange sourceRange)
-            : this(new XLPivotSourceReference(sourceRange))
+        internal XLPivotCache(XLPivotSourceReference reference, XLWorkbook workbook)
         {
-        }
-
-        public XLPivotCache(IXLTable table)
-            : this(new XLPivotSourceReference(table))
-        {
-        }
-
-        private XLPivotCache(XLPivotSourceReference reference)
-        {
+            _workbook = workbook;
             Guid = Guid.NewGuid();
             SetExcelDefaults();
             PivotSourceReference = reference;
@@ -50,19 +44,26 @@ namespace ClosedXML.Excel
 
         public IXLPivotCache Refresh()
         {
+            // Refresh can only happen if the reference is valid.
+            if (!PivotSourceReference.TryGetSource(_workbook, out var sheet, out var foundArea))
+                throw new InvalidReferenceException();
+
+            Debug.Assert(sheet is not null && foundArea is not null);
             _fieldIndexes.Clear();
             _fieldNames.Clear();
             _values.Clear();
 
-            foreach (var column in PivotSourceReference.SourceRange.Columns())
+            var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
+            var area = foundArea.Value;
+            for (var column = area.LeftColumn; column <= area.RightColumn; ++column)
             {
-                var header = column.FirstCell().GetFormattedString();
+                var header = sheet.Cell(area.TopRow, column).GetFormattedString();
                 var sharedItems = new XLPivotCacheSharedItems();
-                var values = column.Cells().Skip(1).Select(c => c.Value);
 
                 var fieldRecords = new XLPivotCacheValues(sharedItems, new List<XLPivotCacheValue>());
-                foreach (var value in values)
+                for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
                 {
+                    var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
                     switch (value.Type)
                     {
                         case XLDataType.Blank:
@@ -152,7 +153,7 @@ namespace ClosedXML.Excel
         }
 
         internal bool ContainsField(String fieldName) => _fieldIndexes.ContainsKey(fieldName);
-        
+
         internal XLPivotCacheValues GetFieldValues(int fieldIndex)
         {
             return _values[fieldIndex];
