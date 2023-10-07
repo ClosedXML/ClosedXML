@@ -1,61 +1,92 @@
-﻿using ClosedXML.Excel.CalcEngine;
-using System;
+﻿using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotSourceReference : IEquatable<XLPivotSourceReference>
+    /// <summary>
+    /// A reference to the pivot source. The source might exist or not, that
+    /// is evaluated during pivot cache record refresh.
+    /// </summary>
+    internal sealed class XLPivotSourceReference : IEquatable<XLPivotSourceReference>
     {
-        public XLPivotSourceReference(IXLRange range)
+        internal XLPivotSourceReference(XLBookArea area)
         {
-            SourceType = XLPivotTableSourceType.Range;
-            SourceRange = range;
+            Area = area;
+            Name = null;
+            SourceType = XLPivotTableSourceType.Area;
         }
 
-        public XLPivotSourceReference(IXLTable table)
+        internal XLPivotSourceReference(string namedRangeOrTable)
         {
-            SourceType = XLPivotTableSourceType.Table;
-            SourceRange = table;
+            Area = null;
+            Name = namedRangeOrTable;
+            SourceType = XLPivotTableSourceType.Named;
         }
 
-        public IXLRange SourceRange { get; }
+        internal XLPivotTableSourceType SourceType { get; }
 
-        public IXLTable? SourceTable => SourceRange as IXLTable;
+        /// <summary>
+        /// Book area with the source data. Either this or <see cref="Name"/> is set.
+        /// </summary>
+        internal XLBookArea? Area { get; }
 
-        public XLPivotTableSourceType SourceType { get; }
+        /// <summary>
+        /// Name of a table or a book-scoped named range that contain the source data.
+        /// Either this or <see cref="Area"/> is set.
+        /// </summary>
+        internal string? Name { get; }
 
-        public override bool Equals(object obj)
+        public bool Equals(XLPivotSourceReference other)
         {
-            var other = obj as XLPivotSourceReference;
-            return Equals(other);
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return Nullable.Equals(Area, other.Area) && XLHelper.NameComparer.Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is XLPivotSourceReference other && Equals(other);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (SourceRange.GetHashCode() * 397) ^ (int)SourceType;
+                return (Area.GetHashCode() * 397) ^ (Name is not null ? XLHelper.NameComparer.GetHashCode(Name) : 0);
             }
         }
 
-        public bool Equals(XLPivotSourceReference? other)
+        /// <summary>
+        /// Try to determine actual area of the source reference in the
+        /// workbook. Source reference might not be valid in the workbook.
+        /// </summary>
+        internal bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
         {
-            if (other is null || SourceType != other.SourceType)
-                return false;
-
-            if (ReferenceEquals(this, other))
-                return true;
-
-            switch (SourceType)
+            if (Name is not null)
             {
-                case XLPivotTableSourceType.Table:
-                    return StringComparer.OrdinalIgnoreCase.Equals(SourceTable!.Name, other.SourceTable!.Name);
+                // TODO: Named ranges are currently unusable, so only check tables.
+                if (workbook.TryGetTable(Name, out var table))
+                {
+                    sheet = table.Worksheet;
+                    sheetArea = table.Area;
+                    return true;
+                }
 
-                case XLPivotTableSourceType.Range:
-                    return XLRangeAddressComparer.IgnoreFixed.Equals(SourceRange.RangeAddress, other.SourceRange.RangeAddress);
-
-                default:
-                    throw new NotSupportedException();
+                sheet = null;
+                sheetArea = null;
+                return false;
             }
+
+            Debug.Assert(Area is not null);
+            if (workbook.WorksheetsInternal.TryGetWorksheet(Area.Value.Name, out sheet))
+            {
+                sheetArea = Area.Value.Area;
+                return true;
+            }
+
+            sheetArea = default;
+            return false;
         }
     }
 }

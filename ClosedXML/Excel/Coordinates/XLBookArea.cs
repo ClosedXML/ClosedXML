@@ -26,6 +26,18 @@ namespace ClosedXML.Excel
             Area = area;
         }
 
+        public static bool operator ==(XLBookArea lhs, XLBookArea rhs) => lhs.Equals(rhs);
+
+        public static bool operator !=(XLBookArea lhs, XLBookArea rhs) => !(lhs == rhs);
+
+        internal static XLBookArea From(IXLRange range)
+        {
+            if (range.Worksheet is null)
+                throw new ArgumentException("Range doesn't contain sheet.", nameof(range));
+
+            return new XLBookArea(range.Worksheet.Name, XLSheetRange.FromRangeAddress(range.RangeAddress));
+        }
+
         public bool Equals(XLBookArea other)
         {
             return Area == other.Area && XLHelper.SheetComparer.Equals(Name, other.Name);

@@ -184,6 +184,14 @@ namespace ClosedXML.Excel
             _values.Capacity = recordCount;
         }
 
+        internal IEnumerable<XLCellValue> GetCellValues()
+        {
+            foreach (var value in _values)
+            {
+                yield return value.GetCellValue(_stringStorage, _sharedItems);
+            }
+        }
+
         [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator", Justification = "double.IsInteger() in NET7 uses same method.")]
         private void AdjustStats(double number)
         {
@@ -211,14 +219,6 @@ namespace ClosedXML.Excel
             var dateTicks = dateTime.Ticks;
             _minDateTicks = _minDateTicks is null ? dateTicks : Math.Min(_minDateTicks.Value, dateTicks);
             _maxDateTicks = _maxDateTicks is null ? dateTicks : Math.Max(_maxDateTicks.Value, dateTicks);
-        }
-
-        internal IEnumerable<XLCellValue> GetCellValues()
-        {
-            foreach (var value in _values)
-            {
-                yield return value.GetCellValue(_stringStorage, _sharedItems);
-            }
         }
     }
 }

@@ -50,13 +50,25 @@ namespace ClosedXML.Excel
             return _worksheets.ContainsKey(sheetName);
         }
 
-        public bool TryGetWorksheet(string sheetName, out IXLWorksheet? worksheet)
+        bool IXLWorksheets.TryGetWorksheet(string sheetName, out IXLWorksheet? worksheet)
         {
-            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out XLWorksheet w))
+            if (TryGetWorksheet(sheetName, out var foundSheet))
             {
-                worksheet = w;
+                worksheet = foundSheet;
                 return true;
             }
+
+            worksheet = null;
+            return false;
+        }
+
+        internal bool TryGetWorksheet(string sheetName, out XLWorksheet? worksheet)
+        {
+            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out worksheet))
+            {
+                return true;
+            }
+
             worksheet = null;
             return false;
         }

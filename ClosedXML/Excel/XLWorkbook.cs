@@ -566,14 +566,49 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
         {
-            var table = this.Worksheets
-                .SelectMany(ws => ws.Tables)
-                .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
-
-            if (table == null)
+            if (!TryGetTable(tableName, out var table, comparisonType))
                 throw new ArgumentOutOfRangeException($"Table {tableName} was not found.");
 
             return table;
+        }
+
+        /// <summary>
+        /// Try to find a table with <paramref name="tableName"/> in a workbook.
+        /// </summary>
+        internal bool TryGetTable(string tableName, out XLTable table, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            table = WorksheetsInternal
+                .SelectMany<XLWorksheet, XLTable>(ws => ws.Tables)
+                .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
+
+            return table is not null;
+        }
+
+        /// <summary>
+        /// Try to find a table that covers same area as the <paramref name="area"/> in a workbook.
+        /// </summary>
+        internal bool TryGetTable(XLBookArea area, out XLTable foundTable)
+        {
+            foreach (var sheet in WorksheetsInternal)
+            {
+                if (XLHelper.SheetComparer.Equals(sheet.Name, area.Name))
+                {
+                    foreach (var table in sheet.Tables)
+                    {
+                        if (table.Area != area.Area)
+                            continue;
+
+                        foundTable = table;
+                        return true;
+                    }
+
+                    // No other sheet has correct name.
+                    break;
+                }
+            }
+
+            foundTable = null;
+            return false;
         }
 
         public IXLWorksheet Worksheet(String name)
@@ -738,7 +773,7 @@ namespace ClosedXML.Excel
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
             NamedRangesInternal = new XLNamedRanges(this);
-            PivotCachesInternal = new XLPivotCaches();
+            PivotCachesInternal = new XLPivotCaches(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;

@@ -133,6 +133,6 @@ namespace ClosedXML.Excel
 
         public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
 
-        public Int32 Offset => _pivotTable.PivotCache.FieldNames.IndexOf(SourceName, StringComparer.OrdinalIgnoreCase);
+        public Int32 Offset => _pivotTable.PivotCache.FieldNames.IndexOf(SourceName, XLHelper.NameComparer);
     }
 }
