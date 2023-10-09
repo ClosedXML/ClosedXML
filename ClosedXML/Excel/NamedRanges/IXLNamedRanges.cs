@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLNamedRanges: IEnumerable<IXLNamedRange>
+    public interface IXLNamedRanges : IEnumerable<IXLNamedRange>
     {
         /// <summary>
         /// Gets the specified named range.
@@ -80,7 +81,7 @@ namespace ClosedXML.Excel
         /// </summary>
         void DeleteAll();
 
-        Boolean TryGetValue(String name, out IXLNamedRange? range);
+        Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLNamedRange? range);
 
         Boolean Contains(String name);
 
