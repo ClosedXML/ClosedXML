@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
@@ -22,6 +20,8 @@ namespace ClosedXML.Excel
         private readonly XLRangeFactory _rangeFactory;
         private readonly XLRangeRepository _rangeRepository;
         private readonly List<IXLRangeIndex> _rangeIndices;
+        private readonly XLRanges _selectedRanges;
+
         internal Int32 ZOrder = 1;
         private String _name;
         internal Int32 _position;
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
                     new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)),
-                (workbook.Style as XLStyle).Value)
+                ((XLStyle)workbook.Style).Value)
         {
             Workbook = workbook;
             SheetId = sheetId;
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
             PivotTables = new XLPivotTables(this);
-            Protection = new XLSheetProtection(DefaultProtectionAlgorithm);
+            _protection = new XLSheetProtection(DefaultProtectionAlgorithm);
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
             SparklineGroupsInternal = new XLSparklineGroups(this);
@@ -77,7 +77,9 @@ namespace ClosedXML.Excel
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
-            Name = sheetName;
+
+            XLHelper.ValidateSheetName(sheetName);
+            _name = sheetName;
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -88,7 +90,7 @@ namespace ClosedXML.Excel
             ShowZeros = workbook.ShowZeros;
             RightToLeft = workbook.RightToLeft;
             TabColor = XLColor.NoColor;
-            SelectedRanges = new XLRanges();
+            _selectedRanges = new XLRanges();
 
             Author = workbook.Author;
         }
@@ -104,7 +106,7 @@ namespace ClosedXML.Excel
         /// Reference to a VML that contains notes, forms controls and so on. All such things are generally unified into
         /// a single legacy VML file, set during load/save.
         /// </summary>
-        public string LegacyDrawingId;
+        public string? LegacyDrawingId;
 
         private Double _columnWidth;
 
@@ -173,7 +175,7 @@ namespace ClosedXML.Excel
         /// yet saved), the value is null until workbook is saved. Use <see cref="SheetId"/>
         /// instead is possible. Mostly for removing deleted sheet parts during save.
         /// </summary>
-        internal String RelId { get; set; }
+        internal String? RelId { get; set; }
 
         public XLDataValidations DataValidations { get; private set; }
 
@@ -182,10 +184,7 @@ namespace ClosedXML.Excel
         public XLSheetProtection Protection
         {
             get => _protection;
-            set
-            {
-                _protection = value.Clone().CastTo<XLSheetProtection>();
-            }
+            set => _protection = value.Clone().CastTo<XLSheetProtection>();
         }
 
         public XLAutoFilter AutoFilter { get; private set; }
@@ -260,23 +259,22 @@ namespace ClosedXML.Excel
 
         public IXLOutline Outline { get; private set; }
 
-        IXLRow IXLWorksheet.FirstRowUsed()
+        IXLRow? IXLWorksheet.FirstRowUsed()
         {
             return FirstRowUsed();
         }
 
-
-        IXLRow IXLWorksheet.FirstRowUsed(XLCellsUsedOptions options)
+        IXLRow? IXLWorksheet.FirstRowUsed(XLCellsUsedOptions options)
         {
             return FirstRowUsed(options);
         }
 
-        IXLRow IXLWorksheet.LastRowUsed()
+        IXLRow? IXLWorksheet.LastRowUsed()
         {
             return LastRowUsed();
         }
 
-        IXLRow IXLWorksheet.LastRowUsed(XLCellsUsedOptions options)
+        IXLRow? IXLWorksheet.LastRowUsed(XLCellsUsedOptions options)
         {
             return LastRowUsed(options);
         }
@@ -301,22 +299,22 @@ namespace ClosedXML.Excel
             return LastRow();
         }
 
-        IXLColumn IXLWorksheet.FirstColumnUsed()
+        IXLColumn? IXLWorksheet.FirstColumnUsed()
         {
             return FirstColumnUsed();
         }
 
-        IXLColumn IXLWorksheet.FirstColumnUsed(XLCellsUsedOptions options)
+        IXLColumn? IXLWorksheet.FirstColumnUsed(XLCellsUsedOptions options)
         {
             return FirstColumnUsed(options);
         }
 
-        IXLColumn IXLWorksheet.LastColumnUsed()
+        IXLColumn? IXLWorksheet.LastColumnUsed()
         {
             return LastColumnUsed();
         }
 
-        IXLColumn IXLWorksheet.LastColumnUsed(XLCellsUsedOptions options)
+        IXLColumn? IXLWorksheet.LastColumnUsed(XLCellsUsedOptions options)
         {
             return LastColumnUsed(options);
         }
@@ -447,7 +445,7 @@ namespace ClosedXML.Excel
             return Cell(row, column);
         }
 
-        IXLCell IXLWorksheet.Cell(string cellAddressInRange)
+        IXLCell? IXLWorksheet.Cell(string cellAddressInRange)
         {
             return Cell(cellAddressInRange);
         }
@@ -467,7 +465,7 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
-        IXLRange IXLWorksheet.Range(string rangeAddress)
+        IXLRange? IXLWorksheet.Range(string rangeAddress)
         {
             return Range(rangeAddress);
         }
@@ -557,14 +555,14 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             IsDeleted = true;
-            (Workbook.NamedRanges as XLNamedRanges).OnWorksheetDeleted(Name);
+            Workbook.NamedRangesInternal.OnWorksheetDeleted(Name);
             Workbook.NotifyWorksheetDeleting(this);
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
         public IXLNamedRanges NamedRanges { get; private set; }
 
-        public IXLNamedRange NamedRange(String rangeName)
+        public IXLNamedRange? NamedRange(String rangeName)
         {
             return NamedRanges.NamedRange(rangeName);
         }
@@ -624,8 +622,8 @@ namespace ClosedXML.Excel
             targetSheet.RowHeightChanged = RowHeightChanged;
             targetSheet.InnerStyle = InnerStyle;
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
-            (targetSheet.PageSetup.Header as XLHeaderFooter).Changed = true;
-            (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
+            ((XLHeaderFooter)targetSheet.PageSetup.Header).Changed = true;
+            ((XLHeaderFooter)targetSheet.PageSetup.Footer).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(targetSheet, SheetView);
             targetSheet.SelectedRanges.RemoveAll();
@@ -684,7 +682,7 @@ namespace ClosedXML.Excel
         IXLSheetProtection IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>.Protection
         {
             get => Protection;
-            set => Protection = value as XLSheetProtection;
+            set => Protection = (XLSheetProtection)value;
         }
 
         public IXLSheetProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm)
@@ -943,11 +941,11 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
+                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange)
+                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange)
                     && workbookNamedRange.Ranges.First().Worksheet == this)
                 {
                     workbookNamedRange.Ranges.ForEach(retVal.Add);
@@ -961,7 +959,7 @@ namespace ClosedXML.Excel
             get { return AutoFilter; }
         }
 
-        public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean>? predicate = null)
         {
             var rows = new XLRows(worksheet: null, StyleValue);
             var rowsUsed = new HashSet<Int32>();
@@ -978,12 +976,12 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-        public IXLRows RowsUsed(Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(Func<IXLRow, Boolean>? predicate = null)
         {
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean>? predicate = null)
         {
             var columns = new XLColumns(worksheet: null, StyleValue);
             var columnsUsed = new HashSet<Int32>();
@@ -998,7 +996,7 @@ namespace ClosedXML.Excel
             return columns;
         }
 
-        public IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(Func<IXLColumn, Boolean>? predicate = null)
         {
             return ColumnsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
@@ -1075,23 +1073,23 @@ namespace ClosedXML.Excel
 
         #endregion Outlines
 
-        public XLRow FirstRowUsed()
+        public XLRow? FirstRowUsed()
         {
             return FirstRowUsed(XLCellsUsedOptions.AllContents);
         }
 
-        public XLRow FirstRowUsed(XLCellsUsedOptions options)
+        public XLRow? FirstRowUsed(XLCellsUsedOptions options)
         {
             var rngRow = AsRange().FirstRowUsed(options);
             return rngRow != null ? Row(rngRow.RangeAddress.FirstAddress.RowNumber) : null;
         }
 
-        public XLRow LastRowUsed()
+        public XLRow? LastRowUsed()
         {
             return LastRowUsed(XLCellsUsedOptions.AllContents);
         }
 
-        public XLRow LastRowUsed(XLCellsUsedOptions options)
+        public XLRow? LastRowUsed(XLCellsUsedOptions options)
         {
             var rngRow = AsRange().LastRowUsed(options);
             return rngRow != null ? Row(rngRow.RangeAddress.LastAddress.RowNumber) : null;
@@ -1117,23 +1115,23 @@ namespace ClosedXML.Excel
             return Row(XLHelper.MaxRowNumber);
         }
 
-        public XLColumn FirstColumnUsed()
+        public XLColumn? FirstColumnUsed()
         {
             return FirstColumnUsed(XLCellsUsedOptions.AllContents);
         }
 
-        public XLColumn FirstColumnUsed(XLCellsUsedOptions options)
+        public XLColumn? FirstColumnUsed(XLCellsUsedOptions options)
         {
             var rngColumn = AsRange().FirstColumnUsed(options);
             return rngColumn != null ? Column(rngColumn.RangeAddress.FirstAddress.ColumnNumber) : null;
         }
 
-        public XLColumn LastColumnUsed()
+        public XLColumn? LastColumnUsed()
         {
             return LastColumnUsed(XLCellsUsedOptions.AllContents);
         }
 
-        public XLColumn LastColumnUsed(XLCellsUsedOptions options)
+        public XLColumn? LastColumnUsed(XLCellsUsedOptions options)
         {
             var rngColumn = AsRange().LastColumnUsed(options);
             return rngColumn != null ? Column(rngColumn.RangeAddress.LastAddress.ColumnNumber) : null;
@@ -1631,12 +1629,12 @@ namespace ClosedXML.Excel
                     .Cells(false, XLCellsUsedOptions.All);
         }
 
-        public override XLCell Cell(String cellAddressInRange)
+        public override XLCell? Cell(String cellAddressInRange)
         {
             var cell = base.Cell(cellAddressInRange);
             if (cell != null) return cell;
 
-            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange? workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
@@ -1647,7 +1645,7 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public override XLRange Range(String rangeAddressStr)
+        public override XLRange? Range(String rangeAddressStr)
         {
             if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                 return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
@@ -1655,10 +1653,10 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
+            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
                 return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
 
-            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
@@ -1675,28 +1673,22 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroups SparklineGroups => SparklineGroupsInternal;
 
-        private IXLRanges _selectedRanges;
-
         public IXLRanges SelectedRanges
         {
             get
             {
-                _selectedRanges?.RemoveAll(r => !r.RangeAddress.IsValid);
+                _selectedRanges.RemoveAll(r => !r.RangeAddress.IsValid);
                 return _selectedRanges;
-            }
-            internal set
-            {
-                _selectedRanges = value;
             }
         }
 
-        public IXLCell ActiveCell { get; set; }
+        public IXLCell? ActiveCell { get; set; }
 
         private XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
-        public XLCellValue Evaluate(String expression, string formulaAddress = null)
+        public XLCellValue Evaluate(String expression, string? formulaAddress = null)
         {
-            IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
+            IXLAddress? address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
             return CalcEngine.EvaluateFormula(expression, Workbook, this, address, true).ToCellValue();
         }
 
@@ -1736,7 +1728,7 @@ namespace ClosedXML.Excel
 
         internal IXLPicture AddPicture(Stream stream, string name, int Id)
         {
-            return (Pictures as XLPictures).Add(stream, name, Id);
+            return ((XLPictures)Pictures).Add(stream, name, Id);
         }
 
         public IXLPicture AddPicture(Stream stream, XLPictureFormat format)
@@ -1904,7 +1896,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get cell or null, if cell doesn't exist.
         /// </summary>
-        internal XLCell GetCell(int ro, int co)
+        internal XLCell? GetCell(int ro, int co)
         {
             return Worksheet.Internals.CellsCollection.GetUsedCell(new XLSheetPoint(ro, co));
         }
@@ -1916,7 +1908,7 @@ namespace ClosedXML.Excel
             if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
                 range.InnerStyle = xlRangeParameters.DefaultStyle;
 
-            return range as XLRange;
+            return (XLRange)range;
         }
 
         /// <summary>
@@ -1925,7 +1917,7 @@ namespace ClosedXML.Excel
         /// <param name="address">Address of range row.</param>
         /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
         /// <returns>Range row with the specified address.</returns>
-        public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle defaultStyle = null)
+        public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle? defaultStyle = null)
         {
             var rangeKey = new XLRangeKey(XLRangeType.RangeRow, address);
             var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(ref rangeKey);
@@ -1942,7 +1934,7 @@ namespace ClosedXML.Excel
         /// <param name="address">Address of range column.</param>
         /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
         /// <returns>Range column with the specified address.</returns>
-        public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle defaultStyle = null)
+        public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle? defaultStyle = null)
         {
             var rangeKey = new XLRangeKey(XLRangeType.RangeColumn, address);
             var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(ref rangeKey);
@@ -2041,7 +2033,7 @@ namespace ClosedXML.Excel
         /// Get a style that should be used for a <paramref name="value"/>,
         /// if the value is set to the <paramref name="point"/>.
         /// </summary>
-        internal XLStyleValue GetStyleForValue(XLCellValue value, XLSheetPoint point)
+        internal XLStyleValue? GetStyleForValue(XLCellValue value, XLSheetPoint point)
         {
             // Because StyleValue property retrieves value from a slice,
             // access it only if necessary. This happens during ever cell
@@ -2075,7 +2067,7 @@ namespace ClosedXML.Excel
                 case XLDataType.Text:
                     {
                         var text = value.GetText();
-                        XLStyleValue styleValue = null;
+                        XLStyleValue? styleValue = null;
                         if (text.Length > 0 && text[0] == '\'')
                         {
                             styleValue = GetStyleValue(point);

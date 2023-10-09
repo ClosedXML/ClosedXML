@@ -91,7 +91,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (_recursive)
             {
                 var cell = sheet.GetCell(rowNumber, columnNumber);
-                return cell.Value;
+                return cell?.Value ?? Blank.Value;
             }
 
             throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(rowNumber, columnNumber)));

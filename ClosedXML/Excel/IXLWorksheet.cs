@@ -1,5 +1,3 @@
-#nullable disable
-
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using ClosedXML.Excel.Drawings;
 using System;
@@ -56,13 +54,13 @@ namespace ClosedXML.Excel
         /// Gets the first non-empty row of the worksheet that contains a cell with a value.
         /// <para>Formatted empty cells do not count.</para>
         /// </summary>
-        IXLRow FirstRowUsed();
+        IXLRow? FirstRowUsed();
 
         /// <summary>
         /// Gets the first non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
-        IXLRow FirstRowUsed(XLCellsUsedOptions options);
+        IXLRow? FirstRowUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets the last row of the worksheet.
@@ -72,13 +70,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the last non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
-        IXLRow LastRowUsed();
+        IXLRow? LastRowUsed();
 
         /// <summary>
         /// Gets the last non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
-        IXLRow LastRowUsed(XLCellsUsedOptions options);
+        IXLRow? LastRowUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets the first column of the worksheet.
@@ -88,13 +86,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the first non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
-        IXLColumn FirstColumnUsed();
+        IXLColumn? FirstColumnUsed();
 
         /// <summary>
         /// Gets the first non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
-        IXLColumn FirstColumnUsed(XLCellsUsedOptions options);
+        IXLColumn? FirstColumnUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets the last column of the worksheet.
@@ -104,13 +102,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the last non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
-        IXLColumn LastColumnUsed();
+        IXLColumn? LastColumnUsed();
 
         /// <summary>
         /// Gets the last non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
-        IXLColumn LastColumnUsed(XLCellsUsedOptions options);
+        IXLColumn? LastColumnUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets a collection of all columns in this worksheet.
@@ -184,7 +182,7 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets the cell at the specified address.</summary>
         /// <param name="cellAddressInRange">The cell address in the worksheet.</param>
-        IXLCell Cell(string cellAddressInRange);
+        IXLCell? Cell(string cellAddressInRange);
 
         /// <summary>
         /// Gets the cell at the specified row and column.
@@ -206,7 +204,7 @@ namespace ClosedXML.Excel
         /// <summary>Returns the specified range.</summary>
         /// <para>e.g. Range("A1"), Range("A1:C2")</para>
         /// <param name="rangeAddress">The range boundaries.</param>
-        IXLRange Range(string rangeAddress);
+        IXLRange? Range(string rangeAddress);
 
         /// <summary>Returns the specified range.</summary>
         /// <param name="firstCell">The first cell in the range.</param>
@@ -300,7 +298,7 @@ namespace ClosedXML.Excel
         /// Gets the specified named range.
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        IXLNamedRange NamedRange(String rangeName);
+        IXLNamedRange? NamedRange(String rangeName);
 
         /// <summary>
         /// Gets an object to manage how the worksheet is going to displayed by Excel.
@@ -344,9 +342,9 @@ namespace ClosedXML.Excel
 
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);
 
-        IXLRange RangeUsed();
+        IXLRange? RangeUsed();
 
-        IXLRange RangeUsed(XLCellsUsedOptions options);
+        IXLRange? RangeUsed(XLCellsUsedOptions options);
 
         IXLDataValidations DataValidations { get; }
 
@@ -420,13 +418,13 @@ namespace ClosedXML.Excel
 
         IXLAutoFilter AutoFilter { get; }
 
-        IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null);
+        IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean>? predicate = null);
 
-        IXLRows RowsUsed(Func<IXLRow, Boolean> predicate);
+        IXLRows RowsUsed(Func<IXLRow, Boolean>? predicate);
 
-        IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null);
+        IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean>? predicate = null);
 
-        IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
+        IXLColumns ColumnsUsed(Func<IXLColumn, Boolean>? predicate);
 
         IXLRanges MergedRanges { get; }
 
@@ -436,7 +434,7 @@ namespace ClosedXML.Excel
 
         IXLRanges SelectedRanges { get; }
 
-        IXLCell ActiveCell { get; set; }
+        IXLCell? ActiveCell { get; set; }
 
         /// <summary>
         /// Evaluate an formula and return a result.
@@ -444,7 +442,7 @@ namespace ClosedXML.Excel
         /// <param name="expression">Formula to evaluate.</param>
         /// <param name="formulaAddress">A cell address that is used to provide context for formula calculation (mostly implicit intersection).</param>
         /// <exception cref="MissingContextException">If <paramref name="formulaAddress"/> was needed for some part of calculation.</exception>
-        XLCellValue Evaluate(String expression, string formulaAddress = null);
+        XLCellValue Evaluate(String expression, string? formulaAddress = null);
 
         /// <summary>
         /// Force recalculation of all cell formulas in the sheet while leaving other sheets without change, even if their dirty cells.
