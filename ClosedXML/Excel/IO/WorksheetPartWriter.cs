@@ -241,7 +241,7 @@ namespace ClosedXML.Excel.IO
             else
                 sheetView.TopLeftCell = xlWorksheet.SheetView.TopLeftCellAddress.ToString();
 
-            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
+            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell is not null)
             {
                 sheetView.RemoveAllChildren<Selection>();
                 svcm.SetElement(XLSheetViewContents.Selection, null);
@@ -250,8 +250,8 @@ namespace ClosedXML.Excel.IO
 
                 Action<Selection> populateSelection = (Selection selection) =>
                 {
-                    if (xlWorksheet.ActiveCell != null)
-                        selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                    if (xlWorksheet.ActiveCell is not null)
+                        selection.ActiveCell = xlWorksheet.ActiveCell.Value.ToString();
                     else if (firstSelection != null)
                         selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 

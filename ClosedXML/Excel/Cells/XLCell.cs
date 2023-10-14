@@ -1045,11 +1045,11 @@ namespace ClosedXML.Excel
 
         public Boolean Active
         {
-            get { return ((XLCell)Worksheet.ActiveCell).SheetPoint == SheetPoint; }
+            get => Worksheet.ActiveCell == SheetPoint;
             set
             {
                 if (value)
-                    Worksheet.ActiveCell = this;
+                    Worksheet.ActiveCell = SheetPoint;
                 else if (Active)
                     Worksheet.ActiveCell = null;
             }

@@ -59,6 +59,11 @@ namespace ClosedXML.Excel
 
     public interface IXLCell
     {
+        /// <summary>
+        /// Is this cell the <see cref="IXLWorksheet.ActiveCell">active cell of
+        /// the worksheet</see>? Setting false deactivates cell only when the
+        /// cell is currently active.
+        /// </summary>
         Boolean Active { get; set; }
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
