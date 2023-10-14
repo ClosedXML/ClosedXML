@@ -298,14 +298,14 @@ namespace ClosedXML.Excel
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
                 var name = split[1];
-                if (TryGetWorksheet(wsName, out IXLWorksheet ws))
+                if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
                     var range = ws.NamedRange(name);
                     return range ?? NamedRange(name);
                 }
                 return null;
             }
-            return NamedRanges.NamedRange(rangeName);
+            return NamedRangesInternal.NamedRange(rangeName);
         }
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)

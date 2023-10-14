@@ -2,9 +2,16 @@
 Migration from 0.103 to 0.104
 #############################
 
-************
-IXLWorksheet
-************
+******************
+Throw on not found
+******************
+
+Several API used to return ``null``, when the searched element wasn't found.
+They now throw an ``ArgumentException`` instead.
+
+If you need to avoid the exception, use methods these methods like
+``IXLNamedRanges.TryGetValue(string rangeName, out IXLNamedRange range)`` or
+* ``IXLNamedRanges.Contains(string rangeName)``.
 
 ``IXLWorksheet.Cell(string)``
 #############################
@@ -12,7 +19,15 @@ IXLWorksheet
 ``IXLWorksheet.Cell(string cellAddressInRange)`` used to return ``null`` when
 the ``cellAddressInRange`` wasn't A1 address or workbook scoped named range.
 
-It now throws ``ArgumentOutOfRangeException`` instead.
+It now throws ``ArgumentException`` instead.
+
+``IXLWorksheet.NamedRange(string)``
+###################################
+
+``IXLWorksheet.NamedRange(string rangeName)`` used to return ``null`` when
+the ``rangeName`` wasn't found.
+
+It now throws ``ArgumentException`` instead.
 
 ``IXLWorksheet.Range(string)``
 ##############################
@@ -20,7 +35,15 @@ It now throws ``ArgumentOutOfRangeException`` instead.
 ``IXLWorksheet.Range(string rangeAddress)`` used to return ``null`` when
 the ``rangeAddress`` wasn't A1 address or named range.
 
-It now throws ``ArgumentOutOfRangeException`` instead.
+It now throws ``ArgumentException`` instead.
+
+``IXLNamedRanges.NamedRange(string)``
+###################################
+
+``IXLNamedRanges.NamedRange(string rangeName)`` used to return ``null`` when
+the ``nameRange`` wasn't found.
+
+It now throws ``ArgumentException`` instead.
 
 **************
 IXLPivotTables
