@@ -1690,7 +1690,16 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell? ActiveCell { get; set; }
+        IXLCell? IXLWorksheet.ActiveCell
+        {
+            get => ActiveCell is not null ? new XLCell(this, ActiveCell.Value) : null;
+            set => ActiveCell = value is not null ? XLSheetPoint.FromAddress(value.Address) : null;
+        }
+
+        /// <summary>
+        /// Address of active cell/cursor in the worksheet.
+        /// </summary>
+        internal XLSheetPoint? ActiveCell { get; set; }
 
         private XLCalcEngine CalcEngine => Workbook.CalcEngine;
 

@@ -437,6 +437,9 @@ namespace ClosedXML.Excel
 
         IXLRanges SelectedRanges { get; }
 
+        /// <summary>
+        /// The active cell of the worksheet.
+        /// </summary>
         IXLCell? ActiveCell { get; set; }
 
         /// <summary>
