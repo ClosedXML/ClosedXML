@@ -2,6 +2,15 @@
 Migration from 0.103 to 0.104
 #############################
 
+************
+IXLWorksheet
+************
+
+``IXLWorksheet.Cell(string cellAddressInRange)`` used to return ``null`` when
+the ``cellAddressInRange`` wasn't A1 address or workbook scoped named range.
+
+It now throws ``ArgumentOutOfRangeException`` instead.
+
 **************
 IXLPivotTables
 **************

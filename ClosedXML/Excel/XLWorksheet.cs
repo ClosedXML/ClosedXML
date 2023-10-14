@@ -445,9 +445,9 @@ namespace ClosedXML.Excel
             return Cell(row, column);
         }
 
-        IXLCell? IXLWorksheet.Cell(string cellAddressInRange)
+        IXLCell IXLWorksheet.Cell(string cellAddressInRange)
         {
-            return Cell(cellAddressInRange);
+            return Cell(cellAddressInRange) ?? throw new ArgumentOutOfRangeException($"'{cellAddressInRange}' is not A1 address or workbook named range.");
         }
 
         IXLCell IXLWorksheet.Cell(int row, string column)
@@ -1632,14 +1632,15 @@ namespace ClosedXML.Excel
         public override XLCell? Cell(String cellAddressInRange)
         {
             var cell = base.Cell(cellAddressInRange);
-            if (cell != null) return cell;
+            if (cell is not null)
+                return cell;
 
             if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange? workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
 
-                return workbookNamedRange.Ranges.FirstOrDefault().FirstCell().CastTo<XLCell>();
+                return workbookNamedRange.Ranges.First().FirstCell().CastTo<XLCell>();
             }
 
             return null;

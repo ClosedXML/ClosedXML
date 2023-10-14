@@ -288,7 +288,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             // First, try to interpret name as a sheet scoped name.
             sheetName = node.Prefix?.Sheet ?? context.FormulaArea.Name;
-            if (context.Workbook.TryGetWorksheet(sheetName, out var sheet) &&
+            if (context.Workbook.TryGetWorksheet(sheetName, out XLWorksheet sheet) &&
                 sheet.NamedRanges.TryGetValue(node.Name, out var sheetNamedRange))
             {
                 return VisitName(sheetNamedRange!);

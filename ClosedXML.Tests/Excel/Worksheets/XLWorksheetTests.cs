@@ -1314,5 +1314,29 @@ namespace ClosedXML.Tests
             Assert.False(sut.Cell("A2").NeedsRecalculation);
             Assert.AreEqual(3.0, sut.Cell("A2").CachedValue);
         }
+
+        [Test]
+        public void Cell_returns_cell_at_address_or_workbook_scoped_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            wb.NamedRanges.Add("test_range", ws.Range(2, 3, 5, 7)); // C2:G5
+
+            var cellB4 = ws.Cell("B4");
+            var firstCellOfRange = ws.Cell("test_range");
+
+            Assert.AreEqual("B4", cellB4.Address.ToString());
+            Assert.AreEqual("C2", firstCellOfRange.Address.ToString());
+        }
+
+        [Test]
+        public void Cell_throws_exception_when_address_is_not_A1_address_or_workbook_scoped_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("XFF1"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("nonexistent_range"));
+        }
     }
 }

@@ -182,7 +182,8 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets the cell at the specified address.</summary>
         /// <param name="cellAddressInRange">The cell address in the worksheet.</param>
-        IXLCell? Cell(string cellAddressInRange);
+        /// <exception cref="ArgumentOutOfRangeException">Address is not A1 or workbook-scoped named range.</exception>
+        IXLCell Cell(string cellAddressInRange);
 
         /// <summary>
         /// Gets the cell at the specified row and column.
