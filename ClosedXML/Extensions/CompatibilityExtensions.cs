@@ -20,16 +20,4 @@ namespace System.IO
         }
     }
 }
-
-namespace System
-{
-    internal static class StringCompatibilityExtensions
-    {
-        public static bool Contains(this string s, char c)
-        {
-            return s.IndexOf(c) >= 0;
-        }
-    }
-}
-
 #endif

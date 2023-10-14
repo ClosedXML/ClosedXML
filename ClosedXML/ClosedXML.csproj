@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <!-- netstandard 2.0 doesn't contain nullable annotations for BCL, so we want to export
          annotations for our consumers, but no warnings for our code. Warnings will be
@@ -40,6 +41,10 @@
     </PackageReference>
     <PackageReference Include="Janitor.Fody" Version="1.8.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Polyfill" Version="1.29.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="RBush" Version="3.2.0" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
