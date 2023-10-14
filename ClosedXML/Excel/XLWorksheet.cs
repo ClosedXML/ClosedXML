@@ -97,6 +97,10 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
+        IXLNamedRanges IXLWorksheet.NamedRanges => NamedRanges;
+
+        internal XLNamedRanges NamedRanges { get; }
+
         public override XLRangeType RangeType
         {
             get { return XLRangeType.Worksheet; }
@@ -447,7 +451,7 @@ namespace ClosedXML.Excel
 
         IXLCell IXLWorksheet.Cell(string cellAddressInRange)
         {
-            return Cell(cellAddressInRange) ?? throw new ArgumentOutOfRangeException($"'{cellAddressInRange}' is not A1 address or workbook named range.");
+            return Cell(cellAddressInRange) ?? throw new ArgumentException($"'{cellAddressInRange}' is not A1 address or workbook named range.");
         }
 
         IXLCell IXLWorksheet.Cell(int row, string column)
@@ -467,7 +471,7 @@ namespace ClosedXML.Excel
 
         IXLRange IXLWorksheet.Range(string rangeAddress)
         {
-            return Range(rangeAddress) ?? throw new ArgumentOutOfRangeException($"'{rangeAddress}' is not A1 address or named range.");
+            return Range(rangeAddress) ?? throw new ArgumentException($"'{rangeAddress}' is not A1 address or named range.");
         }
 
         IXLRange IXLWorksheet.Range(IXLCell firstCell, IXLCell lastCell)
@@ -560,9 +564,12 @@ namespace ClosedXML.Excel
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-        public IXLNamedRanges NamedRanges { get; private set; }
+        IXLNamedRange IXLWorksheet.NamedRange(String rangeName)
+        {
+            return NamedRanges.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
+        }
 
-        public IXLNamedRange? NamedRange(String rangeName)
+        internal IXLNamedRange? NamedRange(String rangeName)
         {
             return NamedRanges.NamedRange(rangeName);
         }

@@ -10,7 +10,8 @@ namespace ClosedXML.Excel
         /// Gets the specified named range.
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        IXLNamedRange? NamedRange(String rangeName);
+        /// <exception cref="ArgumentException">Range wasn't found.</exception>
+        IXLNamedRange NamedRange(String rangeName);
 
         /// <summary>
         /// Adds a new named range.

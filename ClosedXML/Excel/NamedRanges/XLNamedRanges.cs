@@ -33,7 +33,10 @@ namespace ClosedXML.Excel
 
         #region IXLNamedRanges Members
 
-        IXLNamedRange? IXLNamedRanges.NamedRange(String rangeName) => NamedRange(rangeName);
+        IXLNamedRange IXLNamedRanges.NamedRange(String rangeName)
+        {
+            return NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found.");
+        }
 
         internal XLNamedRange? NamedRange(String rangeName)
         {

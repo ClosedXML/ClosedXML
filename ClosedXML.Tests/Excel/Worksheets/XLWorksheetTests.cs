@@ -1,9 +1,7 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1335,8 +1333,8 @@ namespace ClosedXML.Tests
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("XFF1"));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("nonexistent_range"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Cell("XFF1"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Cell("nonexistent_range"));
         }
 
         [Test]
@@ -1364,9 +1362,9 @@ namespace ClosedXML.Tests
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("XFF1"));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("A4:ZZZ10"));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("nonexistent_range"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD1"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD4:BEEF10"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("nonexistent_range"));
         }
     }
 }

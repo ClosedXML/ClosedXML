@@ -182,7 +182,7 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets the cell at the specified address.</summary>
         /// <param name="cellAddressInRange">The cell address in the worksheet.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Address is not A1 or workbook-scoped named range.</exception>
+        /// <exception cref="ArgumentException">Address is not A1 or workbook-scoped named range.</exception>
         IXLCell Cell(string cellAddressInRange);
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace ClosedXML.Excel
         /// <summary>Returns the specified range.</summary>
         /// <para>e.g. Range("A1"), Range("A1:C2")</para>
         /// <param name="rangeAddress">The range boundaries.</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="rangeAddress"/> is not a valid address or named range.</exception>
+        /// <exception cref="ArgumentException"><paramref name="rangeAddress"/> is not a valid address or named range.</exception>
         IXLRange Range(string rangeAddress);
 
         /// <summary>Returns the specified range.</summary>
@@ -300,7 +300,8 @@ namespace ClosedXML.Excel
         /// Gets the specified named range.
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        IXLNamedRange? NamedRange(String rangeName);
+        /// <exception cref="ArgumentException">Range wasn't found in sheet named ranges.</exception>
+        IXLNamedRange NamedRange(String rangeName);
 
         /// <summary>
         /// Gets an object to manage how the worksheet is going to displayed by Excel.
