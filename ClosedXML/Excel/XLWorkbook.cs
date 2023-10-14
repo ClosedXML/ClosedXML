@@ -309,7 +309,19 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            return Worksheets.TryGetWorksheet(name, out worksheet);
+            if (TryGetWorksheet(name, out XLWorksheet foundSheet))
+            {
+                worksheet = foundSheet;
+                return true;
+            }
+
+            worksheet = default;
+            return false;
+        }
+
+        internal Boolean TryGetWorksheet(String name, out XLWorksheet worksheet)
+        {
+            return WorksheetsInternal.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
@@ -328,15 +340,21 @@ namespace ClosedXML.Excel
 
         public IXLCell CellFromFullAddress(String cellAddress, out IXLWorksheet ws)
         {
-            ws = null;
-            if (!cellAddress.Contains('!')) return null;
+            if (!cellAddress.Contains('!'))
+            {
+                ws = null;
+                return null;
+            }
 
             var split = cellAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out ws))
+            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
             {
-                return ws.Cell(split[1]);
+                ws = sheet;
+                return sheet.Cell(split[1]);
             }
+
+            ws = null;
             return null;
         }
 

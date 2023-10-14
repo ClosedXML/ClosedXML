@@ -246,7 +246,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (FirstSheet is not null || LastSheet is not null)
                 throw new NotImplementedException("3D references are not yet implemented.");
 
-            if (!wb.TryGetWorksheet(Sheet, out var worksheet))
+            if (!wb.TryGetWorksheet(Sheet, out XLWorksheet worksheet))
                 return XLError.CellReference;
 
             return OneOf<IXLWorksheet, XLError>.FromT0(worksheet);
