@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -319,22 +320,28 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        internal Boolean TryGetWorksheet(String name, out XLWorksheet worksheet)
+        internal Boolean TryGetWorksheet(String name, [NotNullWhen(true)] out XLWorksheet worksheet)
         {
             return WorksheetsInternal.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
         {
-            ws = null;
-            if (!rangeAddress.Contains('!')) return null;
+            if (!rangeAddress.Contains('!'))
+            {
+                ws = null;
+                return null;
+            }
 
             var split = rangeAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out ws))
+            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
             {
-                return ws.Range(split[1]);
+                ws = sheet;
+                return sheet.Range(split[1]);
             }
+
+            ws = null;
             return null;
         }
 

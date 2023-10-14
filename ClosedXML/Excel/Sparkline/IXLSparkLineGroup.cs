@@ -76,6 +76,10 @@ namespace ClosedXML.Excel
 
         void CopyFrom(IXLSparklineGroup sparklineGroup);
 
+        /// <summary>
+        /// Copy this sparkline group to the specified worksheet
+        /// </summary>
+        /// <param name="targetSheet">The worksheet to copy this sparkline group to</param>
         IXLSparklineGroup CopyTo(IXLWorksheet targetSheet);
 
         IXLSparkline GetSparkline(IXLCell cell);

@@ -732,7 +732,7 @@ namespace ClosedXML.Tests
         {
             using (var ms = new MemoryStream())
             using (var imageStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable))
-                .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
+                       .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             using (var wb1 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
@@ -1337,6 +1337,36 @@ namespace ClosedXML.Tests
 
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("XFF1"));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Cell("nonexistent_range"));
+        }
+
+        [Test]
+        public void Range_returns_range_from_a1_address_or_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            wb.NamedRanges.Add("book_range", ws.Range(2, 3, 5, 7)); // C2:G5
+            ws.NamedRanges.Add("sheet_range", ws.Range(1, 2, 3, 4)); // B1:D3
+
+            var singleCellRange = ws.Range("B4");
+            var areaCellRange = ws.Range("B4:D7");
+            var bookNamedRange = ws.Range("book_range");
+            var sheetNamedRange = ws.Range("sheet_range");
+
+            Assert.AreEqual("B4:B4", singleCellRange.RangeAddress.ToString());
+            Assert.AreEqual("B4:D7", areaCellRange.RangeAddress.ToString());
+            Assert.AreEqual("$C$2:$G$5", bookNamedRange.RangeAddress.ToString());
+            Assert.AreEqual("$B$1:$D$3", sheetNamedRange.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void Range_throws_exception_when_address_is_not_A1_address_or_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("XFF1"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("A4:ZZZ10"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = ws.Range("nonexistent_range"));
         }
     }
 }

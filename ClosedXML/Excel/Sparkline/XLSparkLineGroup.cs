@@ -10,6 +10,10 @@ namespace ClosedXML.Excel
 {
     internal class XLSparklineGroup : IXLSparklineGroup
     {
+        private XLWorksheet _worksheet;
+        private IXLRange _dateRange;
+        private IXLSparklineStyle _style;
+
         #region Public Properties
 
         public IXLRange DateRange
@@ -43,10 +47,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// The worksheet this sparkline group is associated with
         /// </summary>
-        public IXLWorksheet Worksheet { get; }
-
-        private IXLRange _dateRange;
-        private IXLSparklineStyle _style;
+        public IXLWorksheet Worksheet => _worksheet;
 
         #endregion Public Properties
 
@@ -150,9 +151,9 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
         {
-            var sourceDataRange = Worksheet.Workbook.Range(sourceDataAddress) ??
-                                  Worksheet.Range(sourceDataAddress);
-            return Add(Worksheet.Range(locationRangeAddress), sourceDataRange);
+            var sourceDataRange = _worksheet.Workbook.Range(sourceDataAddress) ??
+                                  _worksheet.Range(sourceDataAddress);
+            return Add(_worksheet.Range(locationRangeAddress), sourceDataRange);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace ClosedXML.Excel
             if (sparklineGroup.DateRange != null)
             {
                 DateRange = sparklineGroup.DateRange.Worksheet == sparklineGroup.Worksheet
-                    ? Worksheet.Range(sparklineGroup.DateRange.RangeAddress.ToString())
+                    ? _worksheet.Range(sparklineGroup.DateRange.RangeAddress.ToString())
                     : sparklineGroup.DateRange;
             }
 
@@ -179,11 +180,14 @@ namespace ClosedXML.Excel
             XLSparklineVerticalAxis.Copy(sparklineGroup.VerticalAxis, VerticalAxis);
         }
 
-        /// <summary>
-        /// Copy this sparkline group to the specified worksheet
-        /// </summary>
-        /// <param name="targetSheet">The worksheet to copy this sparkline group to</param>
-        public IXLSparklineGroup CopyTo(IXLWorksheet targetSheet)
+        /// <inheritdoc cref="IXLSparklineGroup.CopyTo(IXLWorksheet)"/>
+        IXLSparklineGroup IXLSparklineGroup.CopyTo(IXLWorksheet targetSheet)
+        {
+            return CopyTo((XLWorksheet)targetSheet);
+        }
+
+        /// <inheritdoc cref="IXLSparklineGroup.CopyTo(IXLWorksheet)"/>
+        internal IXLSparklineGroup CopyTo(XLWorksheet targetSheet)
         {
             if (targetSheet == Worksheet)
                 throw new InvalidOperationException(
@@ -327,7 +331,7 @@ namespace ClosedXML.Excel
         /// <returns>The new sparkline group added</returns>
         internal XLSparklineGroup(IXLWorksheet targetWorksheet)
         {
-            Worksheet = targetWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
+            _worksheet = targetWorksheet as XLWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
             HorizontalAxis = new XLSparklineHorizontalAxis(this);
             VerticalAxis = new XLSparklineVerticalAxis(this);
             HorizontalAxis.Color = XLColor.Black;

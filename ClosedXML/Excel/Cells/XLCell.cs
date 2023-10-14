@@ -1404,7 +1404,7 @@ namespace ClosedXML.Excel
             var shiftedRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(sourceDataAddress));
             var sourceDataWorksheet = otherCell.Worksheet == otherCell.Sparkline.SourceData.Worksheet
                 ? Worksheet
-                : otherCell.Sparkline.SourceData.Worksheet;
+                : (XLWorksheet)otherCell.Sparkline.SourceData.Worksheet;
             var sourceData = sourceDataWorksheet.Range(shiftedRangeAddress);
 
             IXLSparklineGroup group;
