@@ -205,7 +205,8 @@ namespace ClosedXML.Excel
         /// <summary>Returns the specified range.</summary>
         /// <para>e.g. Range("A1"), Range("A1:C2")</para>
         /// <param name="rangeAddress">The range boundaries.</param>
-        IXLRange? Range(string rangeAddress);
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="rangeAddress"/> is not a valid address or named range.</exception>
+        IXLRange Range(string rangeAddress);
 
         /// <summary>Returns the specified range.</summary>
         /// <param name="firstCell">The first cell in the range.</param>

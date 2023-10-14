@@ -465,9 +465,9 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
-        IXLRange? IXLWorksheet.Range(string rangeAddress)
+        IXLRange IXLWorksheet.Range(string rangeAddress)
         {
-            return Range(rangeAddress);
+            return Range(rangeAddress) ?? throw new ArgumentOutOfRangeException($"'{rangeAddress}' is not A1 address or named range.");
         }
 
         IXLRange IXLWorksheet.Range(IXLCell firstCell, IXLCell lastCell)
