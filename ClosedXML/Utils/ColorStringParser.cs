@@ -95,16 +95,10 @@ namespace ClosedXML.Utils
             var value = 0;
             for (var i = start; i < start + length; ++i)
             {
-                var c = text[i];
-                int b = c switch
-                {
-                    >= '0' and <= '9' => '0',
-                    >= 'A' and <= 'F' => 'A' - 10,
-                    >= 'a' and <= 'f' => 'a' - 10,
-                    _ => throw new FormatException($"Unable to parse {text.ToString()}.")
-                };
-                var charValue = c - b;
-                value = value * 16 + charValue;
+                if (!TryGetHex(text[i], out var hexDigit))
+                    throw new FormatException($"Unable to parse {text.ToString()}.");
+
+                value = value * 16 + (int)hexDigit;
             }
 
             return value;
