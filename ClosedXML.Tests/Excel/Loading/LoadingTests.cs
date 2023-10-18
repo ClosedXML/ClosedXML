@@ -664,5 +664,19 @@ namespace ClosedXML.Tests.Excel
                 wb.SaveAs(ms, true);
             }, @"TryToLoad\EmptyStyles.xlsx");
         }
+
+        [Test]
+        public void CanLoadInvalidColors()
+        {
+            // The styles.xml contains two invalid colors: '0' and 'FED+'. Both
+            // should be loaded and no exception thrown. The colors are
+            // converted using an Excel algorithm.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                var ws = wb.Worksheets.Single();
+                Assert.AreEqual(XLColor.FromArgb(0xFF000000), ws.Cell("A1").Style.Font.FontColor);
+                Assert.AreEqual(XLColor.FromArgb(0xFF000FED), ws.Cell("A2").Style.Fill.BackgroundColor);
+            }, @"TryToLoad\InvalidColors.xlsx");
+        }
     }
 }

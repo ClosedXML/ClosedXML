@@ -242,7 +242,7 @@ namespace ClosedXML.Utils
             XLColor? retVal = null;
             if (openXMLColor.Rgb?.Value is not null)
             {
-                var thisColor = ColorStringParser.ParseFromArgb(openXMLColor.Rgb.Value);
+                var thisColor = ColorStringParser.ParseFromArgb(openXMLColor.Rgb.Value.AsSpan());
                 retVal = XLColor.FromColor(thisColor);
             }
             else if (openXMLColor.Indexed is not null && openXMLColor.Indexed <= 64)
