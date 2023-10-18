@@ -5,8 +5,11 @@ namespace ClosedXML.Utils
 {
     internal static class ColorStringParser
     {
-        public static Color ParseFromArgb(string argbColor)
+        internal static Color ParseFromHtml(string argbColor)
         {
+            // Half working incorrect parser:
+            // * accepts #aarrggbb, but HTML would expect #rrggbbaa
+            // * doesn't accept color names
             ReadOnlySpan<char> argb = argbColor.AsSpan();
             if (argb[0] == '#')
                 argb = argb.Slice(1);
@@ -43,6 +46,35 @@ namespace ClosedXML.Utils
         }
 
         /// <summary>
+        /// Parse ARGB color stored in <c>ST_UnsignedIntHex</c> the same way as Excel does.
+        /// </summary>
+        internal static Color ParseFromArgb(ReadOnlySpan<char> argb)
+        {
+            // This algorithm mimics how Excel parses <c>ST_UnsignedIntHex</c> to color.
+            // ST_UnsignedIntHex should be exactly 8 digits and Excel uses black for longer texts.
+            if (argb.Length > 8)
+                return Color.Black;
+
+            // Excel tries to parse hex numbers as long as possible and shifts them,
+            // e.g. 'ABC+' is turned into 'FF000ABC'. Signed shift keeps highest bit,
+            // so keep color in uint.
+            uint color = 0x00000000;
+            var index = 0;
+            while (index < argb.Length && TryGetHex(argb[index], out var hexDigit))
+            {
+                color = (color << 4) | hexDigit;
+                index++;
+            }
+
+            // Although Excel always uses FF for alpha, keep alpha for valid AARRGGBB.
+            var isValidArgb = index == 8;
+            if (!isValidArgb)
+                color |= 0xFF000000;
+
+            return Color.FromArgb(unchecked((int)color));
+        }
+
+        /// <summary>
         /// Parse RRGGBB color.
         /// </summary>
         internal static Color ParseFromRgb(string rgbColor)
@@ -76,6 +108,25 @@ namespace ClosedXML.Utils
             }
 
             return value;
+        }
+
+        private static bool TryGetHex(char c, out uint hexDigit)
+        {
+            switch (c)
+            {
+                case >= '0' and <= '9':
+                    hexDigit = c - (uint)'0';
+                    return true;
+                case >= 'A' and <= 'F':
+                    hexDigit = c - (uint)'A' + 10;
+                    return true;
+                case >= 'a' and <= 'f':
+                    hexDigit = c - (uint)'a' + 10;
+                    return true;
+                default:
+                    hexDigit = 0;
+                    return false;
+            }
         }
     }
 }

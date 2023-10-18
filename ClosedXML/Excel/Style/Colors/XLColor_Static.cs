@@ -67,6 +67,11 @@ namespace ClosedXML.Excel
             return FromColor(Color.FromArgb(argb));
         }
 
+        internal static XLColor FromArgb(UInt32 argb)
+        {
+            return FromColor(Color.FromArgb(unchecked((int)argb)));
+        }
+
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
             return FromColor(Color.FromArgb(r, g, b));
@@ -106,7 +111,7 @@ namespace ClosedXML.Excel
 
         public static XLColor FromHtml(String htmlColor)
         {
-            return FromColor(ColorStringParser.ParseFromArgb(htmlColor));
+            return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
         public static XLColor FromIndex(Int32 index)
