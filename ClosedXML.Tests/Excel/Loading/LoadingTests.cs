@@ -452,7 +452,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanCorrectLoadWorkbookCellsWithTimeSpanDataTypeOrFormatting()
         {
-            string[] expected = { "13:30:55.2", "13:30:55.2", "13:30:55.2", "13:30:55.2", "0:30:55.2" };
+            string[] expected = Enumerable.Range(0, 10).Select(_ => "13:30:55.2").Concat(new[] { "0:30:55.2" }).ToArray();
             TestHelper.LoadAndAssert(wb =>
             {
                 for (int i = 0, row = 2; i < expected.Length; i++, row++)
