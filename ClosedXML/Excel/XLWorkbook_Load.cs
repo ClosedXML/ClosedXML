@@ -20,6 +20,7 @@ using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using static ClosedXML.Excel.XLPredefinedFormat.DateTime;
 
 namespace ClosedXML.Excel
 {
@@ -1536,13 +1537,26 @@ namespace ClosedXML.Excel
 
         private static XLDataType GetNumberDataType(XLNumberFormatValue numberFormat)
         {
-            var numberFormatId = numberFormat.NumberFormatId;
-            if (numberFormatId == 46U ||
-                (numberFormatId >= 18 && numberFormatId <= 21))
+            var numberFormatId = (XLPredefinedFormat.DateTime)numberFormat.NumberFormatId;
+            var isTimeOnlyFormat = numberFormatId is
+                Hour12MinutesAmPm or
+                Hour12MinutesSecondsAmPm or
+                Hour24Minutes or
+                Hour24MinutesSeconds or
+                MinutesSeconds or
+                Hour12MinutesSeconds or
+                MinutesSecondsMillis1;
+
+            if (isTimeOnlyFormat)
                 return XLDataType.TimeSpan;
 
-            if ((numberFormatId >= 14 && numberFormatId <= 22) ||
-                     (numberFormatId >= 45 && numberFormatId <= 47))
+            var isDateTimeFormat = numberFormatId is
+                    DayMonthYear4WithSlashes or
+                    DayMonthAbbrYear2WithDashes or
+                    DayMonthAbbrWithDash or
+                    MonthDayYear4WithDashesHour24Minutes;
+
+            if (isDateTimeFormat)
                 return XLDataType.DateTime;
 
             if (!String.IsNullOrWhiteSpace(numberFormat.Format))
@@ -1581,7 +1595,7 @@ namespace ClosedXML.Excel
                     // Excel treats "m" immediately after "hh" or "h" or immediately before "ss" or "s" as minutes, otherwise as a month value
                     // We can ignore the "hh" or "h" prefixes as these would have been detected by the preceding condition above.
                     // So we just need to make sure any 'm' is followed immediately by "ss" or "s" (excluding placeholders) to detect a timespan value
-                    for (Int32 j = i+1; j < length; j++)
+                    for (Int32 j = i + 1; j < length; j++)
                     {
                         if (f[j] == 'm')
                             continue;
