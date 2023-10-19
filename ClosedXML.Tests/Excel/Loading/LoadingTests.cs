@@ -440,7 +440,7 @@ namespace ClosedXML.Tests.Excel
             const string expected = "03/14/2012 13:30:55";
             TestHelper.LoadAndAssert(wb =>
             {
-                for (int row = 2; row < 16; row++)
+                for (int row = 2; row < 18; row++)
                 {
                     var cellToCheck = wb.Worksheet(1).Cell(row, 2);
                     Assert.AreEqual(XLDataType.DateTime, cellToCheck.DataType, $"Cell B{row} has incorrect DataType");
