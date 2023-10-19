@@ -437,9 +437,8 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanCorrectLoadWorkbookCellsWithDateTimeDataTypeOrFormatting()
         {
-            string expected = "03/14/2012 13:30:55";
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CellsWithDateTimeDataTypeOrFormatting.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            const string expected = "03/14/2012 13:30:55";
+            TestHelper.LoadAndAssert(wb =>
             {
                 for (int row = 2; row < 16; row++)
                 {
@@ -447,15 +446,14 @@ namespace ClosedXML.Tests.Excel
                     Assert.AreEqual(XLDataType.DateTime, cellToCheck.DataType, $"Cell B{row} has incorrect DataType");
                     Assert.AreEqual(expected, cellToCheck.Value.ToString(CultureInfo.InvariantCulture), $"Cell B{row} value differs");
                 }
-            }
+            }, @"TryToLoad\CellsWithDateTimeDataTypeOrFormatting.xlsx");
         }
 
         [Test]
         public void CanCorrectLoadWorkbookCellsWithTimeSpanDataTypeOrFormatting()
         {
             string[] expected = { "13:30:55.2", "13:30:55.2", "13:30:55.2", "13:30:55.2", "0:30:55.2" };
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CellsWithTimeSpanDataTypeOrFormatting.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            TestHelper.LoadAndAssert(wb =>
             {
                 for (int i = 0, row = 2; i < expected.Length; i++, row++)
                 {
@@ -463,14 +461,13 @@ namespace ClosedXML.Tests.Excel
                     Assert.AreEqual(XLDataType.TimeSpan, cellToCheck.DataType, $"Cell B{row} has incorrect DataType");
                     Assert.AreEqual(expected[i], cellToCheck.Value.ToString(CultureInfo.InvariantCulture), $"Cell B{row} value differs");
                 }
-            }
+            }, @"TryToLoad\CellsWithTimeSpanDataTypeOrFormatting.xlsx");
         }
 
         [Test]
         public void CanCorrectLoadWorkbookCellsWithDateTimesWithLocalePrefix()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CellsWithDateTimeWithLocalePrefix.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            TestHelper.LoadAndAssert(wb =>
             {
                 var ws = wb.Worksheet(1);
 
@@ -478,7 +475,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual("21-Jan-19", ws.Cell(2, 1).GetFormattedString());
                 Assert.AreEqual("Monday, 21 January 2019", ws.Cell(3, 1).GetFormattedString());
                 Assert.AreEqual("21 Jan 2019", ws.Cell(4, 1).GetFormattedString());
-            }
+            }, @"TryToLoad\CellsWithDateTimeWithLocalePrefix.xlsx");
         }
 
         [Test]
