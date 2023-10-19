@@ -159,8 +159,11 @@ namespace ClosedXML.Excel
             Hour12MinutesSeconds = 46,
 
             /// <summary>
-            /// mmss.0
+            /// mm:ss.0
             /// </summary>
+            /// <remarks>
+            /// OOXML specification is missing colon.
+            /// </remarks>
             MinutesSecondsMillis1 = 47,
 
             /// <summary>
@@ -205,7 +208,7 @@ namespace ClosedXML.Excel
                         {40, "#,##0.00;[Red](#,##0.00)"},
                         {45, "mm:ss"},
                         {46, "[h]:mm:ss"},
-                        {47, "mmss.0"},
+                        {47, "mm:ss.0"},
                         {48, "##0.0E+0"},
                         {49, "@"}
                     };
