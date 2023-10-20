@@ -1,10 +1,10 @@
 #nullable disable
 
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("WEEKDAY", 1, 2, Weekday); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, Workday, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
-            ce.RegisterFunction("YEAR", 1, Year); // Converts a serial number to a year
+            ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
             ce.RegisterFunction("YEARFRAC", 2, 3, Yearfrac); // Returns the year fraction representing the number of whole days between start_date and end_date
         }
 
@@ -378,16 +378,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Workday(startDate, testDate.AddDays(days), daysRequired, bankHolidays);
         }
 
-        private static object Year(List<Expression> p)
+        private static AnyValue Year(double serialDateTime)
         {
-            var date = (DateTime)p[0];
+            serialDateTime = Math.Truncate(serialDateTime);
+            if (serialDateTime < 0)
+                return XLError.NumberInvalid;
 
             // Serial date time values from [0, 1) are from 1899-12-31,
             // but Excel represents them as 1900-01-00.
-            if (date.Date == 0d.ToSerialDateTime())
+            if (serialDateTime < 1)
                 return 1900;
 
-            return date.Year;
+            return serialDateTime.ToSerialDateTime().Year;
         }
 
         private static object Yearfrac(List<Expression> p)
