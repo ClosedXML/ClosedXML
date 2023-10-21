@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -7,6 +6,96 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class FinancialTests
     {
+        [TestCase("FV(0.06/12,10,-200,-500,1)", 2581.4033740601362)]
+        [TestCase("FV(0.12/12,12,-1000)", 12682.503013196976)]
+        [TestCase("FV(0.11/12,35,-2000,,1)", 82846.24637190059)]
+        [TestCase("FV(0.06/12,12,-100,-1000,1)", 2301.4018303409139)]
+        public void Fv_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+        }
+
+        [TestCase("FV(0,1,1000)", -1000)] // Zero interest rate
+        [TestCase("FV(0,5,10000,5000)", -55000.00)] // Zero interest rate with present value
+        [TestCase("FV(-0.4,2,1000)", -1600.00)] // Negative interest rate
+        [TestCase("FV(0.01,0.5,1000)", -498.75621120889502)] // Non-integer period
+        [TestCase("FV(0.1,-2,1000)", 1735.5371900826453)] // Negative periods
+        [TestCase("FV(0.1,2,0,4)", -4.84)] // No PMT, but present value
+        [TestCase("FV(0,2,-1000)", 2000.00)] // Negative PMT - money is paid to us
+        [TestCase("FV(0.000001,1000,1000)", -1000499.6661261424)] // Small number and high number of periods, check for stability
+        public void Fv_EdgeCases(string formula, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void Fv_DefaultFutureValueIsZero()
+        {
+            Assert.AreEqual(XLWorkbook.EvaluateExpr("FV(0.1,2,1000)"), XLWorkbook.EvaluateExpr("FV(0.1,2,1000,0)"));
+        }
+
+        [Test]
+        public void Fv_DefaultTypeIsZero()
+        {
+            Assert.AreEqual(XLWorkbook.EvaluateExpr("FV(0.1,5,1000)"), XLWorkbook.EvaluateExpr("FV(0.1,5,1000,0,0)"));
+        }
+
+        [Test]
+        public void Fv_ZeroPeriodsReturnsNumError()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("FV(0.1,0,1000)"));
+        }
+
+        [TestCase("IPMT(0.1/12,1,3*12,8000)", -66.666666666666686)]
+        [TestCase("IPMT(0.1,3,3,8000)", -292.4471299093658)]
+        public void Ipmt_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+        }
+
+        [TestCase("IPMT(0,1,1,1000)", 0)] // Zero interest rate
+        [TestCase("IPMT(0,1,5,10000,5000)", 0)] // Zero interest rate with future value
+        [TestCase("IPMT(-0.4,1,2,1000)", 400.00)] // Negative interest rate
+        [TestCase("IPMT(0.01,1,0.5,1000)", -10.00)] // Non-integer period
+        [TestCase("IPMT(0.01,1,1.4,1000)", -10.00)] // Different non-integer period
+        [TestCase("IPMT(0.1,1,2,0,4)", 0)] // No principal, but future value
+        [TestCase("IPMT(0.1,1,2,-1000)", 100)] // Negative principal - money is paid to us
+        [TestCase("IPMT(0.000001,1,1000,1000)", -0.001)] // Small number and high number of periods, check for stability
+        public void Ipmt_EdgeCases(string formula, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void Ipmt_DefaultFutureValueIsZero()
+        {
+            Assert.AreEqual(XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000)"), XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000,0)"));
+        }
+
+        [Test]
+        public void Ipmt_DefaultTypeIsZero()
+        {
+            Assert.AreEqual(XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000)"), XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000,0,0)"));
+        }
+
+        [Test]
+        public void Ipmt_ZeroOrNegativePeriodsReturnsNumError()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,1,0,1000)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,1,-1,1000)"));
+        }
+
+        [Test]
+        public void Ipmt_PeriodOutOfRangeReturnsNumError()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,0,1,1000)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,2,1,1000)"));
+        }
+
         [TestCase("PMT(0.08/12,10,10000)", -1037.03208935915)]
         [TestCase("PMT(0.08/12,10,10000,0,1)", -1030.16432717797)]
         public void Pmt_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)

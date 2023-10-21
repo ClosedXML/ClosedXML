@@ -223,6 +223,50 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptLastTwoOptional(Func<double, double, double, double, double, bool, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToNumber(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1Converted = ToNumber(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var arg2Converted = ToNumber(args[2], ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                var arg3Converted = ToNumber(args[3], ctx);
+                if (!arg3Converted.TryPickT0(out var arg3, out var err3))
+                    return err3;
+
+                var arg4Optional = 0d;
+                if (args.Length >= 5)
+                {
+                    var arg4Converted = ToNumber(args[4], ctx);
+                    if (!arg4Converted.TryPickT0(out var arg4, out var err4))
+                        return err4;
+
+                    arg4Optional = arg4;
+                }
+
+                var arg5Optional = false;
+                if (args.Length >= 6)
+                {
+                    var arg5Converted = CoerceToLogical(args[5], ctx);
+                    if (!arg5Converted.TryPickT0(out var arg5, out var err5))
+                        return err5;
+
+                    arg5Optional = arg5;
+                }
+
+                return f(arg0, arg1, arg2, arg3, arg4Optional, arg5Optional);
+            };
+        }
+
         #endregion
 
         #region Value converters

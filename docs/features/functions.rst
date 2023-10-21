@@ -355,7 +355,7 @@ Standard functions
      - No
 
    * - FV
-     - No
+     - YES
 
    * - FVSCHEDULE
      - No
@@ -364,7 +364,7 @@ Standard functions
      - No
 
    * - IPMT
-     - No
+     - YES
 
    * - IRR
      - No
