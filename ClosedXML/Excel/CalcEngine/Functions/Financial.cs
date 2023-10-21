@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
@@ -28,10 +26,10 @@ namespace ClosedXML.Excel.CalcEngine
             // DOLLARFR Converts a dollar price, expressed as a decimal number, into a dollar price, expressed as a fraction
             // DURATION Returns the annual duration of a security with periodic interest payments
             // EFFECT Returns the effective annual interest rate
-            // FV Returns the future value of an investment
+            ce.RegisterFunction("FV", 3, 5, AdaptLastTwoOptional(Fv), FunctionFlags.Scalar); // Returns the future value of an investment
             // FVSCHEDULE Returns the future value of an initial principal after applying a series of compound interest rates
             // INTRATE Returns the interest rate for a fully invested security
-            // IPMT Returns the interest payment for an investment for a given period
+            ce.RegisterFunction("IPMT", 4, 6, AdaptLastTwoOptional(Ipmt), FunctionFlags.Scalar); // Returns the interest payment for an investment for a given period
             // IRR Returns the internal rate of return for a series of cash flows
             // ISPMT Calculates the interest paid during a specific period of an investment
             // MDURATION Returns the Macauley modified duration for a security with an assumed par value of $100
@@ -66,11 +64,53 @@ namespace ClosedXML.Excel.CalcEngine
             // YIELDMAT Returns the annual yield of a security that pays interest at maturity
         }
 
+        private static AnyValue Fv(double rate, double numberOfPayments, double pmt, double presentValue, bool type)
+        {
+            if (numberOfPayments == 0)
+                return XLError.NumberInvalid;
+
+            return FvInternal(rate, numberOfPayments, pmt, presentValue, type);
+        }
+
+        private static double FvInternal(double rate, double numberOfPayments, double pmt, double presentValue, bool type)
+        {
+            if (rate == 0.0)
+                return -(pmt * numberOfPayments + presentValue);
+
+            if (type)
+                pmt *= (1 + rate);
+
+            return -(pmt * (Math.Pow(1 + rate, numberOfPayments) - 1) / rate + presentValue * Math.Pow(1 + rate, numberOfPayments));
+        }
+
+        private static AnyValue Ipmt(double rate, double period, double numberOfPayments, double presentValue, double futureValue, bool type)
+        {
+            if (numberOfPayments <= 0)
+                return XLError.NumberInvalid;
+
+            numberOfPayments = Math.Ceiling(numberOfPayments);
+
+            if (period < 1 || period > numberOfPayments)
+                return XLError.NumberInvalid;
+
+            double ipmt = FvInternal(rate, period - 1, PmtInternal(rate, numberOfPayments, presentValue, futureValue, type), presentValue, type) * rate;
+
+            if (type)
+                ipmt /= (1 + rate);
+
+            return ipmt;
+        }
+
         private static AnyValue Pmt(double rate, double numberOfPayments, double presentValue, double futureValue, bool type)
         {
             if (numberOfPayments == 0)
                 return XLError.NumberInvalid;
 
+            return PmtInternal(rate, numberOfPayments, presentValue, futureValue, type);
+        }
+
+        private static double PmtInternal(double rate, double numberOfPayments, double presentValue, double futureValue, bool type)
+        {
             if (rate == 0.0)
                 return -(presentValue + futureValue) / numberOfPayments;
 
