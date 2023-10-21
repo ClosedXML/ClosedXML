@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("COLUMNS", 1, 1, Adapt(Columns), FunctionFlags.Range, AllowRange.All); // Returns the number of columns in a reference
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
-            ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
+            ce.RegisterFunction("HLOOKUP", 3, 4, AdaptLastOptional(Hlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
             ce.RegisterFunction("HYPERLINK", 1, 2, Adapt(Hyperlink), FunctionFlags.Scalar | FunctionFlags.SideEffect); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             ce.RegisterFunction("INDEX", 2, 4, Index, AllowRange.Only, 0, 1); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
@@ -60,49 +60,64 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return RowsOrColumns(value, false);
         }
 
-        private static object Hlookup(List<Expression> p)
+        private static AnyValue Hlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue rowIndex, ScalarValue flagValue)
         {
-            var lookup_value = p[0];
+            if (lookupValue.IsError)
+                return lookupValue.ToAnyValue();
 
-            if (!CalcEngineHelpers.TryExtractRange(p[1], out var range, out var error))
-                return error;
+            // Only the lookup value is converted to 0, not values in the range
+            if (lookupValue.IsBlank)
+                lookupValue = 0;
 
-            var row_index_num = (int)p[2];
-            var range_lookup = p.Count < 4
-                               || p[3] is EmptyValueExpression
-                               || (bool)(p[3]);
+            if (lookupValue.TryPickText(out var lookupText, out _) && lookupText.Length > 255)
+                return XLError.IncompatibleValue;
 
-            if (row_index_num < 1)
-                return XLError.CellReference;
-
-            if (row_index_num > range.RowCount())
-                return XLError.CellReference;
-
-            IXLRangeColumn matching_column;
-            matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
-            if (range_lookup && matching_column == null)
+            if (rangeValue.TryPickScalar(out _, out var range))
+                return XLError.NoValueAvailable;
+            if (!range.TryPickT0(out var array, out var reference))
             {
-                var first_column = range.FirstColumn().ColumnNumber();
-                var number_of_columns_in_range = range.ColumnsUsed().Count();
+                if (reference.Areas.Count > 1)
+                    return XLError.NoValueAvailable;
 
-                matching_column = range.FindColumn(c =>
-                {
-                    var column_index_in_range = c.ColumnNumber() - first_column + 1;
-                    if (column_index_in_range < number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
-                        return true;
-                    else if (column_index_in_range == number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
-                        return true;
-                    else
-                        return false;
-                });
+                array = new ReferenceArray(reference.Areas.Single(), ctx);
             }
 
-            if (matching_column == null)
-                return XLError.NoValueAvailable;
+            if (!rowIndex.ToNumber(ctx.Culture).TryPickT0(out var row, out var error))
+                return error;
+            var rowIdx = (int)row;
+            if (rowIdx < 1)
+                return XLError.IncompatibleValue;
+            if (rowIdx > array.Height)
+                return XLError.CellReference;
 
-            return matching_column
-                .Cell(row_index_num)
-                .Value;
+            var approximateSearchFlag = true;
+            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrBlankOrNumberOrText(out approximateSearchFlag, out var flagError))
+                return flagError;
+
+            if (approximateSearchFlag)
+            {
+                // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
+                var foundRow = Bisection(array, lookupValue);
+                if (foundRow == -1)
+                    return XLError.NoValueAvailable;
+
+                return array[rowIdx - 1, foundRow].ToAnyValue();
+            }
+            else
+            {
+                // TODO: Implement wildcard search
+                for (var columnIndex = 0; columnIndex < array.Width; columnIndex++)
+                {
+                    var currentValue = array[0, columnIndex];
+
+                    // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
+                    var comparison = ScalarValueComparer.SortIgnoreCase.Compare(currentValue, lookupValue);
+                    if (comparison == 0)
+                        return array[rowIdx - 1, columnIndex].ToAnyValue();
+                }
+
+                return XLError.NoValueAvailable;
+            }
         }
 
         private static AnyValue Hyperlink(CalcContext ctx, string linkLocation, ScalarValue? friendlyName)
