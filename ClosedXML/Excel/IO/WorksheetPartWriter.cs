@@ -888,7 +888,6 @@ namespace ClosedXML.Excel.IO
                 cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
 
-                UInt32 dataValidationCount = 0;
                 foreach (var (dv, minValue, maxValue) in dataValidationsStandard)
                 {
                     var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
@@ -911,9 +910,8 @@ namespace ClosedXML.Excel.IO
                     };
 
                     dataValidations.AppendChild(dataValidation);
-                    dataValidationCount++;
                 }
-                dataValidations.Count = dataValidationCount;
+                dataValidations.Count = (UInt32)dataValidationsStandard.Count;
             }
 
             // Second phase, save all the data validations that reference other sheets into the worksheet extensions.
@@ -990,7 +988,7 @@ namespace ClosedXML.Excel.IO
                     };
                     extensionDataValidations.AppendChild(dataValidation);
                 }
-                extensionDataValidations.Count = extensionDataValidations.Count;
+                extensionDataValidations.Count = (UInt32)dataValidationsExtension.Count;
             }
 
             #endregion DataValidations
