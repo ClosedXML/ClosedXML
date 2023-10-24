@@ -822,14 +822,56 @@ namespace ClosedXML.Excel.IO
 
             #region DataValidations
 
-            const string dataValidationsExtensionUri = "{CCE6A557-97BC-4b89-ADB6-D9C93CAAB3DF}";
-            List<X14.DataValidation> dataValidationsExtensionTemp = new List<X14.DataValidation>();
-
             // Saving of data validations happens in 2 phases because depending on the data validation
             // content, it gets saved into 1 of 2 possible locations in the XML structure.
             // First phase, save all the data validations that aren't references to other sheets into
             // the standard data validations section.
-            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
+            var dataValidationsStandard = new List<(IXLDataValidation DataValidation, string MinValue, string MaxValue)>();
+            var dataValidationsExtension = new List<(IXLDataValidation DataValidation, string MinValue, string MaxValue)>();
+            if (options.ConsolidateDataValidationRanges)
+            {
+                xlWorksheet.DataValidations.Consolidate();
+            }
+
+            foreach (var dv in xlWorksheet.DataValidations)
+            {
+                var (minReferencesAnotherSheet, minValue) = UsesExternalSheet(xlWorksheet, dv.MinValue);
+                var (maxReferencesAnotherSheet, maxValue) = UsesExternalSheet(xlWorksheet, dv.MaxValue);
+
+                static (bool, string) UsesExternalSheet(XLWorksheet sheet, string value)
+                {
+                    if (!XLHelper.IsValidRangeAddress(value))
+                        return (false, value);
+
+                    var separatorIndex = value.LastIndexOf('!');
+                    var hasSheet = separatorIndex >= 0;
+                    if (!hasSheet)
+                        return (false, value);
+
+                    var sheetName = value[..separatorIndex].UnescapeSheetName();
+                    if (XLHelper.SheetComparer.Equals(sheet.Name, sheetName))
+                    {
+                        // The spec wants us to include references to ranges on the same worksheet without the sheet name
+                        return (false, value.Substring(separatorIndex + 1));
+                    }
+
+                    return (true, value);
+                }
+
+                if (minReferencesAnotherSheet || maxReferencesAnotherSheet)
+                {
+                    // We're dealing with a data validation that references another sheet so has to be saved to extensions
+                    dataValidationsExtension.Add((dv, minValue, maxValue));
+                }
+                else
+                {
+                    // We're dealing with a standard data validation
+                    dataValidationsStandard.Add((dv, minValue, maxValue));
+                }
+            }
+
+            // Save validations that don't use another sheet. It must have at least 1 child, XML doesn't allow 0.
+            if (!dataValidationsStandard.Any(d => d.DataValidation.IsDirty()))
             {
                 worksheet.RemoveAllChildren<DataValidations>();
                 cm.SetElement(XLWorksheetContents.DataValidations, null);
@@ -846,96 +888,41 @@ namespace ClosedXML.Excel.IO
                 cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
 
-                if (options.ConsolidateDataValidationRanges)
-                {
-                    xlWorksheet.DataValidations.Consolidate();
-                }
-
                 UInt32 dataValidationCount = 0;
-                foreach (var dv in xlWorksheet.DataValidations)
+                foreach (var (dv, minValue, maxValue) in dataValidationsStandard)
                 {
                     var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
-
-                    var (minReferencesAnotherSheet, minValue) = UsesExternalSheet(xlWorksheet, dv.MinValue);
-                    var (maxReferencesAnotherSheet, maxValue) = UsesExternalSheet(xlWorksheet, dv.MaxValue);
-
-                    static (bool, string) UsesExternalSheet(XLWorksheet sheet, string value)
+                    var dataValidation = new DataValidation
                     {
-                        if (!XLHelper.IsValidRangeAddress(value))
-                            return (false, value);
+                        AllowBlank = dv.IgnoreBlanks,
+                        Formula1 = new Formula1(minValue),
+                        Formula2 = new Formula2(maxValue),
+                        Type = dv.AllowedValues.ToOpenXml(),
+                        ShowErrorMessage = dv.ShowErrorMessage,
+                        Prompt = dv.InputMessage,
+                        PromptTitle = dv.InputTitle,
+                        ErrorTitle = dv.ErrorTitle,
+                        Error = dv.ErrorMessage,
+                        ShowDropDown = !dv.InCellDropdown,
+                        ShowInputMessage = dv.ShowInputMessage,
+                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                        Operator = dv.Operator.ToOpenXml(),
+                        SequenceOfReferences = new ListValue<StringValue> { InnerText = sequence }
+                    };
 
-                        var separatorIndex = value.LastIndexOf('!');
-                        var hasSheet = separatorIndex >= 0;
-                        if (!hasSheet)
-                            return (false, value);
-
-                    var sheetName = value[..separatorIndex].UnescapeSheetName();
-                    if (XLHelper.SheetComparer.Equals(sheet.Name, sheetName))
-                    {
-                        // The spec wants us to include references to ranges on the same worksheet without the sheet name
-                        return (false, value.Substring(separatorIndex + 1));
-                    }
-
-                        return (true, value);
-                    }
-
-                    if (minReferencesAnotherSheet || maxReferencesAnotherSheet)
-                    {
-                        // We're dealing with a data validation that references another sheet so has to be saved to extensions
-                        var dataValidation = new X14.DataValidation
-                        {
-                            AllowBlank = dv.IgnoreBlanks,
-                            DataValidationForumla1 = !string.IsNullOrWhiteSpace(minValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(minValue)) : null,
-                            DataValidationForumla2 = !string.IsNullOrWhiteSpace(maxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(maxValue)) : null,
-                            Type = dv.AllowedValues.ToOpenXml(),
-                            ShowErrorMessage = dv.ShowErrorMessage,
-                            Prompt = dv.InputMessage,
-                            PromptTitle = dv.InputTitle,
-                            ErrorTitle = dv.ErrorTitle,
-                            Error = dv.ErrorMessage,
-                            ShowDropDown = !dv.InCellDropdown,
-                            ShowInputMessage = dv.ShowInputMessage,
-                            ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                            Operator = dv.Operator.ToOpenXml(),
-                            ReferenceSequence = new OfficeExcel.ReferenceSequence() { Text = sequence }
-                        };
-
-                        dataValidationsExtensionTemp.Add(dataValidation);
-                    }
-                    else
-                    {
-                        // We're dealing with a standard data validation
-                        var dataValidation = new DataValidation
-                        {
-                            AllowBlank = dv.IgnoreBlanks,
-                            Formula1 = new Formula1(minValue),
-                            Formula2 = new Formula2(maxValue),
-                            Type = dv.AllowedValues.ToOpenXml(),
-                            ShowErrorMessage = dv.ShowErrorMessage,
-                            Prompt = dv.InputMessage,
-                            PromptTitle = dv.InputTitle,
-                            ErrorTitle = dv.ErrorTitle,
-                            Error = dv.ErrorMessage,
-                            ShowDropDown = !dv.InCellDropdown,
-                            ShowInputMessage = dv.ShowInputMessage,
-                            ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                            Operator = dv.Operator.ToOpenXml(),
-                            SequenceOfReferences = new ListValue<StringValue> { InnerText = sequence }
-                        };
-
-                        dataValidations.AppendChild(dataValidation);
-                        dataValidationCount++;
-                    }
+                    dataValidations.AppendChild(dataValidation);
+                    dataValidationCount++;
                 }
                 dataValidations.Count = dataValidationCount;
             }
 
             // Second phase, save all the data validations that reference other sheets into the worksheet extensions.
-            if (dataValidationsExtensionTemp.Count == 0)
+            const string dataValidationsExtensionUri = "{CCE6A557-97BC-4b89-ADB6-D9C93CAAB3DF}";
+            if (dataValidationsExtension.Count == 0)
             {
                 var worksheetExtensionList = worksheet.Elements<WorksheetExtensionList>().FirstOrDefault();
                 var worksheetExtension = worksheetExtensionList?.Elements<WorksheetExtension>()
-                    .FirstOrDefault(ext => string.Equals(ext.Uri, dataValidationsExtensionUri, StringComparison.InvariantCultureIgnoreCase));
+                    .FirstOrDefault(ext => string.Equals(ext.Uri, dataValidationsExtensionUri, StringComparison.OrdinalIgnoreCase));
 
                 worksheetExtension?.RemoveAllChildren<X14.DataValidations>();
 
@@ -981,9 +968,27 @@ namespace ClosedXML.Excel.IO
                     extensionDataValidations.RemoveAllChildren();
                 }
 
-                foreach (var extensionData in dataValidationsExtensionTemp)
+                foreach (var (dv, minValue, maxValue) in dataValidationsExtension)
                 {
-                    extensionDataValidations.AppendChild(extensionData);
+                    var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
+                    var dataValidation = new X14.DataValidation
+                    {
+                        AllowBlank = dv.IgnoreBlanks,
+                        DataValidationForumla1 = !string.IsNullOrWhiteSpace(minValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(minValue)) : null,
+                        DataValidationForumla2 = !string.IsNullOrWhiteSpace(maxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(maxValue)) : null,
+                        Type = dv.AllowedValues.ToOpenXml(),
+                        ShowErrorMessage = dv.ShowErrorMessage,
+                        Prompt = dv.InputMessage,
+                        PromptTitle = dv.InputTitle,
+                        ErrorTitle = dv.ErrorTitle,
+                        Error = dv.ErrorMessage,
+                        ShowDropDown = !dv.InCellDropdown,
+                        ShowInputMessage = dv.ShowInputMessage,
+                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                        Operator = dv.Operator.ToOpenXml(),
+                        ReferenceSequence = new OfficeExcel.ReferenceSequence() { Text = sequence }
+                    };
+                    extensionDataValidations.AppendChild(dataValidation);
                 }
                 extensionDataValidations.Count = extensionDataValidations.Count;
             }
