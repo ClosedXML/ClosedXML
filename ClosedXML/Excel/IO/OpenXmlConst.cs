@@ -9,6 +9,10 @@ namespace ClosedXML.Excel.IO
     {
         public const string Main2006SsNs = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
+        public const string XmMain2006 = "http://schemas.microsoft.com/office/excel/2006/main";
+
+        public const string X14Main2009SsNs = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main";
+
         public const string X14Ac2009SsNs = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac";
 
         public const string Xml1998Ns = "http://www.w3.org/XML/1998/namespace";

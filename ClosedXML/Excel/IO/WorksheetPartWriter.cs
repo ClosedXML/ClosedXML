@@ -661,7 +661,7 @@ namespace ClosedXML.Excel.IO
                 if (conditionalFormattings == null || !conditionalFormattings.Any())
                 {
                     WorksheetExtension worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
-                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtension1.AddNamespaceDeclaration("x14", X14Main2009SsNs);
                     worksheetExtensionList.Append(worksheetExtension1);
 
                     conditionalFormattings = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings();
@@ -687,7 +687,7 @@ namespace ClosedXML.Excel.IO
                         }
 
                         var conditionalFormatting = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting();
-                        conditionalFormatting.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                        conditionalFormatting.AddNamespaceDeclaration("xm", XmMain2006);
                         conditionalFormatting.Append(XLCFConvertersExtension.Convert(xlConditionalFormat, context));
                         var referenceSequence = new DocumentFormat.OpenXml.Office.Excel.ReferenceSequence { Text = cfGroup.RangeId };
                         conditionalFormatting.Append(referenceSequence);
@@ -741,11 +741,11 @@ namespace ClosedXML.Excel.IO
                 if (sparklineGroups == null || !sparklineGroups.Any())
                 {
                     var worksheetExtension1 = new WorksheetExtension() { Uri = sparklineGroupsExtensionUri };
-                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtension1.AddNamespaceDeclaration("x14", X14Main2009SsNs);
                     worksheetExtensionList.Append(worksheetExtension1);
 
                     sparklineGroups = new X14.SparklineGroups();
-                    sparklineGroups.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    sparklineGroups.AddNamespaceDeclaration("xm", XmMain2006);
                     worksheetExtension1.Append(sparklineGroups);
                 }
                 else
@@ -955,13 +955,13 @@ namespace ClosedXML.Excel.IO
 
                 if (extensionDataValidations == null || !extensionDataValidations.Any())
                 {
-                    var worksheetExtension1 = new WorksheetExtension() { Uri = dataValidationsExtensionUri };
-                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
-                    worksheetExtensionList.Append(worksheetExtension1);
+                    var worksheetExtension = new WorksheetExtension() { Uri = dataValidationsExtensionUri };
+                    worksheetExtension.AddNamespaceDeclaration("x14", X14Main2009SsNs);
+                    worksheetExtensionList.Append(worksheetExtension);
 
                     extensionDataValidations = new X14.DataValidations();
-                    extensionDataValidations.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
-                    worksheetExtension1.Append(extensionDataValidations);
+                    extensionDataValidations.AddNamespaceDeclaration("xm", XmMain2006);
+                    worksheetExtension.Append(extensionDataValidations);
                 }
                 else
                 {
