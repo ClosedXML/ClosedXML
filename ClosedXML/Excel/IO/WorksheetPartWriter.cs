@@ -854,10 +854,7 @@ namespace ClosedXML.Excel.IO
                 UInt32 dataValidationCount = 0;
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
-                    var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
-
-                    if (sequence.Length > 0)
-                        sequence = sequence.Substring(0, sequence.Length - 1);
+                    var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
 
                     var (minReferencesAnotherSheet, minValue) = UsesExternalSheet(xlWorksheet, dv.MinValue);
                     var (maxReferencesAnotherSheet, maxValue) = UsesExternalSheet(xlWorksheet, dv.MaxValue);
