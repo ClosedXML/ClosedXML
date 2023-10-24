@@ -859,48 +859,37 @@ namespace ClosedXML.Excel.IO
                     if (sequence.Length > 0)
                         sequence = sequence.Substring(0, sequence.Length - 1);
 
-                    bool hasReferenceToAnotherSheet = false;
-                    if (XLHelper.IsValidRangeAddress(dv.MinValue) && dv.MinValue.Contains('!'))
+                    var (minReferencesAnotherSheet, minValue) = UsesExternalSheet(xlWorksheet, dv.MinValue);
+                    var (maxReferencesAnotherSheet, maxValue) = UsesExternalSheet(xlWorksheet, dv.MaxValue);
+
+                    static (bool, string) UsesExternalSheet(XLWorksheet sheet, string value)
                     {
-                        var range = xlWorksheet.Workbook.Range(dv.MinValue);
-                        if (range != null)
-                        {
-                            if (range.Worksheet != xlWorksheet)
-                            {
-                                hasReferenceToAnotherSheet = true;
-                            }
-                            else
-                            {
-                                // The spec wants us to include references to ranges on the same worksheet without the sheet name
-                                dv.MinValue = range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, false);
-                            }
-                        }
-                    }
-                    if (!hasReferenceToAnotherSheet && XLHelper.IsValidRangeAddress(dv.MaxValue) && dv.MaxValue.Contains('!'))
+                        if (!XLHelper.IsValidRangeAddress(value))
+                            return (false, value);
+
+                        var separatorIndex = value.LastIndexOf('!');
+                        var hasSheet = separatorIndex >= 0;
+                        if (!hasSheet)
+                            return (false, value);
+
+                    var sheetName = value[..separatorIndex].UnescapeSheetName();
+                    if (XLHelper.SheetComparer.Equals(sheet.Name, sheetName))
                     {
-                        var range = xlWorksheet.Workbook.Range(dv.MaxValue);
-                        if (range != null)
-                        {
-                            if (range.Worksheet != xlWorksheet)
-                            {
-                                hasReferenceToAnotherSheet = true;
-                            }
-                            else
-                            {
-                                // The spec wants us to include references to ranges on the same worksheet without the sheet name
-                                dv.MaxValue = range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, false);
-                            }
-                        }
+                        // The spec wants us to include references to ranges on the same worksheet without the sheet name
+                        return (false, value.Substring(separatorIndex + 1));
                     }
 
-                    if (hasReferenceToAnotherSheet)
+                        return (true, value);
+                    }
+
+                    if (minReferencesAnotherSheet || maxReferencesAnotherSheet)
                     {
                         // We're dealing with a data validation that references another sheet so has to be saved to extensions
                         var dataValidation = new X14.DataValidation
                         {
                             AllowBlank = dv.IgnoreBlanks,
-                            DataValidationForumla1 = !string.IsNullOrWhiteSpace(dv.MinValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(dv.MinValue)) : null,
-                            DataValidationForumla2 = !string.IsNullOrWhiteSpace(dv.MaxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(dv.MaxValue)) : null,
+                            DataValidationForumla1 = !string.IsNullOrWhiteSpace(minValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(minValue)) : null,
+                            DataValidationForumla2 = !string.IsNullOrWhiteSpace(maxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(maxValue)) : null,
                             Type = dv.AllowedValues.ToOpenXml(),
                             ShowErrorMessage = dv.ShowErrorMessage,
                             Prompt = dv.InputMessage,
@@ -922,8 +911,8 @@ namespace ClosedXML.Excel.IO
                         var dataValidation = new DataValidation
                         {
                             AllowBlank = dv.IgnoreBlanks,
-                            Formula1 = new Formula1(dv.MinValue),
-                            Formula2 = new Formula2(dv.MaxValue),
+                            Formula1 = new Formula1(minValue),
+                            Formula2 = new Formula2(maxValue),
                             Type = dv.AllowedValues.ToOpenXml(),
                             ShowErrorMessage = dv.ShowErrorMessage,
                             Prompt = dv.InputMessage,
@@ -2277,7 +2266,7 @@ namespace ClosedXML.Excel.IO
                     }
                     xml.WriteEndElement(); // cell
                 }
-                else if(xlCell.DataType != XLDataType.Blank)
+                else if (xlCell.DataType != XLDataType.Blank)
                 {
                     // Cell contains only a value
                     var dataType = GetCellValueType(xlCell);
