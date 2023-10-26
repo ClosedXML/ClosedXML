@@ -840,5 +840,19 @@ namespace ClosedXML.Tests.Excel.Saving
                 File.Delete(filename2);
             }
         }
+
+        [Test]
+        public void FormControlsArePreserved()
+        {
+            // The sheet contains three form controls: two radio buttons and group box.
+            // Form controls are rather complex and this test ensures that the saved
+            // file still has VML part (that is the source of truth), drawing part
+            // (likely a replacement in a decade or two) and three control parts.
+            //
+            // Also check that custom text of the form controls is preserved (stored in VML).
+            TestHelper.LoadSaveAndCompare(
+                @"Other\Shapes\sheet-with-form-controls-input.xlsx",
+                @"Other\Shapes\sheet-with-form-controls-output.xlsx");
+        }
     }
 }
