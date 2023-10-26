@@ -1,4 +1,4 @@
-version: 0.103.0.{build}
+version: 0.104.0.{build}
 
 image: Visual Studio 2022
 
