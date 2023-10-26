@@ -28,6 +28,12 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Nuget won't accept dll in nuget and pdb in snupkg because they have different checksum.
+         That is likely causes by Fody https://github.com/jbevain/cecil/issues/610. In the meantime,
+         just include pdb directly to nuget. Pdb also has to embed untracked sources (likely sources
+         for Polyfill package, because they are not a stored in repository). -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 
     <LangVersion>9.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
