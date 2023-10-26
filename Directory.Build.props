@@ -14,9 +14,7 @@
 
     <Authors>Jan Havlíček, Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
     <Owners>Jan Havlíček, Francois Botha, Aleksei Pankratev</Owners>
-    <Company />
 
-    <Copyright>MIT</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <PackageIcon>nuget-logo.png</PackageIcon>
