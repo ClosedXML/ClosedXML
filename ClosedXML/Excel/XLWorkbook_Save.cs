@@ -243,11 +243,17 @@ namespace ClosedXML.Excel
                 var worksheetHasComments = worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any();
 
                 var commentsPart = worksheetPart.WorksheetCommentsPart;
+
+                // VML part is the source of truth for shapes of comments, form controls and likely others.
+                // Excel won't display any shape without VML. The drawing part is always present, but is likely
+                // only different rendering of VML (more precisely the shapes behind VML).
                 var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
                 var hasAnyVmlElements = DeleteExistingCommentsShapes(vmlDrawingPart);
 
                 if (worksheetHasComments)
                 {
+                    // If sheet has comments, we must keep VML in legacy drawing part to display them
+                    // as well as comments part for semantic reasons.
                     if (commentsPart == null)
                     {
                         commentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
@@ -268,13 +274,17 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    worksheet.LegacyDrawingId = null;
+                    // There are no comments in the worksheet = the comment part is no longer needed,
+                    // but VML part might contain other shapes, like form controls.
                     if (commentsPart is not null)
                         worksheetPart.DeletePart(commentsPart);
                 }
 
-                if (!hasAnyVmlElements && vmlDrawingPart != null)
+                if (!hasAnyVmlElements && vmlDrawingPart is not null)
+                {
+                    worksheet.LegacyDrawingId = null;
                     worksheetPart.DeletePart(vmlDrawingPart);
+                }
 
                 var xlTables = worksheet.Tables;
 
