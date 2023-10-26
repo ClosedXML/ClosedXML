@@ -46,7 +46,7 @@
   </PropertyGroup>
 
   <!-- Make deterministic build (same binary is produced regardless of the machine building it) for CI -->
-  <PropertyGroup Condition="'$(APPVEYOR)' == 'true'">
+  <PropertyGroup Condition="'$(APPVEYOR)' != ''">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
