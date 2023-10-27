@@ -206,25 +206,31 @@ namespace ClosedXML.Excel
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
+                position++;
+                var sheetName = dSheet.Name;
+                var sheetId = dSheet.SheetId.Value;
+
                 if (string.IsNullOrEmpty(dSheet.Id))
                 {
                     // Some non-Excel producers create sheets with empty relId.
+                    var emptySheet = WorksheetsInternal.Add(sheetName, position, sheetId);
+                    if (dSheet.State != null)
+                        emptySheet.Visibility = dSheet.State.Value.ToClosedXml();
+
                     continue;
                 }
 
-                position++;
-                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
-
+                // Although relationship to worksheet is most common, there can be other types
+                // than worksheet, e.g. chartSheet. Since we can't load them, add them to list
+                // of unsupported sheets and copy them when saving. See Codeplex #6932.
                 var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
-
                 if (worksheetPart == null)
                 {
-                    UnsupportedSheets.Add(new UnsupportedSheet { SheetId = dSheet.SheetId.Value, Position = position });
+                    UnsupportedSheets.Add(new UnsupportedSheet { SheetId = sheetId, Position = position });
                     continue;
                 }
 
-                var sheetName = dSheet.Name;
-                var sheetId = dSheet.SheetId.Value;
+                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
                 var ws = WorksheetsInternal.Add(sheetName, position, sheetId);
                 ws.RelId = dSheet.Id;
 

@@ -743,5 +743,33 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(XLColor.FromArgb(0xFF000FED), ws.Cell("A2").Style.Fill.BackgroundColor);
             }, @"TryToLoad\InvalidColors.xlsx");
         }
+
+        [Test]
+        public void WontCrashOnSheetsWithoutRelId()
+        {
+            // Some non-Excel producers create workbooks where workbookPart declares
+            // sheet with empty r:id, but with name and sheetId. Content of such sheets
+            // isn't loaded even if relationship part declares implicit relationship to
+            // the worksheets, because workbook has explicit relationships with worksheet
+            // part (ISO29500 12.3.23).
+            //
+            // If excel finds sheet in workbook without r:id, it adds empty sheet with
+            // the specified name and so does ClosedXML.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                Assert.AreEqual(3, wb.Worksheets.Count);
+
+                // First sheet has r:id, so it keeps content
+                Assert.AreEqual("Sheet1", wb.Worksheet("Sheet1").Cell("A1").Value);
+
+                // Second sheet doesn't have r:id, so it is empty after load.
+                Assert.AreEqual(Blank.Value, wb.Worksheet("Sheet without relId").Cell("A1").Value);
+
+                // Third sheet doesn't have r:id and it contains pivot table that is not loaded.
+                var ptSheet = wb.Worksheet("Pivot Sheet without relId");
+                Assert.AreEqual(Blank.Value, ptSheet.Cell("A1").Value);
+                Assert.False(ptSheet.PivotTables.Any());
+            }, @"TryToLoad\SheetsWithoutRelId.xlsx");
+        }
     }
 }
