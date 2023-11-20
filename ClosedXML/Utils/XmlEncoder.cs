@@ -36,7 +36,7 @@ namespace ClosedXML.Utils
             return sb.ToString();
         }
 
-        public static string DecodeString(string decodeStr)
+        public static string DecodeString(string? decodeStr)
         {
             if (string.IsNullOrEmpty(decodeStr)) return string.Empty;
 
