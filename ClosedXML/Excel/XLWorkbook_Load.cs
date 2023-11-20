@@ -1387,7 +1387,7 @@ namespace ClosedXML.Excel
             }
 
             if (!hasRuns)
-                xlCell.SetOnlyValue(XmlEncoder.DecodeString(element.Text.InnerText));
+                xlCell.SetOnlyValue(XmlEncoder.DecodeString(element.Text?.InnerText));
 
             // Load phonetic properties
             var phoneticProperties = element.Elements<PhoneticProperties>();
