@@ -71,7 +71,7 @@ namespace ClosedXML.Excel.IO
                     continue;
                 }
 
-                var worksheetPart = (WorksheetPart)workbookPart.GetPartById(dSheet.Id);
+                var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
 
                 if (worksheetPart is not null)
                 {
