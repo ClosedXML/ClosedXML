@@ -193,6 +193,19 @@ namespace ClosedXML.Tests
             assertWorkbook(wb);
         }
 
+        /// <summary>
+        /// A testing method to load a workbook with a single worksheet from resource and assert
+        /// the state of the loaded workbook.
+        /// </summary>
+        public static void LoadAndAssert(Action<XLWorkbook, IXLWorksheet> assertWorksheet, string loadResourcePath)
+        {
+            LoadAndAssert(wb =>
+            {
+                var ws = wb.Worksheets.Single();
+                assertWorksheet(wb, ws);
+            }, loadResourcePath);
+        }
+
         public static string GetResourcePath(string filePartName)
         {
             return filePartName.Replace('\\', '.').TrimStart('.');

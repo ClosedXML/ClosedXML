@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
 using NUnit.Framework;
@@ -96,6 +97,20 @@ namespace ClosedXML.Tests.Excel.Cells
             var id = sst.IncreaseRef("test", false);
             sst.DecreaseRef(id);
             Assert.Throws<InvalidOperationException>(() => sst.DecreaseRef(id));
+        }
+
+        [Test]
+        public void StringItem_without_text_is_loaded_as_empty_text()
+        {
+            // PR#2218: A text cell that references self-closed <si/> tag in SST is loaded without
+            // an error and is loaded as type TEXT. Although it's not very common, empty string is
+            // a valid value of a cell.
+            TestHelper.LoadAndAssert((_, ws) =>
+            {
+                // Check that type is a empty string, just like in Excel.
+                Assert.AreEqual(2, ws.Evaluate("TYPE(B2)"));
+                Assert.IsEmpty(ws.Cell("B2").GetText());
+            }, @"Other\Cells\EmptySi.xlsx");
         }
     }
 }
