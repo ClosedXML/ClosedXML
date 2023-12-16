@@ -833,6 +833,19 @@ namespace ClosedXML.Tests
                 @"Other\PivotTableReferenceFiles\PivotTableWithoutSourceData-output.xlsx");
         }
 
+        [Test]
+        public void Skips_chartsheets_during_pivot_table_loading()
+        {
+            // Pivot table loading code looks for pivot tables on each sheet, but it shouldn't
+            // crash when sheet is a chartsheet or other type of sheet. The referenced test file
+            // contains chartsheet and a pivot table to ensure that loading code won't crash.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                // Check that existing pivot table is loaded.
+                Assert.True(wb.Worksheet("pivot").PivotTables.Contains("Pastries"));
+            }, @"Other\PivotTableReferenceFiles\ChartsheetAndPivotTable.xlsx");
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;
