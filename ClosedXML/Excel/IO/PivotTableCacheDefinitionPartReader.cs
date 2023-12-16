@@ -71,6 +71,7 @@ namespace ClosedXML.Excel.IO
                     continue;
                 }
 
+                // The referenced sheet can also be ChartsheetPart. Only look for pivot tables in normal sheet parts.
                 var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
 
                 if (worksheetPart is not null)
