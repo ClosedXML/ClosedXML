@@ -1997,8 +1997,50 @@ namespace ClosedXML.Excel
                 conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
                 conditionalFormat.OriginalPriority = fr.Priority?.Value ?? Int32.MaxValue;
 
-                if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
+                // Although formulas are directly used only by CellIs and Expression type, other
+                // format types also write them for evaluation to the workbook, e.g. rule to
+                // IsBlank writes `LEN(TRIM(A2))=0` or ContainsText writes `NOT(ISERROR(SEARCH("hello",A2)))`.
+                if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs)
+                {
                     conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
+
+                    // The XML schema allows up to three <formula> tags, but at most two are used.
+                    // Some producers emit empty <formula> tags that should be ignored and extra
+                    // non-empty formulas should also be ignored (Excel behavior).
+                    var nonEmptyFormulas = fr.Elements<Formula>()
+                        .Where(static f => !String.IsNullOrEmpty(f.Text))
+                        .Select(f => GetFormula(f.Text))
+                        .ToList();
+                    if (conditionalFormat.Operator is XLCFOperator.Between or XLCFOperator.NotBetween)
+                    {
+                        var formulas = nonEmptyFormulas.Take(2).ToList();
+                        if (formulas.Count != 2)
+                            throw PartStructureException.IncorrectElementsCount();
+
+                        conditionalFormat.Values.Add(formulas[0]);
+                        conditionalFormat.Values.Add(formulas[1]);
+                    }
+                    else
+                    {
+                        // Other XLCFOperators expect one argument.
+                        var operatorArg = nonEmptyFormulas.FirstOrDefault();
+                        if (operatorArg is null)
+                            throw PartStructureException.IncorrectElementsCount();
+
+                        conditionalFormat.Values.Add(operatorArg);
+                    }
+                }
+                else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Expression)
+                {
+                    var formula = fr.Elements<Formula>()
+                        .Where(static f => !String.IsNullOrEmpty(f.Text))
+                        .FirstOrDefault();
+
+                    if (formula is null)
+                        throw PartStructureException.IncorrectElementsCount();
+
+                    conditionalFormat.Values.Add(GetFormula(formula.Text));
+                }
 
                 if (!String.IsNullOrWhiteSpace(fr.Text))
                     conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
@@ -2051,18 +2093,6 @@ namespace ClosedXML.Excel
                         conditionalFormat.IconSetStyle = XLIconSetStyle.ThreeTrafficLights1;
 
                     ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
-                }
-                else
-                {
-                    foreach (var formula in fr.Elements<Formula>())
-                    {
-                        if (formula.Text != null
-                            && (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs
-                                || conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Expression))
-                        {
-                            conditionalFormat.Values.Add(GetFormula(formula.Text));
-                        }
-                    }
                 }
 
                 ws.ConditionalFormats.Add(conditionalFormat);
