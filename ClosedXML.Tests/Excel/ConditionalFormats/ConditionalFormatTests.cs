@@ -114,5 +114,50 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 }
             }
         }
+
+        [Test]
+        public void CellIs_type_reads_only_required_formula_arguments()
+        {
+            // The CellIs uses formula tags as arguments. Some producers generate extra empty
+            // formula tags and ClosedXml should be able to load CellIs conditional formatting
+            // with such extra tags without an exception. The test file has been modified to
+            // include extra formula tags and test checks that extra tags are ignored.
+            TestHelper.LoadAndAssert((_, ws) =>
+            {
+                AssertFormulaArgs(ws, XLCFOperator.Between, "$D$2", "$E$2");
+                AssertFormulaArgs(ws, XLCFOperator.NotBetween, "$D$3", "$E$3");
+                AssertFormulaArgs(ws, XLCFOperator.GreaterThan, "$D$4");
+                AssertFormulaArgs(ws, XLCFOperator.LessThan, "$D$5");
+                AssertFormulaArgs(ws, XLCFOperator.Equal, "$D$6");
+            }, @"Other\ConditionalFormats\Extra_formulas_CellIs_type.xlsx");
+
+            static void AssertFormulaArgs(IXLWorksheet ws, XLCFOperator cfOperator, params string[] expectedFormulas)
+            {
+                var cf = ws.ConditionalFormats.Single(cf => cf.ConditionalFormatType == XLConditionalFormatType.CellIs && cf.Operator == cfOperator);
+                Assert.AreEqual(expectedFormulas.Length, cf.Values.Count);
+                CollectionAssert.AreEqual(expectedFormulas, cf.Values.Select(v => v.Value.Value));
+            }
+        }
+
+        [Test]
+        public void Expression_type_skips_empty_formula_tags()
+        {
+            // The Expression uses formula tag as arguments. Some producers generate extra empty
+            // formula tags and ClosedXml should be able to load Expression conditional formatting
+            // with such extra tags without an exception. The test file has been modified to
+            // include extra formula tags and test checks that extra tags are ignored.
+            TestHelper.LoadAndAssert((_, ws) =>
+            {
+                AssertFormulaArgs(ws, "A1:A1", "$C$1=5");
+                AssertFormulaArgs(ws, "A2:A2", "$C$2=4");
+            }, @"Other\ConditionalFormats\Extra_formulas_Expression_type.xlsx");
+
+            static void AssertFormulaArgs(IXLWorksheet ws, string range, string expectedFormula)
+            {
+                var cf = ws.ConditionalFormats.Single(cf => cf.ConditionalFormatType == XLConditionalFormatType.Expression && cf.Range.RangeAddress.ToString() == range);
+                Assert.AreEqual(1, cf.Values.Count);
+                CollectionAssert.AreEqual(expectedFormula, cf.Values[1].Value);
+            }
+        }
     }
 }
