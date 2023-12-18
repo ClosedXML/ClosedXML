@@ -62,3 +62,9 @@ pivot cache.
    var pivot = ws.PivotTables.Add("pivot table", ws.Cell("A1"), range);
 
 Generally, this change doesn't matter, unless the table changes sizes.
+
+*****************************
+``IXLSortElement`` properties
+*****************************
+
+``IXLSortElement`` properties no longer have setters.
