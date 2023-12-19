@@ -1659,27 +1659,7 @@ namespace ClosedXML.Excel
                 columnsToSortBy = DefaultSortString();
             }
 
-            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
-            {
-                String coString;
-                String order;
-                if (coPairTrimmed.Contains(' '))
-                {
-                    var pair = coPairTrimmed.Split(' ');
-                    coString = pair[0];
-                    order = pair[1];
-                }
-                else
-                {
-                    coString = coPairTrimmed;
-                    order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
-                }
-
-                if (!Int32.TryParse(coString, out Int32 co))
-                    co = XLHelper.GetColumnNumberFromLetter(coString);
-
-                SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
-            }
+            SortColumns.CastTo<XLSortElements>().AddRange(ParseSortOrder(columnsToSortBy, sortOrder, matchCase, ignoreBlanks));
 
             SortRangeRows();
             return this;
@@ -1839,6 +1819,35 @@ namespace ClosedXML.Excel
         }
 
         #endregion Sort Columns
+
+        private IEnumerable<XLSortElement> ParseSortOrder(string columnsToSortBy, XLSortOrder defaultSortOrder, bool matchCase, bool ignoreBlanks)
+        {
+            foreach (var sortColumn in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            {
+                var sortOrder = defaultSortOrder;
+
+                String columnName;
+                if (sortColumn.Contains(' '))
+                {
+                    var pair = sortColumn.Split(' ');
+                    columnName = pair[0];
+                    sortOrder = pair[1].Equals("ASC", StringComparison.OrdinalIgnoreCase) ? XLSortOrder.Ascending : XLSortOrder.Descending;
+                }
+                else
+                {
+                    columnName = sortColumn;
+                }
+
+                if (!Int32.TryParse(columnName, out Int32 columnNumber))
+                    columnNumber = XLHelper.GetColumnNumberFromLetter(columnName);
+
+                yield return new XLSortElement(
+                    columnNumber,
+                    sortOrder,
+                    ignoreBlanks,
+                    matchCase);
+            }
+        }
 
         #endregion Sort
 
