@@ -35,5 +35,11 @@ namespace ClosedXML.Tests.Examples
         {
             TestHelper.RunTestExample<DateTimeGroupAutoFilter>(@"AutoFilter\DateTimeGroupAutoFilter.xlsx");
         }
+
+        [Test]
+        public void HideButtonsAutoFilter()
+        {
+            TestHelper.RunTestExample<HideButtonsAutoFilter>(@"AutoFilter\HideButtonsAutoFilter.xlsx");
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace ClosedXML.Excel
         XLSortOrder SortOrder { get; set; }
         IEnumerable<IXLRangeRow> VisibleRows { get; }
 
+        IEnumerable<int> ColumnIndicesWithHiddenButtons { get; }
+
         IXLAutoFilter Clear();
 
         IXLFilterColumn Column(String column);
