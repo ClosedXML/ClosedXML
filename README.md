@@ -84,7 +84,7 @@ Be sure to check out our `ClosedXML` extension projects
 - https://github.com/ClosedXML/ClosedXML.Extensions.WebApi
 
 ## Developer guidelines
-The [OpenXML specification](https://www.ecma-international.org/publications/standards/Ecma-376.htm) is a large and complicated beast. In order for ClosedXML, the wrapper around OpenXML, to support all the features, we rely on community contributions. Before opening an issue to request a new feature, we'd like to urge you to try to implement it yourself and log a pull request.
+The [OpenXML specification](https://ecma-international.org/publications-and-standards/standards/ecma-376/) is a large and complicated beast. In order for ClosedXML, the wrapper around OpenXML, to support all the features, we rely on community contributions. Before opening an issue to request a new feature, we'd like to urge you to try to implement it yourself and log a pull request.
 
 Please read the [full developer guidelines](CONTRIBUTING.md).
 
