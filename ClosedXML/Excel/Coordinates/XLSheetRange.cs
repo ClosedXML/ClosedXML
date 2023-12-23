@@ -277,5 +277,21 @@ namespace ClosedXML.Excel
 
             return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
         }
+
+        /// <summary>
+        /// Does range cover all rows, from top row to bottom row of a sheet.
+        /// </summary>
+        internal bool IsEntireColumn()
+        {
+            return TopRow == 1 && BottomRow == XLHelper.MaxRowNumber;
+        }
+
+        /// <summary>
+        /// Does range cover all columns, from first to last column of a sheet.
+        /// </summary>
+        public bool IsEntireRow()
+        {
+            return LeftColumn == 1 && RightColumn == XLHelper.MaxColumnNumber;
+        }
     }
 }

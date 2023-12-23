@@ -63,8 +63,9 @@ pivot cache.
 
 Generally, this change doesn't matter, unless the table changes sizes.
 
-*****************************
-``IXLSortElement`` properties
-*****************************
+*******
+Sorting
+*******
 
-``IXLSortElement`` properties no longer have setters.
+* ``IXLSortElement`` properties no longer have setters.
+* An unused enum ``XLSortOrientation`` has been deleted.
