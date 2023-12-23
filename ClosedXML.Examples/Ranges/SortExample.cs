@@ -7,40 +7,6 @@ namespace ClosedXML.Examples.Misc
 {
     public class SortExample : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -138,74 +104,31 @@ namespace ClosedXML.Examples.Misc
 
             wb.SaveAs(filePath);
         }
-
-        private void AddTestColumnMixed(IXLWorksheet ws)
-        {
-            ws.Cell("A1").SetValue(new DateTime(2011, 1, 30)).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("A2").SetValue(1.15).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
-            ws.Cell("A3").SetValue(new TimeSpan(1, 1, 12, 30)).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
-            ws.Cell("A4").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
-            ws.Cell("A6").SetValue(9).Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
-            ws.Cell("A7").SetValue(new TimeSpan(9, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("A8").SetValue(new DateTime(2011, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
-        }
-        private void AddTestColumnNumbers(IXLWorksheet ws)
-        {
-            ws.Cell("A1").SetValue(1.30).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("A2").SetValue(1.15).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
-            ws.Cell("A3").SetValue(1230).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
-            ws.Cell("A4").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
-            ws.Cell("A6").SetValue(9).Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
-            ws.Cell("A7").SetValue(4.30).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("A8").SetValue(4.15).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
-        }
-        private void AddTestColumnTimeSpans(IXLWorksheet ws)
-        {
-            ws.Cell("A1").SetValue(new TimeSpan(0, 12, 35, 21)).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("A2").SetValue(new TimeSpan(45, 1, 15)).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
-            ws.Cell("A3").SetValue(new TimeSpan(1, 1, 12, 30)).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
-            ws.Cell("A4").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
-            ws.Cell("A6").SetValue(new TimeSpan(0, 12, 15)).Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
-            ws.Cell("A7").SetValue(new TimeSpan(1, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("A8").SetValue(new TimeSpan(1, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
-        }
-        private void AddTestColumnDates(IXLWorksheet ws)
-        {
-            ws.Cell("A1").SetValue(new DateTime(2011, 1, 30)).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("A2").SetValue(new DateTime(2011, 1, 15)).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
-            ws.Cell("A3").SetValue(new DateTime(2011, 12, 30)).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
-            ws.Cell("A4").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
-            ws.Cell("A6").SetValue(new DateTime(2011, 12, 15)).Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
-            ws.Cell("A7").SetValue(new DateTime(2011, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("A8").SetValue(new DateTime(2011, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
-        }
+        
         private void AddTestColumn(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
             ws.Cell("A2").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("A3").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
-            ws.Cell("A4").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
+            ws.Cell("A4").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+            ws.Cell("A5").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
             ws.Cell("A6").SetValue("b").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("A7").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue("c").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestTable(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
             ws.Cell("A2").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("A3").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("A4").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
+            ws.Cell("A5").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
             ws.Cell("A6").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("A7").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
 
-            ws.Cell("B1").SetValue("").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
+            ws.Cell("B1").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
             ws.Cell("B2").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("B3").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("B4").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
@@ -215,19 +138,13 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("B8").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
 
             ws.Cell("C1").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("C2").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
+            ws.Cell("C2").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("C3").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("C4").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
             ws.Cell("C5").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
             ws.Cell("C6").SetValue("b").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("C7").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("C8").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
+            ws.Cell("C8").SetValue(Blank.Value).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }
