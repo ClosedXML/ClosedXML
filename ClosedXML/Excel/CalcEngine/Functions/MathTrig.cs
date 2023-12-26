@@ -1073,10 +1073,11 @@ namespace ClosedXML.Excel.CalcEngine
                     i++;
                 return i;
             })
-            .Distinct();
+            .Distinct()
+            .ToArray();
 
             // All parameters should have the same length
-            if (counts.Count() > 1)
+            if (counts.Length > 1)
                 return XLError.NoValueAvailable;
 
             var values = p

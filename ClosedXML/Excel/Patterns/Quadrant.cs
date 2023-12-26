@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Smaller quadrants which the current one is split to. Is NULL until ranges are added to child quadrants.
         /// </summary>
-        public IEnumerable<Quadrant> Children { get; private set; }
+        public IReadOnlyList<Quadrant> Children { get; private set; }
 
         /// <summary>
         /// The level of current quadrant. Top most has level 0, child quadrants has levels (Level + 1).

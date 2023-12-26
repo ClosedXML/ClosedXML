@@ -367,7 +367,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return return_date;
         }
 
-        private static DateTime Workday(DateTime startDate, DateTime testDate, int daysRequired, IEnumerable<DateTime> bankHolidays)
+        private static DateTime Workday(DateTime startDate, DateTime testDate, int daysRequired, IReadOnlyCollection<DateTime> bankHolidays)
         {
             var businessDays = BusinessDaysUntil(startDate, testDate, bankHolidays);
             if (businessDays == daysRequired)
