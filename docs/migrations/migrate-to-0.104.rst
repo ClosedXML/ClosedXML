@@ -67,5 +67,10 @@ Generally, this change doesn't matter, unless the table changes sizes.
 Sorting
 *******
 
+Sorting algorithm has been modified, so it matches Excel. It now sorts values
+first by type (number, text, logical, error, blank), then by value. Blanks are
+always last, regardless of sorting order (unless ``ignoreBlanks`` is set to
+``false``).
+
 * ``IXLSortElement`` properties no longer have setters.
 * An unused enum ``XLSortOrientation`` has been deleted.
