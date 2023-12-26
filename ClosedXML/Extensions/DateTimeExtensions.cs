@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
                    && !bankHolidays.Contains(date);
         }
 
-        public static DateTime NextWorkday(this DateTime date, IEnumerable<DateTime> bankHolidays)
+        public static DateTime NextWorkday(this DateTime date, IReadOnlyList<DateTime> bankHolidays)
         {
             var nextDate = date.AddDays(1);
             while (!nextDate.IsWorkDay(bankHolidays))
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
             return nextDate;
         }
 
-        public static DateTime PreviousWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
+        public static DateTime PreviousWorkDay(this DateTime date, IReadOnlyCollection<DateTime> bankHolidays)
         {
             var previousDate = date.AddDays(-1);
             while (!previousDate.IsWorkDay(bankHolidays))

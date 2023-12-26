@@ -126,10 +126,11 @@ namespace ClosedXML.Excel
                 .Where(c => c.RangeAddress.Contains(rangeAddress.FirstAddress) &&
                             c.RangeAddress.Contains(rangeAddress.LastAddress));
 
-            if (!candidates.Any())
+            var candidate = candidates.FirstOrDefault();
+            if (candidate is null)
                 return false;
 
-            dataValidation = candidates.First().DataValidation;
+            dataValidation = candidate.DataValidation;
 
             return true;
         }
