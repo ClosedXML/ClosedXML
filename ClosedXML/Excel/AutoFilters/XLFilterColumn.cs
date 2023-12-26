@@ -268,27 +268,19 @@ namespace ClosedXML.Excel
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            var cellsUsed = subColumn.CellsUsed(c => c.DataType == XLDataType.Number);
-            if (takeTop)
-            {
-                if (type == XLTopBottomType.Items)
-                {
-                    return cellsUsed.Select(c => c.GetDouble()).OrderByDescending(d => d).Take(value).Distinct();
-                }
-
-                var numerics1 = cellsUsed.Select(c => c.GetDouble());
-                Int32 valsToTake1 = numerics1.Count() * value / 100;
-                return numerics1.OrderByDescending(d => d).Take(valsToTake1).Distinct();
-            }
+            var columnNumbers = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble());
+            var comparer = takeTop
+                ? Comparer<double>.Create((x, y) => -x.CompareTo(y))
+                : Comparer<double>.Create((x, y) => x.CompareTo(y));
 
             if (type == XLTopBottomType.Items)
             {
-                return cellsUsed.Select(c => c.GetDouble()).OrderBy(d => d).Take(value).Distinct();
+                return columnNumbers.OrderBy(d => d, comparer).Take(value).Distinct();
             }
 
-            var numerics = cellsUsed.Select(c => c.GetDouble());
-            Int32 valsToTake = numerics.Count() * value / 100;
-            return numerics.OrderBy(d => d).Take(valsToTake).Distinct();
+            var numerics1 = columnNumbers;
+            Int32 valsToTake1 = numerics1.Count() * value / 100;
+            return numerics1.OrderBy(d => d, comparer).Take(valsToTake1).Distinct();
         }
 
         private void ShowAverage(Boolean aboveAverage)
