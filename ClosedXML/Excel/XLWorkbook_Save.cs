@@ -28,12 +28,12 @@ namespace ClosedXML.Excel
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
-            IEnumerable<ValidationErrorInfo> errors;
+            IList<ValidationErrorInfo> errors;
             try
             {
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 var validator = new OpenXmlValidator();
-                errors = validator.Validate(package);
+                errors = validator.Validate(package).ToArray();
             }
             finally
             {

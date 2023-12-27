@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Tests.Excel;
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,19 @@ namespace ClosedXML.Tests.Extensions
             actualType = obj.GetItemType().ToString();
             Assert.True(actualType.StartsWith(expectedTypeStart));
             Assert.True(actualType.EndsWith(expectedTypeEnd));
+        }
+
+        [Test]
+        public void SkipLast_skips_last_element_of_enumerable()
+        {
+            var empty = Array.Empty<int>().SkipLast();
+            CollectionAssert.IsEmpty(empty);
+
+            var oneElement = new[] { 1 }.SkipLast();
+            CollectionAssert.IsEmpty(oneElement);
+
+            var twoElements = new[] { 1, 2 }.SkipLast();
+            CollectionAssert.AreEqual(new[] { 1 }, twoElements);
         }
     }
 }

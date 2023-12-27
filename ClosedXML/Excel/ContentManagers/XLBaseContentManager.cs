@@ -10,23 +10,22 @@ namespace ClosedXML.Excel.ContentManagers
     }
 
     internal abstract class XLBaseContentManager<T> : XLBaseContentManager
-        where T : struct, IConvertible
+        where T : struct, Enum
 
     {
-        protected readonly IDictionary<T, OpenXmlElement> contents = new Dictionary<T, OpenXmlElement>();
+        protected readonly Dictionary<T, OpenXmlElement> contents = new();
 
         public OpenXmlElement? GetPreviousElementFor(T content)
         {
-            var i = content.CastTo<int>();
+            // JIT will recognize the conversion for identity and removes it (for int enums).
+            var i = (int)(ValueType)content;
 
-            var previousElements = contents.Keys
-                .Where(key => key.CastTo<int>() < i && contents[key] != null)
-                .OrderBy(key => key.CastTo<int>());
-
-            if (previousElements.Any())
-                return contents[previousElements.Last()];
-            else
-                return null;
+            var previousElements = contents
+                .Where(kv => (int)(ValueType)kv.Key < i && kv.Value is not null)
+                .OrderBy(kv => (int)(ValueType)kv.Key)
+                .Select(x => x.Value);
+            var previousElement = previousElements.LastOrDefault();
+            return previousElement;
         }
 
         public void SetElement(T content, OpenXmlElement element)

@@ -873,11 +873,11 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
-            if (!(castedData?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray() ?? Array.Empty<object>();
+            if (!castedData.Any() || data is String)
                 return null;
 
-            var numberOfNewRows = castedData.Count();
+            var numberOfNewRows = castedData.Length;
 
             var lastRowOfOldRange = this.DataRange.LastRow();
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
@@ -897,10 +897,11 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var materializedData = data?.ToArray() ?? Array.Empty<T>();
+            if (!materializedData.Any() || data is String)
                 return null;
 
-            var numberOfNewRows = data.Count();
+            var numberOfNewRows = materializedData.Length;
 
             if (numberOfNewRows == 0)
                 return null;
@@ -909,7 +910,7 @@ namespace ClosedXML.Excel
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
             this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
+            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(materializedData);
 
             PropagateExtraColumns(insertedRange.ColumnCount(), lastRowOfOldRange.RowNumber());
 
@@ -923,15 +924,15 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
-            if (!(castedData?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray() ?? Array.Empty<object>();
+            if (!castedData.Any() || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
             var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
             var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
+            var sizeDifference = castedData.Length - this.DataRange.RowCount();
             if (sizeDifference > 0)
                 this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
@@ -966,14 +967,15 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var materializedData = data?.ToArray() ?? Array.Empty<T>();
+            if (!materializedData.Any() || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
             var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
             var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            var sizeDifference = materializedData.Length - DataRange.RowCount();
             if (sizeDifference > 0)
                 this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
@@ -993,7 +995,7 @@ namespace ClosedXML.Excel
                 // Invalidate table fields' columns
                 this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var replacedRange = this.DataRange.FirstCell().InsertData(data);
+            var replacedRange = this.DataRange.FirstCell().InsertData(materializedData);
 
             if (propagateExtraColumns)
                 PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
