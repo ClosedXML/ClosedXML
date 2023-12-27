@@ -1,6 +1,5 @@
-#nullable disable
-
 using System;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
@@ -8,6 +7,22 @@ namespace ClosedXML.Excel
 
     public enum XLDateTimeGrouping { Year, Month, Day, Hour, Minute, Second }
 
+    /// <summary>
+    /// <para>
+    /// AutoFilter filter configuration for one column in an autofilter <see cref="IXLAutoFilter.Range">area</see>.
+    /// Filters determine visibility of rows in the autofilter area. Column can have multiple
+    /// filters, each specifying a different condition. Value in the row must satisfy all filters
+    /// in order for row to be visible.
+    /// </para>
+    /// <para>
+    /// <list type="bullet">
+    ///   <item><term>Top/Bottom</term><description>only accept value in any of the highest/lowest values of the column.</description></item>
+    ///   <item><term>Average</term><description>only accept value above/below average of all values in the column.</description></item>
+    ///   <item><term>Text filters</term><description>only accept value whose text representation matches <see cref="Wildcard"/>. It encompasses text equality, <c>start-with</c> ect.</description></item>
+    ///   <item><term>Number</term><description>only accept value whose text representation matches <see cref="Wildcard"/>.</description></item>
+    /// </list>
+    /// </para>
+    /// </summary>
     public interface IXLFilterColumn
     {
         void Clear();
