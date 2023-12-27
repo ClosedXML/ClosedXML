@@ -5,11 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel.ContentManagers
 {
-    internal abstract class XLBaseContentManager
-    {
-    }
-
-    internal abstract class XLBaseContentManager<T> : XLBaseContentManager
+    internal abstract class XLBaseContentManager<T>
         where T : struct, Enum
 
     {
