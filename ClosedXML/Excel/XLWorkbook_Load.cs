@@ -2472,7 +2472,7 @@ namespace ClosedXML.Excel
             if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = (Int32)pageSetup.HorizontalDpi.Value;
             if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = (Int32)pageSetup.VerticalDpi.Value;
             if (pageSetup.FirstPageNumber?.HasValue ?? false)
-                ws.PageSetup.FirstPageNumber = pageSetup.FirstPageNumber.Value;
+                ws.PageSetup.FirstPageNumber = (int)pageSetup.FirstPageNumber.Value;
         }
 
         private static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)

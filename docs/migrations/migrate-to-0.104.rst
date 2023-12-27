@@ -74,3 +74,11 @@ always last, regardless of sorting order (unless ``ignoreBlanks`` is set to
 
 * ``IXLSortElement`` properties no longer have setters.
 * An unused enum ``XLSortOrientation`` has been deleted.
+
+**********
+Page setup
+**********
+
+``IXLPageSetup.FirstPageNumber`` and ``IXLPageSetup.SetFirstPageNumber(int)``
+now use ``int`` type instead of ``uint``. First page number can be negative and
+``int`` is thus better (``-3`` instead of ``4294967293``).

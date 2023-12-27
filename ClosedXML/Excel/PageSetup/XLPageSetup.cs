@@ -113,7 +113,7 @@ namespace ClosedXML.Excel
         public XLPaperSize PaperSize { get; set; }
         public Int32 HorizontalDpi { get; set; }
         public Int32 VerticalDpi { get; set; }
-        public UInt32? FirstPageNumber { get; set; }
+        public Int32? FirstPageNumber { get; set; }
         public Boolean CenterHorizontally { get; set; }
         public Boolean CenterVertically { get; set; }
         public XLPrintErrorValues PrintErrorValue { get; set; }
@@ -226,7 +226,7 @@ namespace ClosedXML.Excel
         public IXLPageSetup SetScale(Int32 value) { Scale = value; return this; }
         public IXLPageSetup SetHorizontalDpi(Int32 value) { HorizontalDpi = value; return this; }
         public IXLPageSetup SetVerticalDpi(Int32 value) { VerticalDpi = value; return this; }
-        public IXLPageSetup SetFirstPageNumber(UInt32? value) { FirstPageNumber = value; return this; }
+        public IXLPageSetup SetFirstPageNumber(Int32? value) { FirstPageNumber = value; return this; }
         public IXLPageSetup SetCenterHorizontally() { CenterHorizontally = true; return this; }	public IXLPageSetup SetCenterHorizontally(Boolean value) { CenterHorizontally = value; return this; }
         public IXLPageSetup SetCenterVertically() { CenterVertically = true; return this; }	public IXLPageSetup SetCenterVertically(Boolean value) { CenterVertically = value; return this; }
         public IXLPageSetup SetPaperSize(XLPaperSize value) { PaperSize = value; return this; }
