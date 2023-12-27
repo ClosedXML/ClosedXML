@@ -228,7 +228,7 @@ namespace ClosedXML.Excel
                                        .SetTopBottomValue(value)
                                        .SetTopBottomType(type);
 
-            var values = GetValues(value, type, takeTop);
+            var values = GetValues(value, type, takeTop).ToArray();
 
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
@@ -275,12 +275,14 @@ namespace ClosedXML.Excel
 
             if (type == XLTopBottomType.Items)
             {
-                return columnNumbers.OrderBy(d => d, comparer).Take(value).Distinct();
+                var itemCount = value;
+                return columnNumbers.OrderBy(d => d, comparer).Take(itemCount).Distinct();
             }
 
-            var numerics1 = columnNumbers;
-            Int32 valsToTake1 = numerics1.Count() * value / 100;
-            return numerics1.OrderBy(d => d, comparer).Take(valsToTake1).Distinct();
+            var numerics = columnNumbers.ToArray();
+            var percent = value;
+            Int32 itemCountByPercents = numerics.Length * percent / 100;
+            return numerics.OrderBy(d => d, comparer).Take(itemCountByPercents).Distinct();
         }
 
         private void ShowAverage(Boolean aboveAverage)
@@ -290,7 +292,7 @@ namespace ClosedXML.Excel
                 .SetDynamicType(aboveAverage
                                     ? XLFilterDynamicType.AboveAverage
                                     : XLFilterDynamicType.BelowAverage);
-            var values = GetAverageValues(aboveAverage);
+            var values = GetAverageValues(aboveAverage).ToArray();
 
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
@@ -335,16 +337,13 @@ namespace ClosedXML.Excel
             Double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
                 .Average();
 
-            if (aboveAverage)
-            {
-                return
-                    subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
-                        .Where(c => c > average).Distinct();
-            }
-
-            return
-                subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
-                    .Where(c => c < average).Distinct();
+            var distinctNumbers = subColumn
+                .CellsUsed(c => c.DataType == XLDataType.Number)
+                .Select(c => c.GetDouble())
+                .Distinct();
+            return aboveAverage
+                ? distinctNumbers.Where(c => c > average)
+                : distinctNumbers.Where(c => c < average);
         }
 
         private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
