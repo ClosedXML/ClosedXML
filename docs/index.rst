@@ -70,6 +70,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    :caption: API Reference
 
    api/index
+   api/autofilter
    api/workbook
    api/worksheet
    api/cell
