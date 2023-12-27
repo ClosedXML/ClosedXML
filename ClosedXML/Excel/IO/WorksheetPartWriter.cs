@@ -1097,7 +1097,8 @@ namespace ClosedXML.Excel.IO
 
             if (xlWorksheet.PageSetup.FirstPageNumber.HasValue)
             {
-                pageSetup.FirstPageNumber = UInt32Value.FromUInt32(xlWorksheet.PageSetup.FirstPageNumber.Value);
+                // Negative first page numbers are written as uint, e.g. -1 is 4294967295.
+                pageSetup.FirstPageNumber = UInt32Value.FromUInt32((uint)xlWorksheet.PageSetup.FirstPageNumber.Value);
                 pageSetup.UseFirstPageNumber = true;
             }
             else

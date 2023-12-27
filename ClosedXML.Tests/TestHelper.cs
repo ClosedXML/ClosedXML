@@ -108,7 +108,7 @@ namespace ClosedXML.Tests
         /// <param name="referenceResource">Reference workbook saved in resources</param>
         /// <param name="evaluateFormulae">Should formulas of created workbook be evaluated and values saved?</param>
         /// <param name="validate">Should the created workbook be validated during by OpenXmlSdk validator?</param>
-        public static void CreateAndCompare(Action<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
+        public static void CreateAndCompare(Action<XLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
         {
             CreateAndCompare(() =>
             {
@@ -228,6 +228,30 @@ namespace ClosedXML.Tests
         public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
         {
             return _extractor.GetFileNames(predicate);
+        }
+
+        /// <summary>
+        /// A method for testing of a saving and loading capabilities of ClosedXML. Use this
+        /// method to check properties are correctly saved and loaded.
+        /// </summary>
+        /// <remarks>This method is specialized, so it only works on one sheet.</remarks>
+        /// <param name="createWorksheet">
+        /// Method to setup a worksheet that will be saved and the saved file will be compared to
+        /// <paramref name="referenceResource"/>.
+        /// </param>
+        /// <param name="assertLoadedWorkbook">
+        /// <paramref name="referenceResource"/> will be loaded and this method will check that it
+        /// was loaded correctly (i.e. properties are what was set in <paramref name="createWorksheet"/>).
+        /// </param>
+        /// <param name="referenceResource">Saved reference file.</param>
+        public static void CreateSaveLoadAssert(Action<XLWorkbook, IXLWorksheet> createWorksheet, Action<XLWorkbook, IXLWorksheet> assertLoadedWorkbook, string referenceResource)
+        {
+            CreateAndCompare(wb =>
+            {
+                var ws = wb.AddWorksheet();
+                createWorksheet(wb, ws);
+            }, referenceResource);
+            LoadAndAssert(assertLoadedWorkbook, referenceResource);
         }
     }
 }
