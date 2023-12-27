@@ -645,8 +645,8 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
-            if (exlst != null && exlst.Any())
+            var exlst = xlWorksheet.ConditionalFormats.Where(c => c.ConditionalFormatType == XLConditionalFormatType.DataBar).ToArray();
+            if (exlst.Any())
             {
                 if (!worksheet.Elements<WorksheetExtensionList>().Any())
                 {
@@ -1195,7 +1195,7 @@ namespace ClosedXML.Excel.IO
 
                 var rowBreaks = worksheet.Elements<RowBreaks>().First();
 
-                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>().ToArray();
                 var rowBreaksToDelete = existingBreaks
                     .Where(rb => !rb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
@@ -1242,7 +1242,7 @@ namespace ClosedXML.Excel.IO
 
                 var columnBreaks = worksheet.Elements<ColumnBreaks>().First();
 
-                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>().ToArray();
                 var columnBreaksToDelete = existingBreaks
                     .Where(cb => !cb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
