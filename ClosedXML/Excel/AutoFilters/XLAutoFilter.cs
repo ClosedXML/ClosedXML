@@ -34,24 +34,24 @@ namespace ClosedXML.Excel
             return Clear();
         }
 
-        public IXLFilterColumn Column(String column)
+        public IXLFilterColumn Column(String columnLetter)
         {
-            var columnNumber = XLHelper.GetColumnNumberFromLetter(column);
+            var columnNumber = XLHelper.GetColumnNumberFromLetter(columnLetter);
             if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
-                throw new ArgumentOutOfRangeException(nameof(column), "Column '" + column + "' is outside the allowed column range.");
+                throw new ArgumentOutOfRangeException(nameof(columnLetter), "Column '" + columnLetter + "' is outside the allowed column range.");
 
             return Column(columnNumber);
         }
 
-        public IXLFilterColumn Column(Int32 column)
+        public IXLFilterColumn Column(Int32 columnNumber)
         {
-            if (column < 1 || column > XLHelper.MaxColumnNumber)
-                throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
+            if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
+                throw new ArgumentOutOfRangeException(nameof(columnNumber), "Column " + columnNumber + " is outside the allowed column range.");
 
-            if (!_columns.TryGetValue(column, out XLFilterColumn filterColumn))
+            if (!_columns.TryGetValue(columnNumber, out XLFilterColumn filterColumn))
             {
-                filterColumn = new XLFilterColumn(this, column);
-                _columns.Add(column, filterColumn);
+                filterColumn = new XLFilterColumn(this, columnNumber);
+                _columns.Add(columnNumber, filterColumn);
             }
 
             return filterColumn;
