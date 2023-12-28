@@ -82,3 +82,12 @@ Page setup
 ``IXLPageSetup.FirstPageNumber`` and ``IXLPageSetup.SetFirstPageNumber(int)``
 now use ``int`` type instead of ``uint``. First page number can be negative and
 ``int`` is thus better (``-3`` instead of ``4294967293``).
+
+**********
+AutoFilter
+**********
+
+``IXLFilterColumn.AddFilter`` and ``IXLFilteredColumn.AddFilter`` method
+parameter type was changed from a generic ``T : IComparable<T>`` to ``XLCellValue``.
+Semantic of method was also updated to reflect how Excel actually filter column
+values.

@@ -21,5 +21,18 @@ namespace ClosedXML.Excel
         public XLDateTimeGrouping DateTimeGrouping { get; set; }
         public XLFilterOperator Operator { get; set; }
         public Object Value { get; set; }
+
+        internal static XLFilter CreateRegularFilter(XLCellValue value)
+        {
+            // TODO: If user supplies a text that is a wildcard, escape it (e.g. `2*` to `2~*`).
+            var wildcard = value.ToString();
+            return new XLFilter
+            {
+                Value = wildcard,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or,
+                Condition = v => v.ToString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase)
+            };
+        }
     }
 }
