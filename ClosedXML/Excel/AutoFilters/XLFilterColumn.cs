@@ -36,28 +36,10 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<Object, Boolean> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
-
             _autoFilter.IsEnabled = true;
-            _autoFilter.AddFilter(_column, new XLFilter
-            {
-                Value = date,
-                Operator = XLFilterOperator.Equal,
-                Connector = XLConnector.Or,
-                Condition = condition,
-                DateTimeGrouping = dateTimeGrouping
-            });
-
-            _autoFilter.Column(_column).FilterType = XLFilterType.DateTimeGrouping;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-
-            foreach (IXLRangeRow row in rows)
-            {
-                if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
-                    row.WorksheetRow().Unhide();
-                else
-                    row.WorksheetRow().Hide();
-            }
+            FilterType = XLFilterType.DateTimeGrouping;
+            _autoFilter.AddFilter(_column, XLFilter.CreateRegularDateGroupFilter(date, dateTimeGrouping));
+            _autoFilter.Reapply();
 
             return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
         }

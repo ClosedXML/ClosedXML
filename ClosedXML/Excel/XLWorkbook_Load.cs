@@ -1774,80 +1774,73 @@ namespace ClosedXML.Excel
 
                     foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
                     {
-                        bool valid = true;
-
-                        if (!(dateGroupItem.DateTimeGrouping?.HasValue ?? false))
+                        if (dateGroupItem.DateTimeGrouping is null || !dateGroupItem.DateTimeGrouping.HasValue)
                             continue;
 
-                        var xlDateGroupFilter = new XLFilter
-                        {
-                            Connector = XLConnector.Or,
-                            Operator = XLFilterOperator.Equal,
-                            DateTimeGrouping = dateGroupItem.DateTimeGrouping?.Value.ToClosedXml() ?? XLDateTimeGrouping.Year
-                        };
+                        var xlGrouping = dateGroupItem.DateTimeGrouping.Value.ToClosedXml();
+                        var year = 1900;
+                        var month = 1;
+                        var day = 1;
+                        var hour = 0;
+                        var minute = 0;
+                        var second = 0;
 
-                        int year = 1900;
-                        int month = 1;
-                        int day = 1;
-                        int hour = 0;
-                        int minute = 0;
-                        int second = 0;
+                        var valid = true;
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Year)
+                        if (xlGrouping >= XLDateTimeGrouping.Year)
                         {
-                            if (dateGroupItem?.Year?.HasValue ?? false)
-                                year = (int)dateGroupItem.Year?.Value;
+                            if (dateGroupItem.Year?.HasValue ?? false)
+                                year = dateGroupItem.Year.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Month)
+                        if (xlGrouping >= XLDateTimeGrouping.Month)
                         {
-                            if (dateGroupItem?.Month?.HasValue ?? false)
-                                month = (int)dateGroupItem.Month?.Value;
+                            if (dateGroupItem.Month?.HasValue ?? false)
+                                month = dateGroupItem.Month.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Day)
+                        if (xlGrouping >= XLDateTimeGrouping.Day)
                         {
-                            if (dateGroupItem?.Day?.HasValue ?? false)
-                                day = (int)dateGroupItem.Day?.Value;
+                            if (dateGroupItem.Day?.HasValue ?? false)
+                                day = dateGroupItem.Day.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Hour)
+                        if (xlGrouping >= XLDateTimeGrouping.Hour)
                         {
-                            if (dateGroupItem?.Hour?.HasValue ?? false)
-                                hour = (int)dateGroupItem.Hour?.Value;
+                            if (dateGroupItem.Hour?.HasValue ?? false)
+                                hour = dateGroupItem.Hour.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Minute)
+                        if (xlGrouping >= XLDateTimeGrouping.Minute)
                         {
-                            if (dateGroupItem?.Minute?.HasValue ?? false)
-                                minute = (int)dateGroupItem.Minute?.Value;
+                            if (dateGroupItem.Minute?.HasValue ?? false)
+                                minute = dateGroupItem.Minute.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
 
-                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Second)
+                        if (xlGrouping >= XLDateTimeGrouping.Second)
                         {
-                            if (dateGroupItem?.Second?.HasValue ?? false)
-                                second = (int)dateGroupItem.Second?.Value;
+                            if (dateGroupItem.Second?.HasValue ?? false)
+                                second = dateGroupItem.Second.Value;
                             else
-                                valid &= false;
+                                valid = false;
                         }
-
-                        var date = new DateTime(year, month, day, hour, minute, second);
-                        xlDateGroupFilter.Value = date;
-
-                        xlDateGroupFilter.Condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, xlDateGroupFilter.DateTimeGrouping);
 
                         if (valid)
+                        {
+                            var date = new DateTime(year, month, day, hour, minute, second);
+                            var xlDateGroupFilter = XLFilter.CreateRegularDateGroupFilter(date, xlGrouping);
                             filterList.Add(xlDateGroupFilter);
+                        }
                     }
                 }
                 else if (filterColumn.Top10 != null)
