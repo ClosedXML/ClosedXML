@@ -46,35 +46,14 @@ namespace ClosedXML.Excel
             Func<Object, Boolean> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
 
             _autoFilter.IsEnabled = true;
-
-            if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
-                filterList.Add(
-                    new XLFilter
-                    {
-                        Value = date,
-                        Operator = XLFilterOperator.Equal,
-                        Connector = XLConnector.Or,
-                        Condition = condition,
-                        DateTimeGrouping = dateTimeGrouping
-                    }
-                );
-            else
+            _autoFilter.AddFilter(_column, new XLFilter
             {
-                _autoFilter.Filters.Add(
-                    _column,
-                    new List<XLFilter>
-                    {
-                        new XLFilter
-                        {
-                            Value = date,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition,
-                            DateTimeGrouping = dateTimeGrouping
-                        }
-                    }
-                );
-            }
+                Value = date,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or,
+                Condition = condition,
+                DateTimeGrouping = dateTimeGrouping
+            });
 
             _autoFilter.Column(_column).FilterType = XLFilterType.DateTimeGrouping;
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
@@ -231,7 +210,6 @@ namespace ClosedXML.Excel
             var values = GetValues(value, type, takeTop).ToArray();
 
             Clear();
-            _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
@@ -243,7 +221,7 @@ namespace ClosedXML.Excel
                     Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
                     if (addToList)
                     {
-                        _autoFilter.Filters[_column].Add(new XLFilter
+                        _autoFilter.AddFilter(_column, new XLFilter
                         {
                             Value = val,
                             Operator = XLFilterOperator.Equal,
@@ -295,7 +273,6 @@ namespace ClosedXML.Excel
             var values = GetAverageValues(aboveAverage).ToArray();
 
             Clear();
-            _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
@@ -308,7 +285,7 @@ namespace ClosedXML.Excel
                     Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
                     if (addToList)
                     {
-                        _autoFilter.Filters[_column].Add(new XLFilter
+                        _autoFilter.AddFilter(_column, new XLFilter
                         {
                             Value = val,
                             Operator = XLFilterOperator.Equal,
@@ -352,45 +329,15 @@ namespace ClosedXML.Excel
         {
             _autoFilter.IsEnabled = true;
             if (filterType == XLFilterType.Custom)
-            {
                 Clear();
-                _autoFilter.Filters.Add(_column,
-                                        new List<XLFilter>
-                                            {
-                                                new XLFilter
-                                                {
-                                                    Value = value,
-                                                    Operator = op,
-                                                    Connector = XLConnector.Or,
-                                                    Condition = condition
-                                                }
-                                            });
-            }
-            else
+
+            _autoFilter.AddFilter(_column, new XLFilter
             {
-                if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
-                    filterList.Add(new XLFilter
-                    {
-                        Value = value,
-                        Operator = op,
-                        Connector = XLConnector.Or,
-                        Condition = condition
-                    });
-                else
-                {
-                    _autoFilter.Filters.Add(_column,
-                                            new List<XLFilter>
-                                                {
-                                                    new XLFilter
-                                                        {
-                                                            Value = value,
-                                                            Operator = op,
-                                                            Connector = XLConnector.Or,
-                                                            Condition = condition
-                                                        }
-                                                });
-                }
-            }
+                Value = value,
+                Operator = op,
+                Connector = XLConnector.Or,
+                Condition = condition
+            });
             _autoFilter.Column(_column).FilterType = filterType;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);

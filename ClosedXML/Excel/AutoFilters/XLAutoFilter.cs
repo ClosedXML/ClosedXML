@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
             Filters = new Dictionary<int, List<XLFilter>>();
         }
 
-        public Dictionary<Int32, List<XLFilter>> Filters { get; private set; }
+        internal Dictionary<Int32, List<XLFilter>> Filters { get; }
 
         #region IXLAutoFilter Members
 
@@ -166,6 +166,17 @@ namespace ClosedXML.Excel
             Reapply();
 
             return this;
+        }
+
+        internal void AddFilter(Int32 column, XLFilter filter)
+        {
+            if (!Filters.TryGetValue(column, out List<XLFilter> columnFilters))
+            {
+                columnFilters = new List<XLFilter>();
+                Filters.Add(column, columnFilters);
+            }
+
+            columnFilters.Add(filter);
         }
     }
 }

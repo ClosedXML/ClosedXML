@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
                 isText = false;
             }
 
-            _autoFilter.Filters[_column].Add(new XLFilter
+            _autoFilter.AddFilter(_column, new XLFilter
             {
                 Value = value,
                 Condition = condition,
