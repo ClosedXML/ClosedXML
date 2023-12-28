@@ -1,14 +1,7 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLDateTimeGroupFilteredColumn
-    {
-        IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping);
-    }
-
     internal class XLDateTimeGroupFilteredColumn : IXLDateTimeGroupFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
