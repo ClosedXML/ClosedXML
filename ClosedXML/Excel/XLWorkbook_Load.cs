@@ -1655,7 +1655,7 @@ namespace ClosedXML.Excel
                             break;
                         }
                     }
-
+                    
                     foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
                         var xlFilter = new XLFilter { Connector = connector };
@@ -1692,13 +1692,21 @@ namespace ClosedXML.Excel
                                     : s => XLFilterColumn.BeginsWithFunction(value, s);
                             }
                             else
-                                xlFilter.Value = filter.Val.Value;
+                            {
+                                var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
+                                var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
+                                xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
+                            }
                         }
                         else
-                            xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
+                        {
+                            var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
+                            var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
+                            xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
+                        }
 
                         // Unhandled instances - we should actually improve this
-                        if (xlFilter.Condition == null)
+                        if (xlFilter.Condition == null && xlFilter.NewCondition is null)
                         {
                             Func<Object, Boolean> condition = null;
                             switch (xlFilter.Operator)
@@ -1724,7 +1732,7 @@ namespace ClosedXML.Excel
 
                             xlFilter.Condition = condition;
                         }
-
+                        
                         filterList.Add(xlFilter);
                     }
                 }

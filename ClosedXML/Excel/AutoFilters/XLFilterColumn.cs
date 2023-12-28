@@ -66,64 +66,42 @@ namespace ClosedXML.Excel
             ShowAverage(false);
         }
 
-        public IXLFilterConnector EqualTo<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualTo(XLCellValue value)
         {
-            if (typeof(T) == typeof(String))
-            {
-                return ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                         v =>
-                                         v.ToString().Equals(value.ToString(),
-                                                             StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            return ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                     v => v.CastTo<T>().CompareTo(value) == 0);
+            return ApplyCustomFilter(value, XLFilterOperator.Equal);
         }
 
-        public IXLFilterConnector NotEqualTo<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector NotEqualTo(XLCellValue value)
         {
-            if (typeof(T) == typeof(String))
-            {
-                return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
-                                         v =>
-                                         !v.ToString().Equals(value.ToString(),
-                                                              StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
-                                        v => v.CastTo<T>().CompareTo(value) != 0);
+            return ApplyCustomFilter(value, XLFilterOperator.NotEqual);
         }
 
-        public IXLFilterConnector GreaterThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector GreaterThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.GreaterThan,
-                                     v => v.CastTo<T>().CompareTo(value) > 0);
+            return ApplyCustomFilter(value, XLFilterOperator.GreaterThan);
         }
 
-        public IXLFilterConnector LessThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector LessThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.LessThan,
-                                     v => v.CastTo<T>().CompareTo(value) < 0);
+            return ApplyCustomFilter(value, XLFilterOperator.LessThan);
         }
 
-        public IXLFilterConnector EqualOrGreaterThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualOrGreaterThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan,
-                                     v => v.CastTo<T>().CompareTo(value) >= 0);
+            return ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan);
         }
 
-        public IXLFilterConnector EqualOrLessThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualOrLessThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan,
-                                     v => v.CastTo<T>().CompareTo(value) <= 0);
+            return ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan);
         }
 
-        public void Between<T>(T minValue, T maxValue) where T : IComparable<T>
+        public void Between(XLCellValue minValue, XLCellValue maxValue)
         {
             EqualOrGreaterThan(minValue).And.EqualOrLessThan(maxValue);
         }
 
-        public void NotBetween<T>(T minValue, T maxValue) where T : IComparable<T>
+        public void NotBetween(XLCellValue minValue, XLCellValue maxValue)
         {
             LessThan(minValue).Or.GreaterThan(maxValue);
         }
@@ -311,6 +289,17 @@ namespace ClosedXML.Excel
                 Connector = XLConnector.Or,
                 Condition = condition
             });
+            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
+            _autoFilter.Reapply();
+            return new XLFilterConnector(_autoFilter, _column);
+        }
+
+        private IXLFilterConnector ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
+        {
+            _autoFilter.IsEnabled = true;
+            Clear();
+
+            _autoFilter.AddFilter(_column, XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
             _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
