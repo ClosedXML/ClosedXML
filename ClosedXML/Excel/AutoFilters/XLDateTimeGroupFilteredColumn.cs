@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
         {
             Func<Object, Boolean> condition = date2 => IsMatch(date, (DateTime) date2, dateTimeGrouping);
 
-            _autoFilter.Filters[_column].Add(new XLFilter
+            _autoFilter.AddFilter(_column, new XLFilter
             {
                 Value = date,
                 Condition = condition,

@@ -115,7 +115,7 @@ namespace ClosedXML.Excel
         private void ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
             where T : IComparable<T>
         {
-            _autoFilter.Filters[_column].Add(new XLFilter
+            _autoFilter.AddFilter(_column, new XLFilter
             {
                 Value = value,
                 Operator = op,
