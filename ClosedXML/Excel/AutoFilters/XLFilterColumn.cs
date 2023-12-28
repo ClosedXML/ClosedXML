@@ -28,15 +28,14 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(String))
             {
-                ApplyCustomFilter(value, XLFilterOperator.Equal,
+                ApplyRegularFilter(value, XLFilterOperator.Equal,
                                   v =>
-                                  v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase),
-                                  XLFilterType.Regular);
+                                  v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase));
             }
             else
             {
-                ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                  v => v.CastTo<T>().CompareTo(value) == 0, XLFilterType.Regular);
+                ApplyRegularFilter(value, XLFilterOperator.Equal,
+                                  v => v.CastTo<T>().CompareTo(value) == 0);
             }
             return new XLFilteredColumn(_autoFilter, _column);
         }
@@ -323,8 +322,26 @@ namespace ClosedXML.Excel
                 : distinctNumbers.Where(c => c < average);
         }
 
-        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
-                                                        XLFilterType filterType = XLFilterType.Custom)
+        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
+            where T : IComparable<T>
+        {
+            _autoFilter.IsEnabled = true;
+            Clear();
+
+            _autoFilter.AddFilter(_column, new XLFilter
+            {
+                Value = value,
+                Operator = op,
+                Connector = XLConnector.Or,
+                Condition = condition
+            });
+            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
+            _autoFilter.Reapply();
+            return new XLFilterConnector(_autoFilter, _column);
+        }
+
+        private void ApplyRegularFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
+            XLFilterType filterType = XLFilterType.Regular)
             where T : IComparable<T>
         {
             _autoFilter.IsEnabled = true;
@@ -340,7 +357,6 @@ namespace ClosedXML.Excel
             });
             _autoFilter.Column(_column).FilterType = filterType;
             _autoFilter.Reapply();
-            return new XLFilterConnector(_autoFilter, _column);
         }
 
         public IXLFilterColumn SetFilterType(XLFilterType value) { FilterType = value; return this; }
