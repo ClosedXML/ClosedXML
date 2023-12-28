@@ -24,19 +24,13 @@ namespace ClosedXML.Excel
                 _autoFilter.Filters.Remove(_column);
         }
 
-        public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
+        public IXLFilteredColumn AddFilter(XLCellValue value)
         {
-            if (typeof(T) == typeof(String))
-            {
-                ApplyRegularFilter(value, XLFilterOperator.Equal,
-                                  v =>
-                                  v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                ApplyRegularFilter(value, XLFilterOperator.Equal,
-                                  v => v.CastTo<T>().CompareTo(value) == 0);
-            }
+            // TODO: If different filter type, clear them
+            _autoFilter.IsEnabled = true;
+            FilterType = XLFilterType.Regular;
+            _autoFilter.AddFilter(_column, XLFilter.CreateRegularFilter(value));
+            _autoFilter.Reapply();
             return new XLFilteredColumn(_autoFilter, _column);
         }
 
@@ -338,25 +332,6 @@ namespace ClosedXML.Excel
             _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
-        }
-
-        private void ApplyRegularFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
-            XLFilterType filterType = XLFilterType.Regular)
-            where T : IComparable<T>
-        {
-            _autoFilter.IsEnabled = true;
-            if (filterType == XLFilterType.Custom)
-                Clear();
-
-            _autoFilter.AddFilter(_column, new XLFilter
-            {
-                Value = value,
-                Operator = op,
-                Connector = XLConnector.Or,
-                Condition = condition
-            });
-            _autoFilter.Column(_column).FilterType = filterType;
-            _autoFilter.Reapply();
         }
 
         public IXLFilterColumn SetFilterType(XLFilterType value) { FilterType = value; return this; }

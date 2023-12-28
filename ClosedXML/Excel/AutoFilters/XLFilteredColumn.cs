@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -15,45 +13,11 @@ namespace ClosedXML.Excel
             _column = column;
         }
 
-        #region IXLFilteredColumn Members
-
-        public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
+        public IXLFilteredColumn AddFilter(XLCellValue value)
         {
-            Func<Object, Boolean> condition;
-            Boolean isText;
-            if (typeof(T) == typeof(String))
-            {
-                condition = v => v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase);
-                isText = true;
-            }
-            else
-            {
-                condition = v => v.CastTo<T>().CompareTo(value) == 0;
-                isText = false;
-            }
-
-            _autoFilter.AddFilter(_column, new XLFilter
-            {
-                Value = value,
-                Condition = condition,
-                Operator = XLFilterOperator.Equal,
-                Connector = XLConnector.Or
-            });
-
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-
-            foreach (IXLRangeRow row in rows)
-            {
-                if ((isText && condition(row.Cell(_column).GetString())) ||
-                    (!isText && row.Cell(_column).DataType == XLDataType.Number &&
-                     condition(row.Cell(_column).GetValue<T>())))
-                {
-                    row.WorksheetRow().Unhide();
-                }
-            }
+            _autoFilter.AddFilter(_column, XLFilter.CreateRegularFilter(value));
+            _autoFilter.Reapply();
             return this;
         }
-
-        #endregion IXLFilteredColumn Members
     }
 }
