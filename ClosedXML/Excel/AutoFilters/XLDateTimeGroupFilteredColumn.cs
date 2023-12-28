@@ -26,13 +26,7 @@ namespace ClosedXML.Excel
                 DateTimeGrouping = dateTimeGrouping
             });
 
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
-            {
-                if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
-                    row.WorksheetRow().Unhide();
-            }
-
+            _autoFilter.Reapply();
             return this;
         }
 
