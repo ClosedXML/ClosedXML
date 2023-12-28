@@ -10,9 +10,8 @@ namespace ClosedXML.Excel
     /// <summary>
     /// <para>
     /// AutoFilter filter configuration for one column in an autofilter <see cref="IXLAutoFilter.Range">area</see>.
-    /// Filters determine visibility of rows in the autofilter area. Column can have multiple
-    /// filters, each specifying a different condition. Value in the row must satisfy all filters
-    /// in order for row to be visible.
+    /// Filters determine visibility of rows in the autofilter area. Value in the row must satisfy
+    /// all filters in all columns in order for row to be visible, otherwise it is <see cref="IXLRow.IsHidden"/>.
     /// </para>
     /// <para>
     /// Column can have only one type of filter, so it's not possible to combine several different
@@ -22,15 +21,7 @@ namespace ClosedXML.Excel
     /// can be only one).
     /// </para>
     /// <para>
-    /// <para>
     /// Whenever filter configuration changes, the filters are immediately reapplied.
-    /// </para>
-    /// <list type="bullet">
-    ///   <item><term>Top/Bottom</term><description>only accept value in any of the highest/lowest values of the column.</description></item>
-    ///   <item><term>Average</term><description>only accept value above/below average of all values in the column.</description></item>
-    ///   <item><term>Text filters</term><description>only accept value whose text representation matches <see cref="Wildcard"/>. It encompasses text equality, <c>start-with</c> ect.</description></item>
-    ///   <item><term>Number</term><description>only accept value whose text representation matches <see cref="Wildcard"/>.</description></item>
-    /// </list>
     /// </para>
     /// </summary>
     public interface IXLFilterColumn
@@ -38,11 +29,15 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Remove all filters from the column.
         /// </summary>
+        /// <remarks>
+        /// Does not reapply filters, visibility of rows isn't changed.
+        /// </remarks>
         void Clear();
 
         /// <summary>
         /// <para>
-        /// Switch to <see cref="XLFilterType.Regular"/> filter if necessary and add
+        /// Switch to the <see cref="XLFilterType.Regular"/> filter if filter column has a
+        /// different type (for current type <see cref="FilterType"/>) and add
         /// <paramref name="value"/> to a set of allowed values. Excel displays regular filter as
         /// a list of possible values in a column with checkbox next to it and user can check which
         /// one should be displayed.
@@ -50,16 +45,18 @@ namespace ClosedXML.Excel
         /// <para>
         /// From technical perspective, the passed <paramref name="value"/> is converted to
         /// a localized string (using current locale) and the column values satisfy the filter
-        /// condition, when its formatted string matches any filter string.
+        /// condition, when the <see cref="IXLCell.GetFormattedString">formatted string of a cell
+        /// </see> matches any filter string.
         /// </para>
         /// <para>
         /// Examples of less intuitive behavior: filter value is <c>2.5</c> in locale cs-CZ that
         /// uses "<em>,</em>" as a decimal separator. The passed <paramref name="value"/>
-        /// is number 2.5, converted to string <em>2,5</em>. This string is used for comparison
-        /// with values in the column:
+        /// is number 2.5, converted immediately to a string <em>2,5</em>. The string is used for
+        /// comparison with values of cells in the column:
         /// <list type="bullet">
         ///  <item>Number 2.5 formatted with two decimal places as <em>2,50</em> will not match.</item>
-        ///  <item>Number 2.5 with default formatting will be matched, because its string is <em>2,5</em> in cs-CZ locale (but not in others, e.g. en-US locale).</item>
+        ///  <item>Number 2.5 with default formatting will be matched, because its string is
+        ///        <em>2,5</em> in cs-CZ locale (but not in others, e.g. en-US locale).</item>
         ///  <item>Text <em>2,5</em> will be matched.</item>
         /// </list>
         /// </para>
@@ -111,6 +108,9 @@ namespace ClosedXML.Excel
 
         IXLFilterConnector NotContains(String value);
 
+        /// <summary>
+        /// Current filter type used by the filter columns.
+        /// </summary>
         XLFilterType FilterType { get; set; }
         Int32 TopBottomValue { get; set; }
         XLTopBottomType TopBottomType { get; set; }
