@@ -2,6 +2,8 @@
 
 // Keep this file CodeMaid organised and cleaned
 using System;
+using System.Diagnostics;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
@@ -31,6 +33,9 @@ namespace ClosedXML.Excel
 
         public XLFilterOperator Operator { get; set; }
 
+        /// <summary>
+        /// Value for <see cref="XLFilterType.Regular"/> filter.
+        /// </summary>
         public Object Value { get; set; }
 
         internal static XLFilter CreateCustomFilter(XLCellValue value, XLFilterOperator op, XLConnector connector)
@@ -45,7 +50,19 @@ namespace ClosedXML.Excel
                 NewCondition = cellValue => CustomFilterSatisfied(cellValue, op, value, comparer),
             };
         }
-        
+
+        internal static XLFilter CreateCustomWildcardFilter(string wildcard, XLFilterOperator op, XLConnector connector)
+        {
+            Debug.Assert(op is XLFilterOperator.Equal or XLFilterOperator.NotEqual);
+            return new XLFilter
+            {
+                CustomValue = wildcard,
+                Operator = op,
+                Connector = connector,
+                NewCondition = op == XLFilterOperator.Equal ? c => MatchesWildcard(wildcard, c) : c => !MatchesWildcard(wildcard, c),
+            };
+        }
+
         internal static XLFilter CreateRegularFilter(XLCellValue value)
         {
             // TODO: If user supplies a text that is a wildcard, escape it (e.g. `2*` to `2~*`).
@@ -69,6 +86,18 @@ namespace ClosedXML.Excel
                 Connector = XLConnector.Or,
                 DateTimeGrouping = dateTimeGrouping
             };
+        }
+
+        private static bool MatchesWildcard(string pattern, XLCellValue cellValue)
+        {
+            // Wildcard matches only text cells.
+            if (!cellValue.IsText)
+                return false;
+
+            var text = cellValue.GetText();
+            var wildcard = new Wildcard(pattern);
+            var position = wildcard.Search(text.AsSpan());
+            return position >= 0;
         }
 
         private static Boolean IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)

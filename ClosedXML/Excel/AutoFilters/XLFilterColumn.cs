@@ -106,40 +106,34 @@ namespace ClosedXML.Excel
             LessThan(minValue).Or.GreaterThan(maxValue);
         }
 
-        public static Func<String, Object, Boolean> BeginsWithFunction { get; } = (value, input) => ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
-
         public IXLFilterConnector BeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.Equal, s => BeginsWithFunction(value, s));
+            return ApplyWildcardCustomFilter(value + "*", XLFilterOperator.Equal);
         }
 
         public IXLFilterConnector NotBeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => !BeginsWithFunction(value, s));
+            return ApplyWildcardCustomFilter(value + "*", XLFilterOperator.NotEqual);
         }
-
-        public static Func<String, Object, Boolean> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
 
         public IXLFilterConnector EndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.Equal, s => EndsWithFunction(value, s));
+            return ApplyWildcardCustomFilter("*" + value, XLFilterOperator.Equal);
         }
 
         public IXLFilterConnector NotEndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => !EndsWithFunction(value, s));
+            return ApplyWildcardCustomFilter("*" + value, XLFilterOperator.NotEqual);
         }
-
-        public static Func<String, Object, Boolean> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
 
         public IXLFilterConnector Contains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => ContainsFunction(value, s));
+            return ApplyWildcardCustomFilter("*" + value + "*", XLFilterOperator.Equal);
         }
 
         public IXLFilterConnector NotContains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.NotEqual, s => !ContainsFunction(value, s));
+            return ApplyWildcardCustomFilter("*" + value + "*", XLFilterOperator.NotEqual);
         }
 
         public XLFilterType FilterType { get; set; }
@@ -275,31 +269,24 @@ namespace ClosedXML.Excel
                 ? distinctNumbers.Where(c => c > average)
                 : distinctNumbers.Where(c => c < average);
         }
-
-        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
-            where T : IComparable<T>
-        {
-            _autoFilter.IsEnabled = true;
-            Clear();
-
-            _autoFilter.AddFilter(_column, new XLFilter
-            {
-                Value = value,
-                Operator = op,
-                Connector = XLConnector.Or,
-                Condition = condition
-            });
-            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
-            _autoFilter.Reapply();
-            return new XLFilterConnector(_autoFilter, _column);
-        }
-
+        
         private IXLFilterConnector ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
         {
             _autoFilter.IsEnabled = true;
             Clear();
 
             _autoFilter.AddFilter(_column, XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
+            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
+            _autoFilter.Reapply();
+            return new XLFilterConnector(_autoFilter, _column);
+        }
+
+        private IXLFilterConnector ApplyWildcardCustomFilter(string wildcard, XLFilterOperator op)
+        {
+            _autoFilter.IsEnabled = true;
+            Clear();
+
+            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(wildcard, op, XLConnector.Or));
             _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);

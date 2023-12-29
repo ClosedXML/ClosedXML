@@ -1643,94 +1643,21 @@ namespace ClosedXML.Excel
                     var filterList = new List<XLFilter>();
                     autoFilter.Column(column).FilterType = XLFilterType.Custom;
                     autoFilter.Filters.Add(column, filterList);
-                    XLConnector connector = filterColumn.CustomFilters.And != null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
+                    var connector = filterColumn.CustomFilters.And is not null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
 
-                    Boolean isText = false;
                     foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
-                        String val = filter.Val.Value;
-                        if (!Double.TryParse(val, out Double dTest))
+                        var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
+                        XLFilter xlFilter;
+                        var v = filter.Val.Value;
+                        if (op is XLFilterOperator.Equal or XLFilterOperator.NotEqual && v is not null && v.Contains('*'))
                         {
-                            isText = true;
-                            break;
-                        }
-                    }
-                    
-                    foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
-                    {
-                        var xlFilter = new XLFilter { Connector = connector };
-                        if (filter.Operator != null)
-                            xlFilter.Operator = filter.Operator.Value.ToClosedXml();
-                        else
-                            xlFilter.Operator = XLFilterOperator.Equal;
-
-                        if (isText)
-                        {
-                            // TODO: Treat text BETWEEN functions better
-                            if (filter.Val.Value.StartsWith("*") && filter.Val.Value.EndsWith("*"))
-                            {
-                                var value = filter.Val.Value.Substring(1, filter.Val.Value.Length - 2);
-                                xlFilter.Value = filter.Val.Value;
-                                xlFilter.Condition = xlFilter.Operator == XLFilterOperator.NotEqual
-                                    ? s => !XLFilterColumn.ContainsFunction(value, s)
-                                    : s => XLFilterColumn.ContainsFunction(value, s);
-                            }
-                            else if (filter.Val.Value.StartsWith("*"))
-                            {
-                                var value = filter.Val.Value.Substring(1);
-                                xlFilter.Value = filter.Val.Value;
-                                xlFilter.Condition = xlFilter.Operator == XLFilterOperator.NotEqual
-                                    ? s => !XLFilterColumn.EndsWithFunction(value, s)
-                                    : s => XLFilterColumn.EndsWithFunction(value, s);
-                            }
-                            else if (filter.Val.Value.EndsWith("*"))
-                            {
-                                var value = filter.Val.Value.Substring(0, filter.Val.Value.Length - 1);
-                                xlFilter.Value = filter.Val.Value;
-                                xlFilter.Condition = xlFilter.Operator == XLFilterOperator.NotEqual
-                                    ? s => !XLFilterColumn.BeginsWithFunction(value, s)
-                                    : s => XLFilterColumn.BeginsWithFunction(value, s);
-                            }
-                            else
-                            {
-                                var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
-                                var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
-                                xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
-                            }
+                            xlFilter = XLFilter.CreateCustomWildcardFilter(v, op, connector);
                         }
                         else
                         {
                             var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
-                            var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
                             xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
-                        }
-
-                        // Unhandled instances - we should actually improve this
-                        if (xlFilter.Condition == null && xlFilter.NewCondition is null)
-                        {
-                            Func<Object, Boolean> condition = null;
-                            switch (xlFilter.Operator)
-                            {
-                                case XLFilterOperator.Equal:
-                                    if (isText)
-                                        condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
-                                    else
-                                        condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
-                                    break;
-
-                                case XLFilterOperator.EqualOrGreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) >= 0; break;
-                                case XLFilterOperator.EqualOrLessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) <= 0; break;
-                                case XLFilterOperator.GreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) > 0; break;
-                                case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
-                                case XLFilterOperator.NotEqual:
-                                    if (isText)
-                                        condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
-                                    else
-                                        condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
-                                    break;
-                            }
-
-                            xlFilter.Condition = condition;
                         }
                         
                         filterList.Add(xlFilter);
