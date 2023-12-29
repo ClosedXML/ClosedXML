@@ -165,7 +165,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
+                    Func<XLCellValue, Boolean> condition = v => v.IsUnifiedNumber && v.GetUnifiedNumber().Equals(val);
                     if (addToList)
                     {
                         _autoFilter.AddFilter(_column, new XLFilter
@@ -173,7 +173,7 @@ namespace ClosedXML.Excel
                             Value = val,
                             Operator = XLFilterOperator.Equal,
                             Connector = XLConnector.Or,
-                            Condition = condition
+                            NewCondition = condition
                         });
                     }
 
@@ -229,7 +229,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
+                    Func<XLCellValue, Boolean> condition = v => v.IsUnifiedNumber && v.GetUnifiedNumber().Equals(val);
                     if (addToList)
                     {
                         _autoFilter.AddFilter(_column, new XLFilter
@@ -237,7 +237,7 @@ namespace ClosedXML.Excel
                             Value = val,
                             Operator = XLFilterOperator.Equal,
                             Connector = XLConnector.Or,
-                            Condition = condition
+                            NewCondition = condition
                         });
                     }
 

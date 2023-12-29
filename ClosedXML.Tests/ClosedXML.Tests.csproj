@@ -32,4 +32,9 @@
     <ProjectReference Include="..\ClosedXML.Examples\ClosedXML.Examples.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="NUnit.Framework.SetCultureAttribute">
+      <_Parameter1>en-US</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

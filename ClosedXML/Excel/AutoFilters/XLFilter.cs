@@ -26,11 +26,11 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Value for <see cref="XLFilterType.Custom"/> that is compared using <see cref="Operator"/>.
         /// </summary>
-        public XLCellValue CustomValue { get; set; }
+        public XLCellValue CustomValue { get; init; }
 
         public Func<XLCellValue, bool> NewCondition { get; set; }
 
-        public XLFilterOperator Operator { get; set; }
+        public XLFilterOperator Operator { get; init; }
 
         /// <summary>
         /// Value for <see cref="XLFilterType.Regular"/> filter.

@@ -1676,34 +1676,10 @@ namespace ClosedXML.Excel
 
                     autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
 
-                    Boolean isText = false;
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
-                        String val = filter.Val.Value;
-                        if (!Double.TryParse(val, NumberStyles.Any, null, out Double dTest))
-                        {
-                            isText = true;
-                            break;
-                        }
-                    }
+                        var xlFilter = XLFilter.CreateRegularFilter(filter.Val.Value);
 
-                    foreach (var filter in filterColumn.Filters.OfType<Filter>())
-                    {
-                        var xlFilter = new XLFilter { Connector = XLConnector.Or, Operator = XLFilterOperator.Equal };
-
-                        Func<Object, Boolean> condition;
-                        if (isText)
-                        {
-                            xlFilter.Value = filter.Val.Value;
-                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
-                        }
-                        else
-                        {
-                            xlFilter.Value = Double.Parse(filter.Val.Value, NumberStyles.Any);
-                            condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
-                        }
-
-                        xlFilter.Condition = condition;
                         filterList.Add(xlFilter);
                     }
 
