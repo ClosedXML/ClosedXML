@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -363,7 +364,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the cell's value formatted depending on the cell's data type and style.
         /// </summary>
-        String GetFormattedString();
+        /// <param name="culture">Culture used to format the string. If <c>null</c> (default value), use current culture.</param>
+        String GetFormattedString(CultureInfo culture = null);
 
         /// <summary>
         /// Returns a hyperlink for the cell, if any, or creates a new instance is there is no hyperlink.

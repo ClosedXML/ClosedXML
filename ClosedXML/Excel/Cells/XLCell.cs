@@ -496,7 +496,7 @@ namespace ClosedXML.Excel
 
         public String GetString() => Value.ToString(CultureInfo.CurrentCulture);
 
-        public string GetFormattedString()
+        public string GetFormattedString(CultureInfo culture = null)
         {
             XLCellValue value;
             try
@@ -510,10 +510,11 @@ namespace ClosedXML.Excel
                 value = CachedValue;
             }
 
+            culture ??= CultureInfo.CurrentCulture;
             var format = GetFormat();
             return value.IsUnifiedNumber
-                ? value.GetUnifiedNumber().ToExcelFormat(format)
-                : value.ToString(CultureInfo.CurrentCulture);
+                ? value.GetUnifiedNumber().ToExcelFormat(format, culture)
+                : value.ToString(culture);
         }
 
         public void InvalidateFormula()
