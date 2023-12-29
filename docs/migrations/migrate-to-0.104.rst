@@ -91,3 +91,11 @@ AutoFilter
 parameter type was changed from a generic ``T : IComparable<T>`` to ``XLCellValue``.
 Semantic of method was also updated to reflect how Excel actually filter column
 values.
+
+*******
+IXLCell
+*******
+
+``IXLCell.GetFormattedString(CultureInfo)`` now has an optional argument for a
+culture. By default, it uses current culture in all cases (was inconsistent),
+but culture can be explicitely specified.
