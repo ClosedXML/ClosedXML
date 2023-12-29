@@ -165,7 +165,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<XLCellValue, Boolean> condition = v => v.IsUnifiedNumber && v.GetUnifiedNumber().Equals(val);
+                    Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
                     if (addToList)
                     {
                         _autoFilter.AddFilter(_column, new XLFilter
@@ -178,7 +178,7 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (!condition(cell)) continue;
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }
@@ -229,7 +229,7 @@ namespace ClosedXML.Excel
                 Boolean foundOne = false;
                 foreach (double val in values)
                 {
-                    Func<XLCellValue, Boolean> condition = v => v.IsUnifiedNumber && v.GetUnifiedNumber().Equals(val);
+                    Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
                     if (addToList)
                     {
                         _autoFilter.AddFilter(_column, new XLFilter
@@ -242,7 +242,7 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (!condition(cell)) continue;
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }

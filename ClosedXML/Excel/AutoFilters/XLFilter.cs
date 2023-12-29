@@ -17,8 +17,6 @@ namespace ClosedXML.Excel
             Operator = op;
         }
 
-        public Func<Object, Boolean> Condition { get; set; }
-
         public XLConnector Connector { get; set; }
 
         public XLDateTimeGrouping DateTimeGrouping { get; set; }
@@ -28,7 +26,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCellValue CustomValue { get; init; }
 
-        public Func<XLCellValue, bool> NewCondition { get; set; }
+        public Func<IXLCell, bool> NewCondition { get; set; }
 
         public XLFilterOperator Operator { get; init; }
 
@@ -46,7 +44,7 @@ namespace ClosedXML.Excel
                 CustomValue = value,
                 Operator = op,
                 Connector = connector,
-                NewCondition = cellValue => CustomFilterSatisfied(cellValue, op, value, comparer),
+                NewCondition = cell => CustomFilterSatisfied(cell.CachedValue, op, value, comparer),
             };
         }
 
@@ -57,7 +55,7 @@ namespace ClosedXML.Excel
                 CustomValue = wildcard,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                NewCondition = match ? c => MatchesWildcard(wildcard, c) : c => !MatchesWildcard(wildcard, c),
+                NewCondition = match ? c => MatchesWildcard(wildcard, c.CachedValue) : c => !MatchesWildcard(wildcard, c.CachedValue),
             };
         }
 
@@ -70,7 +68,7 @@ namespace ClosedXML.Excel
                 Value = wildcard,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
-                Condition = v => v.ToString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase)
+                NewCondition = v => v.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase),
             };
         }
 
@@ -79,7 +77,7 @@ namespace ClosedXML.Excel
             return new XLFilter
             {
                 Value = date,
-                Condition = date2 => IsMatch(date, (DateTime)date2, dateTimeGrouping),
+                NewCondition = cell => cell.CachedValue.IsDateTime && IsMatch(date, (DateTime)cell.CachedValue.GetDateTime(), dateTimeGrouping),
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 DateTimeGrouping = dateTimeGrouping
