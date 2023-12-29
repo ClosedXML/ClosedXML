@@ -1652,7 +1652,7 @@ namespace ClosedXML.Excel
                         var v = filter.Val.Value;
                         if (op is XLFilterOperator.Equal or XLFilterOperator.NotEqual && v is not null && v.Contains('*'))
                         {
-                            xlFilter = XLFilter.CreateCustomWildcardFilter(v, op, connector);
+                            xlFilter = XLFilter.CreateCustomWildcardFilter(v, op == XLFilterOperator.Equal, connector);
                         }
                         else
                         {

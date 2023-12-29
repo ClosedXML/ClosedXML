@@ -108,32 +108,32 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector BeginsWith(String value)
         {
-            return ApplyWildcardCustomFilter(value + "*", XLFilterOperator.Equal);
+            return ApplyCustomFilter(value + "*", true);
         }
 
         public IXLFilterConnector NotBeginsWith(String value)
         {
-            return ApplyWildcardCustomFilter(value + "*", XLFilterOperator.NotEqual);
+            return ApplyCustomFilter(value + "*", false);
         }
 
         public IXLFilterConnector EndsWith(String value)
         {
-            return ApplyWildcardCustomFilter("*" + value, XLFilterOperator.Equal);
+            return ApplyCustomFilter("*" + value, true);
         }
 
         public IXLFilterConnector NotEndsWith(String value)
         {
-            return ApplyWildcardCustomFilter("*" + value, XLFilterOperator.NotEqual);
+            return ApplyCustomFilter("*" + value, false);
         }
 
         public IXLFilterConnector Contains(String value)
         {
-            return ApplyWildcardCustomFilter("*" + value + "*", XLFilterOperator.Equal);
+            return ApplyCustomFilter("*" + value + "*", true);
         }
 
         public IXLFilterConnector NotContains(String value)
         {
-            return ApplyWildcardCustomFilter("*" + value + "*", XLFilterOperator.NotEqual);
+            return ApplyCustomFilter("*" + value + "*", false);
         }
 
         public XLFilterType FilterType { get; set; }
@@ -281,12 +281,12 @@ namespace ClosedXML.Excel
             return new XLFilterConnector(_autoFilter, _column);
         }
 
-        private IXLFilterConnector ApplyWildcardCustomFilter(string wildcard, XLFilterOperator op)
+        private IXLFilterConnector ApplyCustomFilter(string pattern, bool match)
         {
             _autoFilter.IsEnabled = true;
             Clear();
 
-            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(wildcard, op, XLConnector.Or));
+            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(pattern, match, XLConnector.Or));
             _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);

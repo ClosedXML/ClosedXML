@@ -2,7 +2,6 @@
 
 // Keep this file CodeMaid organised and cleaned
 using System;
-using System.Diagnostics;
 using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
@@ -51,15 +50,14 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateCustomWildcardFilter(string wildcard, XLFilterOperator op, XLConnector connector)
+        internal static XLFilter CreateCustomWildcardFilter(string wildcard, bool match, XLConnector connector)
         {
-            Debug.Assert(op is XLFilterOperator.Equal or XLFilterOperator.NotEqual);
             return new XLFilter
             {
                 CustomValue = wildcard,
-                Operator = op,
+                Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                NewCondition = op == XLFilterOperator.Equal ? c => MatchesWildcard(wildcard, c) : c => !MatchesWildcard(wildcard, c),
+                NewCondition = match ? c => MatchesWildcard(wildcard, c) : c => !MatchesWildcard(wildcard, c),
             };
         }
 

@@ -15,8 +15,6 @@ namespace ClosedXML.Excel
             _connector = connector;
         }
 
-        #region IXLCustomFilteredColumn Members
-
         public void EqualTo(XLCellValue value)
         {
             ApplyCustomFilter(value, XLFilterOperator.Equal);
@@ -49,59 +47,43 @@ namespace ClosedXML.Excel
 
         public void BeginsWith(String value)
         {
-            ApplyCustomFilter(value + "*", XLFilterOperator.Equal,
-                              s => ((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            ApplyWildcardCustomFilter(value + "*", true);
         }
 
         public void NotBeginsWith(String value)
         {
-            ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual,
-                              s =>
-                              !((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            ApplyWildcardCustomFilter(value + "*", false);
         }
 
         public void EndsWith(String value)
         {
-            ApplyCustomFilter("*" + value, XLFilterOperator.Equal,
-                              s => ((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            ApplyWildcardCustomFilter("*" + value, true);
         }
 
         public void NotEndsWith(String value)
         {
-            ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual,
-                              s => !((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            ApplyWildcardCustomFilter("*" + value, false);
         }
 
         public void Contains(String value)
         {
-            ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
-                              s => ((string)s).ToLower().Contains(value.ToLower()));
+            ApplyWildcardCustomFilter("*" + value + "*", true);
         }
 
         public void NotContains(String value)
         {
-            ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
-                              s => !((string)s).ToLower().Contains(value.ToLower()));
-        }
-
-        #endregion
-
-        private void ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
-            where T : IComparable<T>
-        {
-            _autoFilter.AddFilter(_column, new XLFilter
-            {
-                Value = value,
-                Operator = op,
-                Connector = _connector,
-                Condition = condition
-            });
-            _autoFilter.Reapply();
+            ApplyWildcardCustomFilter("*" + value + "*", false);
         }
 
         private void ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
         {
             _autoFilter.AddFilter(_column, XLFilter.CreateCustomFilter(value, op, _connector));
+            _autoFilter.Reapply();
+        }
+
+        private void ApplyWildcardCustomFilter(string pattern, bool match)
+        {
+            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(pattern, match, _connector));
             _autoFilter.Reapply();
         }
     }
