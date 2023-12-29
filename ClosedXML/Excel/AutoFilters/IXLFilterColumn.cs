@@ -143,8 +143,33 @@ namespace ClosedXML.Excel
         /// Current filter type used by the filter columns.
         /// </summary>
         XLFilterType FilterType { get; set; }
+
+        /// <summary>
+        /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains how many
+        /// items/percent (depends on <see cref="TopBottomType"/>) should be filter accept.
+        /// </summary>
+        /// <remarks>
+        /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
+        /// </remarks>
         Int32 TopBottomValue { get; set; }
+
+        /// <summary>
+        /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains the content
+        /// interpretation of a <see cref="TopBottomValue"/> property, either how many items or how
+        /// many percents.
+        /// </summary>
+        /// <remarks>
+        /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
+        /// </remarks>
         XLTopBottomType TopBottomType { get; set; }
+
+        /// <summary>
+        /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It determines if filter
+        /// should accept items from top or bottom.
+        /// </summary>
+        /// <remarks>
+        /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
+        /// </remarks>
         XLTopBottomPart TopBottomPart { get; set; }
         XLFilterDynamicType DynamicType { get; set; }
         Double DynamicValue { get; set; }

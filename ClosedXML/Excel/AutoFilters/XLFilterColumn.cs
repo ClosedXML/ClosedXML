@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
         public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
         {
             _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Top;
-            SetTopBottom(value, type);
+            SetTopBottom(value, type, true);
         }
 
         public void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
@@ -147,67 +147,47 @@ namespace ClosedXML.Excel
 
         #endregion IXLFilterColumn Members
 
-        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
+        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop)
         {
             _autoFilter.IsEnabled = true;
+            Clear();
             _autoFilter.Column(_column).SetFilterType(XLFilterType.TopBottom)
                                        .SetTopBottomValue(value)
                                        .SetTopBottomType(type);
 
-            var values = GetValues(value, type, takeTop).ToArray();
-
-            Clear();
-
-            Boolean addToList = true;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
-            {
-                Boolean foundOne = false;
-                foreach (double val in values)
-                {
-                    Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
-                    if (addToList)
-                    {
-                        _autoFilter.AddFilter(_column, new XLFilter
-                        {
-                            Value = val,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition
-                        });
-                    }
-
-                    var cell = row.Cell(_column);
-                    if (!condition(cell)) continue;
-                    row.WorksheetRow().Unhide();
-                    foundOne = true;
-                }
-                if (!foundOne)
-                    row.WorksheetRow().Hide();
-
-                addToList = false;
-            }
+            var filterValue = GetTopBottomFilterValue(type, value, takeTop);
+            _autoFilter.AddFilter(_column, XLFilter.CreateTopBottom(takeTop, filterValue));
+            _autoFilter.Reapply();
         }
 
-        private IEnumerable<double> GetValues(int value, XLTopBottomType type, bool takeTop)
+        /// <summary>
+        /// Get a border value for top/bottom filter value.
+        /// </summary>
+        /// <param name="type">Content of <paramref name="value"/>.</param>
+        /// <param name="value">Either percents or items.</param>
+        /// <param name="takeTop">Take top (<c>true</c>) or bottom (<c>false</c>).</param>
+        private double GetTopBottomFilterValue(XLTopBottomType type, int value, bool takeTop)
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            var columnNumbers = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble());
+            var columnNumbers = subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber).Select(c => c.CachedValue.GetUnifiedNumber());
             var comparer = takeTop
                 ? Comparer<double>.Create((x, y) => -x.CompareTo(y))
                 : Comparer<double>.Create((x, y) => x.CompareTo(y));
 
-            if (type == XLTopBottomType.Items)
+            switch (type)
             {
-                var itemCount = value;
-                return columnNumbers.OrderBy(d => d, comparer).Take(itemCount).Distinct();
+                case XLTopBottomType.Items:
+                    var itemCount = value;
+                    return columnNumbers.OrderBy(d => d, comparer).Take(itemCount).DefaultIfEmpty(double.NaN).LastOrDefault();
+                case XLTopBottomType.Percent:
+                    var percent = value;
+                    var materializedNumbers = columnNumbers.ToArray();
+                    var itemCountByPercents = materializedNumbers.Length * percent / 100;
+                    return materializedNumbers.OrderBy(d => d, comparer).Take(itemCountByPercents).DefaultIfEmpty(Double.NaN).LastOrDefault();
+                default:
+                    throw new NotSupportedException();
             }
-
-            var numerics = columnNumbers.ToArray();
-            var percent = value;
-            Int32 itemCountByPercents = numerics.Length * percent / 100;
-            return numerics.OrderBy(d => d, comparer).Take(itemCountByPercents).Distinct();
         }
 
         private void ShowAverage(Boolean aboveAverage)
@@ -269,7 +249,7 @@ namespace ClosedXML.Excel
                 ? distinctNumbers.Where(c => c > average)
                 : distinctNumbers.Where(c => c < average);
         }
-        
+
         private IXLFilterConnector ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
         {
             _autoFilter.IsEnabled = true;
