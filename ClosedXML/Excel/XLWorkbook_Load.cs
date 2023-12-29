@@ -1756,22 +1756,21 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-                else if (filterColumn.Top10 != null)
+                else if (filterColumn.Top10 is { } top10)
                 {
                     var xlFilterColumn = autoFilter.Column(column);
-                    autoFilter.Filters.Add(column, null);
                     xlFilterColumn.FilterType = XLFilterType.TopBottom;
-                    if (filterColumn.Top10.Percent != null && filterColumn.Top10.Percent.Value)
-                        xlFilterColumn.TopBottomType = XLTopBottomType.Percent;
-                    else
-                        xlFilterColumn.TopBottomType = XLTopBottomType.Items;
+                    xlFilterColumn.TopBottomType = top10.Percent is not null && top10.Percent.Value
+                            ? XLTopBottomType.Percent
+                            : XLTopBottomType.Items;
+                    xlFilterColumn.TopBottomPart = top10.Top is null || top10.Top.Value
+                        ? XLTopBottomPart.Top
+                        : XLTopBottomPart.Bottom;
 
-                    if (filterColumn.Top10.Top != null && !filterColumn.Top10.Top.Value)
-                        xlFilterColumn.TopBottomPart = XLTopBottomPart.Bottom;
-                    else
-                        xlFilterColumn.TopBottomPart = XLTopBottomPart.Top;
-
-                    xlFilterColumn.TopBottomValue = (int)filterColumn.Top10.Val.Value;
+                    // Value contains how many percent or items, so it can only be int.
+                    // Filter value is optional, so we don't rely on it.
+                    xlFilterColumn.TopBottomValue = (int)top10.Val.Value;
+                    autoFilter.Filters.Add(column, null);
                 }
                 else if (filterColumn.DynamicFilter != null)
                 {
