@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
@@ -1473,7 +1474,9 @@ namespace ClosedXML.Excel.IO
                         var customFilters = new CustomFilters();
                         foreach (var filter in kp.Value)
                         {
-                            var customFilter = new CustomFilter { Val = filter.Value.ObjectToInvariantString() };
+                            // Since OOXML allows only string, the operand for custom filter must be serialized.
+                            var filterValue = filter.CustomValue.ToString(CultureInfo.InvariantCulture);
+                            var customFilter = new CustomFilter { Val = filterValue };
 
                             if (filter.Operator != XLFilterOperator.Equal)
                                 customFilter.Operator = filter.Operator.ToOpenXml();

@@ -1,5 +1,4 @@
 using System;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
@@ -70,6 +69,38 @@ namespace ClosedXML.Excel
         /// <returns>Fluent API allowing to add additional filter value.</returns>
         IXLFilteredColumn AddFilter(XLCellValue value);
 
+        /// <summary>
+        /// <para>
+        /// Enable autofilter (if needed), switch to the <see cref="XLFilterType.Regular"/> filter
+        /// if filter column has a different type (for current type <see cref="FilterType"/>) and
+        /// add a filter that is satisfied when cell value is a <see cref="XLDataType.DateTime"/>
+        /// and the tested date has same components from <paramref name="dateTimeGrouping"/>
+        /// component down to the <see cref="XLDateTimeGrouping.Second"/> component with same value
+        /// as the <paramref name="dateTimeGrouping"/>.
+        /// </para>
+        /// <para>
+        /// <example>
+        /// Example:
+        /// <code>
+        /// // Filter will be satisfied if the cell value is a XLDataType.DateTime and the month,
+        /// // day, hour, minute and second are same as the passed date.
+        /// AddDateGroupFilter(new DateTime(2023, 7, 15), XLDateTimeGrouping.Month)
+        /// </code>
+        /// </example>
+        /// </para>
+        /// <para>
+        /// There can be multiple date group filters and they are <see cref="XLFilterType.Regular"/>
+        /// filter types, i.e. they don't delete filters from <see cref="AddFilter"/>. The cell
+        /// value is satisfied, if it matches any of the text values from <see cref="AddFilter"/>
+        /// or any date group filter.
+        /// </para>
+        /// </summary>
+        /// <param name="date">Date which components are compared with date values of the column.</param>
+        /// <param name="dateTimeGrouping">
+        /// Starting component of the grouping. Tested date must match all date components of the
+        /// <paramref name="date"/> from this one to the <see cref="XLDateTimeGrouping.Second"/>.
+        /// </param>
+        /// <returns>Fluent API allowing to add additional date time group value.</returns>
         IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping);
 
         void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items);
@@ -80,21 +111,21 @@ namespace ClosedXML.Excel
 
         void BelowAverage();
 
-        IXLFilterConnector EqualTo<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector EqualTo(XLCellValue value);
 
-        IXLFilterConnector NotEqualTo<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector NotEqualTo(XLCellValue value);
 
-        IXLFilterConnector GreaterThan<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector GreaterThan(XLCellValue value);
 
-        IXLFilterConnector LessThan<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector LessThan(XLCellValue value);
 
-        IXLFilterConnector EqualOrGreaterThan<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector EqualOrGreaterThan(XLCellValue value);
 
-        IXLFilterConnector EqualOrLessThan<T>(T value) where T : IComparable<T>;
+        IXLFilterConnector EqualOrLessThan(XLCellValue value);
 
-        void Between<T>(T minValue, T maxValue) where T : IComparable<T>;
+        void Between(XLCellValue minValue, XLCellValue maxValue);
 
-        void NotBetween<T>(T minValue, T maxValue) where T : IComparable<T>;
+        void NotBetween(XLCellValue minValue, XLCellValue maxValue);
 
         IXLFilterConnector BeginsWith(String value);
 

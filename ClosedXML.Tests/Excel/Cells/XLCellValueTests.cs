@@ -426,7 +426,7 @@ namespace ClosedXML.Tests.Excel.Cells
         }
 
         [Test]
-        [Culture("cs-CZ")]
+        [SetCulture("cs-CZ")]
         public void ToString_RespectsCulture()
         {
             XLCellValue v = Blank.Value;

@@ -83,21 +83,8 @@ namespace ClosedXML.Excel
 
                     foreach (var filter in columnFilters)
                     {
-                        var condition = filter.Condition;
-                        var isText = filter.Value is String;
-                        var isDateTime = filter.Value is DateTime;
-
-                        Boolean filterMatch;
-
-                        if (isText)
-                            filterMatch = condition(row.Cell(columnIndex).GetFormattedString());
-                        else if (isDateTime)
-                            filterMatch = row.Cell(columnIndex).DataType == XLDataType.DateTime &&
-                                    condition(row.Cell(columnIndex).GetDateTime());
-                        else
-                            filterMatch = row.Cell(columnIndex).TryGetValue(out double number) &&
-                                    condition(number);
-
+                        var cell = row.Cell(columnIndex);
+                        var filterMatch = filter.Condition(cell);
                         if (filter.Connector == XLConnector.And)
                         {
                             columnFilterMatch &= filterMatch;
