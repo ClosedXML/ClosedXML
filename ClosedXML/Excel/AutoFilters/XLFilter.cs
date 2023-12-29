@@ -140,5 +140,27 @@ namespace ClosedXML.Excel
                 _ => throw new NotSupportedException(),
             };
         }
+
+        internal static XLFilter CreateTopBottom(bool takeTop, double topBottomValue)
+        {
+            bool TopFilter(IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() >= topBottomValue;
+            }
+            bool BottomFilter(IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() <= topBottomValue;
+            }
+
+            return new XLFilter
+            {
+                Value = topBottomValue,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or,
+                Condition = takeTop ? TopFilter : BottomFilter,
+            };
+        }
     }
 }

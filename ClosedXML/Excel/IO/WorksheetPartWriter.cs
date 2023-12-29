@@ -1490,8 +1490,10 @@ namespace ClosedXML.Excel.IO
                         break;
 
                     case XLFilterType.TopBottom:
-
-                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
+                        // Although there is FilterValue attribute, populating it seems like more
+                        // trouble than it's worth due to consistency issues. It's optional, so we
+                        // can't rely on it during load anyway.
+                        var top101 = new Top10 { Val = xlFilterColumn.TopBottomValue };
                         if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
                             top101.Percent = true;
                         if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
