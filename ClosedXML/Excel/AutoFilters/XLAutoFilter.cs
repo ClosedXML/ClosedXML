@@ -34,7 +34,11 @@ namespace ClosedXML.Excel
             return Clear();
         }
 
-        public IXLFilterColumn Column(String columnLetter)
+        IXLFilterColumn IXLAutoFilter.Column(String columnLetter) => Column(columnLetter);
+
+        IXLFilterColumn IXLAutoFilter.Column(Int32 columnNumber) => Column(columnNumber);
+
+        internal XLFilterColumn Column(String columnLetter)
         {
             var columnNumber = XLHelper.GetColumnNumberFromLetter(columnLetter);
             if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
@@ -43,7 +47,7 @@ namespace ClosedXML.Excel
             return Column(columnNumber);
         }
 
-        public IXLFilterColumn Column(Int32 columnNumber)
+        internal XLFilterColumn Column(Int32 columnNumber)
         {
             if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(columnNumber), "Column " + columnNumber + " is outside the allowed column range.");
