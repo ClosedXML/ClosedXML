@@ -1474,8 +1474,9 @@ namespace ClosedXML.Excel.IO
                         var customFilters = new CustomFilters();
                         foreach (var filter in kp.Value)
                         {
-                            var v = filter.Value is not null ? filter.Value.ToString() : filter.CustomValue.ToString(CultureInfo.InvariantCulture);
-                            var customFilter = new CustomFilter { Val = v };
+                            // Since OOXML allows only string, the operand for custom filter must be serialized.
+                            var filterValue = filter.CustomValue.ToString(CultureInfo.InvariantCulture);
+                            var customFilter = new CustomFilter { Val = filterValue };
 
                             if (filter.Operator != XLFilterOperator.Equal)
                                 customFilter.Operator = filter.Operator.ToOpenXml();

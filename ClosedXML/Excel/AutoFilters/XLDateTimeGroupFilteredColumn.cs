@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            _autoFilter.AddFilter(_column, XLFilter.CreateRegularDateGroupFilter(date, dateTimeGrouping));
+            _autoFilter.AddFilter(_column, XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
             _autoFilter.Reapply();
             return this;
         }

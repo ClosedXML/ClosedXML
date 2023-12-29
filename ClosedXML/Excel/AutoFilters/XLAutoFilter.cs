@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
                     foreach (var filter in columnFilters)
                     {
                         var cell = row.Cell(columnIndex);
-                        var filterMatch = filter.NewCondition(cell);
+                        var filterMatch = filter.Condition(cell);
                         if (filter.Connector == XLConnector.And)
                         {
                             columnFilterMatch &= filterMatch;

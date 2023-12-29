@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
         {
             _autoFilter.IsEnabled = true;
             FilterType = XLFilterType.DateTimeGrouping;
-            _autoFilter.AddFilter(_column, XLFilter.CreateRegularDateGroupFilter(date, dateTimeGrouping));
+            _autoFilter.AddFilter(_column, XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
             _autoFilter.Reapply();
 
             return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
@@ -173,7 +173,7 @@ namespace ClosedXML.Excel
                             Value = val,
                             Operator = XLFilterOperator.Equal,
                             Connector = XLConnector.Or,
-                            NewCondition = condition
+                            Condition = condition
                         });
                     }
 
@@ -237,7 +237,7 @@ namespace ClosedXML.Excel
                             Value = val,
                             Operator = XLFilterOperator.Equal,
                             Connector = XLConnector.Or,
-                            NewCondition = condition
+                            Condition = condition
                         });
                     }
 
@@ -286,7 +286,7 @@ namespace ClosedXML.Excel
             _autoFilter.IsEnabled = true;
             Clear();
 
-            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(pattern, match, XLConnector.Or));
+            _autoFilter.AddFilter(_column, XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
             _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);

@@ -237,8 +237,12 @@ namespace ClosedXML.Tests
             {
                 // Set thread culture to French, which should format numbers using a space as thousands separator
                 var culture = CultureInfo.CreateSpecificCulture("fr-FR");
-                // but use a period instead of a comma as for decimal separator and space as group separator.
-                // The value is a number, so use number properties.
+
+                // The value in sheet that will be compared with autofilter value is a number
+                // `10000`. That number will be formatted using culture to `10 000.00` thanks to
+                // modified properties of culture - period instead of a comma for decimal separator
+                // and space as group separator. The formatted number will thus match with the
+                // filter value.
                 culture.NumberFormat.NumberDecimalSeparator = ".";
                 culture.NumberFormat.NumberGroupSeparator = " ";
 
@@ -249,8 +253,8 @@ namespace ClosedXML.Tests
                 {
                     var ws = wb.Worksheets.First();
 
-                    // Regular filter compares values as strings, doesn't convert to XLCellValue.
-                    // The cell value should be formatted to same value as the filter.
+                    // Regular filter compares values as strings, doesn't convert to XLCellValue,
+                    // so the value is read from the file as a text despite looking like a number.
                     Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Filters.First().Value.First().Value);
                     Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
 

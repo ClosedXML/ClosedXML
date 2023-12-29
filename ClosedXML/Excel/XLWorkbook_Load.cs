@@ -1638,28 +1638,32 @@ namespace ClosedXML.Excel
             foreach (var filterColumn in af.Elements<FilterColumn>())
             {
                 Int32 column = (int)filterColumn.ColumnId.Value + 1;
-                if (filterColumn.CustomFilters != null)
+                if (filterColumn.CustomFilters is { } customFilters)
                 {
                     var filterList = new List<XLFilter>();
                     autoFilter.Column(column).FilterType = XLFilterType.Custom;
                     autoFilter.Filters.Add(column, filterList);
-                    var connector = filterColumn.CustomFilters.And is not null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
+                    var connector = customFilters.And is not null && customFilters.And.Value ? XLConnector.And : XLConnector.Or;
 
-                    foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
+                    foreach (var filter in customFilters.OfType<CustomFilter>())
                     {
                         var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
+                        // TODO: This is a very simplistic detection of wildcard. Do better.
                         XLFilter xlFilter;
-                        var v = filter.Val.Value;
-                        if (op is XLFilterOperator.Equal or XLFilterOperator.NotEqual && v is not null && v.Contains('*'))
+                        var filterValue = filter.Val.Value;
+                        if (op is XLFilterOperator.Equal or XLFilterOperator.NotEqual && filterValue is not null && filterValue.Contains('*'))
                         {
-                            xlFilter = XLFilter.CreateCustomWildcardFilter(v, op == XLFilterOperator.Equal, connector);
+                            // Only operators Equals/NotEquals use wildcard semantic.
+                            xlFilter = XLFilter.CreateWildcardFilter(filterValue, op == XLFilterOperator.Equal, connector);
                         }
                         else
                         {
+                            // OOXML allows only string, so do your best to convert back to a properly typed
+                            // variable. It's not perfect, but let's mimic Excel.
                             var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
                             xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
                         }
-                        
+
                         filterList.Add(xlFilter);
                     }
                 }
@@ -1678,9 +1682,7 @@ namespace ClosedXML.Excel
 
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
-                        var xlFilter = XLFilter.CreateRegularFilter(filter.Val.Value);
-
-                        filterList.Add(xlFilter);
+                        filterList.Add(XLFilter.CreateRegularFilter(filter.Val.Value));
                     }
 
                     foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
@@ -1749,7 +1751,7 @@ namespace ClosedXML.Excel
                         if (valid)
                         {
                             var date = new DateTime(year, month, day, hour, minute, second);
-                            var xlDateGroupFilter = XLFilter.CreateRegularDateGroupFilter(date, xlGrouping);
+                            var xlDateGroupFilter = XLFilter.CreateDateGroupFilter(date, xlGrouping);
                             filterList.Add(xlDateGroupFilter);
                         }
                     }

@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
 
         private void ApplyWildcardCustomFilter(string pattern, bool match)
         {
-            _autoFilter.AddFilter(_column, XLFilter.CreateCustomWildcardFilter(pattern, match, _connector));
+            _autoFilter.AddFilter(_column, XLFilter.CreateWildcardFilter(pattern, match, _connector));
             _autoFilter.Reapply();
         }
     }

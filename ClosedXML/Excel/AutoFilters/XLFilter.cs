@@ -12,11 +12,6 @@ namespace ClosedXML.Excel
 
     internal class XLFilter
     {
-        public XLFilter(XLFilterOperator op = XLFilterOperator.Equal)
-        {
-            Operator = op;
-        }
-
         public XLConnector Connector { get; set; }
 
         public XLDateTimeGrouping DateTimeGrouping { get; set; }
@@ -26,9 +21,9 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCellValue CustomValue { get; init; }
 
-        public Func<IXLCell, bool> NewCondition { get; set; }
+        public Func<IXLCell, bool> Condition { get; set; }
 
-        public XLFilterOperator Operator { get; init; }
+        public XLFilterOperator Operator { get; init; } = XLFilterOperator.Equal;
 
         /// <summary>
         /// Value for <see cref="XLFilterType.Regular"/> filter.
@@ -44,18 +39,18 @@ namespace ClosedXML.Excel
                 CustomValue = value,
                 Operator = op,
                 Connector = connector,
-                NewCondition = cell => CustomFilterSatisfied(cell.CachedValue, op, value, comparer),
+                Condition = cell => CustomFilterSatisfied(cell.CachedValue, op, value, comparer),
             };
         }
 
-        internal static XLFilter CreateCustomWildcardFilter(string wildcard, bool match, XLConnector connector)
+        internal static XLFilter CreateWildcardFilter(string wildcard, bool match, XLConnector connector)
         {
             return new XLFilter
             {
                 CustomValue = wildcard,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                NewCondition = match ? c => MatchesWildcard(wildcard, c.CachedValue) : c => !MatchesWildcard(wildcard, c.CachedValue),
+                Condition = match ? c => MatchesWildcard(wildcard, c.CachedValue) : c => !MatchesWildcard(wildcard, c.CachedValue),
             };
         }
 
@@ -68,16 +63,16 @@ namespace ClosedXML.Excel
                 Value = wildcard,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
-                NewCondition = v => v.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase),
+                Condition = v => v.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase), // TODO: Use cached value for formatted string.
             };
         }
 
-        internal static XLFilter CreateRegularDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
+        internal static XLFilter CreateDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
             return new XLFilter
             {
                 Value = date,
-                NewCondition = cell => cell.CachedValue.IsDateTime && IsMatch(date, (DateTime)cell.CachedValue.GetDateTime(), dateTimeGrouping),
+                Condition = cell => cell.CachedValue.IsDateTime && IsMatch(date, (DateTime)cell.CachedValue.GetDateTime(), dateTimeGrouping),
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 DateTimeGrouping = dateTimeGrouping

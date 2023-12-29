@@ -95,7 +95,7 @@ namespace ClosedXML.Excel
         /// or any date group filter.
         /// </para>
         /// </summary>
-        /// <param name="date">Date who components are compared with date values of the column.</param>
+        /// <param name="date">Date which components are compared with date values of the column.</param>
         /// <param name="dateTimeGrouping">
         /// Starting component of the grouping. Tested date must match all date components of the
         /// <paramref name="date"/> from this one to the <see cref="XLDateTimeGrouping.Second"/>.
