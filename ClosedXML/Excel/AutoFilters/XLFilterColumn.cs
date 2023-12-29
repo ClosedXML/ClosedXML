@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
 
-    internal class XLFilterColumn : IXLFilterColumn
+    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IXLDateTimeGroupFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
         private readonly Int32 _column;
@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             FilterType = XLFilterType.Regular;
             _autoFilter.AddFilter(_column, XLFilter.CreateRegularFilter(value));
             _autoFilter.Reapply();
-            return new XLFilteredColumn(_autoFilter, _column);
+            return this;
         }
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
             _autoFilter.AddFilter(_column, XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
             _autoFilter.Reapply();
 
-            return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
+            return this;
         }
 
         public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
