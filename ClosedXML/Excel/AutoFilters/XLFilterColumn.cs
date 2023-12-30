@@ -201,37 +201,19 @@ namespace ClosedXML.Excel
 
             Clear();
 
-            Boolean addToList = true;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-
-            foreach (IXLRangeRow row in rows)
+            foreach (double val in values)
             {
-                Boolean foundOne = false;
-                foreach (double val in values)
+                Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
+                _autoFilter.AddFilter(_column, new XLFilter
                 {
-                    Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
-                    if (addToList)
-                    {
-                        _autoFilter.AddFilter(_column, new XLFilter
-                        {
-                            Value = val,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition
-                        });
-                    }
-
-                    var cell = row.Cell(_column);
-                    if (!condition(cell)) continue;
-                    row.WorksheetRow().Unhide();
-                    foundOne = true;
-                }
-
-                if (!foundOne)
-                    row.WorksheetRow().Hide();
-
-                addToList = false;
+                    Value = val,
+                    Operator = XLFilterOperator.Equal,
+                    Connector = XLConnector.Or,
+                    Condition = condition
+                });
             }
+
+            _autoFilter.Reapply();
         }
 
         private IEnumerable<double> GetAverageValues(bool aboveAverage)
