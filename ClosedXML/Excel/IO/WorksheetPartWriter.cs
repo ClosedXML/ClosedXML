@@ -1463,25 +1463,24 @@ namespace ClosedXML.Excel.IO
             var filterRange = xlAutoFilter.Range;
             autoFilter.Reference = filterRange.RangeAddress.ToString();
 
-            foreach (var kp in xlAutoFilter.Filters)
+            foreach (var (columnNumber, xlFilterColumn) in xlAutoFilter.Columns)
             {
-                var filterColumn = new FilterColumn { ColumnId = (UInt32)kp.Key - 1 };
-                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
+                var filterColumn = new FilterColumn { ColumnId = (UInt32)columnNumber - 1 };
 
                 switch (xlFilterColumn.FilterType)
                 {
                     case XLFilterType.Custom:
                         var customFilters = new CustomFilters();
-                        foreach (var filter in kp.Value)
+                        foreach (var xlFilter in xlFilterColumn)
                         {
                             // Since OOXML allows only string, the operand for custom filter must be serialized.
-                            var filterValue = filter.CustomValue.ToString(CultureInfo.InvariantCulture);
+                            var filterValue = xlFilter.CustomValue.ToString(CultureInfo.InvariantCulture);
                             var customFilter = new CustomFilter { Val = filterValue };
 
-                            if (filter.Operator != XLFilterOperator.Equal)
-                                customFilter.Operator = filter.Operator.ToOpenXml();
+                            if (xlFilter.Operator != XLFilterOperator.Equal)
+                                customFilter.Operator = xlFilter.Operator.ToOpenXml();
 
-                            if (filter.Connector == XLConnector.And)
+                            if (xlFilter.Connector == XLConnector.And)
                                 customFilters.And = true;
 
                             customFilters.Append(customFilter);
@@ -1511,7 +1510,7 @@ namespace ClosedXML.Excel.IO
 
                     case XLFilterType.DateTimeGrouping:
                         var dateTimeGroupFilters = new Filters();
-                        foreach (var filter in kp.Value)
+                        foreach (var filter in xlFilterColumn)
                         {
                             if (filter.Value is DateTime)
                             {
@@ -1536,7 +1535,7 @@ namespace ClosedXML.Excel.IO
 
                     default:
                         var filters = new Filters();
-                        foreach (var filter in kp.Value)
+                        foreach (var filter in xlFilterColumn)
                         {
                             filters.Append(new Filter { Val = filter.Value.ObjectToInvariantString() });
                         }

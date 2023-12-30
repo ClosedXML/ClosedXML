@@ -1638,11 +1638,10 @@ namespace ClosedXML.Excel
             foreach (var filterColumn in af.Elements<FilterColumn>())
             {
                 Int32 column = (int)filterColumn.ColumnId.Value + 1;
+                var xlFilterColumn = autoFilter.Column(column);
                 if (filterColumn.CustomFilters is { } customFilters)
                 {
-                    var filterList = new List<XLFilter>();
-                    autoFilter.Column(column).FilterType = XLFilterType.Custom;
-                    autoFilter.Filters.Add(column, filterList);
+                    xlFilterColumn.FilterType = XLFilterType.Custom;
                     var connector = customFilters.And is not null && customFilters.And.Value ? XLConnector.And : XLConnector.Or;
 
                     foreach (var filter in customFilters.OfType<CustomFilter>())
@@ -1664,7 +1663,7 @@ namespace ClosedXML.Excel
                             xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
                         }
 
-                        filterList.Add(xlFilter);
+                        xlFilterColumn.AddFilter(xlFilter);
                     }
                 }
                 else if (filterColumn.Filters != null)
@@ -1676,13 +1675,9 @@ namespace ClosedXML.Excel
                     else
                         throw new NotSupportedException(String.Format("Mixing regular filters and date group filters in a single autofilter column is not supported. Column {0} of {1}", column, autoFilter.Range.ToString()));
 
-                    var filterList = new List<XLFilter>();
-
-                    autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
-
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
-                        filterList.Add(XLFilter.CreateRegularFilter(filter.Val.Value));
+                        xlFilterColumn.AddFilter(XLFilter.CreateRegularFilter(filter.Val.Value));
                     }
 
                     foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
@@ -1752,13 +1747,12 @@ namespace ClosedXML.Excel
                         {
                             var date = new DateTime(year, month, day, hour, minute, second);
                             var xlDateGroupFilter = XLFilter.CreateDateGroupFilter(date, xlGrouping);
-                            filterList.Add(xlDateGroupFilter);
+                            xlFilterColumn.AddFilter(xlDateGroupFilter);
                         }
                     }
                 }
                 else if (filterColumn.Top10 is { } top10)
                 {
-                    var xlFilterColumn = autoFilter.Column(column);
                     xlFilterColumn.FilterType = XLFilterType.TopBottom;
                     xlFilterColumn.TopBottomType = top10.Percent is not null && top10.Percent.Value
                             ? XLTopBottomType.Percent
@@ -1770,19 +1764,16 @@ namespace ClosedXML.Excel
                     // Value contains how many percent or items, so it can only be int.
                     // Filter value is optional, so we don't rely on it.
                     xlFilterColumn.TopBottomValue = (int)top10.Val.Value;
-                    autoFilter.Filters.Add(column, null);
+                    // TODO: Create filter after
                 }
                 else if (filterColumn.DynamicFilter != null)
                 {
-                    autoFilter.Filters.Add(column, null);
-                    var xlFilterColumn = autoFilter.Column(column);
                     xlFilterColumn.FilterType = XLFilterType.Dynamic;
-                    if (filterColumn.DynamicFilter.Type != null)
-                        xlFilterColumn.DynamicType = filterColumn.DynamicFilter.Type.Value.ToClosedXml();
-                    else
-                        xlFilterColumn.DynamicType = XLFilterDynamicType.AboveAverage;
-
+                    xlFilterColumn.DynamicType = filterColumn.DynamicFilter.Type is { } dynamicFilterType
+                        ? dynamicFilterType.Value.ToClosedXml()
+                        : XLFilterDynamicType.AboveAverage;
                     xlFilterColumn.DynamicValue = filterColumn.DynamicFilter.Val.Value;
+                    // TODO: Create filter after
                 }
             }
         }
