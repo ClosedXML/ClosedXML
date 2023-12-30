@@ -16,5 +16,5 @@ public interface IXLDateTimeGroupFilteredColumn
     /// for more details.
     /// </summary>
     /// <returns>Fluent API allowing to add additional date group filter.</returns>
-    IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping);
+    IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply = true);
 }
