@@ -253,5 +253,28 @@ namespace ClosedXML.Tests
             }, referenceResource);
             LoadAndAssert(assertLoadedWorkbook, referenceResource);
         }
+
+        /// <summary>
+        /// Basically can survive through save and load cycle. Doesn't check against actual file.
+        /// Useful for testing is internal structures are correctly initialized after load.
+        /// </summary>
+        /// <param name="createWorksheet">Code to create a workbook.</param>
+        /// <param name="assertLoadedWorkbook">Method to assert that workbook was loaded correctly.</param>
+        public static void CreateSaveLoadAssert(Action<XLWorkbook, IXLWorksheet> createWorksheet, Action<XLWorkbook, IXLWorksheet> assertLoadedWorkbook)
+        {
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                createWorksheet(wb, ws);
+                wb.SaveAs(ms);
+            }
+
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Single();
+                assertLoadedWorkbook(wb, ws);
+            }
+        }
     }
 }

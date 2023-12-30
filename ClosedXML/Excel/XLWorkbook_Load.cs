@@ -1766,14 +1766,17 @@ namespace ClosedXML.Excel
                     xlFilterColumn.TopBottomValue = (int)top10.Val.Value;
                     // TODO: Create filter after
                 }
-                else if (filterColumn.DynamicFilter != null)
+                else if (filterColumn.DynamicFilter is { } dynamicFilter)
                 {
                     xlFilterColumn.FilterType = XLFilterType.Dynamic;
-                    xlFilterColumn.DynamicType = filterColumn.DynamicFilter.Type is { } dynamicFilterType
+                    var dynamicType = dynamicFilter.Type is { } dynamicFilterType
                         ? dynamicFilterType.Value.ToClosedXml()
                         : XLFilterDynamicType.AboveAverage;
-                    xlFilterColumn.DynamicValue = filterColumn.DynamicFilter.Val.Value;
-                    // TODO: Create filter after
+                    var dynamicValue = filterColumn.DynamicFilter.Val.Value;
+
+                    xlFilterColumn.DynamicType = dynamicType;
+                    xlFilterColumn.DynamicValue = dynamicValue;
+                    xlFilterColumn.AddFilter(XLFilter.CreateAverage(dynamicValue, dynamicType == XLFilterDynamicType.AboveAverage));
                 }
             }
         }
