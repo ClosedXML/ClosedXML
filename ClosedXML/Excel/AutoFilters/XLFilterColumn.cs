@@ -149,19 +149,24 @@ namespace ClosedXML.Excel
 
         #endregion IXLFilterColumn Members
 
+        /// <summary>
+        /// A filter value used by top/bottom filter to compare with cell value.
+        /// </summary>
+        internal double TopBottomFilterValue { get; private set; } = double.NaN;
+
         public IEnumerator<XLFilter> GetEnumerator() => _filters.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop, Boolean reapply)
+        private void SetTopBottom(Int32 percentOrItemCount, XLTopBottomType type, Boolean takeTop, Boolean reapply)
         {
             ResetFilter(XLFilterType.TopBottom);
-            TopBottomValue = value;
+            TopBottomValue = percentOrItemCount;
             TopBottomType = type;
             TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
-            var filterValue = GetTopBottomFilterValue(type, value, takeTop);
-            AddFilter(XLFilter.CreateTopBottom(takeTop, filterValue));
+            AddFilter(XLFilter.CreateTopBottom(takeTop, percentOrItemCount));
+
             if (reapply)
                 _autoFilter.Reapply();
         }
@@ -265,12 +270,18 @@ namespace ClosedXML.Excel
 
         internal void Refresh()
         {
-            if (FilterType == XLFilterType.Dynamic && _filters.Count > 0)
+            if (FilterType == XLFilterType.Dynamic)
             {
                 // Update average value of a filter, so it is saved correctly and filter uses
                 // correct value, even is cell values changed and avg was stale.
                 DynamicValue = GetAverageFilterValue();
                 _filters[0].Value = DynamicValue;
+            }
+
+            if (FilterType == XLFilterType.TopBottom)
+            {
+                var takeTop = TopBottomPart == XLTopBottomPart.Top;
+                TopBottomFilterValue = GetTopBottomFilterValue(TopBottomType, TopBottomValue, takeTop);
             }
         }
 

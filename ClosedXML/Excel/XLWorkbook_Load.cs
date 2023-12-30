@@ -1754,17 +1754,17 @@ namespace ClosedXML.Excel
                 else if (filterColumn.Top10 is { } top10)
                 {
                     xlFilterColumn.FilterType = XLFilterType.TopBottom;
-                    xlFilterColumn.TopBottomType = top10.Percent is not null && top10.Percent.Value
+                    xlFilterColumn.TopBottomType = OpenXmlHelper.GetBooleanValueAsBool(top10.Percent, false)
                             ? XLTopBottomType.Percent
                             : XLTopBottomType.Items;
-                    xlFilterColumn.TopBottomPart = top10.Top is null || top10.Top.Value
-                        ? XLTopBottomPart.Top
-                        : XLTopBottomPart.Bottom;
+                    var takeTop = OpenXmlHelper.GetBooleanValueAsBool(top10.Top, true);
+                    xlFilterColumn.TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
                     // Value contains how many percent or items, so it can only be int.
                     // Filter value is optional, so we don't rely on it.
-                    xlFilterColumn.TopBottomValue = (int)top10.Val.Value;
-                    // TODO: Create filter after
+                    var percentsOrItems = (int)top10.Val.Value;
+                    xlFilterColumn.TopBottomValue = percentsOrItems;
+                    xlFilterColumn.AddFilter(XLFilter.CreateTopBottom(takeTop, percentsOrItems));
                 }
                 else if (filterColumn.DynamicFilter is { } dynamicFilter)
                 {
