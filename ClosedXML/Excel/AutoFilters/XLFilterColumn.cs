@@ -193,43 +193,24 @@ namespace ClosedXML.Excel
         private void ShowAverage(Boolean aboveAverage)
         {
             _autoFilter.IsEnabled = true;
+            Clear();
             _autoFilter.Column(_column).SetFilterType(XLFilterType.Dynamic)
                 .SetDynamicType(aboveAverage
                                     ? XLFilterDynamicType.AboveAverage
                                     : XLFilterDynamicType.BelowAverage);
-            var values = GetAverageValues(aboveAverage).ToArray();
-
-            Clear();
-
-            foreach (double val in values)
-            {
-                Func<IXLCell, Boolean> condition = v => v.CachedValue.IsUnifiedNumber && v.CachedValue.GetUnifiedNumber().Equals(val);
-                _autoFilter.AddFilter(_column, new XLFilter
-                {
-                    Value = val,
-                    Operator = XLFilterOperator.Equal,
-                    Connector = XLConnector.Or,
-                    Condition = condition
-                });
-            }
-
+            var average = GetAverageFilterValue();
+            _autoFilter.AddFilter(_column, XLFilter.CreateAverage(average, aboveAverage));
             _autoFilter.Reapply();
-        }
 
-        private IEnumerable<double> GetAverageValues(bool aboveAverage)
-        {
-            var column = _autoFilter.Range.Column(_column);
-            var subColumn = column.Column(2, column.CellCount());
-            Double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
-                .Average();
-
-            var distinctNumbers = subColumn
-                .CellsUsed(c => c.DataType == XLDataType.Number)
-                .Select(c => c.GetDouble())
-                .Distinct();
-            return aboveAverage
-                ? distinctNumbers.Where(c => c > average)
-                : distinctNumbers.Where(c => c < average);
+            double GetAverageFilterValue()
+            {
+                var column = _autoFilter.Range.Column(_column);
+                var subColumn = column.Column(2, column.CellCount());
+                return subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber)
+                    .Select(c => c.CachedValue.GetUnifiedNumber())
+                    .DefaultIfEmpty(Double.NaN)
+                    .Average();
+            }
         }
 
         private IXLFilterConnector ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
