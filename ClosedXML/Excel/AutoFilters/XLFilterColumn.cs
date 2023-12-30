@@ -146,10 +146,10 @@ namespace ClosedXML.Excel
 
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop)
         {
-            ResetFilter(XLFilterType.TopBottom)
-                .SetTopBottomValue(value)
-                .SetTopBottomType(type)
-                .SetTopBottomPart(takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom);
+            ResetFilter(XLFilterType.TopBottom);
+            TopBottomValue = value;
+            TopBottomType = type;
+            TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
             var filterValue = GetTopBottomFilterValue(type, value, takeTop);
             _autoFilter.AddFilter(_column, XLFilter.CreateTopBottom(takeTop, filterValue));
@@ -182,10 +182,10 @@ namespace ClosedXML.Excel
 
         private void SetAverage(Boolean aboveAverage)
         {
-            ResetFilter(XLFilterType.Dynamic)
-                .SetDynamicType(aboveAverage
-                                    ? XLFilterDynamicType.AboveAverage
-                                    : XLFilterDynamicType.BelowAverage);
+            ResetFilter(XLFilterType.Dynamic);
+            DynamicType = aboveAverage
+                ? XLFilterDynamicType.AboveAverage
+                : XLFilterDynamicType.BelowAverage;
             var average = GetAverageFilterValue();
             _autoFilter.AddFilter(_column, XLFilter.CreateAverage(average, aboveAverage));
             _autoFilter.Reapply();
@@ -221,24 +221,11 @@ namespace ClosedXML.Excel
             return new XLFilterConnector(_autoFilter, _column);
         }
 
-        public IXLFilterColumn SetFilterType(XLFilterType value) { FilterType = value; return this; }
-
-        public IXLFilterColumn SetTopBottomValue(Int32 value) { TopBottomValue = value; return this; }
-
-        public IXLFilterColumn SetTopBottomType(XLTopBottomType value) { TopBottomType = value; return this; }
-
-        public IXLFilterColumn SetTopBottomPart(XLTopBottomPart value) { TopBottomPart = value; return this; }
-
-        public IXLFilterColumn SetDynamicType(XLFilterDynamicType value) { DynamicType = value; return this; }
-
-        public IXLFilterColumn SetDynamicValue(Double value) { DynamicValue = value; return this; }
-
-        private XLFilterColumn ResetFilter(XLFilterType type)
+        private void ResetFilter(XLFilterType type)
         {
             Clear();
             _autoFilter.IsEnabled = true;
             FilterType = type;
-            return this;
         }
 
         private void SwitchFilter(XLFilterType type)

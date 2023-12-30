@@ -173,17 +173,5 @@ namespace ClosedXML.Excel
         XLTopBottomPart TopBottomPart { get; }
         XLFilterDynamicType DynamicType { get; }
         Double DynamicValue { get; }
-
-        IXLFilterColumn SetFilterType(XLFilterType value);
-
-        IXLFilterColumn SetTopBottomValue(Int32 value);
-
-        IXLFilterColumn SetTopBottomType(XLTopBottomType value);
-
-        IXLFilterColumn SetTopBottomPart(XLTopBottomPart value);
-
-        IXLFilterColumn SetDynamicType(XLFilterDynamicType value);
-
-        IXLFilterColumn SetDynamicValue(Double value);
     }
 }
