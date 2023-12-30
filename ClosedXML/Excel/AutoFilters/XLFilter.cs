@@ -79,11 +79,30 @@ namespace ClosedXML.Excel
             return new XLFilter
             {
                 Value = date,
-                Condition = cell => cell.CachedValue.IsDateTime && IsMatch(date, cell.CachedValue.GetDateTime(), dateTimeGrouping),
+                Condition = HasSameGroup,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 DateTimeGrouping = dateTimeGrouping
             };
+
+            bool HasSameGroup(IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                return cachedValue.IsDateTime && IsMatch(date, cachedValue.GetDateTime(), dateTimeGrouping);
+            }
+
+            static Boolean IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
+            {
+                Boolean isMatch = true;
+                if (dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
+                if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Month) isMatch &= date1.Month.Equals(date2.Month);
+                if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Day) isMatch &= date1.Day.Equals(date2.Day);
+                if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Hour) isMatch &= date1.Hour.Equals(date2.Hour);
+                if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Minute) isMatch &= date1.Minute.Equals(date2.Minute);
+                if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Second) isMatch &= date1.Second.Equals(date2.Second);
+
+                return isMatch;
+            }
         }
 
         private static bool MatchesWildcard(string pattern, XLCellValue cellValue)
@@ -96,19 +115,6 @@ namespace ClosedXML.Excel
             var wildcard = new Wildcard(pattern);
             var position = wildcard.Search(text.AsSpan());
             return position >= 0;
-        }
-
-        private static Boolean IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
-        {
-            Boolean isMatch = true;
-            if (dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Month) isMatch &= date1.Month.Equals(date2.Month);
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Day) isMatch &= date1.Day.Equals(date2.Day);
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Hour) isMatch &= date1.Hour.Equals(date2.Hour);
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Minute) isMatch &= date1.Minute.Equals(date2.Minute);
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Second) isMatch &= date1.Second.Equals(date2.Second);
-
-            return isMatch;
         }
 
         private static bool CustomFilterSatisfied(XLCellValue cellValue, XLFilterOperator op, XLCellValue filterValue, StringComparer textComparer)
