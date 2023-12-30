@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         }
 
         #region IXLFilterColumn Members
-        
+
         public void Clear()
         {
             if (_autoFilter.Filters.ContainsKey(_column))
@@ -45,54 +45,52 @@ namespace ClosedXML.Excel
 
         public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
         {
-            _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Top;
             SetTopBottom(value, type, true);
         }
 
         public void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
         {
-            _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Bottom;
             SetTopBottom(value, type, false);
         }
 
         public void AboveAverage()
         {
-            ShowAverage(true);
+            SetAverage(true);
         }
 
         public void BelowAverage()
         {
-            ShowAverage(false);
+            SetAverage(false);
         }
 
         public IXLFilterConnector EqualTo(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.Equal);
+            return AddCustomFilter(value, XLFilterOperator.Equal);
         }
 
         public IXLFilterConnector NotEqualTo(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.NotEqual);
+            return AddCustomFilter(value, XLFilterOperator.NotEqual);
         }
 
         public IXLFilterConnector GreaterThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.GreaterThan);
+            return AddCustomFilter(value, XLFilterOperator.GreaterThan);
         }
 
         public IXLFilterConnector LessThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.LessThan);
+            return AddCustomFilter(value, XLFilterOperator.LessThan);
         }
 
         public IXLFilterConnector EqualOrGreaterThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrGreaterThan);
         }
 
         public IXLFilterConnector EqualOrLessThan(XLCellValue value)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrLessThan);
         }
 
         public void Between(XLCellValue minValue, XLCellValue maxValue)
@@ -107,32 +105,32 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector BeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", true);
+            return AddCustomFilter(value + "*", true);
         }
 
         public IXLFilterConnector NotBeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", false);
+            return AddCustomFilter(value + "*", false);
         }
 
         public IXLFilterConnector EndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, true);
+            return AddCustomFilter("*" + value, true);
         }
 
         public IXLFilterConnector NotEndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, false);
+            return AddCustomFilter("*" + value, false);
         }
 
         public IXLFilterConnector Contains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", true);
+            return AddCustomFilter("*" + value + "*", true);
         }
 
         public IXLFilterConnector NotContains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", false);
+            return AddCustomFilter("*" + value + "*", false);
         }
 
         public XLFilterType FilterType { get; set; }
@@ -148,23 +146,16 @@ namespace ClosedXML.Excel
 
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop)
         {
-            _autoFilter.IsEnabled = true;
-            Clear();
-            _autoFilter.Column(_column).SetFilterType(XLFilterType.TopBottom)
-                                       .SetTopBottomValue(value)
-                                       .SetTopBottomType(type);
+            ResetFilter(XLFilterType.TopBottom)
+                .SetTopBottomValue(value)
+                .SetTopBottomType(type)
+                .SetTopBottomPart(takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom);
 
             var filterValue = GetTopBottomFilterValue(type, value, takeTop);
             _autoFilter.AddFilter(_column, XLFilter.CreateTopBottom(takeTop, filterValue));
             _autoFilter.Reapply();
         }
 
-        /// <summary>
-        /// Get a border value for top/bottom filter value.
-        /// </summary>
-        /// <param name="type">Content of <paramref name="value"/>.</param>
-        /// <param name="value">Either percents or items.</param>
-        /// <param name="takeTop">Take top (<c>true</c>) or bottom (<c>false</c>).</param>
         private double GetTopBottomFilterValue(XLTopBottomType type, int value, bool takeTop)
         {
             var column = _autoFilter.Range.Column(_column);
@@ -189,7 +180,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void ShowAverage(Boolean aboveAverage)
+        private void SetAverage(Boolean aboveAverage)
         {
             ResetFilter(XLFilterType.Dynamic)
                 .SetDynamicType(aboveAverage
@@ -210,7 +201,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IXLFilterConnector ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
+        private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op)
         {
             _autoFilter.IsEnabled = true;
             Clear();
@@ -221,13 +212,11 @@ namespace ClosedXML.Excel
             return new XLFilterConnector(_autoFilter, _column);
         }
 
-        private IXLFilterConnector ApplyCustomFilter(string pattern, bool match)
+        private IXLFilterConnector AddCustomFilter(string pattern, bool match)
         {
-            _autoFilter.IsEnabled = true;
-            Clear();
+            SwitchFilter(XLFilterType.Custom);
 
             _autoFilter.AddFilter(_column, XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
-            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
         }
@@ -252,15 +241,14 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        private XLFilterColumn SwitchFilter(XLFilterType type)
+        private void SwitchFilter(XLFilterType type)
         {
             _autoFilter.IsEnabled = true;
             if (FilterType == type)
-                return this;
+                return;
 
             Clear();
             FilterType = type;
-            return this;
         }
     }
 }
