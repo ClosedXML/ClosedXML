@@ -1,20 +1,17 @@
-using System;
+namespace ClosedXML.Excel;
 
-namespace ClosedXML.Excel
+internal class XLFilterConnector : IXLFilterConnector
 {
-    internal class XLFilterConnector : IXLFilterConnector
+    private readonly XLAutoFilter _autoFilter;
+    private readonly XLFilterColumn _filterColumn;
+
+    public XLFilterConnector(XLAutoFilter autoFilter, XLFilterColumn filterColumn)
     {
-        private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
-
-        public XLFilterConnector(XLAutoFilter autoFilter, Int32 column)
-        {
-            _autoFilter = autoFilter;
-            _column = column;
-        }
-
-        public IXLCustomFilteredColumn And => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And);
-
-        public IXLCustomFilteredColumn Or => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or);
+        _autoFilter = autoFilter;
+        _filterColumn = filterColumn;
     }
+
+    public IXLCustomFilteredColumn And => new XLCustomFilteredColumn(_autoFilter, _filterColumn, XLConnector.And);
+
+    public IXLCustomFilteredColumn Or => new XLCustomFilteredColumn(_autoFilter, _filterColumn, XLConnector.Or);
 }
