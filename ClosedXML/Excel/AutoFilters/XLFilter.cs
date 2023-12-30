@@ -79,7 +79,7 @@ namespace ClosedXML.Excel
             return new XLFilter
             {
                 Value = date,
-                Condition = cell => cell.CachedValue.IsDateTime && IsMatch(date, (DateTime)cell.CachedValue.GetDateTime(), dateTimeGrouping),
+                Condition = cell => cell.CachedValue.IsDateTime && IsMatch(date, cell.CachedValue.GetDateTime(), dateTimeGrouping),
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 DateTimeGrouping = dateTimeGrouping
@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
         private static Boolean IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
         {
             Boolean isMatch = true;
-            if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
+            if (dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Month) isMatch &= date1.Month.Equals(date2.Month);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Day) isMatch &= date1.Day.Equals(date2.Day);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Hour) isMatch &= date1.Hour.Equals(date2.Hour);
