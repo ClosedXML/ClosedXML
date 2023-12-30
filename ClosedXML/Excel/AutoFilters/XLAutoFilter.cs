@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
         {
             return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
-        
+
         public IXLAutoFilter Reapply()
         {
             // Recalculate shown / hidden rows
@@ -135,11 +135,6 @@ namespace ClosedXML.Excel
             Reapply();
 
             return this;
-        }
-
-        internal void AddFilter(Int32 column, XLFilter filter)
-        {
-            Column(column).AddFilter(filter);
         }
     }
 }

@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             ResetFilter(XLFilterType.Custom);
             AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
             _autoFilter.Reapply();
-            return new XLFilterConnector(_autoFilter, _column);
+            return new XLFilterConnector(_autoFilter, this);
         }
 
         private IXLFilterConnector AddCustomFilter(string pattern, bool match)
@@ -215,7 +215,7 @@ namespace ClosedXML.Excel
             SwitchFilter(XLFilterType.Custom);
             AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
             _autoFilter.Reapply();
-            return new XLFilterConnector(_autoFilter, _column);
+            return new XLFilterConnector(_autoFilter, this);
         }
 
         private void ResetFilter(XLFilterType type)

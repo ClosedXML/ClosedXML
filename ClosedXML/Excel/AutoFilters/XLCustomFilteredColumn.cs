@@ -5,13 +5,13 @@ namespace ClosedXML.Excel
     internal class XLCustomFilteredColumn : IXLCustomFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly XLFilterColumn _filterColumn;
         private readonly XLConnector _connector;
 
-        public XLCustomFilteredColumn(XLAutoFilter autoFilter, Int32 column, XLConnector connector)
+        public XLCustomFilteredColumn(XLAutoFilter autoFilter, XLFilterColumn filterColumn, XLConnector connector)
         {
             _autoFilter = autoFilter;
-            _column = column;
+            _filterColumn = filterColumn;
             _connector = connector;
         }
 
@@ -77,13 +77,13 @@ namespace ClosedXML.Excel
 
         private void ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
         {
-            _autoFilter.AddFilter(_column, XLFilter.CreateCustomFilter(value, op, _connector));
+            _filterColumn.AddFilter(XLFilter.CreateCustomFilter(value, op, _connector));
             _autoFilter.Reapply();
         }
 
         private void ApplyWildcardCustomFilter(string pattern, bool match)
         {
-            _autoFilter.AddFilter(_column, XLFilter.CreateWildcardFilter(pattern, match, _connector));
+            _filterColumn.AddFilter(XLFilter.CreateWildcardFilter(pattern, match, _connector));
             _autoFilter.Reapply();
         }
     }
