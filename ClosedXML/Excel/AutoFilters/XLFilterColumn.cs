@@ -242,29 +242,22 @@ namespace ClosedXML.Excel
 
         internal bool Check(IXLCell cell)
         {
-            var columnFilterMatch = true;
+            if (_filters.Count == 0)
+                return true;
 
-            // If the first filter is an 'Or', we need to fudge the initial condition
-            if (_filters.Count > 0 && _filters.First().Connector == XLConnector.Or)
-            {
-                columnFilterMatch = false;
-            }
-            foreach (var filter in _filters)
-            {
-                var filterMatch = filter.Condition(cell);
-                if (filter.Connector == XLConnector.And)
-                {
-                    columnFilterMatch &= filterMatch;
-                    if (!columnFilterMatch) break;
-                }
-                else
-                {
-                    columnFilterMatch |= filterMatch;
-                    if (columnFilterMatch) break;
-                }
-            }
+            if (_filters.Count == 1)
+                return _filters[0].Condition(cell);
 
-            return columnFilterMatch;
+            // All filter conditions are connected by a single type of logical condition. Regular
+            // filters use 'Or', custom has up to two clauses connected by 'And'/'Or' and rest is
+            // single clause.
+            var connector = _filters[0].Connector;
+            return connector switch
+            {
+                XLConnector.And => _filters.All(filter => filter.Condition(cell)),
+                XLConnector.Or  => _filters.Any(filter => filter.Condition(cell)),
+                _ => throw new NotSupportedException(),
+            };
         }
     }
 }
