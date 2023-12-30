@@ -162,5 +162,27 @@ namespace ClosedXML.Excel
                 Condition = takeTop ? TopFilter : BottomFilter,
             };
         }
+
+        internal static XLFilter CreateAverage(double average, bool aboveAverage)
+        {
+            bool AboveAverage(IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() > average;
+            }
+            bool BelowAverage(IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() < average;
+            }
+
+            return new XLFilter
+            {
+                Value = average,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or,
+                Condition = aboveAverage ? AboveAverage : BelowAverage,
+            };
+        }
     }
 }
