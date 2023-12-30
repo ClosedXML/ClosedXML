@@ -1,15 +1,16 @@
 using System;
+using System.Collections;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
 
-    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IXLDateTimeGroupFilteredColumn
+    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IXLDateTimeGroupFilteredColumn, IEnumerable<XLFilter>
     {
         private readonly XLAutoFilter _autoFilter;
         private readonly Int32 _column;
-
+        private readonly List<XLFilter> _filters = new();
         public XLFilterColumn(XLAutoFilter autoFilter, Int32 column)
         {
             _autoFilter = autoFilter;
@@ -20,9 +21,7 @@ namespace ClosedXML.Excel
 
         public void Clear()
         {
-            if (_autoFilter.Filters.ContainsKey(_column))
-                _autoFilter.Filters.Remove(_column);
-
+            _filters.Clear();
             FilterType = XLFilterType.None;
         }
 
@@ -144,6 +143,10 @@ namespace ClosedXML.Excel
 
         #endregion IXLFilterColumn Members
 
+        public IEnumerator<XLFilter> GetEnumerator() => _filters.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop)
         {
             ResetFilter(XLFilterType.TopBottom);
@@ -236,6 +239,38 @@ namespace ClosedXML.Excel
 
             Clear();
             FilterType = type;
+        }
+
+        internal void AddFilter(XLFilter filter)
+        {
+            _filters.Add(filter);
+        }
+
+        internal bool Check(IXLCell cell)
+        {
+            var columnFilterMatch = true;
+
+            // If the first filter is an 'Or', we need to fudge the initial condition
+            if (_filters.Count > 0 && _filters.First().Connector == XLConnector.Or)
+            {
+                columnFilterMatch = false;
+            }
+            foreach (var filter in _filters)
+            {
+                var filterMatch = filter.Condition(cell);
+                if (filter.Connector == XLConnector.And)
+                {
+                    columnFilterMatch &= filterMatch;
+                    if (!columnFilterMatch) break;
+                }
+                else
+                {
+                    columnFilterMatch |= filterMatch;
+                    if (columnFilterMatch) break;
+                }
+            }
+
+            return columnFilterMatch;
         }
     }
 }

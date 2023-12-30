@@ -146,7 +146,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains how many
-        /// items/percent (depends on <see cref="TopBottomType"/>) should be filter accept.
+        /// items/percent (depends on <see cref="TopBottomType"/>) should filter accept.
         /// </summary>
         /// <remarks>
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
@@ -155,8 +155,8 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains the content
-        /// interpretation of a <see cref="TopBottomValue"/> property, either how many items or how
-        /// many percents.
+        /// interpretation of a <see cref="TopBottomValue"/> property, i.e. does it mean how many
+        /// percents or how many items?
         /// </summary>
         /// <remarks>
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.

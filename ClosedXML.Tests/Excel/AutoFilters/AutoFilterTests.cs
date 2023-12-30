@@ -255,7 +255,7 @@ namespace ClosedXML.Tests
 
                     // Regular filter compares values as strings, doesn't convert to XLCellValue,
                     // so the value is read from the file as a text despite looking like a number.
-                    Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Filters.First().Value.First().Value);
+                    Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value);
                     Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
 
                     ws.AutoFilter.Reapply();
@@ -268,7 +268,7 @@ namespace ClosedXML.Tests
                 using (var wb = new XLWorkbook(stream))
                 {
                     var ws = wb.Worksheets.First();
-                    Assert.AreEqual("10 000.00", (ws.AutoFilter as XLAutoFilter).Filters.First().Value.First().Value);
+                    Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value);
 
                     var v = ws.AutoFilter.VisibleRows.Select(r => r.FirstCell().Value).ToList();
                     Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
