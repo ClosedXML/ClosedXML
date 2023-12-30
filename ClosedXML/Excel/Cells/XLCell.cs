@@ -510,6 +510,11 @@ namespace ClosedXML.Excel
                 value = CachedValue;
             }
 
+            return GetFormattedString(value, culture);
+        }
+
+        internal string GetFormattedString(XLCellValue value, CultureInfo culture = null)
+        {
             culture ??= CultureInfo.CurrentCulture;
             var format = GetFormat();
             return value.IsUnifiedNumber

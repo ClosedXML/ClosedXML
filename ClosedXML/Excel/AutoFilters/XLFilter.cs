@@ -63,6 +63,14 @@ namespace ClosedXML.Excel
 
         internal static XLFilter CreateRegularFilter(XLCellValue value)
         {
+            bool WildcardMatches(IXLCell cell, XLFilterColumn _)
+            {
+                // IXLCell.GetFormattedString() could trigger formula evaluation.
+                var cachedValue = cell.CachedValue;
+                var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
+                return formattedString.Equals(value.ToString(), StringComparison.OrdinalIgnoreCase);
+            }
+
             // TODO: If user supplies a text that is a wildcard, escape it (e.g. `2*` to `2~*`).
             var wildcard = value.ToString();
             return new XLFilter
@@ -70,7 +78,7 @@ namespace ClosedXML.Excel
                 Value = wildcard,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
-                Condition = (cell, _) => cell.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase), // TODO: Use cached value for formatted string.
+                Condition = WildcardMatches,
             };
         }
 
