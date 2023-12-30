@@ -142,7 +142,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Current filter type used by the filter columns.
         /// </summary>
-        XLFilterType FilterType { get; set; }
+        XLFilterType FilterType { get; }
 
         /// <summary>
         /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains how many
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel
         /// <remarks>
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
         /// </remarks>
-        Int32 TopBottomValue { get; set; }
+        Int32 TopBottomValue { get; }
 
         /// <summary>
         /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It contains the content
@@ -161,7 +161,7 @@ namespace ClosedXML.Excel
         /// <remarks>
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
         /// </remarks>
-        XLTopBottomType TopBottomType { get; set; }
+        XLTopBottomType TopBottomType { get; }
 
         /// <summary>
         /// Configuration of a <see cref="XLFilterType.TopBottom"/> filter. It determines if filter
@@ -170,9 +170,9 @@ namespace ClosedXML.Excel
         /// <remarks>
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
         /// </remarks>
-        XLTopBottomPart TopBottomPart { get; set; }
-        XLFilterDynamicType DynamicType { get; set; }
-        Double DynamicValue { get; set; }
+        XLTopBottomPart TopBottomPart { get; }
+        XLFilterDynamicType DynamicType { get; }
+        Double DynamicValue { get; }
 
         IXLFilterColumn SetFilterType(XLFilterType value);
 

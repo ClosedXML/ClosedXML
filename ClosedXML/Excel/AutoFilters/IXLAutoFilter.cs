@@ -55,13 +55,13 @@ namespace ClosedXML.Excel
         /// Range of the autofilter. It consists of a header in first row, followed by data rows.
         /// It doesn't include totals row for tables.
         /// </summary>
-        IXLRange Range { get; set; }
+        IXLRange Range { get; }
 
         /// <summary>
         /// What column was used during last <see cref="Sort"/>. Contains undefined value for not
         /// yet <see cref="Sorted"/> autofilter.
         /// </summary>
-        Int32 SortColumn { get; set; }
+        Int32 SortColumn { get; }
 
         /// <summary>
         /// Are values in the autofilter range sorted? I.e. the values were either already loaded
@@ -70,13 +70,13 @@ namespace ClosedXML.Excel
         /// <remarks>
         /// If <c>true</c>, <see cref="SortColumn"/> and <see cref="SortOrder"/> contain valid values.
         /// </remarks>
-        Boolean Sorted { get; set; }
+        Boolean Sorted { get; }
 
         /// <summary>
         /// What sorting order was used during last <see cref="Sort"/>. Contains undefined value
         /// for not yet <see cref="Sorted"/> autofilter.
         /// </summary>
-        XLSortOrder SortOrder { get; set; }
+        XLSortOrder SortOrder { get; }
 
         /// <summary>
         /// Get rows of <see cref="Range"/> that are visible because they satisfied filter
