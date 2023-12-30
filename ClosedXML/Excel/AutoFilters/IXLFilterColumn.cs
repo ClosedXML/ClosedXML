@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// <para>
-        /// Switch to the <see cref="XLFilterType.Regular"/> filter if filter column has a
+        /// Switch to the <see cref="XLFilterType.DateTimeGrouping"/> filter if filter column has a
         /// different type (for current type <see cref="FilterType"/>) and add
         /// <paramref name="value"/> to a set of allowed values. Excel displays regular filter as
         /// a list of possible values in a column with checkbox next to it and user can check which

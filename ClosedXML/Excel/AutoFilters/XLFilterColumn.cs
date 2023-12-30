@@ -27,20 +27,14 @@ namespace ClosedXML.Excel
         public IXLFilteredColumn AddFilter(XLCellValue value, bool reapply)
         {
             SwitchFilter(XLFilterType.Regular);
-            AddFilter(XLFilter.CreateRegularFilter(value));
-            if (reapply)
-                _autoFilter.Reapply();
-
+            AddFilter(XLFilter.CreateRegularFilter(value), reapply);
             return this;
         }
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply)
         {
             SwitchFilter(XLFilterType.DateTimeGrouping);
-            AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
-            if (reapply)
-                _autoFilter.Reapply();
-
+            AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping), reapply);
             return this;
         }
 
@@ -165,10 +159,7 @@ namespace ClosedXML.Excel
             TopBottomType = type;
             TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
-            AddFilter(XLFilter.CreateTopBottom(takeTop, percentOrItemCount));
-
-            if (reapply)
-                _autoFilter.Reapply();
+            AddFilter(XLFilter.CreateTopBottom(takeTop, percentOrItemCount), reapply);
         }
 
         private double GetTopBottomFilterValue(XLTopBottomType type, int value, bool takeTop)
@@ -202,18 +193,9 @@ namespace ClosedXML.Excel
                 ? XLFilterDynamicType.AboveAverage
                 : XLFilterDynamicType.BelowAverage;
 
-            if (reapply)
-            {
-                // `Average` is recalculated during reapply, so no need to calculate it twice.
-                AddFilter(XLFilter.CreateAverage(double.NaN, aboveAverage));
-                _autoFilter.Reapply();
-            }
-            else
-            {
-                // Calculate average, so it is saved to a workbook, even if filters are never reapplies.
-                DynamicValue = GetAverageFilterValue();
-                AddFilter(XLFilter.CreateAverage(DynamicValue, aboveAverage));
-            }
+            // `Average` is recalculated during reapply, so no need to calculate it twice.
+            DynamicValue = reapply ? double.NaN : GetAverageFilterValue();
+            AddFilter(XLFilter.CreateAverage(DynamicValue, aboveAverage), reapply);
         }
 
         private double GetAverageFilterValue()
@@ -229,21 +211,15 @@ namespace ClosedXML.Excel
         private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op, Boolean reapply)
         {
             ResetFilter(XLFilterType.Custom);
-            AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
-            if (reapply)
-                _autoFilter.Reapply();
-
-            return new XLFilterConnector(_autoFilter, this);
+            AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or), reapply);
+            return new XLFilterConnector(this);
         }
 
         private IXLFilterConnector AddCustomFilter(string pattern, bool match, bool reapply)
         {
-            SwitchFilter(XLFilterType.Custom);
-            AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
-            if (reapply)
-                _autoFilter.Reapply();
-
-            return new XLFilterConnector(_autoFilter, this);
+            ResetFilter(XLFilterType.Custom);
+            AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or), reapply);
+            return new XLFilterConnector(this);
         }
 
         private void ResetFilter(XLFilterType type)
@@ -263,9 +239,11 @@ namespace ClosedXML.Excel
             FilterType = type;
         }
 
-        internal void AddFilter(XLFilter filter)
+        internal void AddFilter(XLFilter filter, bool reapply = false)
         {
             _filters.Add(filter);
+            if (reapply)
+                _autoFilter.Reapply();
         }
 
         internal void Refresh()
