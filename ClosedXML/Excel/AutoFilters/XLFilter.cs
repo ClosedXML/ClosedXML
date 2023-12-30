@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCellValue CustomValue { get; init; }
 
-        public Func<IXLCell, bool> Condition { get; set; }
+        public Func<IXLCell, XLFilterColumn, bool> Condition { get; init; }
 
         public XLFilterOperator Operator { get; init; } = XLFilterOperator.Equal;
 
@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
                 CustomValue = value,
                 Operator = op,
                 Connector = connector,
-                Condition = cell => CustomFilterSatisfied(cell.CachedValue, op, value, comparer),
+                Condition = (cell, _) => CustomFilterSatisfied(cell.CachedValue, op, value, comparer),
             };
         }
 
@@ -57,7 +57,7 @@ namespace ClosedXML.Excel
                 CustomValue = wildcard,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                Condition = match ? c => MatchesWildcard(wildcard, c.CachedValue) : c => !MatchesWildcard(wildcard, c.CachedValue),
+                Condition = match ? (c, _) => MatchesWildcard(wildcard, c.CachedValue) : (c, _) => !MatchesWildcard(wildcard, c.CachedValue),
             };
         }
 
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
                 Value = wildcard,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
-                Condition = v => v.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase), // TODO: Use cached value for formatted string.
+                Condition = (cell, _) => cell.GetFormattedString().Equals(value.ToString(), StringComparison.OrdinalIgnoreCase), // TODO: Use cached value for formatted string.
             };
         }
 
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
                 DateTimeGrouping = dateTimeGrouping
             };
 
-            bool HasSameGroup(IXLCell cell)
+            bool HasSameGroup(IXLCell cell, XLFilterColumn _)
             {
                 var cachedValue = cell.CachedValue;
                 return cachedValue.IsDateTime && IsMatch(date, cachedValue.GetDateTime(), dateTimeGrouping);
@@ -156,12 +156,12 @@ namespace ClosedXML.Excel
 
         internal static XLFilter CreateTopBottom(bool takeTop, double topBottomValue)
         {
-            bool TopFilter(IXLCell cell)
+            bool TopFilter(IXLCell cell, XLFilterColumn _)
             {
                 var cachedValue = cell.CachedValue;
                 return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() >= topBottomValue;
             }
-            bool BottomFilter(IXLCell cell)
+            bool BottomFilter(IXLCell cell, XLFilterColumn _)
             {
                 var cachedValue = cell.CachedValue;
                 return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() <= topBottomValue;
@@ -176,22 +176,24 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateAverage(double average, bool aboveAverage)
+        internal static XLFilter CreateAverage(double initialAverage, bool aboveAverage)
         {
-            bool AboveAverage(IXLCell cell)
+            bool AboveAverage(IXLCell cell, XLFilterColumn filterColumn)
             {
                 var cachedValue = cell.CachedValue;
+                var average = filterColumn.DynamicValue;
                 return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() > average;
             }
-            bool BelowAverage(IXLCell cell)
+            bool BelowAverage(IXLCell cell, XLFilterColumn filterColumn)
             {
                 var cachedValue = cell.CachedValue;
+                var average = filterColumn.DynamicValue;
                 return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() < average;
             }
 
             return new XLFilter
             {
-                Value = average,
+                Value = initialAverage,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 Condition = aboveAverage ? AboveAverage : BelowAverage,

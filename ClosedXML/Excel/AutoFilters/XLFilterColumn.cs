@@ -141,7 +141,11 @@ namespace ClosedXML.Excel
         public XLTopBottomPart TopBottomPart { get; set; }
 
         public XLFilterDynamicType DynamicType { get; set; }
-        public Double DynamicValue { get; set; }
+
+        /// <summary>
+        /// Basically average for dynamic filters. Value is refreshed during filter reapply.
+        /// </summary>
+        public Double DynamicValue { get; set; } = double.NaN;
 
         #endregion IXLFilterColumn Members
 
@@ -192,20 +196,29 @@ namespace ClosedXML.Excel
             DynamicType = aboveAverage
                 ? XLFilterDynamicType.AboveAverage
                 : XLFilterDynamicType.BelowAverage;
-            var average = GetAverageFilterValue();
-            AddFilter(XLFilter.CreateAverage(average, aboveAverage));
-            if (reapply)
-                _autoFilter.Reapply();
 
-            double GetAverageFilterValue()
+            if (reapply)
             {
-                var column = _autoFilter.Range.Column(_column);
-                var subColumn = column.Column(2, column.CellCount());
-                return subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber)
-                    .Select(c => c.CachedValue.GetUnifiedNumber())
-                    .DefaultIfEmpty(Double.NaN)
-                    .Average();
+                // `Average` is recalculated during reapply, so no need to calculate it twice.
+                AddFilter(XLFilter.CreateAverage(double.NaN, aboveAverage));
+                _autoFilter.Reapply();
             }
+            else
+            {
+                // Calculate average, so it is saved to a workbook, even if filters are never reapplies.
+                DynamicValue = GetAverageFilterValue();
+                AddFilter(XLFilter.CreateAverage(DynamicValue, aboveAverage));
+            }
+        }
+
+        private double GetAverageFilterValue()
+        {
+            var column = _autoFilter.Range.Column(_column);
+            var subColumn = column.Column(2, column.CellCount());
+            return subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber)
+                .Select(c => c.CachedValue.GetUnifiedNumber())
+                .DefaultIfEmpty(Double.NaN)
+                .Average();
         }
 
         private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op, Boolean reapply)
@@ -250,13 +263,24 @@ namespace ClosedXML.Excel
             _filters.Add(filter);
         }
 
+        internal void Refresh()
+        {
+            if (FilterType == XLFilterType.Dynamic && _filters.Count > 0)
+            {
+                // Update average value of a filter, so it is saved correctly and filter uses
+                // correct value, even is cell values changed and avg was stale.
+                DynamicValue = GetAverageFilterValue();
+                _filters[0].Value = DynamicValue;
+            }
+        }
+
         internal bool Check(IXLCell cell)
         {
             if (_filters.Count == 0)
                 return true;
 
             if (_filters.Count == 1)
-                return _filters[0].Condition(cell);
+                return _filters[0].Condition(cell, this);
 
             // All filter conditions are connected by a single type of logical condition. Regular
             // filters use 'Or', custom has up to two clauses connected by 'And'/'Or' and rest is
@@ -264,8 +288,8 @@ namespace ClosedXML.Excel
             var connector = _filters[0].Connector;
             return connector switch
             {
-                XLConnector.And => _filters.All(filter => filter.Condition(cell)),
-                XLConnector.Or => _filters.Any(filter => filter.Condition(cell)),
+                XLConnector.And => _filters.All(filter => filter.Condition(cell, this)),
+                XLConnector.Or => _filters.Any(filter => filter.Condition(cell, this)),
                 _ => throw new NotSupportedException(),
             };
         }

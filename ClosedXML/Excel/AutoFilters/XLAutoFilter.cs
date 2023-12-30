@@ -52,6 +52,9 @@ namespace ClosedXML.Excel
                 row.WorksheetRow().Unhide()
             );
 
+            foreach (var filterColumn in _columns.Values)
+                filterColumn.Refresh();
+
             foreach (IXLRangeRow row in rows)
             {
                 var rowMatch = true;
