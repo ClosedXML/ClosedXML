@@ -10,8 +10,15 @@ namespace ClosedXML.Excel
 
     internal enum XLFilterOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan }
 
+    /// <summary>
+    /// A single filter condition for auto filter.
+    /// </summary>
     internal class XLFilter
     {
+        private XLFilter()
+        {
+        }
+
         public XLConnector Connector { get; set; }
 
         public XLDateTimeGrouping DateTimeGrouping { get; set; }
