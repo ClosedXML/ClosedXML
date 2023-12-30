@@ -51,6 +51,7 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        [SetCulture("en-US")]
         public void Cell_value_is_formatted_by_current_culture_unless_specified_otherwise()
         {
             using var wb = new XLWorkbook();
