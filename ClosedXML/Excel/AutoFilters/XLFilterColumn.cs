@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
         private readonly XLAutoFilter _autoFilter;
         private readonly Int32 _column;
         private readonly List<XLFilter> _filters = new();
+
         public XLFilterColumn(XLAutoFilter autoFilter, Int32 column)
         {
             _autoFilter = autoFilter;
@@ -241,6 +242,19 @@ namespace ClosedXML.Excel
 
         internal void AddFilter(XLFilter filter, bool reapply = false)
         {
+            var maxFilters = FilterType switch
+            {
+                XLFilterType.None => 0,
+                XLFilterType.Regular => int.MaxValue,
+                XLFilterType.Custom => 2,
+                XLFilterType.TopBottom => 1,
+                XLFilterType.Dynamic => 1,
+                XLFilterType.DateTimeGrouping => int.MaxValue,
+                _ => throw new NotSupportedException()
+            };
+            if (_filters.Count >= maxFilters)
+                throw new InvalidOperationException($"{FilterType} filter can have max {maxFilters} conditions.");
+
             _filters.Add(filter);
             if (reapply)
                 _autoFilter.Reapply();
