@@ -15,76 +15,78 @@ namespace ClosedXML.Excel
             _connector = connector;
         }
 
-        public void EqualTo(XLCellValue value)
+        public void EqualTo(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.Equal);
+            ApplyCustomFilter(value, XLFilterOperator.Equal, reapply);
         }
 
-        public void NotEqualTo(XLCellValue value)
+        public void NotEqualTo(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.NotEqual);
+            ApplyCustomFilter(value, XLFilterOperator.NotEqual, reapply);
         }
 
-        public void GreaterThan(XLCellValue value)
+        public void GreaterThan(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.GreaterThan);
+            ApplyCustomFilter(value, XLFilterOperator.GreaterThan, reapply);
         }
 
-        public void LessThan(XLCellValue value)
+        public void LessThan(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.LessThan);
+            ApplyCustomFilter(value, XLFilterOperator.LessThan, reapply);
         }
 
-        public void EqualOrGreaterThan(XLCellValue value)
+        public void EqualOrGreaterThan(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan);
+            ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan, reapply);
         }
 
-        public void EqualOrLessThan(XLCellValue value)
+        public void EqualOrLessThan(XLCellValue value, Boolean reapply)
         {
-            ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan);
+            ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan, reapply);
         }
 
-        public void BeginsWith(String value)
+        public void BeginsWith(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter(value + "*", true);
+            ApplyWildcardCustomFilter(value + "*", true, reapply);
         }
 
-        public void NotBeginsWith(String value)
+        public void NotBeginsWith(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter(value + "*", false);
+            ApplyWildcardCustomFilter(value + "*", false, reapply);
         }
 
-        public void EndsWith(String value)
+        public void EndsWith(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter("*" + value, true);
+            ApplyWildcardCustomFilter("*" + value, true, reapply);
         }
 
-        public void NotEndsWith(String value)
+        public void NotEndsWith(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter("*" + value, false);
+            ApplyWildcardCustomFilter("*" + value, false, reapply);
         }
 
-        public void Contains(String value)
+        public void Contains(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter("*" + value + "*", true);
+            ApplyWildcardCustomFilter("*" + value + "*", true, reapply);
         }
 
-        public void NotContains(String value)
+        public void NotContains(String value, Boolean reapply)
         {
-            ApplyWildcardCustomFilter("*" + value + "*", false);
+            ApplyWildcardCustomFilter("*" + value + "*", false, reapply);
         }
 
-        private void ApplyCustomFilter(XLCellValue value, XLFilterOperator op)
+        private void ApplyCustomFilter(XLCellValue value, XLFilterOperator op, bool reapply)
         {
             _filterColumn.AddFilter(XLFilter.CreateCustomFilter(value, op, _connector));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
         }
 
-        private void ApplyWildcardCustomFilter(string pattern, bool match)
+        private void ApplyWildcardCustomFilter(string pattern, bool match, bool reapply)
         {
             _filterColumn.AddFilter(XLFilter.CreateWildcardFilter(pattern, match, _connector));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
         }
     }
 }

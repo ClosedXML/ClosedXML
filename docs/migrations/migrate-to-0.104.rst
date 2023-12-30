@@ -118,6 +118,11 @@ Following methods were removed.
 Added a new type of filter (``XLFilterType.None``) that is used when autofilter
 doesn't have any filter.
 
+Methods that add/set filters now have an ``bool`` parameter ``reapply``. By
+default, it is set to ``true``. The parameter determines if the method should
+immediately reapplied modified filters to the autofilter. This makes it possile
+to configure several filters and only then call ``IXLAutoFilter.Reapply()``.
+
 *******
 IXLCell
 *******

@@ -24,110 +24,114 @@ namespace ClosedXML.Excel
             FilterType = XLFilterType.None;
         }
 
-        public IXLFilteredColumn AddFilter(XLCellValue value)
+        public IXLFilteredColumn AddFilter(XLCellValue value, bool reapply)
         {
             SwitchFilter(XLFilterType.Regular);
             AddFilter(XLFilter.CreateRegularFilter(value));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
+
             return this;
         }
 
-        public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
+        public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply)
         {
             SwitchFilter(XLFilterType.DateTimeGrouping);
             AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
+
             return this;
         }
 
-        public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Top(Int32 value, XLTopBottomType type, bool reapply)
         {
-            SetTopBottom(value, type, true);
+            SetTopBottom(value, type, takeTop: true, reapply);
         }
 
-        public void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Bottom(Int32 value, XLTopBottomType type, bool reapply)
         {
-            SetTopBottom(value, type, false);
+            SetTopBottom(value, type, takeTop: false, reapply);
         }
 
-        public void AboveAverage()
+        public void AboveAverage(bool reapply)
         {
-            SetAverage(true);
+            SetAverage(aboveAverage: true, reapply);
         }
 
-        public void BelowAverage()
+        public void BelowAverage(bool reapply)
         {
-            SetAverage(false);
+            SetAverage(aboveAverage: false, reapply);
         }
 
-        public IXLFilterConnector EqualTo(XLCellValue value)
+        public IXLFilterConnector EqualTo(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.Equal);
+            return AddCustomFilter(value, XLFilterOperator.Equal, reapply);
         }
 
-        public IXLFilterConnector NotEqualTo(XLCellValue value)
+        public IXLFilterConnector NotEqualTo(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.NotEqual);
+            return AddCustomFilter(value, XLFilterOperator.NotEqual, reapply);
         }
 
-        public IXLFilterConnector GreaterThan(XLCellValue value)
+        public IXLFilterConnector GreaterThan(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.GreaterThan);
+            return AddCustomFilter(value, XLFilterOperator.GreaterThan, reapply);
         }
 
-        public IXLFilterConnector LessThan(XLCellValue value)
+        public IXLFilterConnector LessThan(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.LessThan);
+            return AddCustomFilter(value, XLFilterOperator.LessThan, reapply);
         }
 
-        public IXLFilterConnector EqualOrGreaterThan(XLCellValue value)
+        public IXLFilterConnector EqualOrGreaterThan(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.EqualOrGreaterThan);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrGreaterThan, reapply);
         }
 
-        public IXLFilterConnector EqualOrLessThan(XLCellValue value)
+        public IXLFilterConnector EqualOrLessThan(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.EqualOrLessThan);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrLessThan, reapply);
         }
 
-        public void Between(XLCellValue minValue, XLCellValue maxValue)
+        public void Between(XLCellValue minValue, XLCellValue maxValue, Boolean reapply)
         {
-            EqualOrGreaterThan(minValue).And.EqualOrLessThan(maxValue);
+            EqualOrGreaterThan(minValue, false).And.EqualOrLessThan(maxValue, reapply);
         }
 
-        public void NotBetween(XLCellValue minValue, XLCellValue maxValue)
+        public void NotBetween(XLCellValue minValue, XLCellValue maxValue, Boolean reapply)
         {
-            LessThan(minValue).Or.GreaterThan(maxValue);
+            LessThan(minValue, false).Or.GreaterThan(maxValue, reapply);
         }
 
-        public IXLFilterConnector BeginsWith(String value)
+        public IXLFilterConnector BeginsWith(String value, Boolean reapply)
         {
-            return AddCustomFilter(value + "*", true);
+            return AddCustomFilter(value + "*", true, reapply);
         }
 
-        public IXLFilterConnector NotBeginsWith(String value)
+        public IXLFilterConnector NotBeginsWith(String value, Boolean reapply)
         {
-            return AddCustomFilter(value + "*", false);
+            return AddCustomFilter(value + "*", false, reapply);
         }
 
-        public IXLFilterConnector EndsWith(String value)
+        public IXLFilterConnector EndsWith(String value, Boolean reapply)
         {
-            return AddCustomFilter("*" + value, true);
+            return AddCustomFilter("*" + value, true, reapply);
         }
 
-        public IXLFilterConnector NotEndsWith(String value)
+        public IXLFilterConnector NotEndsWith(String value, Boolean reapply)
         {
-            return AddCustomFilter("*" + value, false);
+            return AddCustomFilter("*" + value, false, reapply);
         }
 
-        public IXLFilterConnector Contains(String value)
+        public IXLFilterConnector Contains(String value, Boolean reapply)
         {
-            return AddCustomFilter("*" + value + "*", true);
+            return AddCustomFilter("*" + value + "*", true, reapply);
         }
 
-        public IXLFilterConnector NotContains(String value)
+        public IXLFilterConnector NotContains(String value, Boolean reapply)
         {
-            return AddCustomFilter("*" + value + "*", false);
+            return AddCustomFilter("*" + value + "*", false, reapply);
         }
 
         public XLFilterType FilterType { get; set; }
@@ -145,7 +149,7 @@ namespace ClosedXML.Excel
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop)
+        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop, Boolean reapply)
         {
             ResetFilter(XLFilterType.TopBottom);
             TopBottomValue = value;
@@ -154,7 +158,8 @@ namespace ClosedXML.Excel
 
             var filterValue = GetTopBottomFilterValue(type, value, takeTop);
             AddFilter(XLFilter.CreateTopBottom(takeTop, filterValue));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
         }
 
         private double GetTopBottomFilterValue(XLTopBottomType type, int value, bool takeTop)
@@ -181,7 +186,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void SetAverage(Boolean aboveAverage)
+        private void SetAverage(Boolean aboveAverage, Boolean reapply)
         {
             ResetFilter(XLFilterType.Dynamic);
             DynamicType = aboveAverage
@@ -189,7 +194,8 @@ namespace ClosedXML.Excel
                 : XLFilterDynamicType.BelowAverage;
             var average = GetAverageFilterValue();
             AddFilter(XLFilter.CreateAverage(average, aboveAverage));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
 
             double GetAverageFilterValue()
             {
@@ -202,19 +208,23 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op)
+        private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op, Boolean reapply)
         {
             ResetFilter(XLFilterType.Custom);
             AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
+
             return new XLFilterConnector(_autoFilter, this);
         }
 
-        private IXLFilterConnector AddCustomFilter(string pattern, bool match)
+        private IXLFilterConnector AddCustomFilter(string pattern, bool match, bool reapply)
         {
             SwitchFilter(XLFilterType.Custom);
             AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
-            _autoFilter.Reapply();
+            if (reapply)
+                _autoFilter.Reapply();
+
             return new XLFilterConnector(_autoFilter, this);
         }
 
@@ -255,7 +265,7 @@ namespace ClosedXML.Excel
             return connector switch
             {
                 XLConnector.And => _filters.All(filter => filter.Condition(cell)),
-                XLConnector.Or  => _filters.Any(filter => filter.Condition(cell)),
+                XLConnector.Or => _filters.Any(filter => filter.Condition(cell)),
                 _ => throw new NotSupportedException(),
             };
         }

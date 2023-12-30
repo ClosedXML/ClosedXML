@@ -66,8 +66,9 @@ namespace ClosedXML.Excel
         /// </remarks>
         /// <param name="value">Value of the filter. The type is <c>XLCellValue</c>, but that's for
         /// convenience sake. The value is converted to a string and filter works with string.</param>
+        /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
         /// <returns>Fluent API allowing to add additional filter value.</returns>
-        IXLFilteredColumn AddFilter(XLCellValue value);
+        IXLFilteredColumn AddFilter(XLCellValue value, bool reapply = true);
 
         /// <summary>
         /// <para>
@@ -100,44 +101,45 @@ namespace ClosedXML.Excel
         /// Starting component of the grouping. Tested date must match all date components of the
         /// <paramref name="date"/> from this one to the <see cref="XLDateTimeGrouping.Second"/>.
         /// </param>
+        /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
         /// <returns>Fluent API allowing to add additional date time group value.</returns>
-        IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping);
+        IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply = true);
 
-        void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items);
+        void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items, bool reapply = true);
 
-        void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items);
+        void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items, bool reapply = true);
 
-        void AboveAverage();
+        void AboveAverage(bool reapply = true);
 
-        void BelowAverage();
+        void BelowAverage(bool reapply = true);
 
-        IXLFilterConnector EqualTo(XLCellValue value);
+        IXLFilterConnector EqualTo(XLCellValue value, bool reapply = true);
 
-        IXLFilterConnector NotEqualTo(XLCellValue value);
+        IXLFilterConnector NotEqualTo(XLCellValue value, bool reapply = true);
 
-        IXLFilterConnector GreaterThan(XLCellValue value);
+        IXLFilterConnector GreaterThan(XLCellValue value, bool reapply = true);
 
-        IXLFilterConnector LessThan(XLCellValue value);
+        IXLFilterConnector LessThan(XLCellValue value, bool reapply = true);
 
-        IXLFilterConnector EqualOrGreaterThan(XLCellValue value);
+        IXLFilterConnector EqualOrGreaterThan(XLCellValue value, bool reapply = true);
 
-        IXLFilterConnector EqualOrLessThan(XLCellValue value);
+        IXLFilterConnector EqualOrLessThan(XLCellValue value, bool reapply = true);
 
-        void Between(XLCellValue minValue, XLCellValue maxValue);
+        void Between(XLCellValue minValue, XLCellValue maxValue, bool reapply = true);
 
-        void NotBetween(XLCellValue minValue, XLCellValue maxValue);
+        void NotBetween(XLCellValue minValue, XLCellValue maxValue, bool reapply = true);
 
-        IXLFilterConnector BeginsWith(String value);
+        IXLFilterConnector BeginsWith(String value, bool reapply = true);
 
-        IXLFilterConnector NotBeginsWith(String value);
+        IXLFilterConnector NotBeginsWith(String value, bool reapply = true);
 
-        IXLFilterConnector EndsWith(String value);
+        IXLFilterConnector EndsWith(String value, bool reapply = true);
 
-        IXLFilterConnector NotEndsWith(String value);
+        IXLFilterConnector NotEndsWith(String value, bool reapply = true);
 
-        IXLFilterConnector Contains(String value);
+        IXLFilterConnector Contains(String value, bool reapply = true);
 
-        IXLFilterConnector NotContains(String value);
+        IXLFilterConnector NotContains(String value, bool reapply = true);
 
         /// <summary>
         /// Current filter type used by the filter columns.
