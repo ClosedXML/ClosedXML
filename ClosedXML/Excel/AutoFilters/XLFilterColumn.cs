@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IXLDateTimeGroupFilteredColumn, IEnumerable<XLFilter>
     {
         private readonly XLAutoFilter _autoFilter;
@@ -28,7 +27,7 @@ namespace ClosedXML.Excel
         public IXLFilteredColumn AddFilter(XLCellValue value)
         {
             SwitchFilter(XLFilterType.Regular);
-            _autoFilter.AddFilter(_column, XLFilter.CreateRegularFilter(value));
+            AddFilter(XLFilter.CreateRegularFilter(value));
             _autoFilter.Reapply();
             return this;
         }
@@ -36,9 +35,8 @@ namespace ClosedXML.Excel
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
             SwitchFilter(XLFilterType.DateTimeGrouping);
-            _autoFilter.AddFilter(_column, XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
+            AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
             _autoFilter.Reapply();
-
             return this;
         }
 
@@ -155,7 +153,7 @@ namespace ClosedXML.Excel
             TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
             var filterValue = GetTopBottomFilterValue(type, value, takeTop);
-            _autoFilter.AddFilter(_column, XLFilter.CreateTopBottom(takeTop, filterValue));
+            AddFilter(XLFilter.CreateTopBottom(takeTop, filterValue));
             _autoFilter.Reapply();
         }
 
@@ -190,7 +188,7 @@ namespace ClosedXML.Excel
                 ? XLFilterDynamicType.AboveAverage
                 : XLFilterDynamicType.BelowAverage;
             var average = GetAverageFilterValue();
-            _autoFilter.AddFilter(_column, XLFilter.CreateAverage(average, aboveAverage));
+            AddFilter(XLFilter.CreateAverage(average, aboveAverage));
             _autoFilter.Reapply();
 
             double GetAverageFilterValue()
@@ -206,11 +204,8 @@ namespace ClosedXML.Excel
 
         private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op)
         {
-            _autoFilter.IsEnabled = true;
-            Clear();
-
-            _autoFilter.AddFilter(_column, XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
-            _autoFilter.Column(_column).FilterType = XLFilterType.Custom;
+            ResetFilter(XLFilterType.Custom);
+            AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or));
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
         }
@@ -218,8 +213,7 @@ namespace ClosedXML.Excel
         private IXLFilterConnector AddCustomFilter(string pattern, bool match)
         {
             SwitchFilter(XLFilterType.Custom);
-
-            _autoFilter.AddFilter(_column, XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
+            AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or));
             _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
         }
