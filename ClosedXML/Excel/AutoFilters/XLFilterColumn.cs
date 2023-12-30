@@ -17,18 +17,18 @@ namespace ClosedXML.Excel
         }
 
         #region IXLFilterColumn Members
-
+        
         public void Clear()
         {
             if (_autoFilter.Filters.ContainsKey(_column))
                 _autoFilter.Filters.Remove(_column);
+
+            FilterType = XLFilterType.None;
         }
 
         public IXLFilteredColumn AddFilter(XLCellValue value)
         {
-            // TODO: If different filter type, clear them
-            _autoFilter.IsEnabled = true;
-            FilterType = XLFilterType.Regular;
+            SwitchFilter(XLFilterType.Regular);
             _autoFilter.AddFilter(_column, XLFilter.CreateRegularFilter(value));
             _autoFilter.Reapply();
             return this;
@@ -36,8 +36,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            _autoFilter.IsEnabled = true;
-            FilterType = XLFilterType.DateTimeGrouping;
+            SwitchFilter(XLFilterType.DateTimeGrouping);
             _autoFilter.AddFilter(_column, XLFilter.CreateDateGroupFilter(date, dateTimeGrouping));
             _autoFilter.Reapply();
 
@@ -192,9 +191,7 @@ namespace ClosedXML.Excel
 
         private void ShowAverage(Boolean aboveAverage)
         {
-            _autoFilter.IsEnabled = true;
-            Clear();
-            _autoFilter.Column(_column).SetFilterType(XLFilterType.Dynamic)
+            ResetFilter(XLFilterType.Dynamic)
                 .SetDynamicType(aboveAverage
                                     ? XLFilterDynamicType.AboveAverage
                                     : XLFilterDynamicType.BelowAverage);
@@ -246,5 +243,24 @@ namespace ClosedXML.Excel
         public IXLFilterColumn SetDynamicType(XLFilterDynamicType value) { DynamicType = value; return this; }
 
         public IXLFilterColumn SetDynamicValue(Double value) { DynamicValue = value; return this; }
+
+        private XLFilterColumn ResetFilter(XLFilterType type)
+        {
+            Clear();
+            _autoFilter.IsEnabled = true;
+            FilterType = type;
+            return this;
+        }
+
+        private XLFilterColumn SwitchFilter(XLFilterType type)
+        {
+            _autoFilter.IsEnabled = true;
+            if (FilterType == type)
+                return this;
+
+            Clear();
+            FilterType = type;
+            return this;
+        }
     }
 }
