@@ -92,6 +92,32 @@ parameter type was changed from a generic ``T : IComparable<T>`` to ``XLCellValu
 Semantic of method was also updated to reflect how Excel actually filter column
 values.
 
+Removed setters for autofilter configuration, the setters were given access to
+internal state and the only acceptable way to set filters is through
+``IXLFilterColumn`` methods. 
+
+Following methods were removed.
+
+* ``IXLAutoFilter.Range`` setter.
+* ``IXLAutoFilter.SortColumn`` setter.
+* ``IXLAutoFilter.Sorted`` setter.
+* ``IXLAutoFilter.SortOrder`` setter.
+* ``IXLFilterColumn.FilterType`` setter.
+* ``IXLFilterColumn.SetFilterType(XLFilterType value)``
+* ``IXLFilterColumn.TopBottomValue`` setter.
+* ``IXLFilterColumn.SetTopBottomValue(Int32 value)``
+* ``IXLFilterColumn.TopBottomType`` setter.
+* ``IXLFilterColumn.SetTopBottomType(XLTopBottomType value)``
+* ``IXLFilterColumn.TopBottomPart`` setter.
+* ``IXLFilterColumn.SetTopBottomPart(XLTopBottomPart value)``
+* ``IXLFilterColumn.DynamicType`` setter.
+* ``IXLFilterColumn.SetDynamicType(XLFilterDynamicType value)``
+* ``IXLFilterColumn.DynamicValue`` setter.
+* ``IXLFilterColumn.SetDynamicValue(Double value)``
+
+Added a new type of filter (``XLFilterType.None``) that is used when autofilter
+doesn't have any filter.
+
 *******
 IXLCell
 *******
