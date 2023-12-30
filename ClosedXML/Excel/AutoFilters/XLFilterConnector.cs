@@ -1,9 +1,4 @@
-#nullable disable
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -18,18 +13,8 @@ namespace ClosedXML.Excel
             _column = column;
         }
 
-        #region IXLFilterConnector Members
+        public IXLCustomFilteredColumn And => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And);
 
-        public IXLCustomFilteredColumn And
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And); }
-        }
-
-        public IXLCustomFilteredColumn Or
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or); }
-        }
-
-        #endregion
+        public IXLCustomFilteredColumn Or => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or);
     }
 }
