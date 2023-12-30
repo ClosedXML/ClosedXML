@@ -154,22 +154,22 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateTopBottom(bool takeTop, double topBottomValue)
+        internal static XLFilter CreateTopBottom(bool takeTop, int percentsOrItemCount)
         {
-            bool TopFilter(IXLCell cell, XLFilterColumn _)
+            bool TopFilter(IXLCell cell, XLFilterColumn filterColumn)
             {
                 var cachedValue = cell.CachedValue;
-                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() >= topBottomValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() >= filterColumn.TopBottomFilterValue;
             }
-            bool BottomFilter(IXLCell cell, XLFilterColumn _)
+            bool BottomFilter(IXLCell cell, XLFilterColumn filterColumn)
             {
                 var cachedValue = cell.CachedValue;
-                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() <= topBottomValue;
+                return cachedValue.IsUnifiedNumber && cachedValue.GetUnifiedNumber() <= filterColumn.TopBottomFilterValue;
             }
 
             return new XLFilter
             {
-                Value = topBottomValue,
+                Value = percentsOrItemCount,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 Condition = takeTop ? TopFilter : BottomFilter,
