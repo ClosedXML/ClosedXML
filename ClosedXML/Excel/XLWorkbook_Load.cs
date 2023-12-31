@@ -1642,39 +1642,43 @@ namespace ClosedXML.Excel
                 if (filterColumn.CustomFilters is { } customFilters)
                 {
                     xlFilterColumn.FilterType = XLFilterType.Custom;
-                    var connector = customFilters.And is not null && customFilters.And.Value ? XLConnector.And : XLConnector.Or;
+                    var connector = OpenXmlHelper.GetBooleanValueAsBool(customFilters.And, false) ? XLConnector.And : XLConnector.Or;
 
                     foreach (var filter in customFilters.OfType<CustomFilter>())
                     {
+                        // Equal or NotEqual use wildcards, not value comparison. The rest does value comparison.
+                        // There is no filter operation for equal of numbers (maybe combine >= and <=).
                         var op = filter.Operator is not null ? filter.Operator.Value.ToClosedXml() : XLFilterOperator.Equal;
-                        // TODO: This is a very simplistic detection of wildcard. Do better.
                         XLFilter xlFilter;
                         var filterValue = filter.Val.Value;
-                        if (op is XLFilterOperator.Equal or XLFilterOperator.NotEqual && filterValue is not null && filterValue.Contains('*'))
+                        switch (op)
                         {
-                            // Only operators Equals/NotEquals use wildcard semantic.
-                            xlFilter = XLFilter.CreateWildcardFilter(filterValue, op == XLFilterOperator.Equal, connector);
-                        }
-                        else
-                        {
-                            // OOXML allows only string, so do your best to convert back to a properly typed
-                            // variable. It's not perfect, but let's mimic Excel.
-                            var customValue = XLCellValue.FromText(filter.Val.Value, CultureInfo.InvariantCulture);
-                            xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
+                            case XLFilterOperator.Equal:
+                                xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, true, connector);
+                                break;
+                            case XLFilterOperator.NotEqual:
+                                xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, false, connector);
+                                break;
+                            default:
+                                // OOXML allows only string, so do your best to convert back to a properly typed
+                                // variable. It's not perfect, but let's mimic Excel.
+                                var customValue = XLCellValue.FromText(filterValue, CultureInfo.InvariantCulture);
+                                xlFilter = XLFilter.CreateCustomFilter(customValue, op, connector);
+                                break;
                         }
 
                         xlFilterColumn.AddFilter(xlFilter);
                     }
                 }
-                else if (filterColumn.Filters != null)
+                else if (filterColumn.Filters is { } filters)
                 {
                     xlFilterColumn.FilterType = XLFilterType.Regular;
-                    foreach (var filter in filterColumn.Filters.OfType<Filter>())
+                    foreach (var filter in filters.OfType<Filter>())
                     {
                         xlFilterColumn.AddFilter(XLFilter.CreateRegularFilter(filter.Val.Value));
                     }
 
-                    foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
+                    foreach (var dateGroupItem in filters.OfType<DateGroupItem>())
                     {
                         if (dateGroupItem.DateTimeGrouping is null || !dateGroupItem.DateTimeGrouping.HasValue)
                             continue;

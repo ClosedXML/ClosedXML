@@ -61,12 +61,12 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector EqualTo(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.Equal, reapply);
+            return AddCustomFilter(value.ToString(), true, reapply);
         }
 
         public IXLFilterConnector NotEqualTo(XLCellValue value, Boolean reapply)
         {
-            return AddCustomFilter(value, XLFilterOperator.NotEqual, reapply);
+            return AddCustomFilter(value.ToString(), false, reapply);
         }
 
         public IXLFilterConnector GreaterThan(XLCellValue value, Boolean reapply)
@@ -219,7 +219,7 @@ namespace ClosedXML.Excel
         private IXLFilterConnector AddCustomFilter(string pattern, bool match, bool reapply)
         {
             ResetFilter(XLFilterType.Custom);
-            AddFilter(XLFilter.CreateWildcardFilter(pattern, match, XLConnector.Or), reapply);
+            AddFilter(XLFilter.CreateCustomPatternFilter(pattern, match, XLConnector.Or), reapply);
             return new XLFilterConnector(this);
         }
 

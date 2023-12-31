@@ -80,6 +80,6 @@ internal class XLCustomFilteredColumn : IXLCustomFilteredColumn
 
     private void ApplyWildcardCustomFilter(string pattern, bool match, bool reapply)
     {
-        _filterColumn.AddFilter(XLFilter.CreateWildcardFilter(pattern, match, _connector), reapply);
+        _filterColumn.AddFilter(XLFilter.CreateCustomPatternFilter(pattern, match, _connector), reapply);
     }
 }

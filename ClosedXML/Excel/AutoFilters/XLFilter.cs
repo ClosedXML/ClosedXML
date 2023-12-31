@@ -50,15 +50,25 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateWildcardFilter(string wildcard, bool match, XLConnector connector)
+        internal static XLFilter CreateCustomPatternFilter(string wildcard, bool match, XLConnector connector)
         {
+            // Custom filter Equal matches strings with a pattern. Custom uses it mostly for filters like begin-with (e.g. `ABC*`).
             return new XLFilter
             {
                 CustomValue = wildcard,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                Condition = match ? (c, _) => MatchesWildcard(wildcard, c.CachedValue) : (c, _) => !MatchesWildcard(wildcard, c.CachedValue),
+                Condition = match ? (c, _) => CustomMatchesWildcard(wildcard, c) : (c, _) => !CustomMatchesWildcard(wildcard, c),
             };
+
+            static bool CustomMatchesWildcard(string pattern, IXLCell cell)
+            {
+                var cachedValue = cell.CachedValue;
+                var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
+                var wildcard = new Wildcard(pattern);
+                var position = wildcard.Search(formattedString.AsSpan());
+                return position >= 0;
+            }
         }
 
         internal static XLFilter CreateRegularFilter(string value)
@@ -109,18 +119,6 @@ namespace ClosedXML.Excel
 
                 return isMatch;
             }
-        }
-
-        private static bool MatchesWildcard(string pattern, XLCellValue cellValue)
-        {
-            // Wildcard matches only text cells.
-            if (!cellValue.IsText)
-                return false;
-
-            var text = cellValue.GetText();
-            var wildcard = new Wildcard(pattern);
-            var position = wildcard.Search(text.AsSpan());
-            return position >= 0;
         }
 
         private static bool CustomFilterSatisfied(XLCellValue cellValue, XLFilterOperator op, XLCellValue filterValue, StringComparer textComparer)
