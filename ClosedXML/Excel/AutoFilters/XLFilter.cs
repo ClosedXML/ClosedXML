@@ -61,19 +61,19 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateRegularFilter(XLCellValue value)
+        internal static XLFilter CreateRegularFilter(string value)
         {
             bool ContentMatches(IXLCell cell, XLFilterColumn _)
             {
                 // IXLCell.GetFormattedString() could trigger formula evaluation.
                 var cachedValue = cell.CachedValue;
                 var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
-                return formattedString.Equals(value.ToString(), StringComparison.OrdinalIgnoreCase);
+                return formattedString.Equals(value, StringComparison.OrdinalIgnoreCase);
             }
 
             return new XLFilter
             {
-                Value = value.ToString(),
+                Value = value,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 Condition = ContentMatches,
