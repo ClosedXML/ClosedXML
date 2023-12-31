@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IXLDateTimeGroupFilteredColumn, IEnumerable<XLFilter>
+    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IEnumerable<XLFilter>
     {
         private readonly XLAutoFilter _autoFilter;
         private readonly Int32 _column;
@@ -32,9 +32,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply)
+        public IXLFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply)
         {
-            SwitchFilter(XLFilterType.DateTimeGrouping);
+            SwitchFilter(XLFilterType.Regular);
             AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping), reapply);
             return this;
         }
@@ -249,7 +249,6 @@ namespace ClosedXML.Excel
                 XLFilterType.Custom => 2,
                 XLFilterType.TopBottom => 1,
                 XLFilterType.Dynamic => 1,
-                XLFilterType.DateTimeGrouping => int.MaxValue,
                 _ => throw new NotSupportedException()
             };
             if (_filters.Count >= maxFilters)

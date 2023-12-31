@@ -118,6 +118,14 @@ Following methods were removed.
 Added a new type of filter (``XLFilterType.None``) that is used when autofilter
 doesn't have any filter.
 
+The filter type ``XLFilterType.DateTimeGrouping`` has been removed. It was an
+artifical type, the actual filter type is ``XLFilterType.Regular``. The removal
+allows to use regular and date time grouping in one filter column at once.
+
+The interface ``IXLDateTimeGroupFilteredColumn`` has been merged into
+``IXLFilteredColumn``. That allows to specify both date time group and values
+for regular filter in same fluent API.
+
 Methods that add/set filters now have an ``bool`` parameter ``reapply``. By
 default, it is set to ``true``. The parameter determines if the method should
 immediately reapplied modified filters to the autofilter. This makes it possile
