@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         public IXLFilteredColumn AddFilter(XLCellValue value, bool reapply)
         {
             SwitchFilter(XLFilterType.Regular);
-            AddFilter(XLFilter.CreateRegularFilter(value), reapply);
+            AddFilter(XLFilter.CreateRegularFilter(value.ToString()), reapply);
             return this;
         }
 
