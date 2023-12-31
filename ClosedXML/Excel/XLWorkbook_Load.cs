@@ -1668,13 +1668,7 @@ namespace ClosedXML.Excel
                 }
                 else if (filterColumn.Filters != null)
                 {
-                    if (filterColumn.Filters.Elements().All(element => element is Filter))
-                        autoFilter.Column(column).FilterType = XLFilterType.Regular;
-                    else if (filterColumn.Filters.Elements().All(element => element is DateGroupItem))
-                        autoFilter.Column(column).FilterType = XLFilterType.DateTimeGrouping;
-                    else
-                        throw new NotSupportedException(String.Format("Mixing regular filters and date group filters in a single autofilter column is not supported. Column {0} of {1}", column, autoFilter.Range.ToString()));
-
+                    xlFilterColumn.FilterType = XLFilterType.Regular;
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
                         xlFilterColumn.AddFilter(XLFilter.CreateRegularFilter(filter.Val.Value));

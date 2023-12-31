@@ -1492,24 +1492,32 @@ namespace ClosedXML.Excel.IO
                         // Although there is FilterValue attribute, populating it seems like more
                         // trouble than it's worth due to consistency issues. It's optional, so we
                         // can't rely on it during load anyway.
-                        var top101 = new Top10 { Val = xlFilterColumn.TopBottomValue };
-                        if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
-                            top101.Percent = true;
-                        if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
-                            top101.Top = false;
-
+                        var top101 = new Top10
+                        {
+                            Val = xlFilterColumn.TopBottomValue,
+                            Percent = OpenXmlHelper.GetBooleanValue(xlFilterColumn.TopBottomType == XLTopBottomType.Percent, false),
+                            Top = OpenXmlHelper.GetBooleanValue(xlFilterColumn.TopBottomPart == XLTopBottomPart.Top, true)
+                        };
                         filterColumn.Append(top101);
                         break;
 
                     case XLFilterType.Dynamic:
-
                         var dynamicFilter = new DynamicFilter
-                        { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                        {
+                            Type = xlFilterColumn.DynamicType.ToOpenXml(),
+                            Val = xlFilterColumn.DynamicValue
+                        };
                         filterColumn.Append(dynamicFilter);
                         break;
 
-                    case XLFilterType.DateTimeGrouping:
-                        var dateTimeGroupFilters = new Filters();
+                    case XLFilterType.Regular:
+                        var filters = new Filters();
+                        foreach (var filter in xlFilterColumn)
+                        {
+                            if (filter.Value is string s)
+                                filters.Append(new Filter { Val = s });
+                        }
+
                         foreach (var filter in xlFilterColumn)
                         {
                             if (filter.Value is DateTime)
@@ -1527,21 +1535,15 @@ namespace ClosedXML.Excel.IO
                                 if (filter.DateTimeGrouping >= XLDateTimeGrouping.Minute) dgi.Minute = (UInt16)d.Minute;
                                 if (filter.DateTimeGrouping >= XLDateTimeGrouping.Second) dgi.Second = (UInt16)d.Second;
 
-                                dateTimeGroupFilters.Append(dgi);
+                                filters.Append(dgi);
                             }
-                        }
-                        filterColumn.Append(dateTimeGroupFilters);
-                        break;
-
-                    default:
-                        var filters = new Filters();
-                        foreach (var filter in xlFilterColumn)
-                        {
-                            filters.Append(new Filter { Val = filter.Value.ObjectToInvariantString() });
                         }
 
                         filterColumn.Append(filters);
                         break;
+
+                    default:
+                        throw new NotSupportedException();
                 }
                 autoFilter.Append(filterColumn);
             }

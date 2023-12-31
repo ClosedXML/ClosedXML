@@ -1,12 +1,12 @@
+using System;
+
 namespace ClosedXML.Excel;
 
 /// <summary>
 /// A fluent API interface for adding another values to a <see cref="XLFilterType.Regular"/>
-/// filter. It is chained by <see cref="IXLFilterColumn.AddFilter"/> method.
+/// filter. It is chained by <see cref="IXLFilterColumn.AddFilter"/> method or
+/// <see cref="IXLFilterColumn.AddDateGroupFilter"/>.
 /// </summary>
-/// <para>
-/// Whenever filter configuration changes, the filters are immediately reapplied.
-/// </para>
 public interface IXLFilteredColumn
 {
     /// <summary>
@@ -18,4 +18,11 @@ public interface IXLFilteredColumn
     /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
     /// <returns>Fluent API allowing to add additional filter value.</returns>
     IXLFilteredColumn AddFilter(XLCellValue value, bool reapply = true);
+
+    /// <summary>
+    /// Add another grouping to a set of allowed groupings. See <see cref="IXLFilterColumn.AddDateGroupFilter"/>
+    /// for more details.
+    /// </summary>
+    /// <returns>Fluent API allowing to add additional date group filter.</returns>
+    IXLFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply = true);
 }
