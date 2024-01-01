@@ -35,5 +35,54 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                     CollectionAssert.AreEqual(new[] { true, false, false, true }, dataVisibility);
                 }, false);
         }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Regular_number_value_is_compared_as_text_against_formatted_text()
+        {
+            new AutoFilterTester(f => f.AddFilter(1.5))
+                .Add(1.5d, true)
+                .Add("1.5f", false)
+                .Add("1,5", true)
+                .Add("1,50", false)
+                .Add(1.5, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentPrecision2), false)
+                .Add(700, nf => nf.SetFormat("\"1,5\""), true)
+                .AssertVisibility();
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Regular_logical_value_is_compared_as_text_against_formatted_text()
+        {
+            new AutoFilterTester(f => f.AddFilter(false))
+                .Add(false, true)
+                .Add(0, false)
+                .Add("FALSE", true)
+                .Add("TRUE", false)
+                .Add(true, false)
+                .Add(77, nf => nf.SetFormat("\"FALSE\""), true)
+                .AssertVisibility();
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Regular_error_value_is_compared_as_text_against_formatted_text()
+        {
+            new AutoFilterTester(f => f.AddFilter("#VALUE!"))
+                .Add(XLError.IncompatibleValue, true)
+                .Add(2, false)
+                .Add("#VALUE!", true)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void Pattern_is_not_interpreted_as_wildcard()
+        {
+            new AutoFilterTester(f => f.AddFilter("A*"))
+                .Add("A*", true)
+                .Add("A", false)
+                .Add("A something", false)
+                .AssertVisibility();
+        }
     }
 }
