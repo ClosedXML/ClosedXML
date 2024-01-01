@@ -126,11 +126,16 @@ namespace ClosedXML.Excel
             // Blanks are rather strange case. Excel parsing logic for custom filter value into
             // XLCellValue is very inconsistent. E.g. 'does not equal' for empty string ignores
             // blanks and empty strings.
-            cellValue = cellValue.IsBlank ? string.Empty : cellValue;
-            filterValue = filterValue.IsBlank ? string.Empty : filterValue;
-
-            if (cellValue.Type != filterValue.Type && cellValue.IsUnifiedNumber != filterValue.IsUnifiedNumber)
+            // For custom compare filters, blank never matches.
+            if (cellValue.IsBlank || filterValue.IsBlank)
                 return false;
+
+            if (cellValue.Type != filterValue.Type)
+            {
+                // Types are different, but could still be unified numbers and thus comparable.
+                if (!(cellValue.IsUnifiedNumber && filterValue.IsUnifiedNumber))
+                    return false;
+            }
 
             // Note that custom filter even error values, basically everything as a number.
             var comparison = cellValue.Type switch

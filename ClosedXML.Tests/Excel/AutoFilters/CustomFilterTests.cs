@@ -21,6 +21,15 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         }
 
         [Test]
+        public void EqualLessThan_with_text_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.EqualOrLessThan("b"))
+                .Add("", true).Add("A", true).Add("b", true).Add("B", true).Add("C", false)
+                .Add(Blank.Value, false).Add(1, false).Add(false, false).Add(XLError.NullValue, false)
+                .AssertVisibility();
+        }
+
+        [Test]
         public void LessThan_with_number_compares_against_values_of_same_type()
         {
             WithOneAndOtherTypes(f => f.LessThan(2))
