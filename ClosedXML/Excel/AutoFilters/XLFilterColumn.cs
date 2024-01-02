@@ -155,6 +155,9 @@ namespace ClosedXML.Excel
 
         private void SetTopBottom(Int32 percentOrItemCount, XLTopBottomType type, Boolean takeTop, Boolean reapply)
         {
+            if (percentOrItemCount is < 1 or > 500)
+                throw new ArgumentOutOfRangeException(nameof(percentOrItemCount), "Value must be between 1 and 500.");
+
             ResetFilter(XLFilterType.TopBottom);
             TopBottomValue = percentOrItemCount;
             TopBottomType = type;
@@ -180,7 +183,9 @@ namespace ClosedXML.Excel
                 case XLTopBottomType.Percent:
                     var percent = value;
                     var materializedNumbers = columnNumbers.ToArray();
-                    var itemCountByPercents = materializedNumbers.Length * percent / 100;
+
+                    // Ceiling, so there is always at least one item.
+                    var itemCountByPercents = (int)Math.Ceiling(materializedNumbers.Length * (double)percent / 100);
                     return materializedNumbers.OrderBy(d => d, comparer).Take(itemCountByPercents).DefaultIfEmpty(Double.NaN).LastOrDefault();
                 default:
                     throw new NotSupportedException();
