@@ -32,6 +32,22 @@ namespace ClosedXML.Tests.Excel.AutoFilters
             return this;
         }
 
+        internal AutoFilterTester AddTrue(params XLCellValue[] values)
+        {
+            foreach (var value in values)
+                Add(value, true);
+
+            return this;
+        }
+
+        internal AutoFilterTester AddFalse(params XLCellValue[] values)
+        {
+            foreach (var value in values)
+                Add(value, false);
+
+            return this;
+        }
+
         internal void AssertVisibility()
         {
             using var wb = new XLWorkbook();
