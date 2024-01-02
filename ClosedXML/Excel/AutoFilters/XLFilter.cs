@@ -2,6 +2,7 @@
 
 // Keep this file CodeMaid organised and cleaned
 using System;
+using System.Globalization;
 using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
@@ -50,43 +51,53 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal static XLFilter CreateCustomPatternFilter(string wildcard, bool match, XLConnector connector)
+        internal static XLFilter CreateCustomPatternFilter(string filterValue, bool match, XLConnector connector)
         {
-            // Custom filter Equal matches strings with a pattern. Custom uses it mostly for filters like begin-with (e.g. `ABC*`).
+            // Excel really parses value in current culture to detect type (e.g. 1,00 is detected as a number in cs-CZ).
+            var testValue = XLCellValue.FromText(filterValue, CultureInfo.CurrentCulture);
+            if (testValue.Type == XLDataType.Text)
+            {
+                // Custom filter Equal matches strings with a pattern. Custom uses it mostly for filters like begin-with (e.g. `ABC*`).
+                var wildcard = filterValue;
+                return new XLFilter
+                {
+                    CustomValue = wildcard,
+                    Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
+                    Connector = connector,
+                    Condition = match ? (c, _) => CustomMatchesWildcard(wildcard, c) : (c, _) => !CustomMatchesWildcard(wildcard, c),
+                };
+            }
+
+            // For filter values that look like a non-text type/non-pattern, check formatted string.
             return new XLFilter
             {
-                CustomValue = wildcard,
+                CustomValue = filterValue,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                Condition = match ? (c, _) => CustomMatchesWildcard(wildcard, c) : (c, _) => !CustomMatchesWildcard(wildcard, c),
+                Condition = match ? (c, _) => ContentMatches(c, filterValue) : (c, _) => !ContentMatches(c, filterValue),
             };
 
             static bool CustomMatchesWildcard(string pattern, IXLCell cell)
             {
                 var cachedValue = cell.CachedValue;
-                var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
+                if (!cachedValue.IsText)
+                    return false;
+
                 var wildcard = new Wildcard(pattern);
-                var position = wildcard.Search(formattedString.AsSpan());
+                var position = wildcard.Search(cachedValue.GetText().AsSpan());
                 return position >= 0;
             }
         }
 
-        internal static XLFilter CreateRegularFilter(string value)
+        internal static XLFilter CreateRegularFilter(string filterValue)
         {
-            bool ContentMatches(IXLCell cell, XLFilterColumn _)
-            {
-                // IXLCell.GetFormattedString() could trigger formula evaluation.
-                var cachedValue = cell.CachedValue;
-                var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
-                return formattedString.Equals(value, StringComparison.OrdinalIgnoreCase);
-            }
 
             return new XLFilter
             {
-                Value = value,
+                Value = filterValue,
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
-                Condition = ContentMatches,
+                Condition = (cell, _) => ContentMatches(cell, filterValue)
             };
         }
 
@@ -119,6 +130,14 @@ namespace ClosedXML.Excel
 
                 return isMatch;
             }
+        }
+
+        private static bool ContentMatches(IXLCell cell, string filterValue)
+        {
+            // IXLCell.GetFormattedString() could trigger formula evaluation.
+            var cachedValue = cell.CachedValue;
+            var formattedString = ((XLCell)cell).GetFormattedString(cachedValue);
+            return formattedString.Equals(filterValue, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool CustomFilterSatisfied(XLCellValue cellValue, XLFilterOperator op, XLCellValue filterValue, StringComparer textComparer)

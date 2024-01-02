@@ -156,7 +156,31 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 .AssertVisibility();
         }
 
-        private AutoFilterTester WithOneAndOtherTypes(Action<IXLFilterColumn> filter)
+        [Test]
+        public void Equal_uses_wildcard_matching_for_patterns_against_text_only()
+        {
+            new AutoFilterTester(f => f.EqualTo("1*0"))
+                .AddTrue("1.0", "1 and 0")
+                .AddFalse(1, "A", "B", 2, XLError.DivisionByZero, true, false)
+                .Add(1, nf => nf.SetFormat("1.0"), false)
+                .Add(1, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2), false)
+                .AssertVisibility();
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Equal_uses_content_matching_for_filter_values_that_look_like_non_patterns()
+        {
+            // Note the ',' separator that is used detect number. Excel doesn't use invariant culture.
+            new AutoFilterTester(f => f.EqualTo("1,00"))
+                .Add("1,00", true)
+                .Add(1, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2), true)
+                .Add(99, nf => nf.SetFormat("\"1,00\""), true)
+                .AddFalse(1, "A", "B", 2, XLError.DivisionByZero, true, false)
+                .AssertVisibility();
+        }
+
+        private static AutoFilterTester WithOneAndOtherTypes(Action<IXLFilterColumn> filter)
         {
             // Add equivalent of 1 and other types
             return new AutoFilterTester(filter)
