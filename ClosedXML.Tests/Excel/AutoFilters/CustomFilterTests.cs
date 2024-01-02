@@ -12,6 +12,15 @@ namespace ClosedXML.Tests.Excel.AutoFilters
     public class CustomFilterTests
     {
         [Test]
+        public void EqualLessThan_with_logical_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.EqualOrLessThan(true))
+                .AddTrue(false, true)
+                .AddFalse(Blank.Value, 1, "FALSE", "TRUE", XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
         public void EqualLessThan_with_number_compares_against_values_of_same_type()
         {
             WithOneAndOtherTypes(f => f.EqualOrLessThan(1))
@@ -24,8 +33,26 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         public void EqualLessThan_with_text_compares_against_values_of_same_type()
         {
             new AutoFilterTester(f => f.EqualOrLessThan("b"))
-                .Add("", true).Add("A", true).Add("b", true).Add("B", true).Add("C", false)
-                .Add(Blank.Value, false).Add(1, false).Add(false, false).Add(XLError.NullValue, false)
+                .AddTrue("", "A", "b", "B")
+                .AddFalse("C", Blank.Value, 1, false, XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void EqualLessThan_with_error_compares_against_numeric_types_of_error()
+        {
+            new AutoFilterTester(f => f.EqualOrLessThan(XLError.CellReference))
+                .AddTrue(XLError.NullValue, XLError.IncompatibleValue, XLError.CellReference)
+                .AddFalse(XLError.NameNotRecognized, 1, "#NULL!", "Test", "", true, false, Blank.Value)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void LessThan_with_logical_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.LessThan(true))
+                .AddTrue(false)
+                .AddFalse(true, -1, Blank.Value, 1, "FALSE", "TRUE", XLError.NullValue)
                 .AssertVisibility();
         }
 
@@ -37,6 +64,34 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 .Add(2, false)
                 .AssertVisibility();
         }
+
+        [Test]
+        public void LessThan_with_text_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.LessThan("b"))
+                .AddTrue("", "A")
+                .AddFalse("b", "B", "C", Blank.Value, 1, false, XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void LessThan_with_error_compares_against_numeric_types_of_error()
+        {
+            new AutoFilterTester(f => f.LessThan(XLError.CellReference))
+                .AddTrue(XLError.NullValue, XLError.IncompatibleValue)
+                .AddFalse(XLError.CellReference, XLError.NameNotRecognized, 1, "#NULL!", "Test", "", true, false, Blank.Value)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void GreaterThan_with_logical_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.GreaterThan(false))
+                .AddTrue(true)
+                .AddFalse(false, -1, Blank.Value, 1, "FALSE", "TRUE", XLError.NullValue)
+                .AssertVisibility();
+        }
+
         [Test]
         public void GreaterThan_with_number_compares_against_values_of_same_type()
         {
@@ -48,11 +103,56 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         }
 
         [Test]
+        public void GreaterThan_with_text_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.GreaterThan("b"))
+                .AddTrue("C", "c")
+                .AddFalse("", "A", "b", "B", Blank.Value, 1, false, XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void GreaterThan_with_error_compares_against_numeric_types_of_error()
+        {
+            new AutoFilterTester(f => f.GreaterThan(XLError.CellReference))
+                .AddTrue(XLError.NameNotRecognized, XLError.NumberInvalid, XLError.NoValueAvailable)
+                .AddFalse(XLError.CellReference, XLError.IncompatibleValue, XLError.NullValue, 1, "#NULL!", "Test", "", true, false, Blank.Value)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void EqualOrGreaterThan_with_logical_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.EqualOrGreaterThan(false))
+                .AddTrue(false, true)
+                .AddFalse(-1, 0, Blank.Value, 1, "FALSE", "TRUE", XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
         public void EqualOrGreaterThan_with_number_compares_against_values_of_same_type()
         {
             WithOneAndOtherTypes(f => f.EqualOrGreaterThan(1))
                 .Add(0.9, false)
                 .Add(1.1, true)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void EqualOrGreaterThan_with_text_compares_against_values_of_same_type()
+        {
+            new AutoFilterTester(f => f.EqualOrGreaterThan("b"))
+                .AddTrue("b", "B", "Ba", "C", "c")
+                .AddFalse("", "A", Blank.Value, 1, false, XLError.NullValue)
+                .AssertVisibility();
+        }
+
+        [Test]
+        public void EqualOrGreaterThan_with_error_compares_against_numeric_types_of_error()
+        {
+            new AutoFilterTester(f => f.EqualOrGreaterThan(XLError.CellReference))
+                .AddTrue(XLError.CellReference, XLError.NameNotRecognized, XLError.NumberInvalid, XLError.NoValueAvailable)
+                .AddFalse(XLError.IncompatibleValue, XLError.NullValue, 1, "#NULL!", "Test", "", true, false, Blank.Value)
                 .AssertVisibility();
         }
 
