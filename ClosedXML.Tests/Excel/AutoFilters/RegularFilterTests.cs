@@ -41,8 +41,8 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         public void Regular_number_value_is_compared_as_text_against_formatted_text()
         {
             new AutoFilterTester(f => f.AddFilter(1.5))
-                .Add(1.5d, true)
-                .Add("1.5f", false)
+                .Add(1.5, true)
+                .Add("1.5", false)
                 .Add("1,5", true)
                 .Add("1,50", false)
                 .Add(1.5, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentPrecision2), false)
