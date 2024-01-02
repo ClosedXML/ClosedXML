@@ -131,6 +131,10 @@ default, it is set to ``true``. The parameter determines if the method should
 immediately reapplied modified filters to the autofilter. This makes it possile
 to configure several filters and only then call ``IXLAutoFilter.Reapply()``.
 
+Method ``IXLFilterColumn.Top`` and ``IXLFilterColumn.Bottom`` now throw and
+``ArgumentOutOfRangeException`` when passed item count or percentage is not
+between 1 and 500.
+
 *******
 IXLCell
 *******

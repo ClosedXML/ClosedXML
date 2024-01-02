@@ -105,8 +105,10 @@ namespace ClosedXML.Excel
         /// <returns>Fluent API allowing to add additional date time group value.</returns>
         IXLFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply = true);
 
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is out of range 1..500.</exception>
         void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items, bool reapply = true);
 
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is out of range 1..500.</exception>
         void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items, bool reapply = true);
 
         void AboveAverage(bool reapply = true);

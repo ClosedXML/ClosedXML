@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 var formattedString = ((XLCell)ws.Cell(row, 1)).GetFormattedString(value);
                 var actualVisible = !ws.Row(row).IsHidden;
                 var expectedVisibility = _values[i].ExpectedVisibility;
-                Assert.AreEqual(expectedVisibility, actualVisible, $"Visibility differs at index {i} for value {value}(formatted '{formattedString}')");
+                Assert.AreEqual(expectedVisibility, actualVisible, $"Visibility differs at index {i} for value {value} (formatted '{formattedString}')");
             }
         }
     }
