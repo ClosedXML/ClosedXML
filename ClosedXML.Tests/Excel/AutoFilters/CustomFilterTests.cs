@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
     public class CustomFilterTests
     {
         [Test]
-        public void EqualLessThan_with_logical_compares_against_values_of_same_type()
+        public void EqualOrLessThan_with_logical_compares_against_values_of_same_type()
         {
             new AutoFilterTester(f => f.EqualOrLessThan(true))
                 .AddTrue(false, true)
@@ -21,7 +21,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         }
 
         [Test]
-        public void EqualLessThan_with_number_compares_against_values_of_same_type()
+        public void EqualOrLessThan_with_number_compares_against_values_of_same_type()
         {
             WithOneAndOtherTypes(f => f.EqualOrLessThan(1))
                 .Add(0.9, true)
@@ -30,7 +30,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         }
 
         [Test]
-        public void EqualLessThan_with_text_compares_against_values_of_same_type()
+        public void EqualOrLessThan_with_text_compares_against_values_of_same_type()
         {
             new AutoFilterTester(f => f.EqualOrLessThan("b"))
                 .AddTrue("", "A", "b", "B")
@@ -39,7 +39,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         }
 
         [Test]
-        public void EqualLessThan_with_error_compares_against_numeric_types_of_error()
+        public void EqualOrLessThan_with_error_compares_against_numeric_types_of_error()
         {
             new AutoFilterTester(f => f.EqualOrLessThan(XLError.CellReference))
                 .AddTrue(XLError.NullValue, XLError.IncompatibleValue, XLError.CellReference)
@@ -97,8 +97,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
         {
             WithOneAndOtherTypes(f => f.GreaterThan(0))
                 .Add(0.1, true)
-                .Add(-0.1, false)
-                .Add(-1, false)
+                .AddFalse(-0.1, -1)
                 .AssertVisibility();
         }
 
@@ -169,7 +168,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
 
         [Test]
         [SetCulture("cs-CZ")]
-        public void Equal_uses_content_matching_for_filter_values_that_look_like_non_patterns()
+        public void Equal_uses_format_string_matching_for_filter_values_that_look_like_non_patterns()
         {
             // Note the ',' separator that is used detect number. Excel doesn't use invariant culture.
             new AutoFilterTester(f => f.EqualTo("1,00"))
