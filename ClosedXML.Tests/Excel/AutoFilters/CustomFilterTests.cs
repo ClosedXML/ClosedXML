@@ -180,6 +180,36 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 .AssertVisibility();
         }
 
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void NotEqual_matches_detected_type_and_value_of_filter_value_for_non_text_data_types()
+        {
+            // 1,00 is detected as a type number with value 1.
+            new AutoFilterTester(f => f.NotEqualTo("1,00"))
+                .Add(1, false) // Value is equal => hide
+                .Add(1, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2), false) // Value is equal => hide
+                .Add("1,00", true) // wrong type
+                .Add(99, nf => nf.SetFormat("\"1,00\""), true) // Value is wrong => non-equal
+                .AddTrue("A", "B", 2, XLError.DivisionByZero, true, false) // Wrong type
+                .AssertVisibility();
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void NotEqual_for_detected_wildcard_matches_only_texts()
+        {
+            // NotEqual with text pattern must have text type.
+            new AutoFilterTester(f => f.NotEqualTo("1*0"))
+                .Add(1, true)
+                .Add(1, nf => nf.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2), true)
+                .Add("1,00", false)
+                .Add("100", false)
+                .Add(100, true)
+                .Add(99, nf => nf.SetFormat("\"1,00\""), true)
+                .AddTrue("A", "B", 2, XLError.DivisionByZero, true, false)
+                .AssertVisibility();
+        }
+
         private static AutoFilterTester WithOneAndOtherTypes(Action<IXLFilterColumn> filter)
         {
             // Add equivalent of 1 and other types

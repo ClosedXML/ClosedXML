@@ -64,20 +64,22 @@ namespace ClosedXML.Excel
                     CustomValue = wildcard,
                     Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                     Connector = connector,
-                    Condition = match ? (c, _) => CustomMatchesWildcard(wildcard, c) : (c, _) => !CustomMatchesWildcard(wildcard, c),
+                    Condition = match ? (c, _) => TextMatchesWildcard(wildcard, c) : (c, _) => !TextMatchesWildcard(wildcard, c),
                 };
             }
 
-            // For filter values that look like a non-text type/non-pattern, check formatted string.
+            // Keep in closure, so it doesn't have to be checked for every cell.
+            var comparer = StringComparer.CurrentCultureIgnoreCase;
             return new XLFilter
             {
                 CustomValue = filterValue,
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
-                Condition = match ? (c, _) => ContentMatches(c, filterValue) : (c, _) => !ContentMatches(c, filterValue),
+                Condition = match ? (c, _) => ContentMatches(c, filterValue)
+                    : (c, _) => !CustomFilterSatisfied(c.CachedValue, XLFilterOperator.NotEqual, testValue, comparer),
             };
 
-            static bool CustomMatchesWildcard(string pattern, IXLCell cell)
+            static bool TextMatchesWildcard(string pattern, IXLCell cell)
             {
                 var cachedValue = cell.CachedValue;
                 if (!cachedValue.IsText)
@@ -174,8 +176,8 @@ namespace ClosedXML.Excel
             {
                 XLFilterOperator.LessThan => comparison < 0,
                 XLFilterOperator.EqualOrLessThan => comparison <= 0,
-                XLFilterOperator.Equal => comparison == 0,
-                XLFilterOperator.NotEqual => comparison != 0,
+                XLFilterOperator.Equal => comparison != 0,
+                XLFilterOperator.NotEqual => comparison == 0,
                 XLFilterOperator.EqualOrGreaterThan => comparison >= 0,
                 XLFilterOperator.GreaterThan => comparison > 0,
                 _ => throw new NotSupportedException(),
