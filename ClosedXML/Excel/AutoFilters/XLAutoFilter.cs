@@ -105,7 +105,7 @@ namespace ClosedXML.Excel
 
             IsEnabled = false;
             foreach (var filterColumn in _columns.Values)
-                filterColumn.Clear();
+                filterColumn.Clear(false);
 
             foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
                 row.WorksheetRow().Unhide();

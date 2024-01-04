@@ -135,6 +135,10 @@ Method ``IXLFilterColumn.Top`` and ``IXLFilterColumn.Bottom`` now throw an
 ``ArgumentOutOfRangeException`` when passed item count or percentage is not
 between 1 and 500.
 
+Method ``IXLFilterColumn.Clear`` now has a new parameter ``reapply`` (set by default to true to
+match the rest of methods) that determines if filters should be reapplied after cleaing column
+filter. Originally, there wasn't any parameter and clearing didn't reapply filters.
+
 *******
 IXLCell
 *******

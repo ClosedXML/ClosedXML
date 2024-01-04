@@ -37,7 +37,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    concepts/formula-calculation
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: Features
 
    features/worksheets
@@ -45,6 +45,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    features/tables
    features/cell-format
    features/sort
+   features/autofilter
    features/pivot-tables
    features/protect
    features/formulas
