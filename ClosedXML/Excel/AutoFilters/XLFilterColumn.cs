@@ -19,10 +19,12 @@ namespace ClosedXML.Excel
 
         #region IXLFilterColumn Members
 
-        public void Clear()
+        public void Clear(bool reapply)
         {
             _filters.Clear();
             FilterType = XLFilterType.None;
+            if (reapply)
+                _autoFilter.Reapply();
         }
 
         public IXLFilteredColumn AddFilter(XLCellValue value, bool reapply)
@@ -230,7 +232,7 @@ namespace ClosedXML.Excel
 
         private void ResetFilter(XLFilterType type)
         {
-            Clear();
+            Clear(false);
             _autoFilter.IsEnabled = true;
             FilterType = type;
         }
@@ -241,7 +243,7 @@ namespace ClosedXML.Excel
             if (FilterType == type)
                 return;
 
-            Clear();
+            Clear(false);
             FilterType = type;
         }
 
@@ -292,7 +294,7 @@ namespace ClosedXML.Excel
             // All filter conditions are connected by a single type of logical condition. Regular
             // filters use 'Or', custom has up to two clauses connected by 'And'/'Or' and rest is
             // single clause.
-            var connector = _filters[0].Connector;
+            var connector = _filters[1].Connector;
             return connector switch
             {
                 XLConnector.And => _filters.All(filter => filter.Condition(cell, this)),

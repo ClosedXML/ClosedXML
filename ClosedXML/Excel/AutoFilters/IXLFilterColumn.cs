@@ -2,7 +2,22 @@ using System;
 
 namespace ClosedXML.Excel
 {
-    public enum XLTopBottomType { Items, Percent }
+    /// <summary>
+    /// Type of a <see cref="XLFilterType.TopBottom"/> filter that is used to determine number of
+    /// visible top/bottom values.
+    /// </summary>
+    public enum XLTopBottomType
+    {
+        /// <summary>
+        /// Filter should display requested number of items.
+        /// </summary>
+        Items,
+
+        /// <summary>
+        /// Number of displayed items is determined as a percentage data rows of auto filter.
+        /// </summary>
+        Percent
+    }
 
     public enum XLDateTimeGrouping { Year, Month, Day, Hour, Minute, Second }
 
@@ -28,10 +43,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Remove all filters from the column.
         /// </summary>
-        /// <remarks>
-        /// Does not reapply filters, visibility of rows isn't changed.
-        /// </remarks>
-        void Clear();
+        /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
+        void Clear(bool reapply = true);
 
         /// <summary>
         /// <para>
@@ -76,15 +89,22 @@ namespace ClosedXML.Excel
         /// if filter column has a different type (for current type <see cref="FilterType"/>) and
         /// add a filter that is satisfied when cell value is a <see cref="XLDataType.DateTime"/>
         /// and the tested date has same components from <paramref name="dateTimeGrouping"/>
-        /// component down to the <see cref="XLDateTimeGrouping.Second"/> component with same value
+        /// component up to the <see cref="XLDateTimeGrouping.Year"/> component with same value
         /// as the <paramref name="dateTimeGrouping"/>.
+        /// </para>
+        /// <para>
+        /// The condition basically defines a date range (based on the <paramref name="dateTimeGrouping"/>)
+        /// and all dates in the range satisfy the filter. If condition is a day, all date-times
+        /// in the day satisfy the filter. If condition is a month, all date-times in the month
+        /// satisfy the filter.
         /// </para>
         /// <para>
         /// <example>
         /// Example:
         /// <code>
         /// // Filter will be satisfied if the cell value is a XLDataType.DateTime and the month,
-        /// // day, hour, minute and second are same as the passed date.
+        /// // and year are same as the passed date. The day component in the <c>DateTime</c>
+        /// // is ignored
         /// AddDateGroupFilter(new DateTime(2023, 7, 15), XLDateTimeGrouping.Month)
         /// </code>
         /// </example>
@@ -99,7 +119,7 @@ namespace ClosedXML.Excel
         /// <param name="date">Date which components are compared with date values of the column.</param>
         /// <param name="dateTimeGrouping">
         /// Starting component of the grouping. Tested date must match all date components of the
-        /// <paramref name="date"/> from this one to the <see cref="XLDateTimeGrouping.Second"/>.
+        /// <paramref name="date"/> from this one to the <see cref="XLDateTimeGrouping.Year"/>.
         /// </param>
         /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
         /// <returns>Fluent API allowing to add additional date time group value.</returns>
@@ -175,7 +195,24 @@ namespace ClosedXML.Excel
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.TopBottom"/>.
         /// </remarks>
         XLTopBottomPart TopBottomPart { get; }
+
+        /// <summary>
+        /// Configuration of a <see cref="XLFilterType.Dynamic"/> filter. It determines the type of
+        /// dynamic filter.
+        /// </summary>
+        /// <remarks>
+        /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.Dynamic"/>.
+        /// </remarks>
         XLFilterDynamicType DynamicType { get; }
+
+        /// <summary>
+        /// Configuration of a <see cref="XLFilterType.Dynamic"/> filter. It contains the dynamic
+        /// value used by the filter, e.g. average. The interpretation depends on
+        /// <see cref="DynamicType"/>.
+        /// </summary>
+        /// <remarks>
+        /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.Dynamic"/>.
+        /// </remarks>
         Double DynamicValue { get; }
     }
 }

@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
                 Operator = match ? XLFilterOperator.Equal : XLFilterOperator.NotEqual,
                 Connector = connector,
                 Condition = match ? (c, _) => ContentMatches(c, filterValue)
-                    : (c, _) => !CustomFilterSatisfied(c.CachedValue, XLFilterOperator.NotEqual, testValue, comparer),
+                    : (c, _) => !CustomFilterSatisfied(c.CachedValue, XLFilterOperator.Equal, testValue, comparer),
             };
 
             static bool TextMatchesWildcard(string pattern, IXLCell cell)
@@ -176,8 +176,8 @@ namespace ClosedXML.Excel
             {
                 XLFilterOperator.LessThan => comparison < 0,
                 XLFilterOperator.EqualOrLessThan => comparison <= 0,
-                XLFilterOperator.Equal => comparison != 0,
-                XLFilterOperator.NotEqual => comparison == 0,
+                XLFilterOperator.Equal => comparison == 0,
+                XLFilterOperator.NotEqual => comparison != 0,
                 XLFilterOperator.EqualOrGreaterThan => comparison >= 0,
                 XLFilterOperator.GreaterThan => comparison > 0,
                 _ => throw new NotSupportedException(),

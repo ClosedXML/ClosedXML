@@ -2,7 +2,7 @@
 Sorting
 *******
 
-Excel can create a table from a range in a worksheet.
+It's possible to sort a range in a worksheet.
 
 .. image:: img/sort-ribbon.png
    :alt: A button in Excel ribbon menu to sort selected value along with a more detailed dialogue.
@@ -12,15 +12,15 @@ Sorting algorithm
 
 The values are sorted same way as Excel, first by type, then by value.
 
-* Logical - ``false`` is less than ``true``.
-* Number - numbers are sorted iaccording to their value.
-* Text - text is sorted by current culture. Note that empty string is generally smallest possible
+* *Logical* - ``false`` is less than ``true``.
+* *Number* - numbers are sorted according to their value.
+* *Text* - text is sorted by current culture. Note that empty string is generally smallest possible
   text and thus is first element (blank is different from empty string).
-* Error - individual error values never change relative order.
-* Blank - blanks are always last, regardless of sorting order.
+* *Error* - individual error values never change relative order during sorting.
+* *Blank* - blanks are always last, regardless of sorting order.
 
-  * Ascending order is thus logical, number, text, error and blank.
-  * Descending order is error, text, number, logical and blank.
+  * Ascending order is *number*, *text*, *logical*, *error* and *blank*.
+  * Descending order is *error*, *logical*, *text*, *number* and *blank*.
 
 Sorting is stable.
 
@@ -29,7 +29,7 @@ Sorting is stable.
 
 Sorting methods may contain two flags that modify how are values sorted.
 
-``matchCase`` flag
+The ``matchCase`` flag
 ------------------
 
 The flag determines if text values are sorted in a case-sensitive (using current culture) manner:
@@ -38,9 +38,9 @@ The flag determines if text values are sorted in a case-sensitive (using current
   treated same as **hello** or **HELLO**.
 * ``true`` - text values are treated in a case sensitive way. **hello** is different from
   **HELLO**. Note that whether lower-case letters are sorted before upper-case ones depends on
-  culture.
+  the culture.
 
-``ignoreBlanks`` flag
+The ``ignoreBlanks`` flag
 ---------------------
 
 This flag determines how should blank values be treated during sorting:
@@ -51,10 +51,10 @@ This flag determines how should blank values be treated during sorting:
   before/after any other text in ascending/descending order.
 
 .. note::
-   The simplest way to enter empty string into an Excel is to write **'** into a cell and press
-   enter. The ``TYPE`` function will then return 2for the cell, indicating a text type. The
-   apostrophe is displayed because of a style (``IXLStyle.IncludeQuotePrefix``), it's not actual
-   value. To get rid of apostrophe, you can copy value of a cell into another one.
+   The simplest way to enter empty string into an Excel is to write apostrophe (**'**) into a cell
+   and press enter. The ``TYPE`` function will then return 2 for the cell, indicating text type.
+   The apostrophe is displayed because of a style (``IXLStyle.IncludeQuotePrefix``), it's not
+   actual value. To get rid of apostrophe, you can copy value of a cell into another one.
 
 Sorting rows
 ============
@@ -65,27 +65,25 @@ There are three of them, later two are only more specialized version of first on
 * ``IXLRange.Sort(string columnsToSortBy, XLSortOrder sortOrder, Boolean matchCase = false, Boolean ignoreBlanks = true)``
 * ``IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase = false, Boolean ignoreBlanks = true)``
 * ``IXLRange.Sort()`` may use ``IXLRange.SortColumns`` property instead of ``columnsToSortBy``
-  parameter. The general idea is to set ``IXLRange.SortColumns`` parameters and then call
-  ``IXLRange.Sort()``. Due to unintuitive usage pattern will likely be removed in future.
+  parameter. The ``IXLRange.SortColumns`` defines sort state of the range. The general idea is to
+  set ``IXLRange.SortColumns`` parameters and then call ``IXLRange.Sort()``.
 
 The ``columnsToSortBy`` parameter can be used to select columns and sorting order of them, e.g.
 ``2 ASC, 3 DESC`` will sort second column of a range in ascending order and then by values of third
 column  in descending order.
 
-* Columns are separated by comma (**,**),
-* Column can be specified either by number (e.g. *5*) or by column letter (e.g. **E**). Columns
+* Columns are separated by comma (**,**).
+* Column can be specified either by number (e.g. **5**) or by column letter (e.g. **E**). Columns
   are specified relative to the range (e.g. **C** for range **B2:E7** means column **D** in
   absolute coordinates).
-* Sort order can be **ASC** or **DESC** or nothing. If none is specified, the `sortOrder` parameter
-  is used.
+* Sort order can be **ASC** or **DESC** or nothing. If none is specified for a column, the
+  `sortOrder` parameter is used.
 
 Sorting rows example
 --------------------
 
-Note that we have stable sort, so if *Sold* column wasn't specied in ``columnsToSortBy``, the
-*Croissant* and *Waffle* would be in ascending order of sold pieces, instead of descending.
-
 .. code-block:: csharp
+
    using var wb = new XLWorkbook();
    var ws = wb.AddWorksheet();
    ws.Column("D").Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentInteger);
@@ -112,13 +110,14 @@ Sorting columns
 
 Sometimes data we want to sort is stored is columns, not rows. The method to use is
 ``IXLRange.SortLeftToRight``. It's significantly more limited than row sorting, it can't set
-columns to sort by nor their order. The sorting uses data from first row, then second, then third
+columns to sort by, nor their order. The sorting uses data from first row, then second, then third
 and so on. It's mostly useful for rows (each row is of course range).
 
 Sorting columns example
 -----------------------
 
 .. code-block:: csharp
+
    using var wb = new XLWorkbook();
    var ws = wb.AddWorksheet();
    ws.Row(5).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentInteger);
