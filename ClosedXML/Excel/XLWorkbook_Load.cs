@@ -1159,7 +1159,7 @@ namespace ClosedXML.Excel
             else
             {
                 // A string cell must contain at least empty string.
-                if (dataType is CellValues.SharedString or CellValues.String)
+                if (dataType.Equals(CellValues.SharedString) || dataType.Equals(CellValues.String))
                     xlCell.SetOnlyValue(string.Empty);
             }
 

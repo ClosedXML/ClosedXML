@@ -2,6 +2,16 @@
 Migration from 0.103 to 0.104
 #############################
 
+************************
+Minimal required version
+************************
+
+OpenXML SDK dependency has been upgraded to 3.0.
+
+Minimal required version for .NET Framework has been increased from net461 to
+net462. The net461 didn't support netstandard 2.0 properly and OpenXML SDK 3.0
+requires net462.
+
 ******************
 Throw on not found
 ******************

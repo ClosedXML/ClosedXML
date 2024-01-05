@@ -221,8 +221,18 @@ namespace ClosedXML.Excel.IO
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
 
-            pane.ActivePane = (ySplit == 0 ? PaneValues.TopRight : 0)
-                              | (hSplit == 0 ? PaneValues.BottomLeft : 0);
+            // When panes are frozen, which part should move.
+            PaneValues split;
+            if (ySplit == 0 && hSplit == 0)
+                split = PaneValues.TopLeft;
+            else if (ySplit == 0 && hSplit != 0)
+                split = PaneValues.TopRight;
+            else if (ySplit != 0 && hSplit == 0)
+                split = PaneValues.BottomLeft;
+            else if (ySplit != 0 && hSplit != 0)
+                split = PaneValues.BottomRight;
+
+            pane.ActivePane = split;
 
             pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
                                + (xlWorksheet.SheetView.SplitRow + 1);

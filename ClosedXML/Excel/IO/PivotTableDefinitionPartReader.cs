@@ -180,7 +180,7 @@ internal class PivotTableDefinitionPartReader
 
                                 if (pf.SortType != null)
                                 {
-                                    pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                    pivotField.SetSort(pf.SortType.Value.ToClosedXml());
                                 }
                             }
                         }
@@ -214,7 +214,7 @@ internal class PivotTableDefinitionPartReader
 
                             if (pf.SortType != null)
                             {
-                                pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                pivotField.SetSort(pf.SortType.Value.ToClosedXml());
                             }
                         }
                     }
