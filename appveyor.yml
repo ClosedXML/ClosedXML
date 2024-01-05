@@ -1,4 +1,4 @@
-version: 0.102.1.{build}
+version: 0.102.2.{build}
 
 os: Visual Studio 2019
 image: Visual Studio 2019
