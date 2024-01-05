@@ -236,7 +236,7 @@ namespace ClosedXML.Excel.IO
 
                 if (xlpf.SortType != XLPivotSortType.Default)
                 {
-                    pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
+                    pf.SortType = new EnumValue<FieldSortValues>(xlpf.SortType.ToOpenXml());
                 }
 
                 switch (pt.Subtotals)
