@@ -2037,13 +2037,15 @@ namespace ClosedXML.Excel
             // style set when column/row is created to avoid problems with correct which
             // style has precedence. I.e. set column blue, set row red => cell is red.
             // Swap order the the cell is blue.
-            if (Internals.RowsCollection.TryGetValue(point.Row, out var row))
-                return row.StyleValue;
+            var sheetStyle = StyleValue;
+            var rowStyle = Internals.RowsCollection.TryGetValue(point.Row, out var row)
+                ? row.StyleValue
+                : sheetStyle;
+            var colStyle = Internals.ColumnsCollection.TryGetValue(point.Column, out var column)
+                ? column.StyleValue
+                : sheetStyle;
 
-            if (Internals.ColumnsCollection.TryGetValue(point.Column, out var column))
-                return column.StyleValue;
-
-            return StyleValue;
+            return XLStyleValue.Combine(sheetStyle, rowStyle, colStyle);
         }
 
         /// <summary>
