@@ -131,6 +131,46 @@ namespace ClosedXML.Tests.Excel
             }, @"Other\StyleReferenceFiles\RowColors\output.xlsx");
         }
 
+        [Test]
+        public void Style_for_cells_without_explicitly_set_style_uses_combination_of_row_and_columns_styles()
+        {
+            // If a style for a cell hasn't been explicitly set (e.g. though `cell.Style.Font
+            // .SetBold(true)`), it is not yet instantiated to save memory and the actual value
+            // is determined by the column style and row style. Generally speaking, the axis that
+            // had its value set explicitly has a precedence, but because we can't detect that with
+            // current structure, use difference from worksheet as an indication of explicitly set
+            // value instead.
+            // If row and column style components differ, the cells at the cross are pinged, thus test
+            // sets different components for each axis.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var rowStyle = ws.Row(4).Style
+                .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                .Fill.SetBackgroundColor(XLColor.Blue)
+                .SetIncludeQuotePrefix()
+                .Protection.SetLocked(true);
+
+            var colStyle = ws.Column(2).Style
+                .Border.SetBottomBorder(XLBorderStyleValues.Double)
+                .Font.SetFontName("Arial")
+                .NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2);
+
+            var crossCellStyle = ws.Cell(4, 2).Style;
+            Assert.AreEqual(XLAlignmentHorizontalValues.Center, crossCellStyle.Alignment.Horizontal);
+            Assert.AreEqual(XLBorderStyleValues.Double, crossCellStyle.Border.BottomBorder);
+            Assert.AreEqual(XLColor.Blue, crossCellStyle.Fill.BackgroundColor);
+            Assert.AreEqual(true, crossCellStyle.IncludeQuotePrefix);
+            Assert.AreEqual((int)XLPredefinedFormat.Number.Precision2, crossCellStyle.NumberFormat.NumberFormatId);
+            Assert.AreEqual(true, crossCellStyle.Protection.Locked);
+
+            var rowCellStyle = ws.Cell(4, 3).Style;
+            Assert.AreEqual(rowStyle, rowCellStyle);
+
+            var colCellStyle = ws.Cell(5, 2).Style;
+            Assert.AreEqual(colStyle, colCellStyle);
+        }
+
         private static IEnumerable<TestCaseData> StylizedEntities
         {
             get
