@@ -146,3 +146,14 @@ IXLCell
 ``IXLCell.GetFormattedString(CultureInfo)`` now has an optional argument for a
 culture. By default, it uses current culture in all cases (was inconsistent),
 but culture can be explicitely specified.
+
+********
+IXLStyle
+********
+
+``IXLStyle.Equals`` method (it's implementor) now compares equality purely by style properties.
+Originally, it also checked the container equality and thus were rarely equal. Because styles are
+internally immutable, the ``IXLStyle`` object must hold a reference to object that contains the
+immutable style in a property (e.g. ``IXLCell`` or ``IXLRow``) so it can change it and that
+reference is called container. The end result is that two IXLStyle objects should be equal when all
+their style properties are equal.
