@@ -195,8 +195,7 @@ namespace ClosedXML.Excel
             if (otherS == null)
                 return false;
 
-            return Key == otherS.Key &&
-                   _container == otherS._container;
+            return Key == otherS.Key;
         }
 
         public override bool Equals(object obj)
