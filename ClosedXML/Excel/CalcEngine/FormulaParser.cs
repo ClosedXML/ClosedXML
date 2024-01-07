@@ -68,69 +68,69 @@ namespace ClosedXML.Excel.CalcEngine
                 _isA1 = isA1;
             }
 
-            public ScalarValue LogicalValue(List<FormulaFlags> context, bool logical) => logical;
+            public ScalarValue LogicalValue(List<FormulaFlags> context, SymbolRange range, bool logical) => logical;
 
-            public ScalarValue NumberValue(List<FormulaFlags> context, double number) => number;
+            public ScalarValue NumberValue(List<FormulaFlags> context, SymbolRange range, double number) => number;
 
-            public ScalarValue TextValue(List<FormulaFlags> context, string text) => text;
+            public ScalarValue TextValue(List<FormulaFlags> context, SymbolRange range, string text) => text;
 
-            public ScalarValue ErrorValue(List<FormulaFlags> context, ReadOnlySpan<char> errorText)
+            public ScalarValue ErrorValue(List<FormulaFlags> context, SymbolRange range, ReadOnlySpan<char> errorText)
             {
                 return GetErrorValue(errorText);
             }
 
-            public ValueNode ArrayNode(List<FormulaFlags> context, int rows, int columns,
+            public ValueNode ArrayNode(List<FormulaFlags> context, SymbolRange range, int rows, int columns,
                 IReadOnlyList<ScalarValue> elements)
             {
                 var array = new LiteralArray(rows, columns, elements);
                 return new ArrayNode(array);
             }
 
-            public ValueNode BlankNode(List<FormulaFlags> context)
+            public ValueNode BlankNode(List<FormulaFlags> context, SymbolRange range)
             {
                 return new ScalarNode(ScalarValue.Blank);
             }
 
-            public ValueNode LogicalNode(List<FormulaFlags> context, bool logical)
+            public ValueNode LogicalNode(List<FormulaFlags> context, SymbolRange range, bool logical)
             {
                 return new ScalarNode(logical);
             }
 
-            public ValueNode ErrorNode(List<FormulaFlags> context, ReadOnlySpan<char> errorText)
+            public ValueNode ErrorNode(List<FormulaFlags> context, SymbolRange range, ReadOnlySpan<char> errorText)
             {
                 var error = GetErrorValue(errorText);
                 return new ScalarNode(error);
             }
 
-            public ValueNode NumberNode(List<FormulaFlags> context, double number)
+            public ValueNode NumberNode(List<FormulaFlags> context, SymbolRange range, double number)
             {
                 return new ScalarNode(number);
             }
 
-            public ValueNode TextNode(List<FormulaFlags> context, string text)
+            public ValueNode TextNode(List<FormulaFlags> context, SymbolRange range, string text)
             {
                 return new ScalarNode(text);
             }
 
-            public ValueNode Reference(List<FormulaFlags> context, ReferenceArea area)
+            public ValueNode Reference(List<FormulaFlags> context, SymbolRange range, ReferenceArea area)
             {
                 return new ReferenceNode(null, area, _isA1);
             }
 
-            public ValueNode SheetReference(List<FormulaFlags> context, string sheet, ReferenceArea area)
+            public ValueNode SheetReference(List<FormulaFlags> context, SymbolRange range, string sheet, ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, sheet, null, null);
                 return new ReferenceNode(prefixNode, area, _isA1);
             }
 
-            public ValueNode Reference3D(List<FormulaFlags> context, string firstSheet, string lastSheet,
+            public ValueNode Reference3D(List<FormulaFlags> context, SymbolRange range, string firstSheet, string lastSheet,
                 ReferenceArea area)
             {
                 var prefixNode = new PrefixNode(null, null, firstSheet, lastSheet);
                 return new ReferenceNode(prefixNode, area, _isA1);
             }
 
-            public ValueNode ExternalSheetReference(List<FormulaFlags> context, int workbookIndex, string sheet,
+            public ValueNode ExternalSheetReference(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string sheet,
                 ReferenceArea area)
             {
                 var fileNode = new FileNode(workbookIndex);
@@ -138,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new ReferenceNode(prefixNode, area, _isA1);
             }
 
-            public ValueNode ExternalReference3D(List<FormulaFlags> context, int workbookIndex, string firstSheet,
+            public ValueNode ExternalReference3D(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string firstSheet,
                 string lastSheet, ReferenceArea area)
             {
                 var fileNode = new FileNode(workbookIndex);
@@ -146,83 +146,83 @@ namespace ClosedXML.Excel.CalcEngine
                 return new ReferenceNode(prefixNode, area, _isA1);
             }
 
-            public ValueNode Function(List<FormulaFlags> context, ReadOnlySpan<char> name,
+            public ValueNode Function(List<FormulaFlags> context, SymbolRange range, ReadOnlySpan<char> name,
                 IReadOnlyList<ValueNode> args)
             {
                 var functionName = name.ToString();
                 return GetFunctionNode(context, null, functionName, args);
             }
 
-            public ValueNode Function(List<FormulaFlags> context, string sheetName, ReadOnlySpan<char> name,
+            public ValueNode Function(List<FormulaFlags> context, SymbolRange range, string sheetName, ReadOnlySpan<char> name,
                 IReadOnlyList<ValueNode> args)
             {
                 var prefixNode = new PrefixNode(null, sheetName, null, null);
                 return GetFunctionNode(context, prefixNode, name.ToString(), args);
             }
 
-            public ValueNode ExternalFunction(List<FormulaFlags> context, int workbookIndex, string sheet,
+            public ValueNode ExternalFunction(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string sheet,
                 ReadOnlySpan<char> name, IReadOnlyList<ValueNode> args)
             {
                 var prefixNode = new PrefixNode(new FileNode(workbookIndex), sheet, null, null);
                 return GetFunctionNode(context, prefixNode, name.ToString(), args);
             }
 
-            public ValueNode ExternalFunction(List<FormulaFlags> context, int workbookIndex, ReadOnlySpan<char> name,
+            public ValueNode ExternalFunction(List<FormulaFlags> context, SymbolRange range, int workbookIndex, ReadOnlySpan<char> name,
                 IReadOnlyList<ValueNode> args)
             {
                 var prefixNode = new PrefixNode(new FileNode(workbookIndex), null, null, null);
                 return GetFunctionNode(context, prefixNode, name.ToString(), args);
             }
 
-            public ValueNode CellFunction(List<FormulaFlags> context, Parser.Reference cell,
+            public ValueNode CellFunction(List<FormulaFlags> context, SymbolRange range, RowCol cell,
                 IReadOnlyList<ValueNode> args)
             {
                 return new NotSupportedNode("Cell functions are not yet supported.");
             }
 
-            public ValueNode StructureReference(List<FormulaFlags> context, StructuredReferenceArea area,
+            public ValueNode StructureReference(List<FormulaFlags> context, SymbolRange range, StructuredReferenceArea area,
                 string? firstColumn, string? lastColumn)
             {
                 return new StructuredReferenceNode(null, null, area, firstColumn, lastColumn);
             }
 
-            public ValueNode StructureReference(List<FormulaFlags> context, string table, StructuredReferenceArea area,
+            public ValueNode StructureReference(List<FormulaFlags> context, SymbolRange range, string table, StructuredReferenceArea area,
                 string? firstColumn, string? lastColumn)
             {
                 return new StructuredReferenceNode(null, table, area, firstColumn, lastColumn);
             }
 
-            public ValueNode ExternalStructureReference(List<FormulaFlags> context, int workbookIndex, string table,
+            public ValueNode ExternalStructureReference(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string table,
                 StructuredReferenceArea area, string? firstColumn, string? lastColumn)
             {
                 return new StructuredReferenceNode(new PrefixNode(new FileNode(workbookIndex), null, null, null), table,
                     area, firstColumn, lastColumn);
             }
 
-            public ValueNode Name(List<FormulaFlags> context, string name)
+            public ValueNode Name(List<FormulaFlags> context, SymbolRange range, string name)
             {
                 return new NameNode(null, name);
             }
 
-            public ValueNode SheetName(List<FormulaFlags> context, string sheet, string name)
+            public ValueNode SheetName(List<FormulaFlags> context, SymbolRange range, string sheet, string name)
             {
                 var prefixNode = new PrefixNode(null, sheet, null, null);
                 return new NameNode(prefixNode, name);
             }
 
-            public ValueNode ExternalName(List<FormulaFlags> context, int workbookIndex, string name)
+            public ValueNode ExternalName(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string name)
             {
                 var prefixNode = new PrefixNode(new FileNode(workbookIndex), null, null, null);
                 return new NameNode(prefixNode, name);
             }
 
-            public ValueNode ExternalSheetName(List<FormulaFlags> context, int workbookIndex, string sheet, string name)
+            public ValueNode ExternalSheetName(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string sheet, string name)
             {
                 var prefixNode = new PrefixNode(new FileNode(workbookIndex), sheet, null, null);
                 return new NameNode(prefixNode, name);
             }
 
-            public ValueNode BinaryNode(List<FormulaFlags> context, BinaryOperation operation, ValueNode leftNode,
+            public ValueNode BinaryNode(List<FormulaFlags> context, SymbolRange range, BinaryOperation operation, ValueNode leftNode,
                 ValueNode rightNode)
             {
                 var op = operation switch
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new BinaryNode(op, leftNode, rightNode);
             }
 
-            public ValueNode Unary(List<FormulaFlags> context, UnaryOperation operation, ValueNode node)
+            public ValueNode Unary(List<FormulaFlags> context, SymbolRange range, UnaryOperation operation, ValueNode node)
             {
                 var op = operation switch
                 {
@@ -262,7 +262,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new UnaryNode(op, node);
             }
 
-            public ValueNode Nested(List<FormulaFlags> context, ValueNode node)
+            public ValueNode Nested(List<FormulaFlags> context, SymbolRange range, ValueNode node)
             {
                 return node;
             }
