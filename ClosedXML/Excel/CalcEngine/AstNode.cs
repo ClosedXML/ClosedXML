@@ -261,7 +261,7 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea, bool isA1)
         {
             Prefix = prefix;
-            Address = referenceArea.GetDisplayStringA1();
+            Address = isA1 ? referenceArea.GetDisplayStringA1() : referenceArea.GetDisplayStringR1C1();
             ReferenceArea = referenceArea;
             IsA1 = isA1;
         }
@@ -270,7 +270,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// An optional prefix for reference item.
         /// </summary>
         public PrefixNode? Prefix { get; }
-        
+
         /// <summary>
         /// An address of a reference that corresponds to <see cref="Type"/>. Always without sheet (that is in the prefix).
         /// </summary>
