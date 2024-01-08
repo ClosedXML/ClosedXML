@@ -364,7 +364,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_item_can_be_structured_reference()
         {
-            AssertCanParseButNotEvaluate("=SomeTable[#Data]", "Evaluation of structured references is not implemented.");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertTable(new[] { new { Amount = 1 }, new { Amount = 2 } });
+
+            Assert.AreEqual(3, ws.Evaluate("SUM(Table1[#Data])"));
         }
 
         #endregion

@@ -68,6 +68,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public uint? RecalculateSheetId { get; set; }
 
+        internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
+
         internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
             sheet ??= Worksheet;

@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace ClosedXML.Excel.CalcEngine
 {
     internal interface IFormulaVisitor<in TContext, out TResult>
