@@ -408,6 +408,19 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
+        [TestCase("Amount")]
+        [TestCase("AMOUNT")]
+        [TestCase("amount")]
+        public void FieldNames_of_XLTable_are_case_insensitive(string fieldName)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var table = ws.Cell("A1").InsertTable(new[] { new { Amount = 1 } });
+
+            var expectedField = table.Field(0);
+            Assert.AreSame(expectedField, table.Field(fieldName));
+        }
+
         [Test]
         public void ChangeFieldName()
         {

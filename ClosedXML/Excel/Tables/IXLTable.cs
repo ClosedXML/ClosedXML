@@ -33,6 +33,12 @@ namespace ClosedXML.Excel
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
+        /// <summary>
+        /// Get field of the table.
+        /// </summary>
+        /// <param name="fieldName">Name of the field. Field names are case-insensitive.</param>
+        /// <returns>Requested field.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Table doesn't contain <paramref name="fieldName"/> field.</exception>
         IXLTableField Field(string fieldName);
 
         IXLTableField Field(int fieldIndex);
