@@ -59,8 +59,8 @@ namespace ClosedXML.Excel
         {
             if (ShowHeaderRow)
             {
-                var oldFieldNames = _fieldNames ?? new Dictionary<string, IXLTableField>();
-                _fieldNames = new Dictionary<string, IXLTableField>();
+                var oldFieldNames = _fieldNames ?? CreateFieldNames();
+                _fieldNames = CreateFieldNames();
                 var headersRow = HeadersRow(false);
                 Int32 cellPos = 0;
                 foreach (XLCell cell in headersRow.Cells())
@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
 
         internal void AddFields(IEnumerable<String> fieldNames)
         {
-            _fieldNames = new Dictionary<String, IXLTableField>();
+            _fieldNames = CreateFieldNames();
 
             Int32 cellPos = 0;
             foreach (var name in fieldNames)
@@ -559,6 +559,11 @@ namespace ClosedXML.Excel
                 _uniqueNames.Add(c.GetString());
                 co++;
             }
+        }
+
+        private static Dictionary<string, IXLTableField> CreateFieldNames()
+        {
+            return new Dictionary<string, IXLTableField>(StringComparer.CurrentCultureIgnoreCase);
         }
 
         private String GetUniqueName(String originalName, Int32 initialOffset, Boolean enforceOffset)
