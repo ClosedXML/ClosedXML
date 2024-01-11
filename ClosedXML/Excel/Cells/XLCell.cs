@@ -84,17 +84,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public bool ShareString
         {
-            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].ShareString;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
-                if (original.ShareString != value)
-                {
-                    var modified = original;
-                    modified.ShareString = value;
-                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
+            get => _cellsCollection.ValueSlice.GetShareString(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetShareString(SheetPoint, value);
         }
 
         /// <summary>
@@ -103,67 +94,28 @@ namespace ClosedXML.Excel
         /// </summary>
         internal override XLStyleValue StyleValue
         {
-            get
-            {
-                var styleValue = _cellsCollection.StyleSlice[_rowNumber, _columnNumber];
-                if (styleValue is not null)
-                    return styleValue;
-
-                // If the slice doesn't contain any value, determine values by inheriting.
-                // Cells that lie on an intersection of a XLColumn and a XLRow have their
-                // style set when column/row is created to avoid problems with correct which
-                // style has precedence. I.e. set column blue, set row red => cell is red.
-                // Swap order the the cell is blue.
-                if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out var row))
-                    return row.StyleValue;
-
-                if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out var column))
-                    return column.StyleValue;
-
-                return Worksheet.StyleValue;
-            }
-
+            get => Worksheet.GetStyleValue(SheetPoint);
             private protected set => _cellsCollection.StyleSlice.Set(_rowNumber, _columnNumber, value);
         }
 
-        internal int SharedStringId
-        {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].SharedStringId;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                if (original.SharedStringId != value)
-                {
-                    var modified = new XLValueSliceContent(original.Value, original.ModifiedAtVersion, value);
-                    _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
-        }
+        internal int SharedStringId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
+
+        internal XLImmutableRichText RichText => SliceRichText;
 
         private XLCellValue SliceCellValue
         {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].Value;
+            get => _cellsCollection.ValueSlice.GetCellValue(SheetPoint);
             set
             {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                var modified = new XLValueSliceContent(value, original.ModifiedAtVersion, original.SharedStringId);
-                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
+                _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
             }
         }
 
-        private XLRichText SliceRichText
+        private XLImmutableRichText SliceRichText
         {
-            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].RichText;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
-                if (original.RichText != value)
-                {
-                    var modified = original;
-                    modified.RichText = value;
-                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
+            get => _cellsCollection.ValueSlice.GetRichText(SheetPoint);
+            set => _cellsCollection.ValueSlice.SetRichText(SheetPoint, value);
         }
 
         private XLComment SliceComment
@@ -246,27 +198,17 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLCellFormula Formula
         {
-            get => _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
+            get => _cellsCollection.FormulaSlice.Get(SheetPoint);
             set
             {
-                ref readonly var original = ref _cellsCollection.FormulaSlice[_rowNumber, _columnNumber];
-                if (original != value)
-                    _cellsCollection.FormulaSlice.Set(_rowNumber, _columnNumber, value);
-            }
-        }
+                _cellsCollection.FormulaSlice.Set(SheetPoint, value);
 
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that
-        /// workbook had at the moment of last value or formula change.
-        /// </summary>
-        internal long ModifiedAtVersion
-        {
-            get => _cellsCollection.ValueSlice[_rowNumber, _columnNumber].ModifiedAtVersion;
-            private set
-            {
-                ref readonly var original = ref _cellsCollection.ValueSlice[_rowNumber, _columnNumber];
-                var modified = new XLValueSliceContent(original.Value, value, original.SharedStringId);
-                _cellsCollection.ValueSlice.Set(_rowNumber, _columnNumber, in modified);
+                // Because text values of evaluated formulas are stored in a worksheet part, mark it as inlined string and store in sst.
+                // If we are clearing formula, we should enable shareString back on, because it is a default position.
+                // If we are setting formula, we should disable shareString (=inline), because it must be written to the worksheet part
+                var clearFormula = value is null;
+                ShareString = clearFormula;
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
             }
         }
 
@@ -284,17 +226,23 @@ namespace ClosedXML.Excel
 
         public XLRichText GetRichText()
         {
-            return SliceRichText ?? CreateRichText();
+            var sliceRichText = SliceRichText;
+            if (sliceRichText is not null)
+                return new XLRichText(this, sliceRichText);
+
+            return CreateRichText();
         }
 
         public XLRichText CreateRichText()
         {
-            var style = GetStyleForRead();
-            SliceRichText = Value.Type == XLDataType.Blank
-                ? new XLRichText(this, new XLFont(Style as XLStyle, style.Font))
-                : new XLRichText(this, GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-            SliceCellValue = SliceRichText.Text;
-            return SliceRichText;
+            var font = new XLFont(GetStyleForRead().Font.Key);
+
+            // Don't include rich text string with 0 length to a new rich text
+            var richText = DataType == XLDataType.Blank
+                ? new XLRichText(this, font)
+                : new XLRichText(this, GetFormattedString(), font);
+            SliceRichText = XLImmutableRichText.Create(richText);
+            return richText;
         }
 
         #region IXLCell Members
@@ -319,93 +267,41 @@ namespace ClosedXML.Excel
             if (checkMergedRanges && IsInferiorMergedCell())
                 return this;
 
-            switch (value.Type)
-            {
-                case XLDataType.DateTime:
-                    SetOnlyValue(value);
-                    SetDateTimeFormat(StyleValue, value.GetUnifiedNumber() % 1 == 0);
-                    break;
-                case XLDataType.TimeSpan:
-                    SetOnlyValue(value);
-                    SetTimeSpanFormat(StyleValue);
-                    break;
-                case XLDataType.Text:
-                    var text = value.GetText();
-                    if (text.Length > 0 && text[0] == '\'')
-                    {
-                        text = text.Substring(1);
-                        SetOnlyValue(text);
-                        Style.SetIncludeQuotePrefix();
-                    }
-                    else
-                        SetOnlyValue(value);
+            SetValueAndStyle(value);
 
-                    if (text.AsSpan().Contains(Environment.NewLine.AsSpan(), StringComparison.Ordinal) && !StyleValue.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-                    break;
-                default:
-                    SetOnlyValue(value);
-                    break;
-            }
-
-            SliceRichText = null;
             FormulaA1 = null;
 
             if (setTableHeader)
             {
-                if (SetTableHeaderValue(value)) return this;
-                if (SetTableTotalsRowLabel(value)) return this;
+                var cellRange = new XLSheetRange(SheetPoint, SheetPoint);
+                foreach (var table in Worksheet.Tables)
+                    table.RefreshFieldsFromCells(cellRange);
             }
 
             return this;
+        }
 
-            Boolean SetTableHeaderValue(XLCellValue newFieldName)
+        /// <summary>
+        /// Set value of a cell and its format (if necessary) from the passed value.
+        /// It doesn't clear formulas or checks merged cells or tables.
+        /// </summary>
+        private void SetValueAndStyle(XLCellValue value)
+        {
+            var modifiedStyleValue = Worksheet.GetStyleForValue(value, SheetPoint);
+            if (modifiedStyleValue is not null)
+                StyleValue = modifiedStyleValue;
+
+            // Modify value after style, because we might strip the '
+            if (value.Type == XLDataType.Text)
             {
-                foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
+                var text = value.GetText();
+                if (text.Length > 0 && text[0] == '\'')
                 {
-                    if (TryGetField(out var field, table, table.RangeAddress.FirstAddress.RowNumber))
-                    {
-                        field.Name = newFieldName.ToString(CultureInfo.CurrentCulture);
-                        return true;
-                    }
+                    value = text.Substring(1);
                 }
-                return false;
             }
 
-            Boolean SetTableTotalsRowLabel(XLCellValue value)
-            {
-                foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
-                {
-                    if (TryGetField(out var field, table, table.RangeAddress.LastAddress.RowNumber))
-                    {
-                        field.TotalsRowFunction = XLTotalsRowFunction.None;
-                        field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            Boolean TryGetField(out IXLTableField field, IXLTable table, int rowNumber)
-            {
-                var tableRange = table.RangeAddress;
-                var tableInTotalsRow = rowNumber == Address.RowNumber;
-                if (!tableInTotalsRow)
-                {
-                    field = null;
-                    return false;
-                }
-
-                var fieldIndex = Address.ColumnNumber - tableRange.FirstAddress.ColumnNumber;
-                var tableContainsCell = fieldIndex >= 0 && fieldIndex < tableRange.ColumnSpan;
-                if (!tableContainsCell)
-                {
-                    field = null;
-                    return false;
-                }
-                field = table.Field(fieldIndex);
-                return true;
-            }
+            SetOnlyValue(value);
         }
 
         public Boolean GetBoolean() => Value.GetBoolean();
@@ -600,7 +496,7 @@ namespace ClosedXML.Excel
 
         public String GetString() => Value.ToString(CultureInfo.CurrentCulture);
 
-        public string GetFormattedString()
+        public string GetFormattedString(CultureInfo culture = null)
         {
             XLCellValue value;
             try
@@ -614,27 +510,26 @@ namespace ClosedXML.Excel
                 value = CachedValue;
             }
 
-            var format = GetFormat();
-            return value.IsUnifiedNumber
-                ? value.GetUnifiedNumber().ToExcelFormat(format)
-                : value.ToString(CultureInfo.CurrentCulture);
+            return GetFormattedString(value, culture);
         }
 
-        /// <summary>
-        /// Flag showing that the cell is in formula evaluation state.
-        /// </summary>
-        internal bool IsEvaluating => Formula is not null && Formula.IsEvaluating;
+        internal string GetFormattedString(XLCellValue value, CultureInfo culture = null)
+        {
+            culture ??= CultureInfo.CurrentCulture;
+            var format = GetFormat();
+            return value.IsUnifiedNumber
+                ? value.GetUnifiedNumber().ToExcelFormat(format, culture)
+                : value.ToString(culture);
+        }
 
         public void InvalidateFormula()
         {
-            Worksheet.Workbook.InvalidateFormulas();
-            ModifiedAtVersion = Worksheet.Workbook.RecalculationCounter;
             if (Formula is null)
             {
                 return;
             }
 
-            Formula.Invalidate(Worksheet);
+            Formula.IsDirty = true;
         }
 
         /// <summary>
@@ -657,7 +552,9 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            Formula.ApplyFormula(this);
+            // TODO: Only one cell, somehow
+            var wb = Worksheet.Workbook;
+            wb.CalcEngine.Recalculate(wb, null);
         }
 
         /// <summary>
@@ -727,23 +624,7 @@ namespace ClosedXML.Excel
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertTableInternal(reader, tableName, createTable, addHeadings, transpose);
-        }
-
-        private IXLTable InsertTableInternal(IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings,
-            Boolean transpose)
-        {
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
-
-            var range = InsertDataInternal(reader, addHeadings, transpose);
-
-            if (createTable)
-                // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-            else
-                // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
         }
 
         public IXLTable InsertTable(DataTable data)
@@ -769,123 +650,16 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
                 throw new InvalidOperationException($"Table name cannot be a valid Cell Address '{tableName}'.");
 
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+            if (createTable && this.Worksheet.Tables.Any<XLTable>(t => t.Contains(this)))
                 throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
-        }
-
-        internal XLRange InsertDataInternal(IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
-        {
-            if (reader == null)
-                return null;
-
-            var currentRowNumber = _rowNumber;
-            var currentColumnNumber = _columnNumber;
-            var maximumColumnNumber = currentColumnNumber;
-            var maximumRowNumber = currentRowNumber;
-
-            if (transpose)
-            {
-                maximumColumnNumber += reader.GetRecordsCount() - 1;
-                maximumRowNumber += reader.GetPropertiesCount() - 1;
-            }
-            else
-            {
-                maximumColumnNumber += reader.GetPropertiesCount() - 1;
-                maximumRowNumber += reader.GetRecordsCount() - 1;
-            }
-
-            // Inline functions to handle looping with transposing
-            //////////////////////////////////////////////////////
-            void incrementFieldPosition()
-            {
-                if (transpose)
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
-                else
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
-            }
-
-            void incrementRecordPosition()
-            {
-                if (transpose)
-                {
-                    maximumColumnNumber = Math.Max(maximumColumnNumber, currentColumnNumber);
-                    currentColumnNumber++;
-                }
-                else
-                {
-                    maximumRowNumber = Math.Max(maximumRowNumber, currentRowNumber);
-                    currentRowNumber++;
-                }
-            }
-
-            void resetRecordPosition()
-            {
-                if (transpose)
-                    currentRowNumber = _rowNumber;
-                else
-                    currentColumnNumber = _columnNumber;
-            }
-            //////////////////////////////////////////////////////
-
-            var empty = maximumRowNumber <= _rowNumber ||
-                        maximumColumnNumber <= _columnNumber;
-
-            if (!empty)
-            {
-                Worksheet.Range(
-                        _rowNumber,
-                        _columnNumber,
-                        maximumRowNumber,
-                        maximumColumnNumber)
-                    .Clear();
-            }
-
-            if (addHeadings)
-            {
-                for (int i = 0; i < reader.GetPropertiesCount(); i++)
-                {
-                    var propertyName = reader.GetPropertyName(i);
-                    Worksheet.SetValue(propertyName, currentRowNumber, currentColumnNumber);
-                    incrementFieldPosition();
-                }
-
-                incrementRecordPosition();
-            }
-
-            var data = reader.GetData();
-
-            foreach (var item in data)
-            {
-                resetRecordPosition();
-                foreach (var value in item)
-                {
-                    Worksheet.SetValue(value, currentRowNumber, currentColumnNumber);
-                    incrementFieldPosition();
-                }
-                incrementRecordPosition();
-            }
-
-            var range = Worksheet.Range(
-                _rowNumber,
-                _columnNumber,
-                maximumRowNumber,
-                maximumColumnNumber);
-
-            return range;
+            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
         public XLTableCellType TableCellType()
         {
-            var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
+            var table = this.Worksheet.Tables.FirstOrDefault<XLTable>(t => t.AsRange().Contains(this));
             if (table == null) return XLTableCellType.None;
 
             if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Header;
@@ -908,7 +682,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return InsertDataInternal(reader, addHeadings: false, transpose: transpose);
+            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -917,7 +691,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
-            return InsertDataInternal(reader, addHeadings: false, transpose: false);
+            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: false);
         }
 
         public XLDataType DataType => SliceCellValue.Type;
@@ -942,7 +716,6 @@ namespace ClosedXML.Excel
                 if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
                     SetHyperlink(null);
-                    SliceRichText = null;
                     SliceCellValue = Blank.Value;
                     FormulaA1 = String.Empty;
                 }
@@ -1089,27 +862,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
-        public bool NeedsRecalculation
-        {
-            get
-            {
-                if (Formula is null)
-                {
-                    return false;
-                }
-
-                return Formula.NeedsRecalculation(this);
-            }
-        }
+        public bool NeedsRecalculation => Formula is not null && Formula.IsDirty;
 
         public XLCellValue CachedValue => SliceCellValue;
 
         IXLRichText IXLCell.GetRichText() => GetRichText();
 
-        public bool HasRichText
-        {
-            get { return SliceRichText != null; }
-        }
+        public bool HasRichText => SliceRichText is not null;
 
         IXLRichText IXLCell.CreateRichText() => CreateRichText();
 
@@ -1146,18 +905,12 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            bool isValueEmpty;
-            if (HasRichText)
-                isValueEmpty = SliceRichText.Length == 0;
-            else
+            var isValueEmpty = SliceCellValue.Type switch
             {
-                isValueEmpty = SliceCellValue.Type switch
-                {
-                    XLDataType.Blank => true,
-                    XLDataType.Text => SliceCellValue.GetText().Length == 0,
-                    _ => false
-                };
-            }
+                XLDataType.Blank => true,
+                XLDataType.Text => SliceCellValue.GetText().Length == 0,
+                _ => false
+            };
 
             if (!isValueEmpty || HasFormula)
                 return false;
@@ -1298,11 +1051,11 @@ namespace ClosedXML.Excel
 
         public Boolean Active
         {
-            get { return ((XLCell)Worksheet.ActiveCell).SheetPoint == SheetPoint; }
+            get => Worksheet.ActiveCell == SheetPoint;
             set
             {
                 if (value)
-                    Worksheet.ActiveCell = this;
+                    Worksheet.ActiveCell = SheetPoint;
                 else if (Active)
                     Worksheet.ActiveCell = null;
             }
@@ -1588,18 +1341,6 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetDateTimeFormat(XLStyleValue style, Boolean onlyDatePart)
-        {
-            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
-        }
-
-        private void SetTimeSpanFormat(XLStyleValue style)
-        {
-            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = 46;
-        }
-
         internal string GetFormulaR1C1(string value)
         {
             return XLCellFormula.GetFormula(value, FormulaConversionType.A1ToR1C1, new XLSheetPoint(_rowNumber, _columnNumber));
@@ -1612,9 +1353,14 @@ namespace ClosedXML.Excel
 
         internal void CopyValuesFrom(XLCell source)
         {
-            SliceCellValue = source.SliceCellValue;
+            // Rich text is basically a super set of a value. Setting a value would override rich text and vice versa.
+            var sourceRichText = source.SliceRichText;
+            if (sourceRichText is null)
+                SliceCellValue = source.SliceCellValue;
+            else
+                SliceRichText = sourceRichText;
+
             FormulaR1C1 = source.FormulaR1C1;
-            SliceRichText = source.SliceRichText == null ? null : new XLRichText(this, source.SliceRichText, source.Style.Font);
             SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
             if (source.SliceHyperlink != null)
             {
@@ -1664,7 +1410,7 @@ namespace ClosedXML.Excel
             var shiftedRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(sourceDataAddress));
             var sourceDataWorksheet = otherCell.Worksheet == otherCell.Sparkline.SourceData.Worksheet
                 ? Worksheet
-                : otherCell.Sparkline.SourceData.Worksheet;
+                : (XLWorksheet)otherCell.Sparkline.SourceData.Worksheet;
             var sourceData = sourceDataWorksheet.Range(shiftedRangeAddress);
 
             IXLSparklineGroup group;
@@ -2273,10 +2019,11 @@ namespace ClosedXML.Excel
             var richText = SliceRichText;
             if (richText is not null)
             {
-                foreach (var richString in richText)
+                foreach (var richTextRun in richText.Runs)
                 {
-                    IXLFontBase font = richString;
-                    AddGlyphs(richString.Text, font, engine, dpi, output);
+                    var text = richText.GetRunText(richTextRun);
+                    var font = new XLFont(richTextRun.Font.Key);
+                    AddGlyphs(text, font, engine, dpi, output);
                 }
             }
             else

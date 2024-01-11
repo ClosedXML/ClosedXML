@@ -19,9 +19,9 @@ namespace ClosedXML.Excel.InsertData
             _itemType = data.GetItemType();
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
-            return _data.Select(item => new[] { item }.Cast<object>());
+            return _data.Select(item => new[] { item }.Select(XLCellValue.FromInsertedObject));
         }
 
         public int GetPropertiesCount()
@@ -35,11 +35,6 @@ namespace ClosedXML.Excel.InsertData
                 throw new ArgumentException("SimpleTypeReader supports only a single property");
 
             return _itemType.Name;
-        }
-
-        public int GetRecordsCount()
-        {
-            return _data.Count();
         }
     }
 }

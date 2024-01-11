@@ -67,6 +67,11 @@ namespace ClosedXML.Excel
             return FromColor(Color.FromArgb(argb));
         }
 
+        internal static XLColor FromArgb(UInt32 argb)
+        {
+            return FromColor(Color.FromArgb(unchecked((int)argb)));
+        }
+
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
             return FromColor(Color.FromArgb(r, g, b));
@@ -88,6 +93,17 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Parse a color in a RRGGBB hexadecimal format. It is used
+        /// to parse colors of <c>ST_HexColorRGB</c> type from the XML.
+        /// </summary>
+        /// <param name="hexColorRgb">A 6 character long hexadecimal number.</param>
+        /// <returns>Parsed color with full opacity.</returns>
+        internal static XLColor FromHexRgb(String hexColorRgb)
+        {
+            return FromColor(ColorStringParser.ParseFromRgb(hexColorRgb));
+        }
+
         public static XLColor FromName(String name)
         {
             return FromColor(Color.FromName(name));
@@ -95,7 +111,7 @@ namespace ClosedXML.Excel
 
         public static XLColor FromHtml(String htmlColor)
         {
-            return FromColor(ColorStringParser.ParseFromArgb(htmlColor));
+            return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
         public static XLColor FromIndex(Int32 index)

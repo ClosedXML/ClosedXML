@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -14,15 +15,9 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Name}")]
     internal class XLTable : XLRange, IXLTable
     {
-        #region Private fields
-
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
-
-        #endregion Private fields
-
-        #region Constructor
 
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
@@ -32,9 +27,6 @@ namespace ClosedXML.Excel
         {
             InitializeValues(false);
         }
-
-        #endregion Constructor
-
         public override XLRangeType RangeType
         {
             get { return XLRangeType.Table; }
@@ -58,17 +50,24 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Area of the range, including headings and totals, if table has them.
+        /// </summary>
+        internal XLSheetRange Area => XLSheetRange.FromRangeAddress(RangeAddress);
+
         private void RescanFieldNames()
         {
             if (ShowHeaderRow)
             {
-                var oldFieldNames = _fieldNames ?? new Dictionary<string, IXLTableField>();
-                _fieldNames = new Dictionary<string, IXLTableField>();
+                var oldFieldNames = _fieldNames ?? CreateFieldNames();
+                _fieldNames = CreateFieldNames();
                 var headersRow = HeadersRow(false);
                 Int32 cellPos = 0;
-                foreach (var cell in headersRow.Cells())
+                foreach (XLCell cell in headersRow.Cells())
                 {
-                    var name = cell.GetString();
+                    var cellValue = cell.CachedValue;
+                    var name = cellValue.ToString(CultureInfo.CurrentCulture);
+
                     if (oldFieldNames.TryGetValue(name, out IXLTableField tableField))// && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
                     {
                         (tableField as XLTableField).Index = cellPos;
@@ -81,12 +80,19 @@ namespace ClosedXML.Excel
                     if (String.IsNullOrEmpty(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
-                        (cell as XLCell).SetValue(name, false, false);
                     }
                     if (_fieldNames.ContainsKey(name))
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
 
                     _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
+
+                    // Field names are the source of the truth that is projected
+                    // to the cells and field names can be only text. Fix the cell,
+                    // so cell fulfills its job of being dependent on the field name.
+                    if (!cellValue.Equals(name))
+                    {
+                        cell.SetValue(name, false, false);
+                    }
                 }
             }
             else
@@ -106,7 +112,7 @@ namespace ClosedXML.Excel
 
         internal void AddFields(IEnumerable<String> fieldNames)
         {
-            _fieldNames = new Dictionary<String, IXLTableField>();
+            _fieldNames = CreateFieldNames();
 
             Int32 cellPos = 0;
             foreach (var name in fieldNames)
@@ -200,8 +206,8 @@ namespace ClosedXML.Excel
 
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
-
-                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out String message))
+                var tableNames = Worksheet.Tables.Select<XLTable, string>(t => t.Name);
+                if (!XLHelper.ValidateName("table", value, oldname, tableNames, out String message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;
@@ -250,7 +256,7 @@ namespace ClosedXML.Excel
             return HeadersRow(true);
         }
 
-        internal IXLRangeRow HeadersRow(Boolean scanForNewFieldsNames)
+        internal XLRangeRow HeadersRow(Boolean scanForNewFieldsNames)
         {
             if (!ShowHeaderRow) return null;
 
@@ -553,6 +559,11 @@ namespace ClosedXML.Excel
                 _uniqueNames.Add(c.GetString());
                 co++;
             }
+        }
+
+        private static Dictionary<string, IXLTableField> CreateFieldNames()
+        {
+            return new Dictionary<string, IXLTableField>(StringComparer.CurrentCultureIgnoreCase);
         }
 
         private String GetUniqueName(String originalName, Int32 initialOffset, Boolean enforceOffset)
@@ -867,11 +878,11 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
-            if (!(castedData?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray() ?? Array.Empty<object>();
+            if (!castedData.Any() || data is String)
                 return null;
 
-            var numberOfNewRows = castedData.Count();
+            var numberOfNewRows = castedData.Length;
 
             var lastRowOfOldRange = this.DataRange.LastRow();
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
@@ -891,10 +902,11 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var materializedData = data?.ToArray() ?? Array.Empty<T>();
+            if (!materializedData.Any() || data is String)
                 return null;
 
-            var numberOfNewRows = data.Count();
+            var numberOfNewRows = materializedData.Length;
 
             if (numberOfNewRows == 0)
                 return null;
@@ -903,7 +915,7 @@ namespace ClosedXML.Excel
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
             this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
+            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(materializedData);
 
             PropagateExtraColumns(insertedRange.ColumnCount(), lastRowOfOldRange.RowNumber());
 
@@ -917,15 +929,15 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
-            if (!(castedData?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray() ?? Array.Empty<object>();
+            if (!castedData.Any() || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
             var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
             var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
+            var sizeDifference = castedData.Length - this.DataRange.RowCount();
             if (sizeDifference > 0)
                 this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
@@ -960,14 +972,15 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var materializedData = data?.ToArray() ?? Array.Empty<T>();
+            if (!materializedData.Any() || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
             var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
             var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            var sizeDifference = materializedData.Length - DataRange.RowCount();
             if (sizeDifference > 0)
                 this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
@@ -987,7 +1000,7 @@ namespace ClosedXML.Excel
                 // Invalidate table fields' columns
                 this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var replacedRange = this.DataRange.FirstCell().InsertData(data);
+            var replacedRange = this.DataRange.FirstCell().InsertData(materializedData);
 
             if (propagateExtraColumns)
                 PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
@@ -1010,6 +1023,55 @@ namespace ClosedXML.Excel
                         else
                             c.Value = cell.Value;
                     });
+            }
+        }
+
+        /// <summary>
+        /// Update headers fields and totals fields by data from the cells. Do not add a new fields or names.
+        /// </summary>
+        /// <param name="refreshArea">Area that contains cells with changed values that might affect header and totals fields.</param>
+        internal void RefreshFieldsFromCells(XLSheetRange refreshArea)
+        {
+            var tableArea = Area;
+            if (ShowTotalsRow)
+            {
+                var totalsRow = tableArea.SliceFromBottom(1);
+                var intersection = totalsRow.Intersect(refreshArea);
+                if (intersection is not null)
+                {
+                    var totalsRowNumber = totalsRow.BottomRow;
+                    var valueSlice = Worksheet.Internals.CellsCollection.ValueSlice;
+                    for (var column = intersection.Value.LeftColumn; column <= intersection.Value.RightColumn; ++column)
+                    {
+                        var fieldIndex = column - totalsRow.LeftColumn;
+                        var field = Field(fieldIndex);
+                        var value = valueSlice.GetCellValue(new XLSheetPoint(totalsRowNumber, column));
+
+                        // Convert value to text, because Excel always converts values to text when replacing totals row.
+                        field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
+                    }
+                }
+            }
+
+            if (ShowHeaderRow)
+            {
+                var headersRow = Area.SliceFromTop(1);
+                var intersection = headersRow.Intersect(refreshArea);
+                if (intersection is not null)
+                {
+                    var headersRowNumber = headersRow.TopRow;
+                    var valueSlice = Worksheet.Internals.CellsCollection.ValueSlice;
+                    for (var column = intersection.Value.LeftColumn; column <= intersection.Value.RightColumn; ++column)
+                    {
+                        var fieldIndex = column - headersRow.LeftColumn;
+                        var field = Field(fieldIndex);
+                        var value = valueSlice.GetCellValue(new XLSheetPoint(headersRowNumber, column));
+
+                        // Convert to text, because headers row of a table can be only
+                        // string in OOXML and Excel converts it to string as well.
+                        field.Name = value.ToString(CultureInfo.CurrentCulture);
+                    }
+                }
             }
         }
 

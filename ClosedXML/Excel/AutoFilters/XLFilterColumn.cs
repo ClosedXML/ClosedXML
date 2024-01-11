@@ -1,14 +1,15 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
-    internal class XLFilterColumn : IXLFilterColumn
+    internal class XLFilterColumn : IXLFilterColumn, IXLFilteredColumn, IEnumerable<XLFilter>
     {
         private readonly XLAutoFilter _autoFilter;
         private readonly Int32 _column;
+        private readonly List<XLFilter> _filters = new();
 
         public XLFilterColumn(XLAutoFilter autoFilter, Int32 column)
         {
@@ -18,196 +19,116 @@ namespace ClosedXML.Excel
 
         #region IXLFilterColumn Members
 
-        public void Clear()
+        public void Clear(bool reapply)
         {
-            if (_autoFilter.Filters.ContainsKey(_column))
-                _autoFilter.Filters.Remove(_column);
+            _filters.Clear();
+            FilterType = XLFilterType.None;
+            if (reapply)
+                _autoFilter.Reapply();
         }
 
-        public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
+        public IXLFilteredColumn AddFilter(XLCellValue value, bool reapply)
         {
-            if (typeof(T) == typeof(String))
-            {
-                ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                  v =>
-                                  v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase),
-                                  XLFilterType.Regular);
-            }
-            else
-            {
-                ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                  v => v.CastTo<T>().CompareTo(value) == 0, XLFilterType.Regular);
-            }
-            return new XLFilteredColumn(_autoFilter, _column);
+            SwitchFilter(XLFilterType.Regular);
+            AddFilter(XLFilter.CreateRegularFilter(value.ToString()), reapply);
+            return this;
         }
 
-        public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
+        public IXLFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping, bool reapply)
         {
-            Func<Object, Boolean> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
-
-            _autoFilter.IsEnabled = true;
-
-            if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
-                filterList.Add(
-                    new XLFilter
-                    {
-                        Value = date,
-                        Operator = XLFilterOperator.Equal,
-                        Connector = XLConnector.Or,
-                        Condition = condition,
-                        DateTimeGrouping = dateTimeGrouping
-                    }
-                );
-            else
-            {
-                _autoFilter.Filters.Add(
-                    _column,
-                    new List<XLFilter>
-                    {
-                        new XLFilter
-                        {
-                            Value = date,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition,
-                            DateTimeGrouping = dateTimeGrouping
-                        }
-                    }
-                );
-            }
-
-            _autoFilter.Column(_column).FilterType = XLFilterType.DateTimeGrouping;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-
-            foreach (IXLRangeRow row in rows)
-            {
-                if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
-                    row.WorksheetRow().Unhide();
-                else
-                    row.WorksheetRow().Hide();
-            }
-
-            return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
+            SwitchFilter(XLFilterType.Regular);
+            AddFilter(XLFilter.CreateDateGroupFilter(date, dateTimeGrouping), reapply);
+            return this;
         }
 
-        public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Top(Int32 value, XLTopBottomType type, bool reapply)
         {
-            _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Top;
-            SetTopBottom(value, type);
+            SetTopBottom(value, type, takeTop: true, reapply);
         }
 
-        public void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Bottom(Int32 value, XLTopBottomType type, bool reapply)
         {
-            _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Bottom;
-            SetTopBottom(value, type, false);
+            SetTopBottom(value, type, takeTop: false, reapply);
         }
 
-        public void AboveAverage()
+        public void AboveAverage(bool reapply)
         {
-            ShowAverage(true);
+            SetAverage(aboveAverage: true, reapply);
         }
 
-        public void BelowAverage()
+        public void BelowAverage(bool reapply)
         {
-            ShowAverage(false);
+            SetAverage(aboveAverage: false, reapply);
         }
 
-        public IXLFilterConnector EqualTo<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualTo(XLCellValue value, Boolean reapply)
         {
-            if (typeof(T) == typeof(String))
-            {
-                return ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                         v =>
-                                         v.ToString().Equals(value.ToString(),
-                                                             StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            return ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                     v => v.CastTo<T>().CompareTo(value) == 0);
+            return AddCustomFilter(value.ToString(), true, reapply);
         }
 
-        public IXLFilterConnector NotEqualTo<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector NotEqualTo(XLCellValue value, Boolean reapply)
         {
-            if (typeof(T) == typeof(String))
-            {
-                return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
-                                         v =>
-                                         !v.ToString().Equals(value.ToString(),
-                                                              StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
-                                        v => v.CastTo<T>().CompareTo(value) != 0);
+            return AddCustomFilter(value.ToString(), false, reapply);
         }
 
-        public IXLFilterConnector GreaterThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector GreaterThan(XLCellValue value, Boolean reapply)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.GreaterThan,
-                                     v => v.CastTo<T>().CompareTo(value) > 0);
+            return AddCustomFilter(value, XLFilterOperator.GreaterThan, reapply);
         }
 
-        public IXLFilterConnector LessThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector LessThan(XLCellValue value, Boolean reapply)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.LessThan,
-                                     v => v.CastTo<T>().CompareTo(value) < 0);
+            return AddCustomFilter(value, XLFilterOperator.LessThan, reapply);
         }
 
-        public IXLFilterConnector EqualOrGreaterThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualOrGreaterThan(XLCellValue value, Boolean reapply)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrGreaterThan,
-                                     v => v.CastTo<T>().CompareTo(value) >= 0);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrGreaterThan, reapply);
         }
 
-        public IXLFilterConnector EqualOrLessThan<T>(T value) where T : IComparable<T>
+        public IXLFilterConnector EqualOrLessThan(XLCellValue value, Boolean reapply)
         {
-            return ApplyCustomFilter(value, XLFilterOperator.EqualOrLessThan,
-                                     v => v.CastTo<T>().CompareTo(value) <= 0);
+            return AddCustomFilter(value, XLFilterOperator.EqualOrLessThan, reapply);
         }
 
-        public void Between<T>(T minValue, T maxValue) where T : IComparable<T>
+        public void Between(XLCellValue minValue, XLCellValue maxValue, Boolean reapply)
         {
-            EqualOrGreaterThan(minValue).And.EqualOrLessThan(maxValue);
+            EqualOrGreaterThan(minValue, false).And.EqualOrLessThan(maxValue, reapply);
         }
 
-        public void NotBetween<T>(T minValue, T maxValue) where T : IComparable<T>
+        public void NotBetween(XLCellValue minValue, XLCellValue maxValue, Boolean reapply)
         {
-            LessThan(minValue).Or.GreaterThan(maxValue);
+            LessThan(minValue, false).Or.GreaterThan(maxValue, reapply);
         }
 
-        public static Func<String, Object, Boolean> BeginsWithFunction { get; } = (value, input) => ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
-
-        public IXLFilterConnector BeginsWith(String value)
+        public IXLFilterConnector BeginsWith(String value, Boolean reapply)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.Equal, s => BeginsWithFunction(value, s));
+            return AddCustomFilter(value + "*", true, reapply);
         }
 
-        public IXLFilterConnector NotBeginsWith(String value)
+        public IXLFilterConnector NotBeginsWith(String value, Boolean reapply)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => !BeginsWithFunction(value, s));
+            return AddCustomFilter(value + "*", false, reapply);
         }
 
-        public static Func<String, Object, Boolean> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
-
-        public IXLFilterConnector EndsWith(String value)
+        public IXLFilterConnector EndsWith(String value, Boolean reapply)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.Equal, s => EndsWithFunction(value, s));
+            return AddCustomFilter("*" + value, true, reapply);
         }
 
-        public IXLFilterConnector NotEndsWith(String value)
+        public IXLFilterConnector NotEndsWith(String value, Boolean reapply)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => !EndsWithFunction(value, s));
+            return AddCustomFilter("*" + value, false, reapply);
         }
 
-        public static Func<String, Object, Boolean> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
-
-        public IXLFilterConnector Contains(String value)
+        public IXLFilterConnector Contains(String value, Boolean reapply)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => ContainsFunction(value, s));
+            return AddCustomFilter("*" + value + "*", true, reapply);
         }
 
-        public IXLFilterConnector NotContains(String value)
+        public IXLFilterConnector NotContains(String value, Boolean reapply)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.NotEqual, s => !ContainsFunction(value, s));
+            return AddCustomFilter("*" + value + "*", false, reapply);
         }
 
         public XLFilterType FilterType { get; set; }
@@ -217,204 +138,169 @@ namespace ClosedXML.Excel
         public XLTopBottomPart TopBottomPart { get; set; }
 
         public XLFilterDynamicType DynamicType { get; set; }
-        public Double DynamicValue { get; set; }
+
+        /// <summary>
+        /// Basically average for dynamic filters. Value is refreshed during filter reapply.
+        /// </summary>
+        public Double DynamicValue { get; set; } = double.NaN;
 
         #endregion IXLFilterColumn Members
 
-        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
+        /// <summary>
+        /// A filter value used by top/bottom filter to compare with cell value.
+        /// </summary>
+        internal double TopBottomFilterValue { get; private set; } = double.NaN;
+
+        public IEnumerator<XLFilter> GetEnumerator() => _filters.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private void SetTopBottom(Int32 percentOrItemCount, XLTopBottomType type, Boolean takeTop, Boolean reapply)
         {
-            _autoFilter.IsEnabled = true;
-            _autoFilter.Column(_column).SetFilterType(XLFilterType.TopBottom)
-                                       .SetTopBottomValue(value)
-                                       .SetTopBottomType(type);
+            if (percentOrItemCount is < 1 or > 500)
+                throw new ArgumentOutOfRangeException(nameof(percentOrItemCount), "Value must be between 1 and 500.");
 
-            var values = GetValues(value, type, takeTop);
+            ResetFilter(XLFilterType.TopBottom);
+            TopBottomValue = percentOrItemCount;
+            TopBottomType = type;
+            TopBottomPart = takeTop ? XLTopBottomPart.Top : XLTopBottomPart.Bottom;
 
-            Clear();
-            _autoFilter.Filters.Add(_column, new List<XLFilter>());
-
-            Boolean addToList = true;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
-            {
-                Boolean foundOne = false;
-                foreach (double val in values)
-                {
-                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
-                    if (addToList)
-                    {
-                        _autoFilter.Filters[_column].Add(new XLFilter
-                        {
-                            Value = val,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition
-                        });
-                    }
-
-                    var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
-                    row.WorksheetRow().Unhide();
-                    foundOne = true;
-                }
-                if (!foundOne)
-                    row.WorksheetRow().Hide();
-
-                addToList = false;
-            }
+            AddFilter(XLFilter.CreateTopBottom(takeTop, percentOrItemCount), reapply);
         }
 
-        private IEnumerable<double> GetValues(int value, XLTopBottomType type, bool takeTop)
+        private double GetTopBottomFilterValue(XLTopBottomType type, int value, bool takeTop)
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            var cellsUsed = subColumn.CellsUsed(c => c.DataType == XLDataType.Number);
-            if (takeTop)
+            var columnNumbers = subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber).Select(c => c.CachedValue.GetUnifiedNumber());
+            var comparer = takeTop
+                ? Comparer<double>.Create((x, y) => -x.CompareTo(y))
+                : Comparer<double>.Create((x, y) => x.CompareTo(y));
+
+            switch (type)
             {
-                if (type == XLTopBottomType.Items)
-                {
-                    return cellsUsed.Select(c => c.GetDouble()).OrderByDescending(d => d).Take(value).Distinct();
-                }
+                case XLTopBottomType.Items:
+                    var itemCount = value;
+                    return columnNumbers.OrderBy(d => d, comparer).Take(itemCount).DefaultIfEmpty(double.NaN).LastOrDefault();
+                case XLTopBottomType.Percent:
+                    var percent = value;
+                    var materializedNumbers = columnNumbers.ToArray();
 
-                var numerics1 = cellsUsed.Select(c => c.GetDouble());
-                Int32 valsToTake1 = numerics1.Count() * value / 100;
-                return numerics1.OrderByDescending(d => d).Take(valsToTake1).Distinct();
+                    // Ceiling, so there is always at least one item.
+                    var itemCountByPercents = (int)Math.Ceiling(materializedNumbers.Length * (double)percent / 100);
+                    return materializedNumbers.OrderBy(d => d, comparer).Take(itemCountByPercents).DefaultIfEmpty(Double.NaN).LastOrDefault();
+                default:
+                    throw new NotSupportedException();
             }
-
-            if (type == XLTopBottomType.Items)
-            {
-                return cellsUsed.Select(c => c.GetDouble()).OrderBy(d => d).Take(value).Distinct();
-            }
-
-            var numerics = cellsUsed.Select(c => c.GetDouble());
-            Int32 valsToTake = numerics.Count() * value / 100;
-            return numerics.OrderBy(d => d).Take(valsToTake).Distinct();
         }
 
-        private void ShowAverage(Boolean aboveAverage)
+        private void SetAverage(Boolean aboveAverage, Boolean reapply)
         {
-            _autoFilter.IsEnabled = true;
-            _autoFilter.Column(_column).SetFilterType(XLFilterType.Dynamic)
-                .SetDynamicType(aboveAverage
-                                    ? XLFilterDynamicType.AboveAverage
-                                    : XLFilterDynamicType.BelowAverage);
-            var values = GetAverageValues(aboveAverage);
+            ResetFilter(XLFilterType.Dynamic);
+            DynamicType = aboveAverage
+                ? XLFilterDynamicType.AboveAverage
+                : XLFilterDynamicType.BelowAverage;
 
-            Clear();
-            _autoFilter.Filters.Add(_column, new List<XLFilter>());
-
-            Boolean addToList = true;
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-
-            foreach (IXLRangeRow row in rows)
-            {
-                Boolean foundOne = false;
-                foreach (double val in values)
-                {
-                    Func<Object, Boolean> condition = v => ((IComparable)v).CompareTo(val) == 0;
-                    if (addToList)
-                    {
-                        _autoFilter.Filters[_column].Add(new XLFilter
-                        {
-                            Value = val,
-                            Operator = XLFilterOperator.Equal,
-                            Connector = XLConnector.Or,
-                            Condition = condition
-                        });
-                    }
-
-                    var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
-                    row.WorksheetRow().Unhide();
-                    foundOne = true;
-                }
-
-                if (!foundOne)
-                    row.WorksheetRow().Hide();
-
-                addToList = false;
-            }
+            // `Average` is recalculated during reapply, so no need to calculate it twice.
+            DynamicValue = reapply ? double.NaN : GetAverageFilterValue();
+            AddFilter(XLFilter.CreateAverage(DynamicValue, aboveAverage), reapply);
         }
 
-        private IEnumerable<double> GetAverageValues(bool aboveAverage)
+        private double GetAverageFilterValue()
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            Double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
+            return subColumn.CellsUsed(c => c.CachedValue.IsUnifiedNumber)
+                .Select(c => c.CachedValue.GetUnifiedNumber())
+                .DefaultIfEmpty(Double.NaN)
                 .Average();
-
-            if (aboveAverage)
-            {
-                return
-                    subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
-                        .Where(c => c > average).Distinct();
-            }
-
-            return
-                subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
-                    .Where(c => c < average).Distinct();
         }
 
-        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
-                                                        XLFilterType filterType = XLFilterType.Custom)
-            where T : IComparable<T>
+        private IXLFilterConnector AddCustomFilter(XLCellValue value, XLFilterOperator op, Boolean reapply)
+        {
+            ResetFilter(XLFilterType.Custom);
+            AddFilter(XLFilter.CreateCustomFilter(value, op, XLConnector.Or), reapply);
+            return new XLFilterConnector(this);
+        }
+
+        private IXLFilterConnector AddCustomFilter(string pattern, bool match, bool reapply)
+        {
+            ResetFilter(XLFilterType.Custom);
+            AddFilter(XLFilter.CreateCustomPatternFilter(pattern, match, XLConnector.Or), reapply);
+            return new XLFilterConnector(this);
+        }
+
+        private void ResetFilter(XLFilterType type)
+        {
+            Clear(false);
+            _autoFilter.IsEnabled = true;
+            FilterType = type;
+        }
+
+        private void SwitchFilter(XLFilterType type)
         {
             _autoFilter.IsEnabled = true;
-            if (filterType == XLFilterType.Custom)
-            {
-                Clear();
-                _autoFilter.Filters.Add(_column,
-                                        new List<XLFilter>
-                                            {
-                                                new XLFilter
-                                                {
-                                                    Value = value,
-                                                    Operator = op,
-                                                    Connector = XLConnector.Or,
-                                                    Condition = condition
-                                                }
-                                            });
-            }
-            else
-            {
-                if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
-                    filterList.Add(new XLFilter
-                    {
-                        Value = value,
-                        Operator = op,
-                        Connector = XLConnector.Or,
-                        Condition = condition
-                    });
-                else
-                {
-                    _autoFilter.Filters.Add(_column,
-                                            new List<XLFilter>
-                                                {
-                                                    new XLFilter
-                                                        {
-                                                            Value = value,
-                                                            Operator = op,
-                                                            Connector = XLConnector.Or,
-                                                            Condition = condition
-                                                        }
-                                                });
-                }
-            }
-            _autoFilter.Column(_column).FilterType = filterType;
-            _autoFilter.Reapply();
-            return new XLFilterConnector(_autoFilter, _column);
+            if (FilterType == type)
+                return;
+
+            Clear(false);
+            FilterType = type;
         }
 
-        public IXLFilterColumn SetFilterType(XLFilterType value) { FilterType = value; return this; }
+        internal void AddFilter(XLFilter filter, bool reapply = false)
+        {
+            var maxFilters = FilterType switch
+            {
+                XLFilterType.None => 0,
+                XLFilterType.Regular => int.MaxValue,
+                XLFilterType.Custom => 2,
+                XLFilterType.TopBottom => 1,
+                XLFilterType.Dynamic => 1,
+                _ => throw new NotSupportedException()
+            };
+            if (_filters.Count >= maxFilters)
+                throw new InvalidOperationException($"{FilterType} filter can have max {maxFilters} conditions.");
 
-        public IXLFilterColumn SetTopBottomValue(Int32 value) { TopBottomValue = value; return this; }
+            _filters.Add(filter);
+            if (reapply)
+                _autoFilter.Reapply();
+        }
 
-        public IXLFilterColumn SetTopBottomType(XLTopBottomType value) { TopBottomType = value; return this; }
+        internal void Refresh()
+        {
+            if (FilterType == XLFilterType.Dynamic)
+            {
+                // Update average value of a filter, so it is saved correctly and filter uses
+                // correct value, even is cell values changed and avg was stale.
+                DynamicValue = GetAverageFilterValue();
+                _filters[0].Value = DynamicValue;
+            }
 
-        public IXLFilterColumn SetTopBottomPart(XLTopBottomPart value) { TopBottomPart = value; return this; }
+            if (FilterType == XLFilterType.TopBottom)
+            {
+                var takeTop = TopBottomPart == XLTopBottomPart.Top;
+                TopBottomFilterValue = GetTopBottomFilterValue(TopBottomType, TopBottomValue, takeTop);
+            }
+        }
 
-        public IXLFilterColumn SetDynamicType(XLFilterDynamicType value) { DynamicType = value; return this; }
+        internal bool Check(IXLCell cell)
+        {
+            if (_filters.Count == 0)
+                return true;
 
-        public IXLFilterColumn SetDynamicValue(Double value) { DynamicValue = value; return this; }
+            if (_filters.Count == 1)
+                return _filters[0].Condition(cell, this);
+
+            // All filter conditions are connected by a single type of logical condition. Regular
+            // filters use 'Or', custom has up to two clauses connected by 'And'/'Or' and rest is
+            // single clause.
+            var connector = _filters[1].Connector;
+            return connector switch
+            {
+                XLConnector.And => _filters.All(filter => filter.Condition(cell, this)),
+                XLConnector.Or => _filters.Any(filter => filter.Condition(cell, this)),
+                _ => throw new NotSupportedException(),
+            };
+        }
     }
 }

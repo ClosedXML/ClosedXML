@@ -57,11 +57,11 @@ namespace ClosedXML.Excel.InsertData
             }
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             foreach (var reader in _readers)
             {
-                foreach (var item in reader.GetData())
+                foreach (var item in reader.GetRecords())
                 {
                     yield return item;
                 }
@@ -76,11 +76,6 @@ namespace ClosedXML.Excel.InsertData
         public string GetPropertyName(int propertyIndex)
         {
             return GetFirstNonNullReader()?.GetPropertyName(propertyIndex);
-        }
-
-        public int GetRecordsCount()
-        {
-            return _data.Count();
         }
 
         private IInsertDataReader GetFirstNonNullReader()

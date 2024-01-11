@@ -140,7 +140,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get enumerator over used values of the range.
         /// </summary>
-        internal IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false)
+        public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false)
         {
             return !reverse ? new Enumerator(this, range) : new ReverseEnumerator(this, range);
         }
@@ -216,6 +216,14 @@ namespace ClosedXML.Excel
             return rowLut.IsUsed(address.Column - 1);
         }
 
+        public void Swap(XLSheetPoint sp1, XLSheetPoint sp2)
+        {
+            var value1 = this[sp1];
+            var value2 = this[sp2];
+            Set(sp1, in value2);
+            Set(sp2, in value1);
+        }
+
         internal void Set(XLSheetPoint point, in TElement value)
             => Set(point.Row, point.Column, in value);
 
@@ -286,7 +294,7 @@ namespace ClosedXML.Excel
         /// Enumerator that returns used values from a specified range.
         /// </summary>
         [DebuggerDisplay("{Point}:{Current}")]
-        private class Enumerator : IEnumerator<XLSheetPoint>
+        internal class Enumerator : IEnumerator<XLSheetPoint>
         {
             private readonly XLSheetRange _range;
             private Lut<TElement>.LutEnumerator _columnsEnumerator;

@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -119,12 +120,6 @@ namespace ClosedXML.Excel
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
 
-        /// <summary>
-        /// Counter increasing at workbook data change. Serves to determine if the cell formula
-        /// has to be recalculated.
-        /// </summary>
-        internal long RecalculationCounter { get; private set; }
-
         internal IXLGraphicEngine GraphicEngine { get; }
 
         internal double DpiX { get; }
@@ -133,14 +128,7 @@ namespace ClosedXML.Excel
 
         internal XLPivotCaches PivotCachesInternal { get; }
 
-        /// <summary>
-        /// Notify that workbook data has been changed which means that cached formula values
-        /// need to be re-evaluated.
-        /// </summary>
-        internal void InvalidateFormulas()
-        {
-            RecalculationCounter++;
-        }
+        internal SharedStringTable SharedStringTable { get; } = new();
 
         #region Nested Type : XLLoadSource
 
@@ -163,10 +151,12 @@ namespace ClosedXML.Excel
             get { return WorksheetsInternal; }
         }
 
+        internal XLNamedRanges NamedRangesInternal { get; }
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
-        public IXLNamedRanges NamedRanges { get; private set; }
+        public IXLNamedRanges NamedRanges => NamedRangesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
@@ -308,46 +298,70 @@ namespace ClosedXML.Excel
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
                 var name = split[1];
-                if (TryGetWorksheet(wsName, out IXLWorksheet ws))
+                if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
                     var range = ws.NamedRange(name);
                     return range ?? NamedRange(name);
                 }
                 return null;
             }
-            return NamedRanges.NamedRange(rangeName);
+            return NamedRangesInternal.NamedRange(rangeName);
         }
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            return Worksheets.TryGetWorksheet(name, out worksheet);
+            if (TryGetWorksheet(name, out XLWorksheet foundSheet))
+            {
+                worksheet = foundSheet;
+                return true;
+            }
+
+            worksheet = default;
+            return false;
+        }
+
+        internal Boolean TryGetWorksheet(String name, [NotNullWhen(true)] out XLWorksheet worksheet)
+        {
+            return WorksheetsInternal.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
         {
-            ws = null;
-            if (!rangeAddress.Contains('!')) return null;
+            if (!rangeAddress.Contains('!'))
+            {
+                ws = null;
+                return null;
+            }
 
             var split = rangeAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out ws))
+            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
             {
-                return ws.Range(split[1]);
+                ws = sheet;
+                return sheet.Range(split[1]);
             }
+
+            ws = null;
             return null;
         }
 
         public IXLCell CellFromFullAddress(String cellAddress, out IXLWorksheet ws)
         {
-            ws = null;
-            if (!cellAddress.Contains('!')) return null;
+            if (!cellAddress.Contains('!'))
+            {
+                ws = null;
+                return null;
+            }
 
             var split = cellAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out ws))
+            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
             {
-                return ws.Cell(split[1]);
+                ws = sheet;
+                return sheet.Cell(split[1]);
             }
+
+            ws = null;
             return null;
         }
 
@@ -577,14 +591,49 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
         {
-            var table = this.Worksheets
-                .SelectMany(ws => ws.Tables)
-                .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
-
-            if (table == null)
+            if (!TryGetTable(tableName, out var table, comparisonType))
                 throw new ArgumentOutOfRangeException($"Table {tableName} was not found.");
 
             return table;
+        }
+
+        /// <summary>
+        /// Try to find a table with <paramref name="tableName"/> in a workbook.
+        /// </summary>
+        internal bool TryGetTable(string tableName, out XLTable table, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            table = WorksheetsInternal
+                .SelectMany<XLWorksheet, XLTable>(ws => ws.Tables)
+                .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
+
+            return table is not null;
+        }
+
+        /// <summary>
+        /// Try to find a table that covers same area as the <paramref name="area"/> in a workbook.
+        /// </summary>
+        internal bool TryGetTable(XLBookArea area, out XLTable foundTable)
+        {
+            foreach (var sheet in WorksheetsInternal)
+            {
+                if (XLHelper.SheetComparer.Equals(sheet.Name, area.Name))
+                {
+                    foreach (var table in sheet.Tables)
+                    {
+                        if (table.Area != area.Area)
+                            continue;
+
+                        foundTable = table;
+                        return true;
+                    }
+
+                    // No other sheet has correct name.
+                    break;
+                }
+            }
+
+            foundTable = null;
+            return false;
         }
 
         public IXLWorksheet Worksheet(String name)
@@ -748,8 +797,8 @@ namespace ClosedXML.Excel
             ShowZeros = DefaultShowZeros;
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
-            NamedRanges = new XLNamedRanges(this);
-            PivotCachesInternal = new XLPivotCaches();
+            NamedRangesInternal = new XLNamedRanges(this);
+            PivotCachesInternal = new XLPivotCaches(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;
@@ -894,8 +943,10 @@ namespace ClosedXML.Excel
         /// </summary>
         public void RecalculateAllFormulas()
         {
-            InvalidateFormulas();
-            Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
+            foreach (var sheet in WorksheetsInternal)
+                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+
+            CalcEngine.Recalculate(this, null);
         }
 
         private static XLCalcEngine _calcEngineExpr;
@@ -1027,6 +1078,22 @@ namespace ClosedXML.Excel
         IXLElementProtection IXLProtectable.Unprotect(String password)
         {
             return Unprotect(password);
+        }
+
+        /// <summary>
+        /// Notify various component of a workbook that sheet has been added.
+        /// </summary>
+        internal void NotifyWorksheetAdded(XLWorksheet newSheet)
+        {
+            _calcEngine.OnAddedSheet(newSheet);
+        }
+
+        /// <summary>
+        /// Notify various component of a workbook that sheet is about to be removed.
+        /// </summary>
+        internal void NotifyWorksheetDeleting(XLWorksheet sheet)
+        {
+            _calcEngine.OnDeletingSheet(sheet);
         }
 
         public override string ToString()

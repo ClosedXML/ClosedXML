@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ClosedXML.Extensions;
 
 namespace ClosedXML.Excel
 {
@@ -132,6 +133,6 @@ namespace ClosedXML.Excel
 
         public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
 
-        public Int32 Offset => _pivotTable.PivotCache.SourceRangeFields.IndexOf(this.SourceName);
+        public Int32 Offset => _pivotTable.PivotCache.FieldNames.IndexOf(SourceName, XLHelper.NameComparer);
     }
 }

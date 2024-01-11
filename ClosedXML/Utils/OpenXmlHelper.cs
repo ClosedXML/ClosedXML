@@ -3,8 +3,7 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Collections.Generic;
-using Drawing = System.Drawing;
+using System.Linq;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ClosedXML.Utils
@@ -52,7 +51,7 @@ namespace ClosedXML.Utils
             return (defaultValue.HasValue && value == defaultValue.Value) ? null : new BooleanValue(value);
         }
 
-        public static bool GetBooleanValueAsBool(BooleanValue value, bool defaultValue)
+        public static bool GetBooleanValueAsBool(BooleanValue? value, bool defaultValue)
         {
             return (value?.HasValue ?? false) ? value.Value : defaultValue;
         }
@@ -61,23 +60,172 @@ namespace ClosedXML.Utils
         /// Convert color in OpenXML representation to ClosedXML type.
         /// </summary>
         /// <param name="openXMLColor">Color in OpenXML format.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this ColorType openXMLColor)
         {
-            return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor), colorCache);
+            return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor));
         }
 
         /// <summary>
         /// Convert color in OpenXML representation to ClosedXML type.
         /// </summary>
         /// <param name="openXMLColor">Color in OpenXML format.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color>? colorCache = null)
+        public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor)
         {
-            return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor), colorCache);
+            return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor));
         }
+
+#nullable disable
+
+        internal static void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
+        {
+            if (nfSource == null) return;
+
+            if (nfSource.NumberFormatId != null && nfSource.NumberFormatId.Value < XLConstants.NumberOfBuiltInStyles)
+                nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
+            else if (nfSource.FormatCode != null)
+                nf.Format = nfSource.FormatCode.Value;
+        }
+
+        internal static void LoadBorder(Border borderSource, IXLBorder border)
+        {
+            if (borderSource == null) return;
+
+            LoadBorderValues(borderSource.DiagonalBorder, border.SetDiagonalBorder, border.SetDiagonalBorderColor);
+
+            if (borderSource.DiagonalUp != null)
+                border.DiagonalUp = borderSource.DiagonalUp.Value;
+            if (borderSource.DiagonalDown != null)
+                border.DiagonalDown = borderSource.DiagonalDown.Value;
+
+            LoadBorderValues(borderSource.LeftBorder, border.SetLeftBorder, border.SetLeftBorderColor);
+            LoadBorderValues(borderSource.RightBorder, border.SetRightBorder, border.SetRightBorderColor);
+            LoadBorderValues(borderSource.TopBorder, border.SetTopBorder, border.SetTopBorderColor);
+            LoadBorderValues(borderSource.BottomBorder, border.SetBottomBorder, border.SetBottomBorderColor);
+        }
+
+        private static void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<XLColor, IXLStyle> setColor)
+        {
+            if (source != null)
+            {
+                if (source.Style != null)
+                    setBorder(source.Style.Value.ToClosedXml());
+                if (source.Color != null)
+                    setColor(source.Color.ToClosedXMLColor());
+            }
+        }
+
+        // Differential fills store the patterns differently than other fills
+        // Actually differential fills make more sense. bg is bg and fg is fg
+        // 'Other' fills store the bg color in the fg field when pattern type is solid
+        internal static void LoadFill(Fill openXMLFill, IXLFill closedXMLFill, Boolean differentialFillFormat)
+        {
+            if (openXMLFill == null || openXMLFill.PatternFill == null) return;
+
+            if (openXMLFill.PatternFill.PatternType != null)
+                closedXMLFill.PatternType = openXMLFill.PatternFill.PatternType.Value.ToClosedXml();
+            else
+                closedXMLFill.PatternType = XLFillPatternValues.Solid;
+
+            switch (closedXMLFill.PatternType)
+            {
+                case XLFillPatternValues.None:
+                    break;
+
+                case XLFillPatternValues.Solid:
+                    if (differentialFillFormat)
+                    {
+                        if (openXMLFill.PatternFill.BackgroundColor != null)
+                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
+                        else
+                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
+                    }
+                    else
+                    {
+                        // yes, source is foreground!
+                        if (openXMLFill.PatternFill.ForegroundColor != null)
+                            closedXMLFill.BackgroundColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
+                        else
+                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
+                    }
+                    break;
+
+                default:
+                    if (openXMLFill.PatternFill.ForegroundColor != null)
+                        closedXMLFill.PatternColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor();
+
+                    if (openXMLFill.PatternFill.BackgroundColor != null)
+                        closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor();
+                    else
+                        closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
+                    break;
+            }
+        }
+
+        internal static void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
+        {
+            if (fontSource == null) return;
+
+            fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
+            var fontColor = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault();
+            if (fontColor != null)
+                fontBase.FontColor = fontColor.ToClosedXMLColor();
+
+            var fontFamilyNumbering =
+                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
+            if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
+                fontBase.FontFamilyNumbering =
+                    (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
+            var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
+            if (runFont != null)
+            {
+                if (runFont.Val != null)
+                    fontBase.FontName = runFont.Val;
+            }
+            var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
+            if (fontSize != null)
+            {
+                if ((fontSize).Val != null)
+                    fontBase.FontSize = (fontSize).Val;
+            }
+
+            fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
+            fontBase.Shadow = GetBoolean(fontSource.Elements<Shadow>().FirstOrDefault());
+            fontBase.Strikethrough = GetBoolean(fontSource.Elements<Strike>().FirstOrDefault());
+
+            var underline = fontSource.Elements<Underline>().FirstOrDefault();
+            if (underline != null)
+            {
+                fontBase.Underline = underline.Val != null ? underline.Val.Value.ToClosedXml() : XLFontUnderlineValues.Single;
+            }
+
+            var verticalTextAlignment = fontSource.Elements<VerticalTextAlignment>().FirstOrDefault();
+            if (verticalTextAlignment is not null)
+            {
+                fontBase.VerticalAlignment = verticalTextAlignment.Val is not null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
+            }
+
+            var fontScheme = fontSource.Elements<FontScheme>().FirstOrDefault();
+            if (fontScheme is not null)
+            {
+                fontBase.FontScheme = fontScheme.Val is not null ? fontScheme.Val.Value.ToClosedXml() : XLFontScheme.None;
+            }
+        }
+
+        internal static Boolean GetBoolean(BooleanPropertyType property)
+        {
+            if (property != null)
+            {
+                if (property.Val != null)
+                    return property.Val;
+                return true;
+            }
+
+            return false;
+        }
+
+#nullable enable
 
         #endregion Public Methods
 
@@ -88,20 +236,13 @@ namespace ClosedXML.Utils
         /// </summary>
         /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>.
         /// Since these types do not implement a common interface we use dynamic.</param>
-        /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color>? colorCache)
+        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor)
         {
             XLColor? retVal = null;
-            if (openXMLColor.Rgb != null)
+            if (openXMLColor.Rgb?.Value is not null)
             {
-                String htmlColor = "#" + openXMLColor.Rgb.Value;
-                if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
-                {
-                    thisColor = ColorStringParser.ParseFromArgb(htmlColor);
-                    colorCache?.Add(htmlColor, thisColor);
-                }
-
+                var thisColor = ColorStringParser.ParseFromArgb(openXMLColor.Rgb.Value.AsSpan());
                 retVal = XLColor.FromColor(thisColor);
             }
             else if (openXMLColor.Indexed is not null && openXMLColor.Indexed <= 64)

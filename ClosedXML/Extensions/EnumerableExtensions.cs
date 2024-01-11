@@ -33,6 +33,23 @@ namespace ClosedXML.Excel
             return new HashSet<T>(source);
         }
 
+        /// <summary>
+        /// Skip last element of a sequence.
+        /// </summary>
+        public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
+        {
+            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+                yield break;
+
+            T prev = enumerator.Current;
+            while (enumerator.MoveNext())
+            {
+                yield return prev;
+                prev = enumerator.Current;
+            }
+        }
+
         public static Boolean HasDuplicates<T>(this IEnumerable<T> source)
         {
             HashSet<T> distinctItems = new HashSet<T>();

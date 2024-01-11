@@ -1,7 +1,6 @@
-version: 0.102.0.{build}
+version: 0.104.0.{build}
 
-os: Visual Studio 2019
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 environment:
   AppVeyor: APPVEYOR
@@ -54,8 +53,7 @@ build:
 artifacts:
   - path: ClosedXML/bin/%CONFIGURATION%/*/ClosedXML.dll
   - path: ClosedXML/bin/%CONFIGURATION%/*.nupkg
-  - path: ClosedXML.SixLabors/bin/%CONFIGURATION%/*/ClosedXML.SixLabors.dll
-  - path: ClosedXML.SixLabors/bin/%CONFIGURATION%/*.nupkg
+  - path: ClosedXML/bin/%CONFIGURATION%/*.snupkg
 
 nuget:
   project_feed: true

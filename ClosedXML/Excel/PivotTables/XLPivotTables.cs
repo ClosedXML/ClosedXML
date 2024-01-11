@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotTables : IXLPivotTables
+    internal class XLPivotTables : IXLPivotTables, IEnumerable<XLPivotTable>
     {
         private readonly Dictionary<String, XLPivotTable> _pivotTables = new(StringComparer.OrdinalIgnoreCase);
 
@@ -35,26 +35,16 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
+            var area = XLBookArea.From(range);
             var pivotCaches = Worksheet.Workbook.PivotCachesInternal;
-            var existingPivotCache = pivotCaches.GetAll(range).FirstOrDefault(s => s.PivotSourceReference.SourceTable is null);
-            if (existingPivotCache is null)
-            {
-                existingPivotCache = pivotCaches.Add(range);
-            }
-
-            return Add(name, targetCell, existingPivotCache);
+            var existingPivotCache = pivotCaches.Find(area);
+            var pivotCache = existingPivotCache ?? pivotCaches.Add(area);
+            return Add(name, targetCell, pivotCache);
         }
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            var pivotCaches = Worksheet.Workbook.PivotCachesInternal;
-            var existingPivotCache = pivotCaches.GetAll(table).FirstOrDefault(s => s.PivotSourceReference.SourceTable is not null);
-            if (existingPivotCache is null)
-            {
-                existingPivotCache = pivotCaches.Add(table);
-            }
-
-            return Add(name, targetCell, existingPivotCache);
+            return Add(name, targetCell, (IXLRange)table);
         }
 
         public Boolean Contains(String name)
@@ -77,14 +67,24 @@ namespace ClosedXML.Excel
             return PivotTable(name);
         }
 
-        public IEnumerator<IXLPivotTable> GetEnumerator()
+        IEnumerator<IXLPivotTable> IEnumerable<IXLPivotTable>.GetEnumerator()
         {
-            return _pivotTables.Values.Cast<IXLPivotTable>().GetEnumerator();
+            return GetEnumerator();
+        }
+
+        IEnumerator<XLPivotTable> IEnumerable<XLPivotTable>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public Dictionary<string, XLPivotTable>.ValueCollection.Enumerator GetEnumerator()
+        {
+            return _pivotTables.Values.GetEnumerator();
         }
 
         internal void Add(String name, IXLPivotTable pivotTable)

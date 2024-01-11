@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
             IXLRanges retVal = new XLRanges();
             foreach (var ws in worksheets)
             {
-                var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where(r => r.Worksheet == ws));
+                var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where(r => r.Worksheet == ws).ToList());
                 var consRanges = matrix.GetConsolidatedRanges();
                 foreach (var consRange in consRanges)
                 {
@@ -69,7 +69,7 @@ namespace ClosedXML.Excel
             /// </summary>
             /// <param name="worksheet">Current worksheet.</param>
             /// <param name="ranges">Ranges to be consolidated. They are expected to belong to the current worksheet, no check is performed.</param>
-            public XLRangeConsolidationMatrix(IXLWorksheet worksheet, IEnumerable<IXLRange> ranges)
+            public XLRangeConsolidationMatrix(IXLWorksheet worksheet, IReadOnlyCollection<IXLRange> ranges)
             {
                 _worksheet = worksheet;
                 PrepareBitMatrix(ranges);

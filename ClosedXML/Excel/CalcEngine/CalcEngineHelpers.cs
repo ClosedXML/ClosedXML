@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
                 };
             });
 
-        internal static bool ValueSatisfiesCriteria(object? value, object criteria, CalcEngine ce)
+        internal static bool ValueSatisfiesCriteria(object? value, object criteria, XLCalcEngine ce)
         {
             // safety...
             if (value == null)

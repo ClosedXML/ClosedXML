@@ -228,12 +228,24 @@ text and a property ``ShowPhonetics`` must be set for the cell.
 Font scheme
 ###########
 
-Rich text can have assigned a font scheme. Font scheme associates text with
-one of fonts of a theme. Theme has major font scheme (headings and such)
-and a minor font scheme (paragraphs, body ect.).
+Font can depend on a font scheme through property ``IXFontBase.FontScheme``.
+Font scheme associates text with one of fonts of a theme. Theme has major font
+scheme (headings and such) and a minor font scheme (paragraphs, body ect.).
 
-When theme changes, Excel updates font of the text associated with a theme
-to use font for the scheme of a new theme.
+Font scheme is part of a style and can be set for a content of a ``IXLCell``,
+``IXLRichText`` and other places.
+
+.. note::
+   Font scheme has a precedence over specified font. Even if text has
+   explicitely specified font, Excel will use and display font from the font
+   scheme.
+   
+   Example: Although ``ws.Cell("A1").SetValue("Text").Style.Font.SetFontName("Consolas").Font.SetFontScheme(XLFontScheme.Major);``
+   specifies that ``Text`` should be displayed with font *Consolas*, Excel
+   will use font of the major scheme (for default theme, it is *Cambria*).
+
+When user changes a theme, Excel dynamically updates font of texts associated
+with the font scheme to the font of selected theme.
 
 .. image:: img/cell-format-rich-text-scheme.png
   :alt: A demonstration of how the text looks before theme change and after theme change.
@@ -247,11 +259,9 @@ to use font for the scheme of a new theme.
    
    cell.GetRichText()
        .AddText("Major scheme")
-           .SetFontName("Arial")
            .SetFontScheme(XLFontScheme.Major)
        .AddText(" ")
        .AddText("Minor scheme")
-           .SetFontName(@"Consolas")
            .SetFontScheme(XLFontScheme.Minor)
        .AddText(" ")
        .AddText("No scheme")

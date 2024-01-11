@@ -1,5 +1,4 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,27 +7,29 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalcContext
     {
-        private readonly CalcEngine _calcEngine;
+        private readonly XLCalcEngine _calcEngine;
         private readonly XLWorkbook? _workbook;
         private readonly XLWorksheet? _worksheet;
         private readonly IXLAddress? _formulaAddress;
+        private readonly bool _recursive;
 
-        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLCell cell)
+        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLCell cell)
             : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
         {
         }
 
-        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress)
+        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress, bool recursive = false)
         {
             _calcEngine = calcEngine;
             _workbook = workbook;
             _worksheet = worksheet;
             _formulaAddress = formulaAddress;
+            _recursive = recursive;
             Culture = culture;
         }
 
         // LEGACY: Remove once legacy functions are migrated
-        internal CalcEngine CalcEngine => _calcEngine ?? throw new MissingContextException();
+        internal XLCalcEngine CalcEngine => _calcEngine ?? throw new MissingContextException();
 
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
@@ -61,17 +62,41 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public bool IsArrayCalculation { get; set; }
 
-        internal ScalarValue GetCellValue(XLWorksheet? worksheet, int rowNumber, int columnNumber)
+        /// <summary>
+        /// Sheet that is being recalculated. If set, formula can read dirty
+        /// values from other sheets, but not from this sheetId.
+        /// </summary>
+        public uint? RecalculateSheetId { get; set; }
+
+        internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
+
+        internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
-            worksheet ??= Worksheet;
-            var cell = worksheet.GetCell(rowNumber, columnNumber);
-            if (cell is null)
-                return ScalarValue.Blank;
+            sheet ??= Worksheet;
+            var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
+            var point = new XLSheetPoint(rowNumber, columnNumber);
+            var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
 
-            if (cell.IsEvaluating)
-                throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
+            if (formula is null)
+                return valueSlice.GetCellValue(point);
 
-            return cell.Value;
+            if (!formula.IsDirty)
+                return valueSlice.GetCellValue(point);
+
+            // Used when only one sheet should be recalculated, leaving other sheets with their data.
+            if (RecalculateSheetId is not null && sheet.SheetId != RecalculateSheetId.Value)
+                return valueSlice.GetCellValue(point);
+
+            // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
+            // These functions are not a part of calculation chain and thus reordering a chain
+            // for them doesn't make sense.
+            if (_recursive)
+            {
+                var cell = sheet.GetCell(rowNumber, columnNumber);
+                return cell?.Value ?? Blank.Value;
+            }
+
+            throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(rowNumber, columnNumber)));
         }
 
         /// <summary>

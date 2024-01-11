@@ -48,6 +48,13 @@ namespace ClosedXML.Excel
         void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete);
 
         /// <summary>
+        /// Get all used points in a slice.
+        /// </summary>
+        /// <param name="range">Range to iterate over.</param>
+        /// <param name="reverse"><c>false</c> = left to right, top to bottom. <c>true</c> = right to left, bottom to top.</param>
+        IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false);
+
+        /// <summary>
         /// Shift all values at the <paramref name="range"/> and all cells below it
         /// down by <see cref="XLSheetRange.Height"/> of the <paramref name="range"/>.
         /// The insert area is cleared.
@@ -59,8 +66,16 @@ namespace ClosedXML.Excel
         /// to the right by <see cref="XLSheetRange.Width"/> of the <paramref name="range"/>.
         /// The insert area is cleared.
         /// </summary>
-        public void InsertAreaAndShiftRight(XLSheetRange range);
+        void InsertAreaAndShiftRight(XLSheetRange range);
 
-        public bool IsUsed(XLSheetPoint address);
+        /// <summary>
+        /// Does slice contains a non-default value at specified point?
+        /// </summary>
+        bool IsUsed(XLSheetPoint address);
+
+        /// <summary>
+        /// Swap content of two points.
+        /// </summary>
+        void Swap(XLSheetPoint sp1, XLSheetPoint sp2);
     }
 }

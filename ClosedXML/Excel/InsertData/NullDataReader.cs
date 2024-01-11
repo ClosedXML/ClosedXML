@@ -6,6 +6,7 @@ namespace ClosedXML.Excel.InsertData
 {
     internal class NullDataReader : IInsertDataReader
     {
+        private readonly XLCellValue[] _row = { Blank.Value };
         private readonly int _count;
 
         public NullDataReader(IEnumerable<object> nulls)
@@ -13,13 +14,9 @@ namespace ClosedXML.Excel.InsertData
             _count = nulls.Count();
         }
 
-        public IEnumerable<IEnumerable<object?>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
-            var res = new object?[] { null }.AsEnumerable();
-            for (int i = 0; i < _count; i++)
-            {
-                yield return res;
-            }
+            return Enumerable.Repeat(_row, _count);
         }
 
         public int GetPropertiesCount()
@@ -30,11 +27,6 @@ namespace ClosedXML.Excel.InsertData
         public string? GetPropertyName(int propertyIndex)
         {
             return null;
-        }
-
-        public int GetRecordsCount()
-        {
-            return _count;
         }
     }
 }

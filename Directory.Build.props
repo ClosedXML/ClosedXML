@@ -5,18 +5,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.102.0-rc</Version>
+    <Version>0.104.0-preview2</Version>
   </PropertyGroup>
 
   <!-- Set common properties regarding assembly information and nuget packages -->
   <PropertyGroup>
     <Product>ClosedXML</Product>
 
-    <Authors>Francois Botha, Jan Havlíček, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
-    <Owners>Francois Botha, Jan Havlíček, Aleksei Pankratev</Owners>
-    <Company />
+    <Authors>Jan Havlíček, Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
+    <Owners>Jan Havlíček, Francois Botha, Aleksei Pankratev</Owners>
 
-    <Copyright>MIT</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <PackageIcon>nuget-logo.png</PackageIcon>
@@ -29,14 +27,27 @@
     <!-- Sourcelink: https://github.com/dotnet/sourcelink/ -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Nuget won't accept dll in nuget and pdb in snupkg because they have different checksum.
+         That is likely causes by Fody https://github.com/jbevain/cecil/issues/610. In the meantime,
+         just include pdb directly to nuget. Pdb also has to embed untracked sources (likely sources
+         for Polyfill package, because they are not a stored in repository). -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 
     <LangVersion>9.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SignAssembly>true</SignAssembly>
+
+    <!-- RBush is not strongly named and won't be. Disable signing, until I make a strongly named fork of RBush -->
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SourceRoot)/ClosedXML.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <!-- Make deterministic build (same binary is produced regardless of the machine building it) for CI -->
+  <PropertyGroup Condition="'$(APPVEYOR)' != ''">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <!-- Additional properties that might not be applicable to a local dev environment -->

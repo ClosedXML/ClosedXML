@@ -106,6 +106,17 @@ namespace ClosedXML.Excel
         public static String ToOpenXml(this XLFontScheme value)
             => XLFontSchemeStrings[(int)value];
 
+        public static FontSchemeValues ToOpenXmlEnum(this XLFontScheme value)
+        {
+            return value switch
+            {
+                XLFontScheme.None => FontSchemeValues.None,
+                XLFontScheme.Major => FontSchemeValues.Major,
+                XLFontScheme.Minor => FontSchemeValues.Minor,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
         public static PatternValues ToOpenXml(this XLFillPatternValues value)
         {
             switch (value)

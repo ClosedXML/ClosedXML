@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotFields : IXLPivotFields
     {
-        private readonly Dictionary<String, IXLPivotField> _pivotFields = new Dictionary<string, IXLPivotField>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, IXLPivotField> _pivotFields = new(XLHelper.NameComparer);
         private readonly XLPivotTable _pivotTable;
 
         internal XLPivotFields(XLPivotTable pivotTable)
@@ -26,8 +26,8 @@ namespace ClosedXML.Excel
 
         public IXLPivotField Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.SourceRangeFields.Contains(sourceName))
-                throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.PivotCache.FieldNames.Contains(sourceName, XLHelper.NameComparer))
+                throw new ArgumentOutOfRangeException(nameof(sourceName), $"The column '{sourceName}' does not appear in the source range.");
 
             var pivotField = new XLPivotField(_pivotTable, sourceName) { CustomName = customName };
             _pivotFields.Add(sourceName, pivotField);

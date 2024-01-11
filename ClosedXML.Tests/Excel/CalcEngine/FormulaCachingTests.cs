@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -9,32 +8,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class FormulaCachingTests
     {
-        [Test]
-        public void NewWorkbookDoesNotNeedRecalculation()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                var cell = sheet.Cell(1, 1);
-
-                Assert.AreEqual(0, wb.RecalculationCounter);
-                Assert.IsFalse(cell.NeedsRecalculation);
-            }
-        }
-
-        [Test]
-        public void EditCellCausesCounterIncreasing()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                var cell = sheet.Cell(1, 1);
-                cell.Value = "1234567";
-
-                Assert.Greater(wb.RecalculationCounter, 0);
-            }
-        }
-
         [Test]
         public void StaticCellDoesNotNeedRecalculation()
         {

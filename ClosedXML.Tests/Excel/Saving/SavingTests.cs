@@ -802,5 +802,57 @@ namespace ClosedXML.Tests.Excel.Saving
                 },
                 @"Other\Parts\WorksheetWithDrawingCanBeModified-output.xlsx");
         }
+
+        [Test]
+        public void CorrectlySaveValidationWithSheetReference()
+        {
+            // When validation with sheet reference loading was first implemented, there was a
+            // disconnect between where those validations were being loaded from and where they
+            // were being saved to. This led to exceptions being thrown when these validations
+            // were loaded/saved multiple times, so this test makes sure that the fix for that
+            // issue continues to work by forcing multiple load/save cycles.
+
+            var filename1 = $"test-{Guid.NewGuid()}.xlsx";
+            var filename2 = $"test-{Guid.NewGuid()}.xlsx";
+            try
+            {
+                var path = TestHelper.GetResourcePath(@"TryToLoad\ValidationWithSheetReference.xlsx");
+                using var stream = TestHelper.GetStreamFromResource(path);
+
+                using var originalWorkbook = new XLWorkbook(stream);
+                Assert.DoesNotThrow(() => originalWorkbook.SaveAs(filename1));
+
+                using var workbook1 = new XLWorkbook(filename1);
+                Assert.DoesNotThrow(() => workbook1.SaveAs(filename2));
+
+                using var workbook2 = new XLWorkbook(filename2);
+                var ws = workbook2.Worksheet("UI Sheet");
+                var B2 = ws.Cell("B2");
+                Assert.AreEqual(XLAllowedValues.List, B2.GetDataValidation().AllowedValues);
+                Assert.AreEqual("$E$1:$E$4", B2.GetDataValidation().Value);
+                var A2 = ws.Cell("A2");
+                Assert.AreEqual(XLAllowedValues.List, A2.GetDataValidation().AllowedValues);
+                Assert.AreEqual("ValuesSheet!$A$1:$A$4", A2.GetDataValidation().Value);
+            }
+            finally
+            {
+                File.Delete(filename1);
+                File.Delete(filename2);
+            }
+        }
+
+        [Test]
+        public void FormControlsArePreserved()
+        {
+            // The sheet contains three form controls: two radio buttons and group box.
+            // Form controls are rather complex and this test ensures that the saved
+            // file still has VML part (that is the source of truth), drawing part
+            // (likely a replacement in a decade or two) and three control parts.
+            //
+            // Also check that custom text of the form controls is preserved (stored in VML).
+            TestHelper.LoadSaveAndCompare(
+                @"Other\Shapes\sheet-with-form-controls-input.xlsx",
+                @"Other\Shapes\sheet-with-form-controls-output.xlsx");
+        }
     }
 }

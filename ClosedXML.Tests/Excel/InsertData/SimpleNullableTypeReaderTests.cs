@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel;
 
 namespace ClosedXML.Tests.Excel.InsertData
 {
@@ -40,17 +41,17 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(_data);
-            Assert.AreEqual(3, reader.GetRecordsCount());
+            Assert.AreEqual(3, reader.GetRecords().Count());
         }
 
         [Test]
         public void CanReadValues()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(_data);
-            var result = reader.GetData();
+            var result = reader.GetRecords();
 
             Assert.AreEqual(1, result.First().Single());
-            Assert.AreEqual(null, result.Last().Single());
+            Assert.AreEqual(Blank.Value, result.Last().Single());
         }
     }
 }

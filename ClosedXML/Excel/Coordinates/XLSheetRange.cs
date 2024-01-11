@@ -1,6 +1,5 @@
-#nullable disable
-
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
@@ -40,6 +39,28 @@ namespace ClosedXML.Excel
         public int Width => LastPoint.Column - FirstPoint.Column + 1;
 
         public int Height => LastPoint.Row - FirstPoint.Row + 1;
+
+        /// <summary>
+        /// The left column number of the range. From 1 to <see cref="XLHelper.MaxColumnNumber"/>.
+        /// </summary>
+        public int LeftColumn => FirstPoint.Column;
+
+        /// <summary>
+        /// The right column number of the range. From 1 to <see cref="XLHelper.MaxColumnNumber"/>.
+        /// Greater or equal to <see cref="LeftColumn"/>.
+        /// </summary>
+        public int RightColumn => LastPoint.Column;
+
+        /// <summary>
+        /// The top row number of the range. From 1 to <see cref="XLHelper.MaxRowNumber"/>.
+        /// </summary>
+        public int TopRow => FirstPoint.Row;
+
+        /// <summary>
+        /// The bottom row number of the range. From 1 to <see cref="XLHelper.MaxRowNumber"/>.
+        /// Greater or equal to <see cref="TopRow"/>.
+        /// </summary>
+        public int BottomRow => LastPoint.Row;
 
         public override bool Equals(object obj)
         {
@@ -150,6 +171,26 @@ namespace ClosedXML.Excel
                 new XLSheetPoint(LastPoint.Row, XLHelper.MaxColumnNumber));
         }
 
+        /// <summary>
+        /// Return a range that contains additional number of rows below.
+        /// </summary>
+        internal XLSheetRange ExtendBelow(int rows)
+        {
+            Debug.Assert(rows >= 0);
+            var row = Math.Min(LastPoint.Row + rows, XLHelper.MaxRowNumber);
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(row, LastPoint.Column));
+        }
+
+        /// <summary>
+        /// Return a range that contains additional number of columns to the right.
+        /// </summary>
+        internal XLSheetRange ExtendRight(int columns)
+        {
+            Debug.Assert(columns >= 0);
+            var column = Math.Min(LastPoint.Column + columns, XLHelper.MaxColumnNumber);
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(LastPoint.Row, column));
+        }
+
         internal static XLSheetRange FromRangeAddress<T>(T address)
             where T : IXLRangeAddress
         {
@@ -166,6 +207,91 @@ namespace ClosedXML.Excel
             return
                 point.Row >= FirstPoint.Row && point.Row <= LastPoint.Row &&
                 point.Column >= FirstPoint.Column && point.Column <= LastPoint.Column;
+        }
+
+        /// <summary>
+        /// Create a new range from this one by taking a number of rows from the bottom row up.
+        /// </summary>
+        /// <param name="rows">How many rows to take, must be at least one.</param>
+        public XLSheetRange SliceFromBottom(int rows)
+        {
+            if (rows < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(new XLSheetPoint(BottomRow - rows + 1, FirstPoint.Column), LastPoint);
+        }
+
+        /// <summary>
+        /// Create a new range from this one by taking a number of rows from the top row down.
+        /// </summary>
+        /// <param name="rows">How many rows to take, must be at least one.</param>
+        public XLSheetRange SliceFromTop(int rows)
+        {
+            if (rows < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(TopRow + rows - 1, LastPoint.Column));
+        }
+
+        /// <summary>
+        /// Create a new range from this one by taking a number of rows from the bottom row up.
+        /// </summary>
+        /// <param name="columns">How many columns to take, must be at least one.</param>
+        public XLSheetRange SliceFromRight(int columns)
+        {
+            if (columns < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(new XLSheetPoint(FirstPoint.Row, RightColumn - columns + 1), LastPoint);
+        }
+
+        /// <summary>
+        /// Create a new sheet range that is a result of range operator (<c>:</c>)
+        /// of this sheet range and <paramref name="otherRange"/>
+        /// </summary>
+        /// <param name="otherRange">The other range.</param>
+        /// <returns>A range that contains both this range and <paramref name="otherRange"/>.</returns>
+        public XLSheetRange Range(XLSheetRange otherRange)
+        {
+            var topRow = Math.Min(TopRow, otherRange.TopRow);
+            var leftColumn = Math.Min(LeftColumn, otherRange.LeftColumn);
+            var bottomRow = Math.Max(BottomRow, otherRange.BottomRow);
+            var rightColumn = Math.Max(RightColumn, otherRange.RightColumn);
+            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+        }
+
+        /// <summary>
+        /// Do an intersection between this range and other range.
+        /// </summary>
+        /// <param name="other">Other range.</param>
+        /// <returns>The intersection range if it exists and is non-empty or null, if intersection doesn't exist.</returns>
+        public XLSheetRange? Intersect(XLSheetRange other)
+        {
+            var leftColumn = Math.Max(LeftColumn, other.LeftColumn);
+            var rightColumn = Math.Min(RightColumn, other.RightColumn);
+            var topRow = Math.Max(TopRow, other.TopRow);
+            var bottomRow = Math.Min(BottomRow, other.BottomRow);
+
+            if (bottomRow < topRow || rightColumn < leftColumn)
+                return null;
+
+            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+        }
+
+        /// <summary>
+        /// Does range cover all rows, from top row to bottom row of a sheet.
+        /// </summary>
+        internal bool IsEntireColumn()
+        {
+            return TopRow == 1 && BottomRow == XLHelper.MaxRowNumber;
+        }
+
+        /// <summary>
+        /// Does range cover all columns, from first to last column of a sheet.
+        /// </summary>
+        public bool IsEntireRow()
+        {
+            return LeftColumn == 1 && RightColumn == XLHelper.MaxColumnNumber;
         }
     }
 }

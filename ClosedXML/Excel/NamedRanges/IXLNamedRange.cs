@@ -40,6 +40,14 @@ namespace ClosedXML.Excel
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
         IXLRanges Ranges { get; }
+
+        /// <summary>
+        /// A formula of the named range. In most cases, name is just a range (e.g.
+        /// <c>Sheet5!$A$4</c>), but it can be a constant, lambda or other values.
+        /// The name formula can contain a bang reference (e.g. reference without
+        /// a sheet, but with exclamation mark <c>!$A$5</c>), but can't contain plain
+        /// local cell references (i.e. references without a sheet like <c>A5</c>).
+        /// </summary>
         String RefersTo { get; set; }
 
         /// <summary>

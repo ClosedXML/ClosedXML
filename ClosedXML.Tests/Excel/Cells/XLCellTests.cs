@@ -874,10 +874,10 @@ namespace ClosedXML.Tests
                 A2.FormulaA1 = "A1 + 1";
 
                 Assert.Throws(
-                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("cycle"),
                     () => _ = A1.Value);
                 Assert.Throws(
-                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("cycle"),
                     () => _ = A2.Value);
             }
         }
@@ -988,6 +988,47 @@ namespace ClosedXML.Tests
             var c = ws.FirstCell();
 
             Assert.Throws<FormatException>(() => c.ToString("dummy"));
+        }
+
+        [Test]
+        public void Property_Active_is_true_when_cell_has_same_address_as_active_cell_in_worksheet()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.IsNull(ws.ActiveCell);
+            Assert.False(ws.Cell(1, 1).Active);
+
+            ws.ActiveCell = ws.Cell("C4");
+            Assert.True(ws.Cell("C4").Active);
+            Assert.False(ws.Cell("C5").Active);
+
+            ws.ActiveCell = null;
+            Assert.False(ws.Cell("C4").Active);
+        }
+
+        [Test]
+        public void Property_Active_deactivates_cell_only_when_the_cell_is_active()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.ActiveCell = ws.Cell("A2");
+
+            ws.Cell("B2").Active = false;
+            Assert.AreEqual(ws.Cell("A2"), ws.ActiveCell);
+
+            ws.Cell("A2").Active = false;
+            Assert.IsNull(ws.ActiveCell);
+        }
+
+        [Test]
+        public void Property_Active_sets_cell_as_active_cell_of_worksheet()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.IsNull(ws.ActiveCell);
+
+            ws.Cell("B2").Active = true;
+            Assert.AreEqual(ws.Cell("B2"), ws.ActiveCell);
         }
     }
 }

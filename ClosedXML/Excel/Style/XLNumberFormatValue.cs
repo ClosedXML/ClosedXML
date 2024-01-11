@@ -52,5 +52,12 @@ namespace ClosedXML.Excel
         {
             return 1507230172 + Key.GetHashCode();
         }
+
+        internal XLNumberFormatValue WithNumberFormatId(int numberFormatId)
+        {
+            var keyCopy = Key;
+            keyCopy.NumberFormatId = numberFormatId;
+            return FromKey(ref keyCopy);
+        }
     }
 }

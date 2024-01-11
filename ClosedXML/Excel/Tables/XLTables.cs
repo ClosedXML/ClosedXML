@@ -8,24 +8,37 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLTables : IXLTables
+    internal class XLTables : IXLTables, IEnumerable<XLTable>
     {
-        private readonly Dictionary<String, IXLTable> _tables;
+        private readonly Dictionary<String, XLTable> _tables;
 
         public XLTables()
         {
-            _tables = new Dictionary<String, IXLTable>(StringComparer.OrdinalIgnoreCase);
+            _tables = new Dictionary<String, XLTable>(StringComparer.OrdinalIgnoreCase);
             Deleted = new HashSet<String>();
         }
 
-        internal ICollection<String> Deleted { get; private set; }
+        internal ICollection<String> Deleted { get; }
 
         #region IXLTables Members
 
+        bool IXLTables.TryGetTable(string tableName, out IXLTable table)
+        {
+            if (TryGetTable(tableName, out var foundTable))
+            {
+                table = foundTable;
+                return true;
+            }
+
+            table = default;
+            return false;
+        }
+
         public void Add(IXLTable table)
         {
-            _tables.Add(table.Name, table);
-            (table as XLTable)?.OnAddedToTables();
+            var xlTable = (XLTable)table;
+            _tables.Add(table.Name, xlTable);
+            xlTable.OnAddedToTables();
         }
 
         public IXLTables Clear(XLClearOptions clearOptions = XLClearOptions.All)
@@ -39,15 +52,16 @@ namespace ClosedXML.Excel
             return _tables.ContainsKey(name);
         }
 
-        public IEnumerator<IXLTable> GetEnumerator()
+        public Dictionary<string, XLTable>.ValueCollection.Enumerator GetEnumerator()
         {
             return _tables.Values.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator<XLTable> IEnumerable<XLTable>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator<IXLTable> IEnumerable<IXLTable>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Remove(Int32 index)
         {
@@ -56,14 +70,14 @@ namespace ClosedXML.Excel
 
         public void Remove(String name)
         {
-            if (!_tables.TryGetValue(name, out IXLTable table))
+            if (!_tables.TryGetValue(name, out var table))
                 throw new ArgumentOutOfRangeException(nameof(name), $"Unable to delete table because the table name {name} could not be found.");
 
             _tables.Remove(name);
 
-            var relId = (table as XLTable)?.RelId;
+            var relId = table.RelId;
 
-            if (relId != null)
+            if (relId is not null)
                 Deleted.Add(relId);
         }
 
@@ -74,13 +88,13 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(String name)
         {
-            if (TryGetTable(name, out IXLTable table))
+            if (TryGetTable(name, out XLTable table))
                 return table;
 
             throw new ArgumentOutOfRangeException(nameof(name), $"Table {name} was not found.");
         }
 
-        public bool TryGetTable(string tableName, out IXLTable table)
+        internal bool TryGetTable(string tableName, out XLTable table)
         {
             return _tables.TryGetValue(tableName, out table);
         }

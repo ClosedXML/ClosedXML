@@ -408,6 +408,19 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
+        [TestCase("Amount")]
+        [TestCase("AMOUNT")]
+        [TestCase("amount")]
+        public void FieldNames_of_XLTable_are_case_insensitive(string fieldName)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var table = ws.Cell("A1").InsertTable(new[] { new { Amount = 1 } });
+
+            var expectedField = table.Field(0);
+            Assert.AreSame(expectedField, table.Field(fieldName));
+        }
+
         [Test]
         public void ChangeFieldName()
         {
@@ -662,6 +675,30 @@ namespace ClosedXML.Tests.Excel
                 ws.FirstCell().InsertTable(dt, true);
                 Assert.Throws<InvalidOperationException>(() => ws.FirstCell().CellRight().InsertTable(dt, true));
             }
+        }
+
+        [Test]
+        public void OverwritingTableHeaders()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var table = ws.Cell("A1").InsertTable(new object[]
+            {
+                ("Header 1", "Header 2"),
+                (1, 2)
+            }, true);
+
+            // Overwrite the headers of the table with non-string values
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (XLError.IncompatibleValue, 7)
+            });
+
+            // The non-string data inserted to headers were converted to strings and used as a field names.
+            Assert.AreEqual("#VALUE!", table.Field(0).Name);
+            Assert.AreEqual("#VALUE!", ws.Cell("A1").Value);
+            Assert.AreEqual("7", table.Field(1).Name);
+            Assert.AreEqual("7", ws.Cell("B1").Value);
         }
 
         [Test]

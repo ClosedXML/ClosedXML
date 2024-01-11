@@ -133,14 +133,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var counterBeforeSetter = wb.RecalculationCounter;
             Assert.False(ws.Cell("A1").NeedsRecalculation);
             Assert.False(ws.Cell("A2").NeedsRecalculation);
 
             ws.Range("A1:A2").FormulaArrayA1 = "ABS(-3)";
 
-            var counterAfterSetter = wb.RecalculationCounter;
-            Assert.AreEqual(counterBeforeSetter + 1, counterAfterSetter);
             Assert.True(ws.Cell("A1").NeedsRecalculation);
             Assert.True(ws.Cell("A2").NeedsRecalculation);
         }
@@ -155,7 +152,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.That(() => _ = ws.Cell("A2").Value,
                 Throws.TypeOf<InvalidOperationException>()
-                    .With.Message.EqualTo("Cell A2 is a part of circular reference."));
+                    .With.Message.EqualTo("Formula in a cell '$Sheet1'!$A1 is part of a cycle."));
         }
     }
 }

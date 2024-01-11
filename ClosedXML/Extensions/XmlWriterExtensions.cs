@@ -9,6 +9,13 @@ namespace ClosedXML.Extensions
 {
     internal static class XmlWriterExtensions
     {
+        public static void WriteAttribute(this XmlWriter w, String attrName, String value)
+        {
+            w.WriteStartAttribute(attrName);
+            w.WriteValue(value);
+            w.WriteEndAttribute();
+        }
+
         public static void WriteAttribute(this XmlWriter w, String attrName, Int32 value)
         {
             w.WriteStartAttribute(attrName);
@@ -27,6 +34,23 @@ namespace ClosedXML.Extensions
         {
             w.WriteStartAttribute(attrName);
             w.WriteNumberValue(value);
+            w.WriteEndAttribute();
+        }
+
+        public static void WriteAttribute(this XmlWriter w, String attrName, Boolean value)
+        {
+            w.WriteStartAttribute(attrName);
+            w.WriteValue(value ? "1" : "0");
+            w.WriteEndAttribute();
+        }
+
+        /// <summary>
+        /// Write date in a format <c>2015-01-01T00:00:00</c> (ignore kind).
+        /// </summary>
+        public static void WriteAttribute(this XmlWriter w, String attrName, DateTime value)
+        {
+            w.WriteStartAttribute(attrName);
+            w.WriteValue(value.ToString("s"));
             w.WriteEndAttribute();
         }
 

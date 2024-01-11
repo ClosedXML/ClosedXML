@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -63,6 +64,26 @@ namespace ClosedXML.Tests.Excel
 
                 return TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i)));
             }
+        }
+        
+        [Test]
+        public void CorrectlyLoadValidationWithSheetReference()
+        {
+            // Arrange
+            var path = TestHelper.GetResourcePath(@"TryToLoad\ValidationWithSheetReference.xlsx");
+            using var stream = TestHelper.GetStreamFromResource(path);
+
+            // Act
+            using var wb = new XLWorkbook(stream);
+
+            // Assert
+            var ws = wb.Worksheet("UI Sheet");
+            var B2 = ws.Cell("B2");
+            Assert.AreEqual(XLAllowedValues.List, B2.GetDataValidation().AllowedValues);
+            Assert.AreEqual("$E$1:$E$4", B2.GetDataValidation().Value);
+            var A2 = ws.Cell("A2");
+            Assert.AreEqual(XLAllowedValues.List, A2.GetDataValidation().AllowedValues);
+            Assert.AreEqual("ValuesSheet!$A$1:$A$4", A2.GetDataValidation().Value);
         }
 
         [Test]
@@ -385,10 +406,21 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void LoadingOptions()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\ExternalLinks\WorkbookWithExternalLink.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\Misc\Formulas.xlsx")))
             {
-                Assert.DoesNotThrow(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false }));
-                Assert.Throws<NotImplementedException>(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true }));
+                Assert.DoesNotThrow(() =>
+                {
+                    // The value in the file is blank and kept.
+                    using var wb = new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false });
+                    Assert.AreEqual(Blank.Value, wb.Worksheets.Single().Cell("C2").CachedValue);
+                });
+
+                Assert.DoesNotThrow(() =>
+                {
+                    // The value in the file is blank, but recalculation sets it to correct 3.
+                    using var wb = new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true });
+                    Assert.AreEqual(3, wb.Worksheets.Single().Cell("C2").CachedValue);
+                });
 
                 Assert.AreEqual(30, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiX);
                 Assert.AreEqual(14, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiY);
@@ -420,6 +452,50 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(XLDataType.Text, cellToCheck.DataType);
                 Assert.AreEqual("String with String Data type", cellToCheck.Value);
             }
+        }
+
+        [Test]
+        public void CanCorrectLoadWorkbookCellsWithDateTimeDataTypeOrFormatting()
+        {
+            const string expected = "03/14/2012 13:30:55";
+            TestHelper.LoadAndAssert(wb =>
+            {
+                for (int row = 2; row < 18; row++)
+                {
+                    var cellToCheck = wb.Worksheet(1).Cell(row, 2);
+                    Assert.AreEqual(XLDataType.DateTime, cellToCheck.DataType, $"Cell B{row} has incorrect DataType");
+                    Assert.AreEqual(expected, cellToCheck.Value.ToString(CultureInfo.InvariantCulture), $"Cell B{row} value differs");
+                }
+            }, @"TryToLoad\CellsWithDateTimeDataTypeOrFormatting.xlsx");
+        }
+
+        [Test]
+        public void CanCorrectLoadWorkbookCellsWithTimeSpanDataTypeOrFormatting()
+        {
+            string[] expected = Enumerable.Range(0, 10).Select(_ => "13:30:55.2").Concat(new[] { "0:30:55.2" }).ToArray();
+            TestHelper.LoadAndAssert(wb =>
+            {
+                for (int i = 0, row = 2; i < expected.Length; i++, row++)
+                {
+                    var cellToCheck = wb.Worksheet(1).Cell(row, 2);
+                    Assert.AreEqual(XLDataType.TimeSpan, cellToCheck.DataType, $"Cell B{row} has incorrect DataType");
+                    Assert.AreEqual(expected[i], cellToCheck.Value.ToString(CultureInfo.InvariantCulture), $"Cell B{row} value differs");
+                }
+            }, @"TryToLoad\CellsWithTimeSpanDataTypeOrFormatting.xlsx");
+        }
+
+        [Test]
+        public void CanCorrectLoadWorkbookCellsWithDateTimesWithLocalePrefix()
+        {
+            TestHelper.LoadAndAssert(wb =>
+            {
+                var ws = wb.Worksheet(1);
+
+                Assert.AreEqual("21 January 2019", ws.Cell(1, 1).GetFormattedString());
+                Assert.AreEqual("21-Jan-19", ws.Cell(2, 1).GetFormattedString());
+                Assert.AreEqual("Monday, 21 January 2019", ws.Cell(3, 1).GetFormattedString());
+                Assert.AreEqual("21 Jan 2019", ws.Cell(4, 1).GetFormattedString());
+            }, @"TryToLoad\CellsWithDateTimeWithLocalePrefix.xlsx");
         }
 
         [Test]
@@ -516,6 +592,31 @@ namespace ClosedXML.Tests.Excel
 
                 foreach (var pair in expected)
                     Assert.AreEqual(pair.Value, ws.Cell(pair.Key).Value, pair.Key);
+            }
+        }
+
+        [Test]
+        public void CorrectlyLoadThemeColors()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\ThemeColors\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                var c = ws.Cell("A1");
+                var themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent2, themeColor);
+                Assert.AreEqual("FFED7D31", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
+
+                c = ws.Cell("A2");
+                themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent4, themeColor);
+                Assert.AreEqual("FFFFC000", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
+
+                c = ws.Cell("A3");
+                themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
+                Assert.AreEqual(XLThemeColor.Accent6, themeColor);
+                Assert.AreEqual("FF70AD47", wb.Theme.ResolveThemeColor(themeColor).Color.ToHex());
             }
         }
 
@@ -627,6 +728,48 @@ namespace ClosedXML.Tests.Excel
                 using var ms = new MemoryStream();
                 wb.SaveAs(ms, true);
             }, @"TryToLoad\EmptyStyles.xlsx");
+        }
+
+        [Test]
+        public void CanLoadInvalidColors()
+        {
+            // The styles.xml contains two invalid colors: '0' and 'FED+'. Both
+            // should be loaded and no exception thrown. The colors are
+            // converted using an Excel algorithm.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                var ws = wb.Worksheets.Single();
+                Assert.AreEqual(XLColor.FromArgb(0xFF000000), ws.Cell("A1").Style.Font.FontColor);
+                Assert.AreEqual(XLColor.FromArgb(0xFF000FED), ws.Cell("A2").Style.Fill.BackgroundColor);
+            }, @"TryToLoad\InvalidColors.xlsx");
+        }
+
+        [Test]
+        public void WontCrashOnSheetsWithoutRelId()
+        {
+            // Some non-Excel producers create workbooks where workbookPart declares
+            // sheet with empty r:id, but with name and sheetId. Content of such sheets
+            // isn't loaded even if relationship part declares implicit relationship to
+            // the worksheets, because workbook has explicit relationships with worksheet
+            // part (ISO29500 12.3.23).
+            //
+            // If excel finds sheet in workbook without r:id, it adds empty sheet with
+            // the specified name and so does ClosedXML.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                Assert.AreEqual(3, wb.Worksheets.Count);
+
+                // First sheet has r:id, so it keeps content
+                Assert.AreEqual("Sheet1", wb.Worksheet("Sheet1").Cell("A1").Value);
+
+                // Second sheet doesn't have r:id, so it is empty after load.
+                Assert.AreEqual(Blank.Value, wb.Worksheet("Sheet without relId").Cell("A1").Value);
+
+                // Third sheet doesn't have r:id and it contains pivot table that is not loaded.
+                var ptSheet = wb.Worksheet("Pivot Sheet without relId");
+                Assert.AreEqual(Blank.Value, ptSheet.Cell("A1").Value);
+                Assert.False(ptSheet.PivotTables.Any());
+            }, @"TryToLoad\SheetsWithoutRelId.xlsx");
         }
     }
 }

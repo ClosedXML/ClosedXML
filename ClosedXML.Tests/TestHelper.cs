@@ -108,7 +108,7 @@ namespace ClosedXML.Tests
         /// <param name="referenceResource">Reference workbook saved in resources</param>
         /// <param name="evaluateFormulae">Should formulas of created workbook be evaluated and values saved?</param>
         /// <param name="validate">Should the created workbook be validated during by OpenXmlSdk validator?</param>
-        public static void CreateAndCompare(Action<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
+        public static void CreateAndCompare(Action<XLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool validate = true)
         {
             CreateAndCompare(() =>
             {
@@ -193,6 +193,19 @@ namespace ClosedXML.Tests
             assertWorkbook(wb);
         }
 
+        /// <summary>
+        /// A testing method to load a workbook with a single worksheet from resource and assert
+        /// the state of the loaded workbook.
+        /// </summary>
+        public static void LoadAndAssert(Action<XLWorkbook, IXLWorksheet> assertWorksheet, string loadResourcePath)
+        {
+            LoadAndAssert(wb =>
+            {
+                var ws = wb.Worksheets.Single();
+                assertWorksheet(wb, ws);
+            }, loadResourcePath);
+        }
+
         public static string GetResourcePath(string filePartName)
         {
             return filePartName.Replace('\\', '.').TrimStart('.');
@@ -215,6 +228,53 @@ namespace ClosedXML.Tests
         public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
         {
             return _extractor.GetFileNames(predicate);
+        }
+
+        /// <summary>
+        /// A method for testing of a saving and loading capabilities of ClosedXML. Use this
+        /// method to check properties are correctly saved and loaded.
+        /// </summary>
+        /// <remarks>This method is specialized, so it only works on one sheet.</remarks>
+        /// <param name="createWorksheet">
+        /// Method to setup a worksheet that will be saved and the saved file will be compared to
+        /// <paramref name="referenceResource"/>.
+        /// </param>
+        /// <param name="assertLoadedWorkbook">
+        /// <paramref name="referenceResource"/> will be loaded and this method will check that it
+        /// was loaded correctly (i.e. properties are what was set in <paramref name="createWorksheet"/>).
+        /// </param>
+        /// <param name="referenceResource">Saved reference file.</param>
+        public static void CreateSaveLoadAssert(Action<XLWorkbook, IXLWorksheet> createWorksheet, Action<XLWorkbook, IXLWorksheet> assertLoadedWorkbook, string referenceResource)
+        {
+            CreateAndCompare(wb =>
+            {
+                var ws = wb.AddWorksheet();
+                createWorksheet(wb, ws);
+            }, referenceResource);
+            LoadAndAssert(assertLoadedWorkbook, referenceResource);
+        }
+
+        /// <summary>
+        /// Basically can survive through save and load cycle. Doesn't check against actual file.
+        /// Useful for testing is internal structures are correctly initialized after load.
+        /// </summary>
+        /// <param name="createWorksheet">Code to create a workbook.</param>
+        /// <param name="assertLoadedWorkbook">Method to assert that workbook was loaded correctly.</param>
+        public static void CreateSaveLoadAssert(Action<XLWorkbook, IXLWorksheet> createWorksheet, Action<XLWorkbook, IXLWorksheet> assertLoadedWorkbook, bool validate = true, bool evaluateFormulas = false)
+        {
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                createWorksheet(wb, ws);
+                wb.SaveAs(ms, validate, evaluateFormulas);
+            }
+
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Single();
+                assertLoadedWorkbook(wb, ws);
+            }
         }
     }
 }

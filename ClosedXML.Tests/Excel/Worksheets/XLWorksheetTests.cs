@@ -1,9 +1,7 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -131,6 +129,23 @@ namespace ClosedXML.Tests
             wb.Worksheets.Add(1);
 
             Assert.AreEqual("Sheet7", wb.Worksheet(1).Name);
+        }
+
+        [Test]
+        public void SheetIdIsNotReused()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = (XLWorksheet)wb.AddWorksheet();
+            var ws2 = (XLWorksheet)wb.AddWorksheet();
+            var ws3 = (XLWorksheet)wb.AddWorksheet();
+
+            Assert.AreEqual(1, ws1.SheetId);
+            Assert.AreEqual(2, ws2.SheetId);
+            Assert.AreEqual(3, ws3.SheetId);
+
+            ws3.Delete();
+            var ws4 = (XLWorksheet)wb.AddWorksheet();
+            Assert.AreEqual(4, ws4.SheetId);
         }
 
         [Test]
@@ -715,7 +730,7 @@ namespace ClosedXML.Tests
         {
             using (var ms = new MemoryStream())
             using (var imageStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable))
-                .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
+                       .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             using (var wb1 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
@@ -1257,6 +1272,99 @@ namespace ClosedXML.Tests
 
             var column = ws.FirstColumnUsed(options);
             Assert.AreEqual(expectedColumn, column.ColumnNumber());
+        }
+
+        [Test]
+        public void RecalculateAllFormulas_recalculates_all_formulas_in_sheet_and_leaves_rest_dirty()
+        {
+            using var wb = new XLWorkbook();
+            var sut = wb.AddWorksheet("sut");
+            var other = wb.AddWorksheet("other");
+
+            other.Cell("A1").Value = 7;
+            other.Cell("A2").FormulaA1 = "A1+3";
+            Assert.AreEqual(10.0, other.Cell("A2").Value);
+
+            // Change the supporting value, but without recalculation of dependent
+            // formula, thus the value stays the same.
+            other.Cell("A1").Value = 5;
+
+            Assert.True(other.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(10.0, other.Cell("A2").CachedValue);
+
+            // Tested formula depends on a dirty formula from other sheet.
+            sut.Cell("A1").FormulaA1 = "other!A2+5";
+            sut.Cell("A2").FormulaA1 = "1+2";
+
+            Assert.AreEqual(Blank.Value, sut.Cell("A1").CachedValue);
+            Assert.AreEqual(Blank.Value, sut.Cell("A2").CachedValue);
+
+            sut.RecalculateAllFormulas();
+
+            // Formulas in other sheets kept the value - not affected by recalculation of a sut sheet.
+            Assert.True(other.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(10.0, other.Cell("A2").CachedValue);
+
+            // Formulas in test sheet were recalculated - they are affected by recalculation of a sut sheet.
+            Assert.False(sut.Cell("A1").NeedsRecalculation);
+            Assert.AreEqual(15.0, sut.Cell("A1").CachedValue);
+
+            Assert.False(sut.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(3.0, sut.Cell("A2").CachedValue);
+        }
+
+        [Test]
+        public void Cell_returns_cell_at_address_or_workbook_scoped_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            wb.NamedRanges.Add("test_range", ws.Range(2, 3, 5, 7)); // C2:G5
+
+            var cellB4 = ws.Cell("B4");
+            var firstCellOfRange = ws.Cell("test_range");
+
+            Assert.AreEqual("B4", cellB4.Address.ToString());
+            Assert.AreEqual("C2", firstCellOfRange.Address.ToString());
+        }
+
+        [Test]
+        public void Cell_throws_exception_when_address_is_not_A1_address_or_workbook_scoped_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            Assert.Throws<ArgumentException>(() => _ = ws.Cell("XFF1"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Cell("nonexistent_range"));
+        }
+
+        [Test]
+        public void Range_returns_range_from_a1_address_or_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            wb.NamedRanges.Add("book_range", ws.Range(2, 3, 5, 7)); // C2:G5
+            ws.NamedRanges.Add("sheet_range", ws.Range(1, 2, 3, 4)); // B1:D3
+
+            var singleCellRange = ws.Range("B4");
+            var areaCellRange = ws.Range("B4:D7");
+            var bookNamedRange = ws.Range("book_range");
+            var sheetNamedRange = ws.Range("sheet_range");
+
+            Assert.AreEqual("B4:B4", singleCellRange.RangeAddress.ToString());
+            Assert.AreEqual("B4:D7", areaCellRange.RangeAddress.ToString());
+            Assert.AreEqual("$C$2:$G$5", bookNamedRange.RangeAddress.ToString());
+            Assert.AreEqual("$B$1:$D$3", sheetNamedRange.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void Range_throws_exception_when_address_is_not_A1_address_or_named_range()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD1"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD4:BEEF10"));
+            Assert.Throws<ArgumentException>(() => _ = ws.Range("nonexistent_range"));
         }
     }
 }

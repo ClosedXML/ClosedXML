@@ -20,5 +20,6 @@ namespace ClosedXML.Excel
         IXLDrawingStyle SetFontName(String value);
         IXLDrawingStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
         IXLDrawingStyle SetFontCharSet(XLFontCharSet value);
+        IXLDrawingStyle SetFontScheme(XLFontScheme value);
     }
 }

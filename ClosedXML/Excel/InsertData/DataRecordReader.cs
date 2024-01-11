@@ -10,7 +10,7 @@ namespace ClosedXML.Excel.InsertData
 {
     internal class DataRecordReader : IInsertDataReader
     {
-        private readonly IEnumerable<object>[] _inMemoryData;
+        private readonly IEnumerable<XLCellValue>[] _inMemoryData;
         private string[] _columns;
 
         public DataRecordReader(IEnumerable<IDataRecord> data)
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.InsertData
             _inMemoryData = ReadToEnd(data).ToArray();
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
             return _inMemoryData;
         }
@@ -44,12 +44,7 @@ namespace ClosedXML.Excel.InsertData
             return _columns[propertyIndex];
         }
 
-        public int GetRecordsCount()
-        {
-            return _inMemoryData.Length;
-        }
-
-        private IEnumerable<IEnumerable<object>> ReadToEnd(IEnumerable<IDataRecord> data)
+        private IEnumerable<IEnumerable<XLCellValue>> ReadToEnd(IEnumerable<IDataRecord> data)
         {
             foreach (var dataRecord in data)
             {
@@ -57,7 +52,7 @@ namespace ClosedXML.Excel.InsertData
             }
         }
 
-        private IEnumerable<object> ToEnumerable(IDataRecord dataRecord)
+        private IEnumerable<XLCellValue> ToEnumerable(IDataRecord dataRecord)
         {
             var firstRow = false;
             if (_columns == null)
@@ -71,7 +66,8 @@ namespace ClosedXML.Excel.InsertData
                 if (firstRow)
                     _columns[i] = dataRecord.GetName(i);
 
-                yield return dataRecord[i];
+                var value = dataRecord[i];
+                yield return XLCellValue.FromInsertedObject(value);
             }
         }
     }

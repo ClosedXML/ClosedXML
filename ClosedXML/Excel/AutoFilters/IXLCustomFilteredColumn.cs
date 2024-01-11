@@ -1,21 +1,19 @@
-#nullable disable
-
 using System;
 namespace ClosedXML.Excel
 {
     public interface IXLCustomFilteredColumn
     {
-        void EqualTo<T>(T value) where T : IComparable<T>;
-        void NotEqualTo<T>(T value) where T : IComparable<T>;
-        void GreaterThan<T>(T value) where T : IComparable<T>;
-        void LessThan<T>(T value) where T : IComparable<T>;
-        void EqualOrGreaterThan<T>(T value) where T : IComparable<T>;
-        void EqualOrLessThan<T>(T value) where T : IComparable<T>;
-        void BeginsWith(String value);
-        void NotBeginsWith(String value);
-        void EndsWith(String value);
-        void NotEndsWith(String value);
-        void Contains(String value);
-        void NotContains(String value);
+        void EqualTo(XLCellValue value, bool reapply = true);
+        void NotEqualTo(XLCellValue value, bool reapply = true);
+        void GreaterThan(XLCellValue value, bool reapply = true);
+        void LessThan(XLCellValue value, bool reapply = true);
+        void EqualOrGreaterThan(XLCellValue value, bool reapply = true);
+        void EqualOrLessThan(XLCellValue value, bool reapply = true);
+        void BeginsWith(String value, bool reapply = true);
+        void NotBeginsWith(String value, bool reapply = true);
+        void EndsWith(String value, bool reapply = true);
+        void NotEndsWith(String value, bool reapply = true);
+        void Contains(String value, bool reapply = true);
+        void NotContains(String value, bool reapply = true);
     }
 }

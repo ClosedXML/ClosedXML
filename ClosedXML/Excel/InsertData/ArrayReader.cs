@@ -15,9 +15,9 @@ namespace ClosedXML.Excel.InsertData
             _data = data ?? throw new ArgumentNullException(nameof(data));
         }
 
-        public IEnumerable<IEnumerable<object>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
-            return _data.Select(item => item.Cast<object>());
+            return _data.Select(item => item.Cast<object>().Select(XLCellValue.FromInsertedObject));
         }
 
         public int GetPropertiesCount()
@@ -31,11 +31,6 @@ namespace ClosedXML.Excel.InsertData
         public string? GetPropertyName(int propertyIndex)
         {
             return null;
-        }
-
-        public int GetRecordsCount()
-        {
-            return _data.Count();
         }
     }
 }

@@ -214,7 +214,7 @@ namespace ClosedXML.Excel
             if (this.Worksheet.AutoFilter != null && Worksheet.AutoFilter.Range != null)
                 autoFilterRows.Add(this.Worksheet.AutoFilter.Range.FirstRow().RowNumber());
 
-            autoFilterRows.AddRange(Worksheet.Tables.Where(t =>
+            autoFilterRows.AddRange(Worksheet.Tables.Where<XLTable>(t =>
                     t.AutoFilter != null
                     && t.AutoFilter.Range != null
                     && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))

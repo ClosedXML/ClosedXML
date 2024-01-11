@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.InsertData
 
         public ObjectReader(IEnumerable data)
         {
-            _data = data?.Cast<object>() ?? throw new ArgumentNullException(nameof(data));
+            _data = data.Cast<object>();
 
             var itemType = data.GetItemType()!;
             if (itemType.IsNullableType())
@@ -36,9 +36,9 @@ namespace ClosedXML.Excel.InsertData
             _staticMembers = _members.Select(ReflectionExtensions.IsStatic).ToArray();
         }
 
-        public IEnumerable<IEnumerable<object?>> GetData()
+        public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
-            return _data.Select(GetItemData);
+            return _data.Select(item => GetItemData(item).Select(XLCellValue.FromInsertedObject));
         }
 
         public int GetPropertiesCount()
@@ -60,11 +60,6 @@ namespace ClosedXML.Excel.InsertData
                 fieldName = memberInfo.Name;
 
             return fieldName;
-        }
-
-        public int GetRecordsCount()
-        {
-            return _data.Count();
         }
 
         private IEnumerable<object?> GetItemData(object item)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -27,9 +28,17 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var datePatterns = CultureSpecificPatterns.GetOrAdd(culture, static ci =>
             {
+                // Patterns that look for exactly two MM/dd that aren't part of longer sequence of MMM/ddd.
+                // The MM/dd matches only two digit month/day and date recognition should be more fuzzy, it
+                // should recognize month/day even without leading zero. Many cultures return only MM/dd
+                // (NOT M/d) on GetAllDateTimePatterns.
+                const string leadingZeroMonthPattern = @"(?<!M)MM(?!M)";
+                const string leadingZeroDayPattern = @"(?<!d)dd(?!d)";
                 var shortDatePatterns = ci.DateTimeFormat.GetAllDateTimePatterns('d')
                     .Concat(ci.DateTimeFormat.GetAllDateTimePatterns('D'))
                     .Where(pattern => !pattern.Contains("dddd")) // It doesn't seem that Excel parser is capable of parsing day names in any culture
+                    .Select(pattern => Regex.Replace(pattern, leadingZeroMonthPattern, "M")) // Recognize months even without leading zero
+                    .Select(pattern => Regex.Replace(pattern, leadingZeroDayPattern, "d")) // Recognize days even without leading zero
                     .Distinct().ToArray();
 
                 // Not sure about this, but reasonably close. Hours pattern is probably generated (e.g. 'as-IN' culture
@@ -42,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
                     .SelectMany(datePattern => timePatterns.Select(timePattern => FormattableString.Invariant($"{datePattern} {timePattern}")));
 
                 // ISO8601 should be parseable in all cultures, not sure if Excel does.
-                return shortDatePatterns.Concat(longDatePatterns).Concat(new[] { "yyyy-MM-DD" }).Distinct().ToArray();
+                return shortDatePatterns.Concat(longDatePatterns).Concat(new[] { "yyyy-MM-dd" }).Distinct().ToArray();
             });
 
             return DateTime.TryParseExact(s, datePatterns, culture, Style, out date);

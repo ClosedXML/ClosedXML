@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -481,11 +480,34 @@ namespace ClosedXML.Tests.Excel.DataValidations
             Assert.AreEqual(new DateTime(2009, 5, 4).ToSerialDateTime(), actual);
         }
 
-        [Test]
-        public void Year()
+        [TestCase("\"8/22/2008\"", 2008)]
+        [TestCase("\"1/2/2006 10:45 AM\"", 2006)]
+        [TestCase("0", 1900)]
+        [TestCase("0.5", 1900)]
+        [TestCase("1", 1900)]
+        [TestCase("366", 1900)]
+        [TestCase("367", 1901)]
+        [TestCase("-1", XLError.NumberInvalid)]
+        [TestCase("\"test\"", XLError.IncompatibleValue)]
+        [TestCase("IF(TRUE,)", 1900)] // Blank
+        [TestCase("TRUE", 1900)]
+        [TestCase("FALSE", 1900)]
+        [TestCase("#DIV/0!", XLError.DivisionByZero)]
+        public void Year(string value, object expected)
         {
-            var actual = XLWorkbook.EvaluateExpr("Year(\"8/22/2008\")");
-            Assert.AreEqual(2008, actual);
+            var actual = XLWorkbook.EvaluateExpr($"YEAR({value})");
+            Assert.AreEqual(XLCellValue.FromObject(expected), actual);
+        }
+
+        [Test]
+        public void Year_BlankValue()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").FormulaA1 = @"=YEAR(A1)";
+            var valueA2 = ws.Cell("A2").Value;
+            Assert.AreEqual(1900, valueA2);
         }
 
         [Test]

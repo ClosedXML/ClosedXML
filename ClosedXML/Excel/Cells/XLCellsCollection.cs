@@ -12,6 +12,8 @@ namespace ClosedXML.Excel
         public XLCellsCollection(XLWorksheet ws)
         {
             _ws = ws;
+            ValueSlice = new ValueSlice(ws.Workbook.SharedStringTable);
+            FormulaSlice = new FormulaSlice(ws);
             _slices = new List<ISlice> { ValueSlice, FormulaSlice, StyleSlice, MiscSlice };
         }
 
@@ -65,11 +67,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal Slice<XLValueSliceContent> ValueSlice { get; } = new();
+        internal ValueSlice ValueSlice { get; }
 
-        internal Slice<XLCellFormula> FormulaSlice { get; } = new();
+        internal FormulaSlice FormulaSlice { get; }
 
-        internal Slice<XLStyleValue> StyleSlice { get; } = new();
+        internal Slice<XLStyleValue?> StyleSlice { get; } = new();
 
         internal Slice<XLMiscSliceContent> MiscSlice { get; } = new();
 
@@ -198,7 +200,85 @@ namespace ClosedXML.Excel
             return FindUsedRow(searchRange, options, predicate, true);
         }
 
-        internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2)
+        /// <summary>
+        /// Remap rows of a range.
+        /// </summary>
+        /// <param name="map">A sorted map of rows. The values must be resorted row numbers from <paramref name="sheetRange"/>.</param>
+        /// <param name="sheetRange">Sheet that should have its rows rearranged.</param>
+        internal void RemapRows(IList<int> map, XLSheetRange sheetRange)
+        {
+            RemapRanges(map, sheetRange.TopRow, SwapRows);
+
+            void SwapRows(int prevRowNumber, int currentRowNumber)
+            {
+                var prevRowRange = new XLSheetRange(
+                    new XLSheetPoint(prevRowNumber, sheetRange.LeftColumn),
+                    new XLSheetPoint(prevRowNumber, sheetRange.RightColumn));
+                var currentRowRange = new XLSheetRange(
+                    new XLSheetPoint(currentRowNumber, sheetRange.LeftColumn),
+                    new XLSheetPoint(currentRowNumber, sheetRange.RightColumn));
+                SwapRanges(prevRowRange, currentRowRange);
+            }
+        }
+        
+        /// <summary>
+        /// Remap columns of a range.
+        /// </summary>
+        /// <param name="map">A sorted map of columns. The values must be resorted columns numbers from <paramref name="sheetRange"/>.</param>
+        /// <param name="sheetRange">Sheet that should have its columns rearranged.</param>
+        internal void RemapColumns(IList<int> map, XLSheetRange sheetRange)
+        {
+            RemapRanges(map, sheetRange.LeftColumn, SwapColumns);
+
+            void SwapColumns(int prevColNumber, int currentColNumber)
+            {
+                var prevRowRange = new XLSheetRange(
+                    new XLSheetPoint(sheetRange.TopRow, prevColNumber),
+                    new XLSheetPoint(sheetRange.BottomRow, prevColNumber));
+                var currentRowRange = new XLSheetRange(
+                    new XLSheetPoint(sheetRange.TopRow, currentColNumber),
+                    new XLSheetPoint(sheetRange.BottomRow, currentColNumber));
+                SwapRanges(prevRowRange, currentRowRange);
+            }
+        }
+
+        private static void RemapRanges(IList<int> map, int indexOffset, Action<int, int> swapData)
+        {
+            for (var i = 0; i < map.Count; ++i)
+            {
+                var axisNumber = i + indexOffset;
+                var dataAxisNumber = map[i];
+                if (axisNumber == dataAxisNumber)
+                    continue;
+
+                // Current row doesn't contain data it should, so it is a part of a permutation
+                // loop. Go over each item in a loop and 
+                // We need to replace
+                var prevNumber = axisNumber;
+                var currentNumber = dataAxisNumber;
+                var startLoopNumber = prevNumber;
+                do
+                {
+                    // Current row number contains data that should be on the previous row number,
+                    // so swap them. That will fix another link in a loop (the previous one), but
+                    // will keep current inconsistent, but that will be fixed when loop completes.
+                    swapData(prevNumber, currentNumber);
+
+                    // Because previous row number is already fixed and will no longer be touched
+                    // during loop fix, mark it as a row that contains correct data.
+                    map[prevNumber - indexOffset] = prevNumber;
+
+                    prevNumber = currentNumber;
+                    currentNumber = map[currentNumber - indexOffset];
+                } while (currentNumber != startLoopNumber);
+
+                // Although we don't have to swap the last one (N count loop needs only N-1 swaps),
+                // we have to mark the last row mapping for the last link (the one before start).
+                map[prevNumber - indexOffset] = prevNumber;
+            }
+        }
+
+        private void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2)
         {
             var rowCount = sheetRange1.LastPoint.Row - sheetRange1.FirstPoint.Row + 1;
             var columnCount = sheetRange1.LastPoint.Column - sheetRange1.FirstPoint.Column + 1;
@@ -275,18 +355,10 @@ namespace ClosedXML.Excel
 
         internal void SwapCellsContent(XLSheetPoint sp1, XLSheetPoint sp2)
         {
-            SwapSliceValue(ValueSlice, sp1, sp2);
-            SwapSliceValue(FormulaSlice, sp1, sp2);
-            SwapSliceValue(StyleSlice, sp1, sp2);
-            SwapSliceValue(MiscSlice, sp1, sp2);
-        }
-
-        private static void SwapSliceValue<TElement>(Slice<TElement> slice, XLSheetPoint sp1, XLSheetPoint sp2)
-        {
-            var restAtSwapPoint1 = slice[sp1];
-            var restAtSwapPoint2 = slice[sp2];
-            slice.Set(sp1, restAtSwapPoint2);
-            slice.Set(sp2, restAtSwapPoint1);
+            ValueSlice.Swap(sp1, sp2);
+            FormulaSlice.Swap(sp1, sp2);
+            StyleSlice.Swap(sp1, sp2);
+            MiscSlice.Swap(sp1, sp2);
         }
 
         private struct CellsEnumerator

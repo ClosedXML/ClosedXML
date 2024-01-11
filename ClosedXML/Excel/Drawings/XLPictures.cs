@@ -127,10 +127,10 @@ namespace ClosedXML.Excel.Drawings
 
         public bool TryGetPicture(string pictureName, out IXLPicture? picture)
         {
-            var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
-            if (matches.Any())
+            var match = _pictures.FirstOrDefault(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
+            if (match is not null)
             {
-                picture = matches.First();
+                picture = match;
                 return true;
             }
             picture = null;

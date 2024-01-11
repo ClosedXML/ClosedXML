@@ -218,6 +218,65 @@ namespace ClosedXML.Excel
             };
         }
 
+        /// <summary>
+        /// A function used during data insertion to convert an <c>object</c> to <c>XLCellValue</c>.
+        /// </summary>
+        internal static XLCellValue FromInsertedObject(object value)
+        {
+            XLCellValue convertedValue = value switch
+            {
+                null => Blank.Value,
+                Blank blankValue => blankValue,
+                Boolean logical => logical,
+                SByte number => number,
+                Byte number => number,
+                Int16 number => number,
+                UInt16 number => number,
+                Int32 number => number,
+                UInt32 number => number,
+                Int64 number => number,
+                UInt64 number => number,
+                Single number => number,
+                Double number => number,
+                Decimal number => number,
+                String text => text,
+                XLError error => error,
+                DateTime date => date,
+                DateTimeOffset dateOfs => dateOfs.DateTime,
+                TimeSpan timeSpan => timeSpan,
+                _ => value.ToString() // Other things, like chars ect are just turned to string
+            };
+            return convertedValue;
+        }
+
+        /// <summary>
+        /// Try to convert a string into a string value, doing your best. If no other type can be
+        /// extracted, consider it a text.
+        /// </summary>
+        /// <param name="text">Text to parse into a value.</param>
+        /// <param name="culture">Culture used to parse numbers.</param>
+        /// <returns>Parsed value.</returns>
+        internal static XLCellValue FromText(string text, CultureInfo culture)
+        {
+            // AutoFilter custom filter operand can be stored as `1 1/2` and Excel correctly
+            // interprets it as a `1.5`. Same for 2015-01-01, therefore use `TextToNumber` that
+            // should deal with any weird formats.
+            if (text is null)
+                return Blank.Value;
+            if (text == String.Empty)
+                return Blank.Value;
+            if (StringComparer.OrdinalIgnoreCase.Equals("TRUE", text))
+                return true;
+            if (StringComparer.OrdinalIgnoreCase.Equals("FALSE", text))
+                return false;
+            if (ScalarValue.TextToNumber(text, culture).TryPickT0(out var number, out _))
+                return number;
+            if (XLErrorParser.TryParseError(text, out var error))
+                return error;
+
+            return text;
+        }
+
         /// <inheritdoc cref="GetBlank"/>
         public static explicit operator Blank(XLCellValue value) => value.GetBlank();
 
@@ -355,6 +414,10 @@ namespace ClosedXML.Excel
             return IsNumber && _value.Equals(other);
         }
 
+        /// <summary>
+        /// Is the cell value text and is equal to the <paramref name="other"/>?
+        /// Text comparison is case sensitive.
+        /// </summary>
         public bool Equals(string other)
         {
             return IsText && _text == other;

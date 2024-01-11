@@ -1,3 +1,6 @@
+# Notice
+ClosedXML is currently not seeking new contributions, until the worst technical debt and current backlog of PRs are dealt with.
+
 # Developer guidelines
 The [OpenXML specification](https://www.ecma-international.org/publications/standards/Ecma-376.htm) is a large and complicated beast. In order for ClosedXML, the wrapper around OpenXML, to support all the features, we rely on community contributions. Before opening an issue to request a new feature, we'd like to urge you to try to implement it yourself and log a pull request.
 

@@ -173,7 +173,7 @@ namespace ClosedXML.Excel
                 .Select(c => c.DataType);
 
             if (this.table.ShowTotalsRow)
-                dataTypes = dataTypes.Take(dataTypes.Count() - 1);
+                dataTypes = dataTypes.SkipLast();
 
             var distinctDataTypes = dataTypes
                 .GroupBy(dt => dt)
@@ -190,7 +190,7 @@ namespace ClosedXML.Excel
                 .Select(c => c.FormulaR1C1);
 
             if (this.table.ShowTotalsRow)
-                formulas = formulas.Take(formulas.Count() - 1);
+                formulas = formulas.SkipLast();
 
             var distinctFormulas = formulas
                 .GroupBy(f => f)
@@ -208,7 +208,7 @@ namespace ClosedXML.Excel
                 .Select(c => c.StyleValue);
 
             if (this.table.ShowTotalsRow)
-                styles = styles.Take(styles.Count() - 1);
+                styles = styles.SkipLast();
 
             var distinctStyles = styles
                 .Distinct();

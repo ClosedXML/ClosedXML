@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -47,6 +48,21 @@ namespace ClosedXML.Tests.Excel
 
                 Assert.AreEqual("10/26/13 21:00", c.GetFormattedString());
             }
+        }
+
+        [Test]
+        [SetCulture("en-US")]
+        public void Cell_value_is_formatted_by_current_culture_unless_specified_otherwise()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell("A1").SetValue(10000.5);
+
+            var currentCultureFormat = cell.GetFormattedString();
+            Assert.AreEqual("10000.5", currentCultureFormat);
+
+            var czechCultureFormat = cell.GetFormattedString(CultureInfo.GetCultureInfo("cs-CZ"));
+            Assert.AreEqual("10000,5", czechCultureFormat);
         }
 
         [Test]

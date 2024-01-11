@@ -84,11 +84,11 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Rescale array for calculation of array formulas.
+        /// Broadcast array for calculation of array formulas.
         /// </summary>
-        public Array Rescale(int rows, int columns)
+        public Array Broadcast(int rows, int columns)
         {
-            if (Width == columns && Height == columns)
+            if (Width == columns && Height == rows)
                 return this;
 
             if (Width == 1 && Height == 1)
@@ -123,6 +123,47 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Width => _data.GetLength(1);
 
         public override int Height => _data.GetLength(0);
+    }
+
+    /// <summary>
+    /// Array for array literal from a parser. It uses a 1D array of values as a storage.
+    /// </summary>
+    internal class LiteralArray : Array
+    {
+        private readonly int _rows;
+        private readonly int _columns;
+        private readonly IReadOnlyList<ScalarValue> _elements;
+
+        /// <summary>
+        /// Create a new instance of a <see cref="LiteralArray"/>.
+        /// </summary>
+        /// <param name="rows">Number of rows of an array/</param>
+        /// <param name="columns">Number of columns of an array.</param>
+        /// <param name="elements">Row by row data of the array. Has the expected size of an array.</param>
+        public LiteralArray(int rows, int columns, IReadOnlyList<ScalarValue> elements)
+        {
+            if (rows * columns != elements.Count)
+                throw new ArgumentException("Number of elements in not the same as size of an array.", nameof(elements));
+
+            _rows = rows;
+            _columns = columns;
+            _elements = elements;
+        }
+
+        public override ScalarValue this[int y, int x]
+        {
+            get
+            {
+                if (x < 0 || x >= _columns)
+                    throw new ArgumentOutOfRangeException(nameof(x));
+
+                return _elements[y * _columns + x];
+            }
+        }
+
+        public override int Width => _columns;
+
+        public override int Height => _rows;
     }
 
     /// <summary>

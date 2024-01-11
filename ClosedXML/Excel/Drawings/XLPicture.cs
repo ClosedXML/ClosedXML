@@ -51,10 +51,8 @@ namespace ClosedXML.Excel.Drawings
 
             // Calculate default picture ID
             var allPictures = worksheet.Workbook.Worksheets.SelectMany(ws => ws.Pictures);
-            if (allPictures.Any())
-                this._id = allPictures.Max(p => p.Id) + 1;
-            else
-                this._id = 1;
+            var freeId = allPictures.Select(x => x.Id).DefaultIfEmpty(0).Max() + 1;
+            _id = freeId;
         }
 
         public IXLCell BottomRightCell

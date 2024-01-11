@@ -160,7 +160,8 @@ namespace ClosedXML.Excel
         /// Gets or sets the page number that will begin the printout.
         /// <para>For example, the first page of your printout could be numbered page 5.</para>
         /// </summary>
-        UInt32? FirstPageNumber { get; set; }
+        /// <remarks>First page number can be negative, e.g. <c>-2</c>.</remarks>
+        Int32? FirstPageNumber { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the worksheet will be centered on the page horizontally.
         /// </summary>
@@ -290,7 +291,9 @@ namespace ClosedXML.Excel
         IXLPageSetup SetScale(Int32 value);
         IXLPageSetup SetHorizontalDpi(Int32 value);
         IXLPageSetup SetVerticalDpi(Int32 value);
-        IXLPageSetup SetFirstPageNumber(UInt32? value);
+        /// <inheritdoc cref="FirstPageNumber"/>>
+        /// <param name="value">First page number or <c>null</c> for auto/default page numbering.</param>
+        IXLPageSetup SetFirstPageNumber(Int32? value);
         IXLPageSetup SetCenterHorizontally(); IXLPageSetup SetCenterHorizontally(Boolean value);
         IXLPageSetup SetCenterVertically(); IXLPageSetup SetCenterVertically(Boolean value);
         IXLPageSetup SetPaperSize(XLPaperSize value);

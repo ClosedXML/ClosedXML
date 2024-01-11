@@ -437,66 +437,30 @@ namespace ClosedXML.Tests
         [Test]
         public void SourceSheetWithWhitespace()
         {
-            using (var ms = new MemoryStream())
+            // Check that pivot source reference for a sheet name with whitespaces
+            // is not saved to the file with escaped quotes, issue #955.
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
+                var wb = new XLWorkbook();
+
+                // Worksheet name contains whitespaces that shouldn't be quoted in the file.
+                var sheet = wb.Worksheets.Add("Pastry Sales Data");
+                var range = sheet.Cell(1, 1).InsertData(new object[]
                 {
-                    // Based on .\ClosedXML\ClosedXML.Examples\PivotTables\PivotTables.cs
-                    // But with empty column for Month
-                    var pastries = new List<Pastry>
-                    {
-                        new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                        new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                        new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                        new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                        new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                        new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                        new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                        new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                        new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                        new Pastry("Danish", 104, 394, -20.24, "", null),
-                        new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                        new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+                    ("Name", "Sold count"),
+                    ("Pie", 7),
+                    ("Cake", 10),
+                    ("Pie", 2),
+                });
 
-                        // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                        new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                        new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                        new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+                // Add a new sheet for our pivot table
+                var ptSheet = wb.Worksheets.Add("pvt");
+                var pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), range);
+                pt.RowLabels.Add("Name");
+                pt.Values.Add("Sold count");
 
-                        // For ContainsBlank and integer rows/columns test
-                        new Pastry("Scone", null, 255, 18.4, "", null),
-                    };
-
-                    var wb = new XLWorkbook();
-
-                    var sheet = wb.Worksheets.Add("Pastry Sales Data");
-                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
-                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet.Columns().AdjustToContents();
-
-                    IXLWorksheet ptSheet;
-                    IXLPivotTable pt;
-
-                    // Add a new sheet for our pivot table
-                    ptSheet = wb.Worksheets.Add("pvt");
-
-                    // Create the pivot table, using the data from the "PastrySalesData" table
-                    pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
-                    pt.ColumnLabels.Add("Name");
-                    pt.RowLabels.Add("Month");
-
-                    // The values in our table will come from the "NumberOfOrders" field
-                    // The default calculation setting is a total of each row/column
-                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
-                        .ShowAsPercentageFrom("Name").And("Bearclaw")
-                        .NumberFormat.Format = "0%";
-
-                    ptSheet.Columns().AdjustToContents();
-
-                    return wb;
-                }, @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx");
-            }
+                return wb;
+            }, @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx");
         }
 
         [Test]
@@ -790,8 +754,10 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void Add_TwoPivotTablesWithSameRangeUseSamePivotCache()
+        public void Add_all_pivot_tables_for_same_range_use_same_pivot_cache()
         {
+            // Two different pivot tables created from same range use same pivot cache
+            // and don't create a separate pivot cache for each pivot table.
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var range = ws.FirstCell().InsertData(new object[]
@@ -805,16 +771,79 @@ namespace ClosedXML.Tests
 
             Assert.AreNotSame(rangePivot1, rangePivot2);
             Assert.AreSame(rangePivot1.PivotCache, rangePivot2.PivotCache);
+        }
 
-            var table = range.CreateTable();
+        [Test]
+        public void Add_all_pivot_tables_for_same_table_use_same_pivot_cache()
+        {
+            // Two different pivot tables created from same table use same pivot cache
+            // and don't create a separate pivot cache for each pivot table.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var table = ws.FirstCell().InsertTable(new object[]
+            {
+                ("Name", "Count"),
+                ("Pie", 14),
+            });
+
             var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), table);
             var tablePivot2 = ws.PivotTables.Add("tablePivot2", ws.Cell("J20"), table);
 
             Assert.AreNotSame(tablePivot1, tablePivot2);
             Assert.AreSame(tablePivot1.PivotCache, tablePivot2.PivotCache);
+        }
 
-            // Table has a different cache, because unlike range, the size of a table can change.
-            Assert.AreNotSame(rangePivot1.PivotCache, tablePivot2.PivotCache);
+        [Test]
+        public void Add_pivot_tables_will_use_table_as_source_if_range_matches_table_area()
+        {
+            // When a pivot table is created, the `Add` method tries to first
+            // find a table with same area as the requested range. If it finds one,
+            // the cache will be created from the table and not a range. That is the
+            // Excel behavior and generally makes sense.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertTable(new object[]
+            {
+                ("Name", "Count"),
+                ("Pie", 14),
+            }, "Test table");
+
+            // A range that matches the size of an area
+            var matchingRange = ws.Range("A1:B3");
+
+            var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), matchingRange);
+
+            var pivotCache = (XLPivotCache)tablePivot1.PivotCache;
+            Assert.AreEqual(XLPivotTableSourceType.Named, pivotCache.PivotSourceReference.SourceType);
+            Assert.AreEqual("Test table", pivotCache.PivotSourceReference.Name);
+        }
+
+        [Test]
+        public void Load_and_save_pivot_table_with_cache_records_but_missing_source_data()
+        {
+            // Test file contains a pivot table created from a normal table in
+            // a sheet that was already deleted. The file contains cache records,
+            // but the table and original sheet are gone. It's possible to load
+            // and save such a pivot table.
+            // Opening the saved file in Excel throws an error 'Reference isn't valid'
+            // on load, because of `RefreshOnLoad` flag. That flag is always enabled because
+            // ClosedXML relies on Excel to rebuild the table and fix it.
+            TestHelper.LoadSaveAndCompare(
+                @"Other\PivotTableReferenceFiles\PivotTableWithoutSourceData-input.xlsx",
+                @"Other\PivotTableReferenceFiles\PivotTableWithoutSourceData-output.xlsx");
+        }
+
+        [Test]
+        public void Skips_chartsheets_during_pivot_table_loading()
+        {
+            // Pivot table loading code looks for pivot tables on each sheet, but it shouldn't
+            // crash when sheet is a chartsheet or other type of sheet. The referenced test file
+            // contains chartsheet and a pivot table to ensure that loading code won't crash.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                // Check that existing pivot table is loaded.
+                Assert.True(wb.Worksheet("pivot").PivotTables.Contains("Pastries"));
+            }, @"Other\PivotTableReferenceFiles\ChartsheetAndPivotTable.xlsx");
         }
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)

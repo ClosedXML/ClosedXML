@@ -1,3 +1,4 @@
+using ClosedXML.Parser;
 using System;
 using System.Collections.Generic;
 
@@ -127,11 +128,11 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FunctionNode : ValueNode
     {
-        public FunctionNode(string name, List<ValueNode> parms) : this(null, name, parms)
+        public FunctionNode(string name, IReadOnlyList<ValueNode> parms) : this(null, name, parms)
         {
         }
 
-        public FunctionNode(PrefixNode? prefix, string name, List<ValueNode> parms)
+        public FunctionNode(PrefixNode? prefix, string name, IReadOnlyList<ValueNode> parms)
         {
             Prefix = prefix;
             Name = name;
@@ -145,7 +146,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public string Name { get; }
 
-        public List<ValueNode> Parameters { get; }
+        /// <summary>
+        /// AST nodes for arguments of the function.
+        /// </summary>
+        public IReadOnlyList<ValueNode> Parameters { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -204,7 +208,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class PrefixNode : AstNode
     {
-        public PrefixNode(FileNode? file, string sheet, string firstSheet, string lastSheet)
+        public PrefixNode(FileNode? file, string? sheet, string? firstSheet, string? lastSheet)
         {
             File = file;
             Sheet = sheet;
@@ -218,19 +222,19 @@ namespace ClosedXML.Excel.CalcEngine
         public FileNode? File { get; }
 
         /// <summary>
-        /// Name of the sheet, without ! or escaped quotes. Can be empty in some cases (e.g. reference to a named range in an another file).
+        /// Name of the sheet, without ! or escaped quotes. Can be null in some cases e.g. reference to a named range in an another file).
         /// </summary>
-        public string Sheet { get; }
+        public string? Sheet { get; }
 
         /// <summary>
         /// If the prefix is for 3D reference, name of first sheet. Empty otherwise.
         /// </summary>
-        public string FirstSheet { get; }
+        public string? FirstSheet { get; }
 
         /// <summary>
         /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
         /// </summary>
-        public string LastSheet { get; }
+        public string? LastSheet { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
@@ -242,7 +246,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (FirstSheet is not null || LastSheet is not null)
                 throw new NotImplementedException("3D references are not yet implemented.");
 
-            if (!wb.TryGetWorksheet(Sheet, out var worksheet))
+            if (!wb.TryGetWorksheet(Sheet, out XLWorksheet worksheet))
                 return XLError.CellReference;
 
             return OneOf<IXLWorksheet, XLError>.FromT0(worksheet);
@@ -254,11 +258,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ReferenceNode : ValueNode
     {
-        public ReferenceNode(PrefixNode? prefix, ReferenceItemType type, string address)
+        public ReferenceNode(PrefixNode? prefix, ReferenceArea referenceArea, bool isA1)
         {
             Prefix = prefix;
-            Type = type;
-            Address = address;
+            Address = isA1 ? referenceArea.GetDisplayStringA1() : referenceArea.GetDisplayStringR1C1();
+            ReferenceArea = referenceArea;
+            IsA1 = isA1;
         }
 
         /// <summary>
@@ -266,12 +271,20 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public PrefixNode? Prefix { get; }
 
-        public ReferenceItemType Type { get; }
-
         /// <summary>
         /// An address of a reference that corresponds to <see cref="Type"/>. Always without sheet (that is in the prefix).
         /// </summary>
         public string Address { get; }
+
+        /// <summary>
+        /// An area from a parser.
+        /// </summary>
+        public ReferenceArea ReferenceArea { get; }
+
+        /// <summary>
+        /// Is the reference in A1 style? If <c>false</c>, then it is R1C1.
+        /// </summary>
+        public bool IsA1 { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
@@ -287,8 +300,6 @@ namespace ClosedXML.Excel.CalcEngine
             return new Reference(new XLRangeAddress((XLWorksheet)ws!, Address));
         }
     }
-
-    internal enum ReferenceItemType { Cell, VRange, HRange }
 
     /// <summary>
     /// A name node in the formula. Name can refers to a generic formula, in most cases a reference, but it can be any kind of calculation (e.g. <c>A1+7</c>).
@@ -310,7 +321,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
-        public AnyValue GetValue(XLWorksheet ctxWs, CalcEngine engine)
+        public AnyValue GetValue(XLWorksheet ctxWs, XLCalcEngine engine)
         {
             var worksheet = ctxWs;
             if (Prefix is not null)
@@ -332,29 +343,55 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal bool TryGetNameRange(IXLWorksheet ws, out IXLNamedRange range)
         {
-            if (ws.NamedRanges.TryGetValue(Name, out range))
+            if (ws.NamedRanges.TryGetValue(Name, out range!))
                 return true;
 
-            if (ws.Workbook.NamedRanges.TryGetValue(Name, out range))
+            if (ws.Workbook.NamedRanges.TryGetValue(Name, out range!))
                 return true;
 
             return false;
         }
     }
 
-    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet supported and
-    // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
     internal class StructuredReferenceNode : ValueNode
     {
-        public StructuredReferenceNode(PrefixNode prefix)
+        public StructuredReferenceNode(PrefixNode? prefix, string? table, StructuredReferenceArea area, string? firstColumn, string? lastColumn)
         {
             Prefix = prefix;
+            Table = table;
+            Area = area;
+            FirstColumn = firstColumn;
+            LastColumn = lastColumn;
         }
 
         /// <summary>
         /// Can be empty if no prefix available.
         /// </summary>
-        public PrefixNode Prefix { get; }
+        public PrefixNode? Prefix { get; }
+
+        /// <summary>
+        /// Table of the reference. It can be empty, if formula using the reference is within
+        /// the table itself (e.g. total formulas).
+        /// </summary>
+        public string? Table { get; }
+
+        /// <summary>
+        /// Area of the table that is considered for the range of cell of reference.
+        /// </summary>
+        public StructuredReferenceArea Area { get; }
+
+        /// <summary>
+        /// First column of column range. If the reference refers to the whole table,
+        /// the value is null.
+        /// </summary>
+        public string? FirstColumn { get; }
+
+        /// <summary>
+        /// Last column of column range. If structured reference refers only to one column,
+        /// it is same as <see cref="FirstColumn"/>. If the reference refers to the whole table,
+        /// the value is null.
+        /// </summary>
+        public string? LastColumn { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }

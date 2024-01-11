@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using ClosedXML.Excel.CalcEngine;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -60,6 +60,11 @@ namespace ClosedXML.Excel
 
     public interface IXLCell
     {
+        /// <summary>
+        /// Is this cell the <see cref="IXLWorksheet.ActiveCell">active cell of
+        /// the worksheet</see>? Setting false deactivates cell only when the
+        /// cell is currently active.
+        /// </summary>
         Boolean Active { get; set; }
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
@@ -125,6 +130,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
+        /// Only cells with formula may return <c>true</c>, value cells always return <c>false</c>.
         /// </summary>
         Boolean NeedsRecalculation { get; }
 
@@ -358,7 +364,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the cell's value formatted depending on the cell's data type and style.
         /// </summary>
-        String GetFormattedString();
+        /// <param name="culture">Culture used to format the string. If <c>null</c> (default value), use current culture.</param>
+        String GetFormattedString(CultureInfo culture = null);
 
         /// <summary>
         /// Returns a hyperlink for the cell, if any, or creates a new instance is there is no hyperlink.

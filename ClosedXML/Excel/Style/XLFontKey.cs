@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -28,6 +26,8 @@ namespace ClosedXML.Excel
 
         public XLFontCharSet FontCharSet { get; set; }
 
+        public XLFontScheme FontScheme { get; set; }
+
         public bool Equals(XLFontKey other)
         {
             return
@@ -37,11 +37,12 @@ namespace ClosedXML.Excel
              && Strikethrough == other.Strikethrough
              && VerticalAlignment == other.VerticalAlignment
              && Shadow == other.Shadow
-             && FontSize == other.FontSize
+             && FontSize.Equals(other.FontSize)
              && FontColor == other.FontColor
              && FontFamilyNumbering == other.FontFamilyNumbering
              && FontCharSet == other.FontCharSet
-             && string.Equals(FontName, other.FontName, StringComparison.InvariantCultureIgnoreCase);
+             && FontScheme == other.FontScheme
+             && string.Equals(FontName, other.FontName, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object obj)
@@ -62,9 +63,10 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Shadow.GetHashCode();
             hashCode = hashCode * -1521134295 + FontSize.GetHashCode();
             hashCode = hashCode * -1521134295 + FontColor.GetHashCode();
-            hashCode = hashCode * -1521134295 + StringComparer.InvariantCultureIgnoreCase.GetHashCode(FontName);
+            hashCode = hashCode * -1521134295 + StringComparer.OrdinalIgnoreCase.GetHashCode(FontName);
             hashCode = hashCode * -1521134295 + (int)FontFamilyNumbering;
             hashCode = hashCode * -1521134295 + (int)FontCharSet;
+            hashCode = hashCode * -1521134295 + (int)FontScheme;
             return hashCode;
         }
 
@@ -73,7 +75,7 @@ namespace ClosedXML.Excel
             return $"{FontName} {FontSize}pt {FontColor} " +
                    (Bold ? "Bold" : "") + (Italic ? "Italic" : "") + (Strikethrough ? "Strikethrough" : "") +
                    (Underline == XLFontUnderlineValues.None ? "" : Underline.ToString()) +
-                   $"{FontFamilyNumbering} {FontCharSet}";
+                   $"{FontFamilyNumbering} {FontCharSet} {FontScheme}";
         }
 
         public static bool operator ==(XLFontKey left, XLFontKey right) => left.Equals(right);

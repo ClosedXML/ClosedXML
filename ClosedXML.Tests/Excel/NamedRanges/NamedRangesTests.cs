@@ -610,7 +610,7 @@ namespace ClosedXML.Tests.Excel
             Assert.IsFalse(ws.NamedRanges.Contains("NameX"));
 
             Assert.IsNotNull(ws.NamedRange("Name"));
-            Assert.IsNull(ws.NamedRange("NameX"));
+            Assert.Throws<ArgumentException>(() => ws.NamedRange("NameX"));
 
             Boolean result1 = ws.NamedRanges.TryGetValue("Name", out IXLNamedRange range1);
             Assert.IsTrue(result1);

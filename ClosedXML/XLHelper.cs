@@ -26,6 +26,21 @@ namespace ClosedXML.Excel
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
+        /// <summary>
+        /// Comparer used to compare sheet names.
+        /// </summary>
+        internal static readonly StringComparer SheetComparer = StringComparer.OrdinalIgnoreCase;
+
+        /// <summary>
+        /// Comparer used to compare defined names.
+        /// </summary>
+        internal static readonly StringComparer NameComparer = StringComparer.OrdinalIgnoreCase;
+
+        /// <summary>
+        /// Comparer of function names.
+        /// </summary>
+        internal static readonly StringComparer FunctionComparer = StringComparer.OrdinalIgnoreCase;
+
         internal static readonly Regex RCSimpleRegex = new Regex(
             @"^(r(((-\d)?\d*)|\[(-\d)?\d*\]))?(c(((-\d)?\d*)|\[(-\d)?\d*\]))?$"
             , RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -192,6 +207,9 @@ namespace ClosedXML.Excel
 
         public static Boolean IsValidRangeAddress(String rangeAddress)
         {
+            if (String.IsNullOrWhiteSpace(rangeAddress))
+                return false;
+
             return A1SimpleRegex.IsMatch(rangeAddress);
         }
 

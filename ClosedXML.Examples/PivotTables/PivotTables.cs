@@ -70,7 +70,7 @@ namespace ClosedXML.Examples
                     ptSheet = wb.Worksheets.Add("pvt" + i);
 
                     // Create the pivot table, using the data from the "PastrySalesData" table
-                    pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
+                    pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
 
                     // The rows in our pivot table will be the names of the pastries
                     if (i == 2) pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
@@ -104,7 +104,7 @@ namespace ClosedXML.Examples
                 #region Different kind of pivot
 
                 ptSheet = wb.Worksheets.Add("pvtNoColumnLabels");
-                pt = ptSheet.PivotTables.Add("pvtNoColumnLabels", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvtNoColumnLabels", ptSheet.Cell(1, 1), table);
 
                 pt.RowLabels.Add("Name");
                 pt.RowLabels.Add("Month");
@@ -119,7 +119,7 @@ namespace ClosedXML.Examples
                 #region Pivot table with collapsed fields
 
                 ptSheet = wb.Worksheets.Add("pvtCollapsedFields");
-                pt = ptSheet.PivotTables.Add("pvtCollapsedFields", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvtCollapsedFields", ptSheet.Cell(1, 1), table);
 
                 pt.RowLabels.Add("Name").SetCollapsed();
                 pt.RowLabels.Add("Month").SetCollapsed();
@@ -132,7 +132,7 @@ namespace ClosedXML.Examples
                 #region Pivot table with a field both as a value and as a row/column/filter label
 
                 ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");
-                pt = ptSheet.PivotTables.Add("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), table);
 
                 pt.RowLabels.Add("Name");
                 pt.RowLabels.Add("Month");
@@ -146,7 +146,7 @@ namespace ClosedXML.Examples
                 ptSheet = wb.Worksheets.Add("pvtHideSubTotals");
 
                 // Create the pivot table, using the data from the "PastrySalesData" table
-                pt = ptSheet.PivotTables.Add("pvtHidesubTotals", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvtHidesubTotals", ptSheet.Cell(1, 1), table);
 
                 // The rows in our pivot table will be the names of the pastries
                 pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
@@ -197,7 +197,7 @@ namespace ClosedXML.Examples
                 #region Pivot table sorting
 
                 ptSheet = wb.Worksheets.Add("pvtSort");
-                pt = ptSheet.PivotTables.Add("pvtSort", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvtSort", ptSheet.Cell(1, 1), table);
 
                 pt.RowLabels.Add("Name").SetSort(XLPivotSortType.Ascending);
                 pt.RowLabels.Add("Month").SetSort(XLPivotSortType.Descending);

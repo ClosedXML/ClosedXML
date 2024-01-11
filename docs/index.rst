@@ -34,20 +34,24 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    :caption: Concepts
 
    concepts/types
+   concepts/formula-calculation
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: Features
 
    features/worksheets
    features/bulk-insert-data
    features/tables
    features/cell-format
+   features/sort
+   features/autofilter
    features/pivot-tables
    features/protect
    features/formulas
    features/functions
    features/graphic-engine
+   features/themes
 
 .. toctree::
    :maxdepth: 3
@@ -62,12 +66,15 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
    migrations/migrate-to-0.100
    migrations/migrate-to-0.101
    migrations/migrate-to-0.102
+   migrations/migrate-to-0.103
+   migrations/migrate-to-0.104
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
 
    api/index
+   api/autofilter
    api/workbook
    api/worksheet
    api/cell

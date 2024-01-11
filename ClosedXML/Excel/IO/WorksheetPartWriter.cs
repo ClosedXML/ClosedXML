@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
@@ -74,12 +75,17 @@ namespace ClosedXML.Excel.IO
                 worksheet = new Worksheet();
             }
 
-            if (
-                !worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+            if (worksheet.NamespaceDeclarations.All(ns => ns.Value != RelationshipsNs))
+                worksheet.AddNamespaceDeclaration("r", RelationshipsNs);
+
+            // We store the x14ac:dyDescent attribute (if set by a xlRow) in a row element. It's an optional attribute and it
+            // needs a declared namespace. To avoid writing namespace to each <x:row> element during streaming, write it to
+            // every sheet part ahead of time. The namespace has to be marked as ignorable, because OpenXML SDK validator will
+            // refuse to validate it because it's an optional extension (see ISO29500 part 3).
+            if (worksheet.NamespaceDeclarations.All(ns => ns.Value != X14Ac2009SsNs))
             {
-                worksheet.AddNamespaceDeclaration("r",
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                worksheet.AddNamespaceDeclaration("x14ac", X14Ac2009SsNs);
+                worksheet.SetAttribute(new OpenXmlAttribute("mc", "Ignorable", MarkupCompatibilityNs, "x14ac"));
             }
 
             #endregion Worksheet
@@ -236,7 +242,7 @@ namespace ClosedXML.Excel.IO
             else
                 sheetView.TopLeftCell = xlWorksheet.SheetView.TopLeftCellAddress.ToString();
 
-            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
+            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell is not null)
             {
                 sheetView.RemoveAllChildren<Selection>();
                 svcm.SetElement(XLSheetViewContents.Selection, null);
@@ -245,8 +251,8 @@ namespace ClosedXML.Excel.IO
 
                 Action<Selection> populateSelection = (Selection selection) =>
                 {
-                    if (xlWorksheet.ActiveCell != null)
-                        selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                    if (xlWorksheet.ActiveCell is not null)
+                        selection.ActiveCell = xlWorksheet.ActiveCell.Value.ToString();
                     else if (firstSelection != null)
                         selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
@@ -640,8 +646,8 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
-            if (exlst != null && exlst.Any())
+            var exlst = xlWorksheet.ConditionalFormats.Where(c => c.ConditionalFormatType == XLConditionalFormatType.DataBar).ToArray();
+            if (exlst.Any())
             {
                 if (!worksheet.Elements<WorksheetExtensionList>().Any())
                 {
@@ -656,7 +662,7 @@ namespace ClosedXML.Excel.IO
                 if (conditionalFormattings == null || !conditionalFormattings.Any())
                 {
                     WorksheetExtension worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
-                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtension1.AddNamespaceDeclaration("x14", X14Main2009SsNs);
                     worksheetExtensionList.Append(worksheetExtension1);
 
                     conditionalFormattings = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings();
@@ -682,7 +688,7 @@ namespace ClosedXML.Excel.IO
                         }
 
                         var conditionalFormatting = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting();
-                        conditionalFormatting.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                        conditionalFormatting.AddNamespaceDeclaration("xm", XmMain2006);
                         conditionalFormatting.Append(XLCFConvertersExtension.Convert(xlConditionalFormat, context));
                         var referenceSequence = new DocumentFormat.OpenXml.Office.Excel.ReferenceSequence { Text = cfGroup.RangeId };
                         conditionalFormatting.Append(referenceSequence);
@@ -736,11 +742,11 @@ namespace ClosedXML.Excel.IO
                 if (sparklineGroups == null || !sparklineGroups.Any())
                 {
                     var worksheetExtension1 = new WorksheetExtension() { Uri = sparklineGroupsExtensionUri };
-                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtension1.AddNamespaceDeclaration("x14", X14Main2009SsNs);
                     worksheetExtensionList.Append(worksheetExtension1);
 
                     sparklineGroups = new X14.SparklineGroups();
-                    sparklineGroups.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    sparklineGroups.AddNamespaceDeclaration("xm", XmMain2006);
                     worksheetExtension1.Append(sparklineGroups);
                 }
                 else
@@ -817,7 +823,56 @@ namespace ClosedXML.Excel.IO
 
             #region DataValidations
 
-            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
+            // Saving of data validations happens in 2 phases because depending on the data validation
+            // content, it gets saved into 1 of 2 possible locations in the XML structure.
+            // First phase, save all the data validations that aren't references to other sheets into
+            // the standard data validations section.
+            var dataValidationsStandard = new List<(IXLDataValidation DataValidation, string MinValue, string MaxValue)>();
+            var dataValidationsExtension = new List<(IXLDataValidation DataValidation, string MinValue, string MaxValue)>();
+            if (options.ConsolidateDataValidationRanges)
+            {
+                xlWorksheet.DataValidations.Consolidate();
+            }
+
+            foreach (var dv in xlWorksheet.DataValidations)
+            {
+                var (minReferencesAnotherSheet, minValue) = UsesExternalSheet(xlWorksheet, dv.MinValue);
+                var (maxReferencesAnotherSheet, maxValue) = UsesExternalSheet(xlWorksheet, dv.MaxValue);
+
+                static (bool, string) UsesExternalSheet(XLWorksheet sheet, string value)
+                {
+                    if (!XLHelper.IsValidRangeAddress(value))
+                        return (false, value);
+
+                    var separatorIndex = value.LastIndexOf('!');
+                    var hasSheet = separatorIndex >= 0;
+                    if (!hasSheet)
+                        return (false, value);
+
+                    var sheetName = value[..separatorIndex].UnescapeSheetName();
+                    if (XLHelper.SheetComparer.Equals(sheet.Name, sheetName))
+                    {
+                        // The spec wants us to include references to ranges on the same worksheet without the sheet name
+                        return (false, value.Substring(separatorIndex + 1));
+                    }
+
+                    return (true, value);
+                }
+
+                if (minReferencesAnotherSheet || maxReferencesAnotherSheet)
+                {
+                    // We're dealing with a data validation that references another sheet so has to be saved to extensions
+                    dataValidationsExtension.Add((dv, minValue, maxValue));
+                }
+                else
+                {
+                    // We're dealing with a standard data validation
+                    dataValidationsStandard.Add((dv, minValue, maxValue));
+                }
+            }
+
+            // Save validations that don't use another sheet. It must have at least 1 child, XML doesn't allow 0.
+            if (!dataValidationsStandard.Any(d => d.DataValidation.IsDirty()))
             {
                 worksheet.RemoveAllChildren<DataValidations>();
                 cm.SetElement(XLWorksheetContents.DataValidations, null);
@@ -834,23 +889,14 @@ namespace ClosedXML.Excel.IO
                 cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
 
-                if (options.ConsolidateDataValidationRanges)
+                foreach (var (dv, minValue, maxValue) in dataValidationsStandard)
                 {
-                    xlWorksheet.DataValidations.Consolidate();
-                }
-
-                foreach (var dv in xlWorksheet.DataValidations)
-                {
-                    var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
-
-                    if (sequence.Length > 0)
-                        sequence = sequence.Substring(0, sequence.Length - 1);
-
+                    var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
                     var dataValidation = new DataValidation
                     {
                         AllowBlank = dv.IgnoreBlanks,
-                        Formula1 = new Formula1(dv.MinValue),
-                        Formula2 = new Formula2(dv.MaxValue),
+                        Formula1 = new Formula1(minValue),
+                        Formula2 = new Formula2(maxValue),
                         Type = dv.AllowedValues.ToOpenXml(),
                         ShowErrorMessage = dv.ShowErrorMessage,
                         Prompt = dv.InputMessage,
@@ -861,13 +907,89 @@ namespace ClosedXML.Excel.IO
                         ShowInputMessage = dv.ShowInputMessage,
                         ErrorStyle = dv.ErrorStyle.ToOpenXml(),
                         Operator = dv.Operator.ToOpenXml(),
-                        SequenceOfReferences =
-                            new ListValue<StringValue> { InnerText = sequence }
+                        SequenceOfReferences = new ListValue<StringValue> { InnerText = sequence }
                     };
 
                     dataValidations.AppendChild(dataValidation);
                 }
-                dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
+                dataValidations.Count = (UInt32)dataValidationsStandard.Count;
+            }
+
+            // Second phase, save all the data validations that reference other sheets into the worksheet extensions.
+            const string dataValidationsExtensionUri = "{CCE6A557-97BC-4b89-ADB6-D9C93CAAB3DF}";
+            if (dataValidationsExtension.Count == 0)
+            {
+                var worksheetExtensionList = worksheet.Elements<WorksheetExtensionList>().FirstOrDefault();
+                var worksheetExtension = worksheetExtensionList?.Elements<WorksheetExtension>()
+                    .FirstOrDefault(ext => string.Equals(ext.Uri, dataValidationsExtensionUri, StringComparison.OrdinalIgnoreCase));
+
+                worksheetExtension?.RemoveAllChildren<X14.DataValidations>();
+
+                if (worksheetExtensionList != null)
+                {
+                    if (worksheetExtension != null && !worksheetExtension.HasChildren)
+                    {
+                        worksheetExtensionList.RemoveChild(worksheetExtension);
+                    }
+
+                    if (!worksheetExtensionList.HasChildren)
+                    {
+                        worksheet.RemoveChild(worksheetExtensionList);
+                        cm.SetElement(XLWorksheetContents.WorksheetExtensionList, null);
+                    }
+                }
+            }
+            else
+            {
+                if (!worksheet.Elements<WorksheetExtensionList>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
+                    worksheet.InsertAfter(new WorksheetExtensionList(), previousElement);
+                }
+
+                var worksheetExtensionList = worksheet.Elements<WorksheetExtensionList>().First();
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
+
+                var extensionDataValidations = worksheetExtensionList.Descendants<X14.DataValidations>().SingleOrDefault();
+
+                if (extensionDataValidations == null || !extensionDataValidations.Any())
+                {
+                    var worksheetExtension = new WorksheetExtension() { Uri = dataValidationsExtensionUri };
+                    worksheetExtension.AddNamespaceDeclaration("x14", X14Main2009SsNs);
+                    worksheetExtensionList.Append(worksheetExtension);
+
+                    extensionDataValidations = new X14.DataValidations();
+                    extensionDataValidations.AddNamespaceDeclaration("xm", XmMain2006);
+                    worksheetExtension.Append(extensionDataValidations);
+                }
+                else
+                {
+                    extensionDataValidations.RemoveAllChildren();
+                }
+
+                foreach (var (dv, minValue, maxValue) in dataValidationsExtension)
+                {
+                    var sequence = string.Join(" ", dv.Ranges.Select(x => x.RangeAddress));
+                    var dataValidation = new X14.DataValidation
+                    {
+                        AllowBlank = dv.IgnoreBlanks,
+                        DataValidationForumla1 = !string.IsNullOrWhiteSpace(minValue) ? new X14.DataValidationForumla1(new OfficeExcel.Formula(minValue)) : null,
+                        DataValidationForumla2 = !string.IsNullOrWhiteSpace(maxValue) ? new X14.DataValidationForumla2(new OfficeExcel.Formula(maxValue)) : null,
+                        Type = dv.AllowedValues.ToOpenXml(),
+                        ShowErrorMessage = dv.ShowErrorMessage,
+                        Prompt = dv.InputMessage,
+                        PromptTitle = dv.InputTitle,
+                        ErrorTitle = dv.ErrorTitle,
+                        Error = dv.ErrorMessage,
+                        ShowDropDown = !dv.InCellDropdown,
+                        ShowInputMessage = dv.ShowInputMessage,
+                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                        Operator = dv.Operator.ToOpenXml(),
+                        ReferenceSequence = new OfficeExcel.ReferenceSequence() { Text = sequence }
+                    };
+                    extensionDataValidations.AppendChild(dataValidation);
+                }
+                extensionDataValidations.Count = (UInt32)dataValidationsExtension.Count;
             }
 
             #endregion DataValidations
@@ -976,7 +1098,8 @@ namespace ClosedXML.Excel.IO
 
             if (xlWorksheet.PageSetup.FirstPageNumber.HasValue)
             {
-                pageSetup.FirstPageNumber = UInt32Value.FromUInt32(xlWorksheet.PageSetup.FirstPageNumber.Value);
+                // Negative first page numbers are written as uint, e.g. -1 is 4294967295.
+                pageSetup.FirstPageNumber = UInt32Value.FromUInt32((uint)xlWorksheet.PageSetup.FirstPageNumber.Value);
                 pageSetup.UseFirstPageNumber = true;
             }
             else
@@ -1074,7 +1197,7 @@ namespace ClosedXML.Excel.IO
 
                 var rowBreaks = worksheet.Elements<RowBreaks>().First();
 
-                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>().ToArray();
                 var rowBreaksToDelete = existingBreaks
                     .Where(rb => !rb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
@@ -1121,7 +1244,7 @@ namespace ClosedXML.Excel.IO
 
                 var columnBreaks = worksheet.Elements<ColumnBreaks>().First();
 
-                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>().ToArray();
                 var columnBreaksToDelete = existingBreaks
                     .Where(cb => !cb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
@@ -1192,7 +1315,10 @@ namespace ClosedXML.Excel.IO
 
             // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
             var hasCharts = worksheetPart.DrawingsPart is not null && worksheetPart.DrawingsPart.Parts.Any();
-            if (worksheetPart.DrawingsPart is not null && !xlWorksheet.Pictures.Any() && !hasCharts)
+            if (worksheetPart.DrawingsPart is not null && // There is a drawing part for the sheet that could be deleted
+                xlWorksheet.LegacyDrawingId is null && // and sheet doesn't contain any form controls or comments or other shapes
+                !xlWorksheet.Pictures.Any() && // and also no pictures.
+                !hasCharts) // and no charts
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
                 worksheet.RemoveChild(worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
@@ -1258,16 +1384,18 @@ namespace ClosedXML.Excel.IO
                     {
                         if (xlCell.ShareString)
                         {
+                            var sharedStringId = context.SstMap[xlCell.SharedStringId];
                             w.WriteStartElement("v", Main2006SsNs);
-                            w.WriteValue(xlCell.SharedStringId);
+                            w.WriteValue(sharedStringId);
                             w.WriteEndElement();
                         }
                         else
                         {
                             w.WriteStartElement("is", Main2006SsNs);
-                            if (xlCell.HasRichText)
+                            var richText = xlCell.RichText;
+                            if (richText is not null)
                             {
-                                TextSerializer.WriteRichTextElements(w, xlCell, context);
+                                TextSerializer.WriteRichTextElements(w, richText, context);
                             }
                             else
                             {
@@ -1335,23 +1463,24 @@ namespace ClosedXML.Excel.IO
             var filterRange = xlAutoFilter.Range;
             autoFilter.Reference = filterRange.RangeAddress.ToString();
 
-            foreach (var kp in xlAutoFilter.Filters)
+            foreach (var (columnNumber, xlFilterColumn) in xlAutoFilter.Columns)
             {
-                var filterColumn = new FilterColumn { ColumnId = (UInt32)kp.Key - 1 };
-                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
+                var filterColumn = new FilterColumn { ColumnId = (UInt32)columnNumber - 1 };
 
                 switch (xlFilterColumn.FilterType)
                 {
                     case XLFilterType.Custom:
                         var customFilters = new CustomFilters();
-                        foreach (var filter in kp.Value)
+                        foreach (var xlFilter in xlFilterColumn)
                         {
-                            var customFilter = new CustomFilter { Val = filter.Value.ObjectToInvariantString() };
+                            // Since OOXML allows only string, the operand for custom filter must be serialized.
+                            var filterValue = xlFilter.CustomValue.ToString(CultureInfo.InvariantCulture);
+                            var customFilter = new CustomFilter { Val = filterValue };
 
-                            if (filter.Operator != XLFilterOperator.Equal)
-                                customFilter.Operator = filter.Operator.ToOpenXml();
+                            if (xlFilter.Operator != XLFilterOperator.Equal)
+                                customFilter.Operator = xlFilter.Operator.ToOpenXml();
 
-                            if (filter.Connector == XLConnector.And)
+                            if (xlFilter.Connector == XLConnector.And)
                                 customFilters.And = true;
 
                             customFilters.Append(customFilter);
@@ -1360,26 +1489,36 @@ namespace ClosedXML.Excel.IO
                         break;
 
                     case XLFilterType.TopBottom:
-
-                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
-                        if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
-                            top101.Percent = true;
-                        if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
-                            top101.Top = false;
-
+                        // Although there is FilterValue attribute, populating it seems like more
+                        // trouble than it's worth due to consistency issues. It's optional, so we
+                        // can't rely on it during load anyway.
+                        var top101 = new Top10
+                        {
+                            Val = xlFilterColumn.TopBottomValue,
+                            Percent = OpenXmlHelper.GetBooleanValue(xlFilterColumn.TopBottomType == XLTopBottomType.Percent, false),
+                            Top = OpenXmlHelper.GetBooleanValue(xlFilterColumn.TopBottomPart == XLTopBottomPart.Top, true)
+                        };
                         filterColumn.Append(top101);
                         break;
 
                     case XLFilterType.Dynamic:
-
                         var dynamicFilter = new DynamicFilter
-                        { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                        {
+                            Type = xlFilterColumn.DynamicType.ToOpenXml(),
+                            Val = xlFilterColumn.DynamicValue
+                        };
                         filterColumn.Append(dynamicFilter);
                         break;
 
-                    case XLFilterType.DateTimeGrouping:
-                        var dateTimeGroupFilters = new Filters();
-                        foreach (var filter in kp.Value)
+                    case XLFilterType.Regular:
+                        var filters = new Filters();
+                        foreach (var filter in xlFilterColumn)
+                        {
+                            if (filter.Value is string s)
+                                filters.Append(new Filter { Val = s });
+                        }
+
+                        foreach (var filter in xlFilterColumn)
                         {
                             if (filter.Value is DateTime)
                             {
@@ -1396,21 +1535,15 @@ namespace ClosedXML.Excel.IO
                                 if (filter.DateTimeGrouping >= XLDateTimeGrouping.Minute) dgi.Minute = (UInt16)d.Minute;
                                 if (filter.DateTimeGrouping >= XLDateTimeGrouping.Second) dgi.Second = (UInt16)d.Second;
 
-                                dateTimeGroupFilters.Append(dgi);
+                                filters.Append(dgi);
                             }
-                        }
-                        filterColumn.Append(dateTimeGroupFilters);
-                        break;
-
-                    default:
-                        var filters = new Filters();
-                        foreach (var filter in kp.Value)
-                        {
-                            filters.Append(new Filter { Val = filter.Value.ObjectToInvariantString() });
                         }
 
                         filterColumn.Append(filters);
                         break;
+
+                    default:
+                        throw new NotSupportedException();
                 }
                 autoFilter.Append(filterColumn);
             }
@@ -1760,7 +1893,7 @@ namespace ClosedXML.Excel.IO
 
         private static void PopulateTablePartReferences(XLTables xlTables, Worksheet worksheet, XLWorksheetContentManager cm)
         {
-            var emptyTable = xlTables.FirstOrDefault(t => t.DataRange == null);
+            var emptyTable = xlTables.FirstOrDefault<XLTable>(t => t.DataRange is null);
             if (emptyTable != null)
                 throw new EmptyTableException($"Table '{emptyTable.Name}' should have at least 1 row.");
 
@@ -1784,7 +1917,7 @@ namespace ClosedXML.Excel.IO
                 tableParts.AppendChild(new TablePart { Id = xlTable.RelId });
             }
 
-            tableParts.Count = (UInt32)xlTables.Count();
+            tableParts.Count = (UInt32)xlTables.Count<XLTable>();
         }
 
         /// <summary>
@@ -1844,7 +1977,7 @@ namespace ClosedXML.Excel.IO
 
             var tableTotalCells = new HashSet<IXLAddress>(
                 xlWorksheet.Tables
-                .Where(table => table.ShowTotalsRow)
+                .Where<XLTable>(table => table.ShowTotalsRow)
                 .SelectMany(table =>
                     table.TotalsRow().CellsUsed())
                 .Select(cell => cell.Address));
@@ -2127,7 +2260,7 @@ namespace ClosedXML.Excel.IO
                 }
                 else if (tableTotalCells.Contains(xlCell.Address))
                 {
-                    var table = xlCell.Worksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                    var table = xlCell.Worksheet.Tables.First<XLTable>(t => t.AsRange().Contains(xlCell));
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
 
                     // If this is a cell in the totals row that contains a label (xor with function), write label
@@ -2143,7 +2276,7 @@ namespace ClosedXML.Excel.IO
                     }
                     xml.WriteEndElement(); // cell
                 }
-                else if(xlCell.DataType != XLDataType.Blank)
+                else if (xlCell.DataType != XLDataType.Blank)
                 {
                     // Cell contains only a value
                     var dataType = GetCellValueType(xlCell);

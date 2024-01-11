@@ -1,12 +1,9 @@
 #nullable disable
 
-using ClosedXML.Excel.CalcEngine;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using Array = ClosedXML.Excel.CalcEngine.Array;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
@@ -27,7 +24,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a cell formula, not the formula itself (i.e. the tree).
     /// </summary>
-    [DebuggerDisplay("{Type}:{A1}")]
+    [DebuggerDisplay("Cell:{Range} - Type: {Type} - Formula: {A1}")]
     internal sealed class XLCellFormula
     {
         /// <summary>
@@ -36,41 +33,16 @@ namespace ClosedXML.Excel
         /// </summary>
         private const string DataTableFormulaFormat = "{{TABLE({0},{1}}}";
 
-        private static readonly Regex A1Regex = new(
-            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
-            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
-
-        private static readonly Regex R1C1Regex = new(
-            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
-            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
-            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
-
         private XLSheetPoint _input1;
         private XLSheetPoint _input2;
         private FormulaFlags _flags;
         private FormulaType _type;
 
         /// <summary>
-        /// The recalculation status of the last time formula was checked whether it needs to be recalculated.
+        /// Is this formula dirty, i.e. is it potentially out of date due to changes
+        /// to precedent cells?
         /// </summary>
-        private RecalculationStatus _lastStatus;
-
-        /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell formula evaluation.
-        /// If this value equals to <see cref="XLWorkbook.RecalculationCounter"/> it indicates that <see cref="XLCell.CachedValue"/> stores
-        /// correct value and no re-evaluation has to be performed.
-        /// </summary>
-        private long _evaluatedAtVersion;
-
-        private XLCellFormula()
-        {
-            // Formulas from loaded worksheets with values are treated as valid, until something changes (i.e. recalculation version increases)
-            // When a formula is set directly from a cell, it invalidates formula immediately afterwards.
-            _lastStatus = new(false, 0);
-        }
-
-        internal bool IsEvaluating { get; private set; }
+        internal bool IsDirty { get; set; }
 
         /// <summary>
         /// Formula in A1 notation. Either this or <see cref="R1C1"/> must be set (potentially
@@ -89,6 +61,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Range for array and data table formulas, otherwise default value.
         /// </summary>
+        /// <remarks>Doesn't contain sheet, so it doesn't have to deal with
+        /// sheet renames and moving formula around.</remarks>
         internal XLSheetRange Range { get; set; }
 
         /// <summary>
@@ -147,71 +121,6 @@ namespace ClosedXML.Excel
         internal Boolean Input2Deleted => _flags.HasFlag(FormulaFlags.Input2Deleted);
 
         /// <summary>
-        /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
-        /// </summary>
-        internal bool NeedsRecalculation(XLCell cell)
-        {
-            var worksheet = cell.Worksheet;
-            var currentVersion = worksheet.Workbook.RecalculationCounter;
-
-            // Nothing changed since last check => answer is still the same
-            if (_lastStatus.Version == currentVersion)
-            {
-                return _lastStatus.NeededRecalculation;
-            }
-
-            var recalculationNeeded = EvaluateStatus(cell);
-            _lastStatus = new(recalculationNeeded, currentVersion);
-            return recalculationNeeded;
-        }
-
-        private bool EvaluateStatus(XLCell cell)
-        {
-            // Cell could have been invalidated or a new formula was set
-            bool cellWasModified = _evaluatedAtVersion < cell.ModifiedAtVersion;
-            if (cellWasModified)
-            {
-                return true;
-            }
-
-            var worksheet = cell.Worksheet;
-            if (!worksheet.CalcEngine.TryGetPrecedentCells(A1, worksheet, out var precedentCells))
-            {
-                // If we are unable to even determine precedent cells, always recalculate
-                return true;
-            }
-
-            foreach (var precedentCell in precedentCells)
-            {
-                // the affecting cell was modified after this one was evaluated
-                // e.g. cell now has a different value than it had at the last evaluation.
-                if (precedentCell.ModifiedAtVersion > _evaluatedAtVersion)
-                {
-                    return true;
-                }
-
-                // the affecting cell was evaluated after this one (normally this should not happen)
-                if (precedentCell.Formula is not null && precedentCell.Formula._evaluatedAtVersion > _evaluatedAtVersion)
-                {
-                    return true;
-                }
-
-                // the affecting cell needs recalculation (recursion to walk through dependencies)
-                if (precedentCell.NeedsRecalculation)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal void Invalidate(XLWorksheet worksheet)
-        {
-            _lastStatus = new(true, worksheet.Workbook.RecalculationCounter);
-        }
-
-        /// <summary>
         /// Get stored formula in A1 notation. Returned formula doesn't contain equal sign.
         /// </summary>
         /// <param name="cellAddress">Address of the formula cell. Used to convert relative R1C1 to A1, if conversion is necessary.</param>
@@ -245,298 +154,29 @@ namespace ClosedXML.Excel
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
-            var value = ">" + strValue + "<";
+            // Users and some producers might prefix formula with '=', but that is not a valid
+            // formula, so strip and re-add if present.
+            var formula = strValue.Trim();
+            if (formula.StartsWith('='))
+                formula = formula[1..];
 
-            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
-
-            var sb = new StringBuilder();
-            var lastIndex = 0;
-
-            foreach (var match in regex.Matches(value).Cast<Match>())
+            var converted = conversionType switch
             {
-                var matchString = match.Value;
-                var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
-                {
-                    // Check if the match is in between quotes
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                    sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                        ? GetR1C1Address(matchString, cellAddress)
-                        : GetA1Address(matchString, cellAddress));
-                }
-                else
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                lastIndex = matchIndex + matchString.Length;
-            }
+                FormulaConversionType.A1ToR1C1 => FormulaConverter.ToR1C1(formula, cellAddress.Row, cellAddress.Column),
+                FormulaConversionType.R1C1ToA1 => FormulaConverter.ToA1(formula, cellAddress.Row, cellAddress.Column),
+                _ => throw new NotSupportedException()
+            };
 
-            if (lastIndex < value.Length)
-                sb.Append(value.Substring(lastIndex));
+            if (formula.Length != strValue.Length)
+                converted = strValue[..^formula.Length] + converted;
 
-            var retVal = sb.ToString();
-            return retVal.Substring(1, retVal.Length - 2);
-        }
-
-        private static string GetA1Address(string r1C1Address, XLSheetPoint cellAddress)
-        {
-            var addressToUse = r1C1Address.ToUpper();
-
-            if (addressToUse.Contains(':'))
-            {
-                var parts = addressToUse.Split(':');
-                var p1 = parts[0];
-                var p2 = parts[1];
-                string leftPart;
-                string rightPart;
-                if (p1.StartsWith("R"))
-                {
-                    leftPart = GetA1Row(p1, cellAddress.Row);
-                    rightPart = GetA1Row(p2, cellAddress.Row);
-                }
-                else
-                {
-                    leftPart = GetA1Column(p1, cellAddress.Column);
-                    rightPart = GetA1Column(p2, cellAddress.Column);
-                }
-
-                return leftPart + ":" + rightPart;
-            }
-
-            try
-            {
-                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf('C'));
-                var rowToReturn = GetA1Row(rowPart, cellAddress.Row);
-
-                var columnPart = addressToUse.Substring(addressToUse.IndexOf('C'));
-                var columnToReturn = GetA1Column(columnPart, cellAddress.Column);
-
-                var retAddress = columnToReturn + rowToReturn;
-                return retAddress;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return "#REF!";
-            }
-        }
-
-        private static string GetA1Column(string columnPartRC, int cellColumn)
-        {
-            string columnToReturn;
-            if (columnPartRC == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(cellColumn);
-            else
-            {
-                var bIndex = columnPartRC.IndexOf('[');
-                var mIndex = columnPartRC.IndexOf('-');
-                if (bIndex >= 0)
-                {
-                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        cellColumn +
-                        Int32.Parse(columnPartRC.Substring(bIndex + 1, columnPartRC.Length - bIndex - 2))
-                    );
-                }
-                else if (mIndex >= 0)
-                {
-                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        cellColumn + Int32.Parse(columnPartRC.Substring(mIndex))
-                    );
-                }
-                else
-                {
-                    columnToReturn = "$" +
-                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPartRC.Substring(1)));
-                }
-            }
-
-            return columnToReturn;
-        }
-
-        private static string GetA1Row(string rowPartRC, int cellRow)
-        {
-            string rowToReturn;
-            if (rowPartRC == "R")
-                rowToReturn = cellRow.ToString();
-            else
-            {
-                var bIndex = rowPartRC.IndexOf('[');
-                if (bIndex >= 0)
-                {
-                    rowToReturn =
-                        (cellRow + Int32.Parse(rowPartRC.Substring(bIndex + 1, rowPartRC.Length - bIndex - 2))).ToString();
-                }
-                else
-                    rowToReturn = "$" + (Int32.Parse(rowPartRC.Substring(1)));
-            }
-
-            return rowToReturn;
-        }
-
-        private static string GetR1C1Address(string a1Address, XLSheetPoint cellAddress)
-        {
-            if (a1Address.Contains(':'))
-            {
-                var parts = a1Address.Split(':');
-                var p1 = parts[0];
-                var p2 = parts[1];
-                if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
-                {
-                    var row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), cellAddress.Row);
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), cellAddress.Row);
-                    return leftPart + ":" + rightPart;
-                }
-                else
-                {
-                    var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
-                    var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), cellAddress.Column);
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), cellAddress.Column);
-                    return leftPart + ":" + rightPart;
-                }
-            }
-
-            var address = XLAddress.Create(a1Address);
-
-            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, cellAddress.Row);
-            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, cellAddress.Column);
-
-            return rowPart + columnPart;
-        }
-
-        private static string GetR1C1Row(int rowNumber, bool fixedRow, int cellRow)
-        {
-            string rowPart;
-            var rowDiff = rowNumber - cellRow;
-            if (rowDiff != 0 || fixedRow)
-                rowPart = fixedRow ? "R" + rowNumber : "R[" + rowDiff + "]";
-            else
-                rowPart = "R";
-
-            return rowPart;
-        }
-
-        private static string GetR1C1Column(int columnNumber, bool fixedColumn, int cellColumn)
-        {
-            string columnPart;
-            var columnDiff = columnNumber - cellColumn;
-            if (columnDiff != 0 || fixedColumn)
-                columnPart = fixedColumn ? "C" + columnNumber : "C[" + columnDiff + "]";
-            else
-                columnPart = "C";
-
-            return columnPart;
-        }
-
-        internal void ApplyFormula(XLCell cell)
-        {
-            if (IsEvaluating)
-            {
-                throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
-            }
-
-            try
-            {
-                IsEvaluating = true;
-
-                if (Type == FormulaType.Normal)
-                {
-                    var fA1 = GetFormulaA1(cell.SheetPoint);
-                    var result = CalculateNormalFormula(fA1, cell);
-                    cell.SetOnlyValue(result.ToCellValue());
-                }
-                else if (Type == FormulaType.Array)
-                {
-                    var result = CalculateArrayFormula(cell);
-                    for (var rowIdx = 0; rowIdx < result.Height; ++rowIdx)
-                    {
-                        for (var colIdx = 0; colIdx < result.Width; ++colIdx)
-                        {
-                            var cellValue = result[rowIdx, colIdx];
-                            var cellRow = Range.FirstPoint.Row + rowIdx;
-                            var cellColumn = Range.FirstPoint.Column + colIdx;
-                            cell.Worksheet.Cell(cellRow, cellColumn).SetOnlyValue(cellValue.ToCellValue());
-                        }
-                    }
-                }
-                else
-                {
-                    throw new NotImplementedException($"Evaluation of {Type} formula not implemented.");
-                }
-
-                var recalculationCounter = cell.Worksheet.Workbook.RecalculationCounter;
-                _lastStatus = new RecalculationStatus(false, recalculationCounter);
-                _evaluatedAtVersion = recalculationCounter;
-            }
-            finally
-            {
-                IsEvaluating = false;
-            }
-        }
-
-        /// <summary>
-        /// Calculate a value of the specified formula.
-        /// </summary>
-        /// <param name="fA1">Cell formula to evaluate in A1 format.</param>
-        /// <param name="cell">Cell whose formula is being evaluated.</param>
-        private ScalarValue CalculateNormalFormula(string fA1, XLCell cell)
-        {
-            var worksheet = cell.Worksheet;
-            string sName;
-            string cAddress;
-            if (fA1.Contains('!'))
-            {
-                sName = fA1.Substring(0, fA1.IndexOf('!'));
-                if (sName[0] == '\'')
-                    sName = sName.Substring(1, sName.Length - 2);
-
-                cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
-            }
-            else
-            {
-                sName = worksheet.Name;
-                cAddress = fA1;
-            }
-
-            if (worksheet.Workbook.Worksheets.Contains(sName)
-                && XLHelper.IsValidA1Address(cAddress))
-            {
-                var referenceCell = worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                    return 0d;
-                else
-                    return referenceCell.Value;
-            }
-
-            if (worksheet.Workbook.Worksheets.Contains(sName)
-                && XLHelper.IsValidA1Address(cAddress))
-            {
-                var referenceCell = worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                    return 0;
-                else
-                    return referenceCell.Value;
-            }
-
-            var retVal = worksheet.CalcEngine.EvaluateFormula(fA1, worksheet.Workbook, worksheet, cell.Address);
-            return retVal;
-        }
-
-        /// <summary>
-        /// Calculate array formula and return an array of the array formula range size.
-        /// </summary>
-        private Array CalculateArrayFormula(XLCell masterCell)
-        {
-            var ws = masterCell.Worksheet;
-            var formula = GetFormulaA1(masterCell.SheetPoint);
-            var resultArray = ws.CalcEngine.EvaluateArrayFormula(formula, masterCell);
-            var rescaledArray = resultArray.Rescale(Range.Height, Range.Width);
-            return rescaledArray;
+            return converted;
         }
 
         /// <summary>
         /// A factory method to create a normal A1 formula. Doesn't affect recalculation version.
         /// </summary>
-        /// <param name="formulaA1">Doesn't start with <c>=</c>.</param>
+        /// <param name="formulaA1">Formula in A1 form. Shouldn't start with <c>=</c>.</param>
         internal static XLCellFormula NormalA1(string formulaA1)
         {
             return new XLCellFormula
@@ -551,7 +191,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// A factory method to create a normal R1C1 formula. Doesn't affect recalculation version.
         /// </summary>
-        /// <param name="formulaR1C1">Doesn't start with <c>=</c>.</param>
+        /// <param name="formulaR1C1">Formula in R1C1 form. Shouldn't start with <c>=</c>.</param>
         internal static XLCellFormula NormalR1C1(string formulaR1C1)
         {
             return new XLCellFormula
@@ -690,22 +330,21 @@ namespace ClosedXML.Excel
             Input2Deleted = 16,
         }
 
-        private readonly struct RecalculationStatus
+        /// <summary>
+        /// Get a lazy initialized AST for the formula.
+        /// </summary>
+        /// <param name="engine">Engine to parse the formula into AST, if necessary.</param>
+        public Formula GetAst(XLCalcEngine engine)
         {
-            public RecalculationStatus(bool neededRecalculation, long version)
-            {
-                NeededRecalculation = neededRecalculation;
-                Version = version;
-            }
+            var ast = A1 is not null
+                ? engine.Parse(A1)
+                : engine.ParseR1C1(R1C1);
+            return ast;
+        }
 
-            internal bool NeededRecalculation { get; }
-
-            /// <summary>
-            /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
-            /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If this value equals to <see cref="XLWorkbook.RecalculationCounter"/>
-            /// it indicates that <see cref="NeededRecalculation"/> stores correct value and no check has to be performed.
-            /// </summary>
-            internal long Version { get; }
-        };
+        public override string ToString()
+        {
+            return A1 ?? R1C1;
+        }
     }
 }

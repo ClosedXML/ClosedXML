@@ -1,18 +1,20 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// A collection of a named ranges, either for workbook or for worksheet.
+    /// </summary>
     internal class XLNamedRanges : IXLNamedRanges
     {
-        private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, XLNamedRange> _namedRanges = new(XLHelper.NameComparer);
 
         internal XLWorkbook Workbook { get; set; }
 
-        internal XLWorksheet Worksheet { get; set; }
+        internal XLWorksheet? Worksheet { get; set; }
 
         internal XLNamedRangeScope Scope { get; }
 
@@ -31,9 +33,14 @@ namespace ClosedXML.Excel
 
         #region IXLNamedRanges Members
 
-        public IXLNamedRange NamedRange(String rangeName)
+        IXLNamedRange IXLNamedRanges.NamedRange(String rangeName)
         {
-            if (_namedRanges.TryGetValue(rangeName, out IXLNamedRange range))
+            return NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found.");
+        }
+
+        internal XLNamedRange? NamedRange(String rangeName)
+        {
+            if (_namedRanges.TryGetValue(rangeName, out XLNamedRange range))
                 return range;
 
             return null;
@@ -54,7 +61,7 @@ namespace ClosedXML.Excel
             return Add(rangeName, ranges, null);
         }
 
-        public IXLNamedRange Add(String rangeName, String rangeAddress, String comment)
+        public IXLNamedRange Add(String rangeName, String rangeAddress, String? comment)
         {
             return Add(rangeName, rangeAddress, comment, validateName: true, validateRangeAddress: true);
         }
@@ -71,7 +78,7 @@ namespace ClosedXML.Excel
         /// <exception cref="ArgumentException">
         /// For named ranges in the workbook scope, specify the sheet name in the reference.
         /// </exception>
-        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, Boolean validateName, Boolean validateRangeAddress)
+        internal IXLNamedRange Add(String rangeName, String rangeAddress, String? comment, Boolean validateName, Boolean validateRangeAddress)
         {
             // When loading named ranges from an existing file, we do not validate the range address or name.
             if (validateRangeAddress)
@@ -82,9 +89,9 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsValidRangeAddress(rangeAddress))
                     {
-                        IXLRange range = null;
+                        IXLRange? range;
                         if (Scope == XLNamedRangeScope.Worksheet)
-                            range = Worksheet.Range(rangeAddress);
+                            range = Worksheet!.Range(rangeAddress);
                         else if (Scope == XLNamedRangeScope.Workbook)
                             range = Workbook.Range(rangeAddress);
                         else
@@ -99,7 +106,7 @@ namespace ClosedXML.Excel
                             throw new ArgumentException(
                                 "For named ranges in the workbook scope, specify the sheet name in the reference.");
 
-                        rangeAddress = Worksheet.Range(rangeAddress).ToString();
+                        rangeAddress = range.ToString();
                     }
                 }
             }
@@ -109,20 +116,20 @@ namespace ClosedXML.Excel
             return namedRange;
         }
 
-        public IXLNamedRange Add(String rangeName, IXLRange range, String comment)
+        public IXLNamedRange Add(String rangeName, IXLRange range, String? comment)
         {
             var ranges = new XLRanges { range };
             return Add(rangeName, ranges, comment);
         }
 
-        public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment)
+        public IXLNamedRange Add(String rangeName, IXLRanges ranges, String? comment)
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
 
-        public IXLNamedRange Add(String rangeName, IXLNamedRange namedRange)
+        internal XLNamedRange Add(String rangeName, XLNamedRange namedRange)
         {
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
@@ -179,14 +186,19 @@ namespace ClosedXML.Excel
 
         #endregion IEnumerable Members
 
-        public Boolean TryGetValue(String name, out IXLNamedRange range)
+        public Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLNamedRange? range)
         {
-            if (_namedRanges.TryGetValue(name, out range)) return true;
+            if (_namedRanges.TryGetValue(name, out var rangeInternal))
+            {
+                range = rangeInternal;
+                return true;
+            }
 
-            if (Scope == XLNamedRangeScope.Workbook)
-                range = Workbook.NamedRange(name);
+            range = Scope == XLNamedRangeScope.Workbook
+                ? Workbook.NamedRange(name)
+                : null;
 
-            return range != null;
+            return range is not null;
         }
 
         public Boolean Contains(String name)
@@ -202,7 +214,6 @@ namespace ClosedXML.Excel
         internal void OnWorksheetDeleted(string worksheetName)
         {
             _namedRanges.Values
-                .Cast<XLNamedRange>()
                 .ForEach(nr => nr.OnWorksheetDeleted(worksheetName));
         }
     }
