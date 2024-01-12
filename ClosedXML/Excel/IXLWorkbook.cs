@@ -189,7 +189,7 @@ namespace ClosedXML.Excel
 
         IXLRows FindRows(Func<IXLRow, Boolean> predicate);
 
-        IXLNamedRange NamedRange(String rangeName);
+        IXLDefinedName NamedRange(String name);
 
         IXLRange Range(String range);
 

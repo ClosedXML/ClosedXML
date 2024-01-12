@@ -303,10 +303,10 @@ namespace ClosedXML.Excel.CalcEngine
             // Name is not found in the workbook
             return null;
 
-            List<XLBookArea>? VisitName(IXLNamedRange namedRange)
+            List<XLBookArea>? VisitName(IXLDefinedName definedName)
             {
                 // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
-                var namedFormula = namedRange.RefersTo;
+                var namedFormula = definedName.RefersTo;
                 var ast = context.Workbook.CalcEngine.Parse(namedFormula);
                 var nameReferences = ast.AstRoot.Accept(context, this);
 

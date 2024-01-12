@@ -301,7 +301,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
         /// <exception cref="ArgumentException">Range wasn't found in sheet named ranges.</exception>
-        IXLNamedRange NamedRange(String rangeName);
+        IXLDefinedName NamedRange(String rangeName);
 
         /// <summary>
         /// Gets an object to manage how the worksheet is going to displayed by Excel.

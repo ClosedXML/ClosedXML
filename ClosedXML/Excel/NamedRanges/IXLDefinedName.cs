@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
         Workbook
     }
 
-    public interface IXLNamedRange
+    public interface IXLDefinedName
     {
         /// <summary>
         /// Gets or sets the comment for this named range.
@@ -89,7 +89,7 @@ namespace ClosedXML.Excel
         /// </summary>
         void Clear();
 
-        IXLNamedRange CopyTo(IXLWorksheet targetSheet);
+        IXLDefinedName CopyTo(IXLWorksheet targetSheet);
 
         /// <summary>
         /// Deletes this named range (not the cells).
@@ -116,10 +116,10 @@ namespace ClosedXML.Excel
         /// <param name="ranges">The ranges to remove.</param>
         void Remove(IXLRanges ranges);
 
-        IXLNamedRange SetRefersTo(String range);
+        IXLDefinedName SetRefersTo(String range);
 
-        IXLNamedRange SetRefersTo(IXLRangeBase range);
+        IXLDefinedName SetRefersTo(IXLRangeBase range);
 
-        IXLNamedRange SetRefersTo(IXLRanges ranges);
+        IXLDefinedName SetRefersTo(IXLRanges ranges);
     }
 }

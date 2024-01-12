@@ -4,96 +4,96 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLNamedRanges : IEnumerable<IXLNamedRange>
+    public interface IXLNamedRanges : IEnumerable<IXLDefinedName>
     {
         /// <summary>
-        /// Gets the specified named range.
+        /// Gets the specified defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the range.</param>
-        /// <exception cref="ArgumentException">Range wasn't found.</exception>
-        IXLNamedRange NamedRange(String rangeName);
+        /// <param name="name">Name identifier.</param>
+        /// <exception cref="ArgumentException">Name wasn't found.</exception>
+        IXLDefinedName NamedRange(String name);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the range to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="rangeAddress">The range address to add.</param>
         /// <exception cref="ArgumentException">The name or address is invalid.</exception>
-        IXLNamedRange Add(String rangeName, String rangeAddress);
+        IXLDefinedName Add(String name, String rangeAddress);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the range to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="range">The range to add.</param>
         /// <exception cref="ArgumentException">The name is invalid.</exception>
-        IXLNamedRange Add(String rangeName, IXLRange range);
+        IXLDefinedName Add(String name, IXLRange range);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the range to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="ranges">The ranges to add.</param>
         /// <exception cref="ArgumentException">The name is invalid.</exception>
-        IXLNamedRange Add(String rangeName, IXLRanges ranges);
+        IXLDefinedName Add(String name, IXLRanges ranges);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the ranges to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="rangeAddress">The range address to add.</param>
         /// <param name="comment">The comment for the new named range.</param>
         /// <exception cref="ArgumentException">The range name or address is invalid.</exception>
-        IXLNamedRange Add(String rangeName, String rangeAddress, String? comment);
+        IXLDefinedName Add(String name, String rangeAddress, String? comment);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the ranges to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="range">The range to add.</param>
         /// <param name="comment">The comment for the new named range.</param>
         /// <exception cref="ArgumentException">The range name is invalid.</exception>
-        IXLNamedRange Add(String rangeName, IXLRange range, String? comment);
+        IXLDefinedName Add(String name, IXLRange range, String? comment);
 
         /// <summary>
-        /// Adds a new named range.
+        /// Adds a new defined name.
         /// </summary>
-        /// <param name="rangeName">Name of the ranges to add.</param>
+        /// <param name="name">Name identifier to add.</param>
         /// <param name="ranges">The ranges to add.</param>
         /// <param name="comment">The comment for the new named range.</param>
         /// <exception cref="ArgumentException">The range name is invalid.</exception>
-        IXLNamedRange Add(String rangeName, IXLRanges ranges, String? comment);
+        IXLDefinedName Add(String name, IXLRanges ranges, String? comment);
 
         /// <summary>
-        /// Deletes the specified named range (not the cells).
+        /// Deletes the specified defined name (not the cells).
         /// </summary>
-        /// <param name="rangeName">Name of the range to delete.</param>
+        /// <param name="rangeName">Name identifier to delete.</param>
         void Delete(String rangeName);
 
         /// <summary>
-        /// Deletes the specified named range's index (not the cells).
+        /// Deletes the specified defined name's index (not the cells).
         /// </summary>
-        /// <param name="rangeIndex">Index of the named range to delete.</param>
+        /// <param name="rangeIndex">Index of the defined name to delete.</param>
         /// <exception cref="ArgumentOutOfRangeException">The index is outside of named ranges array.</exception>
         void Delete(Int32 rangeIndex);
 
         /// <summary>
-        /// Deletes all named ranges (not the cells).
+        /// Deletes all defined names (not the cells).
         /// </summary>
         void DeleteAll();
 
-        Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLNamedRange? range);
+        Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLDefinedName? range);
 
         Boolean Contains(String name);
 
         /// <summary>
-        /// Returns a subset of named ranges that do not have invalid references.
+        /// Returns a subset of defined names that do not have invalid references.
         /// </summary>
-        IEnumerable<IXLNamedRange> ValidNamedRanges();
+        IEnumerable<IXLDefinedName> ValidNamedRanges();
 
         /// <summary>
-        /// Returns a subset of named ranges that do have invalid references.
+        /// Returns a subset of defined names that do have invalid references.
         /// </summary>
-        IEnumerable<IXLNamedRange> InvalidNamedRanges();
+        IEnumerable<IXLDefinedName> InvalidNamedRanges();
     }
 }

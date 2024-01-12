@@ -332,21 +332,21 @@ namespace ClosedXML.Excel.CalcEngine
                 worksheet = (XLWorksheet)ws!;
             }
 
-            if (!TryGetNameRange(worksheet, out var namedRange))
+            if (!TryGetNameRange(worksheet, out var definedName))
                 return XLError.NameNotRecognized;
 
             // Parser needs an equal sign for a union of ranges (or braces around formula)
-            var nameFormula = namedRange.RefersTo;
+            var nameFormula = definedName.RefersTo;
             nameFormula = nameFormula.StartsWith("=") ? nameFormula : "=" + nameFormula;
             return engine.EvaluateName(nameFormula, ctxWs);
         }
 
-        internal bool TryGetNameRange(IXLWorksheet ws, out IXLNamedRange range)
+        internal bool TryGetNameRange(IXLWorksheet ws, out IXLDefinedName definedName)
         {
-            if (ws.NamedRanges.TryGetValue(Name, out range!))
+            if (ws.NamedRanges.TryGetValue(Name, out definedName!))
                 return true;
 
-            if (ws.Workbook.NamedRanges.TryGetValue(Name, out range!))
+            if (ws.Workbook.NamedRanges.TryGetValue(Name, out definedName!))
                 return true;
 
             return false;

@@ -102,13 +102,13 @@ namespace ClosedXML.Tests.Excel
                 var ws1 = wb.AddWorksheet("Sheet1");
                 var nr1 = wb.NamedRanges.Add("TEST", "=0.1");
 
-                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
-                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST", out _));
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST1", out _));
 
                 nr1.Name = "TEST1";
 
-                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
-                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST", out _));
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST1", out _));
 
                 var nr2 = wb.NamedRanges.Add("TEST2", "=TEST1*2");
 
@@ -356,7 +356,7 @@ namespace ClosedXML.Tests.Excel
                 using (var wb = new XLWorkbook(ms))
                 {
                     Assert.AreEqual(1, wb.NamedRanges.Count());
-                    var nr = wb.NamedRanges.Single() as XLNamedRange;
+                    var nr = (XLDefinedName)wb.NamedRanges.Single();
                     Assert.AreEqual("'Sheet 1'!$A$5:$D$5,'Sheet 1'!$A$15:$D$15", nr.RefersTo);
                     Assert.AreEqual(2, nr.Ranges.Count);
                     Assert.AreEqual("'Sheet 1'!A5:D5", nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
@@ -568,14 +568,14 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(wb.NamedRange("Sheet1!Name"));
             Assert.IsNull(wb.NamedRange("Sheet1!NameX"));
 
-            Boolean result1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out IXLNamedRange range1);
-            Assert.IsTrue(result1);
-            Assert.IsNotNull(range1);
-            Assert.AreEqual(XLNamedRangeScope.Worksheet, range1.Scope);
+            Boolean found1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out var definedName1);
+            Assert.IsTrue(found1);
+            Assert.IsNotNull(definedName1);
+            Assert.AreEqual(XLNamedRangeScope.Worksheet, definedName1.Scope);
 
-            Boolean result2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out IXLNamedRange range2);
-            Assert.IsFalse(result2);
-            Assert.IsNull(range2);
+            Boolean found2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out var definedName2);
+            Assert.IsFalse(found2);
+            Assert.IsNull(definedName2);
         }
 
         [Test]
@@ -591,13 +591,13 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(wb.NamedRange("Name"));
             Assert.IsNull(wb.NamedRange("NameX"));
 
-            Boolean result1 = wb.NamedRanges.TryGetValue("Name", out IXLNamedRange range1);
-            Assert.IsTrue(result1);
-            Assert.IsNotNull(range1);
+            Boolean found1 = wb.NamedRanges.TryGetValue("Name", out var definedName1);
+            Assert.IsTrue(found1);
+            Assert.IsNotNull(definedName1);
 
-            Boolean result2 = wb.NamedRanges.TryGetValue("NameX", out IXLNamedRange range2);
-            Assert.IsFalse(result2);
-            Assert.IsNull(range2);
+            Boolean found2 = wb.NamedRanges.TryGetValue("NameX", out var definedName2);
+            Assert.IsFalse(found2);
+            Assert.IsNull(definedName2);
         }
 
         [Test]
@@ -612,13 +612,13 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(ws.NamedRange("Name"));
             Assert.Throws<ArgumentException>(() => ws.NamedRange("NameX"));
 
-            Boolean result1 = ws.NamedRanges.TryGetValue("Name", out IXLNamedRange range1);
-            Assert.IsTrue(result1);
-            Assert.IsNotNull(range1);
+            Boolean found1 = ws.NamedRanges.TryGetValue("Name", out var definedName1);
+            Assert.IsTrue(found1);
+            Assert.IsNotNull(definedName1);
 
-            Boolean result2 = ws.NamedRanges.TryGetValue("NameX", out IXLNamedRange range2);
-            Assert.IsFalse(result2);
-            Assert.IsNull(range2);
+            Boolean found2 = ws.NamedRanges.TryGetValue("NameX", out var definedName2);
+            Assert.IsFalse(found2);
+            Assert.IsNull(definedName2);
         }
 
         [Test]

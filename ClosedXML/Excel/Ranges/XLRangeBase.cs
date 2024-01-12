@@ -575,8 +575,8 @@ namespace ClosedXML.Excel
                                   ? Worksheet.Workbook.NamedRanges
                                   : Worksheet.NamedRanges;
 
-            if (namedRanges.TryGetValue(rangeName, out IXLNamedRange namedRange))
-                namedRange.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
+            if (namedRanges.TryGetValue(rangeName, out IXLDefinedName definedName))
+                definedName.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             else
                 namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
 
@@ -727,8 +727,8 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
 
-            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange namedRange))
-                return namedRange.Ranges.First().FirstCell().CastTo<XLCell>();
+            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLDefinedName definedName))
+                return definedName.Ranges.First().FirstCell().CastTo<XLCell>();
 
             return null;
         }

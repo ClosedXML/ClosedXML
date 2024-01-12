@@ -321,22 +321,22 @@ namespace ClosedXML.Excel.IO
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (var nr in xlWorkbook.NamedRanges.OfType<XLNamedRange>())
+            foreach (var xlDefinedName in xlWorkbook.NamedRanges.OfType<XLDefinedName>())
             {
-                var refersTo = string.Join(",", nr.RangeList
+                var refersTo = string.Join(",", xlDefinedName.RangeList
                     .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
 
                 var definedName = new DefinedName
                 {
-                    Name = nr.Name,
+                    Name = xlDefinedName.Name,
                     Text = refersTo
                 };
 
-                if (!nr.Visible)
+                if (!xlDefinedName.Visible)
                     definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                if (!String.IsNullOrWhiteSpace(nr.Comment))
-                    definedName.Comment = nr.Comment;
+                if (!String.IsNullOrWhiteSpace(xlDefinedName.Comment))
+                    definedName.Comment = xlDefinedName.Comment;
                 definedNames.AppendChild(definedName);
             }
 

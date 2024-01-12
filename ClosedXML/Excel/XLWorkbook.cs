@@ -290,22 +290,22 @@ namespace ClosedXML.Excel
             };
         }
 
-        public IXLNamedRange NamedRange(String rangeName)
+        public IXLDefinedName NamedRange(String name)
         {
-            if (rangeName.Contains("!"))
+            if (name.Contains("!"))
             {
-                var split = rangeName.Split('!');
+                var split = name.Split('!');
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
-                var name = split[1];
+                var sheetName = split[1];
                 if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
-                    var range = ws.NamedRange(name);
-                    return range ?? NamedRange(name);
+                    var range = ws.NamedRange(sheetName);
+                    return range ?? NamedRange(sheetName);
                 }
                 return null;
             }
-            return NamedRangesInternal.NamedRange(rangeName);
+            return NamedRangesInternal.NamedRange(name);
         }
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)

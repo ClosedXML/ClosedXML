@@ -564,12 +564,12 @@ namespace ClosedXML.Excel
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-        IXLNamedRange IXLWorksheet.NamedRange(String rangeName)
+        IXLDefinedName IXLWorksheet.NamedRange(String rangeName)
         {
             return NamedRanges.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
         }
 
-        internal IXLNamedRange? NamedRange(String rangeName)
+        internal IXLDefinedName? NamedRange(String rangeName)
         {
             return NamedRanges.NamedRange(rangeName);
         }
@@ -948,11 +948,11 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
+                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange)
+                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? workbookNamedRange)
                     && workbookNamedRange.Ranges.First().Worksheet == this)
                 {
                     workbookNamedRange.Ranges.ForEach(retVal.Add);
@@ -1475,7 +1475,7 @@ namespace ClosedXML.Excel
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
         {
-            foreach (XLNamedRange nr in namedRanges)
+            foreach (XLDefinedName nr in namedRanges)
             {
                 var newRangeList =
                     nr.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
@@ -1486,7 +1486,7 @@ namespace ClosedXML.Excel
 
         private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLNamedRanges namedRanges)
         {
-            foreach (XLNamedRange nr in namedRanges)
+            foreach (XLDefinedName nr in namedRanges)
             {
                 var newRangeList =
                     nr.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
@@ -1642,7 +1642,7 @@ namespace ClosedXML.Excel
             if (cell is not null)
                 return cell;
 
-            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange? workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLDefinedName? workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
@@ -1661,10 +1661,10 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
+            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
                 return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
 
-            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
