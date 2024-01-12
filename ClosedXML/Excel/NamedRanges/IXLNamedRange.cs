@@ -12,8 +12,6 @@ namespace ClosedXML.Excel
 
     public interface IXLNamedRange
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the comment for this named range.
         /// </summary>
@@ -62,10 +60,6 @@ namespace ClosedXML.Excel
         ///   <c>true</c> if visible; otherwise, <c>false</c>.
         /// </value>
         Boolean Visible { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         /// <summary>
         /// Adds the specified range to this named range.
@@ -127,7 +121,5 @@ namespace ClosedXML.Excel
         IXLNamedRange SetRefersTo(IXLRangeBase range);
 
         IXLNamedRange SetRefersTo(IXLRanges ranges);
-
-        #endregion Public Methods
     }
 }
