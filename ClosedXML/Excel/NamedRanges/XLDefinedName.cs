@@ -9,29 +9,29 @@ namespace ClosedXML.Excel
     internal class XLDefinedName : IXLDefinedName
     {
         private String _name;
-        private readonly XLNamedRanges _namedRanges;
+        private readonly XLDefinedNames _namedRanges;
 
         internal XLWorkbook Workbook => _namedRanges.Workbook;
 
-        public XLDefinedName(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
+        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, String range, String comment = null)
             : this(namedRanges, rangeName, validateName: true, range, comment)
         {
         }
 
-        public XLDefinedName(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
+        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, IXLRanges ranges, String comment = null)
             : this(namedRanges, rangeName, validateName: true, comment)
         {
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
         }
 
-        internal XLDefinedName(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String range, String comment)
+        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String range, String comment)
             : this(namedRanges, rangeName, validateName, comment)
         {
             //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
             range.Split(',').ForEach(r => RangeList.Add(r));
         }
 
-        internal XLDefinedName(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String comment)
+        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String comment)
         {
             _namedRanges = namedRanges ?? throw new ArgumentNullException(nameof(namedRanges));
             Visible = true;
@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
                     existingNames.AddRange(_namedRanges.Workbook.NamedRanges.Select(nr => nr.Name));
 
                 if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
-                    existingNames.AddRange(_namedRanges.Worksheet.NamedRanges.Select(nr => nr.Name));
+                    existingNames.AddRange(_namedRanges.Worksheet.DefinedNames.Select(nr => nr.Name));
 
                 existingNames = existingNames.Distinct().ToList();
 

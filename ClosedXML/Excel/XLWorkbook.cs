@@ -151,12 +151,12 @@ namespace ClosedXML.Excel
             get { return WorksheetsInternal; }
         }
 
-        internal XLNamedRanges NamedRangesInternal { get; }
+        internal XLDefinedNames DefinedNamesInternal { get; }
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
-        public IXLNamedRanges NamedRanges => NamedRangesInternal;
+        public IXLDefinedNames NamedRanges => DefinedNamesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
@@ -305,7 +305,7 @@ namespace ClosedXML.Excel
                 }
                 return null;
             }
-            return NamedRangesInternal.NamedRange(name);
+            return DefinedNamesInternal.NamedRange(name);
         }
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
@@ -797,7 +797,7 @@ namespace ClosedXML.Excel
             ShowZeros = DefaultShowZeros;
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
-            NamedRangesInternal = new XLNamedRanges(this);
+            DefinedNamesInternal = new XLDefinedNames(this);
             PivotCachesInternal = new XLPivotCaches(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();

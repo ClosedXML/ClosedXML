@@ -58,9 +58,9 @@ namespace ClosedXML.Excel
         Boolean LockWindows { get; set; }
 
         /// <summary>
-        ///   Gets an object to manipulate this workbook's named ranges.
+        ///   Gets an object to manipulate this workbook's defined names.
         /// </summary>
-        IXLNamedRanges NamedRanges { get; }
+        IXLDefinedNames NamedRanges { get; }
 
         /// <summary>
         ///   Gets or sets the default outline options for the workbook.

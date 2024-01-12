@@ -266,7 +266,7 @@ namespace ClosedXML.Excel.IO
                     definedNames.AppendChild(definedName);
                 }
 
-                foreach (var nr in worksheet.NamedRanges.Where(n => n.Name != "_xlnm._FilterDatabase"))
+                foreach (var nr in worksheet.DefinedNames.Where(n => n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
                     {

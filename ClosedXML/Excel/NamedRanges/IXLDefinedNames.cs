@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLNamedRanges : IEnumerable<IXLDefinedName>
+    public interface IXLDefinedNames : IEnumerable<IXLDefinedName>
     {
         /// <summary>
         /// Gets the specified defined name.

@@ -975,13 +975,13 @@ namespace ClosedXML.Excel
                     var comment = definedName.Comment;
                     if (localSheetId == -1)
                     {
-                        if (NamedRanges.All(nr => nr.Name != name))
-                            (NamedRanges as XLNamedRanges).Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
+                        if (DefinedNamesInternal.All(nr => nr.Name != name))
+                            DefinedNamesInternal.Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
                     }
                     else
                     {
                         if (Worksheet(localSheetId + 1).NamedRanges.All(nr => nr.Name != name))
-                            (Worksheet(localSheetId + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
+                            (Worksheet(localSheetId + 1).NamedRanges as XLDefinedNames).Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
                     }
                 }
             }

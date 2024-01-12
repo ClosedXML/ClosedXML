@@ -294,7 +294,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets an object to manage this worksheet's named ranges.
         /// </summary>
-        IXLNamedRanges NamedRanges { get; }
+        IXLDefinedNames NamedRanges { get; }
 
         /// <summary>
         /// Gets the specified named range.

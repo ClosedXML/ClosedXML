@@ -573,7 +573,7 @@ namespace ClosedXML.Excel
         {
             var namedRanges = scope == XLScope.Workbook
                                   ? Worksheet.Workbook.NamedRanges
-                                  : Worksheet.NamedRanges;
+                                  : Worksheet.DefinedNames;
 
             if (namedRanges.TryGetValue(rangeName, out IXLDefinedName definedName))
                 definedName.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
@@ -727,7 +727,7 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
 
-            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLDefinedName definedName))
+            if (Worksheet.DefinedNames.TryGetValue(cellAddressInRange, out IXLDefinedName definedName))
                 return definedName.Ranges.First().FirstCell().CastTo<XLCell>();
 
             return null;

@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             _rangeIndices = new List<IXLRangeIndex>();
 
             Pictures = new XLPictures(this);
-            NamedRanges = new XLNamedRanges(this);
+            DefinedNames = new XLDefinedNames(this);
             SheetView = new XLSheetView(this);
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
@@ -97,9 +97,9 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        IXLNamedRanges IXLWorksheet.NamedRanges => NamedRanges;
+        IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
 
-        internal XLNamedRanges NamedRanges { get; }
+        internal XLDefinedNames DefinedNames { get; }
 
         public override XLRangeType RangeType
         {
@@ -559,19 +559,19 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             IsDeleted = true;
-            Workbook.NamedRangesInternal.OnWorksheetDeleted(Name);
+            Workbook.DefinedNamesInternal.OnWorksheetDeleted(Name);
             Workbook.NotifyWorksheetDeleting(this);
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
         IXLDefinedName IXLWorksheet.NamedRange(String rangeName)
         {
-            return NamedRanges.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
+            return DefinedNames.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
         }
 
         internal IXLDefinedName? NamedRange(String rangeName)
         {
-            return NamedRanges.NamedRange(rangeName);
+            return DefinedNames.NamedRange(rangeName);
         }
 
         IXLSheetView IXLWorksheet.SheetView { get => SheetView; }
@@ -636,7 +636,7 @@ namespace ClosedXML.Excel
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
-            NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
+            DefinedNames.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
@@ -948,7 +948,7 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
+                else if (DefinedNames.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
@@ -1473,7 +1473,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
+        private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLDefinedNames namedRanges)
         {
             foreach (XLDefinedName nr in namedRanges)
             {
@@ -1484,7 +1484,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLNamedRanges namedRanges)
+        private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLDefinedNames namedRanges)
         {
             foreach (XLDefinedName nr in namedRanges)
             {
@@ -1661,7 +1661,7 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
+            if (DefinedNames.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
                 return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
 
             if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? workbookNamedRange))

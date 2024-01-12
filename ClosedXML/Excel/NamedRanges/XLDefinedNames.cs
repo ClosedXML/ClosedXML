@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A collection of a named ranges, either for workbook or for worksheet.
     /// </summary>
-    internal class XLNamedRanges : IXLNamedRanges
+    internal class XLDefinedNames : IXLDefinedNames
     {
         private readonly Dictionary<String, XLDefinedName> _namedRanges = new(XLHelper.NameComparer);
 
@@ -18,14 +18,14 @@ namespace ClosedXML.Excel
 
         internal XLNamedRangeScope Scope { get; }
 
-        public XLNamedRanges(XLWorksheet worksheet)
+        public XLDefinedNames(XLWorksheet worksheet)
             : this(worksheet.Workbook)
         {
             Worksheet = worksheet;
             Scope = XLNamedRangeScope.Worksheet;
         }
 
-        public XLNamedRanges(XLWorkbook workbook)
+        public XLDefinedNames(XLWorkbook workbook)
         {
             Workbook = workbook;
             Scope = XLNamedRangeScope.Workbook;
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
 
         #region IXLNamedRanges Members
 
-        IXLDefinedName IXLNamedRanges.NamedRange(String name)
+        IXLDefinedName IXLDefinedNames.NamedRange(String name)
         {
             return NamedRange(name) ?? throw new ArgumentException($"Range '{name}' not found.");
         }
