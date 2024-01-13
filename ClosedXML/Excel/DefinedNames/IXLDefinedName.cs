@@ -4,9 +4,21 @@ using System;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// A scope of <see cref="IXLDefinedName"/>. It determines where can be defined name resolved.
+    /// </summary>
     public enum XLNamedRangeScope
     {
+        /// <summary>
+        /// Name is defined at the sheet level and is available only at the sheet
+        /// it is defined or <see cref="IXLWorksheet.DefinedNames"/> collection or when referred
+        /// with sheet specifier (e.g. <c>Sheet5!Name</c> when name is scoped to <c>Sheet5</c>).
+        /// </summary>
         Worksheet,
+
+        /// <summary>
+        /// Name is defined at the workbook and is available everywhere.
+        /// </summary>
         Workbook
     }
 
@@ -22,6 +34,10 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Checks if the named range contains invalid references (#REF!).
+        /// <para>
+        /// <example>Defined name with a formula <c>SUM(#REF!A1, Sheet7!B4)</c> would return
+        /// <c>true</c>, because <c>#REF!A1</c> is an invalid reference.</example>
+        /// </para>
         /// </summary>
         bool IsValid { get; }
 
@@ -31,6 +47,8 @@ namespace ClosedXML.Excel
         /// <value>
         /// The name of the range.
         /// </value>
+        /// <exception cref="ArgumentException">Set value is not a valid name or the name is
+        /// colliding with a different name that is already defined in the collection.</exception>
         String Name { get; set; }
 
         /// <summary>
@@ -95,6 +113,7 @@ namespace ClosedXML.Excel
         /// Deletes this named range (not the cells).
         /// </summary>
         void Delete();
+
         /// <summary>
         /// Removes the specified range from this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
