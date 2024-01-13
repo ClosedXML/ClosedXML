@@ -575,7 +575,7 @@ namespace ClosedXML.Excel
 
         internal XLDefinedName DefinedName(String name)
         {
-            return DefinedNames.NamedRange(name) ?? throw new ArgumentException($"Defined name '{name}' not found in sheet '{Name}'.");
+            return DefinedNames.DefinedName(name);
         }
 
         IXLSheetView IXLWorksheet.SheetView { get => SheetView; }

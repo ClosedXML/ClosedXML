@@ -67,7 +67,7 @@ namespace ClosedXML.Examples.Tables
                 titlesStyle.Fill.BackgroundColor = XLColor.Cyan;
 
                 // Format all titles in one shot
-                wb.DefinedNames.NamedRange("Titles").Ranges.Style = titlesStyle;
+                wb.DefinedNames.DefinedName("Titles").Ranges.Style = titlesStyle;
 
                 ws.Columns().AdjustToContents();
 

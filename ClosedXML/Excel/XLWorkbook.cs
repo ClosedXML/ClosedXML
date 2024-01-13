@@ -308,15 +308,14 @@ namespace ClosedXML.Excel
                 var sheetlessName = split[1];
                 if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
-                    if (ws.DefinedNames.TryGetValue(sheetlessName, out var definedName))
-                        return definedName;
-
-                    return DefinedNamesInternal.NamedRange(sheetlessName);
+                    if (ws.DefinedNames.TryGetScopedValue(sheetlessName, out var sheetDefinedName))
+                        return sheetDefinedName;
                 }
-                return null;
+
+                name = sheetlessName;
             }
 
-            return DefinedNamesInternal.NamedRange(name);
+            return DefinedNamesInternal.TryGetScopedValue(name, out var definedName) ? definedName : null;
         }
 #nullable disable
 

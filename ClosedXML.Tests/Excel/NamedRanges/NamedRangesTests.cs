@@ -2,6 +2,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -611,7 +612,7 @@ namespace ClosedXML.Tests.Excel
             Assert.IsFalse(ws.DefinedNames.Contains("NameX"));
 
             Assert.IsNotNull(ws.DefinedName("Name"));
-            Assert.Throws<ArgumentException>(() => ws.DefinedName("NameX"));
+            Assert.Throws<KeyNotFoundException>(() => ws.DefinedName("NameX"));
 
             Boolean found1 = ws.DefinedNames.TryGetValue("Name", out var definedName1);
             Assert.IsTrue(found1);

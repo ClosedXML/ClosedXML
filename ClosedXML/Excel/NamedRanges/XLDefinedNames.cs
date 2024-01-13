@@ -33,17 +33,17 @@ namespace ClosedXML.Excel
 
         #region IXLNamedRanges Members
 
-        IXLDefinedName IXLDefinedNames.NamedRange(String name)
-        {
-            return NamedRange(name) ?? throw new ArgumentException($"Range '{name}' not found.");
-        }
+        [Obsolete]
+        IXLDefinedName IXLDefinedNames.NamedRange(String name) => DefinedName(name);
 
-        internal XLDefinedName? NamedRange(String name)
+        IXLDefinedName IXLDefinedNames.DefinedName(String name) => DefinedName(name);
+
+        internal XLDefinedName DefinedName(String name)
         {
             if (_namedRanges.TryGetValue(name, out XLDefinedName range))
                 return range;
 
-            return null;
+            throw new KeyNotFoundException($"Name {name} not found.");
         }
 
         public IXLDefinedName Add(String name, String rangeAddress)
@@ -186,19 +186,29 @@ namespace ClosedXML.Excel
 
         #endregion IEnumerable Members
 
-        public Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLDefinedName? range)
+        public Boolean TryGetValue(String name, [NotNullWhen(true)] out IXLDefinedName? definedName)
         {
-            if (_namedRanges.TryGetValue(name, out var rangeInternal))
+            if (TryGetScopedValue(name, out var sheetDefinedName))
             {
-                range = rangeInternal;
+                definedName = sheetDefinedName;
                 return true;
             }
 
-            range = Scope == XLNamedRangeScope.Workbook
+            definedName = Scope == XLNamedRangeScope.Workbook
                 ? Workbook.DefinedName(name)
                 : null;
 
-            return range is not null;
+            return definedName is not null;
+        }
+
+        internal Boolean TryGetScopedValue(String name, [NotNullWhen(true)] out XLDefinedName? definedName)
+        {
+            if (_namedRanges.TryGetValue(name, out definedName))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public Boolean Contains(String name)

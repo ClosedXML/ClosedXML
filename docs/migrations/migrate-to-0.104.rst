@@ -157,3 +157,10 @@ internally immutable, the ``IXLStyle`` object must hold a reference to object th
 immutable style in a property (e.g. ``IXLCell`` or ``IXLRow``) so it can change it and that
 reference is called container. The end result is that two IXLStyle objects should be equal when all
 their style properties are equal.
+
+*************
+Defined names
+*************
+
+``IXLWorksheet.NamedRange(string)`` throws ``KeyNotFoundException`` instead of
+``ArgumentOutOfRangeException`` when defined name is not found.

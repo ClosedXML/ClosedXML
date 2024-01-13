@@ -6,12 +6,16 @@ namespace ClosedXML.Excel
 {
     public interface IXLDefinedNames : IEnumerable<IXLDefinedName>
     {
+        /// <inheritdoc cref="DefinedName"/>
+        [Obsolete($"Use {nameof(DefinedName)} instead.")]
+        IXLDefinedName NamedRange(String name);
+
         /// <summary>
         /// Gets the specified defined name.
         /// </summary>
         /// <param name="name">Name identifier.</param>
-        /// <exception cref="ArgumentException">Name wasn't found.</exception>
-        IXLDefinedName NamedRange(String name);
+        /// <exception cref="KeyNotFoundException">Name wasn't found.</exception>
+        IXLDefinedName DefinedName(String name);
 
         /// <summary>
         /// Adds a new defined name.
