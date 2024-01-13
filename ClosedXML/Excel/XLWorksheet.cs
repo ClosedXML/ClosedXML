@@ -567,14 +567,15 @@ namespace ClosedXML.Excel
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-        IXLDefinedName IXLWorksheet.NamedRange(String rangeName)
-        {
-            return DefinedNames.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
-        }
 
-        internal IXLDefinedName? NamedRange(String rangeName)
+        [Obsolete($"Used {nameof(DefinedName)} instead.")]
+        IXLDefinedName IXLWorksheet.NamedRange(String name) => DefinedName(name);
+
+        IXLDefinedName IXLWorksheet.DefinedName(String name) => DefinedName(name);
+
+        internal XLDefinedName DefinedName(String name)
         {
-            return DefinedNames.NamedRange(rangeName);
+            return DefinedNames.NamedRange(name) ?? throw new ArgumentException($"Defined name '{name}' not found in sheet '{Name}'.");
         }
 
         IXLSheetView IXLWorksheet.SheetView { get => SheetView; }

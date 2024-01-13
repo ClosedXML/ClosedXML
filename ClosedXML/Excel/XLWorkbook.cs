@@ -305,11 +305,13 @@ namespace ClosedXML.Excel
                 var split = name.Split('!');
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
-                var sheetName = split[1];
+                var sheetlessName = split[1];
                 if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
-                    var range = ws.NamedRange(sheetName);
-                    return range ?? DefinedName(sheetName);
+                    if (ws.DefinedNames.TryGetValue(sheetlessName, out var definedName))
+                        return definedName;
+
+                    return DefinedNamesInternal.NamedRange(sheetlessName);
                 }
                 return null;
             }

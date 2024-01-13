@@ -192,14 +192,14 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void CopyNamedRangeSameWorksheet()
+        public void Copy_defined_name_to_same_sheet()
         {
             var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Range("B2:E6").AddToNamed("Named range", XLScope.Worksheet);
-            var nr = ws1.NamedRange("Named range");
+            var dn = ws1.DefinedName("Named range");
 
-            TestDelegate action = () => nr.CopyTo(ws1);
+            TestDelegate action = () => dn.CopyTo(ws1);
 
             Assert.Throws(typeof(InvalidOperationException), action);
         }
@@ -471,9 +471,9 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual("Sheet1!A1:A10",
                     wb.DefinedName("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
                 Assert.AreEqual("Copy!A3:A3",
-                    wsCopy.NamedRange("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                    wsCopy.DefinedName("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
                 Assert.AreEqual("Sheet2!A4:A4",
-                    wsCopy.NamedRange("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
+                    wsCopy.DefinedName("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
             }
         }
 
@@ -610,8 +610,8 @@ namespace ClosedXML.Tests.Excel
             Assert.IsTrue(ws.DefinedNames.Contains("Name"));
             Assert.IsFalse(ws.DefinedNames.Contains("NameX"));
 
-            Assert.IsNotNull(ws.NamedRange("Name"));
-            Assert.Throws<ArgumentException>(() => ws.NamedRange("NameX"));
+            Assert.IsNotNull(ws.DefinedName("Name"));
+            Assert.Throws<ArgumentException>(() => ws.DefinedName("NameX"));
 
             Boolean found1 = ws.DefinedNames.TryGetValue("Name", out var definedName1);
             Assert.IsTrue(found1);

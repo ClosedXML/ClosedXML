@@ -299,12 +299,15 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLDefinedNames DefinedNames { get; }
 
-        /// <summary>
-        /// Gets the specified named range.
-        /// </summary>
-        /// <param name="rangeName">Name of the range.</param>
-        /// <exception cref="ArgumentException">Range wasn't found in sheet named ranges.</exception>
+        [Obsolete($"Used {nameof(DefinedName)} instead.")]
         IXLDefinedName NamedRange(String rangeName);
+
+        /// <summary>
+        /// Gets the specified defined name.
+        /// </summary>
+        /// <param name="name">Name identifier of defined name, without sheet name.</param>
+        /// <exception cref="ArgumentException">Name wasn't found in sheets defined names.</exception>
+        IXLDefinedName DefinedName(String name);
 
         /// <summary>
         /// Gets an object to manage how the worksheet is going to displayed by Excel.
