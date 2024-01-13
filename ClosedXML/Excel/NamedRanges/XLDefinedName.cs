@@ -66,12 +66,12 @@ namespace ClosedXML.Excel
 
                 var oldname = _name ?? string.Empty;
 
-                var existingNames = _namedRanges.Select(nr => nr.Name).ToList();
+                var existingNames = _namedRanges.Select<XLDefinedName, string>(nr => nr.Name).ToList();
                 if (_namedRanges.Scope == XLNamedRangeScope.Workbook)
-                    existingNames.AddRange(_namedRanges.Workbook.DefinedNamesInternal.Select(nr => nr.Name));
+                    existingNames.AddRange(_namedRanges.Workbook.DefinedNamesInternal.Select<XLDefinedName, string>(nr => nr.Name));
 
                 if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
-                    existingNames.AddRange(_namedRanges.Worksheet.DefinedNames.Select(nr => nr.Name));
+                    existingNames.AddRange(_namedRanges.Worksheet.DefinedNames.Select<XLDefinedName, string>(nr => nr.Name));
 
                 existingNames = existingNames.Distinct().ToList();
 

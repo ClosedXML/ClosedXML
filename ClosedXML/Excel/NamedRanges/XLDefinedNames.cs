@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A collection of a named ranges, either for workbook or for worksheet.
     /// </summary>
-    internal class XLDefinedNames : IXLDefinedNames
+    internal class XLDefinedNames : IXLDefinedNames, IEnumerable<XLDefinedName>
     {
         private readonly Dictionary<String, XLDefinedName> _namedRanges = new(XLHelper.NameComparer);
 
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public IEnumerable<IXLDefinedName> ValidNamedRanges()
         {
-            return this.Where(nr => nr.IsValid);
+            return _namedRanges.Values.Where(nr => nr.IsValid);
         }
 
         /// <summary>
@@ -163,19 +163,19 @@ namespace ClosedXML.Excel
         /// </summary>
         public IEnumerable<IXLDefinedName> InvalidNamedRanges()
         {
-            return this.Where(nr => !nr.IsValid);
+            return _namedRanges.Values.Where(nr => !nr.IsValid);
         }
 
         #endregion IXLNamedRanges Members
 
-        #region IEnumerable<IXLNamedRange> Members
+        IEnumerator<XLDefinedName> IEnumerable<XLDefinedName>.GetEnumerator() => GetEnumerator();
 
-        public IEnumerator<IXLDefinedName> GetEnumerator()
+        IEnumerator<IXLDefinedName> IEnumerable<IXLDefinedName>.GetEnumerator() => GetEnumerator();
+
+        internal Dictionary<string, XLDefinedName>.ValueCollection.Enumerator GetEnumerator()
         {
             return _namedRanges.Values.GetEnumerator();
         }
-
-        #endregion IEnumerable<IXLNamedRange> Members
 
         #region IEnumerable Members
 

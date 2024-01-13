@@ -975,7 +975,7 @@ namespace ClosedXML.Excel
                     var comment = definedName.Comment;
                     if (localSheetId == -1)
                     {
-                        if (DefinedNamesInternal.All(nr => nr.Name != name))
+                        if (DefinedNamesInternal.All<XLDefinedName>(nr => nr.Name != name))
                             DefinedNamesInternal.Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
                     }
                     else
