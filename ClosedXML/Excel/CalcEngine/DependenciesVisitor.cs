@@ -289,13 +289,13 @@ namespace ClosedXML.Excel.CalcEngine
             // First, try to interpret name as a sheet scoped name.
             sheetName = node.Prefix?.Sheet ?? context.FormulaArea.Name;
             if (context.Workbook.TryGetWorksheet(sheetName, out XLWorksheet sheet) &&
-                sheet.DefinedNames.TryGetValue(node.Name, out var sheetDefinedName))
+                sheet.DefinedNames.TryGetScopedValue(node.Name, out var sheetDefinedName))
             {
                 return VisitName(sheetDefinedName);
             }
 
             // Name is not a sheet scoped one, try workbook scoped one
-            if (context.Workbook.DefinedNamesInternal.TryGetValue(node.Name, out var bookNamedRange))
+            if (context.Workbook.DefinedNamesInternal.TryGetScopedValue(node.Name, out var bookNamedRange))
             {
                 return VisitName(bookNamedRange!);
             }
@@ -303,7 +303,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Name is not found in the workbook
             return null;
 
-            List<XLBookArea>? VisitName(IXLDefinedName definedName)
+            List<XLBookArea>? VisitName(XLDefinedName definedName)
             {
                 // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
                 var namedFormula = definedName.RefersTo;

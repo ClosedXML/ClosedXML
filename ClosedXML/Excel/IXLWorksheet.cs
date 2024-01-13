@@ -299,7 +299,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLDefinedNames DefinedNames { get; }
 
-        [Obsolete($"Used {nameof(DefinedName)} instead.")]
+        [Obsolete($"Use {nameof(DefinedName)} instead.")]
         IXLDefinedName NamedRange(String rangeName);
 
         /// <summary>

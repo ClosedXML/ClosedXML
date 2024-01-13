@@ -370,7 +370,7 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void DefinedNamesBecomeInvalidOnWorksheetDeleting()
+        public void Defined_names_referencing_sheet_range_become_invalid_when_sheet_is_deleted()
         {
             using (var wb = new XLWorkbook())
             {

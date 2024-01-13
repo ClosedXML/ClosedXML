@@ -164,3 +164,13 @@ Defined names
 
 ``IXLWorksheet.NamedRange(string)`` throws ``KeyNotFoundException`` instead of
 ``ArgumentOutOfRangeException`` when defined name is not found.
+
+Names of interfaces has been changed to better semantic meaning, i.e. defined name. Defined name
+can refere to range, constant, cell, function, lambda and others. *named range* is very
+non-descript type name.
+
+* ``IXLNamedRange`` -> ``IXLDefinedName``
+* ``IXLNamedRanges`` -> ``IXLDefinedNames``
+
+Varisou properties/names have been renamed and marked with an ``[Obsolete]`` attribute pointing to a new
+name.

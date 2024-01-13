@@ -69,20 +69,23 @@ namespace ClosedXML.Excel
         IXLDefinedName Add(String name, IXLRanges ranges, String? comment);
 
         /// <summary>
-        /// Deletes the specified defined name (not the cells).
+        /// Deletes the specified defined name.  Deleting defined name doesn't delete referenced
+        /// cells.
         /// </summary>
-        /// <param name="rangeName">Name identifier to delete.</param>
-        void Delete(String rangeName);
+        /// <param name="name">Name identifier to delete.</param>
+        void Delete(String name);
 
         /// <summary>
-        /// Deletes the specified defined name's index (not the cells).
+        /// Deletes the specified defined name's index. Deleting defined name doesn't delete
+        /// referenced cells.
         /// </summary>
-        /// <param name="rangeIndex">Index of the defined name to delete.</param>
+        /// <param name="index">Index of the defined name to delete.</param>
         /// <exception cref="ArgumentOutOfRangeException">The index is outside of named ranges array.</exception>
-        void Delete(Int32 rangeIndex);
+        void Delete(Int32 index);
 
         /// <summary>
-        /// Deletes all defined names (not the cells).
+        /// Deletes all defined names of this collection, i.e. a workbook or a sheet. Deleting
+        /// defined name doesn't delete referenced cells.
         /// </summary>
         void DeleteAll();
 

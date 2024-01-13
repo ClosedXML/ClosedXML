@@ -521,7 +521,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void Copy_sheet_inside_workbook_makes_defined_names_local()
+        public void Copying_sheet_inside_workbook_makes_copies_of_sheet_scoped_defined_names()
         {
             using (var wb1 = new XLWorkbook())
             {
