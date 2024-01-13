@@ -153,7 +153,8 @@ namespace ClosedXML.Excel
 
         internal XLDefinedNames DefinedNamesInternal { get; }
 
-        public IXLDefinedNames NamedRanges => DefinedNames;
+        [Obsolete($"Use {nameof(DefinedNames)} instead.")]
+        public IXLDefinedNames NamedRanges => DefinedNamesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.

@@ -951,14 +951,14 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (DefinedNames.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
+                else if (DefinedNames.TryGetValue(rangeAddressStr, out var worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? workbookNamedRange)
-                    && workbookNamedRange.Ranges.First().Worksheet == this)
+                else if (Workbook.DefinedNames.TryGetValue(rangeAddressStr, out var workbookDefinedName)
+                    && workbookDefinedName.Ranges.First().Worksheet == this)
                 {
-                    workbookNamedRange.Ranges.ForEach(retVal.Add);
+                    workbookDefinedName.Ranges.ForEach(retVal.Add);
                 }
             }
             return retVal;
@@ -1645,12 +1645,12 @@ namespace ClosedXML.Excel
             if (cell is not null)
                 return cell;
 
-            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLDefinedName? workbookNamedRange))
+            if (Workbook.DefinedNames.TryGetValue(cellAddressInRange, out var definedName))
             {
-                if (!workbookNamedRange.Ranges.Any())
+                if (!definedName.Ranges.Any())
                     return null;
 
-                return workbookNamedRange.Ranges.First().FirstCell().CastTo<XLCell>();
+                return definedName.Ranges.First().FirstCell().CastTo<XLCell>();
             }
 
             return null;
@@ -1664,15 +1664,15 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (DefinedNames.TryGetValue(rangeAddressStr, out IXLDefinedName? worksheetNamedRange))
-                return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
+            if (DefinedNames.TryGetValue(rangeAddressStr, out var sheetDefinedName))
+                return sheetDefinedName.Ranges.First().CastTo<XLRange>();
 
-            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLDefinedName? workbookNamedRange))
+            if (Workbook.DefinedNamesInternal.TryGetValue(rangeAddressStr, out var workbookDefinedName))
             {
-                if (!workbookNamedRange.Ranges.Any())
+                if (!workbookDefinedName.Ranges.Any())
                     return null;
 
-                return workbookNamedRange.Ranges.First().CastTo<XLRange>();
+                return workbookDefinedName.Ranges.First().CastTo<XLRange>();
             }
 
             return null;

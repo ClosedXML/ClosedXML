@@ -569,16 +569,16 @@ namespace ClosedXML.Excel
             return AddToNamed(rangeName, scope, null);
         }
 
-        public IXLRange AddToNamed(String rangeName, XLScope scope, String comment)
+        public IXLRange AddToNamed(String name, XLScope scope, String comment)
         {
-            var namedRanges = scope == XLScope.Workbook
-                                  ? Worksheet.Workbook.NamedRanges
+            var definedNames = scope == XLScope.Workbook
+                                  ? Worksheet.Workbook.DefinedNamesInternal
                                   : Worksheet.DefinedNames;
 
-            if (namedRanges.TryGetValue(rangeName, out IXLDefinedName definedName))
+            if (definedNames.TryGetValue(name, out var definedName))
                 definedName.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             else
-                namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
+                definedNames.Add(name, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
 
             return AsRange();
         }

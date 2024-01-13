@@ -295,7 +295,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // Name is not a sheet scoped one, try workbook scoped one
-            if (context.Workbook.NamedRanges.TryGetValue(node.Name, out var bookNamedRange))
+            if (context.Workbook.DefinedNamesInternal.TryGetValue(node.Name, out var bookNamedRange))
             {
                 return VisitName(bookNamedRange!);
             }

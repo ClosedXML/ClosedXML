@@ -329,7 +329,7 @@ namespace ClosedXML.Tests.Excel
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            wb.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+            wb.DefinedNames.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
 
             IXLRanges wbRanges = ws.Ranges("TestRange");
             Assert.AreEqual("$A$1:$A$1", wbRanges.First().RangeAddress.ToStringFixed());

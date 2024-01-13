@@ -136,7 +136,7 @@ namespace ClosedXML.Excel.IO
                 namedRanges.Add(sheet.Name + "!Print_Area");
                 namedRanges.Add(sheet.Name + "!Print_Titles");
             }
-            namedRanges.AddRange(workbook.NamedRanges.Select(n => n.Name));
+            namedRanges.AddRange(workbook.DefinedNamesInternal.Select<XLDefinedName, string>(n => n.Name));
             return namedRanges;
         }
     }

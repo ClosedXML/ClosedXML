@@ -70,7 +70,7 @@ namespace ClosedXML.Examples.Misc
                 titlesStyle.Fill.BackgroundColor = XLColor.Cyan;
 
                 // Format all titles in one shot
-                wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;
+                wb.DefinedNames.NamedRange("Titles").Ranges.Style = titlesStyle;
 
                 ws.Columns().AdjustToContents();
 

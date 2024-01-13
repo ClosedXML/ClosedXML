@@ -1318,7 +1318,7 @@ namespace ClosedXML.Tests
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            wb.NamedRanges.Add("test_range", ws.Range(2, 3, 5, 7)); // C2:G5
+            wb.DefinedNames.Add("test_range", ws.Range(2, 3, 5, 7)); // C2:G5
 
             var cellB4 = ws.Cell("B4");
             var firstCellOfRange = ws.Cell("test_range");
@@ -1342,7 +1342,7 @@ namespace ClosedXML.Tests
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            wb.NamedRanges.Add("book_range", ws.Range(2, 3, 5, 7)); // C2:G5
+            wb.DefinedNames.Add("book_range", ws.Range(2, 3, 5, 7)); // C2:G5
             ws.DefinedNames.Add("sheet_range", ws.Range(1, 2, 3, 4)); // B1:D3
 
             var singleCellRange = ws.Range("B4");

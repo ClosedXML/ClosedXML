@@ -28,7 +28,7 @@ namespace ClosedXML.Examples.Misc
             wsData.Range("A2:B4").AddToNamed("PeopleData"); // Default named range scope is Workbook
 
             // Create a hidden named range
-            wb.NamedRanges.Add("Headers", wsData.Range("A1:B1")).Visible = false;
+            wb.DefinedNames.Add("Headers", wsData.Range("A1:B1")).Visible = false;
 
             // Create a hidden named range n worksheet scope
             wsData.DefinedNames.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
@@ -61,7 +61,7 @@ namespace ClosedXML.Examples.Misc
             // The following creates a relative named range pointing to the same row
             // and one column to the left. For example if the current cell is D2
             // relativeRange2 will point to C2.
-            wb.NamedRanges.Add("relativeRange2", "Presentation!XFD1");
+            wb.DefinedNames.Add("relativeRange2", "Presentation!XFD1");
 
             // Explanation: The address of a relative range always starts at A1
             // and moves from then on. To get the desired relative range just
