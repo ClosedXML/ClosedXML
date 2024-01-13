@@ -57,6 +57,7 @@ namespace ClosedXML.Excel
 
         Boolean LockWindows { get; set; }
 
+        [Obsolete($"User {nameof(DefinedNames)} instead.")]
         IXLDefinedNames NamedRanges { get; }
 
         /// <summary>
