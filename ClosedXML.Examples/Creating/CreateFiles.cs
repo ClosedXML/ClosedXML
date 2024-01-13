@@ -57,7 +57,7 @@ namespace ClosedXML.Examples
             new Outline().Create(Path.Combine(path, "Outline.xlsx"));
             new Formulas().Create(Path.Combine(path, "Formulas.xlsx"));
             new Collections().Create(Path.Combine(path, "Collections.xlsx"));
-            new NamedRanges().Create(Path.Combine(path, "NamedRanges.xlsx"));
+            new DefinedNames().Create(Path.Combine(path, "DefinedNames.xlsx"));
             new CopyingRanges().Create(Path.Combine(path, "CopyingRanges.xlsx"));
             new BlankCells().Create(Path.Combine(path, "BlankCells.xlsx"));
             new TwoPages().Create(Path.Combine(path, "TwoPages.xlsx"));

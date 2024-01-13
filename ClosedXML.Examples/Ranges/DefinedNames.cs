@@ -3,11 +3,8 @@ using System;
 
 namespace ClosedXML.Examples.Misc
 {
-    public class NamedRanges : IXLExample
+    public class DefinedNames : IXLExample
     {
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -75,11 +72,5 @@ namespace ClosedXML.Examples.Misc
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-        #endregion Methods
     }
 }
