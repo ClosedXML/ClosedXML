@@ -151,12 +151,15 @@ namespace ClosedXML.Excel
             get { return WorksheetsInternal; }
         }
 
-        internal XLNamedRanges NamedRangesInternal { get; }
+        internal XLDefinedNames DefinedNamesInternal { get; }
+
+        [Obsolete($"Use {nameof(DefinedNames)} instead.")]
+        public IXLDefinedNames NamedRanges => DefinedNamesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
-        public IXLNamedRanges NamedRanges => NamedRangesInternal;
+        public IXLDefinedNames DefinedNames => DefinedNamesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
@@ -290,23 +293,31 @@ namespace ClosedXML.Excel
             };
         }
 
-        public IXLNamedRange NamedRange(String rangeName)
+#nullable enable
+        [Obsolete($"Use {nameof(DefinedName)} instead.")]
+        public IXLDefinedName? NamedRange(String name) => DefinedName(name);
+
+        /// <inheritdoc/>
+        public IXLDefinedName? DefinedName(String name)
         {
-            if (rangeName.Contains("!"))
+            if (name.Contains("!"))
             {
-                var split = rangeName.Split('!');
+                var split = name.Split('!');
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
-                var name = split[1];
+                var sheetlessName = split[1];
                 if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
-                    var range = ws.NamedRange(name);
-                    return range ?? NamedRange(name);
+                    if (ws.DefinedNames.TryGetScopedValue(sheetlessName, out var sheetDefinedName))
+                        return sheetDefinedName;
                 }
-                return null;
+
+                name = sheetlessName;
             }
-            return NamedRangesInternal.NamedRange(rangeName);
+
+            return DefinedNamesInternal.TryGetScopedValue(name, out var definedName) ? definedName : null;
         }
+#nullable disable
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
@@ -797,7 +808,7 @@ namespace ClosedXML.Excel
             ShowZeros = DefaultShowZeros;
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
-            NamedRangesInternal = new XLNamedRanges(this);
+            DefinedNamesInternal = new XLDefinedNames(this);
             PivotCachesInternal = new XLPivotCaches(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
@@ -819,7 +830,7 @@ namespace ClosedXML.Excel
 
         public IXLCell Cell(String namedCell)
         {
-            var namedRange = NamedRange(namedCell);
+            var namedRange = DefinedName(namedCell);
             if (namedRange != null)
             {
                 return namedRange.Ranges?.FirstOrDefault()?.FirstCell();
@@ -835,7 +846,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Range(String range)
         {
-            var namedRange = NamedRange(range);
+            var namedRange = DefinedName(range);
             if (namedRange != null)
                 return namedRange.Ranges.FirstOrDefault();
             else

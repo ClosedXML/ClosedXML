@@ -6,32 +6,32 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLNamedRange : IXLNamedRange
+    internal class XLDefinedName : IXLDefinedName
     {
         private String _name;
-        private readonly XLNamedRanges _namedRanges;
+        private readonly XLDefinedNames _namedRanges;
 
         internal XLWorkbook Workbook => _namedRanges.Workbook;
 
-        public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
+        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, String range, String comment = null)
             : this(namedRanges, rangeName, validateName: true, range, comment)
         {
         }
 
-        public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
+        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, IXLRanges ranges, String comment = null)
             : this(namedRanges, rangeName, validateName: true, comment)
         {
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
         }
 
-        internal XLNamedRange(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String range, String comment)
+        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String range, String comment)
             : this(namedRanges, rangeName, validateName, comment)
         {
             //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
             range.Split(',').ForEach(r => RangeList.Add(r));
         }
 
-        internal XLNamedRange(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String comment)
+        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String comment)
         {
             _namedRanges = namedRanges ?? throw new ArgumentNullException(nameof(namedRanges));
             Visible = true;
@@ -66,12 +66,12 @@ namespace ClosedXML.Excel
 
                 var oldname = _name ?? string.Empty;
 
-                var existingNames = _namedRanges.Select(nr => nr.Name).ToList();
+                var existingNames = _namedRanges.Select<XLDefinedName, string>(nr => nr.Name).ToList();
                 if (_namedRanges.Scope == XLNamedRangeScope.Workbook)
-                    existingNames.AddRange(_namedRanges.Workbook.NamedRanges.Select(nr => nr.Name));
+                    existingNames.AddRange(_namedRanges.Workbook.DefinedNamesInternal.Select<XLDefinedName, string>(nr => nr.Name));
 
                 if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
-                    existingNames.AddRange(_namedRanges.Worksheet.NamedRanges.Select(nr => nr.Name));
+                    existingNames.AddRange(_namedRanges.Worksheet.DefinedNames.Select<XLDefinedName, string>(nr => nr.Name));
 
                 existingNames = existingNames.Distinct().ToList();
 
@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLNamedRange CopyTo(IXLWorksheet targetSheet)
+        public IXLDefinedName CopyTo(IXLWorksheet targetSheet)
         {
             if (targetSheet == _namedRanges.Worksheet)
                 throw new InvalidOperationException("Cannot copy named range to the worksheet it already belongs to.");
@@ -201,25 +201,25 @@ namespace ClosedXML.Excel
                     ranges.Add(r);
             }
 
-            return targetSheet.NamedRanges.Add(Name, ranges);
+            return targetSheet.DefinedNames.Add(Name, ranges);
         }
 
         internal IList<String> RangeList { get; set; } = new List<String>();
 
-        public IXLNamedRange SetRefersTo(String range)
+        public IXLDefinedName SetRefersTo(String range)
         {
             RefersTo = range;
             return this;
         }
 
-        public IXLNamedRange SetRefersTo(IXLRangeBase range)
+        public IXLDefinedName SetRefersTo(IXLRangeBase range)
         {
             RangeList.Clear();
             RangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             return this;
         }
 
-        public IXLNamedRange SetRefersTo(IXLRanges ranges)
+        public IXLDefinedName SetRefersTo(IXLRanges ranges)
         {
             RangeList.Clear();
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));

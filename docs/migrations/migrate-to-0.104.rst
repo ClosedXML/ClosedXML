@@ -157,3 +157,20 @@ internally immutable, the ``IXLStyle`` object must hold a reference to object th
 immutable style in a property (e.g. ``IXLCell`` or ``IXLRow``) so it can change it and that
 reference is called container. The end result is that two IXLStyle objects should be equal when all
 their style properties are equal.
+
+*************
+Defined names
+*************
+
+``IXLWorksheet.NamedRange(string)`` throws ``KeyNotFoundException`` instead of
+``ArgumentOutOfRangeException`` when defined name is not found.
+
+Names of interfaces has been changed to better reflect semantic meaning, i.e. defined name. Defined
+name can refer to a range, constant, cell, function, lambda and others. *named range* is very
+non-descript type name.
+
+* ``IXLNamedRange`` -> ``IXLDefinedName``
+* ``IXLNamedRanges`` -> ``IXLDefinedNames``
+
+Various properties/names containing ``*NamedRange*`` have been renamed to ``*DefinedName*`` and
+marked with an ``[Obsolete]`` attribute pointing to a new name.

@@ -193,29 +193,28 @@ namespace ClosedXML.Excel
         IXLRange Merge(Boolean checkIntersect);
 
         /// <summary>
-        ///   Creates a named range out of this range.
-        ///   <para>If the named range exists, it will add this range to that named range.</para>
-        ///   <para>The default scope for the named range is Workbook.</para>
+        /// Creates/adds this range to workbook scoped <see cref="IXLDefinedNames"/>.
+        /// <para>If the named range exists, it will add this range to that named range.</para>
         /// </summary>
-        /// <param name = "rangeName">Name of the range.</param>
-        IXLRange AddToNamed(String rangeName);
+        /// <param name = "name">Name of the defined name, without sheet.</param>
+        IXLRange AddToNamed(String name);
 
         /// <summary>
-        ///   Creates a named range out of this range.
-        ///   <para>If the named range exists, it will add this range to that named range.</para>
-        ///   <param name = "rangeName">Name of the range.</param>
-        ///   <param name = "scope">The scope for the named range.</param>
+        /// Creates/adds this range to <see cref="IXLDefinedNames"/>.
+        /// <para>If the named range exists, it will add this range to that named range.</para>
+        /// <param name = "name">Name of the defined name, without sheet.</param>
+        /// <param name = "scope">The scope for the named range.</param>
         /// </summary>
-        IXLRange AddToNamed(String rangeName, XLScope scope);
+        IXLRange AddToNamed(String name, XLScope scope);
 
         /// <summary>
-        ///   Creates a named range out of this range.
-        ///   <para>If the named range exists, it will add this range to that named range.</para>
-        ///   <param name = "rangeName">Name of the range.</param>
-        ///   <param name = "scope">The scope for the named range.</param>
-        ///   <param name = "comment">The comments for the named range.</param>
+        /// Creates/adds this range to <see cref="IXLDefinedNames"/>.
+        /// <para>If the named range exists, it will add this range to that named range.</para>
+        /// <param name = "name">Name of the defined name, without sheet.</param>
+        /// <param name = "scope">The scope for the named range.</param>
+        /// <param name = "comment">The comments for the named range.</param>
         /// </summary>
-        IXLRange AddToNamed(String rangeName, XLScope scope, String comment);
+        IXLRange AddToNamed(String name, XLScope scope, String comment);
 
         /// <summary>
         /// Clears the contents of this range.

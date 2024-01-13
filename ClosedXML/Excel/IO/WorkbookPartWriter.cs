@@ -266,20 +266,20 @@ namespace ClosedXML.Excel.IO
                     definedNames.AppendChild(definedName);
                 }
 
-                foreach (var nr in worksheet.NamedRanges.Where(n => n.Name != "_xlnm._FilterDatabase"))
+                foreach (var xlDefinedName in worksheet.DefinedNames.Where<XLDefinedName>(n => n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
                     {
-                        Name = nr.Name,
+                        Name = xlDefinedName.Name,
                         LocalSheetId = sheetId,
-                        Text = nr.ToString()
+                        Text = xlDefinedName.ToString()
                     };
 
-                    if (!nr.Visible)
+                    if (!xlDefinedName.Visible)
                         definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                    if (!String.IsNullOrWhiteSpace(nr.Comment))
-                        definedName.Comment = nr.Comment;
+                    if (!String.IsNullOrWhiteSpace(xlDefinedName.Comment))
+                        definedName.Comment = xlDefinedName.Comment;
                     definedNames.AppendChild(definedName);
                 }
 
@@ -321,22 +321,22 @@ namespace ClosedXML.Excel.IO
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (var nr in xlWorkbook.NamedRanges.OfType<XLNamedRange>())
+            foreach (var xlDefinedName in xlWorkbook.DefinedNamesInternal)
             {
-                var refersTo = string.Join(",", nr.RangeList
+                var refersTo = string.Join(",", xlDefinedName.RangeList
                     .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
 
                 var definedName = new DefinedName
                 {
-                    Name = nr.Name,
+                    Name = xlDefinedName.Name,
                     Text = refersTo
                 };
 
-                if (!nr.Visible)
+                if (!xlDefinedName.Visible)
                     definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                if (!String.IsNullOrWhiteSpace(nr.Comment))
-                    definedName.Comment = nr.Comment;
+                if (!String.IsNullOrWhiteSpace(xlDefinedName.Comment))
+                    definedName.Comment = xlDefinedName.Comment;
                 definedNames.AppendChild(definedName);
             }
 

@@ -85,7 +85,7 @@ namespace ClosedXML.Tests
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).Value = "Hello World!";
-            wb.NamedRanges.Add("SingleCell", "Sheet1!$A$1");
+            wb.DefinedNames.Add("SingleCell", "Sheet1!$A$1");
             IXLRange range = wb.Range("SingleCell");
             Assert.AreEqual(1, range.CellsUsed().Count());
             Assert.AreEqual("Hello World!", range.CellsUsed().Single().GetText());
@@ -102,7 +102,7 @@ namespace ClosedXML.Tests
             rangeColumn.Cell(3).Value = "Hank";
             rangeColumn.Cell(4).Value = "Dagny";
             IXLTable table = rangeColumn.CreateTable();
-            wb.NamedRanges.Add("FNameColumn", String.Format("{0}[{1}]", table.Name, "FName"));
+            wb.DefinedNames.Add("FNameColumn", String.Format("{0}[{1}]", table.Name, "FName"));
 
             IXLRange namedRange = wb.Range("FNameColumn");
             Assert.AreEqual(3, namedRange.Cells().Count());
@@ -164,7 +164,7 @@ namespace ClosedXML.Tests
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            ws.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+            ws.DefinedNames.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
             IXLRanges namedRanges = ws.Ranges("TestRange");
 
             Assert.AreEqual("$A$1:$A$1", namedRanges.First().RangeAddress.ToStringFixed());

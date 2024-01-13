@@ -32,7 +32,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var dependencies = GetDependencies("name + D2", init: wb =>
             {
-                wb.NamedRanges.Add("name", "Sheet!$B$4+Sheet!$C$6");
+                wb.DefinedNames.Add("name", "Sheet!$B$4+Sheet!$C$6");
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var dependencies = GetDependencies("B3:name", init: wb =>
             {
-                wb.NamedRanges.Add("name", "Sheet!$D$7");
+                wb.DefinedNames.Add("name", "Sheet!$D$7");
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
@@ -62,8 +62,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var dependencies = GetDependencies("outer", init: wb =>
             {
-                wb.NamedRanges.Add("outer", "Sheet!$D$7 + inner");
-                wb.NamedRanges.Add("inner", "Sheet!$B$1");
+                wb.DefinedNames.Add("outer", "Sheet!$D$7 + inner");
+                wb.DefinedNames.Add("inner", "Sheet!$B$1");
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
@@ -78,7 +78,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var dependencies = GetDependencies("name", init: wb =>
             {
-                wb.NamedRanges.Add("name", "1+3");
+                wb.DefinedNames.Add("name", "1+3");
             });
             CollectionAssert.IsEmpty(dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
@@ -92,8 +92,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var dependencies = GetDependencies(formula, init: wb =>
             {
                 // Define two names, the local one should be selected
-                wb.Worksheet("Sheet").NamedRanges.Add("name", "Sheet!$A$1");
-                wb.NamedRanges.Add("name", "Sheet!$B$10");
+                wb.Worksheet("Sheet").DefinedNames.Add("name", "Sheet!$A$1");
+                wb.DefinedNames.Add("name", "Sheet!$B$10");
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
@@ -108,7 +108,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var dependencies = GetDependencies("name", "D8", init: wb =>
             {
-                wb.NamedRanges.Add("name", "Sheet!B4"); // equivalent of R[3]C[2]
+                wb.DefinedNames.Add("name", "Sheet!B4"); // equivalent of R[3]C[2]
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {

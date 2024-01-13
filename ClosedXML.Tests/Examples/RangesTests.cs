@@ -57,9 +57,9 @@ namespace ClosedXML.Tests.Examples
         }
 
         [Test]
-        public void NamedRanges()
+        public void DefinedNames()
         {
-            TestHelper.RunTestExample<NamedRanges>(@"Ranges\NamedRanges.xlsx");
+            TestHelper.RunTestExample<DefinedNames>(@"Ranges\DefinedNames.xlsx");
         }
 
         [Test]

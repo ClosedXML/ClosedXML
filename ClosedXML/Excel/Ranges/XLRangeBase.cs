@@ -559,26 +559,26 @@ namespace ClosedXML.Excel
             return Worksheet.Range(RangeAddress);
         }
 
-        public IXLRange AddToNamed(String rangeName)
+        public IXLRange AddToNamed(String name)
         {
-            return AddToNamed(rangeName, XLScope.Workbook);
+            return AddToNamed(name, XLScope.Workbook);
         }
 
-        public IXLRange AddToNamed(String rangeName, XLScope scope)
+        public IXLRange AddToNamed(String name, XLScope scope)
         {
-            return AddToNamed(rangeName, scope, null);
+            return AddToNamed(name, scope, null);
         }
 
-        public IXLRange AddToNamed(String rangeName, XLScope scope, String comment)
+        public IXLRange AddToNamed(String name, XLScope scope, String comment)
         {
-            var namedRanges = scope == XLScope.Workbook
-                                  ? Worksheet.Workbook.NamedRanges
-                                  : Worksheet.NamedRanges;
+            var definedNames = scope == XLScope.Workbook
+                                  ? Worksheet.Workbook.DefinedNamesInternal
+                                  : Worksheet.DefinedNames;
 
-            if (namedRanges.TryGetValue(rangeName, out IXLNamedRange namedRange))
-                namedRange.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
+            if (definedNames.TryGetScopedValue(name, out var definedName))
+                definedName.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             else
-                namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
+                definedNames.Add(name, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
 
             return AsRange();
         }
@@ -727,8 +727,8 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
 
-            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange namedRange))
-                return namedRange.Ranges.First().FirstCell().CastTo<XLCell>();
+            if (Worksheet.DefinedNames.TryGetValue(cellAddressInRange, out IXLDefinedName definedName))
+                return definedName.Ranges.First().FirstCell().CastTo<XLCell>();
 
             return null;
         }

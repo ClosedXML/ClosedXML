@@ -1,6 +1,7 @@
 using ClosedXML.Parser;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -332,23 +333,30 @@ namespace ClosedXML.Excel.CalcEngine
                 worksheet = (XLWorksheet)ws!;
             }
 
-            if (!TryGetNameRange(worksheet, out var namedRange))
+            if (!TryGetNameRange(worksheet, out var definedName))
                 return XLError.NameNotRecognized;
 
             // Parser needs an equal sign for a union of ranges (or braces around formula)
-            var nameFormula = namedRange.RefersTo;
+            var nameFormula = definedName.RefersTo;
             nameFormula = nameFormula.StartsWith("=") ? nameFormula : "=" + nameFormula;
             return engine.EvaluateName(nameFormula, ctxWs);
         }
 
-        internal bool TryGetNameRange(IXLWorksheet ws, out IXLNamedRange range)
+        internal bool TryGetNameRange(IXLWorksheet ws, [NotNullWhen(true)] out IXLDefinedName? definedName)
         {
-            if (ws.NamedRanges.TryGetValue(Name, out range!))
+            if (ws.DefinedNames.TryGetValue(Name, out var sheetDefinedName))
+            {
+                definedName = sheetDefinedName;
                 return true;
+            }
 
-            if (ws.Workbook.NamedRanges.TryGetValue(Name, out range!))
+            if (ws.Workbook.DefinedNamesInternal.TryGetValue(Name, out var bookDefinedName))
+            {
+                definedName = bookDefinedName;
                 return true;
+            }
 
+            definedName = null;
             return false;
         }
     }

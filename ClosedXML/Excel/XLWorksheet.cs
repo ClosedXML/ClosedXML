@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             _rangeIndices = new List<IXLRangeIndex>();
 
             Pictures = new XLPictures(this);
-            NamedRanges = new XLNamedRanges(this);
+            DefinedNames = new XLDefinedNames(this);
             SheetView = new XLSheetView(this);
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
@@ -97,9 +97,12 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        IXLNamedRanges IXLWorksheet.NamedRanges => NamedRanges;
+        [Obsolete($"Use {nameof(DefinedNames)} instead.")]
+        IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
 
-        internal XLNamedRanges NamedRanges { get; }
+        IXLDefinedNames IXLWorksheet.DefinedNames => DefinedNames;
+
+        internal XLDefinedNames DefinedNames { get; }
 
         public override XLRangeType RangeType
         {
@@ -559,19 +562,20 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             IsDeleted = true;
-            Workbook.NamedRangesInternal.OnWorksheetDeleted(Name);
+            Workbook.DefinedNamesInternal.OnWorksheetDeleted(Name);
             Workbook.NotifyWorksheetDeleting(this);
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-        IXLNamedRange IXLWorksheet.NamedRange(String rangeName)
-        {
-            return NamedRanges.NamedRange(rangeName) ?? throw new ArgumentException($"Range '{rangeName}' not found in sheet '{Name}'.");
-        }
 
-        internal IXLNamedRange? NamedRange(String rangeName)
+        [Obsolete($"Used {nameof(DefinedName)} instead.")]
+        IXLDefinedName IXLWorksheet.NamedRange(String name) => DefinedName(name);
+
+        IXLDefinedName IXLWorksheet.DefinedName(String name) => DefinedName(name);
+
+        internal XLDefinedName DefinedName(String name)
         {
-            return NamedRanges.NamedRange(rangeName);
+            return DefinedNames.DefinedName(name);
         }
 
         IXLSheetView IXLWorksheet.SheetView { get => SheetView; }
@@ -636,7 +640,7 @@ namespace ClosedXML.Excel
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
-            NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
+            DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
@@ -948,14 +952,14 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
+                else if (DefinedNames.TryGetValue(rangeAddressStr, out var worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange)
-                    && workbookNamedRange.Ranges.First().Worksheet == this)
+                else if (Workbook.DefinedNames.TryGetValue(rangeAddressStr, out var workbookDefinedName)
+                    && workbookDefinedName.Ranges.First().Worksheet == this)
                 {
-                    workbookNamedRange.Ranges.ForEach(retVal.Add);
+                    workbookDefinedName.Ranges.ForEach(retVal.Add);
                 }
             }
             return retVal;
@@ -1197,8 +1201,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
-            MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
+            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesColumns(range, columnsShifted, ws.DefinedNames));
+            MoveDefinedNamesColumns(range, columnsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
@@ -1339,8 +1343,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
-            MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
+            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesRows(range, rowsShifted, ws.DefinedNames));
+            MoveDefinedNamesRows(range, rowsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingRows(range, rowsShifted);
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
@@ -1473,25 +1477,25 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
+        private void MoveDefinedNamesRows(XLRange range, int rowsShifted, XLDefinedNames definedNames)
         {
-            foreach (XLNamedRange nr in namedRanges)
+            foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    nr.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
+                    definedName.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                nr.RangeList = newRangeList;
+                definedName.RangeList = newRangeList;
             }
         }
 
-        private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLNamedRanges namedRanges)
+        private void MoveDefinedNamesColumns(XLRange range, int columnsShifted, XLDefinedNames definedNames)
         {
-            foreach (XLNamedRange nr in namedRanges)
+            foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    nr.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
+                    definedName.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                nr.RangeList = newRangeList;
+                definedName.RangeList = newRangeList;
             }
         }
 
@@ -1642,12 +1646,12 @@ namespace ClosedXML.Excel
             if (cell is not null)
                 return cell;
 
-            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange? workbookNamedRange))
+            if (Workbook.DefinedNames.TryGetValue(cellAddressInRange, out var definedName))
             {
-                if (!workbookNamedRange.Ranges.Any())
+                if (!definedName.Ranges.Any())
                     return null;
 
-                return workbookNamedRange.Ranges.First().FirstCell().CastTo<XLCell>();
+                return definedName.Ranges.First().FirstCell().CastTo<XLCell>();
             }
 
             return null;
@@ -1661,15 +1665,15 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? worksheetNamedRange))
-                return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
+            if (DefinedNames.TryGetValue(rangeAddressStr, out var sheetDefinedName))
+                return sheetDefinedName.Ranges.First().CastTo<XLRange>();
 
-            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange? workbookNamedRange))
+            if (Workbook.DefinedNamesInternal.TryGetValue(rangeAddressStr, out var workbookDefinedName))
             {
-                if (!workbookNamedRange.Ranges.Any())
+                if (!workbookDefinedName.Ranges.Any())
                     return null;
 
-                return workbookNamedRange.Ranges.First().CastTo<XLRange>();
+                return workbookDefinedName.Ranges.First().CastTo<XLRange>();
             }
 
             return null;

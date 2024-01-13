@@ -130,14 +130,13 @@ namespace ClosedXML.Excel.IO
         private static List<string> GetModifiedNamedRanges(XLWorkbook workbook)
         {
             var namedRanges = new List<String>();
-            foreach (var w in workbook.WorksheetsInternal)
+            foreach (var sheet in workbook.WorksheetsInternal)
             {
-                var wName = w.Name;
-                namedRanges.AddRange(w.NamedRanges.Select(n => wName + "!" + n.Name));
-                namedRanges.Add(w.Name + "!Print_Area");
-                namedRanges.Add(w.Name + "!Print_Titles");
+                namedRanges.AddRange(sheet.DefinedNames.Select<XLDefinedName, string>(n => sheet.Name + "!" + n.Name));
+                namedRanges.Add(sheet.Name + "!Print_Area");
+                namedRanges.Add(sheet.Name + "!Print_Titles");
             }
-            namedRanges.AddRange(workbook.NamedRanges.Select(n => n.Name));
+            namedRanges.AddRange(workbook.DefinedNamesInternal.Select<XLDefinedName, string>(n => n.Name));
             return namedRanges;
         }
     }

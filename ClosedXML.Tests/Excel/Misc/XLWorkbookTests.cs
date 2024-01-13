@@ -159,46 +159,46 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void NamedRange1()
+        public void Non_existent_defined_name_returns_null()
         {
             var wb = new XLWorkbook();
-            IXLNamedRange range = wb.NamedRange("ABC");
-            Assert.IsNull(range);
+            var definedName = wb.DefinedName("ABC");
+            Assert.IsNull(definedName);
         }
 
         [Test]
-        public void NamedRange2()
+        public void Sheet_specified_defined_name_is_retrieved_from_sheet_if_defined_there()
         {
             var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
-            IXLNamedRange range = wb.NamedRange("Sheet1!Result");
-            Assert.IsNotNull(range);
-            Assert.AreEqual(1, range.Ranges.Count);
-            Assert.AreEqual(1, range.Ranges.Cells().Count());
-            Assert.AreEqual(1, range.Ranges.First().FirstCell().Value);
+            var definedName = wb.DefinedName("Sheet1!Result");
+            Assert.IsNotNull(definedName);
+            Assert.AreEqual(1, definedName.Ranges.Count);
+            Assert.AreEqual(1, definedName.Ranges.Cells().Count());
+            Assert.AreEqual(1, definedName.Ranges.First().FirstCell().Value);
         }
 
         [Test]
-        public void NamedRange3()
+        public void Sheet_specified_defined_name_returns_null_if_not_defined_in_sheet_nor_workbook()
         {
             var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-            IXLNamedRange range = wb.NamedRange("Sheet1!Result");
-            Assert.IsNull(range);
+            var ws = wb.AddWorksheet("Sheet1");
+            var definedName = wb.DefinedName("Sheet1!Result");
+            Assert.IsNull(definedName);
         }
 
         [Test]
-        public void NamedRange4()
+        public void Sheet_specified_defined_name_falls_back_to_workbook_scoped_defined_name_if_not_defined_in_sheet()
         {
             var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
-            IXLNamedRange range = wb.NamedRange("Sheet1!Result");
-            Assert.IsNotNull(range);
-            Assert.AreEqual(1, range.Ranges.Count);
-            Assert.AreEqual(1, range.Ranges.Cells().Count());
-            Assert.AreEqual(1, range.Ranges.First().FirstCell().Value);
+            var definedName = wb.DefinedName("Sheet1!Result");
+            Assert.IsNotNull(definedName);
+            Assert.AreEqual(1, definedName.Ranges.Count);
+            Assert.AreEqual(1, definedName.Ranges.Cells().Count());
+            Assert.AreEqual(1, definedName.Ranges.First().FirstCell().Value);
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace ClosedXML.Tests.Excel
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            wb.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+            wb.DefinedNames.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
 
             IXLRanges wbRanges = ws.Ranges("TestRange");
             Assert.AreEqual("$A$1:$A$1", wbRanges.First().RangeAddress.ToStringFixed());

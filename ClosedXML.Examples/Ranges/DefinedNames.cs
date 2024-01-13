@@ -3,11 +3,8 @@ using System;
 
 namespace ClosedXML.Examples.Misc
 {
-    public class NamedRanges : IXLExample
+    public class DefinedNames : IXLExample
     {
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -28,10 +25,10 @@ namespace ClosedXML.Examples.Misc
             wsData.Range("A2:B4").AddToNamed("PeopleData"); // Default named range scope is Workbook
 
             // Create a hidden named range
-            wb.NamedRanges.Add("Headers", wsData.Range("A1:B1")).Visible = false;
+            wb.DefinedNames.Add("Headers", wsData.Range("A1:B1")).Visible = false;
 
             // Create a hidden named range n worksheet scope
-            wsData.NamedRanges.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
+            wsData.DefinedNames.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
 
             // Let's use the named range in a formula:
             wsPresentation.Cell(1, 1).Value = "People Count:";
@@ -56,12 +53,12 @@ namespace ClosedXML.Examples.Misc
             // The following creates a relative named range pointing to the same row
             // and one column to the right. For example if the current cell is B4
             // relativeRange1 will point to C4.
-            wsPresentation.NamedRanges.Add("relativeRange1", "Presentation!B1");
+            wsPresentation.DefinedNames.Add("relativeRange1", "Presentation!B1");
 
             // The following creates a relative named range pointing to the same row
             // and one column to the left. For example if the current cell is D2
             // relativeRange2 will point to C2.
-            wb.NamedRanges.Add("relativeRange2", "Presentation!XFD1");
+            wb.DefinedNames.Add("relativeRange2", "Presentation!XFD1");
 
             // Explanation: The address of a relative range always starts at A1
             // and moves from then on. To get the desired relative range just
@@ -75,11 +72,5 @@ namespace ClosedXML.Examples.Misc
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-        #endregion Methods
     }
 }
