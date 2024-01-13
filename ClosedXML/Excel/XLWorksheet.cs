@@ -97,7 +97,9 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
+        IXLDefinedNames IXLWorksheet.NamedRanges => NamedRanges;
+
+        internal XLDefinedNames NamedRanges => DefinedNames;
 
         internal XLDefinedNames DefinedNames { get; }
 

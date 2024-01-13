@@ -57,10 +57,12 @@ namespace ClosedXML.Excel
 
         Boolean LockWindows { get; set; }
 
+        IXLDefinedNames NamedRanges { get; }
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's defined names.
         /// </summary>
-        IXLDefinedNames NamedRanges { get; }
+        IXLDefinedNames DefinedNames { get; }
 
         /// <summary>
         ///   Gets or sets the default outline options for the workbook.
@@ -189,7 +191,31 @@ namespace ClosedXML.Excel
 
         IXLRows FindRows(Func<IXLRow, Boolean> predicate);
 
-        IXLDefinedName NamedRange(String name);
+#nullable enable
+        [Obsolete($"Use {nameof(DefinedName)} instead.")]
+        IXLDefinedName? NamedRange(String name);
+
+        /// <summary>
+        /// Try to find a defined name. If <paramref name="name"/> specifies a sheet, try to find
+        /// name in the sheet first and fall back to the workbook if not found in the sheet.
+        /// <para>
+        /// <example>
+        /// Requested name <c>Sheet1!Name</c> will first try to find <c>Name</c> in a sheet
+        /// <c>Sheet1</c> (if such sheet exists) and if not found there, tries to find <c>Name</c>
+        /// in workbook.
+        /// </example>
+        /// </para>
+        /// <para>
+        /// <example>
+        /// Requested name <c>Name</c> will be searched only in a workbooks <see cref="DefinedNames"/>.
+        /// </example>
+        /// </para>
+        /// </summary>
+        /// <param name="name">Name of requested name, either plain name (e.g. <c>Name</c>) or with
+        /// sheet specified (e.g. <c>Sheet!Name</c>).</param>
+        /// <returns>Found name or null.</returns>
+        IXLDefinedName? DefinedName(String name);
+#nullable disable
 
         IXLRange Range(String range);
 

@@ -153,10 +153,12 @@ namespace ClosedXML.Excel
 
         internal XLDefinedNames DefinedNamesInternal { get; }
 
+        public IXLDefinedNames NamedRanges => DefinedNames;
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
-        public IXLDefinedNames NamedRanges => DefinedNamesInternal;
+        public IXLDefinedNames DefinedNames => DefinedNamesInternal;
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
@@ -290,7 +292,12 @@ namespace ClosedXML.Excel
             };
         }
 
-        public IXLDefinedName NamedRange(String name)
+#nullable enable
+        [Obsolete($"Use {nameof(DefinedName)} instead.")]
+        public IXLDefinedName? NamedRange(String name) => DefinedName(name);
+
+        /// <inheritdoc/>
+        public IXLDefinedName? DefinedName(String name)
         {
             if (name.Contains("!"))
             {
@@ -301,12 +308,14 @@ namespace ClosedXML.Excel
                 if (TryGetWorksheet(wsName, out XLWorksheet ws))
                 {
                     var range = ws.NamedRange(sheetName);
-                    return range ?? NamedRange(sheetName);
+                    return range ?? DefinedName(sheetName);
                 }
                 return null;
             }
+
             return DefinedNamesInternal.NamedRange(name);
         }
+#nullable disable
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
@@ -819,7 +828,7 @@ namespace ClosedXML.Excel
 
         public IXLCell Cell(String namedCell)
         {
-            var namedRange = NamedRange(namedCell);
+            var namedRange = DefinedName(namedCell);
             if (namedRange != null)
             {
                 return namedRange.Ranges?.FirstOrDefault()?.FirstCell();
@@ -835,7 +844,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Range(String range)
         {
-            var namedRange = NamedRange(range);
+            var namedRange = DefinedName(range);
             if (namedRange != null)
                 return namedRange.Ranges.FirstOrDefault();
             else

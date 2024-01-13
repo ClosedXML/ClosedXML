@@ -442,7 +442,7 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void NamedRangesWhenCopyingWorksheets()
+        public void Only_worksheet_scoped_defined_names_are_copied_when_sheet_is_copied()
         {
             using (var wb = new XLWorkbook())
             {
@@ -469,7 +469,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(104, wsCopy.Cell("C3").Value);
 
                 Assert.AreEqual("Sheet1!A1:A10",
-                    wb.NamedRange("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                    wb.DefinedName("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
                 Assert.AreEqual("Copy!A3:A3",
                     wsCopy.NamedRange("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
                 Assert.AreEqual("Sheet2!A4:A4",
@@ -565,8 +565,8 @@ namespace ClosedXML.Tests.Excel
             Assert.IsTrue(wb.NamedRanges.Contains("Sheet1!Name"));
             Assert.IsFalse(wb.NamedRanges.Contains("Sheet1!NameX"));
 
-            Assert.IsNotNull(wb.NamedRange("Sheet1!Name"));
-            Assert.IsNull(wb.NamedRange("Sheet1!NameX"));
+            Assert.IsNotNull(wb.DefinedName("Sheet1!Name"));
+            Assert.IsNull(wb.DefinedName("Sheet1!NameX"));
 
             Boolean found1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out var definedName1);
             Assert.IsTrue(found1);
@@ -588,8 +588,8 @@ namespace ClosedXML.Tests.Excel
             Assert.IsTrue(wb.NamedRanges.Contains("Name"));
             Assert.IsFalse(wb.NamedRanges.Contains("NameX"));
 
-            Assert.IsNotNull(wb.NamedRange("Name"));
-            Assert.IsNull(wb.NamedRange("NameX"));
+            Assert.IsNotNull(wb.DefinedName("Name"));
+            Assert.IsNull(wb.DefinedName("NameX"));
 
             Boolean found1 = wb.NamedRanges.TryGetValue("Name", out var definedName1);
             Assert.IsTrue(found1);

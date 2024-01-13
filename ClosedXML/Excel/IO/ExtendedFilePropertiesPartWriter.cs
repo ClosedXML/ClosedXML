@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.IO
             foreach (var w in workbook.WorksheetsInternal)
             {
                 var wName = w.Name;
-                namedRanges.AddRange(w.DefinedNames.Select(n => wName + "!" + n.Name));
+                namedRanges.AddRange(w.NamedRanges.Select(n => wName + "!" + n.Name));
                 namedRanges.Add(w.Name + "!Print_Area");
                 namedRanges.Add(w.Name + "!Print_Titles");
             }

@@ -195,7 +195,7 @@ namespace ClosedXML.Excel
             }
 
             range = Scope == XLNamedRangeScope.Workbook
-                ? Workbook.NamedRange(name)
+                ? Workbook.DefinedName(name)
                 : null;
 
             return range is not null;
@@ -206,7 +206,7 @@ namespace ClosedXML.Excel
             if (_namedRanges.ContainsKey(name)) return true;
 
             if (Scope == XLNamedRangeScope.Workbook)
-                return Workbook.NamedRange(name) != null;
+                return Workbook.DefinedName(name) is not null;
             else
                 return false;
         }
