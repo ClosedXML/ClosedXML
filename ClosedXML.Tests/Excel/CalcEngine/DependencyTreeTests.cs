@@ -92,7 +92,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var dependencies = GetDependencies(formula, init: wb =>
             {
                 // Define two names, the local one should be selected
-                wb.Worksheet("Sheet").NamedRanges.Add("name", "Sheet!$A$1");
+                wb.Worksheet("Sheet").DefinedNames.Add("name", "Sheet!$A$1");
                 wb.NamedRanges.Add("name", "Sheet!$B$10");
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]

@@ -291,10 +291,13 @@ namespace ClosedXML.Excel
         /// </summary>
         void Delete();
 
-        /// <summary>
-        /// Gets an object to manage this worksheet's named ranges.
-        /// </summary>
+        [Obsolete($"Use {nameof(DefinedNames)} instead.")]
         IXLDefinedNames NamedRanges { get; }
+
+        /// <summary>
+        /// Gets an object to manage this worksheet's defined names.
+        /// </summary>
+        IXLDefinedNames DefinedNames { get; }
 
         /// <summary>
         /// Gets the specified named range.

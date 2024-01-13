@@ -1606,7 +1606,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            ws.NamedRanges.Add("subtotalrange", "A37:A38");
+            ws.DefinedNames.Add("subtotalrange", "A37:A38");
 
             ws.Cell("A1").Value = 2;
             ws.Cell("A2").Value = 4;

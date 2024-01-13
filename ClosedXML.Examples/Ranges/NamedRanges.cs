@@ -31,7 +31,7 @@ namespace ClosedXML.Examples.Misc
             wb.NamedRanges.Add("Headers", wsData.Range("A1:B1")).Visible = false;
 
             // Create a hidden named range n worksheet scope
-            wsData.NamedRanges.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
+            wsData.DefinedNames.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
 
             // Let's use the named range in a formula:
             wsPresentation.Cell(1, 1).Value = "People Count:";
@@ -56,7 +56,7 @@ namespace ClosedXML.Examples.Misc
             // The following creates a relative named range pointing to the same row
             // and one column to the right. For example if the current cell is B4
             // relativeRange1 will point to C4.
-            wsPresentation.NamedRanges.Add("relativeRange1", "Presentation!B1");
+            wsPresentation.DefinedNames.Add("relativeRange1", "Presentation!B1");
 
             // The following creates a relative named range pointing to the same row
             // and one column to the left. For example if the current cell is D2

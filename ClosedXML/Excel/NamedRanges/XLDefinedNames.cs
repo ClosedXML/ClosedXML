@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
 
         IEnumerator<IXLDefinedName> IEnumerable<IXLDefinedName>.GetEnumerator() => GetEnumerator();
 
-        internal Dictionary<string, XLDefinedName>.ValueCollection.Enumerator GetEnumerator()
+        public Dictionary<string, XLDefinedName>.ValueCollection.Enumerator GetEnumerator()
         {
             return _namedRanges.Values.GetEnumerator();
         }

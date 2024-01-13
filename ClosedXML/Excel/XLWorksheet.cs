@@ -97,9 +97,10 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        IXLDefinedNames IXLWorksheet.NamedRanges => NamedRanges;
+        [Obsolete($"Use {nameof(DefinedNames)} instead.")]
+        IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
 
-        internal XLDefinedNames NamedRanges => DefinedNames;
+        IXLDefinedNames IXLWorksheet.DefinedNames => DefinedNames;
 
         internal XLDefinedNames DefinedNames { get; }
 
@@ -1199,8 +1200,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
-            MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
+            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesColumns(range, columnsShifted, ws.DefinedNames));
+            MoveDefinedNamesColumns(range, columnsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
@@ -1341,8 +1342,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
-            MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
+            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesRows(range, rowsShifted, ws.DefinedNames));
+            MoveDefinedNamesRows(range, rowsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingRows(range, rowsShifted);
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
@@ -1475,25 +1476,25 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLDefinedNames namedRanges)
+        private void MoveDefinedNamesRows(XLRange range, int rowsShifted, XLDefinedNames definedNames)
         {
-            foreach (XLDefinedName nr in namedRanges)
+            foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    nr.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
+                    definedName.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                nr.RangeList = newRangeList;
+                definedName.RangeList = newRangeList;
             }
         }
 
-        private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLDefinedNames namedRanges)
+        private void MoveDefinedNamesColumns(XLRange range, int columnsShifted, XLDefinedNames definedNames)
         {
-            foreach (XLDefinedName nr in namedRanges)
+            foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    nr.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
+                    definedName.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                nr.RangeList = newRangeList;
+                definedName.RangeList = newRangeList;
             }
         }
 

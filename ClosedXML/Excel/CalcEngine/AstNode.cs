@@ -343,7 +343,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal bool TryGetNameRange(IXLWorksheet ws, out IXLDefinedName definedName)
         {
-            if (ws.NamedRanges.TryGetValue(Name, out definedName!))
+            if (ws.DefinedNames.TryGetValue(Name, out definedName!))
                 return true;
 
             if (ws.Workbook.NamedRanges.TryGetValue(Name, out definedName!))

@@ -164,7 +164,7 @@ namespace ClosedXML.Tests
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            ws.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+            ws.DefinedNames.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
             IXLRanges namedRanges = ws.Ranges("TestRange");
 
             Assert.AreEqual("$A$1:$A$1", namedRanges.First().RangeAddress.ToStringFixed());

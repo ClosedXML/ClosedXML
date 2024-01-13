@@ -201,7 +201,7 @@ namespace ClosedXML.Excel
                     ranges.Add(r);
             }
 
-            return targetSheet.NamedRanges.Add(Name, ranges);
+            return targetSheet.DefinedNames.Add(Name, ranges);
         }
 
         internal IList<String> RangeList { get; set; } = new List<String>();

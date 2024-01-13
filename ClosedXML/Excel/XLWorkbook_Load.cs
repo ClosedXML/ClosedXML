@@ -980,8 +980,8 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        if (Worksheet(localSheetId + 1).NamedRanges.All(nr => nr.Name != name))
-                            (Worksheet(localSheetId + 1).NamedRanges as XLDefinedNames).Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
+                        if (Worksheet(localSheetId + 1).DefinedNames.All(nr => nr.Name != name))
+                            ((XLDefinedNames)Worksheet(localSheetId + 1).DefinedNames).Add(name, text, comment, validateName: false, validateRangeAddress: false).Visible = visible;
                     }
                 }
             }

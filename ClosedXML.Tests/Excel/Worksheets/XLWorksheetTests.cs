@@ -494,7 +494,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void CopyWorksheetAcrossWorkbooksPreservesNamedRanges()
+        public void Copy_sheet_across_workbooks_preserves_defined_names()
         {
             using (var wb1 = new XLWorkbook())
             using (var wb2 = new XLWorkbook())
@@ -506,11 +506,11 @@ namespace ClosedXML.Tests
 
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
-                Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
-                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                Assert.AreEqual(ws1.DefinedNames.Count(), ws2.DefinedNames.Count());
+                for (int i = 0; i < ws1.DefinedNames.Count(); i++)
                 {
-                    var nr1 = ws1.NamedRanges.ElementAt(i);
-                    var nr2 = ws2.NamedRanges.ElementAt(i);
+                    var nr1 = ws1.DefinedNames.ElementAt(i);
+                    var nr2 = ws2.DefinedNames.ElementAt(i);
                     Assert.AreEqual(nr1.Ranges.ToString(), nr2.Ranges.ToString());
                     Assert.AreEqual(nr1.Scope, nr2.Scope);
                     Assert.AreEqual(nr1.Name, nr2.Name);
@@ -521,7 +521,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void CopyWorksheeInsideWorkbookMakesNamedRangesLocal()
+        public void Copy_sheet_inside_workbook_makes_defined_names_local()
         {
             using (var wb1 = new XLWorkbook())
             {
@@ -532,11 +532,11 @@ namespace ClosedXML.Tests
 
                 var ws2 = ws1.CopyTo("Copy");
 
-                Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
-                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                Assert.AreEqual(ws1.DefinedNames.Count(), ws2.DefinedNames.Count());
+                for (int i = 0; i < ws1.DefinedNames.Count(); i++)
                 {
-                    var nr1 = ws1.NamedRanges.ElementAt(i);
-                    var nr2 = ws2.NamedRanges.ElementAt(i);
+                    var nr1 = ws1.DefinedNames.ElementAt(i);
+                    var nr2 = ws2.DefinedNames.ElementAt(i);
 
                     Assert.AreEqual(XLScope.Worksheet, nr2.Scope);
 
@@ -1343,7 +1343,7 @@ namespace ClosedXML.Tests
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             wb.NamedRanges.Add("book_range", ws.Range(2, 3, 5, 7)); // C2:G5
-            ws.NamedRanges.Add("sheet_range", ws.Range(1, 2, 3, 4)); // B1:D3
+            ws.DefinedNames.Add("sheet_range", ws.Range(1, 2, 3, 4)); // B1:D3
 
             var singleCellRange = ws.Range("B4");
             var areaCellRange = ws.Range("B4:D7");
