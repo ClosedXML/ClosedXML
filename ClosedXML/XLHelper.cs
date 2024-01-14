@@ -329,20 +329,28 @@ namespace ClosedXML.Excel
             return TimeSpan.FromMilliseconds(roundedMilliseconds);
         }
 
-        public static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
+        internal static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
+        {
+            if (!ValidateName(objectType, newName, out message))
+                return false;
+
+            // Table names are case insensitive
+            if (!string.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase)
+                && existingNames.Contains(newName, StringComparer.OrdinalIgnoreCase))
+            {
+                message = $"There is already a {objectType} named '{newName}'";
+                return false;
+            }
+
+            return true;
+        }
+
+        internal static Boolean ValidateName(String objectType, String newName, out String message)
         {
             message = "";
             if (String.IsNullOrWhiteSpace(newName))
             {
                 message = $"The {objectType} name '{newName}' is invalid";
-                return false;
-            }
-
-            // Table names are case insensitive
-            if (!oldName.Equals(newName, StringComparison.OrdinalIgnoreCase)
-                && existingNames.Contains(newName, StringComparer.OrdinalIgnoreCase))
-            {
-                message = $"There is already a {objectType} named '{newName}'";
                 return false;
             }
 

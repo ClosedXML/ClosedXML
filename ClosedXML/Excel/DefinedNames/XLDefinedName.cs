@@ -8,45 +8,29 @@ namespace ClosedXML.Excel
 {
     internal class XLDefinedName : IXLDefinedName
     {
-        private String _name;
         private readonly XLDefinedNames _namedRanges;
+        private String _name;
 
         internal XLWorkbook Workbook => _namedRanges.Workbook;
 
-        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, String range, String comment = null)
-            : this(namedRanges, rangeName, validateName: true, range, comment)
+        internal XLDefinedName(XLDefinedNames container, String name, Boolean validateName, String formula, String comment)
         {
-        }
-
-        public XLDefinedName(XLDefinedNames namedRanges, String rangeName, IXLRanges ranges, String comment = null)
-            : this(namedRanges, rangeName, validateName: true, comment)
-        {
-            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
-        }
-
-        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String range, String comment)
-            : this(namedRanges, rangeName, validateName, comment)
-        {
-            //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
-            range.Split(',').ForEach(r => RangeList.Add(r));
-        }
-
-        internal XLDefinedName(XLDefinedNames namedRanges, String rangeName, Boolean validateName, String comment)
-        {
-            _namedRanges = namedRanges ?? throw new ArgumentNullException(nameof(namedRanges));
-            Visible = true;
-
             if (validateName)
-                Name = rangeName;
-            else
-                SetNameWithoutValidation(rangeName);
+            {
+                if (!XLHelper.ValidateName("named range", name, out var error))
+                    throw new ArgumentException(error, nameof(name));
+            }
 
+            _namedRanges = container;
+            _name = name;
+            Visible = true;
             Comment = comment;
+
+            //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
+            formula.Split(',').ForEach(r => RangeList.Add(r));
         }
 
-        /// <summary>
-        /// Checks if the named range contains invalid references (#REF!).
-        /// </summary>
+        /// <inheritdoc />
         public bool IsValid
         {
             get
@@ -62,35 +46,19 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
-                if (_name == value) return;
+                if (XLHelper.NameComparer.Equals(_name, value))
+                    return;
 
-                var oldname = _name ?? string.Empty;
+                if (!XLHelper.ValidateName("named range", value, out var error))
+                    throw new ArgumentException(error, nameof(value));
 
-                var existingNames = _namedRanges.Select<XLDefinedName, string>(nr => nr.Name).ToList();
-                if (_namedRanges.Scope == XLNamedRangeScope.Workbook)
-                    existingNames.AddRange(_namedRanges.Workbook.DefinedNamesInternal.Select<XLDefinedName, string>(nr => nr.Name));
+                if (_namedRanges.Contains(value))
+                    throw new InvalidOperationException($"There is already a name '{value}'.");
 
-                if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
-                    existingNames.AddRange(_namedRanges.Worksheet.DefinedNames.Select<XLDefinedName, string>(nr => nr.Name));
-
-                existingNames = existingNames.Distinct().ToList();
-
-                if (!XLHelper.ValidateName("named range", value, oldname, existingNames, out String message))
-                    throw new ArgumentException(message, nameof(value));
-
+                _namedRanges.Delete(_name);
                 _name = value;
-
-                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
-                {
-                    _namedRanges.Delete(oldname);
-                    _namedRanges.Add(_name, this);
-                }
+                _namedRanges.Add(_name, this);
             }
-        }
-
-        private void SetNameWithoutValidation(string value)
-        {
-            _name = value;
         }
 
         public IXLRanges Ranges
@@ -118,7 +86,9 @@ namespace ClosedXML.Excel
 
         public Boolean Visible { get; set; }
 
-        public XLNamedRangeScope Scope { get { return _namedRanges.Scope; } }
+        public XLNamedRangeScope Scope => _namedRanges.Scope;
+
+        internal List<String> RangeList { get; set; } = new();
 
         public IXLRanges Add(XLWorkbook workbook, String rangeAddress)
         {
@@ -203,8 +173,6 @@ namespace ClosedXML.Excel
 
             return targetSheet.DefinedNames.Add(Name, ranges);
         }
-
-        internal IList<String> RangeList { get; set; } = new List<String>();
 
         public IXLDefinedName SetRefersTo(String range)
         {

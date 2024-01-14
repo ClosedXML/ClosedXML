@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -124,7 +125,8 @@ namespace ClosedXML.Excel
 
         public IXLDefinedName Add(String name, IXLRanges ranges, String? comment)
         {
-            var namedRange = new XLDefinedName(this, name, ranges, comment);
+            var formula = string.Join(",", ranges.Select(r => r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
+            var namedRange = new XLDefinedName(this, name, true, formula, comment);
             _namedRanges.Add(name, namedRange);
             return namedRange;
         }
