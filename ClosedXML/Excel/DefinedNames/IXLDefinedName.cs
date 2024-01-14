@@ -47,8 +47,9 @@ namespace ClosedXML.Excel
         /// <value>
         /// The name of the range.
         /// </value>
-        /// <exception cref="ArgumentException">Set value is not a valid name or the name is
-        /// colliding with a different name that is already defined in the collection.</exception>
+        /// <exception cref="ArgumentException">Set value is not a valid name.</exception>
+        /// <exception cref="InvalidOperationException">The name is colliding with a different name
+        /// that is already defined in the collection.</exception>
         String Name { get; set; }
 
         /// <summary>
