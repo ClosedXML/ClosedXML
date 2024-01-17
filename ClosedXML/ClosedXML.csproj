@@ -49,7 +49,7 @@
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
     <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
-    <PackageReference Include="ClosedXML.Parser" Version="[1.1.0,2.0.0)" />
+    <PackageReference Include="ClosedXML.Parser" Version="[1.2.0,2.0.0)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

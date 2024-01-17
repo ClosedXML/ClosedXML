@@ -640,8 +640,8 @@ namespace ClosedXML.Excel
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
-            DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet));
-            Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
+            Tables.ForEach<XLTable>(t => t.CopyTo(targetSheet, false));
+            DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet)); // Names must modify table references, so keep the order.
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
             SparklineGroups.CopyTo(targetSheet);
@@ -1482,9 +1482,10 @@ namespace ClosedXML.Excel
             foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    definedName.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
+                    definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                definedName.RangeList = newRangeList;
+                var unionFormula = string.Join(",", newRangeList);
+                definedName.SetRefersTo(unionFormula);
             }
         }
 
@@ -1493,9 +1494,10 @@ namespace ClosedXML.Excel
             foreach (var definedName in definedNames)
             {
                 var newRangeList =
-                    definedName.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
+                    definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
-                definedName.RangeList = newRangeList;
+                var unionFormula = string.Join(",", newRangeList);
+                definedName.SetRefersTo(unionFormula);
             }
         }
 

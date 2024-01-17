@@ -271,7 +271,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var anchor = context.FormulaArea.Area.FirstPoint;
-            var sheetRange = node.ReferenceArea.ToSheetRange(anchor, node.IsA1);
+            var sheetRange = node.ReferenceArea.ToSheetRange(anchor);
             return new List<XLBookArea> { new(sheetName, sheetRange) };
         }
 

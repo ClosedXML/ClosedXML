@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -30,7 +28,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The comment for this named range.
         /// </value>
-        String Comment { get; set; }
+        String? Comment { get; set; }
 
         /// <summary>
         /// Checks if the named range contains invalid references (#REF!).
@@ -81,33 +79,17 @@ namespace ClosedXML.Excel
         Boolean Visible { get; set; }
 
         /// <summary>
-        /// Adds the specified range to this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
+        /// Copy sheet-scoped defined name to a different sheet. The references to the original
+        /// sheet are changed to refer to the <paramref name="targetSheet"/>:
+        /// <list type="bullet">
+        ///   <item>Cell ranges (<c>Org!A1</c> will be <c>New!A1</c>).</item>
+        ///   <item>Tables - if the target sheet contains a table of same size at same place as the original sheet.</item>
+        ///   <item>Sheet-specified names (<c>Org!Name</c> will be <c>New!Name</c>, but the actual name won't be created).</item>
+        /// </list>
         /// </summary>
-        /// <param name="workbook">Workbook containing the range</param>
-        /// <param name="rangeAddress">The range address to add.</param>
-        IXLRanges Add(XLWorkbook workbook, String rangeAddress);
-
-        /// <summary>
-        /// Adds the specified range to this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
-        /// </summary>
-        /// <param name="range">The range to add.</param>
-        IXLRanges Add(IXLRange range);
-
-        /// <summary>
-        /// Adds the specified ranges to this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
-        /// </summary>
-        /// <param name="ranges">The ranges to add.</param>
-        IXLRanges Add(IXLRanges ranges);
-
-        /// <summary>
-        /// Clears the list of ranges associated with this named range.
-        /// <para>(it does not clear the cells)</para>
-        /// </summary>
-        void Clear();
-
+        /// <param name="targetSheet">Target sheet where to copy the defined name.</param>
+        /// <exception cref="InvalidOperationException">Defined name is workbook-scoped</exception>
+        /// <exception cref="InvalidOperationException">Trying to copy defined name to the same sheet.</exception>
         IXLDefinedName CopyTo(IXLWorksheet targetSheet);
 
         /// <summary>
@@ -115,28 +97,7 @@ namespace ClosedXML.Excel
         /// </summary>
         void Delete();
 
-        /// <summary>
-        /// Removes the specified range from this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
-        /// </summary>
-        /// <param name="rangeAddress">The range address to remove.</param>
-        void Remove(String rangeAddress);
-
-        /// <summary>
-        /// Removes the specified range from this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
-        /// </summary>
-        /// <param name="range">The range to remove.</param>
-        void Remove(IXLRange range);
-
-        /// <summary>
-        /// Removes the specified ranges from this named range.
-        /// <para>Note: A named range can point to multiple ranges.</para>
-        /// </summary>
-        /// <param name="ranges">The ranges to remove.</param>
-        void Remove(IXLRanges ranges);
-
-        IXLDefinedName SetRefersTo(String range);
+        IXLDefinedName SetRefersTo(String formula);
 
         IXLDefinedName SetRefersTo(IXLRangeBase range);
 

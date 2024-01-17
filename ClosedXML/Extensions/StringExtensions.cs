@@ -153,5 +153,14 @@ namespace ClosedXML.Excel
 
             return Encoding.ASCII.GetBytes(magic).Select(x => (uint)x).Aggregate((acc, cur) => acc * 256 + cur);
         }
+
+        internal static String TrimFormulaEqual(this String text)
+        {
+            var trimmedStart = text.AsSpan().TrimStart();
+            if (trimmedStart.Length > 1 && trimmedStart[0] == '=')
+                return trimmedStart.Slice(1).ToString();
+
+            return text;
+        }
     }
 }

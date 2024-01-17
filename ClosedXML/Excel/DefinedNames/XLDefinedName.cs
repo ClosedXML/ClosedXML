@@ -1,210 +1,177 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Parser;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+[DebuggerDisplay("{_name}:{_formula}")]
+internal class XLDefinedName : IXLDefinedName
 {
-    internal class XLDefinedName : IXLDefinedName
+    private readonly XLDefinedNames _container;
+    private String _name;
+    private String _formula = null!;
+    private FormulaReferences _references = null!;
+
+    internal XLDefinedName(XLDefinedNames container, String name, Boolean validateName, String formula, String? comment)
     {
-        private readonly XLDefinedNames _namedRanges;
-        private String _name;
-
-        internal XLWorkbook Workbook => _namedRanges.Workbook;
-
-        internal XLDefinedName(XLDefinedNames container, String name, Boolean validateName, String formula, String comment)
+        // Excel accepts invalid names per grammar (e.g. `[Foo]Bar`) as a valid name and they can
+        // encountered in existing workbooks. We shouldn't throw exception on load.
+        if (validateName)
         {
-            if (validateName)
+            if (!XLHelper.ValidateName("named range", name, out var error))
+                throw new ArgumentException(error, nameof(name));
+        }
+
+        _container = container;
+        _name = name;
+        RefersTo = formula;
+        Visible = true;
+        Comment = comment;
+    }
+
+    public bool IsValid => !_references.ContainsRefError;
+
+    public String Name
+    {
+        get => _name;
+        set
+        {
+            if (XLHelper.NameComparer.Equals(_name, value))
+                return;
+
+            if (!XLHelper.ValidateName("named range", value, out var error))
+                throw new ArgumentException(error, nameof(value));
+
+            if (_container.Contains(value))
+                throw new InvalidOperationException($"There is already a name '{value}'.");
+
+            _container.Delete(_name);
+            _name = value;
+            _container.Add(_name, this);
+        }
+    }
+
+    public IXLRanges Ranges => _references.GetExternalRanges(_container.Workbook, new XLSheetPoint(1, 1));
+
+    public String? Comment { get; set; }
+
+    public Boolean Visible { get; set; }
+
+    public XLNamedRangeScope Scope => _container.Scope;
+
+    public String RefersTo
+    {
+        get => _formula;
+        set
+        {
+            if (value is null)
+                throw new ArgumentNullException();
+
+            var formula = value.TrimFormulaEqual();
+            var references = FormulaReferences.ForFormula(formula);
+            if (references.References.Any())
             {
-                if (!XLHelper.ValidateName("named range", name, out var error))
-                    throw new ArgumentException(error, nameof(name));
+                // `[MS-XLSX] 2.2.2.5: The formula MUST NOT use the local-cell-reference production
+                // rule.` Excel will refuse to load a workbook with such a defined name (e.g. `A1`).
+                // In theory, defined name should support bang references as a replacement for local
+                // references, but ClosedParser doesn't support it yet.
+                throw new ArgumentException($"Formula '{formula}' contains references without a sheet.");
             }
 
-            _namedRanges = container;
-            _name = name;
-            Visible = true;
-            Comment = comment;
-
-            //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
-            formula.Split(',').ForEach(r => RangeList.Add(r));
+            _references = references;
+            _formula = formula;
         }
+    }
 
-        /// <inheritdoc />
-        public bool IsValid
+    IXLDefinedName IXLDefinedName.CopyTo(IXLWorksheet targetSheet) => CopyTo((XLWorksheet)targetSheet);
+
+    void IXLDefinedName.Delete() => _container.Delete(Name);
+
+    /// <summary>
+    /// Get sheet references found in the formula in A1. Doesn't return tables or name references,
+    /// only what has col/row coordinates.
+    /// </summary>
+    internal IReadOnlyList<String> SheetReferencesList => _references.SheetReferences.Select(x => x.GetA1()).ToList();
+
+    internal XLDefinedName CopyTo(XLWorksheet targetSheet)
+    {
+        var sheet = _container.Worksheet;
+        if (targetSheet == sheet)
+            throw new InvalidOperationException("Cannot copy named range to the worksheet it already belongs to.");
+
+        if (sheet is null)
+            throw new InvalidOperationException("Cannot copy workbook scoped defined name.");
+
+        var targetTables = targetSheet.Tables.ToDictionary<XLTable, XLSheetRange>(x => x.SheetRange);
+        var tableRenames = new Dictionary<string, string>();
+        foreach (var table in sheet.Tables)
         {
-            get
+            if (targetTables.TryGetValue(table.SheetRange, out var targetTable))
             {
-                return RangeList.SelectMany(c => c.Split(',')).All(r =>
-                    !r.StartsWith("#REF!", StringComparison.OrdinalIgnoreCase) &&
-                    !r.EndsWith("#REF!", StringComparison.OrdinalIgnoreCase));
-            }
-        }
-
-        public String Name
-        {
-            get { return _name; }
-            set
-            {
-                if (XLHelper.NameComparer.Equals(_name, value))
-                    return;
-
-                if (!XLHelper.ValidateName("named range", value, out var error))
-                    throw new ArgumentException(error, nameof(value));
-
-                if (_namedRanges.Contains(value))
-                    throw new InvalidOperationException($"There is already a name '{value}'.");
-
-                _namedRanges.Delete(_name);
-                _name = value;
-                _namedRanges.Add(_name, this);
-            }
-        }
-
-        public IXLRanges Ranges
-        {
-            get
-            {
-                var ranges = new XLRanges();
-                foreach (var rangeToAdd in
-                   from rangeAddress in RangeList.SelectMany(c => c.Split(',')).Where(s => s[0] != '"')
-                   let match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress)
-                   select
-                       match.Groups["Sheet"].Success && Workbook.Worksheets.Contains(match.Groups["Sheet"].Value)
-                       ? Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
-                       : Workbook.Worksheets.SelectMany(sheet => sheet.Tables).SingleOrDefault(table => table.Name == match.Groups["Table"].Value)?
-                               .DataRange?.Column(match.Groups["Column"].Value))
-                {
-                    if (rangeToAdd != null)
-                        ranges.Add(rangeToAdd);
-                }
-                return ranges;
-            }
-        }
-
-        public String Comment { get; set; }
-
-        public Boolean Visible { get; set; }
-
-        public XLNamedRangeScope Scope => _namedRanges.Scope;
-
-        internal List<String> RangeList { get; set; } = new();
-
-        public IXLRanges Add(XLWorkbook workbook, String rangeAddress)
-        {
-            var ranges = new XLRanges();
-            var byExclamation = rangeAddress.Split('!');
-            var wsName = byExclamation[0].Replace("'", "");
-            var rng = byExclamation[1];
-            var rangeToAdd = workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
-
-            ranges.Add(rangeToAdd);
-            return Add(ranges);
-        }
-
-        public IXLRanges Add(IXLRange range)
-        {
-            var ranges = new XLRanges { range };
-            return Add(ranges);
-        }
-
-        public IXLRanges Add(IXLRanges ranges)
-        {
-            ranges.ForEach(r => RangeList.Add(r.ToString()));
-            return ranges;
-        }
-
-        public void Delete()
-        {
-            _namedRanges.Delete(Name);
-        }
-
-        public void Clear()
-        {
-            RangeList.Clear();
-        }
-
-        public void Remove(String rangeAddress)
-        {
-            RangeList.Remove(rangeAddress);
-        }
-
-        public void Remove(IXLRange range)
-        {
-            RangeList.Remove(range.ToString());
-        }
-
-        public void Remove(IXLRanges ranges)
-        {
-            ranges.ForEach(r => RangeList.Remove(r.ToString()));
-        }
-
-        public override string ToString()
-        {
-            String retVal = RangeList.Aggregate(String.Empty, (agg, r) => agg + (r + ","));
-            if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
-            return retVal;
-        }
-
-        public String RefersTo
-        {
-            get { return ToString(); }
-            set
-            {
-                RangeList.Clear();
-                RangeList.Add(value);
+                tableRenames.Add(table.Name, targetTable.Name);
             }
         }
 
-        public IXLDefinedName CopyTo(IXLWorksheet targetSheet)
+        var copiedFormula = FormulaConverter.ModifyA1(_formula, 1, 1, new RenameRefModVisitor
         {
-            if (targetSheet == _namedRanges.Worksheet)
-                throw new InvalidOperationException("Cannot copy named range to the worksheet it already belongs to.");
+            Sheets = new Dictionary<string, string?> { { sheet.Name, targetSheet.Name } },
+            Tables = tableRenames,
+        });
+        var copiedName = new XLDefinedName(targetSheet.DefinedNames, Name, false, copiedFormula, Comment);
+        return targetSheet.DefinedNames.Add(Name, copiedName);
+    }
 
-            var ranges = new XLRanges();
-            foreach (var r in Ranges)
-            {
-                if (_namedRanges.Worksheet == r.Worksheet)
-                    // Named ranges on the source worksheet have to point to the new destination sheet
-                    ranges.Add(targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
-                else
-                    ranges.Add(r);
-            }
+    public IXLDefinedName SetRefersTo(IXLRangeBase range)
+    {
+        return SetRefersTo(RangeToFixed(range));
+    }
 
-            return targetSheet.DefinedNames.Add(Name, ranges);
-        }
+    public IXLDefinedName SetRefersTo(IXLRanges ranges)
+    {
+        var unionFormula = string.Join(",", ranges.Select(RangeToFixed));
+        return SetRefersTo(unionFormula);
+    }
 
-        public IXLDefinedName SetRefersTo(String range)
+    public IXLDefinedName SetRefersTo(String formula)
+    {
+        RefersTo = formula;
+        return this;
+    }
+
+    public override string ToString()
+    {
+        return _formula;
+    }
+
+    internal void Add(String rangeAddress)
+    {
+        var byExclamation = rangeAddress.Split('!');
+        var wsName = byExclamation[0].Replace("'", "");
+        var rng = byExclamation[1];
+        var rangeToAdd = _container.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
+
+        var ranges = new XLRanges { rangeToAdd };
+        RefersTo = _formula + "," + string.Join(",", ranges.Select(RangeToFixed));
+    }
+
+    internal void OnWorksheetDeleted(string worksheetName)
+    {
+        if (!_references.ContainsSheet(worksheetName))
+            return;
+
+        var modified = FormulaConverter.ModifyA1(_formula, 1, 1, new RenameRefModVisitor
         {
-            RefersTo = range;
-            return this;
-        }
+            Sheets = new Dictionary<string, string?> { { worksheetName, null } }
+        });
 
-        public IXLDefinedName SetRefersTo(IXLRangeBase range)
-        {
-            RangeList.Clear();
-            RangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
-            return this;
-        }
+        RefersTo = modified;
+    }
 
-        public IXLDefinedName SetRefersTo(IXLRanges ranges)
-        {
-            RangeList.Clear();
-            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
-            return this;
-        }
-
-        internal void OnWorksheetDeleted(string worksheetName)
-        {
-            var escapedSheetName = worksheetName.EscapeSheetName();
-            RangeList = RangeList
-                .Select(
-                    rl => string.Join(",", rl
-                        .Split(',')
-                        .Select(r => r.StartsWith(escapedSheetName + "!", StringComparison.OrdinalIgnoreCase)
-                                     ? "#REF!" + r.Substring(escapedSheetName.Length + 1)
-                                     : r))
-                ).ToList();
-        }
+    private static string RangeToFixed(IXLRangeBase range)
+    {
+        return range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true);
     }
 }
