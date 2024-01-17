@@ -14,12 +14,11 @@ namespace ClosedXML.Extensions
         /// </summary>
         /// <param name="area">Area to convert</param>
         /// <param name="anchor">An anchor address that is the center of R1C1 relative address.</param>
-        /// <param name="isA1">If true, the reference area is in A1 style, otherwise in R1C1 style.</param>
         /// <returns>Converted absolute range.</returns>
-        public static XLSheetRange ToSheetRange(this ReferenceArea area, XLSheetPoint anchor, bool isA1)
+        public static XLSheetRange ToSheetRange(this ReferenceArea area, XLSheetPoint anchor)
         {
             int col1, row1, col2, row2;
-            if (isA1)
+            if (area.First.IsA1)
             {
                 row1 = A1ToPosition(area.First.RowType, area.First.RowValue, XLHelper.MinRowNumber);
                 col1 = A1ToPosition(area.First.ColumnType, area.First.ColumnValue, XLHelper.MinColumnNumber);

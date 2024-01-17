@@ -27,7 +27,7 @@ namespace ClosedXML.Excel
             new XLAddress(-1, -1, fixedRow: true, fixedColumn: true)
         );
 
-        internal static XLRangeAddress FromSheetRange(XLWorksheet worksheet, XLSheetRange range)
+        internal static XLRangeAddress FromSheetRange(XLWorksheet? worksheet, XLSheetRange range)
         {
             return new XLRangeAddress(
                 new XLAddress(worksheet, range.FirstPoint.Row, range.FirstPoint.Column, fixedRow: false, fixedColumn: false),

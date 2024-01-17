@@ -576,7 +576,7 @@ namespace ClosedXML.Excel
                                   : Worksheet.DefinedNames;
 
             if (definedNames.TryGetScopedValue(name, out var definedName))
-                definedName.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
+                definedName.Add(RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             else
                 definedNames.Add(name, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
 

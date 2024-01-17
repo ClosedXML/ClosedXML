@@ -5,12 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Tests.Excel
 {
     [TestFixture]
     public class NamedRangesTests
     {
+        [Test]
+        public void Formula_must_be_valid()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.Throws<ParsingException>(() => wb.DefinedNames.Add("Test", "SUM(Sheet7!A4"));
+        }
+
         [Test]
         public void CanEvaluateNamedMultiRange()
         {
@@ -193,6 +202,40 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void Copy_table_references_to_different_worksheet()
+        {
+            // When sheet-scoped name references a table and there is a table with same area in the
+            // copied sheet, the copied defined name changes table reference to a new table. If
+            // range differs, table reference is not modified.
+            using var wb = new XLWorkbook();
+            var orgSheet = wb.AddWorksheet();
+            orgSheet.Cell("A1").InsertTable(new[] { "Data", "A", "B" }, "OrgTable", true);
+            orgSheet.Cell("C1").InsertTable(new[] { "Data", "A", "B" }, "MiscTable", true);
+            var originalName = orgSheet.DefinedNames.Add("TableName", "SUM(OrgTable[Data], MiscTable[Data])");
+
+            var copySheet = wb.AddWorksheet();
+            copySheet.Cell("A1").InsertTable(new[] { "Data", "A", "B" }, "CopyTable", true);
+
+            originalName.CopyTo(copySheet);
+
+            var copyName = copySheet.DefinedNames.Single();
+            Assert.AreEqual("TableName", copyName.Name);
+            Assert.AreEqual("SUM(CopyTable[Data], MiscTable[Data])", copyName.RefersTo);
+        }
+
+        [Test]
+        public void Copy_workbook_scoped_defined()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            var name = wb.DefinedNames.Add("Name", "Sheet!$A$1");
+
+            var copySheet = wb.AddWorksheet();
+            var ex = Assert.Throws<InvalidOperationException>(() => name.CopyTo(copySheet))!;
+            Assert.AreEqual("Cannot copy workbook scoped defined name.", ex.Message);
+        }
+
+        [Test]
         public void Copy_defined_name_to_same_sheet()
         {
             var wb = new XLWorkbook();
@@ -362,9 +405,9 @@ namespace ClosedXML.Tests.Excel
                     Assert.AreEqual(2, nr.Ranges.Count);
                     Assert.AreEqual("'Sheet 1'!A5:D5", nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
                     Assert.AreEqual("'Sheet 1'!A15:D15", nr.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
-                    Assert.AreEqual(2, nr.RangeList.Count);
-                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5", nr.RangeList.First());
-                    Assert.AreEqual("'Sheet 1'!$A$15:$D$15", nr.RangeList.Last());
+                    Assert.AreEqual(2, nr.SheetReferencesList.Count);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5", nr.SheetReferencesList.First());
+                    Assert.AreEqual("'Sheet 1'!$A$15:$D$15", nr.SheetReferencesList.Last());
                 }
             }
         }
@@ -406,12 +449,12 @@ namespace ClosedXML.Tests.Excel
 
                 Assert.AreEqual("Named range 4", wb.DefinedNames.ElementAt(1).Name);
                 Assert.AreEqual(XLNamedRangeScope.Workbook, wb.DefinedNames.ElementAt(1).Scope);
-                Assert.AreEqual("#REF!$A$4:$D$4", wb.DefinedNames.ElementAt(1).RefersTo);
+                Assert.AreEqual("#REF!", wb.DefinedNames.ElementAt(1).RefersTo);
                 Assert.IsFalse(wb.DefinedNames.ElementAt(1).Ranges.Any());
 
                 Assert.AreEqual("Named range 5", wb.DefinedNames.ElementAt(2).Name);
                 Assert.AreEqual(XLNamedRangeScope.Workbook, wb.DefinedNames.ElementAt(2).Scope);
-                Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!$A$5:$D$5", wb.DefinedNames.ElementAt(2).RefersTo);
+                Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!", wb.DefinedNames.ElementAt(2).RefersTo);
                 Assert.AreEqual(1, wb.DefinedNames.ElementAt(2).Ranges.Count);
                 Assert.AreEqual("'Sheet 1'!A5:D5", wb.DefinedNames.ElementAt(2).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
             }

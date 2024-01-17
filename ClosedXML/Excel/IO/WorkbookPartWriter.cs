@@ -323,13 +323,10 @@ namespace ClosedXML.Excel.IO
 
             foreach (var xlDefinedName in xlWorkbook.DefinedNamesInternal)
             {
-                var refersTo = string.Join(",", xlDefinedName.RangeList
-                    .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
-
                 var definedName = new DefinedName
                 {
                     Name = xlDefinedName.Name,
-                    Text = refersTo
+                    Text = xlDefinedName.RefersTo
                 };
 
                 if (!xlDefinedName.Visible)

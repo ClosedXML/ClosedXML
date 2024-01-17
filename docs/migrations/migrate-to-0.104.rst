@@ -174,3 +174,28 @@ non-descript type name.
 
 Various properties/names containing ``*NamedRange*`` have been renamed to ``*DefinedName*`` and
 marked with an ``[Obsolete]`` attribute pointing to a new name.
+
+The source of truth in a defined name is ``IXLDefinedName.RefersTo``, it used to be
+``IXLNamedRange.Ranges``. The formula in defined name is now parsed and validated when it is being
+set, so it might throw an exception. The redundant equal sign (``=``) is now also removed from
+formula in the setter.
+
+``IXLDefinedName.Clear()`` has been removed. It makes no sense to have an operation that turns
+defined range to a non-valid (=empty) formula.
+
+Methods to modify the defined name by adding/removing ranges from a list of ranges in formula have
+been removed. Methods only makes sense when defined name represents a union of ranges, but that is
+not always the case. If you need to modify the name, create a new one formula of range unions and
+set through ``IXLDefinedName.SetRefersTo(string)``. List of removed methods:
+
+* ``IXLDefinedName.Add(IXLRange range)``
+* ``IXLDefinedName.Add(IXLRanges ranges)``
+* ``IXLDefinedName.Add(XLWorkbook workbook, String rangeAddress);
+* ``IXLDefinedName.Remove(String rangeAddress)``
+* ``IXLDefinedName.Remove(IXLRange range)``
+* ``IXLDefinedName.Remove(IXLRanges ranges)``
+
+``IXLDefinedName.Copyto(IXLWorksheet targetSheet)`` now throws an exception when copied name is not
+sheet-scoped and it copies ranges and tables referencing the original sheet, if found in the new
+sheet.
+
