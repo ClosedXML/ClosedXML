@@ -268,6 +268,23 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void Formula_is_updated_on_sheet_rename()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Old name");
+            var bookScopedName = wb.DefinedNames.Add("TEST", "ABS('Old name'!$B$5)");
+            var sheetScopedName = ws.DefinedNames.Add("TEST1", "'Old name'!$D$7:$F$14");
+
+            ws.Name = "Renamed";
+
+            Assert.AreEqual("ABS(Renamed!$B$5)", bookScopedName.RefersTo);
+            Assert.AreEqual("Renamed!$B$5:$B$5", bookScopedName.Ranges.ToString());
+
+            Assert.AreEqual("Renamed!$D$7:$F$14", sheetScopedName.RefersTo);
+            Assert.AreEqual("Renamed!$D$7:$F$14", sheetScopedName.Ranges.ToString());
+        }
+
+        [Test]
         public void MovingRanges()
         {
             var wb = new XLWorkbook();

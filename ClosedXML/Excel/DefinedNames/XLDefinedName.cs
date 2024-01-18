@@ -8,7 +8,7 @@ using ClosedXML.Parser;
 namespace ClosedXML.Excel;
 
 [DebuggerDisplay("{_name}:{_formula}")]
-internal class XLDefinedName : IXLDefinedName
+internal class XLDefinedName : IXLDefinedName, IWorkbookListener
 {
     private readonly XLDefinedNames _container;
     private String _name;
@@ -157,14 +157,24 @@ internal class XLDefinedName : IXLDefinedName
         RefersTo = _formula + "," + string.Join(",", ranges.Select(RangeToFixed));
     }
 
+    void IWorkbookListener.OnSheetRenamed(string oldSheetName, string newSheetName)
+    {
+        RenameFormulaSheet(oldSheetName, newSheetName);
+    }
+
     internal void OnWorksheetDeleted(string worksheetName)
     {
-        if (!_references.ContainsSheet(worksheetName))
+        RenameFormulaSheet(worksheetName, null);
+    }
+
+    private void RenameFormulaSheet(string oldSheetName, string? newSheetName)
+    {
+        if (!_references.ContainsSheet(oldSheetName))
             return;
 
         var modified = FormulaConverter.ModifyA1(_formula, 1, 1, new RenameRefModVisitor
         {
-            Sheets = new Dictionary<string, string?> { { worksheetName, null } }
+            Sheets = new Dictionary<string, string?> { { oldSheetName, newSheetName} }
         });
 
         RefersTo = modified;
