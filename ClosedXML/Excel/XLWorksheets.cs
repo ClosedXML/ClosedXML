@@ -215,9 +215,28 @@ namespace ClosedXML.Excel
 
             _worksheets.Remove(oldSheetName);
             Add(newSheetName, ws);
+
+            foreach (var listener in GetWorkbookListeners())
+                listener.OnSheetRenamed(oldSheetName, newSheetName);
         }
 
         #region Private members
+
+        private IEnumerable<IWorkbookListener> GetWorkbookListeners()
+        {
+            // All components that should be updated when sheet is added/removed or renamed should
+            // be enumerated here.
+            foreach (var definedName in _workbook.DefinedNamesInternal)
+                yield return definedName;
+
+            foreach (var sheet in _worksheets.Values)
+            {
+                foreach (var definedName in sheet.DefinedNames)
+                {
+                    yield return definedName;
+                }
+            }
+        }
 
         private String GetNextWorksheetName()
         {
