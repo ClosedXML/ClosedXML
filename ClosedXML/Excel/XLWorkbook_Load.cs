@@ -502,7 +502,30 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
 
-            PivotTableCacheDefinitionPartReader.Load(workbookPart, sheets, this, differentialFormats);
+            PivotTableCacheDefinitionPartReader.Load(workbookPart, this);
+
+            // Delay loading of pivot tables until all sheets have been loaded
+            foreach (var dSheet in sheets.OfType<Sheet>())
+            {
+                if (string.IsNullOrEmpty(dSheet.Id))
+                {
+                    // Some non-Excel producers create sheets with empty relId.
+                    continue;
+                }
+
+                // The referenced sheet can also be ChartsheetPart. Only look for pivot tables in normal sheet parts.
+                var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+
+                if (worksheetPart is not null)
+                {
+                    var ws = (XLWorksheet)WorksheetsInternal.Worksheet(dSheet.Name);
+
+                    foreach (var pivotTablePart in worksheetPart.PivotTableParts)
+                    {
+                        PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws);
+                    }
+                }
+            }
         }
 
         /// <summary>
