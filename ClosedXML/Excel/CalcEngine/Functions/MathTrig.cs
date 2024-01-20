@@ -920,8 +920,8 @@ namespace ClosedXML.Excel.CalcEngine
                 else
                 {
                     var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array!
-                        : reference!.GetCellsValues(ctx);
+                        ? array
+                        : reference.GetCellsValues(ctx);
                     foreach (var value in valuesIterator)
                     {
                         // collections ignore strings and logical, only numbers (and errors) allowed

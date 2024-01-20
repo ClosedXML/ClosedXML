@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -50,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
             //LOGEST	Returns the parameters of an exponential trend
             //LOGINV	Returns the inverse of the lognormal distribution
             //LOGNORMDIST	Returns the cumulative lognormal distribution
-            ce.RegisterFunction("MAX", 1, int.MaxValue, Max, AllowRange.All);
+            ce.RegisterFunction("MAX", 1, 255, Max, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, AllowRange.All);
             ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, AllowRange.All);
             ce.RegisterFunction("MIN", 1, int.MaxValue, Min, AllowRange.All);
@@ -228,6 +229,25 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Max(List<Expression> p)
         {
             return GetTally(p, true).Max();
+        }
+
+        private static AnyValue Max(CalcContext ctx, Span<AnyValue> args)
+        {
+            var result = args.Aggregate(
+                ctx,
+                initialValue: double.NegativeInfinity,
+                noElementsResult: 0,
+                aggregate: static (acc, current) => Math.Max(acc, current),
+                convert: static (value, ctx) => value.ToNumber(ctx.Culture),
+                collectionFilter: v => v.IsNumber || v.IsError); // Ignore blanks in references
+
+            if (!result.TryPickT0(out var maximum, out var error))
+                return error;
+
+            if (double.IsInfinity(maximum))
+                return 0;
+
+            return maximum;
         }
 
         private static object MaxA(List<Expression> p)

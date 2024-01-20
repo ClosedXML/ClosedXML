@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// A function that converts a scalar value of an element into the <typeparamref name="TValue"/> or
         /// an error if it can't be converted. Make sure the method is static lambda to avoid useless allocations.
         /// </param>
-        /// <param name="includeCollectionElement">
+        /// <param name="collectionFilter">
         /// Some functions skip elements in a array/reference that would be accepted as an argument,
         /// e.g. <c>SUM("1", {2,"4"})</c> is <c>3</c> - it converts string <c>"3"</c> to a number <c>3</c>
         /// in for root arguments, but omits element <c>"4"</c> in the array. This is a function that
@@ -44,13 +44,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// all values are treated same. Make sure the method is static lambda to avoid useless allocations.
         /// </param>
         public static OneOf<TValue, XLError> Aggregate<TValue>(
-            this Span<AnyValue> args,
-            CalcContext ctx,
-            TValue initialValue,
-            OneOf<TValue, XLError> noElementsResult,
-            Func<TValue, TValue, TValue> aggregate,
-            Func<ScalarValue, CalcContext, OneOf<TValue, XLError>> convert,
-            Func<ScalarValue, bool>? includeCollectionElement = null)
+             this Span<AnyValue> args,
+             CalcContext ctx,
+             TValue initialValue,
+             OneOf<TValue, XLError> noElementsResult,
+             Func<TValue, TValue, TValue> aggregate,
+             Func<ScalarValue, CalcContext, OneOf<TValue, XLError>> convert,
+             Func<ScalarValue, bool>? collectionFilter = null)
         {
             var result = initialValue;
             var hasElement = false;
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                         : reference!.GetCellsValues(ctx);
                     foreach (var value in valuesIterator)
                     {
-                        if (includeCollectionElement is not null && !includeCollectionElement(value))
+                        if (collectionFilter is not null && !collectionFilter(value))
                             continue;
 
                         var conversionResult = convert(value, ctx);

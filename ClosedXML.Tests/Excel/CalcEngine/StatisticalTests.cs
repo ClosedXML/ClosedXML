@@ -333,6 +333,38 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             value = workbook.Evaluate(@"=MAX(Data!G:G)");
             Assert.AreEqual(96, value);
+
+            // Although in most cases blank cells are considered 0, MAX just ignores them.
+            value = workbook.Evaluate(@"MAX(-10, Data!X:Z)");
+            Assert.AreEqual(-10, value);
+
+            // Blanks are not ignored as a value, only in references.
+            value = workbook.Evaluate(@"MAX(-10, IF(TRUE,,))");
+            Assert.AreEqual(0, value);
+
+            // Logical are converted
+            value = workbook.Evaluate(@"MAX(-10, TRUE)");
+            Assert.AreEqual(1, value);
+
+            // Numbers texts are converted
+            value = workbook.Evaluate(@"MAX(-10, ""10"")");
+            Assert.AreEqual(10, value);
+
+            // Non-number texts cause conversion error
+            value = workbook.Evaluate(@"MAX(-10, ""a"")");
+            Assert.AreEqual(XLError.IncompatibleValue, value);
+
+            // Arrays - numbers are used
+            value = workbook.Evaluate(@"MAX(-10, { -6, -5, 7 })");
+            Assert.AreEqual(7, value);
+
+            // Arrays - non-number and non-error values are skipped.
+            value = workbook.Evaluate(@"MAX(-10, { TRUE, FALSE, ""100"" })");
+            Assert.AreEqual(-10, value);
+
+            // Arrays - errors immediately end evaluation.
+            value = workbook.Evaluate(@"MAX(-10, {#N/A})");
+            Assert.AreEqual(XLError.NoValueAvailable, value);
         }
 
         [Test]
