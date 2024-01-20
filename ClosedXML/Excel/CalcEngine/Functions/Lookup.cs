@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
             ce.RegisterFunction("MATCH", 2, 3, Match, AllowRange.Only, 1); // Looks up values in a reference or array
             //ce.RegisterFunction("OFFSET", , Offset); // Returns a reference offset from a given reference
-            ce.RegisterFunction("ROW", 0, 1, Row, FunctionFlags.Range, AllowRange.All); // Returns the row number of a reference
+            ce.RegisterFunction("ROW", 0, 1, Row, FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Returns the row number of a reference
             ce.RegisterFunction("ROWS", 1, 1, Adapt(Rows), FunctionFlags.Range, AllowRange.All); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             ce.RegisterFunction("TRANSPOSE", 1, 1, Adapt(Transpose), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Returns the transpose of an array

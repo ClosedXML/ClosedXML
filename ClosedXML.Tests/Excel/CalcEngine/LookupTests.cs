@@ -327,6 +327,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A9").SetFormulaA1("ROW(IF(TRUE,5))").Value);
             Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A10").SetFormulaA1("ROW(IF(TRUE,\"G15\"))").Value);
             Assert.AreEqual(XLError.DivisionByZero, ws.Cell("A11").SetFormulaA1("ROW(#DIV/0!)").Value);
+
+            // Properly works even in array formulas, where border between references and arrays blurs.
+            ws.Range("A12:A13").FormulaArrayA1 = "ROW(2:3)";
+            Assert.AreEqual(2, ws.Cell("A12").Value);
+            Assert.AreEqual(3, ws.Cell("A13").Value);
         }
 
         [Test]
