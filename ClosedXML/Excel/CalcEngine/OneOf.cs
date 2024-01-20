@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -15,7 +16,7 @@ namespace ClosedXML.Excel.CalcEngine
             _t1 = t1;
         }
 
-        public bool TryPickT0(out T0? t0, out T1? t1)
+        public bool TryPickT0([NotNullWhen(true)] out T0? t0, [NotNullWhen(false)] out T1? t1)
         {
             t0 = _t0;
             t1 = _t1;
