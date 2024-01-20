@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 
@@ -173,7 +174,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static AnyValue ConvertLegacyFormulaValueToAnyValue(object result)
+        private static AnyValue ConvertLegacyFormulaValueToAnyValue(object? result)
         {
             return result switch
             {
@@ -204,13 +205,30 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     var convertedArray = new double[array.Height, array.Width];
                     for (var row = 0; row < array.Height; ++row)
+                    {
                         for (var col = 0; col < array.Width; ++col)
-                            convertedArray[row, col] = array[row, col].Match(
+                        {
+                            var value = array[row, col];
+
+                            // Generally speaking, once a value in a parameter is an error,
+                            // function returns that error. There are few outliers, but very rare.
+                            // Since legacy function never supported errors, use the expression
+                            // that throws on error which is caught by legacy function evaluator.
+                            // That will simulate the correct behavior in most cases:
+                            // * OK scalar legacy function that is applied one by one
+                            // * OK reducing legacy function that maps multiple values to one value.
+                            // * NOK function returning array (e.g MATMULT)
+                            if (value.IsError)
+                                return new Expression(value.GetError());
+
+                            convertedArray[row, col] = value.Match(
                                 () => 0.0,
                                 logical => logical ? 1.0 : 0.0,
                                 number => number,
                                 text => throw new NotImplementedException(),
-                                error => throw new NotImplementedException());
+                                _ => throw new UnreachableException());
+                        }
+                    }
 
                     return new XObjectExpression(convertedArray);
                 },

@@ -119,18 +119,33 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void CanWorkWithLegacyFormulas()
+        public void Legacy_scalar_functions_evaluate_cells_individually()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var range = ws.Range("A1:B2");
+            ws.Cell("A1").Value = -2;
+            ws.Cell("A2").Value = XLError.NameNotRecognized;
+            ws.Cell("A3").Value = 2;
+            ws.Range("B1:B3").FormulaArrayA1 = "SIGN(A1:A3)";
 
-            range.FormulaArrayA1 = "SIN(PI()/2)";
+            Assert.AreEqual(-1, ws.Cell("B1").Value);
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Cell("B2").Value);
+            Assert.AreEqual(1, ws.Cell("B3").Value);
+        }
 
-            foreach (var cell in range.Cells())
-            {
-                Assert.AreEqual(1, cell.Value);
-            }
+        [Test]
+        public void Legacy_reduce_function_calculate_single_value_from_range_and_broadcasts_the_value_to_array()
+        {
+            // AVERAGE is a legacy function that takes a range and reduces it to a single value.
+            // It calculates a single value and that value is then broadcasts it along the range.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Range("B1:B4").FormulaArrayA1 = "AVERAGE({-2; #NAME?; 2})";
+
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Cell("B1").Value);
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Cell("B2").Value);
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Cell("B3").Value);
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Cell("B4").Value);
         }
     }
 }
