@@ -997,20 +997,21 @@ namespace ClosedXML.Tests
             }
         }
 
-        [Test, Ignore("Muted until #836 is fixed")]
-        public void RenameWorksheetChangesAbsoluteReferencesInFormulae()
+        [Test]
+        public void Rename_sheets_changes_sheet_references_in_formulas()
         {
-            using (var wb1 = new XLWorkbook())
-            {
-                var ws1 = wb1.Worksheets.Add("Original");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Original");
 
-                ws1.Cell("A1").FormulaA1 = "10*10";
-                ws1.Cell("A2").FormulaA1 = "Original!A1 * 3";
+            ws.Cell("A1").FormulaA1 = "10*10";
+            ws.Cell("A2").FormulaA1 = "Original!A1 * 3";
+            _ = ws.Cell("A2").Value;
 
-                ws1.Name = "Renamed";
+            ws.Name = "Renamed";
 
-                Assert.AreEqual("Renamed!A1 * 3", ws1.Cell("A2").FormulaA1);
-            }
+            Assert.AreEqual("Renamed!A1 * 3", ws.Cell("A2").FormulaA1);
+            Assert.True(ws.Cell("A2").NeedsRecalculation);
+            Assert.AreEqual(300, ws.Cell("A2").Value);
         }
 
         [Test]

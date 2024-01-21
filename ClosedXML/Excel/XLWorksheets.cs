@@ -226,6 +226,13 @@ namespace ClosedXML.Excel
         {
             // All components that should be updated when sheet is added/removed or renamed should
             // be enumerated here.
+            yield return _workbook.CalcEngine;
+
+            foreach (var sheet in _worksheets.Values)
+            {
+                yield return sheet.Internals.CellsCollection;
+            }
+
             foreach (var definedName in _workbook.DefinedNamesInternal)
                 yield return definedName;
 

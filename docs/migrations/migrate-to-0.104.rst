@@ -199,3 +199,9 @@ set through ``IXLDefinedName.SetRefersTo(string)``. List of removed methods:
 sheet-scoped and it copies ranges and tables referencing the original sheet, if found in the new
 sheet.
 
+*********
+Worksheet
+*********
+
+Changing a worksheet name through ``IXLWorksheet.Name`` setter now also changes names in formulas
+and defined names that use the original sheet name.

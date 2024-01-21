@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// to <c>B7</c> or just value <c>7</c> =&gt; formula no longer depends on <c>A5</c>).
         /// </summary>
         public IReadOnlyCollection<XLName> Names => _names;
-        
+
         internal void AddAreas(List<XLBookArea> sheetAreas)
         {
             _areas.UnionWith(sheetAreas);
@@ -34,6 +34,51 @@ namespace ClosedXML.Excel.CalcEngine
         internal void AddName(XLName name)
         {
             _names.Add(name);
+        }
+
+        internal void RenameSheet(string oldSheetName, string newSheetName)
+        {
+            // The renaming is done for every formula, so only allocate when needed.
+            List<(XLBookArea Original, XLBookArea Replacement)>? areasToRename = null;
+            foreach (var areaInFormula in _areas)
+            {
+                if (XLHelper.SheetComparer.Equals(areaInFormula.Name, oldSheetName))
+                {
+                    var renamedArea = new XLBookArea(newSheetName, areaInFormula.Area);
+                    areasToRename ??= new List<(XLBookArea Original, XLBookArea Replacement)>();
+                    areasToRename.Add((areaInFormula, renamedArea));
+                }
+            }
+
+            if (areasToRename is not null)
+            {
+                foreach (var (original, replacement) in areasToRename)
+                {
+                    _areas.Remove(original);
+                    _areas.Add(replacement);
+                }
+            }
+
+            List<(XLName Original, XLName Replacement)>? namesToRename = null;
+            foreach (var nameInFormula in _names)
+            {
+                if (nameInFormula.SheetName is not null &&
+                    XLHelper.SheetComparer.Equals(nameInFormula.SheetName, oldSheetName))
+                {
+                    var renamedName = new XLName(newSheetName, nameInFormula.Name);
+                    namesToRename ??= new List<(XLName Original, XLName Replacement)>();
+                    namesToRename.Add((nameInFormula, renamedName));
+                }
+            }
+
+            if (namesToRename is not null)
+            {
+                foreach (var (original, replacement) in namesToRename)
+                {
+                    _names.Remove(original);
+                    _names.Add(replacement);
+                }
+            }
         }
     }
 }

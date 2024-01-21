@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <para>This class has three extensibility points:</para>
     /// <para>Use the <b>RegisterFunction</b> method to define custom functions.</para>
     /// </remarks>
-    internal class XLCalcEngine : ISheetListener
+    internal class XLCalcEngine : ISheetListener, IWorkbookListener
     {
         private readonly CultureInfo _culture;
         private readonly ExpressionCache _cache;               // cache with parsed expressions
@@ -385,6 +385,12 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new InvalidOperationException("Got multi cell reference instead of single cell reference.");
 
             return singleCellValue;
+        }
+
+        void IWorkbookListener.OnSheetRenamed(string oldSheetName, string newSheetName)
+        {
+            if (_dependencyTree is not null)
+                _dependencyTree.RenameSheet(oldSheetName, newSheetName);
         }
     }
 
