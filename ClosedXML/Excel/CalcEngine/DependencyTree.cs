@@ -146,6 +146,19 @@ namespace ClosedXML.Excel.CalcEngine
             _sheetTrees.Add(sheet.Name, new SheetDependencyTree());
         }
 
+        internal void RenameSheet(string oldSheetName, string newSheetName)
+        {
+            foreach (var formulaDependencies in _dependencies.Values)
+                formulaDependencies.RenameSheet(oldSheetName, newSheetName);
+
+            var renamedSheetTree = _sheetTrees[oldSheetName];
+            _sheetTrees.Remove(oldSheetName);
+            _sheetTrees.Add(newSheetName, renamedSheetTree);
+
+            foreach (var sheetTree in _sheetTrees.Values)
+                sheetTree.RenameSheet(oldSheetName, newSheetName);
+        }
+
         /// <summary>
         /// Mark all formulas that depend (directly or transitively) on the area as dirty.
         /// </summary>
@@ -244,6 +257,19 @@ namespace ClosedXML.Excel.CalcEngine
                     _dependents.RemoveAt(_dependents.Count - 1);
                 }
             }
+
+            internal void RenameSheet(string oldSheetName, string newSheetName)
+            {
+                for (var i = 0; i < _dependents.Count; ++i)
+                {
+                    var dependent = _dependents[i];
+                    if (XLHelper.SheetComparer.Equals(dependent.FormulaArea.Name, oldSheetName))
+                    {
+                        var renamedArea = new XLBookArea(newSheetName, dependent.FormulaArea.Area);
+                        _dependents[i] = new Dependent(renamedArea, dependent.Formula);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -339,6 +365,14 @@ namespace ClosedXML.Excel.CalcEngine
                     _tree.Delete(precedentArea);
                     _precedentAreas.Remove(precedentRange);
                 }
+            }
+
+            internal void RenameSheet(string oldSheetName, string newSheetName)
+            {
+                // Area dependents instances are shared among _precedentAreas and _tree, so it is
+                // enough to change _precedentAreas.
+                foreach (var areaDependents in _precedentAreas.Values)
+                    areaDependents.RenameSheet(oldSheetName, newSheetName);
             }
 
             private static Envelope ToEnvelope(XLSheetRange range)

@@ -25,7 +25,8 @@ namespace ClosedXML.Excel
         Double RowHeight { get; set; }
 
         /// <summary>
-        /// Gets or sets the name (caption) of this worksheet.
+        /// Gets or sets the name (caption) of this worksheet. The sheet rename also renames sheet
+        /// in formulas and defined names.
         /// </summary>
         String Name { get; set; }
 

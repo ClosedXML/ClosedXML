@@ -296,6 +296,76 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
+        #region Rename sheet
+
+        [Test]
+        public void Sheet_rename_keeps_tree_same_only_with_changed_sheet_name()
+        {
+            using var wb = new XLWorkbook();
+            var renamedSheet = wb.AddWorksheet("Original");
+            var unchangedSheet = wb.AddWorksheet("Unchanged");
+
+            renamedSheet.Cell("A1").Value = 1;
+            renamedSheet.Cell("A2").Value = 2;
+            renamedSheet.Cell("A3").Value = 3;
+            renamedSheet.Cell("A4").FormulaA1 = "SUM(Original!A1:A2, A3, Unchanged!A1:A2)";
+            unchangedSheet.Cell("A1").Value = 10;
+            unchangedSheet.Cell("A2").Value = 20;
+            unchangedSheet.Cell("A3").Value = 30;
+            unchangedSheet.Cell("A4").FormulaA1 = "SUM(Unchanged!A1:A2, A3, Original!A1:A2)";
+            Recalculate();
+
+            renamedSheet.Name = "Renamed";
+
+            Assert.AreEqual("SUM(Renamed!A1:A2, A3, Unchanged!A1:A2)", renamedSheet.Cell("A4").FormulaA1);
+            Assert.AreEqual("SUM(Unchanged!A1:A2, A3, Renamed!A1:A2)", unchangedSheet.Cell("A4").FormulaA1);
+
+            Recalculate();
+            Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.False(unchangedSheet.Cell("A4").NeedsRecalculation);
+
+            // Both depend on Unchanged!A1
+            unchangedSheet.Cell("A1").Value = 110;
+            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Recalculate();
+            Assert.AreEqual(136, renamedSheet.Cell("A4").CachedValue);
+            Assert.AreEqual(163, unchangedSheet.Cell("A4").CachedValue);
+
+            // Both depend on Renamed!A1
+            renamedSheet.Cell("A1").Value = 201;
+            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Recalculate();
+            Assert.AreEqual(336, renamedSheet.Cell("A4").CachedValue);
+            Assert.AreEqual(363, unchangedSheet.Cell("A4").CachedValue);
+
+            // Only unchanged depends on Unchanged!A3. The renamed formula keeps value.
+            unchangedSheet.Cell("A3").Value = 330;
+            Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Recalculate();
+            Assert.AreEqual(336, renamedSheet.Cell("A4").CachedValue);
+            Assert.AreEqual(663, unchangedSheet.Cell("A4").CachedValue);
+
+            // Only renamed depends on Renamed!A3. The unchanged formula keeps value.
+            renamedSheet.Cell("A3").Value = 403;
+            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.False(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Recalculate();
+            Assert.AreEqual(736, renamedSheet.Cell("A4").CachedValue);
+            Assert.AreEqual(663, unchangedSheet.Cell("A4").CachedValue);
+
+            void Recalculate()
+            {
+                // Force recalculation to clear dirty flag. Recalculation always happens for whole
+                // calculation chain.
+                wb.CalcEngine.Recalculate(wb, null);
+            }
+        }
+
+        #endregion
+
         private static XLCellFormula AddFormula(DependencyTree tree, IXLWorksheet sheet, string address, string formula)
         {
             // Set directly, so the cell is not marked as a dirty.

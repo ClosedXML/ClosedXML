@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCellsCollection
+    internal class XLCellsCollection : IWorkbookListener
     {
         private readonly XLWorksheet _ws;
         private readonly List<ISlice> _slices;
@@ -220,7 +220,7 @@ namespace ClosedXML.Excel
                 SwapRanges(prevRowRange, currentRowRange);
             }
         }
-        
+
         /// <summary>
         /// Remap columns of a range.
         /// </summary>
@@ -421,6 +421,27 @@ namespace ClosedXML.Excel
                 }
 
                 return true;
+            }
+        }
+
+        void IWorkbookListener.OnSheetRenamed(string oldSheetName, string newSheetName)
+        {
+            using var enumerator = FormulaSlice.GetForwardEnumerator(XLSheetRange.Full);
+            while (enumerator.MoveNext())
+            {
+                ref readonly XLCellFormula cellFormula = ref enumerator.Current;
+                var currentPoint = enumerator.Point;
+                if (cellFormula.Type != FormulaType.Normal)
+                {
+                    // Array or data formula. Only change name once, on master cell.
+                    var isMasterCell = cellFormula.Range.FirstPoint == currentPoint;
+                    if (!isMasterCell)
+                    {
+                        continue;
+                    }
+                }
+
+                cellFormula.RenameSheet(currentPoint, oldSheetName, newSheetName);
             }
         }
     }

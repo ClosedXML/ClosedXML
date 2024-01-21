@@ -1,8 +1,10 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Visitors;
 using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
@@ -345,6 +347,21 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             return A1 ?? R1C1;
+        }
+
+        public void RenameSheet(XLSheetPoint origin, string oldSheetName, string newSheetName)
+        {
+            var a1 = GetFormulaA1(origin);
+            var res = FormulaConverter.ModifyA1(a1, origin.Row, origin.Column, new RenameRefModVisitor
+            {
+                Sheets = new Dictionary<string, string> { { oldSheetName, newSheetName } }
+            });
+
+            if (res != a1)
+            {
+                A1 = res;
+                IsDirty = true;
+            }
         }
     }
 }
