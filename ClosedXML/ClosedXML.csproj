@@ -38,7 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Janitor.Fody" Version="1.8.0" PrivateAssets="all" />
+    <PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Polyfill" Version="1.29.0">
       <PrivateAssets>all</PrivateAssets>
