@@ -47,6 +47,21 @@ namespace ClosedXML.Excel.CalcEngine
         internal IReadOnlyList<XLRangeAddress> Areas { get; }
 
         /// <summary>
+        /// Get total number of cells coverted by all areas (double counts overlapping areas).
+        /// </summary>
+        internal int NumberOfCells
+        {
+            get
+            {
+                var size = 0;
+                for (var i = 0; i < Areas.Count; ++i)
+                    size += Areas[i].NumberOfCells;
+
+                return size;
+            }
+        }
+
+        /// <summary>
         /// An iterator over all nonblank cells of the range. Some cells can be iterated
         /// over multiple times (e.g. a union of two ranges with overlapping cells).
         /// </summary>
