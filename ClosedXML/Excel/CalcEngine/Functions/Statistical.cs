@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Functions;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -47,6 +48,7 @@ namespace ClosedXML.Excel.CalcEngine
             //INTERCEPT	Returns the intercept of the linear regression line
             //KURT	Returns the kurtosis of a data set
             //LARGE	Returns the k-th largest value in a data set
+            ce.RegisterFunction("LARGE", 2, 2, Adapt(Large), FunctionFlags.Range, AllowRange.Only, 0);
             //LINEST	Returns the parameters of a linear trend
             //LOGEST	Returns the parameters of an exponential trend
             //LOGINV	Returns the inverse of the lognormal distribution
@@ -310,6 +312,50 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).VarP();
         }
 
+        private static AnyValue Large(CalcContext ctx, AnyValue arrayParam, double kParam)
+        {
+            if (kParam < 1)
+                return XLError.NumberInvalid;
+
+            var k = (int)Math.Ceiling(kParam);
+
+            IEnumerable<ScalarValue> values;
+            int size;
+            if (arrayParam.TryPickScalar(out var scalar, out var collection))
+            {
+                values = new[] { scalar };
+                size = 1;
+            }
+            else if (collection.TryPickT0(out var array, out var reference))
+            {
+                values = array;
+                size = array.Width * array.Height;
+            }
+            else
+            {
+                values = reference.GetCellsValues(ctx);
+                size = reference.NumberOfCells;
+            }
+
+            // Pre-allocate array to reduce allocations during doubling of buffer.
+            var total = new List<double>(size);
+            foreach (var value in values)
+            {
+                if (value.IsError)
+                    return value.GetError();
+
+                if (value.IsNumber)
+                    total.Add(value.GetNumber());
+            }
+
+            if (k > total.Count)
+                return XLError.NumberInvalid;
+
+            total.Sort();
+
+            return total[^k];
+        }
+        
         // utility for tallying statistics
         private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
