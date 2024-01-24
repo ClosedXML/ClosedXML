@@ -558,39 +558,57 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Large()
         {
-            var ws = workbook.Worksheets.First();
-            XLCellValue value;
-            value = ws.Evaluate(@"=Large(G1:G45, 1)");
+            var ws = workbook.Worksheet("Data");
+            var value = ws.Evaluate("LARGE(G1:G45, 1)");
             Assert.AreEqual(96, value);
 
-            value = ws.Evaluate(@"=Large(G1:G45, 7)");
+            value = ws.Evaluate("LARGE(G1:G45, 7)");
             Assert.AreEqual(87, value);
 
-            value = ws.Evaluate(@"=Large(G1:G45, 0)");
+            value = ws.Evaluate("LARGE(G1:G45, 0)");
             Assert.AreEqual(XLError.NumberInvalid, value);
 
-            value = ws.Evaluate(@"=Large(G1:G45, -1)");
+            value = ws.Evaluate("LARGE(G1:G45, -1)");
             Assert.AreEqual(XLError.NumberInvalid, value);
 
-            value = ws.Evaluate("=Large(G1:G45,\"test\")");
+            value = ws.Evaluate("LARGE(G1:G45,\"test\")");
             Assert.AreEqual(XLError.IncompatibleValue, value);
 
-            value = ws.Evaluate("=Large(C:C,7)");
+            value = ws.Evaluate("LARGE(C:C,7)");
             Assert.AreEqual(42623, value);
 
-            value = ws.Evaluate("=Large(D:D,7)");
+            value = ws.Evaluate("LARGE(D:D,7)");
             Assert.AreEqual(XLError.NumberInvalid, value);
 
-            ws = workbook.Worksheets.Skip(1).First();
+            ws = workbook.Worksheet("MixedData");
 
-            value = ws.Evaluate("=Large(A1:A7,6)");
+            value = ws.Evaluate("LARGE(A1:A7,6)");
             Assert.AreEqual(XLError.NumberInvalid, value);
 
-            value = ws.Evaluate("=Large(A1:A7,5)");
+            // Ignores non-numbers.
+            value = ws.Evaluate("LARGE(A1:A7,5)");
             Assert.AreEqual(1, value);
 
-        }
+            // Accepts non-area references.
+            value = ws.Evaluate("LARGE((A1:A2,A4:A6),2)");
+            Assert.AreEqual(3, value);
 
+            // Errors are returned.
+            value = ws.Evaluate("LARGE({ 1, 2, #N/A }, 1)");
+            Assert.AreEqual(XLError.NoValueAvailable, value);
+
+            // Uses ceiling logic for number (1.1 -> 2) + can use arrays.
+            value = ws.Evaluate("LARGE({ 1, 2 }, 1.1)");
+            Assert.AreEqual(1, value);
+
+            // If a scalar number-like value supplied, it is converted to number.
+            value = ws.Evaluate("LARGE(\"1 1/2\", 1)");
+            Assert.AreEqual(1.5, value);
+
+            // When the scalar can't be converted, return conversion error.
+            value = ws.Evaluate("LARGE(\"test\", 1)");
+            Assert.AreEqual(XLError.IncompatibleValue, value);
+        }
 
         private XLWorkbook SetupWorkbook()
         {
