@@ -323,7 +323,10 @@ namespace ClosedXML.Excel.CalcEngine
             int size;
             if (arrayParam.TryPickScalar(out var scalar, out var collection))
             {
-                values = new[] { scalar };
+                if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                    return error;
+                    
+                values = new ScalarValue[] { number };
                 size = 1;
             }
             else if (collection.TryPickT0(out var array, out var reference))
