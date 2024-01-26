@@ -35,6 +35,7 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
 
    concepts/types
    concepts/formula-calculation
+   concepts/function-evaluation
 
 .. toctree::
    :maxdepth: 4
