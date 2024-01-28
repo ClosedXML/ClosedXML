@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ROWS", 1, 1, Adapt(Rows), FunctionFlags.Range, AllowRange.All); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             ce.RegisterFunction("TRANSPOSE", 1, 1, Adapt(Transpose), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Returns the transpose of an array
-            ce.RegisterFunction("VLOOKUP", 3, 4, AdaptLastOptional(Vlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
+            ce.RegisterFunction("VLOOKUP", 3, 4, AdaptLastOptional(Vlookup, true), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
         private static AnyValue Column(CalcContext ctx, Span<AnyValue> p)
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new TransposedArray(multi);
         }
 
-        private static AnyValue Vlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue columnIndex, ScalarValue flagValue)
+        private static AnyValue Vlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, double columnNumber, bool approximateSearchFlag)
         {
             if (lookupValue.IsError)
                 return lookupValue.ToAnyValue();
@@ -303,17 +303,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 array = new ReferenceArray(reference.Areas.Single(), ctx);
             }
 
-            if (!columnIndex.ToNumber(ctx.Culture).TryPickT0(out var column, out var error))
-                return error;
-            var columnIdx = (int)column;
-            if (columnIdx < 1)
+            var columnIdx = (int)Math.Truncate(columnNumber) - 1;
+            if (columnIdx < 0)
                 return XLError.IncompatibleValue;
-            if (columnIdx > array.Width)
+            if (columnIdx >= array.Width)
                 return XLError.CellReference;
-
-            var approximateSearchFlag = true;
-            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrBlankOrNumberOrText(out approximateSearchFlag, out var flagError))
-                return flagError;
 
             if (approximateSearchFlag)
             {
@@ -322,7 +316,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (foundRow == -1)
                     return XLError.NoValueAvailable;
 
-                return array[foundRow, columnIdx - 1].ToAnyValue();
+                return array[foundRow, columnIdx].ToAnyValue();
             }
             else
             {
@@ -334,7 +328,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
                     var comparison = ScalarValueComparer.SortIgnoreCase.Compare(currentValue, lookupValue);
                     if (comparison == 0)
-                        return array[rowIndex, columnIdx - 1].ToAnyValue();
+                        return array[rowIndex, columnIdx].ToAnyValue();
                 }
 
                 return XLError.NoValueAvailable;
