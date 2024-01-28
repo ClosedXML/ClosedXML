@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("COLUMNS", 1, 1, Adapt(Columns), FunctionFlags.Range, AllowRange.All); // Returns the number of columns in a reference
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
-            ce.RegisterFunction("HLOOKUP", 3, 4, AdaptLastOptional(Hlookup), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
+            ce.RegisterFunction("HLOOKUP", 3, 4, AdaptLastOptional(Hlookup, true), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
             ce.RegisterFunction("HYPERLINK", 1, 2, Adapt(Hyperlink), FunctionFlags.Scalar | FunctionFlags.SideEffect); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             ce.RegisterFunction("INDEX", 2, 4, Index, AllowRange.Only, 0, 1); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
@@ -60,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return RowsOrColumns(value, false);
         }
 
-        private static AnyValue Hlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, ScalarValue rowIndex, ScalarValue flagValue)
+        private static AnyValue Hlookup(CalcContext ctx, ScalarValue lookupValue, AnyValue rangeValue, double rowNumber, bool approximateSearchFlag)
         {
             if (lookupValue.IsError)
                 return lookupValue.ToAnyValue();
@@ -82,19 +82,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 array = new ReferenceArray(reference.Areas.Single(), ctx);
             }
 
-            if (!rowIndex.ToNumber(ctx.Culture).TryPickT0(out var row, out var error))
-                return error;
-            var rowIdx = (int)row;
-            if (rowIdx < 1)
+            var rowIndex = (int)Math.Truncate(rowNumber) - 1;
+            if (rowIndex < 0)
                 return XLError.IncompatibleValue;
-            if (rowIdx > array.Height)
+            if (rowIndex >= array.Height)
                 return XLError.CellReference;
 
-            var approximateSearchFlag = true;
-            if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrBlankOrNumberOrText(out approximateSearchFlag, out var flagError))
-                return flagError;
-
-            // If TRUE or omitted
             if (approximateSearchFlag)
             {
                 // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
@@ -103,7 +96,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (foundColumn == -1)
                     return XLError.NoValueAvailable;
 
-                return array[rowIdx - 1, foundColumn].ToAnyValue();
+                return array[rowIndex, foundColumn].ToAnyValue();
             }
             else
             {
@@ -115,7 +108,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
                     var comparison = ScalarValueComparer.SortIgnoreCase.Compare(currentValue, lookupValue);
                     if (comparison == 0)
-                        return array[rowIdx - 1, columnIndex].ToAnyValue();
+                        return array[rowIndex, columnIndex].ToAnyValue();
                 }
 
                 return XLError.NoValueAvailable;
