@@ -94,14 +94,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!flagValue.IsBlank && !flagValue.TryCoerceLogicalOrBlankOrNumberOrText(out approximateSearchFlag, out var flagError))
                 return flagError;
 
+            // If TRUE or omitted
             if (approximateSearchFlag)
             {
                 // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
-                var foundRow = Bisection(array, lookupValue);
-                if (foundRow == -1)
+                var transposedArray = new TransposedArray(array);
+                var foundColumn = Bisection(transposedArray, lookupValue);
+                if (foundColumn == -1)
                     return XLError.NoValueAvailable;
 
-                return array[rowIdx - 1, foundRow].ToAnyValue();
+                return array[rowIdx - 1, foundColumn].ToAnyValue();
             }
             else
             {

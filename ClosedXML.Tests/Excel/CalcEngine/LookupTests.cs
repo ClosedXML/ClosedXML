@@ -179,9 +179,123 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Hlookup()
         {
-            // Range lookup false
-            var value = ws.Evaluate(@"=HLOOKUP(""Total"",Data!$B$2:$I$71,4,FALSE)");
-            Assert.AreEqual(179.64, value);
+            // Since HLOOKUP requires values to be sorted, we can't use created data.
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("B2").InsertData(new[]
+            {
+                new object[] { 1, 3, 5, 10 },
+                new object[] { "A", "B", "C", "D" },
+            });
+
+            // Range lookup false = exact match
+            var value = sheet.Evaluate(@"HLOOKUP(3,B2:E3,2,FALSE)");
+            Assert.AreEqual("B", value);
+
+            // Text values are looked up case insensitive.
+            value = sheet.Evaluate(@"HLOOKUP(""c"",B3:E3,1,FALSE)");
+            Assert.AreEqual("C", value);
+
+            // Value not present in the range for exact search
+            // Empty string is not same as blank.
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"HLOOKUP("""",A2:E2,1,FALSE)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"HLOOKUP(50,B2:E3,1,FALSE)"));
+
+            // Value in approximate search that is lower than first element
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"HLOOKUP(-10,B2:E3,2,TRUE)"));
+        }
+
+        [Test]
+        public void Hlookup_UnexpectedArguments()
+        {
+            // Lookup value can't be an error
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"HLOOKUP(#DIV/0!,{1,2},1)"));
+
+            // Text value can't be over 255 chars
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"HLOOKUP(\"{new string('A', 256)}\",{{\"A\"}},1)"));
+
+            // Range can only be array or a reference. If other type, it returns the error #N/A
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr(@"HLOOKUP(""value"",1,1)"));
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr(@"HLOOKUP(""value"",TRUE,1)"));
+
+            // If range is a non-contiguous range, #N/A
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"HLOOKUP(""Units"",(B2:I5,B6:I10),1)"));
+
+            // The row index number must be at most the same as height of the range. It is 5 here, but range is 4 cell high.
+            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"HLOOKUP(""value"",B2:I5,5,FALSE)"));
+
+            // The row index number must be at least 1. It is 0 here.
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"HLOOKUP(1,{1,2},0,FALSE)"));
+        }
+
+        [Test]
+        public void Hlookup_truncates_row_index_number_parameter()
+        {
+            // If row index number is not a whole number, it is truncated, so here 1.9 is truncated to 1
+            Assert.AreEqual(7, ws.Evaluate(@"HLOOKUP(7,{5,7,9},1.9)"));
+        }
+
+        [Test]
+        public void Hlookup_converts_blank_lookup_value_to_number_zero()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A1").InsertData(new[]
+            {
+                new object[] { -1, 0, 1 },
+                new object[] { "-one", "zero", "one"},
+            });
+
+            var actual = worksheet.Evaluate("HLOOKUP(IF(TRUE,,),A1:C2,2)");
+
+            Assert.AreEqual("zero", actual);
+        }
+
+        [Test]
+        public void Hlookup_approximate_search_omits_values_with_different_type()
+        {
+            using var wb = new XLWorkbook();
+            var worksheet = wb.AddWorksheet();
+            worksheet.Cell("A1").Value = "0";
+            worksheet.Cell("B1").Value = "1";
+            worksheet.Cell("C1").Value = 1;
+            worksheet.Cell("D1").Value = "0";
+            worksheet.Cell("E1").Value = "text";
+            worksheet.Cell("F1").Value = Blank.Value;
+            worksheet.Cell("G1").Value = 2;
+            worksheet.Cell("A2").InsertData(Enumerable.Range(1, 7).Select(x => $"Column {x}"), true);
+
+            var actual = worksheet.Evaluate("HLOOKUP(1.9,A1:G2,2,TRUE)");
+            Assert.AreEqual("Column 3", actual);
+        }
+
+        [Test]
+        public void Hlookup_with_range_containing_only_cells_with_different_type_returns_NA_error()
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("A1").Value = "text";
+            Assert.AreEqual(XLError.NoValueAvailable, sheet.Evaluate("HLOOKUP(1,A1,1,TRUE)"));
+        }
+
+        [Test]
+        public void Hlookup_approximate_search_returns_last_column_for_multiple_equal_values()
+        {
+            var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("A1").InsertData(new object[]
+            {
+                new object[] { 1, 3, 3, 3, 3, 3, 3, 9 },
+                new object[] { "A", "B", "C", "D", "E", "F", "G", "H" },
+            });
+
+            // If there is a section of values with same value, return the value at the highest column
+            var actual = sheet.Evaluate("HLOOKUP(3, A1:H2, 2, TRUE)");
+            Assert.AreEqual("G", actual);
+
+            // If the last value is in the highest column, just return value outright
+            actual = sheet.Evaluate("HLOOKUP(3, B1:G2, 2, TRUE)");
+            Assert.AreEqual("G", actual);
         }
 
         [Test]
@@ -389,7 +503,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Vlookup()
         {
-            // Range lookup false
+            // Range lookup false = exact match
             var value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,3,FALSE)");
             Assert.AreEqual("Central", value);
 
@@ -403,7 +517,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=VLOOKUP(""central"",Data!D:E,2,FALSE)");
             Assert.AreEqual("Kivell", value);
 
-            // Range lookup true
+            // Range lookup true = approximate match
             value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(179.64, value);
 
@@ -510,7 +624,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Vlookup_OnlyOneValueSurreoundedByIgnoredTypes()
+        public void Vlookup_OnlyOneValueSurroundedByIgnoredTypes()
         {
             using var wb = new XLWorkbook();
             var worksheet = wb.AddWorksheet();
