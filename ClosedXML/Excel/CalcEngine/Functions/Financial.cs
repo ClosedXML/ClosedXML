@@ -85,7 +85,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Ipmt(double rate, double period, double numberOfPayments, double presentValue, double futureValue, double type)
         {
-            if (numberOfPayments <= 0)
+            if (numberOfPayments <= 0 || rate <= -1)
                 return XLError.NumberInvalid;
 
             numberOfPayments = Math.Ceiling(numberOfPayments);
@@ -103,7 +103,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Pmt(double rate, double numberOfPayments, double presentValue, double futureValue, double type)
         {
-            if (numberOfPayments == 0)
+            if (numberOfPayments == 0 || rate <= -1)
                 return XLError.NumberInvalid;
 
             return PmtInternal(rate, numberOfPayments, presentValue, futureValue, type);

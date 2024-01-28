@@ -89,6 +89,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,1,-1,1000)"));
         }
 
+        [TestCase(-1)]
+        [TestCase(-1.5)]
+        [TestCase(-100)]
+        public void Ipmt_RateLessOrEqualMinusOneReturnsNumError(double rate)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"IPMT({rate},2,3,1000,10000,1)"));
+        }
+
         [Test]
         public void Ipmt_PeriodOutOfRangeReturnsNumError()
         {
@@ -154,6 +162,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Pmt_ZeroPeriodsReturnsNumError()
         {
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("PMT(0.1,0,1000)"));
+        }
+
+        [TestCase(-1)]
+        [TestCase(-1.5)]
+        [TestCase(-100)]
+        public void Pmt_RateLessOrEqualMinusOneReturnsNumError(double rate)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"PMT({rate},1,1000,5000,1)"));
         }
     }
 }
