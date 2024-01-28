@@ -220,7 +220,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction AdaptLastTwoOptional(Func<double, double, double, double, bool, AnyValue> f)
+        public static CalcEngineFunction AdaptLastTwoOptional(Func<double, double, double, double, double, AnyValue> f, double defaultValue0, double defaultValue1)
         {
             return (ctx, args) =>
             {
@@ -236,7 +236,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg2Converted.TryPickT0(out var arg2, out var err2))
                     return err2;
 
-                var arg3Optional = 0d;
+                var arg3Optional = defaultValue0;
                 if (args.Length >= 4)
                 {
                     var arg3Converted = ToNumber(args[3], ctx);
@@ -246,10 +246,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     arg3Optional = arg3;
                 }
 
-                var arg4Optional = false;
+                var arg4Optional = defaultValue1;
                 if (args.Length >= 5)
                 {
-                    var arg4Converted = CoerceToLogical(args[4], ctx);
+                    var arg4Converted = ToNumber(args[4], ctx);
                     if (!arg4Converted.TryPickT0(out var arg4, out var err4))
                         return err4;
 
@@ -260,7 +260,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction AdaptLastTwoOptional(Func<double, double, double, double, double, bool, AnyValue> f)
+        public static CalcEngineFunction AdaptLastTwoOptional(Func<double, double, double, double, double, double, AnyValue> f, double defaultValue0, double defaultValue1)
         {
             return (ctx, args) =>
             {
@@ -280,7 +280,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg3Converted.TryPickT0(out var arg3, out var err3))
                     return err3;
 
-                var arg4Optional = 0d;
+                var arg4Optional = defaultValue0;
                 if (args.Length >= 5)
                 {
                     var arg4Converted = ToNumber(args[4], ctx);
@@ -290,10 +290,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     arg4Optional = arg4;
                 }
 
-                var arg5Optional = false;
+                var arg5Optional = defaultValue1;
                 if (args.Length >= 6)
                 {
-                    var arg5Converted = CoerceToLogical(args[5], ctx);
+                    var arg5Converted = ToNumber(args[5], ctx);
                     if (!arg5Converted.TryPickT0(out var arg5, out var err5))
                         return err5;
 
