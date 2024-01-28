@@ -67,7 +67,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue Fv(double rate, double numberOfPayments, double pmt, double presentValue, double type)
         {
             if (numberOfPayments == 0)
-                return XLError.NumberInvalid;
+                return -presentValue;
 
             return FvInternal(rate, numberOfPayments, pmt, presentValue, type);
         }
