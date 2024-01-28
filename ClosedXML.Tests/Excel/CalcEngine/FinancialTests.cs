@@ -43,9 +43,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Fv_ZeroPeriodsReturnsNumError()
+        public void Fv_ZeroPeriodsReturnsPresentValue()
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("FV(0.1,0,1000)"));
+            Assert.AreEqual(-100, XLWorkbook.EvaluateExpr("FV(0.1,0,1000, 100)"));
         }
 
         [TestCase("IPMT(0.1/12,1,3*12,8000)", -66.666666666666686)]
