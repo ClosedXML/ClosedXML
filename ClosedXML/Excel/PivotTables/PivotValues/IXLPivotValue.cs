@@ -4,8 +4,17 @@ using System;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// Enum describing how is a pivot field values (i.e. in data area) displayed.
+    /// </summary>
+    /// <remarks>
+    /// [ISO-29500] 18.18.70 ST_ShowDataAs
+    /// </remarks>
     public enum XLPivotCalculation
     {
+        /// <summary>
+        /// Field values are displayed normally.
+        /// </summary>
         Normal,
         DifferenceFrom,
         PercentageOf,
@@ -14,16 +23,36 @@ namespace ClosedXML.Excel
         PercentageOfRow,
         PercentageOfColumn,
         PercentageOfTotal,
+
+        /// <summary>
+        /// Basically a relative importance of a value. Closer the value to 1.0 is, the less
+        /// important it is. Calculated as <c>(value-in-cell * grand-total-of-grand-totals) /
+        /// (grand-total-row * grand-total-column)</c>.
+        /// </summary>
         Index
     }
 
+    /// <summary>
+    /// Some calculation from <see cref="XLPivotCalculation"/> need a value as another an argument
+    /// of a calculation (e.g. difference from). This enum specifies how to find the reference value.
+    /// </summary>
     public enum XLPivotCalculationItem
     {
         Value, Previous, Next
     }
 
+    /// <summary>
+    /// An enum that specifies how are grouped pivot field values summed up in a single cell of a
+    /// pivot table.
+    /// </summary>
+    /// <remarks>
+    /// [ISO-29500] 18.18.17 ST_DataConsolidateFunction
+    /// </remarks>
     public enum XLPivotSummary
     {
+        /// <summary>
+        /// Values are summed up.
+        /// </summary>
         Sum,
         Count,
         Average,

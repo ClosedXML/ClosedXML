@@ -1494,7 +1494,7 @@ namespace ClosedXML.Excel
         {
             return TimePeriodMap[value];
         }
-        
+
         private static readonly IReadOnlyDictionary<PivotAreaValues, XLPivotAreaValues> PivotAreaMap =
             new Dictionary<PivotAreaValues, XLPivotAreaValues>
             {
@@ -1563,6 +1563,57 @@ namespace ClosedXML.Excel
         public static XLPivotSortType ToClosedXml(this FieldSortValues value)
         {
             return FieldSortMap[value];
+        }
+
+        private static readonly IReadOnlyDictionary<PivotTableAxisValues, XLPivotAxis> PivotTableAxisMap =
+            new Dictionary<PivotTableAxisValues, XLPivotAxis>
+            {
+                { PivotTableAxisValues.AxisRow, XLPivotAxis.AxisRow },
+                { PivotTableAxisValues.AxisColumn, XLPivotAxis.AxisCol },
+                { PivotTableAxisValues.AxisPage, XLPivotAxis.AxisPage },
+                { PivotTableAxisValues.AxisValues, XLPivotAxis.AxisValues },
+            };
+
+        internal static XLPivotAxis ToClosedXml(this PivotTableAxisValues value)
+        {
+            return PivotTableAxisMap[value];
+        }
+
+        private static readonly IReadOnlyDictionary<ItemValues, XLPivotItemType> ItemMap =
+            new Dictionary<ItemValues, XLPivotItemType>
+            {
+                { ItemValues.Data, XLPivotItemType.Data },
+                { ItemValues.Default, XLPivotItemType.Default },
+                { ItemValues.Sum, XLPivotItemType.Sum },
+                { ItemValues.CountA, XLPivotItemType.CountA },
+                { ItemValues.Average, XLPivotItemType.Avg },
+                { ItemValues.Maximum, XLPivotItemType.Max },
+                { ItemValues.Minimum, XLPivotItemType.Min },
+                { ItemValues.Product, XLPivotItemType.Product },
+                { ItemValues.Count, XLPivotItemType.Count },
+                { ItemValues.StandardDeviation, XLPivotItemType.StdDev },
+                { ItemValues.StandardDeviationP, XLPivotItemType.StdDevP },
+                { ItemValues.Variance, XLPivotItemType.Var },
+                { ItemValues.VarianceP, XLPivotItemType.VarP },
+                { ItemValues.Grand, XLPivotItemType.Grand },
+                { ItemValues.Blank, XLPivotItemType.Blank },
+            };
+
+        internal static XLPivotItemType ToClosedXml(this ItemValues value)
+        {
+            return ItemMap[value];
+        }
+
+        private static readonly IReadOnlyDictionary<FormatActionValues, XLPivotFormatAction> FormatActionMap =
+            new Dictionary<FormatActionValues, XLPivotFormatAction>
+            {
+                { FormatActionValues.Blank, XLPivotFormatAction.Blank },
+                { FormatActionValues.Formatting, XLPivotFormatAction.Formatting },
+            };
+
+        internal static XLPivotFormatAction ToClosedXml(this FormatActionValues value)
+        {
+            return FormatActionMap[value];
         }
 
         #endregion To ClosedXml

@@ -12,6 +12,12 @@ namespace ClosedXML.Excel.IO;
 
 internal class PivotTableDefinitionPartReader
 {
+    /// <summary>
+    /// A field displayed as <c>∑Values</c> in a pivot table that contains names of all aggregation
+    /// function in value fields collection. Also commonly called 'data' field.
+    /// </summary>
+    private const int ValuesFieldIndex = -2;
+
     internal static void Load(WorkbookPart workbookPart, Dictionary<int, DifferentialFormat> differentialFormats, PivotTablePart pivotTablePart, WorksheetPart worksheetPart, XLWorksheet ws)
     {
         var workbook = ws.Workbook;
@@ -40,7 +46,8 @@ internal class PivotTableDefinitionPartReader
 
         if (target != null && pivotSource != null)
         {
-            var pt = ws.PivotTables.Add(pivotTableDefinition.Name, target, pivotSource) as XLPivotTable;
+            var pt = (XLPivotTable)ws.PivotTables.Add(pivotTableDefinition.Name, target, pivotSource);
+            LoadPivotTableDefinition(pivotTableDefinition, pt);
 
             if (!String.IsNullOrWhiteSpace(
                     StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
@@ -121,22 +128,6 @@ internal class PivotTableDefinitionPartReader
                     pt.EnableCellEditing = pivotTableDefinition2.EnableEdit.Value;
                 if (pivotTableDefinition2.HideValuesRow != null)
                     pt.ShowValuesRow = !pivotTableDefinition2.HideValuesRow.Value;
-            }
-
-            var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
-            if (pivotTableStyle != null)
-            {
-                if (pivotTableStyle.Name != null)
-                    pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
-                else
-                    pt.Theme = XLPivotTableTheme.None;
-
-                pt.ShowRowHeaders = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowHeaders, false);
-                pt.ShowColumnHeaders =
-                    OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnHeaders, false);
-                pt.ShowRowStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowStripes, false);
-                pt.ShowColumnStripes =
-                    OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnStripes, false);
             }
 
             // Subtotal configuration
@@ -568,6 +559,383 @@ internal class PivotTableDefinitionPartReader
             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                 pivotField.SetCollapsed();
+        }
+    }
+
+#nullable enable
+    private static void LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLPivotTable xlPivotTable)
+    {
+        // Load pivot fields
+        var pivotFields = pivotTable.PivotFields;
+        if (pivotFields is not null)
+        {
+            foreach (var pivotField in pivotFields.Cast<PivotField>())
+                xlPivotTable.AddField(LoadPivotField(pivotField, xlPivotTable));
+        }
+
+        // Load row axis fields and items
+        LoadAxisFields(pivotTable.RowFields, xlPivotTable.RowAxis);
+        LoadAxisItems(pivotTable.RowItems, xlPivotTable.RowAxis);
+
+        // Load column axis fields and items
+        LoadAxisFields(pivotTable.ColumnFields, xlPivotTable.ColumnAxis);
+        LoadAxisItems(pivotTable.ColumnItems, xlPivotTable.ColumnAxis);
+
+        // Load page fields, i.e. the filters region.
+        var pageFields = pivotTable.PageFields;
+        if (pageFields is not null)
+        {
+            foreach (var pageField in pageFields.Cast<PageField>())
+            {
+                var field = pageField.Field?.Value ?? throw PartStructureException.MissingAttribute();
+                var itemIndex = pageField.Item?.Value;
+                var hierarchyIndex = pageField.Hierarchy?.Value;
+                var hierarchyUniqueName = pageField.Name;
+                var hierarchyDisplayName = pageField.Caption;
+                var xlPageField = new XLPivotPageField(field)
+                {
+                    ItemIndex = itemIndex,
+                    HierarchyIndex = hierarchyIndex,
+                    HierarchyUniqueName = hierarchyUniqueName,
+                    HierarchyDisplayName = hierarchyDisplayName,
+                };
+                xlPivotTable.AddPageField(xlPageField);
+            }
+        }
+
+        // Load data fields.
+        var dataFields = pivotTable.DataFields;
+        if (dataFields is not null)
+        {
+            foreach (var dataField in dataFields.Cast<DataField>())
+            {
+                var name = dataField.Name?.Value;
+                var field = dataField.Field?.Value ?? throw PartStructureException.MissingAttribute();
+                var subtotal = dataField.Subtotal?.Value.ToClosedXml() ?? XLPivotSummary.Sum;
+                var showDataAsFormat = dataField.ShowDataAs?.Value.ToClosedXml() ?? XLPivotCalculation.Normal;
+                var baseField = dataField.BaseField?.Value ?? -1;
+                var baseItem = dataField.BaseItem?.Value ?? 1048832;
+                var numberFormatId = dataField.NumberFormatId?.Value;
+                var xlDataField = new XLPivotDataField(field)
+                {
+                    DataFieldName = name,
+                    Subtotal = subtotal,
+                    ShowDataAsFormat = showDataAsFormat,
+                    BaseField = baseField,
+                    BaseItem = baseItem,
+                    NumberFormatId = numberFormatId,
+                };
+                xlPivotTable.AddDataField(xlDataField);
+            }
+        }
+
+        // Load formats
+        var formats = pivotTable.Formats;
+        if (formats is not null)
+        {
+            foreach (var format in formats.Cast<Format>())
+            {
+                var action = format.Action?.Value.ToClosedXml() ?? XLPivotFormatAction.Formatting;
+                var formatId = format.FormatId?.Value;
+                var pivotArea = format.PivotArea ?? throw PartStructureException.ExpectedElementNotFound();
+                var xlPivotArea = LoadPivotArea(pivotArea, xlPivotTable);
+                var xlFormat = new XLPivotFormat(xlPivotArea)
+                {
+                    Action = action,
+                    DxfId = formatId,
+                };
+                xlPivotTable.AddFormat(xlFormat);
+            }
+        }
+
+        // TODO: conditionalFormats
+        // TODO: chartFormats
+        // pivotHierarchies is OLAP and thus for now out of scope.
+        var pivotTableStyle = pivotTable.GetFirstChild<PivotTableStyle>();
+        LoadPivotTableStyle(pivotTableStyle, xlPivotTable);
+
+        // TODO: filters
+        // rowHierarchiesUsage is OLAP and thus for now out of scope.
+        // colHierarchiesUsage is OLAP and thus for now out of scope.
+        // TODO: extList
+    }
+
+    private static XLPivotTableField LoadPivotField(PivotField pivotField, XLPivotTable xlPivotTable)
+    {
+        var customName = pivotField.Name?.Value;
+        var axis = pivotField.Axis?.Value.ToClosedXml();
+        var dataField = pivotField.DataField?.Value ?? false;
+        var subtotalCaption = pivotField.SubtotalCaption?.Value;
+        var showDropDowns = pivotField.ShowDropDowns?.Value ?? true;
+        var hiddenLevel = pivotField.HiddenLevel?.Value ?? false;
+        var uniqueMemberProperty = pivotField.UniqueMemberProperty?.Value;
+        var compact = pivotField.Compact?.Value ?? true;
+        var allDrilled = pivotField.AllDrilled?.Value ?? false;
+        var numberFormatId = pivotField.NumberFormatId?.Value;
+        var outline = pivotField.Outline?.Value ?? true;
+        var subtotalTop = pivotField.SubtotalTop?.Value ?? true;
+        var dragToRow = pivotField.DragToRow?.Value ?? true;
+        var dragToColumn = pivotField.DragToColumn?.Value ?? true;
+        var multipleItemSelectionAllowed = pivotField.MultipleItemSelectionAllowed?.Value ?? false;
+        var dragToPage = pivotField.DragToPage?.Value ?? true;
+        var dragToData = pivotField.DragToData?.Value ?? true;
+        var dragOff = pivotField.DragOff?.Value ?? true;
+        var showAll = pivotField.ShowAll?.Value ?? true;
+        var insertBlankRow = pivotField.InsertBlankRow?.Value ?? false;
+        var serverField = pivotField.ServerField?.Value ?? false;
+        var insertPageBreak = pivotField.InsertPageBreak?.Value ?? false;
+        var autoShow = pivotField.AutoShow?.Value ?? false;
+        var topAutoShow = pivotField.TopAutoShow?.Value ?? true;
+        var hideNewItems = pivotField.HideNewItems?.Value ?? false;
+        var measureFilter = pivotField.MeasureFilter?.Value ?? false;
+        var includeNewItemsInFilter = pivotField.IncludeNewItemsInFilter?.Value ?? false;
+        var itemPageCount = pivotField.ItemPageCount?.Value ?? 10u;
+        var sortType = pivotField.SortType?.Value.ToClosedXml() ?? XLPivotSortType.Default;
+        var dataSourceSort = pivotField.DataSourceSort?.Value;
+        var nonAutoSortDefault = pivotField.NonAutoSortDefault?.Value ?? false;
+        var rankBy = pivotField.RankBy?.Value;
+        var defaultSubtotal = pivotField.DefaultSubtotal?.Value ?? true;
+        var sumSubtotal = pivotField.SumSubtotal?.Value ?? false;
+        var countASubtotal = pivotField.CountASubtotal?.Value ?? false;
+        var avgSubtotal = pivotField.AverageSubTotal?.Value ?? false;
+        var maxSubtotal = pivotField.MaxSubtotal?.Value ?? false;
+        var minSubtotal = pivotField.MinSubtotal?.Value ?? false;
+        var productSubtotal = pivotField.ApplyProductInSubtotal?.Value ?? false;
+        var countSubtotal = pivotField.CountSubtotal?.Value ?? false;
+        var stdDevSubtotal = pivotField.ApplyStandardDeviationInSubtotal?.Value ?? false;
+        var stdDevPSubtotal = pivotField.ApplyStandardDeviationPInSubtotal?.Value ?? false;
+        var varSubtotal = pivotField.ApplyVarianceInSubtotal?.Value ?? false;
+        var varPSubtotal = pivotField.ApplyVariancePInSubtotal?.Value ?? false;
+        var showPropCell = pivotField.ShowPropCell?.Value ?? false;
+        var showPropTip = pivotField.ShowPropertyTooltip?.Value ?? false;
+        var showPropAsCaption = pivotField.ShowPropAsCaption?.Value ?? false;
+        var defaultAttributeDrillState = pivotField.DefaultAttributeDrillState?.Value ?? false;
+
+        var xlField = new XLPivotTableField
+        {
+            Name = customName,
+            Axis = axis,
+            DataField = dataField,
+            SubtotalCaption = subtotalCaption,
+            ShowDropDowns = showDropDowns,
+            HiddenLevel = hiddenLevel,
+            UniqueMemberProperty = uniqueMemberProperty,
+            Compact = compact,
+            AllDrilled = allDrilled,
+            NumberFormatId = numberFormatId,
+            Outline = outline,
+            SubtotalTop = subtotalTop,
+            DragToRow = dragToRow,
+            DragToColumn = dragToColumn,
+            MultipleItemSelectionAllowed = multipleItemSelectionAllowed,
+            DragToPage = dragToPage,
+            DragToData = dragToData,
+            DragOff = dragOff,
+            ShowAll = showAll,
+            InsertBlankRow = insertBlankRow,
+            ServerField = serverField,
+            InsertPageBreak = insertPageBreak,
+            AutoShow = autoShow,
+            TopAutoShow = topAutoShow,
+            HideNewItems = hideNewItems,
+            MeasureFilter = measureFilter,
+            IncludeNewItemsInFilter = includeNewItemsInFilter,
+            ItemPageCount = itemPageCount,
+            SortType = sortType,
+            DataSourceSort = dataSourceSort,
+            NonAutoSortDefault = nonAutoSortDefault,
+            RankBy = rankBy,
+            DefaultSubtotal = defaultSubtotal,
+            SumSubtotal = sumSubtotal,
+            CountASubtotal = countASubtotal,
+            AvgSubtotal = avgSubtotal,
+            MaxSubtotal = maxSubtotal,
+            MinSubtotal = minSubtotal,
+            ProductSubtotal = productSubtotal,
+            CountSubtotal = countSubtotal,
+            StdDevSubtotal = stdDevSubtotal,
+            StdDevPSubtotal = stdDevPSubtotal,
+            VarSubtotal = varSubtotal,
+            VarPSubtotal = varPSubtotal,
+            ShowPropCell = showPropCell,
+            ShowPropTip = showPropTip,
+            ShowPropAsCaption = showPropAsCaption,
+            DefaultAttributeDrillState = defaultAttributeDrillState,
+        };
+
+        var items = pivotField.Items;
+        if (items is not null)
+        {
+            foreach (var item in items.Cast<Item>())
+            {
+                var approximatelyHasChildren = item.ChildItems?.Value ?? false;
+                var isExpanded = item.Expanded?.Value ?? true;
+                var drillAcrossAttributes = item.DrillAcrossAttributes?.Value ?? true;
+                var calculatedMember = item.DrillAcrossAttributes?.Value ?? false;
+                var hidden = item.Hidden?.Value ?? false;
+                var missing = item.Missing?.Value ?? false;
+                var itemUserCaption = item.ItemName;
+                var valueIsString = item.HasStringVlue?.Value ?? false;
+                var hideDetails = item.HideDetails?.Value ?? true;
+                var itemIndex = item.Index?.Value;
+                var itemType = item.ItemType?.Value.ToClosedXml() ?? XLPivotItemType.Data;
+                var xlItem = new XLPivotFieldItem(xlField, itemIndex)
+                {
+                    ApproximatelyHasChildren = approximatelyHasChildren,
+                    IsExpanded = isExpanded,
+                    DrillAcrossAttributes = drillAcrossAttributes,
+                    CalculatedMember = calculatedMember,
+                    Hidden = hidden,
+                    Missing = missing,
+                    ItemUserCaption = itemUserCaption,
+                    ValueIsString = valueIsString,
+                    HideDetails = hideDetails,
+                    ItemType = itemType,
+                };
+
+                xlField.AddItem(xlItem);
+            }
+        }
+
+        // TODO: autoSortScope
+        return xlField;
+    }
+
+    private static void LoadAxisFields(OpenXmlCompositeElement? fields, XLPivotTableAxis axis)
+    {
+        if (fields is not null)
+        {
+            foreach (var field in fields.Cast<Field>())
+            {
+                // Axis can contain 'data' field.
+                var fieldIndex = field.Index?.Value ?? throw PartStructureException.MissingAttribute();
+                if (fieldIndex >= axis.PivotTable.PivotFields.Count || (fieldIndex < 0 && fieldIndex != ValuesFieldIndex))
+                    throw PartStructureException.IncorrectAttributeValue();
+
+                axis.AddField(fieldIndex);
+            }
+        }
+    }
+
+    private static void LoadAxisItems(OpenXmlCompositeElement? axisItems, XLPivotTableAxis axis)
+    {
+        if (axisItems is not null)
+        {
+            // Both row and column use RowItem type for axis item.
+            var previous = new List<int>();
+            foreach (var axisItem in axisItems.Cast<RowItem>())
+            {
+                var xlItemType = axisItem.ItemType?.Value.ToClosedXml() ?? XLPivotItemType.Data;
+                var dataFieldIndex = axisItem.Index?.Value; // This is used by 'data' field
+                var repeatedCount = axisItem.RepeatedItemCount?.Value ?? 0;
+                var fieldIndexes = new List<int>();
+                foreach (var dataIndex in axisItem.ChildElements.Cast<MemberPropertyIndex>())
+                    fieldIndexes.Add(dataIndex.Val?.Value ?? 0);
+
+                var allFieldIndexes = previous.Take((int)repeatedCount).Concat(fieldIndexes);
+                axis.AddItem(new XLPivotFieldAxisItem(xlItemType, dataFieldIndex, allFieldIndexes));
+                previous = fieldIndexes;
+            }
+        }
+    }
+
+    private static XLPivotArea LoadPivotArea(PivotArea pivotArea, XLPivotTable xlPivotTable)
+    {
+        var field = pivotArea.Field?.Value;
+        var type = pivotArea.Type?.Value.ToClosedXml() ?? XLPivotAreaValues.Normal;
+        var dataOnly = pivotArea.DataOnly?.Value ?? true;
+        var labelOnly = pivotArea.LabelOnly?.Value ?? false;
+        var grandRow = pivotArea.GrandRow?.Value ?? false;
+        var grandCol = pivotArea.GrandColumn?.Value ?? false;
+        var cacheIndex = pivotArea.CacheIndex?.Value ?? false;
+        var outline = pivotArea.Outline?.Value ?? true;
+        var offset = pivotArea.Offset?.Value is { } offsetRefText ? XLSheetRange.Parse(offsetRefText) : (XLSheetRange?)null;
+        var collapsedLevelsAreSubtotals = pivotArea.CollapsedLevelsAreSubtotals?.Value ?? false;
+        var axis = pivotArea.Axis?.Value.ToClosedXml();
+        var fieldPosition = pivotArea.FieldPosition?.Value;
+        var xlPivotArea = new XLPivotArea
+        {
+            Field = field,
+            Type = type,
+            DataOnly = dataOnly,
+            LabelOnly = labelOnly,
+            GrandRow = grandRow,
+            GrandCol = grandCol,
+            CacheIndex = cacheIndex,
+            Outline = outline,
+            Offset = offset,
+            CollapsedLevelsAreSubtotals = collapsedLevelsAreSubtotals,
+            Axis = axis,
+            FieldPosition = fieldPosition
+        };
+
+        // Can contain extensions, in theory at least.
+        foreach (var reference in pivotArea.OfType<PivotAreaReference>())
+            xlPivotArea.AddReference(LoadPivotReference(reference, xlPivotArea));
+
+        return xlPivotArea;
+    }
+
+    private static XLPivotReference LoadPivotReference(PivotAreaReference reference, XLPivotArea pivotArea)
+    {
+        var field = reference.Field?.Value;
+        var selected = reference.Selected?.Value ?? true;
+        var byPosition = reference.ByPosition?.Value ?? false;
+        var relative = reference.Relative?.Value ?? false;
+        var defaultSubtotal = reference.DefaultSubtotal?.Value ?? false;
+        var sumSubtotal = reference.SumSubtotal?.Value ?? false;
+        var countASubtotal = reference.CountASubtotal?.Value ?? false;
+        var avgSubtotal = reference.AverageSubtotal?.Value ?? false;
+        var maxSubtotal = reference.MaxSubtotal?.Value ?? false;
+        var minSubtotal = reference.MinSubtotal?.Value ?? false;
+        var productSubtotal = reference.ApplyProductInSubtotal?.Value ?? false;
+        var countSubtotal = reference.CountSubtotal?.Value ?? false;
+        var stdDevSubtotal = reference.ApplyStandardDeviationInSubtotal?.Value ?? false;
+        var stdDevPSubtotal = reference.ApplyStandardDeviationPInSubtotal?.Value ?? false;
+        var varSubtotal = reference.ApplyVarianceInSubtotal?.Value ?? false;
+        var varPSubtotal = reference.ApplyVariancePInSubtotal?.Value ?? false;
+
+        var xlReference = new XLPivotReference
+        {
+            Field = field,
+            Selected = selected,
+            ByPosition = byPosition,
+            Relative = relative,
+            DefaultSubtotal = defaultSubtotal,
+            SumSubtotal = sumSubtotal,
+            CountASubtotal = countASubtotal,
+            AvgSubtotal = avgSubtotal,
+            MaxSubtotal = maxSubtotal,
+            MinSubtotal = minSubtotal,
+            ProductSubtotal = productSubtotal,
+            CountSubtotal = countSubtotal,
+            StdDevSubtotal = stdDevSubtotal,
+            StdDevPSubtotal = stdDevPSubtotal,
+            VarSubtotal = varSubtotal,
+            VarPSubtotal = varPSubtotal,
+        };
+
+        // Add indexes after the reference is initialized, so it can check values by cacheIndex/byPosition.
+        foreach (var fieldItem in reference.OfType<FieldItem>())
+        {
+            var fieldItemValue = fieldItem.Val?.Value ?? throw PartStructureException.MissingAttribute();
+            xlReference.AddFieldItem(fieldItemValue);
+        }
+
+        return xlReference;
+    }
+
+    private static void LoadPivotTableStyle(PivotTableStyle? pivotTableStyle, XLPivotTable xlPivotTable)
+    {
+        if (pivotTableStyle is not null)
+        {
+            xlPivotTable.Theme = pivotTableStyle.Name is not null && Enum.TryParse<XLPivotTableTheme>(pivotTableStyle.Name, out var xlPivotTableTheme)
+                ? xlPivotTableTheme
+                : XLPivotTableTheme.None;
+            xlPivotTable.ShowRowHeaders = pivotTableStyle.ShowRowHeaders?.Value ?? false;
+            xlPivotTable.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders?.Value ?? false;
+            xlPivotTable.ShowRowStripes = pivotTableStyle.ShowRowStripes?.Value ?? false;
+            xlPivotTable.ShowColumnStripes = pivotTableStyle.ShowColumnStripes?.Value ?? false;
         }
     }
 }
