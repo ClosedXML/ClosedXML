@@ -25,10 +25,27 @@
         Max
     }
 
+    /// <summary>
+    /// An enum describing how are values of a <see cref="XLPivotTableField">pivot field</see> are sorted.
+    /// </summary>
+    /// <remarks>
+    /// [ISO-29500] 18.18.28 ST_FieldSortType.
+    /// </remarks>
     public enum XLPivotSortType
     {
+        /// <summary>
+        /// Field values are sorted manually.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Field values are sorted in ascending order.
+        /// </summary>
         Ascending = 1,
+
+        /// <summary>
+        /// Field values are sorted in descending order.
+        /// </summary>
         Descending = 2
     }
 

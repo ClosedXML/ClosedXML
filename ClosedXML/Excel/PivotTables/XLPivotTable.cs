@@ -14,6 +14,11 @@ namespace ClosedXML.Excel
         private String _name;
         public Guid Guid { get; }
 
+        private readonly List<XLPivotTableField> _fields = new();
+        private readonly List<XLPivotDataField> _dataFields = new();
+        private readonly List<XLPivotPageField> _pageFields = new();
+        private readonly List<XLPivotFormat> _formats = new();
+
         public XLPivotTable(IXLWorksheet worksheet)
         {
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
@@ -24,6 +29,8 @@ namespace ClosedXML.Excel
             RowLabels = new XLPivotFields(this);
             Values = new XLPivotValues(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
+            RowAxis = new XLPivotTableAxis(this);
+            ColumnAxis = new XLPivotTableAxis(this);
 
             SetExcelDefaults();
         }
@@ -51,7 +58,20 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Table theme this pivot table will use.
+        /// </summary>
         public XLPivotTableTheme Theme { get; set; }
+
+        /// <summary>
+        /// All fields reflected in the pivot cache.
+        /// Order of fields is same as for in the <see cref="PivotCache"/>.
+        /// </summary>
+        internal IReadOnlyList<XLPivotTableField> PivotFields => _fields;
+
+        internal XLPivotTableAxis RowAxis { get; }
+
+        internal XLPivotTableAxis ColumnAxis { get; }
 
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
@@ -669,6 +689,26 @@ namespace ClosedXML.Excel
                     yield return pivotField.StyleFormats.DataValuesFormat;
                 }
             }
+        }
+
+        internal void AddField(XLPivotTableField field)
+        {
+            _fields.Add(field);
+        }
+
+        internal void AddDataField(XLPivotDataField dataField)
+        {
+            _dataFields.Add(dataField);
+        }
+
+        internal void AddPageField(XLPivotPageField pageField)
+        {
+            _pageFields.Add(pageField);
+        }
+
+        internal void AddFormat(XLPivotFormat pivotFormat)
+        {
+            _formats.Add(pivotFormat);
         }
     }
 }
