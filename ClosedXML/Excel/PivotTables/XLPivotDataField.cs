@@ -1,7 +1,7 @@
 namespace ClosedXML.Excel;
 
 /// <summary>
-/// A field that describes calculation of value to display in the <see cref="XLPivotAreaValues.Data"/>
+/// A field that describes calculation of value to display in the <see cref="XLPivotAreaType.Data"/>
 /// area of pivot table.
 /// </summary>
 internal class XLPivotDataField

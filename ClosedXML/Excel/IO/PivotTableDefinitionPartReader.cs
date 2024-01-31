@@ -842,7 +842,7 @@ internal class PivotTableDefinitionPartReader
     private static XLPivotArea LoadPivotArea(PivotArea pivotArea, XLPivotTable xlPivotTable)
     {
         var field = pivotArea.Field?.Value;
-        var type = pivotArea.Type?.Value.ToClosedXml() ?? XLPivotAreaValues.Normal;
+        var type = pivotArea.Type?.Value.ToClosedXml() ?? XLPivotAreaType.Normal;
         var dataOnly = pivotArea.DataOnly?.Value ?? true;
         var labelOnly = pivotArea.LabelOnly?.Value ?? false;
         var grandRow = pivotArea.GrandRow?.Value ?? false;
