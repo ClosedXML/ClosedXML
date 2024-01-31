@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     /// <remarks>
     /// [ISO-29500] 18.18.58 ST_PivotAreaType
     /// </remarks>
-    internal enum XLPivotAreaValues
+    internal enum XLPivotAreaType
     {
         None = 0,
         Normal = 1,

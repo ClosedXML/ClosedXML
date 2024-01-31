@@ -25,7 +25,7 @@ internal class XLPivotArea
     /// <summary>
     /// An area of aspect of pivot table that is part of the pivot area.
     /// </summary>
-    internal XLPivotAreaValues Type { get; init; } = XLPivotAreaValues.Normal;
+    internal XLPivotAreaType Type { get; init; } = XLPivotAreaType.Normal;
 
     /// <summary>
     /// Flag indicating whether only the data values (in the data area of the view) for an item

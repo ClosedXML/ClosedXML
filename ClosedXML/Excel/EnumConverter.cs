@@ -845,32 +845,32 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static PivotAreaValues ToOpenXml(this XLPivotAreaValues value)
+        public static PivotAreaValues ToOpenXml(this XLPivotAreaType value)
         {
             switch (value)
             {
-                case XLPivotAreaValues.None:
+                case XLPivotAreaType.None:
                     return PivotAreaValues.None;
 
-                case XLPivotAreaValues.Normal:
+                case XLPivotAreaType.Normal:
                     return PivotAreaValues.Normal;
 
-                case XLPivotAreaValues.Data:
+                case XLPivotAreaType.Data:
                     return PivotAreaValues.Data;
 
-                case XLPivotAreaValues.All:
+                case XLPivotAreaType.All:
                     return PivotAreaValues.All;
 
-                case XLPivotAreaValues.Origin:
+                case XLPivotAreaType.Origin:
                     return PivotAreaValues.Origin;
 
-                case XLPivotAreaValues.Button:
+                case XLPivotAreaType.Button:
                     return PivotAreaValues.Button;
 
-                case XLPivotAreaValues.TopRight:
+                case XLPivotAreaType.TopRight:
                     return PivotAreaValues.TopRight;
 
-                case XLPivotAreaValues.TopEnd:
+                case XLPivotAreaType.TopEnd:
                     return PivotAreaValues.TopEnd;
 
                 default:
@@ -1495,20 +1495,20 @@ namespace ClosedXML.Excel
             return TimePeriodMap[value];
         }
 
-        private static readonly IReadOnlyDictionary<PivotAreaValues, XLPivotAreaValues> PivotAreaMap =
-            new Dictionary<PivotAreaValues, XLPivotAreaValues>
+        private static readonly IReadOnlyDictionary<PivotAreaValues, XLPivotAreaType> PivotAreaMap =
+            new Dictionary<PivotAreaValues, XLPivotAreaType>
             {
-                { PivotAreaValues.None, XLPivotAreaValues.None },
-                { PivotAreaValues.Normal, XLPivotAreaValues.Normal },
-                { PivotAreaValues.Data, XLPivotAreaValues.Data },
-                { PivotAreaValues.All, XLPivotAreaValues.All },
-                { PivotAreaValues.Origin, XLPivotAreaValues.Origin },
-                { PivotAreaValues.Button, XLPivotAreaValues.Button },
-                { PivotAreaValues.TopRight, XLPivotAreaValues.TopRight },
-                { PivotAreaValues.TopEnd, XLPivotAreaValues.TopEnd },
+                { PivotAreaValues.None, XLPivotAreaType.None },
+                { PivotAreaValues.Normal, XLPivotAreaType.Normal },
+                { PivotAreaValues.Data, XLPivotAreaType.Data },
+                { PivotAreaValues.All, XLPivotAreaType.All },
+                { PivotAreaValues.Origin, XLPivotAreaType.Origin },
+                { PivotAreaValues.Button, XLPivotAreaType.Button },
+                { PivotAreaValues.TopRight, XLPivotAreaType.TopRight },
+                { PivotAreaValues.TopEnd, XLPivotAreaType.TopEnd },
             };
 
-        public static XLPivotAreaValues ToClosedXml(this PivotAreaValues value)
+        public static XLPivotAreaType ToClosedXml(this PivotAreaValues value)
         {
             return PivotAreaMap[value];
         }

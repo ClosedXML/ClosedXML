@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLPivotStyleFormat members
 
-        internal XLPivotAreaValues AreaType { get; set; } = XLPivotAreaValues.Normal;
+        internal XLPivotAreaType AreaType { get; set; } = XLPivotAreaType.Normal;
         internal bool CollapsedLevelsAreSubtotals { get; set; } = false;
         internal IList<AbstractPivotFieldReference> FieldReferences { get; } = new List<AbstractPivotFieldReference>();
         internal bool Outline { get; set; } = true;
