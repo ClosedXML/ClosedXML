@@ -541,7 +541,7 @@ namespace ClosedXML.Excel
                 else
                     pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
 
-                PivotTablePartWriter.GeneratePivotTablePartContent(workbookPart, pivotTablePart, pt, context);
+                PivotTableDefinitionPartWriter.GeneratePivotTablePartContent(workbookPart, pivotTablePart, pt, context);
             }
         }
 

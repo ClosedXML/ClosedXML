@@ -13,7 +13,7 @@ using static ClosedXML.Excel.XLWorkbook;
 
 namespace ClosedXML.Excel.IO
 {
-    internal class PivotTablePartWriter
+    internal class PivotTableDefinitionPartWriter
     {
         // Generates content of pivotTablePart
         internal static void GeneratePivotTablePartContent(
