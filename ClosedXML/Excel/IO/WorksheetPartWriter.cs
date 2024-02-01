@@ -1392,42 +1392,39 @@ namespace ClosedXML.Excel.IO
                 }
                 else
                 {
-                    if (xlCell.StyleValue.IncludeQuotePrefix || text.Length != 0)
+                    if (xlCell.ShareString)
                     {
-                        if (xlCell.ShareString)
+                        var sharedStringId = context.SstMap[xlCell.SharedStringId];
+                        if (sharedStringId < 0)
                         {
-                            var sharedStringId = context.SstMap[xlCell.SharedStringId];
-                            if (sharedStringId < 0)
-                            {
-                                throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
-                                                                "That likely means reference counting is broken. As a stop-gap, try to set the " +
-                                                                "text value to an unused cell to increase number of references for the text.");
-                            }
+                            throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
+                                                           "That likely means reference counting is broken. As a stop-gap, try to set the " +
+                                                           "text value to an unused cell to increase number of references for the text.");
+                        }
 
-                            w.WriteStartElement("v", Main2006SsNs);
-                            w.WriteValue(sharedStringId);
-                            w.WriteEndElement();
+                        w.WriteStartElement("v", Main2006SsNs);
+                        w.WriteValue(sharedStringId);
+                        w.WriteEndElement();
+                    }
+                    else
+                    {
+                        w.WriteStartElement("is", Main2006SsNs);
+                        var richText = xlCell.RichText;
+                        if (richText is not null)
+                        {
+                            TextSerializer.WriteRichTextElements(w, richText, context);
                         }
                         else
                         {
-                            w.WriteStartElement("is", Main2006SsNs);
-                            var richText = xlCell.RichText;
-                            if (richText is not null)
-                            {
-                                TextSerializer.WriteRichTextElements(w, richText, context);
-                            }
-                            else
-                            {
-                                w.WriteStartElement("t", Main2006SsNs);
-                                if (text.PreserveSpaces())
-                                    w.WritePreserveSpaceAttr();
+                            w.WriteStartElement("t", Main2006SsNs);
+                            if (text.PreserveSpaces())
+                                w.WritePreserveSpaceAttr();
 
-                                w.WriteString(text);
-                                w.WriteEndElement();
-                            }
-
-                            w.WriteEndElement(); // is
+                            w.WriteString(text);
+                            w.WriteEndElement();
                         }
+
+                        w.WriteEndElement(); // is
                     }
                 }
             }
@@ -2037,7 +2034,8 @@ namespace ClosedXML.Excel.IO
 
                 // For saving cells to file, ignore conditional formatting, data validation rules and merged
                 // ranges. They just bloat the file
-                var isEmpty = xlCell.IsEmpty(XLCellsUsedOptions.All
+                var isEmpty = xlCell.CachedValue.Type == XLDataType.Blank &&
+                              xlCell.IsEmpty(XLCellsUsedOptions.All
                                              & ~XLCellsUsedOptions.ConditionalFormats
                                              & ~XLCellsUsedOptions.DataValidation
                                              & ~XLCellsUsedOptions.MergedRanges);
