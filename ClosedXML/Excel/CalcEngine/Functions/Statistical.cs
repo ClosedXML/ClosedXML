@@ -23,7 +23,7 @@ namespace ClosedXML.Excel.CalcEngine
             //CONFIDENCE	Returns the confidence interval for a population mean
             //CORREL	Returns the correlation coefficient between two data sets
             ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, AllowRange.All);
-            ce.RegisterFunction("COUNTA", 1, int.MaxValue, CountA, AllowRange.All);
+            ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
             ce.RegisterFunction("COUNTIF", 2, CountIf, AllowRange.Only, 0);
             ce.RegisterFunction("COUNTIFS", 2, 255, CountIfs, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
@@ -114,9 +114,31 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, true).Count();
         }
 
-        private static object CountA(List<Expression> p)
+        private static AnyValue CountA(CalcContext ctx, Span<AnyValue> values)
         {
-            return GetTally(p, false).Count();
+            var result = values.Aggregate(
+                ctx,
+                initialValue: 0,
+                noElementsResult: 0,
+                collectionFilter: value =>
+                {
+                    // Blanks in collections (i.e. references, because arrays can't contain blanks)
+                    // are not counted and thus are filtered out.
+                    if (value.IsBlank)
+                        return false;
+
+                    // Everything else is counted, including errors.
+                    return true;
+                },
+                // Any scalar value (including errors, including blank, if is passed directly as
+                // an argument) is counted as one non-empty element.
+                convert: (_, _) => 1,
+                aggregate: static (acc, cur) => acc + cur);
+
+            if (!result.TryPickT0(out var nonEmptyCount, out var error))
+                return error;
+
+            return nonEmptyCount;
         }
 
         private static object CountBlank(List<Expression> p)

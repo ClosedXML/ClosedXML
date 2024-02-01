@@ -50,18 +50,87 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void CountA()
         {
             var ws = workbook.Worksheets.First();
-            XLCellValue value;
-            value = ws.Evaluate(@"=COUNTA(D3:D45)");
+            var value = ws.Evaluate("COUNTA(D3:D45)");
             Assert.AreEqual(43, value);
 
-            value = ws.Evaluate(@"=COUNTA(G3:G45)");
+            value = ws.Evaluate("COUNTA(G3:G45)");
             Assert.AreEqual(43, value);
 
-            value = ws.Evaluate(@"=COUNTA(G:G)");
+            value = ws.Evaluate("COUNTA(G:G)");
             Assert.AreEqual(44, value);
 
-            value = workbook.Evaluate(@"=COUNTA(Data!G:G)");
+            value = workbook.Evaluate("COUNTA(Data!G:G)");
             Assert.AreEqual(44, value);
+        }
+
+        [Test]
+        public void CountA_counts_non_blank_values()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = 39790;
+            ws.Cell("A3").Value = 0;
+            ws.Cell("A4").Value = 22.24;
+            ws.Cell("A5").Value = "Text";
+            ws.Cell("A6").Value = false;
+            ws.Cell("A7").Value = true;
+            ws.Cell("A8").Value = XLError.DivisionByZero;
+            ws.Cell("A9").FormulaA1 = "COUNTA(A1:B8)";
+            Assert.AreEqual(7, ws.Cell("A9").Value);
+        }
+
+        [Test]
+        public void CountA_on_examples_from_spec()
+        {
+            Assert.AreEqual(5, XLWorkbook.EvaluateExpr("COUNTA(1,2,3,4,5)"));
+            Assert.AreEqual(5, XLWorkbook.EvaluateExpr("COUNTA(1,2,3,4,5)"));
+            Assert.AreEqual(7, XLWorkbook.EvaluateExpr("COUNTA({1,2,3,4,5},6,\"7\")"));
+
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("E2").Value = true;
+            Assert.AreEqual(1, ws.Evaluate("COUNTA(10, E1)"));
+            Assert.AreEqual(2, ws.Evaluate("COUNTA(10, E2)"));
+        }
+
+        [Test]
+        public void CountA_accepts_union_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A2").Value = 7;
+            ws.Cell("B5").Value = false;
+            Assert.AreEqual(2, ws.Evaluate("COUNTA((A1:A4,B4:B7))"));
+        }
+
+        [Test]
+        public void CountA_doesnt_count_single_blank_cell_reference()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(0, ws.Evaluate("COUNTA(A1)"));
+        }
+
+        [Test]
+        public void CountA_counts_blank_argument()
+        {
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("COUNTA(IF(TRUE,,))"));
+        }
+
+        [Test]
+        public void CountA_counts_error_arguments()
+        {
+            Assert.AreEqual(7, XLWorkbook.EvaluateExpr("COUNTA(#NULL!, #DIV/0!, #VALUE!, #REF!, #NAME?, #NUM!, #N/A)"));
+        }
+
+        [Test]
+        public void CountA_counts_empty_string()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = string.Empty;
+            Assert.AreEqual(2, ws.Evaluate("COUNTA(A1, \"\")"));
         }
 
         [Test]
