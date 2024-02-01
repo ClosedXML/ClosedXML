@@ -104,13 +104,7 @@ namespace ClosedXML.Excel
                 var entry = _table[i];
                 var isShared =
                     entry.RefCount > 0 && // Only used entry can be written to sst
-                    !entry.Text.Inline && // Inline texts shouldn't be written to sst
-                    !(
-                        (entry.Text.Value is string s && s.Length == 0)  // empty strings shouldn't be written to sst.
-                        ||
-                        (entry.Text.Value is XLImmutableRichText rt && rt.Text.Length == 0)  // empty rich text shouldn't be written to sst.
-                    );
-
+                    !entry.Text.Inline;  // Inline texts shouldn't be written to sst
                 map.Add(isShared ? mappedStringId++ : -1);
             }
 

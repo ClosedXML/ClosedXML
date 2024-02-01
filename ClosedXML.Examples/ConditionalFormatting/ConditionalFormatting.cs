@@ -113,7 +113,7 @@ namespace ClosedXML.Examples
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("")
+                .CellBelow().SetValue(Blank.Value)
                 .CellBelow().SetValue("")
                 .CellBelow().SetValue("Holl");
 
@@ -132,7 +132,7 @@ namespace ClosedXML.Examples
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("")
+                .CellBelow().SetValue(Blank.Value)
                 .CellBelow().SetValue("")
                 .CellBelow().SetValue("Holl");
 

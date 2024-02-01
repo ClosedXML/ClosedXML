@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
 using NUnit.Framework;
@@ -111,6 +110,26 @@ namespace ClosedXML.Tests.Excel.Cells
                 Assert.AreEqual(2, ws.Evaluate("TYPE(B2)"));
                 Assert.IsEmpty(ws.Cell("B2").GetText());
             }, @"Other\Cells\EmptySi.xlsx");
+        }
+
+        [Test]
+        public void Empty_text_is_written_and_loaded_to_sst()
+        {
+            TestHelper.CreateSaveLoadAssert(
+                (_, ws) =>
+                {
+                    ws.Cell("A1").Value = "Empty text cell (B1):";
+                    ws.Cell("B1").Value = string.Empty;
+
+                    ws.Cell("A2").Value = "Empty rich text";
+                    ws.Cell("B2").CreateRichText().AddText(string.Empty);
+                },
+                (_, ws) =>
+                {
+                    Assert.AreEqual("", ws.Cell("B1").CachedValue);
+                    Assert.AreEqual("", ws.Cell("B2").GetRichText().Text);
+                },
+                @"Other\Cells\EmptyText.xlsx");
         }
     }
 }
