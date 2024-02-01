@@ -83,10 +83,42 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (Math.Cosh(x) / Math.Sinh(x));
         }
 
-        public static double Combin(Int32 n, Int32 k)
+        internal static OneOf<double, XLError> CombinChecked(double number, double numberChosen)
+        {
+            if (number < 0 || numberChosen < 0)
+                return XLError.NumberInvalid;
+
+            var n = Math.Floor(number);
+            var k = Math.Floor(numberChosen);
+
+            // Parameter doesn't fit into int. That's how many multiplications Excel allows.
+            if (n >= int.MaxValue || k >= int.MaxValue)
+                return XLError.NumberInvalid;
+
+            if (n < k)
+                return XLError.NumberInvalid;
+
+            var combinations = Combin(n, k);
+            if (double.IsInfinity(combinations) || double.IsNaN(combinations))
+                return XLError.NumberInvalid;
+
+            return combinations;
+        }
+
+        internal static double Combin(double n, double k)
         {
             if (k == 0) return 1;
-            return n * Combin(n - 1, k - 1) / k;
+
+            // Don't use recursion, malicious input could exhaust stack.
+            // Don't calculate directly from factorials, could overflow.
+            double result = 1;
+            for (var i = 1; i <= k; i++, n--)
+            {
+                result *= n;
+                result /= i;
+            }
+
+            return result;
         }
 
         internal static double Factorial(int n)

@@ -502,50 +502,74 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Combin()
         {
-            object actual1 = XLWorkbook.EvaluateExpr("Combin(200, 2)");
+            var actual1 = XLWorkbook.EvaluateExpr("COMBIN(200, 2)");
             Assert.AreEqual(19900.0, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Combin(20.1, 2.9)");
+            var actual2 = XLWorkbook.EvaluateExpr("COMBIN(20.1, 2.9)");
             Assert.AreEqual(190.0, actual2);
         }
 
         [Theory]
-        public void Combin_Returns1ForKis0OrKEqualsN([Range(0, 10)] int n)
+        public void Combin_returns_1_for_k_is_0_or_k_equals_n([Range(0, 10)] int n)
         {
-            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, 0)", n));
+            var actual = XLWorkbook.EvaluateExpr($"COMBIN({n}, 0)");
             Assert.AreEqual(1, actual);
 
-            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {0})", n));
+            var actual2 = XLWorkbook.EvaluateExpr($"COMBIN({n}, {n})");
             Assert.AreEqual(1, actual2);
         }
 
+        [TestCase(0, 0, 1)]
+        [TestCase(1, 0, 1)]
+        [TestCase(1, 1, 1)]
         [TestCase(4, 2, 6)]
         [TestCase(5, 2, 10)]
         [TestCase(6, 2, 15)]
         [TestCase(6, 3, 20)]
         [TestCase(7, 2, 21)]
         [TestCase(7, 3, 35)]
-        public void Combin_ReturnsCorrectResults(int n, int k, int expectedResult)
+        public void Combin_calculates_combinations(int n, int k, int expectedResult)
         {
-            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, k));
+            var actual = XLWorkbook.EvaluateExpr($"COMBIN({n}, {k})");
             Assert.AreEqual(expectedResult, actual);
 
-            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n - k));
+            var actual2 = XLWorkbook.EvaluateExpr($"COMBIN({n}, {n - k})");
             Assert.AreEqual(expectedResult, actual2);
         }
 
         [Theory]
-        public void Combin_ReturnsNforKis1OrKisNminus1([Range(1, 10)] int n)
+        public void Combin_returns_n_for_k_is_1_or_k_is_n_minus_1([Range(1, 10)] int n)
         {
-            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, 1)", n));
+            var actual = XLWorkbook.EvaluateExpr($"COMBIN({n}, 1)");
             Assert.AreEqual(n, actual);
 
-            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n - 1));
+            var actual2 = XLWorkbook.EvaluateExpr($"COMBIN({n}, {n - 1})");
             Assert.AreEqual(n, actual2);
         }
 
-        [Theory]
-        public void Combin_ThrowsNumberExceptionForAnyArgumentSmaller0([Range(-4, -1)] int smaller0)
+        [Test]
+        public void Combin_returns_num_error_when_k_is_larger_than_n()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("COMBIN(5, 6)"));
+
+            // Values are floored, so this is COMBIN(5, 5).
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("COMBIN(5, 5.5)"));
+        }
+
+        [Test]
+        public void Combin_returns_num_error_when_value_is_too_large()
+        {
+            // Maximum int - 1 is maximum computable value in Excel.
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("COMBIN(2147483647, 2147483647)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("COMBIN(5E+301, 6)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("COMBIN(6, 5E+301)"));
+        }
+
+        [TestCase(-4)]
+        [TestCase(-3)]
+        [TestCase(-1)]
+        [TestCase(-0.1)]
+        public void Combin_returns_num_error_for_any_argument_smaller_than_0(double smaller0)
         {
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
@@ -562,17 +586,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("\"no number\"")]
         [TestCase("\"\"")]
-        public void Combin_ThrowsNumericExceptionForAnyArgumentNotNumeric(string input)
+        public void Combin_returns_value_error_for_any_non_numeric_argument(string input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"COMBIN({0}, 1)",
-                    input?.ToString(CultureInfo.InvariantCulture))));
-
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"COMBIN(1, {0})",
-                    input?.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"COMBIN({input}, 1)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"COMBIN(1, {input})"));
         }
 
         [TestCase(4, 3, 20)]
@@ -937,7 +954,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5)]
         [TestCase(-1)]
         [TestCase(-0.1)]
-        public void Fact_returns_error_for_negative_input( double input)
+        public void Fact_returns_error_for_negative_input(double input)
         {
             var actual = XLWorkbook.EvaluateExpr($@"FACT({input.ToString(CultureInfo.InvariantCulture)})");
             Assert.AreEqual(XLError.NumberInvalid, actual);

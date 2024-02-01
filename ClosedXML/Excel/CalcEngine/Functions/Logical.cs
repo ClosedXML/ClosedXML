@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("AND", 1, int.MaxValue, And, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
             ce.RegisterFunction("IF", 2, 3, AdaptLastOptional(If, false), FunctionFlags.Scalar);
-            ce.RegisterFunction("IFERROR", 2, 2, Adapt(IfError), FunctionFlags.Scalar);
+            ce.RegisterFunction("IFERROR", 2, 2, Adapt((Func<ScalarValue, ScalarValue, AnyValue>)IfError), FunctionFlags.Scalar);
             ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("TRUE", 0, 0, Adapt(True), FunctionFlags.Scalar);

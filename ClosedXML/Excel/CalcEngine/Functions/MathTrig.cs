@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 2, Ceiling);
             ce.RegisterFunction("CEILING.MATH", 1, 3, CeilingMath);
-            ce.RegisterFunction("COMBIN", 2, Combin);
+            ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
             ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
@@ -302,30 +302,13 @@ namespace ClosedXML.Excel.CalcEngine
                 return -Math.Ceiling(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
-        private static object Combin(List<Expression> p)
+        private static AnyValue Combin(double number, double numberChosen)
         {
-            Int32 n;
-            Int32 k;
+            var combinationsResult = XLMath.CombinChecked(number, numberChosen);
+            if (!combinationsResult.TryPickT0(out var combinations, out var error))
+                return error;
 
-            var rawN = p[0].Evaluate();
-            var rawK = p[1].Evaluate();
-            if (rawN is long || rawN is int || rawN is byte || rawN is double || rawN is float)
-                n = (int)Math.Floor((double)rawN);
-            else
-                return XLError.NumberInvalid;
-
-            if (rawK is long || rawK is int || rawK is byte || rawK is double || rawK is float)
-                k = (int)Math.Floor((double)rawK);
-            else
-                return XLError.NumberInvalid;
-
-            n = (int)p[0];
-            k = (int)p[1];
-
-            if (n < 0 || n < k || k < 0)
-                return XLError.NumberInvalid;
-
-            return XLMath.Combin(n, k);
+            return combinations;
         }
 
         private static object CombinA(List<Expression> p)
