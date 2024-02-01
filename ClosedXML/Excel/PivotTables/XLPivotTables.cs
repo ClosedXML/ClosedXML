@@ -17,19 +17,24 @@ namespace ClosedXML.Excel
 
         internal XLWorksheet Worksheet { get; }
 
-        public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotCache pivotCache)
+        public void Add(XLPivotTable pivotTable)
         {
+            var pivotCache = pivotTable.PivotCache;
             if (!pivotCache.FieldNames.Any())
                 pivotCache.Refresh();
 
+            _pivotTables.Add(pivotTable.Name, pivotTable);
+        }
+
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotCache pivotCache)
+        {
             var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
                 PivotCache = (XLPivotCache)pivotCache
             };
-
-            _pivotTables.Add(name, pivotTable);
+            Add(pivotTable);
             return pivotTable;
         }
 
