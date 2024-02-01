@@ -77,15 +77,8 @@ namespace ClosedXML.Excel.IO
                 pivotTableDefinition.CompactData = false;
             }
 
-            if (pt.EmptyCellReplacement != null)
-            {
-                pivotTableDefinition.ShowMissing = true;
-                pivotTableDefinition.MissingCaption = pt.EmptyCellReplacement;
-            }
-            else
-            {
-                pivotTableDefinition.ShowMissing = false;
-            }
+            pivotTableDefinition.ShowMissing = pt.ShowMissing;
+            pivotTableDefinition.MissingCaption = pt.MissingCaption ?? string.Empty;
 
             if (pt.ErrorValueReplacement != null)
             {

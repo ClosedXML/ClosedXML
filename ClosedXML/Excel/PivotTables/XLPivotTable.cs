@@ -144,7 +144,8 @@ namespace ClosedXML.Excel
             newPivotTable.FilterAreaOrder = FilterAreaOrder;
             newPivotTable.FilterFieldsPageWrap = FilterFieldsPageWrap;
             newPivotTable.ErrorValueReplacement = ErrorValueReplacement;
-            newPivotTable.EmptyCellReplacement = EmptyCellReplacement;
+            newPivotTable.ShowMissing = ShowMissing;
+            newPivotTable.MissingCaption = MissingCaption;
             newPivotTable.AutofitColumns = AutofitColumns;
             newPivotTable.PreserveCellFormatting = PreserveCellFormatting;
             newPivotTable.ShowGrandTotalsColumns = ShowGrandTotalsColumns;
@@ -223,23 +224,17 @@ namespace ClosedXML.Excel
             Description = value; return this;
         }
 
-        public String ColumnHeaderCaption { get; set; }
-
         public IXLPivotTable SetColumnHeaderCaption(String value)
         {
             ColumnHeaderCaption = value;
             return this;
         }
 
-        public String RowHeaderCaption { get; set; }
-
         public IXLPivotTable SetRowHeaderCaption(String value)
         {
             RowHeaderCaption = value;
             return this;
         }
-
-        public Boolean MergeAndCenterWithLabels { get; set; }
 
         public IXLPivotTable SetMergeAndCenterWithLabels()
         {
@@ -258,35 +253,49 @@ namespace ClosedXML.Excel
             RowLabelIndent = value; return this;
         }
 
-        public XLFilterAreaOrder FilterAreaOrder { get; set; }
-
         public IXLPivotTable SetFilterAreaOrder(XLFilterAreaOrder value)
         {
             FilterAreaOrder = value; return this;
         }
-
-        public Int32 FilterFieldsPageWrap { get; set; }
 
         public IXLPivotTable SetFilterFieldsPageWrap(Int32 value)
         {
             FilterFieldsPageWrap = value; return this;
         }
 
-        public String ErrorValueReplacement { get; set; }
-
         public IXLPivotTable SetErrorValueReplacement(String value)
         {
             ErrorValueReplacement = value; return this;
         }
 
-        public String EmptyCellReplacement { get; set; }
+        public String EmptyCellReplacement
+        {
+            get
+            {
+                if (ShowMissing)
+                    return MissingCaption;
+
+                return string.Empty;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    ShowMissing = false;
+                    MissingCaption = string.Empty;
+                }
+                else
+                {
+                    ShowMissing = true;
+                    MissingCaption = value;
+                }
+            }
+        }
 
         public IXLPivotTable SetEmptyCellReplacement(String value)
         {
             EmptyCellReplacement = value; return this;
         }
-
-        public Boolean AutofitColumns { get; set; }
 
         public IXLPivotTable SetAutofitColumns()
         {
@@ -310,8 +319,6 @@ namespace ClosedXML.Excel
             PreserveCellFormatting = value; return this;
         }
 
-        public Boolean ShowGrandTotalsRows { get; set; }
-
         public IXLPivotTable SetShowGrandTotalsRows()
         {
             ShowGrandTotalsRows = true; return this;
@@ -321,8 +328,6 @@ namespace ClosedXML.Excel
         {
             ShowGrandTotalsRows = value; return this;
         }
-
-        public Boolean ShowGrandTotalsColumns { get; set; }
 
         public IXLPivotTable SetShowGrandTotalsColumns()
         {
@@ -334,8 +339,6 @@ namespace ClosedXML.Excel
             ShowGrandTotalsColumns = value; return this;
         }
 
-        public Boolean FilteredItemsInSubtotals { get; set; }
-
         public IXLPivotTable SetFilteredItemsInSubtotals()
         {
             FilteredItemsInSubtotals = true; return this;
@@ -345,8 +348,6 @@ namespace ClosedXML.Excel
         {
             FilteredItemsInSubtotals = value; return this;
         }
-
-        public Boolean AllowMultipleFilters { get; set; }
 
         public IXLPivotTable SetAllowMultipleFilters()
         {
@@ -358,8 +359,6 @@ namespace ClosedXML.Excel
             AllowMultipleFilters = value; return this;
         }
 
-        public Boolean UseCustomListsForSorting { get; set; }
-
         public IXLPivotTable SetUseCustomListsForSorting()
         {
             UseCustomListsForSorting = true; return this;
@@ -369,8 +368,6 @@ namespace ClosedXML.Excel
         {
             UseCustomListsForSorting = value; return this;
         }
-
-        public Boolean ShowExpandCollapseButtons { get; set; }
 
         public IXLPivotTable SetShowExpandCollapseButtons()
         {
@@ -382,8 +379,6 @@ namespace ClosedXML.Excel
             ShowExpandCollapseButtons = value; return this;
         }
 
-        public Boolean ShowContextualTooltips { get; set; }
-
         public IXLPivotTable SetShowContextualTooltips()
         {
             ShowContextualTooltips = true; return this;
@@ -393,8 +388,6 @@ namespace ClosedXML.Excel
         {
             ShowContextualTooltips = value; return this;
         }
-
-        public Boolean ShowPropertiesInTooltips { get; set; }
 
         public IXLPivotTable SetShowPropertiesInTooltips()
         {
@@ -406,8 +399,6 @@ namespace ClosedXML.Excel
             ShowPropertiesInTooltips = value; return this;
         }
 
-        public Boolean DisplayCaptionsAndDropdowns { get; set; }
-
         public IXLPivotTable SetDisplayCaptionsAndDropdowns()
         {
             DisplayCaptionsAndDropdowns = true; return this;
@@ -417,8 +408,6 @@ namespace ClosedXML.Excel
         {
             DisplayCaptionsAndDropdowns = value; return this;
         }
-
-        public Boolean ClassicPivotTableLayout { get; set; }
 
         public IXLPivotTable SetClassicPivotTableLayout()
         {
@@ -442,8 +431,6 @@ namespace ClosedXML.Excel
             ShowValuesRow = value; return this;
         }
 
-        public Boolean ShowEmptyItemsOnRows { get; set; }
-
         public IXLPivotTable SetShowEmptyItemsOnRows()
         {
             ShowEmptyItemsOnRows = true; return this;
@@ -453,8 +440,6 @@ namespace ClosedXML.Excel
         {
             ShowEmptyItemsOnRows = value; return this;
         }
-
-        public Boolean ShowEmptyItemsOnColumns { get; set; }
 
         public IXLPivotTable SetShowEmptyItemsOnColumns()
         {
@@ -466,8 +451,6 @@ namespace ClosedXML.Excel
             ShowEmptyItemsOnColumns = value; return this;
         }
 
-        public Boolean DisplayItemLabels { get; set; }
-
         public IXLPivotTable SetDisplayItemLabels()
         {
             DisplayItemLabels = true; return this;
@@ -477,8 +460,6 @@ namespace ClosedXML.Excel
         {
             DisplayItemLabels = value; return this;
         }
-
-        public Boolean SortFieldsAtoZ { get; set; }
 
         public IXLPivotTable SetSortFieldsAtoZ()
         {
@@ -490,8 +471,6 @@ namespace ClosedXML.Excel
             SortFieldsAtoZ = value; return this;
         }
 
-        public Boolean PrintExpandCollapsedButtons { get; set; }
-
         public IXLPivotTable SetPrintExpandCollapsedButtons()
         {
             PrintExpandCollapsedButtons = true; return this;
@@ -502,8 +481,6 @@ namespace ClosedXML.Excel
             PrintExpandCollapsedButtons = value; return this;
         }
 
-        public Boolean RepeatRowLabels { get; set; }
-
         public IXLPivotTable SetRepeatRowLabels()
         {
             RepeatRowLabels = true; return this;
@@ -513,8 +490,6 @@ namespace ClosedXML.Excel
         {
             RepeatRowLabels = value; return this;
         }
-
-        public Boolean PrintTitles { get; set; }
 
         public IXLPivotTable SetPrintTitles()
         {
@@ -637,7 +612,8 @@ namespace ClosedXML.Excel
 
         private void SetExcelDefaults()
         {
-            EmptyCellReplacement = String.Empty;
+            ShowMissing = true;
+            MissingCaption = null;
             ShowColumnHeaders = true;
             ShowRowHeaders = true;
 
@@ -690,7 +666,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
+#nullable enable
         internal void AddField(XLPivotTableField field)
         {
             _fields.Add(field);
@@ -710,5 +686,457 @@ namespace ClosedXML.Excel
         {
             _formats.Add(pivotFormat);
         }
+
+        #region Attributes of PivotTableDefinition in same order as XSD
+
+        internal bool DataOnRows { get; init; } = false;
+
+        /// <summary>
+        /// Determines the default 'data' field position, when it is automatically added to row/column fields.
+        /// 0 = first (e.g. before all column/row fields), 1 = second (i.e. after first row/column field) and so on.
+        /// &gt; number of fields or <c>null</c> indicates the last position.
+        /// </summary>
+        internal uint? DataPosition { get; init; }
+
+        /// <summary>
+        /// <para>
+        /// An identification of legacy table auto-format to apply to the pivot table. The
+        /// <c>Apply*Formats</c> properties specifies which parts of auto-format to apply. If
+        /// <c>null</c> or <see cref="AutofitColumns"/> is not <c>true</c>, legacy auto-format is
+        /// not applied.
+        /// </para>
+        /// <para>
+        /// The value must be less than 21 or greater than 4096 and less than or equal to 4117. See
+        /// ISO-29500 Annex G.3 for how auto formats look like.
+        /// </para>
+        /// </summary>
+        internal uint? AutoFormatId { get; init; }
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format number format properties.
+        /// </summary>
+        internal bool ApplyNumberFormats { get; init; } = false;
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format border properties.
+        /// </summary>
+        internal bool ApplyBorderFormats { get; init; } = false;
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format font properties.
+        /// </summary>
+        internal bool ApplyFontFormats { get; init; } = false;
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format pattern properties.
+        /// </summary>
+        internal bool ApplyPatternFormats { get; init; } = false;
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format alignment properties.
+        /// </summary>
+        internal bool ApplyAlignmentFormats { get; init; } = false;
+
+        /// <summary>
+        /// If auto-format should be applied (<see cref="AutofitColumns"/> and <see cref="AutoFormatId"/>
+        /// are set), apply legacy auto-format width/height properties.
+        /// </summary>
+        internal bool ApplyWidthHeightFormats { get; init; } = false;
+
+        /// <summary>
+        /// Initial text of 'data' field.
+        /// </summary>
+        internal string? DataCaption { get; init; }
+
+        internal string? GrandTotalCaption { get; init; }
+
+        /// <summary>
+        /// Text to display when in cells that contain error.
+        /// </summary>
+        public String? ErrorValueReplacement { get; set; }
+
+        /// <summary>
+        /// Flag indicating if <see cref="ErrorValueReplacement"/> should be shown when cell contain an error.
+        /// </summary>
+        internal bool ShowError { get; init; } = false;
+
+        /// <summary>
+        /// Test to display for missing items, when <see cref="ShowMissing"/> is <c>true</c>.
+        /// </summary>
+        internal string? MissingCaption { get; set; }
+
+        /// <summary>
+        /// Flag indicating if <see cref="MissingCaption"/> should be shown when cell has no value.
+        /// </summary>
+        /// <remarks>Doesn't seem to work in Excel.</remarks>
+        internal bool ShowMissing { get; set; } = true;
+
+        /// <summary>
+        /// Name of style to apply to <see cref="XLPivotPageField"/> items headers in <see cref="XLPivotAxis.AxisPage"/>.
+        /// </summary>
+        internal string? PageStyle { get; init; }
+
+        /// <remarks>Doesn't seem to work in Excel.</remarks>
+        internal string? PivotTableStyleName { get; init; }
+
+        /// <summary>
+        /// Name of a style to apply to the cells left blank when a pivot table shrinks during a refresh operation.
+        /// </summary>
+        internal string? VacatedStyle { get; init; }
+
+        internal string? Tag { get; init; }
+
+        /// <summary>
+        /// Version of the application that last updated the pivot table. Application-dependent.
+        /// </summary>
+        internal byte UpdatedVersion { get; init; }
+
+        /// <summary>
+        /// Minimum version of the application required to update the pivot table. Application-dependent.
+        /// </summary>
+        internal byte MinRefreshableVersion { get; init; }
+
+        /// <remarks>OLAP related.</remarks>
+        internal bool AsteriskTotals { get; init; } = false;
+
+        /// <summary>
+        /// <para>
+        /// Should field items be displayed on the axis despite pivot table not having any value
+        /// field? <c>true</c> will display items even without data field, <c>false</c> won't.
+        /// </para>
+        /// <para>
+        /// Example: There is an empty pivot table with no value fields. Add field 'Name'
+        /// to row fields. Should names be displayed on row despite not having any value field?
+        /// </para>
+        /// </summary>
+        /// <remarks>Also called ShowItems</remarks>
+        public bool DisplayItemLabels { get; set; } = true;
+
+        /// <summary>
+        /// Flag indicating if user is allowed to edit cells in data area.
+        /// </summary>
+        internal bool EditData { get; init; } = false;
+
+        /// <summary>
+        /// Flag indicating if UI to modify the fields of pivot table is disabled. In Excel, the
+        /// whole field area is hidden.
+        /// </summary>
+        internal bool DisableFieldList { get; init; } = false;
+
+        /// <remarks>OLAP only.</remarks>
+        internal bool ShowCalculatedMembers { get; init; } = true;
+
+        /// <remarks>OLAP only.</remarks>
+        internal bool VisualTotals { get; init; } = true;
+
+        /// <summary>
+        /// A flag indicating whether a page field that has selected multiple items (but not
+        /// necessarily all) display "(multiple items)" instead of "All"? If value is <c>false</c>.
+        /// page fields will display "All" regardless of whether only item subset is selected or
+        /// all items are selected.
+        /// </summary>
+        internal bool ShowMultipleLabel { get; init; } = true;
+
+        /// <summary>
+        /// Doesn't seem to do anything. Should hide drop down filters.
+        /// </summary>
+        internal bool ShowDataDropDown { get; init; } = true;
+
+        /// <summary>
+        /// A flag indicating whether UI should display collapse/expand (drill) buttons in pivot
+        /// table axes.
+        /// </summary>
+        /// <remarks>Also called ShowDrill.</remarks>
+        public Boolean ShowExpandCollapseButtons { get; set; } = true;
+
+        /// <summary>
+        /// A flag indicating whether collapse/expand (drill) buttons in pivot table axes should
+        /// be printed.
+        /// </summary>
+        /// <remarks>Also called PrintDrill.</remarks>
+        public Boolean PrintExpandCollapsedButtons { get; set; } = false;
+
+        /// <remarks>OLAP only. Also called ShowMemberPropertyTips.</remarks>
+        public Boolean ShowPropertiesInTooltips { get; set; }
+
+        /// <summary>
+        /// A flag indicating whether UI should display a tooltip on data items of pivot table. The
+        /// tooltip contain info about value field name, row/col items used to aggregate the value
+        /// ect. Note that this tooltip generally hides cell notes, because mouseover displays data
+        /// tool tip, rather than the note.
+        /// </summary>
+        /// <remarks>Also called ShowDataTips.</remarks>
+        public Boolean ShowContextualTooltips { get; set; }
+
+        /// <summary>
+        /// A flag indicating whether UI should provide a mechanism to edit the pivot table. If the
+        /// value is <c>false</c>, Excel provides ability to refresh data through context menu, but
+        /// ribbon or other options to manipulate field or pivot table settings are not present.
+        /// </summary>
+        /// <remarks>Also called enableWizard.</remarks>
+        internal bool EnableEditingMechanism { get; set; } = true;
+
+        /// <remarks>Likely OLAP only. Do not confuse with collapse/expand buttons.</remarks>
+        internal bool EnableDrillDown { get; init; } = true;
+
+        /// <summary>
+        /// A flag indicating whether the user is prevented from displaying PivotField properties.
+        /// Not very consistent in Excel, e.g. can't display field properties through context menu
+        /// of a pivot table, but can display properties menu through context menu in editing wizard.
+        /// </summary>
+        internal bool EnableFieldProperties { get; init; } = true;
+
+        /// <summary>
+        /// A flag that indicates whether the formatting applied by the user to the pivot table
+        /// cells is preserved on refresh. 
+        /// </summary>
+        /// <remarks>Once again, ISO-29500 is buggy and says the opposite.</remarks>
+        internal bool PreserveFormatting { get; init; } = true;
+
+        /// <summary>
+        /// A flag that indicates whether legacy auto formatting has been applied to the PivotTable
+        /// view.
+        /// </summary>
+        /// <remarks>Also called UseAutoFormatting.</remarks>
+        public Boolean AutofitColumns { get; set; } = false;
+
+        /// <summary>
+        /// Specifies the number of page fields to display before starting another row or column.
+        /// Value &lt;= 0 means unlimited.
+        /// </summary>
+        /// <remarks>Also called PageWrap.</remarks>
+        public Int32 FilterFieldsPageWrap { get; set; }
+
+        /// <summary>
+        /// Page field layout setting that indicates layout order of page fields. The layout uses
+        /// <see cref="FilterFieldsPageWrap"/> to determine when to break to a new row or column.
+        /// </summary>
+        /// <remarks>Also called <em>PageOverThenDown</em>.</remarks>
+        public XLFilterAreaOrder FilterAreaOrder { get; set; } = XLFilterAreaOrder.DownThenOver;
+
+        /// <summary>
+        /// A flag that indicates whether hidden pivot items should be included in subtotal
+        /// calculated values. If <c>true</c>, data for hidden items are included in subtotals
+        /// calculated values. If <c>false</c>, hidden values are not included in subtotal
+        /// calculations.
+        /// </summary>
+        /// <remarks>Also called <em>SubtotalHiddenItems</em>. OLAP only. Option in Excel is grayed
+        ///     out and does nothing. The option is un-grayed out when pivot cache is part of data
+        ///     model.</remarks>
+        public bool FilteredItemsInSubtotals { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether grand totals should be displayed for the PivotTable rows.
+        /// </summary>
+        /// <remarks>Also called <em>RowGrandTotals</em>.</remarks>
+        public Boolean ShowGrandTotalsRows { get; set; } = true;
+
+        /// <summary>
+        /// A flag indicating whether grand totals should be displayed for the PivotTable columns.
+        /// </summary>
+        /// <remarks>Also called <em>ColumnGrandTotals</em>.</remarks>
+        public Boolean ShowGrandTotalsColumns { get; set; } = true;
+
+        /// <summary>
+        /// A flag indicating whether when a field name should be printed on all pages.
+        /// </summary>
+        /// <remarks>Also called <em>FieldPrintTitles</em>.</remarks>
+        public Boolean PrintTitles { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether whether PivotItem names should be repeated at the top of each
+        /// printed page (e.g. if axis item spans multiple pages, it will be repeated an all pages).
+        /// </summary>
+        /// <remarks>Also called <em>ItemPrintTitles</em>.</remarks>
+        public Boolean RepeatRowLabels { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether row or column titles that span multiple cells should be
+        /// merged into a single cell. Useful only in in tabular layout, titles in other layouts
+        /// don't span across multiple cells.
+        /// </summary>
+        /// <remarks>Also called <em>MergeItem</em>.</remarks>
+        public Boolean MergeAndCenterWithLabels { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether UI for the pivot table should display large text in field
+        /// drop zones when there are no fields in the data region (e.g. <em>Drop Value Fields
+        /// Here</em>). Only works in legacy layout mode (i.e. <see cref="ClassicPivotTableLayout"/>
+        /// is <c>true</c>).
+        /// </summary>
+        internal bool ShowDropZones { get; init; } = true;
+
+        /// <summary>
+        /// Specifies the version of the application that created the pivot cache. Application-dependent.
+        /// </summary>
+        /// <remarks>Also called <em>CreatedVersion</em>.</remarks>
+        internal byte PivotCacheCreatedVersion { get; init; } = 0;
+
+        /// <summary>
+        /// A row indentation increment for row axis when pivot table is in compact layout. Units
+        /// are characters.
+        /// </summary>
+        /// <remarks>Also called <em>Indent</em>.</remarks>
+        internal uint IndentationForCompactAxis { get; init; } = 1;
+
+        /// <summary>
+        /// A flag indicating whether to include empty rows in the pivot table (i.e. row axis items
+        /// are blank and data items are blank).
+        /// </summary>
+        /// <remarks>Also called <em>ShowEmptyRow</em>.</remarks>
+        public Boolean ShowEmptyItemsOnRows { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether to include empty columns in the table (i.e. column axis items
+        /// are blank and data items are blank).
+        /// </summary>
+        /// <remarks>Also called <em>ShowEmptyColumn</em>.</remarks>
+        public Boolean ShowEmptyItemsOnColumns { get; set; }
+
+        /// <summary>
+        /// A flag indicating whether to show field names on axis. The axis items are still
+        /// displayed, only field names are not. The dropdowns next to the axis field names
+        /// are also displayed/hidden based on the flag.
+        /// </summary>
+        /// <remarks>Also called <em>ShowHeaders</em>.</remarks>
+        public Boolean DisplayCaptionsAndDropdowns { get; set; } = true;
+
+        /// <summary>
+        /// A flag indicating whether new fields should have their
+        /// <see cref="XLPivotTableField.Compact"/> flag set to <c>true</c>. By new, it means field
+        /// added to page, axes or data fields, not a new field from cache.
+        /// </summary>
+        internal bool Compact { get; init; } = true;
+
+        /// <summary>
+        /// A flag indicating whether new fields should have their
+        /// <see cref="XLPivotTableField.Outline"/> flag set to <c>true</c>. By new, it means field
+        /// added to page, axes or data fields, not a new field from cache.
+        /// </summary>
+        internal bool Outline { get; init; } = true;
+
+        /// <summary>
+        /// <para>
+        /// A flag that indicates whether 'data'/-2 fields in the PivotTable should be displayed in
+        /// outline next column of the sheet. This is basically an equivalent of
+        /// <see cref="XLPivotTableField.Outline"/> property for the 'data' fields, because 'data'
+        /// field is implicit.
+        /// </para>
+        /// <para>
+        /// When <c>true</c>, the labels from the next field (as ordered by
+        /// <see cref="XLPivotTableAxis.Fields"/> for row or column) are displayed in the next
+        /// column. Has no effect if 'data' field is last field.
+        /// </para>
+        /// </summary>
+        /// <remarks>Doesn't seem to do much in column axis, only in row axis. Also, Excel
+        ///     sometimes seems to favor <see cref="Outline"/> flag instead (likely some less used
+        ///     paths in the Excel code).</remarks>
+        internal bool OutlineData { get; init; } = false;
+
+        /// <summary>
+        /// <para>
+        /// A flag that indicates whether 'data'/-2 fields in the PivotTable should be displayed in
+        /// compact mode (=same column of the sheet). This is basically an equivalent of
+        /// <see cref="XLPivotTableField.Compact"/> property for the 'data' fields, because 'data'
+        /// field is implicit.
+        /// </para>
+        /// <para>
+        /// When <c>true</c>, the labels from the next field (as ordered by
+        /// <see cref="XLPivotTableAxis.Fields"/> for row or column) are displayed in the same
+        /// column (one row below). Has no effect if 'data' field is last field.
+        /// </para>
+        /// </summary>
+        /// <remarks>Doesn't seem to do much in column axis, only in row axis. Also, Excel
+        ///     sometimes seems to favor <see cref="Compact"/> flag instead (likely some less used
+        ///     paths in the Excel code).</remarks>
+        internal bool CompactData { get; init; } = true;
+
+        /// <summary>
+        /// A flag that indicates whether data fields in the pivot table are published and
+        /// available for viewing in a server rendering environment.
+        /// </summary>
+        /// <remarks>No idea what this does. Likely flag for other components that display table
+        ///     on a web page.</remarks>
+        internal bool Published { get; init; } = false;
+
+        /// <summary>
+        /// A flag that indicates whether to apply the classic layout. Classic layout displays the
+        /// grid zones in UI where user can drop fields (unless disabled through
+        /// <see cref="ShowDropZones"/>).
+        /// </summary>
+        /// <remarks>Also called <em>GridDropZones</em>.</remarks>
+        public Boolean ClassicPivotTableLayout { get; set; } = false;
+
+        /// <summary>
+        /// Likely a flag whether immersive reader should be turned off. Not sure if immersive
+        /// reader was ever used outside Word, though Excel for Web added some support in 2023.
+        /// </summary>
+        internal bool StopImmersiveUi { get; init; } = true;
+
+        /// <summary>
+        /// <para>
+        /// A flag indicating whether field can have at most most one filter type used. This flag
+        /// doesn't allow multiple filters of same type, only multiple different filter types.
+        /// </para>
+        /// <para>
+        /// If false, field can have at most one filter, if user tries to set multiple, previous
+        /// one is cleared.
+        /// </para>
+        /// </summary>
+        /// <remarks>Also called <em>multipleFieldFilters</em>.</remarks>
+        public Boolean AllowMultipleFilters { get; set; } = true;
+
+        /// <summary>
+        /// Specifies the next pivot chart formatting identifier to use on the pivot table. First
+        /// actually used identifier should be 1. The format is used in <c>/chartSpace/pivotSource/
+        /// fmtId/@val</c>.
+        /// </summary>
+        internal uint ChartFormat { get; init; } = 0;
+
+        /// <summary>
+        /// The text that will be displayed in row header in compact mode. It is next to drop down
+        /// (if enabled) of a label/values filter for fields (if
+        /// <see cref="DisplayCaptionsAndDropdowns"/> is set to <c>true</c>). Use localized text
+        /// <em>Row labels</em> if property is not specified.
+        /// </summary>
+        public String? RowHeaderCaption { get; set; } = null;
+
+        /// <summary>
+        /// The text that will be displayed in column header in compact mode. It is next to drop down
+        /// (if enabled) of a label/values filter for fields (if
+        /// <see cref="DisplayCaptionsAndDropdowns"/> is set to <c>true</c>). Use localized text
+        /// <em>Column labels</em> if property is not specified.
+        /// </summary>
+        public String? ColumnHeaderCaption { get; set; } = null;
+
+        /// <summary>
+        /// A flag that controls how are fields sorted in the field list UI. <c>true</c> will
+        /// display fields sorted alphabetically, <c>false</c> will display fields in the order
+        /// fields appear in <see cref="XLPivotCache"/>. OLAP data sources always use alphabetical
+        /// sorting.
+        /// </summary>
+        /// <remarks>Also called <em>fieldListSortAscending</em>.</remarks>
+        public Boolean SortFieldsAtoZ { get; set; } = false;
+
+        /// <summary>
+        /// A flag indicating whether MDX sub-queries are supported by OLAP data provider of this
+        /// pivot table.
+        /// </summary>
+        internal bool MdxSubQueries { get; init; } = false;
+
+        /// <summary>
+        /// A flag that indicates whether custom lists are used for sorting items of fields, both
+        /// initially when the PivotField is initialized and the PivotItems are ordered by their
+        /// captions, and later when the user applies a sort.
+        /// </summary>
+        /// <remarks>Also called <em>customSortList</em>.</remarks>
+        public Boolean UseCustomListsForSorting { get; set; }
+
+        #endregion
     }
 }
