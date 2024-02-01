@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1384,17 +1385,25 @@ namespace ClosedXML.Excel.IO
 
             if (dataType == XLDataType.Text)
             {
+                var text = xlCell.GetText();
                 if (xlCell.HasFormula)
                 {
-                    WriteStringValue(w, xlCell.GetText());
+                    WriteStringValue(w, text);
                 }
                 else
                 {
-                    if (xlCell.StyleValue.IncludeQuotePrefix || xlCell.GetText().Length != 0)
+                    if (xlCell.StyleValue.IncludeQuotePrefix || text.Length != 0)
                     {
                         if (xlCell.ShareString)
                         {
                             var sharedStringId = context.SstMap[xlCell.SharedStringId];
+                            if (sharedStringId < 0)
+                            {
+                                throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
+                                                                "That likely means reference counting is broken. As a stop-gap, try to set the " +
+                                                                "text value to an unused cell to increase number of references for the text.");
+                            }
+
                             w.WriteStartElement("v", Main2006SsNs);
                             w.WriteValue(sharedStringId);
                             w.WriteEndElement();
@@ -1410,7 +1419,6 @@ namespace ClosedXML.Excel.IO
                             else
                             {
                                 w.WriteStartElement("t", Main2006SsNs);
-                                var text = xlCell.GetText();
                                 if (text.PreserveSpaces())
                                     w.WritePreserveSpaceAttr();
 
