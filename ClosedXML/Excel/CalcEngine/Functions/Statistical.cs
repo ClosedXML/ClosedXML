@@ -15,8 +15,9 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
             ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, AllowRange.All);
             //BETADIST	Returns the beta cumulative distribution function
-            //BETAINV	Returns the inverse of the cumulative distribution function for a specified beta distribution
-            //BINOMDIST	Returns the individual term binomial distribution probability
+            //BETAINV   Returns the inverse of the cumulative distribution function for a specified beta distribution
+            ce.RegisterFunction("BINOMDIST", 4, 4, Adapt(BinomDist), FunctionFlags.Scalar); //BINOMDIST	Returns the individual term binomial distribution probability
+            ce.RegisterFunction("BINOM.DIST", 4, 4, Adapt(BinomDist), FunctionFlags.Scalar); // In theory more precise BINOMDIST.
             //CHIDIST	Returns the one-tailed probability of the chi-squared distribution
             //CHIINV	Returns the inverse of the one-tailed probability of the chi-squared distribution
             //CHITEST	Returns the test for independence
@@ -107,6 +108,52 @@ namespace ClosedXML.Excel.CalcEngine
         private static object AverageA(List<Expression> p)
         {
             return GetTally(p, false).Average();
+        }
+
+        private static AnyValue BinomDist(double numberSuccesses, double numberTrials, double successProbability, bool cumulativeFlag)
+        {
+            if (successProbability is < 0 or > 1)
+                return XLError.NumberInvalid;
+
+            if (cumulativeFlag)
+            {
+                var cdf = 0d;
+                for (var y = 0; y <= numberSuccesses; ++y)
+                {
+                    var result = BinomDist(y, numberTrials, successProbability);
+                    if (!result.TryPickT0(out var pf, out var error))
+                        return error;
+
+                    cdf += pf;
+                }
+
+                if (double.IsNaN(cdf) || double.IsInfinity(cdf))
+                    return XLError.NumberInvalid;
+
+                return cdf;
+            }
+            else
+            {
+                var result = BinomDist(numberSuccesses, numberTrials, successProbability);
+                if (!result.TryPickT0(out var binomDist, out var error))
+                    return error;
+
+                return binomDist;
+            }
+        }
+
+        private static OneOf<double, XLError> BinomDist(double x, double n, double p)
+        {
+            if (!XLMath.CombinChecked(n ,x).TryPickT0(out var combinations, out var error))
+                return error;
+
+            x = Math.Floor(x);
+            n = Math.Floor(n);
+            var binomDist = combinations * Math.Pow(p, x) * Math.Pow(1 - p, n - x);
+            if (double.IsNaN(binomDist) || double.IsInfinity(binomDist))
+                return XLError.NumberInvalid;
+
+            return binomDist;
         }
 
         private static object Count(List<Expression> p)
@@ -347,7 +394,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
                     return error;
-                    
+
                 values = new ScalarValue[] { number };
                 size = 1;
             }
@@ -380,7 +427,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return total[^k];
         }
-        
+
         // utility for tallying statistics
         private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
