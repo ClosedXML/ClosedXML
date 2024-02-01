@@ -906,42 +906,55 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(120.0, actual);
         }
 
-        [TestCase(0, 1L)]
-        [TestCase(1, 1L)]
-        [TestCase(2, 2L)]
-        [TestCase(3, 6L)]
-        [TestCase(4, 24L)]
-        [TestCase(5, 120L)]
-        [TestCase(6, 720L)]
-        [TestCase(7, 5040L)]
-        [TestCase(8, 40320L)]
-        [TestCase(9, 362880L)]
-        [TestCase(10, 3628800L)]
-        [TestCase(11, 39916800L)]
-        [TestCase(12, 479001600L)]
-        [TestCase(13, 6227020800L)]
-        [TestCase(14, 87178291200L)]
-        [TestCase(15, 1307674368000L)]
-        [TestCase(16, 20922789888000L)]
+        [TestCase(0, 1d)]
+        [TestCase(1, 1d)]
+        [TestCase(2, 2d)]
+        [TestCase(3, 6d)]
+        [TestCase(4, 24d)]
+        [TestCase(5, 120d)]
+        [TestCase(6, 720d)]
+        [TestCase(7, 5040d)]
+        [TestCase(8, 40320d)]
+        [TestCase(9, 362880d)]
+        [TestCase(10, 3628800d)]
+        [TestCase(11, 39916800d)]
+        [TestCase(12, 479001600d)]
+        [TestCase(13, 6227020800d)]
+        [TestCase(14, 87178291200d)]
+        [TestCase(15, 1307674368000d)]
+        [TestCase(16, 20922789888000d)]
+        [TestCase(170.9, 7.257415615308004E+306)]
         [TestCase(0.1, 1L)]
         [TestCase(2.3, 2L)]
         [TestCase(2.8, 2L)]
-        public void Fact_ReturnsCorrectResult(double input, long expectedResult)
+        public void Fact_calculates_factorial(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = XLWorkbook.EvaluateExpr($@"FACT({input.ToString(CultureInfo.InvariantCulture)})");
             Assert.AreEqual(expectedResult, actual);
         }
 
-        [Theory]
-        public void Fact_ThrowsNumberExceptionForNegativeInput([Range(-10, -1)] int input)
+        [TestCase(-10)]
+        [TestCase(-5)]
+        [TestCase(-1)]
+        [TestCase(-0.1)]
+        public void Fact_returns_error_for_negative_input( double input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture))));
+            var actual = XLWorkbook.EvaluateExpr($@"FACT({input.ToString(CultureInfo.InvariantCulture)})");
+            Assert.AreEqual(XLError.NumberInvalid, actual);
+        }
+
+        [TestCase(171)]
+        [TestCase(5000)]
+        public void Fact_returns_error_for_too_large_result(int input)
+        {
+            var actual = XLWorkbook.EvaluateExpr($@"FACT({input})");
+            Assert.AreEqual(XLError.NumberInvalid, actual);
         }
 
         [Test]
-        public void Fact_ThrowsValueExceptionForNonNumericInput()
+        public void Fact_coercion_fails_for_non_numeric_input()
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(string.Format(@"FACT(""x"")")));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"FACT(""x"")"));
         }
 
         [Test]

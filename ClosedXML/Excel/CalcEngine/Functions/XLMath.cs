@@ -89,6 +89,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return n * Combin(n - 1, k - 1) / k;
         }
 
+        internal static double Factorial(int n)
+        {
+            var factorial = 1d;
+            while (n > 1)
+                factorial *= n--;
+
+            return factorial;
+        }
+
         public static Boolean IsEven(Int32 value)
         {
             return Math.Abs(value % 2) == 0;
