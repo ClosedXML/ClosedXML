@@ -28,6 +28,54 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.That(() => ws.Evaluate("AVERAGE(D3:D45)"), Throws.TypeOf<ApplicationException>());
         }
 
+        [TestCase(6, 10, 0.5, 0.205078125)]
+        [TestCase(4, 20, 0.2, 0.2181994)] // p different than 0.5
+        [TestCase(0, 5, 0.2, 0.32768)] // 0 out of 5 successes
+        [TestCase(0, 0, 0.2, 1)] // 0 out of 0 successes
+        [TestCase(1, 1, 0, 0)]
+        [TestCase(1, 1, 1, 1)]
+        [TestCase(2, 4, 0.5, 0.375)]
+        [TestCase(2.9, 4.9, 0.5, 0.375)] // Attempts are floored
+        public void BinomDist_calculates_non_cumulative_binomial_distribution(double k, double n, double p, double expected)
+        {
+            var kString = k.ToInvariantString();
+            var nString = n.ToInvariantString();
+            var pString = p.ToInvariantString();
+            var result = (double)XLWorkbook.EvaluateExpr($"BINOMDIST({kString}, {nString}, {pString}, FALSE)");
+            Assert.AreEqual(expected, result, tolerance);
+        }
+
+        [TestCase(6, 10, 0.5, 0.828125)]
+        [TestCase(2, 7, 0.3, 0.6470695)]
+        [TestCase(0, 7, 0.3, 0.0823543)]
+        [TestCase(0, 0, 0.3, 1)]
+        [TestCase(0, 0, 1, 1)]
+        [TestCase(2, 4, 0.5, 0.6875)]
+        [TestCase(2.9, 4.9, 0.5, 0.6875)] // Values are floored
+        public void BinomDist_calculates_cumulative_binomial_distribution(double k, double n, double p, double expected)
+        {
+            var kString = k.ToInvariantString();
+            var nString = n.ToInvariantString();
+            var pString = p.ToInvariantString();
+            var result = (double)XLWorkbook.EvaluateExpr($"BINOMDIST({kString}, {nString}, {pString}, TRUE)");
+            Assert.AreEqual(expected, result, tolerance);
+        }
+
+        [TestCase(5, 4, 0.5)] // Five successes out of 4 attempts
+        [TestCase(-1, 4, 0.5)] // Negative successes
+        [TestCase(0, -1, 0.5)] // Negative attempts
+        [TestCase(2, 4, -0.1)] // p < 0
+        [TestCase(2, 4, 1.1)] // p > 1
+        [TestCase(1E+300, 2E+300, 0.5)] // Too large values
+        public void BinomDist_returns_num_error_on_invalid_calculations(double k, double n, double p)
+        {
+            var kString = k.ToInvariantString();
+            var nString = n.ToInvariantString();
+            var pString = p.ToInvariantString();
+            var result = XLWorkbook.EvaluateExpr($"BINOMDIST({kString}, {nString}, {pString}, FALSE)");
+            Assert.AreEqual(XLError.NumberInvalid, result);
+        }
+
         [Test]
         public void Count()
         {
