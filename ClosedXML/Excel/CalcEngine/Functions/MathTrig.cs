@@ -45,7 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("DEGREES", 1, Degrees);
             ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
-            ce.RegisterFunction("FACT", 1, Fact);
+            ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
             ce.RegisterFunction("FLOOR", 2, Floor);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
@@ -443,28 +443,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Exp(p[0]);
         }
 
-        private static object Fact(List<Expression> p)
+        private static AnyValue Fact(double n)
         {
-            var input = p[0].Evaluate();
-
-            if (!(input is long || input is int || input is byte || input is double || input is float))
-                return XLError.IncompatibleValue;
-
-            var num = Math.Floor((double)input);
-            double fact = 1.0;
-
-            if (num < 0)
+            if (n is < 0 or >= 171)
                 return XLError.NumberInvalid;
 
-            if (num > 1)
-            {
-                for (int i = 2; i <= num; i++)
-                {
-                    fact *= i;
-                }
-            }
-
-            return fact;
+            return XLMath.Factorial((int)Math.Floor(n));
         }
 
         private static object FactDouble(List<Expression> p)
