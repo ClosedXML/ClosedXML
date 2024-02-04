@@ -203,6 +203,13 @@ namespace ClosedXML.Excel
                 ColumnWidth = CalculateColumnWidth(8, Style.Font, this);
             }
 
+            // We don't want to trigger a NotifyWorksheetAdded on the workbook every time we add a new worksheet during
+            // the loading of the workbook, as that invalidates all the cached caculation values unnecessarily and can
+            // cause a large amount of time to be wasted during workbook loading. Large workbooks with many worksheets
+            // and many caculations were seeing 5-15% of load time being spent just being used marking calculations as
+            // dirty over and over again before this was disabled.
+            const bool notifyWorksheetsAdded = false;
+
             var sheets = workbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
@@ -214,7 +221,7 @@ namespace ClosedXML.Excel
                 if (string.IsNullOrEmpty(dSheet.Id))
                 {
                     // Some non-Excel producers create sheets with empty relId.
-                    var emptySheet = WorksheetsInternal.Add(sheetName, position, sheetId);
+                    var emptySheet = WorksheetsInternal.Add(sheetName, position, sheetId, notifyWorksheetsAdded);
                     if (dSheet.State != null)
                         emptySheet.Visibility = dSheet.State.Value.ToClosedXml();
 
@@ -232,7 +239,7 @@ namespace ClosedXML.Excel
                 }
 
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
-                var ws = WorksheetsInternal.Add(sheetName, position, sheetId);
+                var ws = WorksheetsInternal.Add(sheetName, position, sheetId, notifyWorksheetsAdded);
                 ws.RelId = dSheet.Id;
 
                 if (dSheet.State != null)
