@@ -505,6 +505,19 @@ internal class PivotTableDefinitionPartReader
         // Load base attributes
         var xlPivotTable = LoadPivotTableAttributes(pivotTable, sheet, cache);
 
+        // Load location
+        var location = pivotTable.Location;
+        if (location is null)
+            throw PartStructureException.ExpectedElementNotFound();
+
+        var referenceText = location.Reference?.Value ?? throw PartStructureException.MissingAttribute();
+        xlPivotTable.Area = XLSheetRange.Parse(referenceText);
+        xlPivotTable.FirstHeaderRow = location.FirstHeaderRow?.Value ?? throw PartStructureException.MissingAttribute();
+        xlPivotTable.FirstDataRow = location.FirstDataRow?.Value ?? throw PartStructureException.MissingAttribute();
+        xlPivotTable.FirstDataCol = location.FirstDataColumn?.Value ?? throw PartStructureException.MissingAttribute();
+        xlPivotTable.RowPageCount = location.RowPageCount?.Value ?? 0;
+        xlPivotTable.ColumnPageCount = location.ColumnsPerPage?.Value ?? 0;
+
         // Load pivot fields
         var pivotFields = pivotTable.PivotFields;
         if (pivotFields is not null)
