@@ -50,72 +50,8 @@ internal class PivotTableDefinitionPartReader
             pt.TargetCell = target;
             ws.PivotTables.Add(pt);
 
-            if (!String.IsNullOrWhiteSpace(
-                    StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
-                pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
-
-            if (!String.IsNullOrWhiteSpace(
-                    StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
-                pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
-
             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
             pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(cache);
-
-            if (pivotTableDefinition.MergeItem != null)
-                pt.MergeAndCenterWithLabels = pivotTableDefinition.MergeItem.Value;
-            if (pivotTableDefinition.Indent != null) pt.RowLabelIndent = (int)pivotTableDefinition.Indent.Value;
-            if (pivotTableDefinition.PageOverThenDown != null)
-                pt.FilterAreaOrder = pivotTableDefinition.PageOverThenDown.Value
-                    ? XLFilterAreaOrder.OverThenDown
-                    : XLFilterAreaOrder.DownThenOver;
-            if (pivotTableDefinition.PageWrap != null)
-                pt.FilterFieldsPageWrap = (int)pivotTableDefinition.PageWrap.Value;
-            if (pivotTableDefinition.UseAutoFormatting != null)
-                pt.AutofitColumns = pivotTableDefinition.UseAutoFormatting.Value;
-            if (pivotTableDefinition.PreserveFormatting != null)
-                pt.PreserveCellFormatting = pivotTableDefinition.PreserveFormatting.Value;
-            if (pivotTableDefinition.RowGrandTotals != null)
-                pt.ShowGrandTotalsRows = pivotTableDefinition.RowGrandTotals.Value;
-            if (pivotTableDefinition.ColumnGrandTotals != null)
-                pt.ShowGrandTotalsColumns = pivotTableDefinition.ColumnGrandTotals.Value;
-            if (pivotTableDefinition.SubtotalHiddenItems != null)
-                pt.FilteredItemsInSubtotals = pivotTableDefinition.SubtotalHiddenItems.Value;
-            if (pivotTableDefinition.MultipleFieldFilters != null)
-                pt.AllowMultipleFilters = pivotTableDefinition.MultipleFieldFilters.Value;
-            if (pivotTableDefinition.CustomListSort != null)
-                pt.UseCustomListsForSorting = pivotTableDefinition.CustomListSort.Value;
-            if (pivotTableDefinition.ShowDrill != null)
-                pt.ShowExpandCollapseButtons = pivotTableDefinition.ShowDrill.Value;
-            if (pivotTableDefinition.ShowDataTips != null)
-                pt.ShowContextualTooltips = pivotTableDefinition.ShowDataTips.Value;
-            if (pivotTableDefinition.ShowMemberPropertyTips != null)
-                pt.ShowPropertiesInTooltips = pivotTableDefinition.ShowMemberPropertyTips.Value;
-            if (pivotTableDefinition.ShowHeaders != null)
-                pt.DisplayCaptionsAndDropdowns = pivotTableDefinition.ShowHeaders.Value;
-            if (pivotTableDefinition.GridDropZones != null)
-                pt.ClassicPivotTableLayout = pivotTableDefinition.GridDropZones.Value;
-            if (pivotTableDefinition.ShowEmptyRow != null)
-                pt.ShowEmptyItemsOnRows = pivotTableDefinition.ShowEmptyRow.Value;
-            if (pivotTableDefinition.ShowEmptyColumn != null)
-                pt.ShowEmptyItemsOnColumns = pivotTableDefinition.ShowEmptyColumn.Value;
-            if (pivotTableDefinition.ShowItems != null)
-                pt.DisplayItemLabels = pivotTableDefinition.ShowItems.Value;
-            if (pivotTableDefinition.FieldListSortAscending != null)
-                pt.SortFieldsAtoZ = pivotTableDefinition.FieldListSortAscending.Value;
-            if (pivotTableDefinition.PrintDrill != null)
-                pt.PrintExpandCollapsedButtons = pivotTableDefinition.PrintDrill.Value;
-            if (pivotTableDefinition.ItemPrintTitles != null)
-                pt.RepeatRowLabels = pivotTableDefinition.ItemPrintTitles.Value;
-            if (pivotTableDefinition.FieldPrintTitles != null)
-                pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
-            if (pivotTableDefinition.EnableDrill != null)
-                pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
-
-            // if (pivotTableDefinition.ShowMissing != null && pivotTableDefinition.MissingCaption != null)
-            //     pt.EmptyCellReplacement = pivotTableDefinition.MissingCaption.Value;
-
-            if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
-                pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
             var pivotTableDefinitionExtensionList =
                 pivotTableDefinition.GetFirstChild<PivotTableDefinitionExtensionList>();
@@ -775,9 +711,9 @@ internal class PivotTableDefinitionPartReader
             ShowPropertiesInTooltips = showMemberPropertyTips,
             ShowContextualTooltips = showDataTips,
             EnableEditingMechanism = enableWizard,
-            EnableDrillDown = enableDrill,
+            EnableShowDetails = enableDrill,
             EnableFieldProperties = enableFieldProperties,
-            PreserveFormatting = preserveFormatting,
+            PreserveCellFormatting = preserveFormatting,
             AutofitColumns = useAutoFormatting,
             FilterFieldsPageWrap = checked((int)pageWrap),
             FilterAreaOrder = pageOverThenDown ? XLFilterAreaOrder.OverThenDown : XLFilterAreaOrder.DownThenOver,
@@ -789,7 +725,7 @@ internal class PivotTableDefinitionPartReader
             MergeAndCenterWithLabels = mergeItem,
             ShowDropZones = showDropZones,
             PivotCacheCreatedVersion = createdVersion,
-            IndentationForCompactAxis = indent,
+            RowLabelIndent = checked((int)indent),
             ShowEmptyItemsOnRows = showEmptyRow,
             ShowEmptyItemsOnColumns = showEmptyColumn,
             DisplayCaptionsAndDropdowns = showHeaders,
