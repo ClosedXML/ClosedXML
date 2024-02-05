@@ -246,8 +246,6 @@ namespace ClosedXML.Excel
             MergeAndCenterWithLabels = value; return this;
         }
 
-        public Int32 RowLabelIndent { get; set; }
-
         public IXLPivotTable SetRowLabelIndent(Int32 value)
         {
             RowLabelIndent = value; return this;
@@ -306,8 +304,6 @@ namespace ClosedXML.Excel
         {
             AutofitColumns = value; return this;
         }
-
-        public Boolean PreserveCellFormatting { get; set; }
 
         public IXLPivotTable SetPreserveCellFormatting()
         {
@@ -500,9 +496,6 @@ namespace ClosedXML.Excel
         {
             PrintTitles = value; return this;
         }
-
-
-        public Boolean EnableShowDetails { get; set; }
 
         public IXLPivotTable SetEnableShowDetails()
         {
@@ -882,7 +875,7 @@ namespace ClosedXML.Excel
         internal bool EnableEditingMechanism { get; set; } = true;
 
         /// <remarks>Likely OLAP only. Do not confuse with collapse/expand buttons.</remarks>
-        internal bool EnableDrillDown { get; init; } = true;
+        public Boolean EnableShowDetails { get; set; } = true;
 
         /// <summary>
         /// A flag indicating whether the user is prevented from displaying PivotField properties.
@@ -895,8 +888,9 @@ namespace ClosedXML.Excel
         /// A flag that indicates whether the formatting applied by the user to the pivot table
         /// cells is preserved on refresh. 
         /// </summary>
-        /// <remarks>Once again, ISO-29500 is buggy and says the opposite.</remarks>
-        internal bool PreserveFormatting { get; init; } = true;
+        /// <remarks>Once again, ISO-29500 is buggy and says the opposite. Also called <em>
+        /// PreserveFormatting</em></remarks>
+        public Boolean PreserveCellFormatting { get; set; } = true;
 
         /// <summary>
         /// A flag that indicates whether legacy auto formatting has been applied to the PivotTable
@@ -982,7 +976,7 @@ namespace ClosedXML.Excel
         /// are characters.
         /// </summary>
         /// <remarks>Also called <em>Indent</em>.</remarks>
-        internal uint IndentationForCompactAxis { get; init; } = 1;
+        public Int32 RowLabelIndent { get; set; } = 1;
 
         /// <summary>
         /// A flag indicating whether to include empty rows in the pivot table (i.e. row axis items
