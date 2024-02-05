@@ -680,6 +680,45 @@ namespace ClosedXML.Excel
             _formats.Add(pivotFormat);
         }
 
+        #region location
+
+        /// <summary>
+        /// Area of a pivot table. Area doesn't include page fields, they are above the area with
+        /// one empty row between area and filters. Size of filter area is held in
+        /// <see cref="RowPageCount"/> and <see cref="ColumnPageCount"/>
+        /// </summary>
+        /// <remarks>Not kept in sync with <see cref="TargetCell"/>.</remarks>
+        internal XLSheetRange Area { get; set; }
+
+        /// <summary>
+        /// First row of pivot table header, relative to the <see cref="TargetCell"/>.
+        /// </summary>
+        internal uint FirstHeaderRow { get; set; }
+
+        /// <summary>
+        /// First row of pivot table data area, relative to the <see cref="TargetCell"/>.
+        /// </summary>
+        internal uint FirstDataRow { get; set; }
+
+        /// <summary>
+        /// First column of pivot table data area, relative to the <see cref="TargetCell"/>.
+        /// </summary>
+        internal uint FirstDataCol { get; set; }
+
+        /// <summary>
+        /// Number of rows a filter area occupies. Filter area is above the pivot table and it
+        /// optional (i.e. value <c>0</c> indicates no filter).
+        /// </summary>
+        internal uint RowPageCount { get; set; }
+
+        /// <summary>
+        /// Number of column a filter area occupies. Filter area is above the pivot table and it
+        /// optional (i.e. value <c>0</c> indicates no filter).
+        /// </summary>
+        internal uint ColumnPageCount { get; set; }
+
+        #endregion
+
         #region Attributes of PivotTableDefinition in same order as XSD
 
         internal bool DataOnRows { get; init; } = false;
