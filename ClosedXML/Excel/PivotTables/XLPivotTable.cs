@@ -744,7 +744,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Initial text of 'data' field.
         /// </summary>
-        internal string? DataCaption { get; init; }
+        internal string DataCaption { get; init; }
 
         internal string? GrandTotalCaption { get; init; }
 
