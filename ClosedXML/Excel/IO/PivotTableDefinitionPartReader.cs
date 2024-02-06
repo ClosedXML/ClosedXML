@@ -871,7 +871,7 @@ internal class PivotTableDefinitionPartReader
                 var approximatelyHasChildren = item.ChildItems?.Value ?? false;
                 var isExpanded = item.Expanded?.Value ?? true;
                 var drillAcrossAttributes = item.DrillAcrossAttributes?.Value ?? true;
-                var calculatedMember = item.DrillAcrossAttributes?.Value ?? false;
+                var calculatedMember = item.Calculated?.Value ?? false;
                 var hidden = item.Hidden?.Value ?? false;
                 var missing = item.Missing?.Value ?? false;
                 var itemUserCaption = item.ItemName;
