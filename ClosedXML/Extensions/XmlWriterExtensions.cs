@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Xml;
 using ClosedXML.Excel;
@@ -16,6 +14,12 @@ namespace ClosedXML.Extensions
             w.WriteEndAttribute();
         }
 
+        public static void WriteAttributeOptional(this XmlWriter w, String attrName, String? value)
+        {
+            if (value is not null)
+                w.WriteAttribute(attrName, value);
+        }
+
         public static void WriteAttribute(this XmlWriter w, String attrName, Int32 value)
         {
             w.WriteStartAttribute(attrName);
@@ -30,6 +34,12 @@ namespace ClosedXML.Extensions
             w.WriteEndAttribute();
         }
 
+        public static void WriteAttributeOptional(this XmlWriter w, String attrName, UInt32? value)
+        {
+            if (value is not null)
+                w.WriteAttribute(attrName, value.Value);
+        }
+
         public static void WriteAttribute(this XmlWriter w, String attrName, Double value)
         {
             w.WriteStartAttribute(attrName);
@@ -42,6 +52,24 @@ namespace ClosedXML.Extensions
             w.WriteStartAttribute(attrName);
             w.WriteValue(value ? "1" : "0");
             w.WriteEndAttribute();
+        }
+
+        public static void WriteAttributeDefault(this XmlWriter w, String attrName, Boolean value, Boolean defaultValue)
+        {
+            if (value != defaultValue)
+                w.WriteAttribute(attrName, value);
+        }
+
+        public static void WriteAttributeOptional(this XmlWriter w, String attrName, Boolean? value)
+        {
+            if (value is not null)
+                w.WriteAttribute(attrName, value.Value);
+        }
+
+        public static void WriteAttributeDefault(this XmlWriter w, String attrName, uint value, uint defaultValue)
+        {
+            if (value != defaultValue)
+                w.WriteAttribute(attrName, value);
         }
 
         /// <summary>
