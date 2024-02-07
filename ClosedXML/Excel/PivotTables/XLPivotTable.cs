@@ -75,6 +75,8 @@ namespace ClosedXML.Excel
 
         internal IReadOnlyList<XLPivotPageField> PageFields => _pageFields;
 
+        internal IReadOnlyList<XLPivotDataField> DataFields => _dataFields;
+
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
             var addressComparer = new XLAddressComparer(ignoreFixed: true);

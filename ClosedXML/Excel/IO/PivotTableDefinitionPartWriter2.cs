@@ -248,6 +248,62 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteEndElement(); // pageFields
         }
 
+        if (pt.DataFields.Count > 0)
+        {
+            xml.WriteStartElement("dataFields", Main2006SsNs);
+            xml.WriteAttribute("count", pt.DataFields.Count);
+            foreach (var dataField in pt.DataFields)
+            {
+                xml.WriteStartElement("dataField", Main2006SsNs);
+                xml.WriteAttributeOptional("name", dataField.DataFieldName);
+                xml.WriteAttribute("fld", dataField.Field);
+                if (dataField.Subtotal != XLPivotSummary.Sum)
+                {
+                    var subtotalAttr = dataField.Subtotal switch
+                    {
+                        XLPivotSummary.Sum => "sum",
+                        XLPivotSummary.Count => "count",
+                        XLPivotSummary.Average => "average",
+                        XLPivotSummary.Minimum => "min",
+                        XLPivotSummary.Maximum => "max",
+                        XLPivotSummary.Product => "product",
+                        XLPivotSummary.CountNumbers => "countNums",
+                        XLPivotSummary.StandardDeviation => "stdDev",
+                        XLPivotSummary.PopulationStandardDeviation => "stdDevp",
+                        XLPivotSummary.Variance => "var",
+                        XLPivotSummary.PopulationVariance => "varp",
+                        _ => throw new UnreachableException(),
+                    };
+                    xml.WriteAttribute("subtotal", subtotalAttr);
+                }
+
+                if (dataField.ShowDataAsFormat != XLPivotCalculation.Normal)
+                {
+                    var showDataAsAttr = dataField.ShowDataAsFormat switch
+                    {
+                        XLPivotCalculation.Normal => "normal",
+                        XLPivotCalculation.DifferenceFrom => "difference",
+                        XLPivotCalculation.PercentageOf => "percent",
+                        XLPivotCalculation.PercentageDifferenceFrom => "percentDiff",
+                        XLPivotCalculation.RunningTotal => "runTotal",
+                        XLPivotCalculation.PercentageOfRow => "percentOfRow",
+                        XLPivotCalculation.PercentageOfColumn => "percentOfCol",
+                        XLPivotCalculation.PercentageOfTotal => "percentOfTotal",
+                        XLPivotCalculation.Index => "index",
+                        _ => throw new UnreachableException(),
+                    };
+                    xml.WriteAttribute("showDataAs", showDataAsAttr);
+                }
+
+                xml.WriteAttributeDefault("baseField", dataField.BaseField, -1);
+                xml.WriteAttributeDefault("baseItem", dataField.BaseItem, 1048832);
+                xml.WriteAttributeOptional("numFmtId", dataField.NumberFormatId);
+                xml.WriteEndElement(); // dataField
+            }
+
+            xml.WriteEndElement(); // dataFields
+        }
+
         xml.WriteEndElement(); // pivotTableDefinition
     }
 
