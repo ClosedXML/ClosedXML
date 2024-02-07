@@ -66,6 +66,12 @@ namespace ClosedXML.Extensions
                 w.WriteAttribute(attrName, value.Value);
         }
 
+        public static void WriteAttributeDefault(this XmlWriter w, String attrName, int value, int defaultValue)
+        {
+            if (value != defaultValue)
+                w.WriteAttribute(attrName, value);
+        }
+
         public static void WriteAttributeDefault(this XmlWriter w, String attrName, uint value, uint defaultValue)
         {
             if (value != defaultValue)

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using ClosedXML.Extensions;
@@ -199,25 +201,7 @@ internal class PivotTableDefinitionPartWriter2
                     xml.WriteAttributeOptional("n", pfItem.ItemUserCaption);
                     if (pfItem.ItemType != XLPivotItemType.Data)
                     {
-                        var itemTypeAttr = pfItem.ItemType switch
-                        {
-                            XLPivotItemType.Avg => "avg",
-                            XLPivotItemType.Blank => "blank",
-                            XLPivotItemType.Count => "count",
-                            XLPivotItemType.CountA => "countA",
-                            XLPivotItemType.Data => "data",
-                            XLPivotItemType.Default => "default",
-                            XLPivotItemType.Grand => "grand",
-                            XLPivotItemType.Max => "max",
-                            XLPivotItemType.Min => "min",
-                            XLPivotItemType.Product => "product",
-                            XLPivotItemType.StdDev => "stdDev",
-                            XLPivotItemType.StdDevP => "stdDevP",
-                            XLPivotItemType.Sum => "sum",
-                            XLPivotItemType.Var => "var",
-                            XLPivotItemType.VarP => "varP",
-                            _ => throw new UnreachableException(),
-                        };
+                        var itemTypeAttr = GetItemTypeAttr(pfItem.ItemType);
                         xml.WriteAttribute("t", itemTypeAttr);
                     }
 
@@ -242,6 +226,89 @@ internal class PivotTableDefinitionPartWriter2
         }
 
         xml.WriteEndElement(); // pivotFields
+
+        WriteAxis(xml, pt.RowAxis, "rowFields", "rowItems");
+        WriteAxis(xml, pt.ColumnAxis, "colFields", "colItems");
+
         xml.WriteEndElement(); // pivotTableDefinition
+    }
+
+    private static void WriteAxis(XmlWriter xml, XLPivotTableAxis axis, string fieldsElement, string itemsElement)
+    {
+        if (axis.Fields.Count > 0)
+        {
+            xml.WriteStartElement(fieldsElement, Main2006SsNs);
+            xml.WriteAttribute("count", axis.Fields.Count);
+            foreach (var axisField in axis.Fields)
+            {
+                xml.WriteStartElement("field", Main2006SsNs);
+                xml.WriteAttribute("x", axisField.Value);
+                xml.WriteEndElement();
+            }
+
+            xml.WriteEndElement(); // rowFields
+        }
+
+        if (axis.Items.Count > 0)
+        {
+            xml.WriteStartElement(itemsElement, Main2006SsNs);
+            xml.WriteAttribute("count", axis.Items.Count);
+
+            IReadOnlyList<int> previousItems = Array.Empty<int>();
+            foreach (var axisItem in axis.Items)
+            {
+                xml.WriteStartElement("i", Main2006SsNs);
+                if (axisItem.ItemType != XLPivotItemType.Data)
+                {
+                    var itemTypeAttr = GetItemTypeAttr(axisItem.ItemType);
+                    xml.WriteAttribute("t", itemTypeAttr);
+                }
+
+                // 'r' attribute means repeat data from previous axis item.
+                var maxLen = Math.Min(previousItems.Count, axisItem.FieldItem.Count);
+                var r = 0;
+                while (r < maxLen && previousItems[r] == axisItem.FieldItem[r])
+                    r++;
+
+                xml.WriteAttributeDefault("r", r, 0);
+                xml.WriteAttributeDefault("i", axisItem.DataItem, 0); // Data field index
+
+                foreach (var fieldItem in axisItem.FieldItem)
+                {
+                    xml.WriteStartElement("x", Main2006SsNs);
+                    xml.WriteAttributeDefault("v", fieldItem, 0);
+                    xml.WriteEndElement(); // x
+                }
+
+                xml.WriteEndElement(); // i
+                previousItems = axisItem.FieldItem;
+            }
+
+            xml.WriteEndElement();
+        }
+    }
+
+    private static string GetItemTypeAttr(XLPivotItemType itemType)
+    {
+        var itemTypeAttr = itemType switch
+        {
+            XLPivotItemType.Avg => "avg",
+            XLPivotItemType.Blank => "blank",
+            XLPivotItemType.Count => "count",
+            XLPivotItemType.CountA => "countA",
+            XLPivotItemType.Data => "data",
+            XLPivotItemType.Default => "default",
+            XLPivotItemType.Grand => "grand",
+            XLPivotItemType.Max => "max",
+            XLPivotItemType.Min => "min",
+            XLPivotItemType.Product => "product",
+            XLPivotItemType.StdDev => "stdDev",
+            XLPivotItemType.StdDevP => "stdDevP",
+            XLPivotItemType.Sum => "sum",
+            XLPivotItemType.Var => "var",
+            XLPivotItemType.VarP => "varP",
+            _ => throw new UnreachableException(),
+        };
+        return itemTypeAttr;
     }
 }

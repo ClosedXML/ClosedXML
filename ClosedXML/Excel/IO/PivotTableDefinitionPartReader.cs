@@ -926,7 +926,7 @@ internal class PivotTableDefinitionPartReader
             foreach (var axisItem in axisItems.Cast<RowItem>())
             {
                 var xlItemType = axisItem.ItemType?.Value.ToClosedXml() ?? XLPivotItemType.Data;
-                var dataFieldIndex = axisItem.Index?.Value; // This is used by 'data' field
+                var dataFieldIndex = axisItem.Index?.Value ?? 0; // This is used by 'data' field
                 var repeatedCount = axisItem.RepeatedItemCount?.Value ?? 0;
                 var fieldIndexes = new List<int>();
                 foreach (var dataIndex in axisItem.ChildElements.Cast<MemberPropertyIndex>())
