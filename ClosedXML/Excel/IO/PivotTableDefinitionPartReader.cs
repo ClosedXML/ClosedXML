@@ -46,7 +46,7 @@ internal class PivotTableDefinitionPartReader
 
         if (target != null && pivotSource != null)
         {
-            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource);
+            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, differentialFormats);
             pt.TargetCell = target;
             ws.PivotTables.Add(pt);
 
@@ -500,7 +500,7 @@ internal class PivotTableDefinitionPartReader
     }
 
 #nullable enable
-    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache)
+    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache, Dictionary<int, DifferentialFormat> differentialFormats)
     {
         // Load base attributes
         var xlPivotTable = LoadPivotTableAttributes(pivotTable, sheet, cache);
@@ -523,7 +523,7 @@ internal class PivotTableDefinitionPartReader
         if (pivotFields is not null)
         {
             foreach (var pivotField in pivotFields.Cast<PivotField>())
-                xlPivotTable.AddField(LoadPivotField(pivotField, xlPivotTable));
+                xlPivotTable.AddField(LoadPivotField(pivotField));
         }
 
         // Load row axis fields and items
@@ -568,7 +568,7 @@ internal class PivotTableDefinitionPartReader
                 var showDataAsFormat = dataField.ShowDataAs?.Value.ToClosedXml() ?? XLPivotCalculation.Normal;
                 var baseField = dataField.BaseField?.Value ?? -1;
                 var baseItem = dataField.BaseItem?.Value ?? 1048832;
-                var numberFormatId = dataField.NumberFormatId?.Value;
+                var numberFormatId = dataField.NumberFormatId?.Value; // TODO: Load properly number format
                 var xlDataField = new XLPivotDataField(field)
                 {
                     DataFieldName = name,
@@ -589,13 +589,23 @@ internal class PivotTableDefinitionPartReader
             foreach (var format in formats.Cast<Format>())
             {
                 var action = format.Action?.Value.ToClosedXml() ?? XLPivotFormatAction.Formatting;
-                var formatId = format.FormatId?.Value;
+                var dxfStyle = XLStyle.Default;
+                if (format.FormatId is not null)
+                {
+                    // TODO: What about alignment?
+                    var df = differentialFormats[checked((int)format.FormatId.Value)];
+                    OpenXmlHelper.LoadFont(df.Font, dxfStyle.Font);
+                    OpenXmlHelper.LoadFill(df.Fill, dxfStyle.Fill, differentialFillFormat: true);
+                    OpenXmlHelper.LoadBorder(df.Border, dxfStyle.Border);
+                    OpenXmlHelper.LoadNumberFormat(df.NumberingFormat, dxfStyle.NumberFormat);
+                }
+
                 var pivotArea = format.PivotArea ?? throw PartStructureException.ExpectedElementNotFound();
                 var xlPivotArea = LoadPivotArea(pivotArea);
                 var xlFormat = new XLPivotFormat(xlPivotArea)
                 {
                     Action = action,
-                    DxfId = formatId,
+                    DxfStyle = dxfStyle,
                 };
                 xlPivotTable.AddFormat(xlFormat);
             }
@@ -760,7 +770,7 @@ internal class PivotTableDefinitionPartReader
         return xlPivotTable;
     }
 
-    private static XLPivotTableField LoadPivotField(PivotField pivotField, XLPivotTable xlPivotTable)
+    private static XLPivotTableField LoadPivotField(PivotField pivotField)
     {
         var customName = pivotField.Name?.Value;
         var axis = pivotField.Axis?.Value.ToClosedXml();
@@ -771,7 +781,7 @@ internal class PivotTableDefinitionPartReader
         var uniqueMemberProperty = pivotField.UniqueMemberProperty?.Value;
         var compact = pivotField.Compact?.Value ?? true;
         var allDrilled = pivotField.AllDrilled?.Value ?? false;
-        var numberFormatId = pivotField.NumberFormatId?.Value;
+        var numberFormatId = pivotField.NumberFormatId?.Value; // TODO: Load properly number format
         var outline = pivotField.Outline?.Value ?? true;
         var subtotalTop = pivotField.SubtotalTop?.Value ?? true;
         var dragToRow = pivotField.DragToRow?.Value ?? true;
@@ -970,8 +980,12 @@ internal class PivotTableDefinitionPartReader
         };
 
         // Can contain extensions, in theory at least.
-        foreach (var reference in pivotArea.OfType<PivotAreaReference>())
-            xlPivotArea.AddReference(LoadPivotReference(reference));
+        var references = pivotArea.PivotAreaReferences;
+        if (references is not null)
+        {
+            foreach (var reference in references.Cast<PivotAreaReference>())
+                xlPivotArea.AddReference(LoadPivotReference(reference));
+        }
 
         return xlPivotArea;
     }

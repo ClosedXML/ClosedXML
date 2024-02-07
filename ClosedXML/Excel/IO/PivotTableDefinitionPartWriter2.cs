@@ -6,12 +6,14 @@ using System.Xml;
 using ClosedXML.Extensions;
 using DocumentFormat.OpenXml.Packaging;
 using static ClosedXML.Excel.IO.OpenXmlConst;
+using static ClosedXML.Excel.XLWorkbook;
+using Array = System.Array;
 
 namespace ClosedXML.Excel.IO;
 
 internal class PivotTableDefinitionPartWriter2
 {
-    internal static void WriteContent(PivotTablePart pivotTablePart, XLPivotTable pt)
+    internal static void WriteContent(PivotTablePart pivotTablePart, XLPivotTable pt, SaveContext context)
     {
         var settings = new XmlWriterSettings
         {
@@ -121,14 +123,7 @@ internal class PivotTableDefinitionPartWriter2
 
             if (pf.Axis is not null)
             {
-                var axisAttr = pf.Axis.Value switch
-                {
-                    XLPivotAxis.AxisRow => "axisRow",
-                    XLPivotAxis.AxisCol => "axisCol",
-                    XLPivotAxis.AxisPage => "axisPage",
-                    XLPivotAxis.AxisValues => "axisValues",
-                    _ => throw new UnreachableException(),
-                };
+                var axisAttr = GetAxisAttr(pf.Axis.Value);
                 xml.WriteAttribute("axis", axisAttr);
             }
 
@@ -304,6 +299,38 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteEndElement(); // dataFields
         }
 
+        if (pt.Formats.Count > 0)
+        {
+            xml.WriteStartElement("formats", Main2006SsNs);
+            xml.WriteAttribute("count", pt.Formats.Count);
+            foreach (var format in pt.Formats)
+            {
+                xml.WriteStartElement("format", Main2006SsNs);
+                if (format.Action != XLPivotFormatAction.Formatting)
+                {
+                    var actionAttr = format.Action switch
+                    {
+                        XLPivotFormatAction.Blank => "blank",
+                        XLPivotFormatAction.Formatting => "formatting",
+                        _ => throw new UnreachableException(),
+                    };
+                    xml.WriteAttribute("action", actionAttr);
+                }
+
+                // DxfId is optional.
+                if (format.DxfStyle.Value != XLStyleValue.Default)
+                {
+                    var dxfId = context.DifferentialFormats[format.DxfStyle.Value];
+                    xml.WriteAttribute("dxfId", dxfId);
+                }
+
+                var pivotArea = format.PivotArea;
+                WritePivotArea(xml, pivotArea);
+                xml.WriteEndElement(); // format
+            }
+            xml.WriteEndElement(); // formats
+        }
+
         xml.WriteEndElement(); // pivotTableDefinition
     }
 
@@ -362,6 +389,83 @@ internal class PivotTableDefinitionPartWriter2
         }
     }
 
+    private static void WritePivotArea(XmlWriter xml, XLPivotArea pivotArea)
+    {
+        xml.WriteStartElement("pivotArea", Main2006SsNs);
+        xml.WriteAttributeOptional("field", pivotArea.Field?.Value);
+        if (pivotArea.Type != XLPivotAreaType.Normal)
+        {
+            var typeAttr = pivotArea.Type switch
+            {
+                XLPivotAreaType.None => "none",
+                XLPivotAreaType.Normal => "normal",
+                XLPivotAreaType.Data => "data",
+                XLPivotAreaType.All => "all",
+                XLPivotAreaType.Origin => "origin",
+                XLPivotAreaType.Button => "button",
+                XLPivotAreaType.TopRight => "topRight",
+                XLPivotAreaType.TopEnd => "topEnd",
+                _ => throw new UnreachableException(),
+            };
+            xml.WriteAttribute("type", typeAttr);
+        }
+
+        xml.WriteAttributeDefault("dataOnly", pivotArea.DataOnly, true);
+        xml.WriteAttributeDefault("labelOnly", pivotArea.LabelOnly, false);
+        xml.WriteAttributeDefault("grandRow", pivotArea.GrandRow, false);
+        xml.WriteAttributeDefault("grandCol", pivotArea.GrandCol, false);
+        xml.WriteAttributeDefault("cacheIndex", pivotArea.CacheIndex, false);
+        xml.WriteAttributeDefault("outline", pivotArea.Outline, true);
+        if (pivotArea.Offset is not null)
+            xml.WriteAttribute("offset", pivotArea.Offset.ToString());
+
+        xml.WriteAttributeDefault("collapsedLevelsAreSubtotals", pivotArea.CollapsedLevelsAreSubtotals, false);
+        if (pivotArea.Axis is not null)
+            xml.WriteAttribute("axis", GetAxisAttr(pivotArea.Axis.Value));
+
+        xml.WriteAttributeOptional("fieldPosition", pivotArea.FieldPosition);
+
+        if (pivotArea.References.Count > 0)
+        {
+            xml.WriteStartElement("references", Main2006SsNs);
+            xml.WriteAttribute("count", pivotArea.References.Count);
+            foreach (var reference in pivotArea.References)
+            {
+                xml.WriteStartElement("reference", Main2006SsNs);
+                xml.WriteAttributeOptional("field", reference.Field);
+                xml.WriteAttribute("count", reference.FieldItems.Count);
+                xml.WriteAttributeDefault("selected", reference.Selected, true);
+                xml.WriteAttributeDefault("byPosition", reference.ByPosition, false);
+                xml.WriteAttributeDefault("relative", reference.Relative, false);
+                xml.WriteAttributeDefault("defaultSubtotal", reference.DefaultSubtotal, false);
+                xml.WriteAttributeDefault("sumSubtotal", reference.SumSubtotal, false);
+                xml.WriteAttributeDefault("countASubtotal", reference.CountASubtotal, false);
+                xml.WriteAttributeDefault("avgSubtotal", reference.AvgSubtotal, false);
+                xml.WriteAttributeDefault("maxSubtotal", reference.MaxSubtotal, false);
+                xml.WriteAttributeDefault("minSubtotal", reference.MinSubtotal, false);
+                xml.WriteAttributeDefault("productSubtotal", reference.ProductSubtotal, false);
+                xml.WriteAttributeDefault("countSubtotal", reference.CountSubtotal, false);
+                xml.WriteAttributeDefault("stdDevSubtotal", reference.StdDevSubtotal, false);
+                xml.WriteAttributeDefault("stdDevPSubtotal", reference.StdDevPSubtotal, false);
+                xml.WriteAttributeDefault("varSubtotal", reference.VarSubtotal, false);
+                xml.WriteAttributeDefault("varPSubtotal", reference.VarPSubtotal, false);
+
+                foreach (var fieldItem in reference.FieldItems)
+                {
+                    xml.WriteStartElement("x", Main2006SsNs);
+                    xml.WriteAttribute("v", fieldItem);
+                    xml.WriteEndElement(); // x
+                }
+
+                xml.WriteEndElement(); // reference
+            }
+
+            xml.WriteEndElement(); // references
+        }
+
+        xml.WriteEndElement(); // pivotArea
+    }
+
     private static string GetItemTypeAttr(XLPivotItemType itemType)
     {
         var itemTypeAttr = itemType switch
@@ -384,5 +488,17 @@ internal class PivotTableDefinitionPartWriter2
             _ => throw new UnreachableException(),
         };
         return itemTypeAttr;
+    }
+
+    private static string GetAxisAttr(XLPivotAxis axis)
+    {
+        return axis switch
+        {
+            XLPivotAxis.AxisRow => "axisRow",
+            XLPivotAxis.AxisCol => "axisCol",
+            XLPivotAxis.AxisPage => "axisPage",
+            XLPivotAxis.AxisValues => "axisValues",
+            _ => throw new UnreachableException(),
+        };
     }
 }
