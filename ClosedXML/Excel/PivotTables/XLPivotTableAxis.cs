@@ -36,6 +36,11 @@ internal class XLPivotTableAxis
     internal IReadOnlyList<FieldIndex> Fields => _fields;
 
     /// <summary>
+    /// Individual row/column parts of the axis.
+    /// </summary>
+    internal IReadOnlyList<XLPivotFieldAxisItem> Items => _axisItems;
+
+    /// <summary>
     /// Add field to the axis.
     /// </summary>
     internal void AddField(FieldIndex fieldIndex)

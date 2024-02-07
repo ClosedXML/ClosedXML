@@ -28,6 +28,9 @@ internal class XLPivotTableField
     internal string? Name { get; init; }
 
     /// <summary>
+    /// If the value is set, the field must also be in <c>rowFields</c>/<c>colFields</c>/
+    /// <c>pageFields</c>/<c>dataFields</c> collection in the pivot table part (otherwise Excel
+    /// will consider it a corrupt file).
     /// </summary>
     /// <remarks>
     /// [MS-OI29500] In Office, axisValues shall not be used for the axis attribute.
