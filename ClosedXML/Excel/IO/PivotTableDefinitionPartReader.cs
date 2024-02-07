@@ -869,7 +869,7 @@ internal class PivotTableDefinitionPartReader
             foreach (var item in items.Cast<Item>())
             {
                 var approximatelyHasChildren = item.ChildItems?.Value ?? false;
-                var isExpanded = item.Expanded?.Value ?? true;
+                var isExpanded = item.Expanded?.Value ?? false;
                 var drillAcrossAttributes = item.DrillAcrossAttributes?.Value ?? true;
                 var calculatedMember = item.Calculated?.Value ?? false;
                 var hidden = item.Hidden?.Value ?? false;
