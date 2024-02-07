@@ -230,6 +230,24 @@ internal class PivotTableDefinitionPartWriter2
         WriteAxis(xml, pt.RowAxis, "rowFields", "rowItems");
         WriteAxis(xml, pt.ColumnAxis, "colFields", "colItems");
 
+        if (pt.PageFields.Count > 0)
+        {
+            xml.WriteStartElement("pageFields", Main2006SsNs);
+            xml.WriteAttribute("count", pt.PageFields.Count);
+            foreach (var pageField in pt.PageFields)
+            {
+                xml.WriteStartElement("pageField", Main2006SsNs);
+                xml.WriteAttribute("fld", pageField.Field);
+                xml.WriteAttributeOptional("item", pageField.ItemIndex);
+                xml.WriteAttributeOptional("hier", pageField.HierarchyIndex);
+                xml.WriteAttributeOptional("name", pageField.HierarchyUniqueName);
+                xml.WriteAttributeOptional("cap", pageField.HierarchyDisplayName);
+                xml.WriteEndElement(); // pageField
+            }
+
+            xml.WriteEndElement(); // pageFields
+        }
+
         xml.WriteEndElement(); // pivotTableDefinition
     }
 
