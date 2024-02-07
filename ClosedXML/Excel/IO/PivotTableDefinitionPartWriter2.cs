@@ -195,7 +195,7 @@ internal class PivotTableDefinitionPartWriter2
                 xml.WriteAttribute("count", pf.Items.Count);
                 foreach (var pfItem in pf.Items)
                 {
-                    xml.WriteStartElement("item");
+                    xml.WriteStartElement("item", Main2006SsNs);
                     xml.WriteAttributeOptional("n", pfItem.ItemUserCaption);
                     if (pfItem.ItemType != XLPivotItemType.Data)
                     {
