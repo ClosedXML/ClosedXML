@@ -40,6 +40,12 @@ namespace ClosedXML.Extensions
                 w.WriteAttribute(attrName, value.Value);
         }
 
+        public static void WriteAttributeOptional(this XmlWriter w, String attrName, Int32? value)
+        {
+            if (value is not null)
+                w.WriteAttribute(attrName, value.Value);
+        }
+
         public static void WriteAttribute(this XmlWriter w, String attrName, Double value)
         {
             w.WriteStartAttribute(attrName);

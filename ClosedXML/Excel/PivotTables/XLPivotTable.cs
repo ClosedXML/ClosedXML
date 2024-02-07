@@ -73,6 +73,8 @@ namespace ClosedXML.Excel
 
         internal XLPivotTableAxis ColumnAxis { get; }
 
+        internal IReadOnlyList<XLPivotPageField> PageFields => _pageFields;
+
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
             var addressComparer = new XLAddressComparer(ignoreFixed: true);
