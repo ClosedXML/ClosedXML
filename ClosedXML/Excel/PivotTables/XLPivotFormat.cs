@@ -16,12 +16,14 @@ internal class XLPivotFormat
     internal XLPivotArea PivotArea { get; }
 
     /// <summary>
-    /// Should the formatting (determined by <see cref="DxfId"/>) be applied or not?
+    /// Should the formatting (determined by <see cref="DxfStyle"/>) be applied or not?
     /// </summary>
     internal XLPivotFormatAction Action { get; init; } = XLPivotFormatAction.Formatting;
 
     /// <summary>
-    /// Differential formatting to apply to the <see cref="PivotArea"/>.
+    /// Differential formatting to apply to the <see cref="PivotArea"/>. It can be empty, e.g. if
+    /// <see cref="Action"/> is blank. Empty dxf is represented by <see cref="XLStyle.Default"/>,
+    /// until we get better dxf representation.
     /// </summary>
-    internal uint? DxfId { get; init; }
+    internal XLStyle DxfStyle { get; init; } = XLStyle.Default;
 }

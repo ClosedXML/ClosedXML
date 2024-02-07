@@ -194,7 +194,7 @@ namespace ClosedXML.Excel.IO
             differentialFormats.RemoveAllChildren();
             FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
 
-            foreach (var ws in workbook.Worksheets)
+            foreach (var ws in workbook.WorksheetsInternal)
             {
                 foreach (var cf in ws.ConditionalFormats)
                 {
@@ -203,7 +203,7 @@ namespace ClosedXML.Excel.IO
                         AddConditionalDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
                 }
 
-                foreach (var tf in ws.Tables.SelectMany(t => t.Fields))
+                foreach (var tf in ws.Tables.SelectMany<XLTable, IXLTableField>(t => t.Fields))
                 {
                     if (tf.IsConsistentStyle())
                     {
@@ -217,13 +217,25 @@ namespace ClosedXML.Excel.IO
                     }
                 }
 
-                foreach (var pt in ws.PivotTables.Cast<XLPivotTable>())
+                foreach (var pt in ws.PivotTables)
                 {
+                    // Add Dxf from old pivot table structures.
                     foreach (var styleFormat in pt.AllStyleFormats)
                     {
                         var xlStyle = (XLStyle)styleFormat.Style;
                         if (!xlStyle.Value.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(xlStyle.Value))
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
+                    }
+
+                    // Add Dxf from new pivot table structures.
+                    foreach (var xlPivotFormat in pt.Formats)
+                    {
+                        var xlStyle = xlPivotFormat.DxfStyle;
+                        if (xlStyle.Value != XLStyleValue.Default &&
+                            !context.DifferentialFormats.ContainsKey(xlStyle.Value))
+                        {
+                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
+                        }
                     }
                 }
             }
