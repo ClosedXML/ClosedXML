@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using ClosedXML.Extensions;
 using DocumentFormat.OpenXml.Packaging;
@@ -355,7 +356,7 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteStartElement(itemsElement, Main2006SsNs);
             xml.WriteAttribute("count", axis.Items.Count);
 
-            IReadOnlyList<int> previousItems = Array.Empty<int>();
+            IReadOnlyList<int> previous = Array.Empty<int>();
             foreach (var axisItem in axis.Items)
             {
                 xml.WriteStartElement("i", Main2006SsNs);
@@ -366,15 +367,20 @@ internal class PivotTableDefinitionPartWriter2
                 }
 
                 // 'r' attribute means repeat data from previous axis item.
-                var maxLen = Math.Min(previousItems.Count, axisItem.FieldItem.Count);
                 var r = 0;
-                while (r < maxLen && previousItems[r] == axisItem.FieldItem[r])
+                var maxPrefixLen = Math.Min(previous.Count, axisItem.FieldItem.Count);
+                while (r < maxPrefixLen && previous[r] == axisItem.FieldItem[r])
                     r++;
+
+                // It seems that Excel always has at least one <x> element, not sure if necessary,
+                // but it makes xml comparisons far easier. This is common for non-data type items.
+                if (r > 0 && r == axisItem.FieldItem.Count)
+                    r--;
 
                 xml.WriteAttributeDefault("r", r, 0);
                 xml.WriteAttributeDefault("i", axisItem.DataItem, 0); // Data field index
 
-                foreach (var fieldItem in axisItem.FieldItem)
+                foreach (var fieldItem in axisItem.FieldItem.Skip(r))
                 {
                     xml.WriteStartElement("x", Main2006SsNs);
                     xml.WriteAttributeDefault("v", fieldItem, 0);
@@ -382,7 +388,7 @@ internal class PivotTableDefinitionPartWriter2
                 }
 
                 xml.WriteEndElement(); // i
-                previousItems = axisItem.FieldItem;
+                previous = axisItem.FieldItem;
             }
 
             xml.WriteEndElement();
