@@ -27,11 +27,7 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteStartDocument();
         xml.WriteStartElement("pivotTableDefinition", Main2006SsNs);
         xml.WriteAttributeString("xmlns", Main2006SsNs);
-        xml.WriteAttributeString("xmlns", "mc", null, MarkupCompatibilityNs);
 
-        // Mark revision as ignorable extension
-        xml.WriteAttributeString("mc", "Ignorable", null, "xr");
-        xml.WriteAttributeString("xmlns", "xr", null, RevisionNs);
         xml.WriteAttribute("name", pt.Name);
         xml.WriteAttribute("cacheId", pt.PivotCache.CacheId!.Value); // TODO: Maybe not nullable?
         xml.WriteAttributeDefault("dataOnRows", pt.DataOnRows, false);
