@@ -942,9 +942,9 @@ internal class PivotTableDefinitionPartReader
                 foreach (var dataIndex in axisItem.ChildElements.Cast<MemberPropertyIndex>())
                     fieldIndexes.Add(dataIndex.Val?.Value ?? 0);
 
-                var allFieldIndexes = previous.Take((int)repeatedCount).Concat(fieldIndexes);
+                var allFieldIndexes = previous.Take((int)repeatedCount).Concat(fieldIndexes).ToList();
                 axis.AddItem(new XLPivotFieldAxisItem(xlItemType, dataFieldIndex, allFieldIndexes));
-                previous = fieldIndexes;
+                previous = allFieldIndexes;
             }
         }
     }
