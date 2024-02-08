@@ -26,6 +26,7 @@ internal class PivotTableDefinitionPartWriter2
 
         xml.WriteStartDocument();
         xml.WriteStartElement("pivotTableDefinition", Main2006SsNs);
+        xml.WriteAttributeString("xmlns", Main2006SsNs);
         xml.WriteAttributeString("xmlns", "mc", null, MarkupCompatibilityNs);
 
         // Mark revision as ignorable extension
