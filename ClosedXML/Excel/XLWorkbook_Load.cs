@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
             var sheetId = 1u;
             foreach (var ws in WorksheetsInternal)
             {
-                // Ensure unique sheetId for each sheet. 
+                // Ensure unique sheetId for each sheet.
                 ws.SheetId = sheetId++;
                 ws.RelId = null;
 
@@ -1679,9 +1679,11 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.Equal:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, true, connector);
                                 break;
+
                             case XLFilterOperator.NotEqual:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, false, connector);
                                 break;
+
                             default:
                                 // OOXML allows only string, so do your best to convert back to a properly typed
                                 // variable. It's not perfect, but let's mimic Excel.

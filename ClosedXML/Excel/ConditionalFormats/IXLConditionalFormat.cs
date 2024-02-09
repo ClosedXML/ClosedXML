@@ -61,7 +61,8 @@ namespace ClosedXML.Excel
         AboveAverage
     }
 
-    public enum XLCFOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
+    public enum XLCFOperator
+    { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
 
     public interface IXLConditionalFormat
     {
