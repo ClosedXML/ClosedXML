@@ -2061,11 +2061,18 @@ namespace ClosedXML.Excel
             {
                 var xlConditionalFormat = ws.ConditionalFormats
                     .Cast<XLConditionalFormat>()
-                    .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+                    .SingleOrDefault(cf => string.Compare(cf.Id.WrapInBraces(), conditionalFormattingRule.Id, ignoreCase: true) == 0);
                 if (xlConditionalFormat != null)
                 {
                     var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
                     xlConditionalFormat.Colors.Add(negativeFillColor.ToClosedXMLColor());
+
+                    var dataBar = conditionalFormattingRule.Descendants<X14.DataBar>().SingleOrDefault();
+                    if (dataBar != null)
+                    {
+                        // Excel will not specify Gradient if it is true
+                        xlConditionalFormat.Gradient = dataBar.Gradient?.Value ?? true;
+                    }
                 }
             }
 

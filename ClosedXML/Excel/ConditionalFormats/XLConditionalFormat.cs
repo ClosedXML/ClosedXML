@@ -223,6 +223,8 @@ namespace ClosedXML.Excel
 
         public Boolean ShowBarOnly { get; set; }
 
+        public Boolean Gradient { get; set; }
+
         public Boolean StopIfTrue { get; set; }
 
         public IXLConditionalFormat SetStopIfTrue()
@@ -513,19 +515,21 @@ namespace ClosedXML.Excel
             return new XLCFColorScaleMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false, Boolean gradient = true)
         {
             Colors.Initialize(color);
             ShowBarOnly = showBarOnly;
+            Gradient = gradient;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false, Boolean gradient = true)
         {
             Colors.Initialize(positiveColor);
             Colors.Add(negativeColor);
             ShowBarOnly = showBarOnly;
+            Gradient = gradient;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }

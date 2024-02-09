@@ -129,9 +129,9 @@ namespace ClosedXML.Excel
 
         IXLCFColorScaleMin ColorScale();
 
-        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false, Boolean gradient = true);
 
-        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false, Boolean gradient = true);
 
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
@@ -146,6 +146,8 @@ namespace ClosedXML.Excel
         Boolean ShowIconOnly { get; }
 
         Boolean ShowBarOnly { get; }
+
+        Boolean Gradient { get; }
 
         Boolean StopIfTrue { get; }
 

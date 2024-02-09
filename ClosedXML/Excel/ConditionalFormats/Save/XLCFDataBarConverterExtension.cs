@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             {
                 MinLength = 0,
                 MaxLength = 100,
-                Gradient = true,
+                Gradient = cf.Gradient,
                 ShowValue = !cf.ShowBarOnly
             };
 
