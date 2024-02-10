@@ -237,6 +237,16 @@ namespace ClosedXML.Excel.IO
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
                         }
                     }
+
+                    foreach (var xlConditionalStyle in pt.ConditionalFormats)
+                    {
+                        var xlStyle = ((XLStyle)xlConditionalStyle.Format.Style);
+                        if (xlStyle.Value != XLStyleValue.Default &&
+                            !context.DifferentialFormats.ContainsKey(xlStyle.Value))
+                        {
+                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
+                        }
+                    }
                 }
             }
 

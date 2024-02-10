@@ -18,7 +18,7 @@ internal class PivotTableDefinitionPartReader
     /// </summary>
     private const int ValuesFieldIndex = -2;
 
-    internal static void Load(WorkbookPart workbookPart, Dictionary<int, DifferentialFormat> differentialFormats, PivotTablePart pivotTablePart, WorksheetPart worksheetPart, XLWorksheet ws)
+    internal static void Load(WorkbookPart workbookPart, Dictionary<int, DifferentialFormat> differentialFormats, PivotTablePart pivotTablePart, WorksheetPart worksheetPart, XLWorksheet ws, LoadContext context)
     {
         var workbook = ws.Workbook;
         var cache = pivotTablePart.PivotTableCacheDefinitionPart;
@@ -46,7 +46,7 @@ internal class PivotTableDefinitionPartReader
 
         if (target != null && pivotSource != null)
         {
-            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, differentialFormats);
+            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, differentialFormats, context);
             pt.TargetCell = target;
             ws.PivotTables.Add(pt);
 
@@ -500,7 +500,7 @@ internal class PivotTableDefinitionPartReader
     }
 
 #nullable enable
-    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache, Dictionary<int, DifferentialFormat> differentialFormats)
+    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
         // Load base attributes
         var xlPivotTable = LoadPivotTableAttributes(pivotTable, sheet, cache);
@@ -619,7 +619,8 @@ internal class PivotTableDefinitionPartReader
                 var scope = conditionalFormat.Scope?.Value.ToClosedXml() ?? XLPivotCfScope.SelectedCells;
                 var type = conditionalFormat.Type?.Value.ToClosedXml() ?? XLPivotCfRuleType.None;
                 var priority = conditionalFormat.Priority?.Value ?? throw PartStructureException.MissingAttribute();
-                var xlConditionalFormat = new XLPivotConditionalFormat
+                var format = context.GetPivotCf(sheet.Name, priority);
+                var xlConditionalFormat = new XLPivotConditionalFormat(format)
                 {
                     Scope = scope,
                     Type = type,

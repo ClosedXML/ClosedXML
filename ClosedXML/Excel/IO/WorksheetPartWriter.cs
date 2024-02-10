@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.IO
         {
             if (options.ConsolidateConditionalFormatRanges)
             {
-                ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+                xlWorksheet.ConditionalFormats.Consolidate();
             }
 
             #region Worksheet
@@ -621,7 +621,21 @@ namespace ClosedXML.Excel.IO
 
             #region Conditional Formatting
 
-            if (!xlWorksheet.ConditionalFormats.Any())
+            var xlSheetPivotCfs = xlWorksheet.PivotTables
+                .SelectMany<XLPivotTable, XLConditionalFormat>(pt => pt.ConditionalFormats.Select(cf => cf.Format))
+                .ToHashSet();
+
+            // Elements in sheet.ConditionalFormats were sorted according to priority during load,
+            // but new ones have priority 0. CFs are also interleaved with sheet CF. To deal with
+            // these situations, set correct unique priority (also required for pivot CF).
+            var xlConditionalFormats = xlWorksheet.ConditionalFormats.Cast<XLConditionalFormat>()
+                .Concat(xlSheetPivotCfs)
+                .OrderBy(x => x.OriginalPriority)
+                .ToList();
+            for (var i = 0; i < xlConditionalFormats.Count; ++i)
+                xlConditionalFormats[i].OriginalPriority = i + 1;
+
+            if (!xlConditionalFormats.Any())
             {
                 worksheet.RemoveAllChildren<ConditionalFormatting>();
                 cm.SetElement(XLWorksheetContents.ConditionalFormatting, null);
@@ -631,25 +645,28 @@ namespace ClosedXML.Excel.IO
                 worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.ConditionalFormatting);
 
-                var conditionalFormats = xlWorksheet.ConditionalFormats.ToList(); // Required for IndexOf method
-
-                foreach (var cfGroup in conditionalFormats
+                foreach (var cfGroup in xlConditionalFormats
                     .GroupBy(
-                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
+                        c => new
+                        {
+                            SeqRefs = string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
+                            IsPivot = xlSheetPivotCfs.Contains(c),
+                        },
                         c => c,
-                        (key, g) => new { RangeId = key, CfList = g.ToList() }
+                        (key, g) => new { key.SeqRefs, key.IsPivot, CfList = g.ToList() }
                     )
                     )
                 {
                     var conditionalFormatting = new ConditionalFormatting
                     {
                         SequenceOfReferences =
-                            new ListValue<StringValue> { InnerText = cfGroup.RangeId }
+                            new ListValue<StringValue> { InnerText = cfGroup.SeqRefs },
+                        Pivot = cfGroup.IsPivot ? true : null,
                     };
                     foreach (var cf in cfGroup.CfList)
                     {
-                        var priority = conditionalFormats.IndexOf(cf) + 1;
-                        conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                        var xlCf = XLCFConverters.Convert(cf, cf.OriginalPriority, context);
+                        conditionalFormatting.Append(xlCf);
                     }
                     worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
