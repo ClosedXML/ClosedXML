@@ -1916,7 +1916,7 @@ namespace ClosedXML.Excel
                 // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
                 if (fr.Type == null) continue;
                 conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
-                conditionalFormat.OriginalPriority = fr.Priority?.Value ?? Int32.MaxValue;
+                conditionalFormat.Priority = fr.Priority?.Value ?? Int32.MaxValue;
 
                 // Although formulas are directly used only by CellIs and Expression type, other
                 // format types also write them for evaluation to the workbook, e.g. rule to

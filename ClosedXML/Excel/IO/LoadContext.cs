@@ -27,7 +27,7 @@ internal class LoadContext
         if (!_pivotCfs.TryGetValue(sheetName, out var list))
             throw PartStructureException.ExpectedElementNotFound();
 
-        var pivotCf = list.SingleOrDefault(x => x.OriginalPriority == checked((int)priority));
+        var pivotCf = list.SingleOrDefault(x => x.Priority == checked((int)priority));
         return pivotCf ?? throw PartStructureException.ExpectedElementNotFound();
     }
 }
