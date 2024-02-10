@@ -992,7 +992,7 @@ namespace ClosedXML.Excel
         private static readonly IReadOnlyDictionary<PatternValues, XLFillPatternValues> PatternMap =
             new Dictionary<PatternValues, XLFillPatternValues>
             {
-                { PatternValues.DarkDown,  XLFillPatternValues.DarkDown },
+                { PatternValues.DarkDown, XLFillPatternValues.DarkDown },
                 { PatternValues.DarkGray, XLFillPatternValues.DarkGray },
                 { PatternValues.DarkGrid, XLFillPatternValues.DarkGrid },
                 { PatternValues.DarkHorizontal, XLFillPatternValues.DarkHorizontal },
@@ -1032,7 +1032,7 @@ namespace ClosedXML.Excel
                 { BorderStyleValues.MediumDashDotDot, XLBorderStyleValues.MediumDashDotDot },
                 { BorderStyleValues.MediumDashed, XLBorderStyleValues.MediumDashed },
                 { BorderStyleValues.None, XLBorderStyleValues.None },
-                { BorderStyleValues.SlantDashDot,XLBorderStyleValues.SlantDashDot },
+                { BorderStyleValues.SlantDashDot, XLBorderStyleValues.SlantDashDot },
                 { BorderStyleValues.Thick, XLBorderStyleValues.Thick },
                 { BorderStyleValues.Thin, XLBorderStyleValues.Thin },
             };
@@ -1298,7 +1298,7 @@ namespace ClosedXML.Excel
                 { ShowDataAsValues.Difference, XLPivotCalculation.DifferenceFrom },
                 { ShowDataAsValues.Percent, XLPivotCalculation.PercentageOf },
                 { ShowDataAsValues.PercentageDifference, XLPivotCalculation.PercentageDifferenceFrom },
-                { ShowDataAsValues.RunTotal,  XLPivotCalculation.RunningTotal },
+                { ShowDataAsValues.RunTotal, XLPivotCalculation.RunningTotal },
                 { ShowDataAsValues.PercentOfRaw, XLPivotCalculation.PercentageOfRow }, // There's a typo in the OpenXML SDK =)
                 { ShowDataAsValues.PercentOfColumn, XLPivotCalculation.PercentageOfColumn },
                 { ShowDataAsValues.PercentOfTotal, XLPivotCalculation.PercentageOfTotal },
@@ -1614,6 +1614,33 @@ namespace ClosedXML.Excel
         internal static XLPivotFormatAction ToClosedXml(this FormatActionValues value)
         {
             return FormatActionMap[value];
+        }
+
+        private static readonly IReadOnlyDictionary<ScopeValues, XLPivotCfScope> ScopeMap =
+            new Dictionary<ScopeValues, XLPivotCfScope>
+            {
+                { ScopeValues.Selection, XLPivotCfScope.SelectedCells },
+                { ScopeValues.Data, XLPivotCfScope.DataFields },
+                { ScopeValues.Field, XLPivotCfScope.FieldIntersections },
+            };
+
+        internal static XLPivotCfScope ToClosedXml(this ScopeValues value)
+        {
+            return ScopeMap[value];
+        }
+
+        private static readonly IReadOnlyDictionary<RuleValues, XLPivotCfRuleType> RuleMap =
+            new Dictionary<RuleValues, XLPivotCfRuleType>
+            {
+                { RuleValues.None, XLPivotCfRuleType.None },
+                { RuleValues.All, XLPivotCfRuleType.All },
+                { RuleValues.Row, XLPivotCfRuleType.Row },
+                { RuleValues.Column, XLPivotCfRuleType.Column },
+            };
+
+        internal static XLPivotCfRuleType ToClosedXml(this RuleValues value)
+        {
+            return RuleMap[value];
         }
 
         #endregion To ClosedXml

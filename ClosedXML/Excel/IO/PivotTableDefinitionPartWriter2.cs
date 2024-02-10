@@ -329,6 +329,54 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteEndElement(); // formats
         }
 
+        // Pivot table CF only specifies what should be formatted in PT. The actual CF
+        // specification is in sheet:conditionalFormatting that with a flag Pivot="1"
+        // and matching priority.
+        if (pt.ConditionalFormats.Count > 0)
+        {
+            xml.WriteStartElement("conditionalFormats", Main2006SsNs);
+            xml.WriteAttribute("count", pt.ConditionalFormats.Count);
+            foreach (var conditionalFormat in pt.ConditionalFormats)
+            {
+                xml.WriteStartElement("conditionalFormat", Main2006SsNs);
+                if (conditionalFormat.Scope != XLPivotCfScope.SelectedCells)
+                {
+                    var scopeAttr = conditionalFormat.Scope switch
+                    {
+                        XLPivotCfScope.SelectedCells => "selection",
+                        XLPivotCfScope.DataFields => "data",
+                        XLPivotCfScope.FieldIntersections => "field",
+                        _ => throw new UnreachableException(),
+                    };
+                    xml.WriteAttribute("scope", scopeAttr);
+                }
+
+                if (conditionalFormat.Type != XLPivotCfRuleType.None)
+                {
+                    var typeAttr = conditionalFormat.Type switch
+                    {
+                        XLPivotCfRuleType.All => "all",
+                        XLPivotCfRuleType.Column => "column",
+                        XLPivotCfRuleType.None => "none",
+                        XLPivotCfRuleType.Row => "row",
+                        _ => throw new UnreachableException(),
+                    };
+                    xml.WriteAttribute("type", typeAttr);
+                }
+
+                xml.WriteAttribute("priority", conditionalFormat.Priority);
+                xml.WriteStartElement("pivotAreas", Main2006SsNs);
+                xml.WriteAttribute("count", conditionalFormat.Areas.Count);
+                foreach (var pivotArea in conditionalFormat.Areas)
+                    WritePivotArea(xml, pivotArea);
+
+                xml.WriteEndElement(); // pivotAreas
+                xml.WriteEndElement(); // conditionalFormat
+            }
+
+            xml.WriteEndElement(); // conditionalFormats
+        }
+
         xml.WriteEndElement(); // pivotTableDefinition
     }
 

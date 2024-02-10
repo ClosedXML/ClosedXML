@@ -611,7 +611,34 @@ internal class PivotTableDefinitionPartReader
             }
         }
 
-        // TODO: conditionalFormats
+        var conditionalFormats = pivotTable.ConditionalFormats;
+        if (conditionalFormats is not null)
+        {
+            foreach (var conditionalFormat in conditionalFormats.Cast<ConditionalFormat>())
+            {
+                var scope = conditionalFormat.Scope?.Value.ToClosedXml() ?? XLPivotCfScope.SelectedCells;
+                var type = conditionalFormat.Type?.Value.ToClosedXml() ?? XLPivotCfRuleType.None;
+                var priority = conditionalFormat.Priority?.Value ?? throw PartStructureException.MissingAttribute();
+                var xlConditionalFormat = new XLPivotConditionalFormat
+                {
+                    Scope = scope,
+                    Type = type,
+                    Priority = priority,
+                };
+                var pivotAreas = conditionalFormat.PivotAreas;
+                if (pivotAreas is not null)
+                {
+                    foreach (var pivotArea in pivotAreas.Cast<PivotArea>())
+                    {
+                        var xlPivotArea = LoadPivotArea(pivotArea);
+                        xlConditionalFormat.AddArea(xlPivotArea);
+                    }
+                }
+
+                xlPivotTable.AddConditionalFormat(xlConditionalFormat);
+            }
+        }
+
         // TODO: chartFormats
         // pivotHierarchies is OLAP and thus for now out of scope.
         var pivotTableStyle = pivotTable.GetFirstChild<PivotTableStyle>();
