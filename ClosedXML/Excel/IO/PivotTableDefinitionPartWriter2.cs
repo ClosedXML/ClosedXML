@@ -364,7 +364,7 @@ internal class PivotTableDefinitionPartWriter2
                     xml.WriteAttribute("type", typeAttr);
                 }
 
-                xml.WriteAttribute("priority", conditionalFormat.Priority);
+                xml.WriteAttribute("priority", conditionalFormat.Format.Priority);
                 xml.WriteStartElement("pivotAreas", Main2006SsNs);
                 xml.WriteAttribute("count", conditionalFormat.Areas.Count);
                 foreach (var pivotArea in conditionalFormat.Areas)

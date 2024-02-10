@@ -619,12 +619,11 @@ internal class PivotTableDefinitionPartReader
                 var scope = conditionalFormat.Scope?.Value.ToClosedXml() ?? XLPivotCfScope.SelectedCells;
                 var type = conditionalFormat.Type?.Value.ToClosedXml() ?? XLPivotCfRuleType.None;
                 var priority = conditionalFormat.Priority?.Value ?? throw PartStructureException.MissingAttribute();
-                var format = context.GetPivotCf(sheet.Name, priority);
+                var format = context.GetPivotCf(sheet.Name, checked((int)priority));
                 var xlConditionalFormat = new XLPivotConditionalFormat(format)
                 {
                     Scope = scope,
                     Type = type,
-                    Priority = priority,
                 };
                 var pivotAreas = conditionalFormat.PivotAreas;
                 if (pivotAreas is not null)
