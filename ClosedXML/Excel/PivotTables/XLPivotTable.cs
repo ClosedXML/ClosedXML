@@ -18,6 +18,7 @@ namespace ClosedXML.Excel
         private readonly List<XLPivotDataField> _dataFields = new();
         private readonly List<XLPivotPageField> _pageFields = new();
         private readonly List<XLPivotFormat> _formats = new();
+        private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
 
         public XLPivotTable(IXLWorksheet worksheet)
         {
@@ -78,6 +79,8 @@ namespace ClosedXML.Excel
         internal IReadOnlyList<XLPivotDataField> DataFields => _dataFields;
 
         internal IReadOnlyList<XLPivotFormat> Formats => _formats;
+
+        internal IReadOnlyList<XLPivotConditionalFormat> ConditionalFormats => _conditionalFormats;
 
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
@@ -684,6 +687,11 @@ namespace ClosedXML.Excel
         internal void AddFormat(XLPivotFormat pivotFormat)
         {
             _formats.Add(pivotFormat);
+        }
+
+        internal void AddConditionalFormat(XLPivotConditionalFormat conditionalFormat)
+        {
+            _conditionalFormats.Add(conditionalFormat);
         }
 
         #region location
