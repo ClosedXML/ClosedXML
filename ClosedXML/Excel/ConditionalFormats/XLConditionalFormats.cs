@@ -4,11 +4,16 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// A container for conditional formatting of a <see cref="XLWorksheet"/>. It contains
+    /// a collection of <see cref="XLConditionalFormat"/>. Doesn't contain pivot table formats,
+    /// they are in pivot table <see cref="XLPivotTable.ConditionalFormats"/>,
+    /// </summary>
     internal class XLConditionalFormats : IXLConditionalFormats
     {
-        private readonly List<IXLConditionalFormat> _conditionalFormats = new List<IXLConditionalFormat>();
+        private readonly List<IXLConditionalFormat> _conditionalFormats = new();
 
-        private static readonly List<XLConditionalFormatType> _conditionalFormatTypesExcludedFromConsolidation = new List<XLConditionalFormatType>()
+        private static readonly List<XLConditionalFormatType> CFTypesExcludedFromConsolidation = new()
         {
             XLConditionalFormatType.DataBar,
             XLConditionalFormatType.ColorScale,
@@ -53,7 +58,7 @@ namespace ClosedXML.Excel
             {
                 var item = formats.First();
 
-                if (!_conditionalFormatTypesExcludedFromConsolidation.Contains(item.ConditionalFormatType))
+                if (!CFTypesExcludedFromConsolidation.Contains(item.ConditionalFormatType))
                 {
                     var rangesToJoin = new XLRanges();
                     item.Ranges.ForEach(r => rangesToJoin.Add(r));

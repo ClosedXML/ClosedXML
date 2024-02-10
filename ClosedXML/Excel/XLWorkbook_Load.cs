@@ -92,6 +92,7 @@ namespace ClosedXML.Excel
 
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
         {
+            var context = new LoadContext();
             ShapeIdManager = new XLIdManager();
             SetProperties(dSpreadsheet);
 
@@ -299,7 +300,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(DataValidations))
                             LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ConditionalFormatting))
-                            LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats);
+                            LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
                         else if (reader.ElementType == typeof(Hyperlinks))
                             LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                         else if (reader.ElementType == typeof(PrintOptions))
@@ -324,7 +325,7 @@ namespace ClosedXML.Excel
                     reader.Close();
                 }
 
-                (ws.ConditionalFormats as XLConditionalFormats).ReorderAccordingToOriginalPriority();
+                ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 
                 #region LoadTables
 
@@ -522,7 +523,7 @@ namespace ClosedXML.Excel
 
                     foreach (var pivotTablePart in worksheetPart.PivotTableParts)
                     {
-                        PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws);
+                        PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws, context);
                     }
                 }
             }
@@ -1890,7 +1891,7 @@ namespace ClosedXML.Excel
         /// </summary>
         // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
         private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
-            Dictionary<Int32, DifferentialFormat> differentialFormats)
+            Dictionary<Int32, DifferentialFormat> differentialFormats, LoadContext context)
         {
             if (conditionalFormatting == null) return;
 
@@ -2015,7 +2016,11 @@ namespace ClosedXML.Excel
                     ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
                 }
 
-                ws.ConditionalFormats.Add(conditionalFormat);
+                var isPivotTableFormatting = conditionalFormatting.Pivot?.Value ?? false;
+                if (isPivotTableFormatting)
+                    context.AddPivotTableCf(ws.Name, conditionalFormat);
+                else
+                    ws.ConditionalFormats.Add(conditionalFormat);
             }
         }
 

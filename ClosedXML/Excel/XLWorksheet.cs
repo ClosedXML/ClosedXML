@@ -1683,7 +1683,9 @@ namespace ClosedXML.Excel
 
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
 
-        public IXLConditionalFormats ConditionalFormats { get; private set; }
+        IXLConditionalFormats IXLWorksheet.ConditionalFormats => ConditionalFormats;
+
+        internal XLConditionalFormats ConditionalFormats { get; }
 
         public IXLSparklineGroups SparklineGroups => SparklineGroupsInternal;
 

@@ -9,6 +9,11 @@ internal class XLPivotConditionalFormat
 {
     private readonly List<XLPivotArea> _area = new();
 
+    internal XLPivotConditionalFormat(XLConditionalFormat format)
+    {
+        Format = format;
+    }
+
     /// <summary>
     /// An option to display in GUI on how to update <see cref="Areas"/>.
     /// </summary>
@@ -33,6 +38,11 @@ internal class XLPivotConditionalFormat
     /// <see cref="XLConditionalFormat.Ranges"/> that Excel actually uses to display CF.
     /// </summary>
     internal IReadOnlyList<XLPivotArea> Areas => _area;
+
+    /// <summary>
+    /// Conditional format applied to the <see cref="Areas"/>.
+    /// </summary>
+    internal XLConditionalFormat Format { get; }
 
     internal void AddArea(XLPivotArea pivotArea)
     {
