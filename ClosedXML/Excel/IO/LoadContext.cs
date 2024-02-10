@@ -22,12 +22,12 @@ internal class LoadContext
         list.Add(conditionalFormat);
     }
 
-    internal XLConditionalFormat GetPivotCf(string sheetName, uint priority)
+    internal XLConditionalFormat GetPivotCf(string sheetName, int priority)
     {
         if (!_pivotCfs.TryGetValue(sheetName, out var list))
             throw PartStructureException.ExpectedElementNotFound();
 
-        var pivotCf = list.SingleOrDefault(x => x.Priority == checked((int)priority));
+        var pivotCf = list.SingleOrDefault(x => x.Priority == priority);
         return pivotCf ?? throw PartStructureException.ExpectedElementNotFound();
     }
 }

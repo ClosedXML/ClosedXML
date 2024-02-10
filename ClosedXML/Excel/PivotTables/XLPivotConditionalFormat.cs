@@ -27,13 +27,6 @@ internal class XLPivotConditionalFormat
     internal XLPivotCfRuleType Type { get; init; } = XLPivotCfRuleType.None;
 
     /// <summary>
-    /// Specifies priority of CF. Pivot CF is ultimately part of sheet CFs and the priority
-    /// determines order of CF application (note that CF has <see cref="XLConditionalFormat.StopIfTrue"/>
-    /// flag).
-    /// </summary>
-    internal uint Priority { get; init; }
-
-    /// <summary>
     /// Areas of pivot table the rule should be applied. The areas are projected to the sheet
     /// <see cref="XLConditionalFormat.Ranges"/> that Excel actually uses to display CF.
     /// </summary>
@@ -42,6 +35,12 @@ internal class XLPivotConditionalFormat
     /// <summary>
     /// Conditional format applied to the <see cref="Areas"/>.
     /// </summary>
+    /// <remarks>
+    /// The <see cref="XLConditionalFormat.Priority"/> of the format is used as a identifier used
+    /// to connect pivot CF element and sheet CF element. Pivot CF is ultimately part of sheet CFs
+    /// and the priority determines order of CF application (note that CF has
+    /// <see cref="XLConditionalFormat.StopIfTrue"/> flag).
+    /// </remarks>
     internal XLConditionalFormat Format { get; }
 
     internal void AddArea(XLPivotArea pivotArea)
