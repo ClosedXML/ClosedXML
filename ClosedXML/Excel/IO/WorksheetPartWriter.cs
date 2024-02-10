@@ -630,10 +630,10 @@ namespace ClosedXML.Excel.IO
             // these situations, set correct unique priority (also required for pivot CF).
             var xlConditionalFormats = xlWorksheet.ConditionalFormats.Cast<XLConditionalFormat>()
                 .Concat(xlSheetPivotCfs)
-                .OrderBy(x => x.OriginalPriority)
+                .OrderBy(x => x.Priority)
                 .ToList();
             for (var i = 0; i < xlConditionalFormats.Count; ++i)
-                xlConditionalFormats[i].OriginalPriority = i + 1;
+                xlConditionalFormats[i].Priority = i + 1;
 
             if (!xlConditionalFormats.Any())
             {
@@ -665,7 +665,7 @@ namespace ClosedXML.Excel.IO
                     };
                     foreach (var cf in cfGroup.CfList)
                     {
-                        var xlCf = XLCFConverters.Convert(cf, cf.OriginalPriority, context);
+                        var xlCf = XLCFConverters.Convert(cf, cf.Priority, context);
                         conditionalFormatting.Append(xlCf);
                     }
                     worksheet.InsertAfter(conditionalFormatting, previousElement);

@@ -135,7 +135,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void ReorderAccordingToOriginalPriority()
         {
-            var reorderedFormats = _conditionalFormats.OrderBy(cf => ((XLConditionalFormat)cf).OriginalPriority).ToList();
+            var reorderedFormats = _conditionalFormats.OrderBy(cf => ((XLConditionalFormat)cf).Priority).ToList();
             _conditionalFormats.Clear();
             _conditionalFormats.AddRange(reorderedFormats);
         }
