@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel.IO;
@@ -25,9 +26,17 @@ internal class LoadContext
     internal XLConditionalFormat GetPivotCf(string sheetName, int priority)
     {
         if (!_pivotCfs.TryGetValue(sheetName, out var list))
-            throw PartStructureException.ExpectedElementNotFound();
+            throw PivotCfNotFoundException(sheetName, priority);
 
         var pivotCf = list.SingleOrDefault(x => x.Priority == priority);
-        return pivotCf ?? throw PartStructureException.ExpectedElementNotFound();
+        if (pivotCf is null)
+            throw PivotCfNotFoundException(sheetName, priority);
+
+        return pivotCf;
+    }
+
+    private static Exception PivotCfNotFoundException(string sheetName, int priority)
+    {
+        return PartStructureException.ExpectedElementNotFound($"conditional formatting for pivot table in sheet {sheetName} with priority {priority}");
     }
 }
