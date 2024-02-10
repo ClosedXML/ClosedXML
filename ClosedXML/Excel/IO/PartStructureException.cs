@@ -11,13 +11,19 @@ namespace ClosedXML.Excel.IO
     /// </summary>
     internal class PartStructureException : Exception
     {
-        private PartStructureException(string message) : base(message)
+        private PartStructureException(string message, string? detail = null)
+            : base(detail is null ? message : message[..^1] + " (" + detail + ").")
         {
         }
 
-        internal static Exception ExpectedElementNotFound()
+        /// <summary>
+        /// Create a new exception with info that some element that should be present in a workbook
+        /// is missing.
+        /// </summary>
+        /// <param name="missingElementDesc">optional info about what element is missing.</param>
+        internal static Exception ExpectedElementNotFound(string? missingElementDesc = null)
         {
-            return new PartStructureException("The structure of XML expected a certain kind of element, but it isn't there.");
+            return new PartStructureException("The structure of XML expected a certain kind of element, but it isn't there.", missingElementDesc);
         }
 
         internal static Exception IncorrectElementsCount()
