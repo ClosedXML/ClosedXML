@@ -53,20 +53,6 @@ internal class PivotTableDefinitionPartReader
             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
             pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(cache);
 
-            var pivotTableDefinitionExtensionList =
-                pivotTableDefinition.GetFirstChild<PivotTableDefinitionExtensionList>();
-            var pivotTableDefinitionExtension =
-                pivotTableDefinitionExtensionList?.GetFirstChild<PivotTableDefinitionExtension>();
-            var pivotTableDefinition2 = pivotTableDefinitionExtension
-                ?.GetFirstChild<DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition>();
-            if (pivotTableDefinition2 != null)
-            {
-                if (pivotTableDefinition2.EnableEdit != null)
-                    pt.EnableCellEditing = pivotTableDefinition2.EnableEdit.Value;
-                if (pivotTableDefinition2.HideValuesRow != null)
-                    pt.ShowValuesRow = !pivotTableDefinition2.HideValuesRow.Value;
-            }
-
             // Subtotal configuration
             if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf =>
                     (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
@@ -647,7 +633,7 @@ internal class PivotTableDefinitionPartReader
         // TODO: filters
         // rowHierarchiesUsage is OLAP and thus for now out of scope.
         // colHierarchiesUsage is OLAP and thus for now out of scope.
-        // TODO: extList
+        LoadExtensionList(pivotTable, xlPivotTable);
 
         return xlPivotTable;
     }
@@ -1077,6 +1063,19 @@ internal class PivotTableDefinitionPartReader
             xlPivotTable.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders?.Value ?? false;
             xlPivotTable.ShowRowStripes = pivotTableStyle.ShowRowStripes?.Value ?? false;
             xlPivotTable.ShowColumnStripes = pivotTableStyle.ShowColumnStripes?.Value ?? false;
+        }
+    }
+
+    private static void LoadExtensionList(PivotTableDefinition pivotTable, XLPivotTable xlPivotTable)
+    {
+        var extList = pivotTable.GetFirstChild<PivotTableDefinitionExtensionList>();
+        var ext2010 = extList?.GetFirstChild<PivotTableDefinitionExtension>();
+        var ptExt2010 = ext2010?.GetFirstChild<DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition>();
+        if (ptExt2010 is not null)
+        {
+            xlPivotTable.EnableCellEditing = ptExt2010.EnableEdit?.Value ?? false;
+            var hideValuesRow = ptExt2010.HideValuesRow?.Value ?? false;
+            xlPivotTable.ShowValuesRow = !hideValuesRow;
         }
     }
 }
