@@ -215,3 +215,13 @@ Worksheet
 
 Changing a worksheet name through ``IXLWorksheet.Name`` setter now also changes names in formulas
 and defined names that use the original sheet name.
+
+
+*********
+IXLConditionalFormat DataBar
+*********
+Methods on XLCFDataBarMax now return ``IXLCFDataBar`` rather than ``void``, to allow chaining new 
+DataBar properties.
+
+The method ``IXLConditionalFormat.DataBar`` has been renamed ``IXLConditionalFormat.AddDataBar``
+to allow for a new property by the name of ``DataBar`` that holds the DataBar Gradient property.

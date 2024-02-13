@@ -516,7 +516,7 @@ namespace ClosedXML.Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, true)
+            ws.RangeUsed().AddConditionalFormat().AddDataBar(XLColor.Red, true)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");
 
@@ -538,7 +538,7 @@ namespace ClosedXML.Examples
 
             ws.Range(ws.Cell(1, 1), ws.Cell(4, 1))
                 .AddConditionalFormat()
-                .DataBar(XLColor.Green, XLColor.Red, showBarOnly: false)
+                .AddDataBar(XLColor.Green, XLColor.Red, showBarOnly: false)
                 .LowestValue()
                 .HighestValue();
 
@@ -549,7 +549,7 @@ namespace ClosedXML.Examples
 
             ws.Range(ws.Cell(1, 3), ws.Cell(4, 3))
                 .AddConditionalFormat()
-                .DataBar(XLColor.Green, XLColor.Red, showBarOnly: true)
+                .AddDataBar(XLColor.Green, XLColor.Red, showBarOnly: true)
                 .Minimum(XLCFContentType.Number, -100)
                 .Maximum(XLCFContentType.Number, 100);
 
@@ -635,7 +635,7 @@ namespace ClosedXML.Examples
               .CellBelow().SetValue(3)
               .CellBelow().SetValue(4);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, XLColor.Green)
+            ws.RangeUsed().AddConditionalFormat().AddDataBar(XLColor.Red, XLColor.Green)
                 .LowestValue()
                 .HighestValue();
 
@@ -728,33 +728,33 @@ namespace ClosedXML.Examples
             ws.Range("A6:F6").Value = 4;
 
             ws.Cell("A1").Value = "Automatic";
-            ws.Range("A2:A6").AddConditionalFormat().DataBar(XLColor.Amber);
-            
+            ws.Range("A2:A6").AddConditionalFormat().AddDataBar(XLColor.Amber);
+
             ws.Cell("B1").Value = "Lowest/Highest";
-            ws.Range("B2:B6").AddConditionalFormat().DataBar(XLColor.BallBlue)
+            ws.Range("B2:B6").AddConditionalFormat().AddDataBar(XLColor.BallBlue)
                 .LowestValue()
                 .HighestValue();
 
             ws.Cell("C1").Value = "Value";
-            ws.Range("C2:C6").AddConditionalFormat().DataBar(XLColor.Cadet)
+            ws.Range("C2:C6").AddConditionalFormat().AddDataBar(XLColor.Cadet)
                 .Minimum(XLCFContentType.Number, 0)
                 .Maximum(XLCFContentType.Number, 10);
 
             ws.Cell("D1").Value = "Percent";
-            ws.Range("D2:D6").AddConditionalFormat().DataBar(XLColor.Desert)
+            ws.Range("D2:D6").AddConditionalFormat().AddDataBar(XLColor.Desert)
                 .Minimum(XLCFContentType.Percent, 50)
                 .Maximum(XLCFContentType.Percent, 100);
 
             ws.Cell("E1").Value = "Formula";
-            ws.Range("E2:E6").AddConditionalFormat().DataBar(XLColor.Ecru)
+            ws.Range("E2:E6").AddConditionalFormat().AddDataBar(XLColor.Ecru)
                 .Minimum(XLCFContentType.Formula, "-SUM($A$2:$E$2)")
                 .Maximum(XLCFContentType.Formula, "SUM($A$6:$E$6)");
 
             ws.Cell("F1").Value = "Percentile";
-            ws.Range("F2:F6").AddConditionalFormat().DataBar(XLColor.Fandango)
+            ws.Range("F2:F6").AddConditionalFormat().AddDataBar(XLColor.Fandango)
                 .Minimum(XLCFContentType.Percentile, 30)
                 .Maximum(XLCFContentType.Percentile, 70);
-            
+
             workbook.SaveAs(filePath);
         }
     }

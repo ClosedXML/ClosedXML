@@ -9,8 +9,10 @@ namespace ClosedXML.Excel
 {
     public interface IXLCFDataBarMax
     {
-        void Maximum(XLCFContentType type, String value);
-        void Maximum(XLCFContentType type, Double value);
-        void HighestValue();
+        IXLCFDataBar Maximum(XLCFContentType type, String value);
+
+        IXLCFDataBar Maximum(XLCFContentType type, Double value);
+
+        IXLCFDataBar HighestValue();
     }
 }

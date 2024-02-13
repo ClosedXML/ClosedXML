@@ -37,8 +37,8 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
 
-            ws.Range("D2:D3").AddConditionalFormat().DataBar(XLColor.Red).LowestValue().HighestValue();
-            ws.Range("B2:B3").AddConditionalFormat().DataBar(XLColor.Red).LowestValue().HighestValue();
+            ws.Range("D2:D3").AddConditionalFormat().AddDataBar(XLColor.Red).LowestValue().HighestValue();
+            ws.Range("B2:B3").AddConditionalFormat().AddDataBar(XLColor.Red).LowestValue().HighestValue();
             ws.Range("E2:E6").AddConditionalFormat().ColorScale().LowestValue(XLColor.Red).HighestValue(XLColor.Blue);
             ws.Range("F2:F6").AddConditionalFormat().ColorScale().LowestValue(XLColor.Red).HighestValue(XLColor.Blue);
             ws.Range("G2:G7").AddConditionalFormat().WhenIsUnique().Fill.SetBackgroundColor(XLColor.Blue);

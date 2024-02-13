@@ -227,6 +227,8 @@ namespace ClosedXML.Excel
 
         public Boolean ShowBarOnly { get; set; }
 
+        public IXLCFDataBar DataBar { get; set; }
+
         public Boolean StopIfTrue { get; set; }
 
         public IXLConditionalFormat SetStopIfTrue()
@@ -517,7 +519,7 @@ namespace ClosedXML.Excel
             return new XLCFColorScaleMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
+        public IXLCFDataBarMin AddDataBar(XLColor color, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
             ShowBarOnly = showBarOnly;
@@ -525,7 +527,7 @@ namespace ClosedXML.Excel
             return new XLCFDataBarMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
+        public IXLCFDataBarMin AddDataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
         {
             Colors.Initialize(positiveColor);
             Colors.Add(negativeColor);

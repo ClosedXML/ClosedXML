@@ -15,19 +15,21 @@ namespace ClosedXML.Excel
             _conditionalFormat = conditionalFormat;
         }
 
-        public void Maximum(XLCFContentType type, String value)
+        public IXLCFDataBar Maximum(XLCFContentType type, String value)
         {
             _conditionalFormat.ContentTypes.Add(type);
             _conditionalFormat.Values.Add(new XLFormula { Value = value });
-        }
-        public void Maximum(XLCFContentType type, Double value)
-        {
-            Maximum(type, value.ToInvariantString());
+            return new XLCFDataBar(_conditionalFormat);
         }
 
-        public void HighestValue()
+        public IXLCFDataBar Maximum(XLCFContentType type, Double value)
         {
-            Maximum(XLCFContentType.Maximum, "0");
+            return Maximum(type, value.ToInvariantString());
+        }
+
+        public IXLCFDataBar HighestValue()
+        {
+            return Maximum(XLCFContentType.Maximum, "0");
         }
     }
 }
