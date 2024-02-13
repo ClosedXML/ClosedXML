@@ -2073,7 +2073,8 @@ namespace ClosedXML.Excel
                     if (dataBar != null)
                     {
                         // Excel will not specify Gradient if it is true
-                        xlConditionalFormat.Gradient = dataBar.Gradient?.Value ?? true;
+                        xlConditionalFormat.DataBar = new XLCFDataBar(xlConditionalFormat);
+                        xlConditionalFormat.DataBar.SetGradient(dataBar.Gradient?.Value ?? true);
                     }
                 }
             }
