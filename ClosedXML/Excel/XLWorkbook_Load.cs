@@ -203,13 +203,10 @@ namespace ClosedXML.Excel
                 ColumnWidth = CalculateColumnWidth(8, Style.Font, this);
             }
 
-            // We don't want to trigger a NotifyWorksheetAdded on the workbook every time we add a new worksheet during
-            // the loading of the workbook, as that invalidates all the cached caculation values unnecessarily and can
-            // cause a large amount of time to be wasted during workbook loading. Large workbooks with many worksheets
-            // and many caculations were seeing 5-15% of load time being spent just being used marking calculations as
-            // dirty over and over again before this was disabled.
-            const bool notifyWorksheetsAdded = false;
-
+            // We loop through the sheets in 2 passes: first just to add the sheets and second to add all the data for the sheets.
+            // We do this mainly because it skips a very costly calculation invalidation step, but it also make things more consistent,
+            // e.g. when reading calculations that reference other sheets, we know that those sheets always already exist.
+            // That consistency point isn't required yet but could be taken advantage of in the future.
             var sheets = workbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
@@ -221,7 +218,7 @@ namespace ClosedXML.Excel
                 if (string.IsNullOrEmpty(dSheet.Id))
                 {
                     // Some non-Excel producers create sheets with empty relId.
-                    var emptySheet = WorksheetsInternal.Add(sheetName, position, sheetId, notifyWorksheetsAdded);
+                    var emptySheet = WorksheetsInternal.Add(sheetName, position, sheetId);
                     if (dSheet.State != null)
                         emptySheet.Visibility = dSheet.State.Value.ToClosedXml();
 
@@ -238,12 +235,41 @@ namespace ClosedXML.Excel
                     continue;
                 }
 
-                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
-                var ws = WorksheetsInternal.Add(sheetName, position, sheetId, notifyWorksheetsAdded);
+                var ws = WorksheetsInternal.Add(sheetName, position, sheetId);
                 ws.RelId = dSheet.Id;
 
                 if (dSheet.State != null)
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
+            }
+
+            position = 0;
+            foreach (var dSheet in sheets.OfType<Sheet>())
+            {
+                position++;
+                var sheetName = dSheet.Name;
+                var sheetId = dSheet.SheetId.Value;
+
+                if (string.IsNullOrEmpty(dSheet.Id))
+                {
+                    // Some non-Excel producers create sheets with empty relId.
+                    continue;
+                }
+
+                // Although relationship to worksheet is most common, there can be other types
+                // than worksheet, e.g. chartSheet. Since we can't load them, add them to list
+                // of unsupported sheets and copy them when saving. See Codeplex #6932.
+                var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+                if (worksheetPart == null)
+                {
+                    continue;
+                }
+
+                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
+                if (!WorksheetsInternal.TryGetWorksheet(sheetName, out var ws))
+                {
+                    // This shouldn't be possible, as all worksheets should have already been added in the loop before this loop
+                    continue;
+                }
 
                 ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
 
