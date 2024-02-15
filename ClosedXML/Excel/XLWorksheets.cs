@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -50,7 +51,7 @@ namespace ClosedXML.Excel
             return _worksheets.ContainsKey(sheetName);
         }
 
-        bool IXLWorksheets.TryGetWorksheet(string sheetName, out IXLWorksheet? worksheet)
+        bool IXLWorksheets.TryGetWorksheet(string sheetName, [NotNullWhen(true)] out IXLWorksheet? worksheet)
         {
             if (TryGetWorksheet(sheetName, out var foundSheet))
             {
@@ -62,7 +63,7 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        internal bool TryGetWorksheet(string sheetName, out XLWorksheet? worksheet)
+        internal bool TryGetWorksheet(string sheetName, [NotNullWhen(true)] out XLWorksheet? worksheet)
         {
             if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out worksheet))
             {
