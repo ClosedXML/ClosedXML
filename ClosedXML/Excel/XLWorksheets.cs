@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
             return Add(sheetName, position, GetNextSheetId());
         }
 
-        internal XLWorksheet Add(String sheetName, Int32 position, UInt32 sheetId, bool notifyWorksheetAdded = true)
+        internal XLWorksheet Add(String sheetName, Int32 position, UInt32 sheetId)
         {
             _worksheets.Values.Where(w => w._position >= position).ForEach(w => w._position += 1);
             _workbook.UnsupportedSheets.Where(w => w.Position >= position).ForEach(w => w.Position += 1);
@@ -129,20 +129,19 @@ namespace ClosedXML.Excel
             // If the loaded sheetId is greater than current, just make sure our next sheetId is even bigger.
             _nextSheetId = Math.Max(_nextSheetId, sheetId + 1);
             var sheet = new XLWorksheet(sheetName, _workbook, sheetId);
-            Add(sheetName, sheet, notifyWorksheetAdded);
+            Add(sheetName, sheet);
             sheet._position = position;
             return sheet;
         }
 
-        private void Add(String sheetName, XLWorksheet sheet, bool notifyWorksheetAdded = true)
+        private void Add(String sheetName, XLWorksheet sheet)
         {
             if (_worksheets.ContainsKey(sheetName))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", sheetName), nameof(sheetName));
 
             _worksheets.Add(sheetName, sheet);
 
-            if (notifyWorksheetAdded)
-                _workbook.NotifyWorksheetAdded(sheet);
+            _workbook.NotifyWorksheetAdded(sheet);
         }
 
         public void Delete(String sheetName)
