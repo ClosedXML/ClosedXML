@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Cells;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -190,6 +191,68 @@ namespace ClosedXML.Excel
             {
                 yield return value.GetCellValue(_stringStorage, _sharedItems);
             }
+        }
+
+        /// <summary>
+        /// Get or add a value to the shared items. Throw, if value is not in items.
+        /// </summary>
+        /// <returns>Index in shared items.</returns>
+        internal int GetOrAddSharedItem(XLCellValue value)
+        {
+            var sharedItemsIndex = SharedItems.IndexOf(value);
+            if (sharedItemsIndex >= 0)
+                return sharedItemsIndex;
+
+            // Not in shared items, make sure it actually is present.
+            var recordIndex = IndexOf(value);
+            if (recordIndex == -1)
+                throw new ArgumentException($"Value '{value}' not among cache field values.");
+
+            switch (value.Type)
+            {
+                case XLDataType.Blank:
+                    _sharedItems.AddMissing();
+                    break;
+                case XLDataType.Boolean:
+                    _sharedItems.AddBoolean(value.GetBoolean());
+                    break;
+                case XLDataType.Number:
+                    _sharedItems.AddNumber(value.GetNumber());
+                    break;
+                case XLDataType.Text:
+                    _sharedItems.AddString(value.GetText());
+                    break;
+                case XLDataType.Error:
+                    _sharedItems.AddError(value.GetError());
+                    break;
+                case XLDataType.DateTime:
+                    _sharedItems.AddDateTime(value.GetDateTime());
+                    break;
+                case XLDataType.TimeSpan:
+                    var timeSpan = value.GetTimeSpan().ToSerialDateTime().ToSerialDateTime();
+                    _sharedItems.AddDateTime(timeSpan);
+                    break;
+                default:
+                    throw new UnreachableException();
+            }
+
+            return _sharedItems.Count - 1;
+        }
+
+        /// <summary>
+        /// Get index of value or -1 if not among shared items.
+        /// </summary>
+        private int IndexOf(XLCellValue value)
+        {
+            for (var index = 0; index < _values.Count; ++index)
+            {
+                var recordValue = GetValue(index);
+                var cacheValue = recordValue.GetCellValue(_stringStorage, _sharedItems);
+                if (XLCellValueComparer.OrdinalIgnoreCase.Equals(cacheValue, value))
+                    return index;
+            }
+
+            return -1;
         }
 
         [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator", Justification = "double.IsInteger() in NET7 uses same method.")]

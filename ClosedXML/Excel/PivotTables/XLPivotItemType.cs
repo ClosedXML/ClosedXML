@@ -19,12 +19,13 @@ internal enum XLPivotItemType
     Blank,
 
     /// <summary>
-    /// The pivot item represents custom the "count" aggregate.
+    /// The pivot item represents custom the "count numbers" aggregate.
     /// </summary>
     Count,
 
     /// <summary>
-    /// The pivot item represents the "count numbers" aggregate function.
+    /// The pivot item represents the "count" aggregate function (i.e. number, text and everything
+    /// else, except blanks).
     /// </summary>
     CountA,
 

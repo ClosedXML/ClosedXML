@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel;
 
@@ -12,12 +13,24 @@ namespace ClosedXML.Excel;
 /// </remarks>
 internal class XLPivotTableField
 {
+    private readonly XLPivotTable _pivotTable;
     private readonly List<XLPivotFieldItem> _items = new();
+
+    public XLPivotTableField(XLPivotTable pivotTable)
+    {
+        _pivotTable = pivotTable;
+        ShowAll = false; // The XML default value is true, but Excel always has false, so let's follow Excel.
+        Subtotals.Add(XLSubtotalFunction.Automatic);
+    }
+
+    internal XLPivotTable PivotTable => _pivotTable;
 
     /// <summary>
     /// Pivot field item, doesn't contain value, only indexes to <see cref="XLPivotCache"/> shared items.
     /// </summary>
     internal IReadOnlyList<XLPivotFieldItem> Items => _items;
+
+    #region XML attributes
 
     /// <summary>
     /// Custom name of the field.
@@ -25,7 +38,7 @@ internal class XLPivotTableField
     /// <remarks>
     /// [MS-OI29500] Office requires @name to be unique for non-OLAP PivotTables.
     /// </remarks>
-    internal string? Name { get; init; }
+    internal string? Name { get; set; }
 
     /// <summary>
     /// If the value is set, the field must also be in <c>rowFields</c>/<c>colFields</c>/
@@ -35,11 +48,11 @@ internal class XLPivotTableField
     /// <remarks>
     /// [MS-OI29500] In Office, axisValues shall not be used for the axis attribute.
     /// </remarks>
-    internal XLPivotAxis? Axis { get; init; }
+    internal XLPivotAxis? Axis { get; set; }
 
     internal bool DataField { get; init; } = false;
 
-    internal string? SubtotalCaption { get; init; }
+    internal string SubtotalCaption { get; set; } = string.Empty;
 
     internal bool ShowDropDowns { get; init; } = true;
 
@@ -47,15 +60,18 @@ internal class XLPivotTableField
 
     internal string? UniqueMemberProperty { get; init; }
 
-    internal bool Compact { get; init; } = true;
+    internal bool Compact { get; set; } = true;
 
-    internal bool AllDrilled { get; init; } = false;
+    /// <summary>
+    /// Are all items expanded?
+    /// </summary>
+    internal bool AllDrilled { get; set; } = false;
 
     internal uint? NumberFormatId { get; init; }
 
-    internal bool Outline { get; init; } = true;
+    internal bool Outline { get; set; } = true;
 
-    internal bool SubtotalTop { get; init; } = true;
+    internal bool SubtotalTop { get; set; } = true;
 
     internal bool DragToRow { get; init; } = true;
 
@@ -69,13 +85,21 @@ internal class XLPivotTableField
 
     internal bool DragOff { get; init; } = true;
 
-    internal bool ShowAll { get; init; } = true;
+    /// <summary>
+    /// A flag that indicates whether to show all items for this field.
+    /// </summary>
+    internal bool ShowAll { get; set; } = true;
 
-    internal bool InsertBlankRow { get; init; } = false;
+    /// <summary>
+    /// Insert empty row below every item if the field is row/column axis. The last field in axis
+    /// doesn't add extra item at the end. If multiple fields in axis have extra item, only once
+    /// blank row is inserted.
+    /// </summary>
+    internal bool InsertBlankRow { get; set; } = false;
 
     internal bool ServerField { get; init; } = false;
 
-    internal bool InsertPageBreak { get; init; } = false;
+    internal bool InsertPageBreak { get; set; } = false;
 
     internal bool AutoShow { get; init; } = false;
 
@@ -85,11 +109,11 @@ internal class XLPivotTableField
 
     internal bool MeasureFilter { get; init; } = false;
 
-    internal bool IncludeNewItemsInFilter { get; init; } = false;
+    internal bool IncludeNewItemsInFilter { get; set; } = false;
 
     internal uint ItemPageCount { get; init; } = 10;
 
-    internal XLPivotSortType SortType { get; init; } = XLPivotSortType.Default;
+    internal XLPivotSortType SortType { get; set; } = XLPivotSortType.Default;
 
     internal bool? DataSourceSort { get; init; }
 
@@ -97,29 +121,7 @@ internal class XLPivotTableField
 
     internal uint? RankBy { get; init; }
 
-    internal bool DefaultSubtotal { get; init; } = true;
-
-    internal bool SumSubtotal { get; init; } = false;
-
-    internal bool CountASubtotal { get; init; } = false;
-
-    internal bool AvgSubtotal { get; init; } = false;
-
-    internal bool MaxSubtotal { get; init; } = false;
-
-    internal bool MinSubtotal { get; init; } = false;
-
-    internal bool ProductSubtotal { get; init; } = false;
-
-    internal bool CountSubtotal { get; init; } = false;
-
-    internal bool StdDevSubtotal { get; init; } = false;
-
-    internal bool StdDevPSubtotal { get; init; } = false;
-
-    internal bool VarSubtotal { get; init; } = false;
-
-    internal bool VarPSubtotal { get; init; } = false;
+    internal HashSet<XLSubtotalFunction> Subtotals { get; init; } = new();
 
     internal bool ShowPropCell { get; init; } = false;
 
@@ -128,6 +130,24 @@ internal class XLPivotTableField
     internal bool ShowPropAsCaption { get; init; } = false;
 
     internal bool DefaultAttributeDrillState { get; init; } = false;
+
+    /// <summary>
+    /// Are item labels on row/column axis repeated for each nested item?
+    /// </summary>
+    /// <remarks>
+    /// Also called <c>FillDownLabels</c>. Attribute is ignored if both the <see cref="Compact"/>
+    /// and the <see cref="Outline"/> are <c>true</c>. Attribute is ignored if the field is not on
+    /// the <see cref="XLPivotTable.RowAxis"/> or the <see cref="XLPivotTable.ColumnAxis"/>.
+    /// </remarks>
+    internal bool RepeatItemLabels { get; set; } = false;
+
+    #endregion XML attributes
+
+    internal bool Collapsed
+    {
+        get => !AllDrilled;
+        set => AllDrilled = !value;
+    }
 
     /// <summary>
     /// Add an item when it is used anywhere in the pivot table.
@@ -139,5 +159,45 @@ internal class XLPivotTableField
         var index = _items.Count;
         _items.Add(item);
         return (uint)index;
+    }
+
+    internal void AddSubtotal(XLSubtotalFunction value)
+    {
+        if (value == XLSubtotalFunction.None)
+            return;
+
+        Subtotals.Add(value);
+    }
+
+    internal void SetLayout(XLPivotLayout value)
+    {
+        switch (value)
+        {
+            case XLPivotLayout.Compact:
+                Outline = false;
+                Compact = true;
+                break;
+            case XLPivotLayout.Outline:
+                Compact = false;
+                Outline = true;
+                break;
+            case XLPivotLayout.Tabular:
+                Compact = false;
+                Outline = false;
+                break;
+            default:
+                throw new UnreachableException();
+        }
+    }
+
+    internal XLPivotFieldItem GetOrAddItem(XLCellValue value)
+    {
+        var index = _pivotTable.GetFieldIndex(this);
+        var cache = _pivotTable.PivotCache;
+        var cacheValues = cache.GetFieldValues(index);
+        var sharedItemIndex = cacheValues.GetOrAddSharedItem(value);
+        var newItem = new XLPivotFieldItem(this, sharedItemIndex);
+        _items.Add(newItem);
+        return newItem;
     }
 }

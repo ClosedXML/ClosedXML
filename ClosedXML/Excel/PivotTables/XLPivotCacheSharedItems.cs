@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ClosedXML.Excel.Cells;
 
 namespace ClosedXML.Excel
 {
@@ -87,6 +88,22 @@ namespace ClosedXML.Excel
         {
             var value = GetValue(index);
             return value.GetText(_stringStorage);
+        }
+
+        /// <summary>
+        /// Get index of value or -1 if not among shared items.
+        /// </summary>
+        internal int IndexOf(XLCellValue value)
+        {
+            for (var index = 0; index < _values.Count; ++index)
+            {
+                var sharedValue = _values[index];
+                var cacheValue = sharedValue.GetCellValue(_stringStorage, this);
+                if (XLCellValueComparer.OrdinalIgnoreCase.Equals(cacheValue, value))
+                    return index;
+            }
+
+            return -1;
         }
     }
 }
