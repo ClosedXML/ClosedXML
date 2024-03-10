@@ -539,9 +539,17 @@ namespace ClosedXML.Excel
                     pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(relId);
                 }
                 else
-                    pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
+                    pivotTablePart = (PivotTablePart)worksheetPart.GetPartById(pt.RelId);
 
-                PivotTableDefinitionPartWriter.GeneratePivotTablePartContent(workbookPart, pivotTablePart, pt, context);
+                var pivotSource = pt.PivotCache;
+                var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
+                if (!workbookPart.GetPartById(pivotSource.WorkbookCacheRelId).Equals(pivotTableCacheDefinitionPart))
+                {
+                    pivotTablePart.DeletePart(pivotTableCacheDefinitionPart);
+                    pivotTablePart.CreateRelationshipToPart(workbookPart.GetPartById(pivotSource.WorkbookCacheRelId), context.RelIdGenerator.GetNext(XLWorkbook.RelType.Workbook));
+                }
+
+                PivotTableDefinitionPartWriter2.WriteContent(pivotTablePart, pt, context);
             }
         }
 

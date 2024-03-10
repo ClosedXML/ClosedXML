@@ -31,7 +31,7 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteAttribute("name", pt.Name);
         xml.WriteAttribute("cacheId", pt.PivotCache.CacheId!.Value); // TODO: Maybe not nullable?
         xml.WriteAttributeDefault("dataOnRows", pt.DataOnRows, false);
-        xml.WriteAttributeOptional("dataPosition", pt.DataPosition);
+        xml.WriteAttributeOptional("dataPosition", pt.DataPosition is not null ? checked((int)pt.DataPosition) : null);
         xml.WriteAttributeOptional("autoFormatId", pt.AutoFormatId);
 
         // Although apply*Formats do have default value `false`, Excel always writes them.
@@ -166,18 +166,18 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteAttributeOptional("dataSourceSort", pf.DataSourceSort);
             xml.WriteAttributeDefault("nonAutoSortDefault", pf.NonAutoSortDefault, false);
             xml.WriteAttributeOptional("rankBy", pf.RankBy);
-            xml.WriteAttributeDefault("defaultSubtotal", pf.DefaultSubtotal, true);
-            xml.WriteAttributeDefault("sumSubtotal", pf.SumSubtotal, false);
-            xml.WriteAttributeDefault("countASubtotal", pf.CountASubtotal, false);
-            xml.WriteAttributeDefault("avgSubtotal", pf.AvgSubtotal, false);
-            xml.WriteAttributeDefault("maxSubtotal", pf.MaxSubtotal, false);
-            xml.WriteAttributeDefault("minSubtotal", pf.MinSubtotal, false);
-            xml.WriteAttributeDefault("productSubtotal", pf.ProductSubtotal, false);
-            xml.WriteAttributeDefault("countSubtotal", pf.CountSubtotal, false);
-            xml.WriteAttributeDefault("stdDevSubtotal", pf.StdDevSubtotal, false);
-            xml.WriteAttributeDefault("stdDevPSubtotal", pf.StdDevPSubtotal, false);
-            xml.WriteAttributeDefault("varSubtotal", pf.VarSubtotal, false);
-            xml.WriteAttributeDefault("varPSubtotal", pf.VarPSubtotal, false);
+            xml.WriteAttributeDefault("defaultSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Automatic), true);
+            xml.WriteAttributeDefault("sumSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Sum), false);
+            xml.WriteAttributeDefault("countASubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Count), false);
+            xml.WriteAttributeDefault("avgSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Average), false);
+            xml.WriteAttributeDefault("maxSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Maximum), false);
+            xml.WriteAttributeDefault("minSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Minimum), false);
+            xml.WriteAttributeDefault("productSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Product), false);
+            xml.WriteAttributeDefault("countSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.CountNumbers), false);
+            xml.WriteAttributeDefault("stdDevSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.StandardDeviation), false);
+            xml.WriteAttributeDefault("stdDevPSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.PopulationStandardDeviation), false);
+            xml.WriteAttributeDefault("varSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Variance), false);
+            xml.WriteAttributeDefault("varPSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.PopulationVariance), false);
             xml.WriteAttributeDefault("showPropCell", pf.ShowPropCell, false);
             xml.WriteAttributeDefault("showPropTip", pf.ShowPropTip, false);
             xml.WriteAttributeDefault("showPropAsCaption", pf.ShowPropAsCaption, false);
@@ -377,7 +377,47 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteEndElement(); // conditionalFormats
         }
 
+        var hasDefaultTheme =
+            pt.Theme == XLPivotTableTheme.None &&
+            pt.ShowRowHeaders == false &&
+            pt.ShowColumnHeaders == false &&
+            pt.ShowRowStripes == false &&
+            pt.ShowColumnStripes == false &&
+            pt.ShowLastColumn == false;
+        if (!hasDefaultTheme)
+        {
+            xml.WriteStartElement("pivotTableStyleInfo", Main2006SsNs);
+            if (pt.Theme != XLPivotTableTheme.None)
+                xml.WriteAttribute("name", pt.Theme.ToString());
+
+            xml.WriteAttributeDefault("showRowHeaders", pt.ShowRowHeaders, false);
+            xml.WriteAttributeDefault("showColHeaders", pt.ShowColumnHeaders, false);
+            xml.WriteAttributeDefault("showRowStripes", pt.ShowRowStripes, false);
+            xml.WriteAttributeDefault("showColStripes", pt.ShowColumnStripes, false);
+            xml.WriteAttributeDefault("showLastColumn", pt.ShowLastColumn, false);
+            xml.WriteEndElement(); // pivotTableStyleInfo
+        }
+
+        // Because extensions are pretty large, always write them.
+        xml.WriteStartElement("extLst");
+
+        {
+            // See [MS-XLSX] 2.2.4.5 Pivot Table
+            xml.WriteStartElement("ext", Main2006SsNs);
+            xml.WriteAttributeString("xmlns", "x14", null, X14Main2009SsNs);
+            xml.WriteAttributeString("uri", "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}");
+            xml.WriteStartElement( "pivotTableDefinition", X14Main2009SsNs);
+            xml.WriteAttribute("enableEdit", pt.EnableCellEditing);
+            xml.WriteAttribute("hideValuesRow", !pt.ShowValuesRow);
+            xml.WriteEndElement(); // pivotTableDefinition
+            xml.WriteEndElement(); // ext
+        }
+
+        xml.WriteEndElement(); // extList
+
         xml.WriteEndElement(); // pivotTableDefinition
+
+        xml.Close();
     }
 
     private static void WriteAxis(XmlWriter xml, XLPivotTableAxis axis, string fieldsElement, string itemsElement)

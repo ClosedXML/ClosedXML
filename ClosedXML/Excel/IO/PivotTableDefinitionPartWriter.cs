@@ -10,7 +10,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using static ClosedXML.Excel.XLWorkbook;
-
+/*
 namespace ClosedXML.Excel.IO
 {
     internal class PivotTableDefinitionPartWriter
@@ -754,3 +754,4 @@ namespace ClosedXML.Excel.IO
         }
     }
 }
+*/

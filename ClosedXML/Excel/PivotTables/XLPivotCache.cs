@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     internal class XLPivotCache : IXLPivotCache
     {
         private readonly XLWorkbook _workbook;
-        private readonly Dictionary<String, Int32> _fieldIndexes = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, Int32> _fieldIndexes = new(XLHelper.NameComparer);
         private readonly List<String> _fieldNames = new();
 
         /// <summary>
@@ -104,7 +104,20 @@ namespace ClosedXML.Excel
                 AddField(AdjustedFieldName(header), fieldRecords);
             }
 
+            UpdatePivotTables();
             return this;
+
+            void UpdatePivotTables()
+            {
+                foreach (var worksheet in _workbook.WorksheetsInternal)
+                {
+                    foreach (var pivotTable in worksheet.PivotTables)
+                    {
+                        if (pivotTable.PivotCache == this)
+                            pivotTable.UpdateCacheFields();
+                    }
+                }
+            }
         }
 
         public IXLPivotCache SetItemsToRetainPerField(XLItemsToRetain value) { ItemsToRetainPerField = value; return this; }

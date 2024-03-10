@@ -12,37 +12,48 @@ namespace ClosedXML.Excel
     internal class XLPivotTable : IXLPivotTable
     {
         private String _name;
-        public Guid Guid { get; }
-
         private readonly List<XLPivotTableField> _fields = new();
         private readonly List<XLPivotDataField> _dataFields = new();
         private readonly List<XLPivotPageField> _pageFields = new();
         private readonly List<XLPivotFormat> _formats = new();
         private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
+        private XLPivotCache _cache;
 
-        public XLPivotTable(IXLWorksheet worksheet)
+        internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
-            this.Guid = Guid.NewGuid();
+            Worksheet = worksheet;
+            Guid = Guid.NewGuid();
 
-            ReportFilters = new XLPivotFields(this);
-            ColumnLabels = new XLPivotFields(this);
-            RowLabels = new XLPivotFields(this);
+            Filters = new XLPivotTableFilters(this);
+            RowAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisRow);
+            ColumnAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisCol);
             Values = new XLPivotValues(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
-            RowAxis = new XLPivotTableAxis(this);
-            ColumnAxis = new XLPivotTableAxis(this);
+            _cache = cache;
 
             SetExcelDefaults();
         }
 
         IXLPivotCache IXLPivotTable.PivotCache { get => PivotCache; set => PivotCache = (XLPivotCache)value; }
         public IXLCell TargetCell { get; set; }
-        public XLPivotCache PivotCache { get; set; }
-        public IXLPivotFields ReportFilters { get; private set; }
-        public IXLPivotFields ColumnLabels { get; private set; }
-        public IXLPivotFields RowLabels { get; private set; }
-        public IXLPivotValues Values { get; private set; }
+
+        public XLPivotCache PivotCache
+        {
+            get => _cache;
+            set
+            {
+                _cache = value;
+                UpdateCacheFields();
+            }
+        }
+
+        public IXLPivotFields ReportFilters => Filters;
+
+        public IXLPivotFields ColumnLabels => ColumnAxis;
+
+        public IXLPivotFields RowLabels => RowAxis;
+
+        public IXLPivotValues Values { get; }
 
         public IEnumerable<IXLPivotField> ImplementedFields
         {
@@ -50,10 +61,10 @@ namespace ClosedXML.Excel
             {
                 foreach (var pf in ReportFilters)
                     yield return pf;
-
+                
                 foreach (var pf in RowLabels)
                     yield return pf;
-
+                
                 foreach (var pf in ColumnLabels)
                     yield return pf;
             }
@@ -70,6 +81,8 @@ namespace ClosedXML.Excel
         /// </summary>
         internal IReadOnlyList<XLPivotTableField> PivotFields => _fields;
 
+        internal XLPivotTableFilters Filters { get; }
+
         internal XLPivotTableAxis RowAxis { get; }
 
         internal XLPivotTableAxis ColumnAxis { get; }
@@ -81,6 +94,8 @@ namespace ClosedXML.Excel
         internal IReadOnlyList<XLPivotFormat> Formats => _formats;
 
         internal IReadOnlyList<XLPivotConditionalFormat> ConditionalFormats => _conditionalFormats;
+
+        internal Guid Guid { get; }
 
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
@@ -185,11 +200,6 @@ namespace ClosedXML.Excel
             // TODO: Copy Styleformats
 
             return newPivotTable;
-        }
-
-        public IXLPivotTable SetTheme(XLPivotTableTheme value)
-        {
-            Theme = value; return this;
         }
 
         public String Name
@@ -577,6 +587,11 @@ namespace ClosedXML.Excel
             ShowColumnStripes = value; return this;
         }
 
+        /// <summary>
+        /// Part of the pivot table style.
+        /// </summary>
+        internal Boolean ShowLastColumn { get; set; } = false;
+
         public XLPivotSubtotals Subtotals { get; set; }
 
         public IXLPivotTable SetSubtotals(XLPivotSubtotals value)
@@ -659,13 +674,14 @@ namespace ClosedXML.Excel
                 foreach (var styleFormat in this.StyleFormats.ColumnGrandTotalFormats)
                     yield return styleFormat;
 
-                foreach (var pivotField in ImplementedFields)
-                {
-                    yield return pivotField.StyleFormats.Subtotal;
-                    yield return pivotField.StyleFormats.Header;
-                    yield return pivotField.StyleFormats.Label;
-                    yield return pivotField.StyleFormats.DataValuesFormat;
-                }
+                // TODO: Skipped for now, until I implement stubs
+                //foreach (var pivotField in ImplementedFields)
+                //{
+                //    yield return pivotField.StyleFormats.Subtotal;
+                //    yield return pivotField.StyleFormats.Header;
+                //    yield return pivotField.StyleFormats.Label;
+                //    yield return pivotField.StyleFormats.DataValuesFormat;
+                //}
             }
         }
 #nullable enable
@@ -702,7 +718,7 @@ namespace ClosedXML.Excel
         /// <see cref="RowPageCount"/> and <see cref="ColumnPageCount"/>
         /// </summary>
         /// <remarks>Not kept in sync with <see cref="TargetCell"/>.</remarks>
-        internal XLSheetRange Area { get; set; }
+        internal XLSheetRange Area { get; set; } = new XLSheetRange(1, 1, 1, 1); // TODO: Sync with targetCell
 
         /// <summary>
         /// First row of pivot table header, relative to the <see cref="Area"/>.
@@ -735,14 +751,14 @@ namespace ClosedXML.Excel
 
         #region Attributes of PivotTableDefinition in same order as XSD
 
-        internal bool DataOnRows { get; init; } = false;
+        internal bool DataOnRows { get; set; } = false;
 
         /// <summary>
         /// Determines the default 'data' field position, when it is automatically added to row/column fields.
         /// 0 = first (e.g. before all column/row fields), 1 = second (i.e. after first row/column field) and so on.
         /// &gt; number of fields or <c>null</c> indicates the last position.
         /// </summary>
-        internal uint? DataPosition { get; init; }
+        internal int? DataPosition { get; set; }
 
         /// <summary>
         /// <para>
@@ -795,9 +811,10 @@ namespace ClosedXML.Excel
         internal bool ApplyWidthHeightFormats { get; init; } = false;
 
         /// <summary>
-        /// Initial text of 'data' field.
+        /// Initial text of 'data' field. This is doesn't do anything, Excel always displays
+        /// dynamically a text 'Values', translated to current culture.
         /// </summary>
-        internal string DataCaption { get; init; }
+        internal string DataCaption { get; set; } = "Values";
 
         internal string? GrandTotalCaption { get; init; }
 
@@ -1185,5 +1202,180 @@ namespace ClosedXML.Excel
         public Boolean UseCustomListsForSorting { get; set; }
 
         #endregion
+
+        internal FieldIndex AddFieldToAxis(string sourceName, string customName, XLPivotAxis axis)
+        {
+            if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
+            {
+                if (axis != XLPivotAxis.AxisRow && axis != XLPivotAxis.AxisCol)
+                    throw new ArgumentException("Data field can be used only on row or column axis.", nameof(sourceName));
+
+                if (RowAxis.ContainsDataField || ColumnAxis.ContainsDataField)
+                    throw new ArgumentException("Data field is already used.", nameof(sourceName));
+
+                var isRowAxis = axis == XLPivotAxis.AxisRow;
+
+                DataOnRows = isRowAxis;
+                DataPosition = isRowAxis ? RowAxis.Fields.Count : ColumnAxis.Fields.Count;
+                DataCaption = "Values"; // Custom captions don't do anything.
+                return FieldIndex.DataField;
+            }
+
+            var index = GetUnusedFieldIndex(sourceName, customName);
+            var field = _fields[index];
+            field.Name = customName;
+            field.Axis = axis;
+
+            // If it is an axis, all possible values to field items, because they should be referenced in items.
+            if (axis is XLPivotAxis.AxisRow or XLPivotAxis.AxisCol)
+            {
+                var sharedItems = _cache.GetFieldSharedItems(index);
+                for (var i = 0; i < sharedItems.Count; ++i)
+                {
+                    // TODO: use distinct
+                    field.AddItem(new XLPivotFieldItem(field, i));
+                }
+
+                // Subtotal items must be synchronized with subtotals. If field has a an item for
+                // subtotal function, but doesn't declare subtotals function, Excel will try to
+                // repair workbook. Subtotal items can be in any order.
+                foreach (var subtotalFunction in field.Subtotals.Where(x => x != XLSubtotalFunction.None))
+                {
+                    var itemType = subtotalFunction switch
+                    {
+                        XLSubtotalFunction.Automatic => XLPivotItemType.Default,
+                        XLSubtotalFunction.Sum => XLPivotItemType.Sum,
+                        XLSubtotalFunction.Count => XLPivotItemType.CountA,
+                        XLSubtotalFunction.Average => XLPivotItemType.Avg,
+                        XLSubtotalFunction.Minimum => XLPivotItemType.Min,
+                        XLSubtotalFunction.Maximum => XLPivotItemType.Max,
+                        XLSubtotalFunction.Product => XLPivotItemType.Product,
+                        XLSubtotalFunction.CountNumbers => XLPivotItemType.Count,
+                        XLSubtotalFunction.StandardDeviation => XLPivotItemType.StdDev,
+                        XLSubtotalFunction.PopulationStandardDeviation => XLPivotItemType.StdDevP,
+                        XLSubtotalFunction.Variance => XLPivotItemType.Var,
+                        XLSubtotalFunction.PopulationVariance => XLPivotItemType.VarP,
+                        _ => throw new UnreachableException(),
+                    };
+                    field.AddItem(new XLPivotFieldItem(field, null) { ItemType = itemType });
+                }
+            }
+
+            return index;
+        }
+
+        internal void RemoveFieldFromAxis(FieldIndex index)
+        {
+            if (index.IsDataField)
+            {
+                DataOnRows = false;
+                DataPosition = null;
+                DataCaption = "Values";
+            }
+            else
+            {
+                var field = _fields[index];
+                field.Name = null;
+                field.Axis = null;
+            }
+        }
+
+        internal bool TryGetSourceNameFieldIndex(String sourceName, out FieldIndex index)
+        {
+            if (XLHelper.NameComparer.Equals(sourceName, XLConstants.PivotTable.ValuesSentinalLabel))
+            {
+                index = FieldIndex.DataField;
+                return true;
+            }
+
+            if (PivotCache.TryGetFieldIndex(sourceName, out var fldIndex))
+            {
+                index = fldIndex;
+                return true;
+            }
+
+            index = default;
+            return false;
+        }
+
+        internal bool TryGetCustomNameFieldIndex(String customName, out FieldIndex index)
+        {
+            var comparer = XLHelper.NameComparer;
+            if (comparer.Equals(customName, XLConstants.PivotTable.ValuesSentinalLabel))
+            {
+                index = FieldIndex.DataField;
+                return true;
+            }
+
+            var allFields = PivotFields;
+            for (var i = 0; i < allFields.Count; ++i)
+            {
+                if (comparer.Equals(customName, allFields[i].Name))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            index = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Get index of a <paramref name="sourceName"/> field. If the field is already used
+        /// in any area, throw. If <paramref name="customName"/> is already used somewhere, throw.
+        /// </summary>
+        /// <param name="sourceName">Name of a field in <see cref="XLPivotCache"/>.</param>
+        /// <param name="customName">Proposed custom name of the field.</param>
+        /// <exception cref="InvalidOperationException">If field of custom name is already used.</exception>
+        private FieldIndex GetUnusedFieldIndex(string sourceName, string customName)
+        {
+            if (!PivotCache.TryGetFieldIndex(sourceName, out var fieldIndex))
+                throw new InvalidOperationException($"Field '{sourceName}' not found in pivot cache.");
+
+            // Check actual fields.
+            var customNameUsed = _fields.Any(f => XLHelper.NameComparer.Equals(f.Name, customName));
+            if (customNameUsed)
+                throw new InvalidOperationException($"Custom name '{customName}' is already used.");
+
+            return fieldIndex;
+        }
+
+        /// <summary>
+        /// Refresh cache fields after cache has changed.
+        /// </summary>
+        internal void UpdateCacheFields()
+        {
+            // TODO: Although this deserves far better implementation, at least don't crash.
+            Filters.Clear();
+            RowAxis.Clear();
+            ColumnAxis.Clear();
+            _dataFields.Clear();
+
+            _fields.Clear();
+            foreach (var field in PivotCache.FieldNames)
+                _fields.Add(new XLPivotTableField(this));
+        }
+
+        /// <summary>
+        /// Is field used by any axis (row, column, filter), but not data.
+        /// </summary>
+        internal bool IsFieldUsedOnAxis(FieldIndex fieldIndex)
+        {
+            if (fieldIndex.IsDataField)
+                return DataPosition is null;
+
+            return !RowAxis.Fields.Contains(fieldIndex) &&
+                   !ColumnAxis.Fields.Contains(fieldIndex) &&
+                   !Filters.Fields.Contains(fieldIndex);
+        }
+
+        internal int GetFieldIndex(XLPivotTableField field)
+        {
+            var index = _fields.IndexOf(field);
+            if (index < 0)
+                throw new ArgumentException($"Unable to find field '{field.Name}'.");
+            return index;
+        }
     }
 }

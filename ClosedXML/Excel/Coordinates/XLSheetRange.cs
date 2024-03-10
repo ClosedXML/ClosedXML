@@ -8,7 +8,12 @@ namespace ClosedXML.Excel
     /// </summary>
     internal readonly struct XLSheetRange : IEquatable<XLSheetRange>
     {
-        public XLSheetRange(XLSheetPoint firstPoint, XLSheetPoint lastPoint)
+        internal XLSheetRange(XLSheetPoint point)
+            : this(point, point)
+        {
+        }
+
+        internal XLSheetRange(XLSheetPoint firstPoint, XLSheetPoint lastPoint)
         {
             FirstPoint = firstPoint;
             LastPoint = lastPoint;

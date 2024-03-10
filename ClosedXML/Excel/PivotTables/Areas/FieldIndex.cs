@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel;
 
@@ -6,6 +7,7 @@ namespace ClosedXML.Excel;
 /// A type for field index, so there is a better idea what is a semantic content of some
 /// variable/props. Not detrimental to performance, JIT will inline struct to int.
 /// </summary>
+[DebuggerDisplay("{Value}")]
 internal readonly record struct FieldIndex
 {
     internal FieldIndex(int value)
@@ -17,9 +19,20 @@ internal readonly record struct FieldIndex
     }
 
     /// <summary>
-    /// Index of a field in <see cref="XLPivotTable.PivotFields"/>. Can be -2 for 'data' field.
+    /// The index of a 'data' field (<see cref="XLConstants.PivotTable.ValuesSentinalLabel"/>).
     /// </summary>
-    public int Value { get; }
+    internal static FieldIndex DataField => -2;
+
+    /// <summary>
+    /// Index of a field in <see cref="XLPivotTable.PivotFields"/>. Can be -2 for 'data' field,
+    /// otherwise non-negative.
+    /// </summary>
+    internal int Value { get; }
+
+    /// <summary>
+    /// Is this index for a 'data' field?
+    /// </summary>
+    internal bool IsDataField => Value == -2;
 
     public static implicit operator int(FieldIndex index) => index.Value;
 

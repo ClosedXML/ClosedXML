@@ -6,7 +6,7 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class XLPivotDataField
 {
-    public XLPivotDataField(uint field)
+    internal XLPivotDataField(uint field)
     {
         Field = field;
     }
@@ -14,7 +14,7 @@ internal class XLPivotDataField
     /// <summary>
     /// Custom name of the data field (e.g. <em>Sum of Sold</em>).
     /// </summary>
-    public string? DataFieldName { get; init; }
+    internal string? DataFieldName { get; init; }
 
     /// <summary>
     /// Field index to <see cref="XLPivotTable.PivotFields"/>.
@@ -23,7 +23,7 @@ internal class XLPivotDataField
     /// Unlike axis, this field index can't be <c>-2</c> for data fields. That field can't be in
     /// the data area.
     /// </remarks>
-    public uint Field { get; }
+    internal uint Field { get; }
 
     /// <summary>
     /// An aggregation function that calculates the value to display in the data cells of pivot area.
@@ -50,7 +50,7 @@ internal class XLPivotDataField
     public uint BaseItem { get; init; } = 1048832;
 
     /// <summary>
-    /// Formatting to apply to the data field. If <see cref="XLPivotFormat"/> disagree, it has precedence.
+    /// Formatting to apply to the data field. If <see cref="XLPivotFormat"/> disagree, this has precedence.
     /// </summary>
     public uint? NumberFormatId { get; init; }
 }

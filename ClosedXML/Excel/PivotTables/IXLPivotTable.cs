@@ -9,7 +9,15 @@ namespace ClosedXML.Excel
         XLPivotTableTheme Theme { get; set; }
 
         IXLPivotFields ReportFilters { get; }
+
+        /// <summary>
+        /// Labels displayed in columns (i.e. horizontal axis) of the pivot table.
+        /// </summary>
         IXLPivotFields ColumnLabels { get; }
+
+        /// <summary>
+        /// Labels displayed in rows (i.e. vertical axis) of the pivot table.
+        /// </summary>
         IXLPivotFields RowLabels { get; }
         IXLPivotValues Values { get; }
 
