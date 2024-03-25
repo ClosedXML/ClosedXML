@@ -444,6 +444,15 @@ namespace ClosedXML.Tests
         }
 
         [Test]
+        public void TryGetValue_TimeSpan_Good2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            bool success = ws.Cell("A1").SetValue(0.0034722222222222199).TryGetValue(out TimeSpan outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(TimeSpan.FromMinutes(5), outValue);
+        }
+
+        [Test]
         public void TryGetValue_TimeSpan_Good_Large()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
