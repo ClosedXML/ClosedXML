@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
 
         public static TimeSpan ToSerialTimeSpan(this Double value)
         {
-            return new TimeSpan((long)(TimeSpan.TicksPerDay * value));
+            return XLHelper.GetTimeSpan(value);
         }
 
         public static DateTime ToSerialDateTime(this Double value)
