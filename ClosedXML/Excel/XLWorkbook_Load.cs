@@ -224,12 +224,13 @@ namespace ClosedXML.Excel
                 // Although relationship to worksheet is most common, there can be other types
                 // than worksheet, e.g. chartSheet. Since we can't load them, add them to list
                 // of unsupported sheets and copy them when saving. See Codeplex #6932.
-                if (!(workbookPart.GetPartById(dSheet.Id) is WorksheetPart))
+                var part = workbookPart.GetPartById(dSheet.Id);
+                if (!(part is WorksheetPart))
                 {
                     UnsupportedSheets.Add(new UnsupportedSheet { SheetId = sheetId, Position = position });
                     continue;
                 }
-                var worksheetPart = workbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+                var worksheetPart = part as WorksheetPart;
 
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
                 var ws = WorksheetsInternal.Add(sheetName, position, sheetId);
