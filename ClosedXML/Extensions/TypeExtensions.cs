@@ -3,13 +3,23 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 
-namespace ClosedXML.Excel
+namespace workbook.Excel
 {
     internal static class TypeExtensions
     {
         public static Type GetUnderlyingType(this Type type)
         {
             return Nullable.GetUnderlyingType(type) ?? type;
+        }
+
+        public static bool IsBasicType(this Type type)
+        {
+            return type.IsSimpleType()
+                   || type == typeof(DateTime?)
+                   || type == typeof(TimeSpan?)
+                   || type.IsEnum
+                   || (Nullable.GetUnderlyingType(type)?.IsEnum ?? false)
+                   || Nullable.GetUnderlyingType(type) != null && Nullable.GetUnderlyingType(type).IsNumber();
         }
 
         public static bool IsNullableType(this Type type)

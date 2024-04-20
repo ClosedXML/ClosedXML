@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Graphics;
+using workbook.Excel;
 
 namespace ClosedXML.Excel
 {
