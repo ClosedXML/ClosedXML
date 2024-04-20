@@ -32,7 +32,7 @@ AMD Ryzen 5 5500U with Radeon Graphics, 1 CPU, 12 logical and 6 physical cores
 
 #### Save
 
-| Description                  |     Rows  |           Columns      | Time/Memory to insert data | Save workbook | Total time/memory | 
+| Description                  |     Rows  |           Columns      | Time/Memory to insert data | Save workbook | Total time/memory |
 |------------------------------|-----------|------------------------|----------------------------|------------------------------|---|
 | Mixed (text/number) workbook.<br>[Gist](https://gist.github.com/jahav/bdc5fe3c90f25544ca6ae1394bbe3561) |   250 000 | 15 | 1.619 sec / 117 MiB |  6.343 sec |  7.962 sec /  477 MiB |
 | Text only workbook. [Gist](https://gist.github.com/jahav/257bb2ffd5ab7adfded7e669290d8151)              | 1 000 000 | 10 | 6.302 sec / 402 MiB  | 17.134 sec | 23.436 sec / 1880 MiB |
@@ -75,6 +75,78 @@ using (var workbook = new XLWorkbook())
     workbook.SaveAs("HelloWorld.xlsx");
 }
 ```
+
+### Easy Export for Object
+
+If you want to export objects to Excel in your C# project, you can use the `EasyExport` method provided by a certain extension library. Here's how you can do it:
+
+**Define Your Exportable Class**
+
+First, define a class that implements the `IXLExportable` interface. This interface is necessary for the export operation.
+
+```csharp
+using YourNamespace.Extensions;
+
+class SampleXLExportable : IXLExportable
+{
+    // Use XLColumn attribute to mark properties for export
+    [XLColumn(Header = "First name", Order = 1)]
+    public string FirstName { get; set; }
+
+    [XLColumn(Header = "Last name", Order = 2)]
+    public string LastName { get; set; }
+
+    [XLColumn(Header = "Email address", Order = 4)]
+    public string Email { get; set; }
+
+    [XLColumn(Ignore = true)]
+    public string PhoneNumber { get; set; }
+
+    [XLColumn(Order = 3)]
+    public int Age { get; set; }
+}
+```
+
+**Perform the Export**
+
+Now, execute the export operation using the EasyExport method.
+You can also customize each _row_ or _column/header_ during the export process using a `row/column callback function`.
+
+```csharp
+List<SampleXLExportable> data = GetData();
+
+var workbook = data.EasyExport<SampleXLExportable>(options, rowCallback: (field, obj, index) =>
+{
+    switch (field.Property.Name)
+    {
+        case nameof(SampleXLExportable.Age):
+        {
+            var cellResult = new XLExportDrawCellResult();
+
+            // Determine age category and corresponding text color
+            var ageCategory = obj.Age < 18 ? "Minor" : "Adult";
+            var textColor = obj.Age < 18 ? XLColor.Red : XLColor.Green;
+
+            // Customize cell appearance
+            cellResult.Value = ageCategory;
+            cellResult.Options = new XLExportCellOptions
+            {
+                TextColor = textColor,
+                FontSize = 12,
+                Bold = true
+            };
+
+            return cellResult;
+        }
+    }
+
+    return null;
+});
+
+// Finally, save the generated Excel workbook
+workbook.SaveAs("sampleFile.xlsx");
+```
+
 
 ### Extensions
 Be sure to check out our `ClosedXML` extension projects
