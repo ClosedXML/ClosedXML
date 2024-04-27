@@ -65,7 +65,7 @@ namespace ClosedXML.Tests.Excel
                 return TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i)));
             }
         }
-        
+
         [Test]
         public void CorrectlyLoadValidationWithSheetReference()
         {
@@ -770,6 +770,25 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(Blank.Value, ptSheet.Cell("A1").Value);
                 Assert.False(ptSheet.PivotTables.Any());
             }, @"TryToLoad\SheetsWithoutRelId.xlsx");
+        }
+
+        [Test]
+        public void CanLoadDialogSheet()
+        {
+            // Workbook can reference multiple different types of sheet, most common is worksheet,
+            // but there is also possibility of referencing dialogSheet (basically VBA dialog).
+            // dialogSheet is basically obsolete (from Excel 5.0), but still supported. Do not
+            // crash when such sheet is encountered. Test file also contains pivot table, because
+            // it originally crashed just before pivot table loading.
+            TestHelper.LoadAndAssert(wb =>
+            {
+                // Dialog sheet
+                Assert.AreEqual(1, wb.UnsupportedSheets.Count);
+
+                // Data and pivot sheets
+                Assert.AreEqual(2, wb.Worksheets.Count);
+                Assert.NotNull(wb.Worksheet("Pivot").PivotTables.Contains("PivotTable1"));
+            }, @"TryToLoad\DialogSheet.xlsx");
         }
     }
 }
