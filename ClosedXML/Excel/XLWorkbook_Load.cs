@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
             var sheetId = 1u;
             foreach (var ws in WorksheetsInternal)
             {
-                // Ensure unique sheetId for each sheet. 
+                // Ensure unique sheetId for each sheet.
                 ws.SheetId = sheetId++;
                 ws.RelId = null;
 
@@ -1713,9 +1713,11 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.Equal:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, true, connector);
                                 break;
+
                             case XLFilterOperator.NotEqual:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, false, connector);
                                 break;
+
                             default:
                                 // OOXML allows only string, so do your best to convert back to a properly typed
                                 // variable. It's not perfect, but let's mimic Excel.
@@ -2099,11 +2101,19 @@ namespace ClosedXML.Excel
             {
                 var xlConditionalFormat = ws.ConditionalFormats
                     .Cast<XLConditionalFormat>()
-                    .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+                    .SingleOrDefault(cf => string.Compare(cf.Id.WrapInBraces(), conditionalFormattingRule.Id, ignoreCase: true) == 0);
                 if (xlConditionalFormat != null)
                 {
                     var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
                     xlConditionalFormat.Colors.Add(negativeFillColor.ToClosedXMLColor());
+
+                    var dataBar = conditionalFormattingRule.Descendants<X14.DataBar>().SingleOrDefault();
+                    if (dataBar != null)
+                    {
+                        // Excel will not specify Gradient if it is true
+                        xlConditionalFormat.DataBar = new XLCFDataBar(xlConditionalFormat);
+                        xlConditionalFormat.DataBar.SetGradient(dataBar.Gradient?.Value ?? true);
+                    }
                 }
             }
 

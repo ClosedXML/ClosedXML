@@ -61,7 +61,8 @@ namespace ClosedXML.Excel
         AboveAverage
     }
 
-    public enum XLCFOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
+    public enum XLCFOperator
+    { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
 
     public interface IXLConditionalFormat
     {
@@ -129,9 +130,9 @@ namespace ClosedXML.Excel
 
         IXLCFColorScaleMin ColorScale();
 
-        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin AddDataBar(XLColor color, Boolean showBarOnly = false);
 
-        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
+        IXLCFDataBarMin AddDataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
 
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
@@ -175,5 +176,7 @@ namespace ClosedXML.Excel
         IXLConditionalFormat SetStopIfTrue(Boolean value);
 
         IXLConditionalFormat CopyTo(IXLWorksheet targetSheet);
+
+        IXLCFDataBar DataBar { get; }
     }
 }
