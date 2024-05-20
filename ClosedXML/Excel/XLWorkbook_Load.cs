@@ -534,7 +534,8 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            LoadDefinedNames(workbook);
+            if (LoadWorkbookDefinedNames)
+                LoadDefinedNames(workbook);
 
             PivotTableCacheDefinitionPartReader.Load(workbookPart, this);
 

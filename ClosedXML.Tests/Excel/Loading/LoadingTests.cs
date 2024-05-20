@@ -410,9 +410,10 @@ namespace ClosedXML.Tests.Excel
             {
                 Assert.DoesNotThrow(() =>
                 {
-                    // The value in the file is blank and kept.
+                    // The value in the file is blank and kept. Defined names are loaded (defaulting to load defined names)
                     using var wb = new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false });
                     Assert.AreEqual(Blank.Value, wb.Worksheets.Single().Cell("C2").CachedValue);
+                    Assert.AreEqual(1, wb.DefinedNames.Count());
                 });
 
                 Assert.DoesNotThrow(() =>
@@ -422,9 +423,20 @@ namespace ClosedXML.Tests.Excel
                     Assert.AreEqual(3, wb.Worksheets.Single().Cell("C2").CachedValue);
                 });
 
+                Assert.DoesNotThrow(() =>
+                {
+                    // The value in the file is blank, but recalculation sets it to correct 3.
+                    // Not loading defined names.
+                    using var wb = new XLWorkbook(stream, new LoadOptions { LoadWorkbookDefinedNames = false });
+                    Assert.AreEqual(Blank.Value, wb.Worksheets.Single().Cell("C2").CachedValue);
+                    Assert.AreEqual(0, wb.DefinedNames.Count());
+                });
+
                 Assert.AreEqual(30, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiX);
                 Assert.AreEqual(14, new XLWorkbook(stream, new LoadOptions { Dpi = new Point(30, 14) }).DpiY);
             }
+
+
         }
 
         [Test]

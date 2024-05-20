@@ -23,6 +23,12 @@ namespace ClosedXML.Excel
         public Boolean RecalculateAllFormulas { get; set; } = false;
 
         /// <summary>
+        /// Should load the workbook's defined names? Default value is <c>true</c>.
+        /// </summary>
+        public Boolean LoadWorkbookDefinedNames { get; set; } = true;
+
+
+        /// <summary>
         /// Graphic engine used by the workbook.
         /// </summary>
         public IXLGraphicEngine? GraphicEngine { get; set; }
