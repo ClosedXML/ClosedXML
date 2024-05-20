@@ -813,6 +813,7 @@ namespace ClosedXML.Excel
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;
+            LoadWorkbookDefinedNames = loadOptions.LoadWorkbookDefinedNames;
         }
 
         #endregion Constructor
@@ -977,6 +978,8 @@ namespace ClosedXML.Excel
         }
 
         public String Author { get; set; }
+
+        public Boolean LoadWorkbookDefinedNames { get; set; }
 
         public Boolean LockStructure
         {
