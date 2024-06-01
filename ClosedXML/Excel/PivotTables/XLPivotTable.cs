@@ -12,8 +12,14 @@ namespace ClosedXML.Excel
     internal class XLPivotTable : IXLPivotTable
     {
         private String _name;
+
+        /// <summary>
+        /// List of all fields in the pivot table, roughly represents <c>pivotTableDefinition.
+        /// pivotFields</c>. Contains info about each field, mostly page/axis info (data field can
+        /// reference same field multiple times, so it mostly stores data in data fields).
+        /// </summary>
         private readonly List<XLPivotTableField> _fields = new();
-        private readonly List<XLPivotDataField> _dataFields = new();
+        // TODO: Delete and replace with Filters.
         private readonly List<XLPivotPageField> _pageFields = new();
         private readonly List<XLPivotFormat> _formats = new();
         private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
@@ -27,7 +33,7 @@ namespace ClosedXML.Excel
             Filters = new XLPivotTableFilters(this);
             RowAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisRow);
             ColumnAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisCol);
-            Values = new XLPivotValues(this);
+            DataFields = new XLPivotDataFields(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
             _cache = cache;
 
@@ -42,8 +48,9 @@ namespace ClosedXML.Excel
             get => _cache;
             set
             {
+                var oldNames = _cache.FieldNames;
                 _cache = value;
-                UpdateCacheFields();
+                UpdateCacheFields(oldNames);
             }
         }
 
@@ -53,7 +60,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotFields RowLabels => RowAxis;
 
-        public IXLPivotValues Values { get; }
+        public IXLPivotValues Values => DataFields;
 
         public IEnumerable<IXLPivotField> ImplementedFields
         {
@@ -61,10 +68,10 @@ namespace ClosedXML.Excel
             {
                 foreach (var pf in ReportFilters)
                     yield return pf;
-                
+
                 foreach (var pf in RowLabels)
                     yield return pf;
-                
+
                 foreach (var pf in ColumnLabels)
                     yield return pf;
             }
@@ -89,7 +96,7 @@ namespace ClosedXML.Excel
 
         internal IReadOnlyList<XLPivotPageField> PageFields => _pageFields;
 
-        internal IReadOnlyList<XLPivotDataField> DataFields => _dataFields;
+        internal XLPivotDataFields DataFields { get; }
 
         internal IReadOnlyList<XLPivotFormat> Formats => _formats;
 
@@ -690,11 +697,6 @@ namespace ClosedXML.Excel
             _fields.Add(field);
         }
 
-        internal void AddDataField(XLPivotDataField dataField)
-        {
-            _dataFields.Add(dataField);
-        }
-
         internal void AddPageField(XLPivotPageField pageField)
         {
             _pageFields.Add(pageField);
@@ -1203,8 +1205,14 @@ namespace ClosedXML.Excel
 
         #endregion
 
+        /// <summary>
+        /// Add field to a specific axis (page/row/col). Only modified <see cref="PivotFields"/>, doesn't modify
+        /// additional info in <see cref="RowAxis"/>, <see cref="ColumnAxis"/> or <see cref="PageFields"/>.
+        /// </summary>
         internal FieldIndex AddFieldToAxis(string sourceName, string customName, XLPivotAxis axis)
         {
+            // Only slices axes can be added through this method.
+            Debug.Assert(axis is XLPivotAxis.AxisCol or XLPivotAxis.AxisRow or XLPivotAxis.AxisValues);
             if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
             {
                 if (axis != XLPivotAxis.AxisRow && axis != XLPivotAxis.AxisCol)
@@ -1277,6 +1285,7 @@ namespace ClosedXML.Excel
                 var field = _fields[index];
                 field.Name = null;
                 field.Axis = null;
+                field.DataField = false;
             }
         }
 
@@ -1344,17 +1353,64 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Refresh cache fields after cache has changed.
         /// </summary>
-        internal void UpdateCacheFields()
+        internal void UpdateCacheFields(IReadOnlyList<string> oldFieldNames)
         {
-            // TODO: Although this deserves far better implementation, at least don't crash.
+            var newNames = PivotCache.FieldNames.ToHashSet();
+            var keptDataNames = new List<string>();
+            foreach (var dataField in DataFields)
+            {
+                var oldName = oldFieldNames[dataField.Field];
+                keptDataNames.Add(oldName);
+            }
+
+            var includeValuesField = keptDataNames.Count > 1;
+            var filterSourceNames = GetKeptNames(Filters.Fields, oldFieldNames, newNames, includeValuesField);
+            var rowAxisSourceNames = GetKeptNames(RowAxis.Fields, oldFieldNames, newNames, includeValuesField);
+            var columnAxisSourceNames = GetKeptNames(ColumnAxis.Fields, oldFieldNames, newNames, includeValuesField);
+
             Filters.Clear();
             RowAxis.Clear();
             ColumnAxis.Clear();
-            _dataFields.Clear();
+            DataFields.Clear();
 
             _fields.Clear();
             foreach (var field in PivotCache.FieldNames)
                 _fields.Add(new XLPivotTableField(this));
+
+            foreach (var filterName in filterSourceNames)
+                Filters.Add(filterName, filterName);
+
+            foreach (var rowName in rowAxisSourceNames)
+                RowAxis.AddField(rowName, rowName);
+
+            foreach (var columnName in columnAxisSourceNames)
+                ColumnAxis.AddField(columnName, columnName);
+
+            foreach (var dataName in keptDataNames)
+                DataFields.Add(dataName);
+
+            static List<string> GetKeptNames(
+                IReadOnlyList<FieldIndex> fieldIndexes,
+                IReadOnlyList<string> oldNames,
+                HashSet<string> newNames,
+                bool includeDataField)
+            {
+                var result = new List<string>();
+                foreach (var fieldIndex in fieldIndexes)
+                {
+                    if (fieldIndex.IsDataField && includeDataField)
+                    {
+                        result.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+                        continue;
+                    }
+
+                    var oldName = oldNames[fieldIndex];
+                    if (newNames.Contains(oldName))
+                        result.Add(oldName);
+                }
+
+                return result;
+            }
         }
 
         /// <summary>
@@ -1363,11 +1419,11 @@ namespace ClosedXML.Excel
         internal bool IsFieldUsedOnAxis(FieldIndex fieldIndex)
         {
             if (fieldIndex.IsDataField)
-                return DataPosition is null;
+                return DataPosition is not null;
 
-            return !RowAxis.Fields.Contains(fieldIndex) &&
-                   !ColumnAxis.Fields.Contains(fieldIndex) &&
-                   !Filters.Fields.Contains(fieldIndex);
+            return RowAxis.Fields.Contains(fieldIndex) ||
+                   ColumnAxis.Fields.Contains(fieldIndex) ||
+                   Filters.Fields.Contains(fieldIndex);
         }
 
         internal int GetFieldIndex(XLPivotTableField field)

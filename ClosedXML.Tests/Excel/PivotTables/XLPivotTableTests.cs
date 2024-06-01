@@ -717,12 +717,9 @@ namespace ClosedXML.Tests
         {
             // Make sure that if the original file has *subtotals*, the subtotals are
             // turned on even after loading into ClosedXML and then saving the document.
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx")))
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    return wb;
-                }, @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\output.xlsx");
+            TestHelper.LoadSaveAndCompare(
+                @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx",
+                @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\output.xlsx");
         }
 
         [Test]

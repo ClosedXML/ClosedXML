@@ -31,7 +31,7 @@ internal class XLPivotFieldAxisItem
     internal XLPivotItemType ItemType { get; }
 
     /// <summary>
-    /// If this item (row/column) contains 'data' field, this contains an index into the <see cref="XLPivotTable._dataFields"/>
+    /// If this item (row/column) contains 'data' field, this contains an index into the <see cref="XLPivotTable.DataFields"/>
     /// that should be used as a value. The value for 'data' field in the <see cref="FieldItem"/> is ignored, but Excel fills
     /// same number as this index.
     /// </summary>

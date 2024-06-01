@@ -36,7 +36,8 @@ internal class XLPivotTableField
     /// Custom name of the field.
     /// </summary>
     /// <remarks>
-    /// [MS-OI29500] Office requires @name to be unique for non-OLAP PivotTables.
+    /// [MS-OI29500] Office requires @name to be unique for non-OLAP PivotTables. Ignored by data
+    /// fields that use <see cref="XLPivotDataField.DataFieldName"/>.
     /// </remarks>
     internal string? Name { get; set; }
 
@@ -50,7 +51,11 @@ internal class XLPivotTableField
     /// </remarks>
     internal XLPivotAxis? Axis { get; set; }
 
-    internal bool DataField { get; init; } = false;
+    /// <summary>
+    /// Is this field a data field (i.e. it is referenced the <c>pivotTableDefinition.
+    /// dataFields</c>)? Excel will crash, unless these two things both set correctly.
+    /// </summary>
+    internal bool DataField { get; set; } = false;
 
     internal string SubtotalCaption { get; set; } = string.Empty;
 

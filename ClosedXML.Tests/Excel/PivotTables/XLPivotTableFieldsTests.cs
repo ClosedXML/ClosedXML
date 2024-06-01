@@ -166,7 +166,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
         }
 
         [Test]
-        public void IndexOf_finds_field_in_axis_by_custom_name()
+        public void IndexOf_finds_field_in_axis_by_source_name()
         {
             using var wb = new XLWorkbook();
             var data = wb.AddWorksheet();
@@ -180,9 +180,9 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var idField = pt.RowLabels.Add("ID", "Item ID");
             pt.ColumnLabels.Add("Color");
 
-            Assert.AreEqual(0, pt.RowLabels.IndexOf("item id"));
+            Assert.AreEqual(0, pt.RowLabels.IndexOf("ID"));
             Assert.AreEqual(0, pt.RowLabels.IndexOf(idField));
-            Assert.AreEqual(-1, pt.RowLabels.IndexOf("ID"));
+            Assert.AreEqual(-1, pt.RowLabels.IndexOf("item id"));
             Assert.AreEqual(-1, pt.RowLabels.IndexOf("Color"));
         }
 

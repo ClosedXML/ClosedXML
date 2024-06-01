@@ -99,8 +99,15 @@ namespace ClosedXML.Excel
 
         XLPivotCalculation Calculation { get; set; }
         XLPivotCalculationItem CalculationItem { get; set; }
+
+        /// <summary>
+        /// Get custom name of pivot value. If custom name is not specified, return source name as
+        /// a fallback.
+        /// </summary>
         String CustomName { get; set; }
+
         IXLPivotValueFormat NumberFormat { get; }
+
         String SourceName { get; }
         XLPivotSummary SummaryFormula { get; set; }
 

@@ -95,6 +95,14 @@ namespace ClosedXML.Excel
 
         IXLPivotTable SetShowGrandTotalsRows(); IXLPivotTable SetShowGrandTotalsRows(Boolean value);
 
+        /// <summary>
+        /// Should pivot table display a grand total for each row in the last column of a pivot
+        /// table (it will enlarge pivot table for extra column).
+        /// </summary>
+        /// <remarks>
+        /// This API has inverse row/column names than the Excel. Excel: <em>On for rows
+        /// </em> should use this method <em>ShowGrandTotalsColumns</em>.
+        /// </remarks>
         IXLPivotTable SetShowGrandTotalsColumns(); IXLPivotTable SetShowGrandTotalsColumns(Boolean value);
 
         IXLPivotTable SetFilteredItemsInSubtotals(); IXLPivotTable SetFilteredItemsInSubtotals(Boolean value);

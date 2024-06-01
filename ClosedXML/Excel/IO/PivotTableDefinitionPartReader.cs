@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClosedXML.Excel.Cells;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -557,16 +556,16 @@ internal class PivotTableDefinitionPartReader
                 var baseField = dataField.BaseField?.Value ?? -1;
                 var baseItem = dataField.BaseItem?.Value ?? 1048832;
                 var numberFormatId = dataField.NumberFormatId?.Value; // TODO: Load properly number format
-                var xlDataField = new XLPivotDataField(field)
+                var xlDataField = new XLPivotDataField(xlPivotTable, checked((int)field))
                 {
                     DataFieldName = name,
                     Subtotal = subtotal,
                     ShowDataAsFormat = showDataAsFormat,
                     BaseField = baseField,
                     BaseItem = baseItem,
-                    NumberFormatId = numberFormatId,
+                    NumberFormatId = checked((int?)numberFormatId),
                 };
-                xlPivotTable.AddDataField(xlDataField);
+                xlPivotTable.DataFields.AddField(xlDataField);
             }
         }
 

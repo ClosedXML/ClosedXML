@@ -49,6 +49,7 @@ namespace ClosedXML.Excel
                 throw new InvalidReferenceException();
 
             Debug.Assert(sheet is not null && foundArea is not null);
+            var oldFieldNames = _fieldNames.ToList();
             _fieldIndexes.Clear();
             _fieldNames.Clear();
             _values.Clear();
@@ -114,7 +115,7 @@ namespace ClosedXML.Excel
                     foreach (var pivotTable in worksheet.PivotTables)
                     {
                         if (pivotTable.PivotCache == this)
-                            pivotTable.UpdateCacheFields();
+                            pivotTable.UpdateCacheFields(oldFieldNames);
                     }
                 }
             }

@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
                 Area = new XLSheetRange(XLSheetPoint.FromAddress(targetCell.Address)),
             };
             Add(pivotTable);
-            pivotTable.UpdateCacheFields();
+            pivotTable.UpdateCacheFields(Array.Empty<string>());
             return pivotTable;
         }
 
