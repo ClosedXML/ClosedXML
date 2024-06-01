@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  Build:
+    strategy:
+      matrix:
+        options:
+          - os: ubuntu-latest
+            framework: net8.0
+            sdk-preview: true
+            runtime: -x64
+          - os: macos-latest
+            framework: net8.0
+            sdk-preview: true
+            runtime: -x64
+          - os: windows-latest
+            framework: net8.0
+            sdk-preview: true
+            runtime: -x64
+          - os: ubuntu-latest
+            framework: net6.0
+            runtime: -x64
+          - os: macos-latest
+            framework: net6.0
+            runtime: -x64
+          - os: windows-latest
+            framework: net6.0
+            runtime: -x64
+    runs-on: ${{matrix.options.os}}
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+
+      - name: NuGet Install
+        uses: NuGet/setup-nuget@v2
+
+      - name: DotNet Setup
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            6.0.x
+
+      - name: DotNet Build
+        shell: pwsh
+        run: ./ci-build.ps1 "netstandard2.0"
+
+
+      - name: DotNet Test
+        shell: pwsh
+        run: ./ci-test.ps1 "${{matrix.options.framework}}"
