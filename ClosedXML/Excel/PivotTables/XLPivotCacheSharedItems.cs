@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using ClosedXML.Excel.Cells;
 
 namespace ClosedXML.Excel
@@ -34,6 +35,37 @@ namespace ClosedXML.Excel
         internal XLCellValue this[uint index] => GetValue(index).GetCellValue(_stringStorage, this);
 
         internal int Count => _values.Count;
+
+        internal void Add(XLCellValue value)
+        {
+            switch (value.Type)
+            {
+                case XLDataType.Blank:
+                    AddMissing();
+                    break;
+                case XLDataType.Boolean:
+                    AddBoolean(value.GetBoolean());
+                    break;
+                case XLDataType.Number:
+                    AddNumber(value.GetNumber());
+                    break;
+                case XLDataType.Text:
+                    AddString(value.GetText());
+                    break;
+                case XLDataType.Error:
+                    AddError(value.GetError());
+                    break;
+                case XLDataType.DateTime:
+                    AddDateTime(value.GetDateTime());
+                    break;
+                case XLDataType.TimeSpan:
+                    var timeSpan = value.GetTimeSpan().ToSerialDateTime().ToSerialDateTime();
+                    AddDateTime(timeSpan);
+                    break;
+                default:
+                    throw new UnreachableException();
+            }
+        }
 
         internal void AddMissing()
         {

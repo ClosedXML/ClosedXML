@@ -1355,6 +1355,8 @@ namespace ClosedXML.Excel
         /// </summary>
         internal void UpdateCacheFields(IReadOnlyList<string> oldFieldNames)
         {
+            // Should be better, but at least refresh fields. A lot of attributes are not
+            // kept/initialized from the table.
             var newNames = PivotCache.FieldNames.ToHashSet();
             var keptDataNames = new List<string>();
             foreach (var dataField in DataFields)
@@ -1374,8 +1376,15 @@ namespace ClosedXML.Excel
             DataFields.Clear();
 
             _fields.Clear();
-            foreach (var field in PivotCache.FieldNames)
-                _fields.Add(new XLPivotTableField(this));
+            foreach (var fieldName in PivotCache.FieldNames)
+            {
+                var field = new XLPivotTableField(this)
+                {
+                    Compact = Compact,
+                    Outline = Outline,
+                };
+                _fields.Add(field);
+            }
 
             foreach (var filterName in filterSourceNames)
                 Filters.Add(filterName, filterName);

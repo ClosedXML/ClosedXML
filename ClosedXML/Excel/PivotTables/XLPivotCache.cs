@@ -65,41 +65,7 @@ namespace ClosedXML.Excel
                 for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
                 {
                     var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
-                    switch (value.Type)
-                    {
-                        case XLDataType.Blank:
-                            sharedItems.AddMissing();
-                            fieldRecords.AddMissing();
-                            break;
-                        case XLDataType.Boolean:
-                            sharedItems.AddBoolean(value.GetBoolean());
-                            fieldRecords.AddBoolean(value.GetBoolean());
-                            break;
-                        case XLDataType.Number:
-                            sharedItems.AddNumber(value.GetNumber());
-                            fieldRecords.AddNumber(value.GetNumber());
-                            break;
-                        case XLDataType.Text:
-                            sharedItems.AddString(value.GetText());
-                            fieldRecords.AddString(value.GetText());
-                            break;
-                        case XLDataType.Error:
-                            sharedItems.AddError(value.GetError());
-                            fieldRecords.AddError(value.GetError());
-                            break;
-                        case XLDataType.DateTime:
-                            sharedItems.AddDateTime(value.GetDateTime());
-                            fieldRecords.AddDateTime(value.GetDateTime());
-                            break;
-                        case XLDataType.TimeSpan:
-                            // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
-                            var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
-                            fieldRecords.AddDateTime(adjustedTimeSpan);
-                            sharedItems.AddDateTime(adjustedTimeSpan);
-                            break;
-                        default:
-                            throw new NotSupportedException();
-                    }
+                    fieldRecords.Add(value);
                 }
 
                 AddField(AdjustedFieldName(header), fieldRecords);

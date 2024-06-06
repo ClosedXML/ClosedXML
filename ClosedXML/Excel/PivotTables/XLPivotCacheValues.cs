@@ -95,6 +95,41 @@ namespace ClosedXML.Excel
 
         internal XLPivotCacheSharedItems SharedItems => _sharedItems;
 
+        internal void Add(XLCellValue value)
+        {
+            switch (value.Type)
+            {
+                case XLDataType.Blank:
+                    AddMissing();
+                    break;
+                case XLDataType.Boolean:
+                    AddBoolean(value.GetBoolean());
+                    break;
+                case XLDataType.Number:
+                    AddNumber(value.GetNumber());
+                    break;
+                case XLDataType.Text:
+                    AddString(value.GetText());
+                    break;
+                case XLDataType.Error:
+                    AddError(value.GetError());
+                    break;
+                case XLDataType.DateTime:
+                    AddDateTime(value.GetDateTime());
+                    break;
+                case XLDataType.TimeSpan:
+                    // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
+                    var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
+                    AddDateTime(adjustedTimeSpan);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            if (_sharedItems.IndexOf(value) == -1)
+                _sharedItems.Add(value);
+        }
+
         internal void AddMissing()
         {
             _values.Add(XLPivotCacheValue.ForMissing());
@@ -199,60 +234,33 @@ namespace ClosedXML.Excel
         /// <returns>Index in shared items.</returns>
         internal int GetOrAddSharedItem(XLCellValue value)
         {
-            var sharedItemsIndex = SharedItems.IndexOf(value);
+            var sharedItemsIndex = _sharedItems.IndexOf(value);
             if (sharedItemsIndex >= 0)
                 return sharedItemsIndex;
 
             // Not in shared items, make sure it actually is present.
-            var recordIndex = IndexOf(value);
-            if (recordIndex == -1)
+            if (!ContainsRecord(value))
                 throw new ArgumentException($"Value '{value}' not among cache field values.");
 
-            switch (value.Type)
-            {
-                case XLDataType.Blank:
-                    _sharedItems.AddMissing();
-                    break;
-                case XLDataType.Boolean:
-                    _sharedItems.AddBoolean(value.GetBoolean());
-                    break;
-                case XLDataType.Number:
-                    _sharedItems.AddNumber(value.GetNumber());
-                    break;
-                case XLDataType.Text:
-                    _sharedItems.AddString(value.GetText());
-                    break;
-                case XLDataType.Error:
-                    _sharedItems.AddError(value.GetError());
-                    break;
-                case XLDataType.DateTime:
-                    _sharedItems.AddDateTime(value.GetDateTime());
-                    break;
-                case XLDataType.TimeSpan:
-                    var timeSpan = value.GetTimeSpan().ToSerialDateTime().ToSerialDateTime();
-                    _sharedItems.AddDateTime(timeSpan);
-                    break;
-                default:
-                    throw new UnreachableException();
-            }
+            _sharedItems.Add(value);
 
             return _sharedItems.Count - 1;
         }
 
         /// <summary>
-        /// Get index of value or -1 if not among shared items.
+        /// Is among the <c>value</c> among values of the record.
         /// </summary>
-        private int IndexOf(XLCellValue value)
+        private bool ContainsRecord(XLCellValue value)
         {
             for (var index = 0; index < _values.Count; ++index)
             {
                 var recordValue = GetValue(index);
                 var cacheValue = recordValue.GetCellValue(_stringStorage, _sharedItems);
                 if (XLCellValueComparer.OrdinalIgnoreCase.Equals(cacheValue, value))
-                    return index;
+                    return true;
             }
 
-            return -1;
+            return false;
         }
 
         [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator", Justification = "double.IsInteger() in NET7 uses same method.")]
