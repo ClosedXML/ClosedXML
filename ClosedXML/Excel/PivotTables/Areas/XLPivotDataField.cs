@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel;
 
@@ -8,8 +9,15 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class XLPivotDataField : IXLPivotValue
 {
+    private const int BaseFieldDefaultValue = -1;
+    private const int BaseItemPreviousValue = 1048828;
+    private const int BaseItemNextValue = 1048829;
+    private const int BaseItemDefaultValue = 1048832;
+
     private readonly XLPivotTable _pivotTable;
-    private int _baseField = -1;
+
+    private int _baseField = BaseFieldDefaultValue;
+    private uint _baseItem = BaseItemDefaultValue;
     private XLPivotCalculation _showDataAsFormat = XLPivotCalculation.Normal;
     private XLPivotSummary _subtotal = XLPivotSummary.Sum;
 
@@ -72,7 +80,11 @@ internal class XLPivotDataField : IXLPivotValue
     /// Index to the base item of <see cref="BaseField"/> when <see cref="ShowDataAsFormat"/> needs
     /// an item for its calculation.
     /// </summary>
-    public uint BaseItem { get; init; } = 1048832;
+    public uint BaseItem
+    {
+        get => _baseItem;
+        init => _baseItem = value;
+    }
 
     /// <summary>
     /// Formatting to apply to the data field. If <see cref="XLPivotFormat"/> disagree, this has precedence.
@@ -103,7 +115,7 @@ internal class XLPivotDataField : IXLPivotValue
         {
             if (value is null)
             {
-                _baseField = -1;
+                _baseField = BaseFieldDefaultValue;
                 return;
             }
 
@@ -118,8 +130,36 @@ internal class XLPivotDataField : IXLPivotValue
 
     public XLCellValue BaseItemValue
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get
+        {
+            var baseFieldSpecified = _baseField != BaseFieldDefaultValue;
+            if (!baseFieldSpecified)
+                return Blank.Value;
+
+            var baseItemSpecified = _baseItem != BaseItemDefaultValue;
+            if (!baseItemSpecified)
+                return Blank.Value;
+
+            if (_baseItem == BaseItemPreviousValue)
+                return Blank.Value;
+
+            if (_baseItem == BaseItemNextValue)
+                return Blank.Value;
+
+            var baseField = _pivotTable.PivotFields[_baseField];
+            var fieldItem = baseField.Items[checked((int)BaseItem)];
+            return fieldItem.GetValue() ?? Blank.Value;
+        }
+        set
+        {
+            if (_baseField == BaseItemDefaultValue)
+                throw new InvalidOperationException("Base field not specified for the field.");
+
+            var field = _pivotTable.PivotFields[_baseField];
+            var fieldItem = field.GetOrAddItem(value);
+            var itemIndex = fieldItem.ItemIndex ?? BaseFieldDefaultValue;
+            _baseItem = checked((uint)itemIndex);
+        }
     }
 
     public XLPivotCalculation Calculation
@@ -128,12 +168,45 @@ internal class XLPivotDataField : IXLPivotValue
         set => _showDataAsFormat = value;
     }
 
-    // 1048828 prev
-    // 1048829 next
     public XLPivotCalculationItem CalculationItem
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get
+        {
+            return _baseItem switch
+            {
+                BaseItemPreviousValue => XLPivotCalculationItem.Previous,
+                BaseItemNextValue => XLPivotCalculationItem.Next,
+                _ => XLPivotCalculationItem.Value,
+            };
+        }
+        set
+        {
+            switch (value)
+            {
+                case XLPivotCalculationItem.Previous:
+                    _baseItem = BaseItemPreviousValue;
+                    break;
+                case XLPivotCalculationItem.Next:
+                    _baseItem = BaseItemNextValue;
+                    break;
+                case XLPivotCalculationItem.Value:
+                    // Calculation value should be set in tandem with the base item value.
+                    // Base item other than prev/next special constants is implicitly a value.
+                    if (BaseItem is BaseItemPreviousValue or BaseItemNextValue)
+                    {
+                        // If value is not yet set, just use unspecified value. User should
+                        // set value by calling `BaseItemValue` after calling this, but Excel
+                        // accepts valid base field with unspecified item without need to repair.
+                        _baseItem = BaseItemDefaultValue;
+                    }
+
+                    // When base item is not a valid reference to the field.Items, Excel
+                    // tries to repair the workbook, so user should always set base value.
+                    break;
+                default:
+                    throw new UnreachableException();
+            }
+        }
     }
 
     public string CustomName

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel;
 
@@ -201,6 +202,13 @@ internal class XLPivotTableField
         var cache = _pivotTable.PivotCache;
         var cacheValues = cache.GetFieldValues(index);
         var sharedItemIndex = cacheValues.GetOrAddSharedItem(value);
+
+        // Excel tries to repair workbook, when there are duplicates in pivotFields.Items
+        // therefore add only if necessary
+        var existingItem = _items.FirstOrDefault(x => x.ItemIndex == sharedItemIndex);
+        if (existingItem is not null)
+            return existingItem;
+
         var newItem = new XLPivotFieldItem(this, sharedItemIndex);
         _items.Add(newItem);
         return newItem;
