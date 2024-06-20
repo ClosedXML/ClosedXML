@@ -290,7 +290,21 @@ internal class PivotTableDefinitionPartWriter2
 
                 xml.WriteAttributeDefault("baseField", dataField.BaseField, -1);
                 xml.WriteAttributeDefault("baseItem", dataField.BaseItem, 1048832);
-                xml.WriteAttributeOptional("numFmtId", dataField.NumberFormatId);
+
+                if (dataField.NumberFormatValue is not null)
+                {
+                    if (context.SharedNumberFormats.TryGetValue(dataField.NumberFormatValue, out var customFormat))
+                    {
+                        var numberFormatId = customFormat.NumberFormatId;
+                        xml.WriteAttributeOptional("numFmtId", numberFormatId);
+                    }
+                    else
+                    {
+                        var builtInNumberFormatId = dataField.NumberFormatValue.NumberFormatId;
+                        xml.WriteAttributeOptional("numFmtId", builtInNumberFormatId);
+                    }
+                }
+
                 xml.WriteEndElement(); // dataField
             }
 

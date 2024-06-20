@@ -83,8 +83,8 @@ namespace ClosedXML.Excel.IO
 
                 var xlPivotTableCustomFormats = worksheet.PivotTables
                     .SelectMany<XLPivotTable, XLPivotDataField>(pt => pt.DataFields)
-                    .Where(x => x.HasCustomNumberFormat)
-                    .Select(x => x.NumberFormatCode);
+                    .Where(x => x.NumberFormatValue is not null && !string.IsNullOrEmpty(x.NumberFormatValue.Format))
+                    .Select(x => x.NumberFormatValue.Format);
                 xlPivotTablesCustomFormats.UnionWith(xlPivotTableCustomFormats);
             }
 
@@ -128,7 +128,7 @@ namespace ClosedXML.Excel.IO
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, customNumberFormats, defaultFormatId);
             foreach (var nf in allSharedNumberFormats)
             {
-                context.SharedNumberFormats.Add(nf.Value.NumberFormatId, nf.Value);
+                context.SharedNumberFormats.Add(nf.Key, nf.Value);
             }
 
             ResolveFonts(workbookStylesPart, context);

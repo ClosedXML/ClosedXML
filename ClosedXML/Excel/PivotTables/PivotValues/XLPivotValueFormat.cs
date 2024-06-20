@@ -13,21 +13,41 @@ namespace ClosedXML.Excel
 
         public Int32 NumberFormatId
         {
-            get => _pivotValue.NumberFormatId ?? -1;
+            get => _pivotValue.NumberFormatValue?.NumberFormatId ?? -1;
             set
             {
-                _pivotValue.NumberFormatId = value == -1 ? null : value;
-                _pivotValue.NumberFormatCode = string.Empty;
+                if (value == -1)
+                {
+                    _pivotValue.NumberFormatValue = null;
+                    return;
+                }
+
+                var key = new XLNumberFormatKey
+                {
+                    NumberFormatId = value,
+                    Format = string.Empty,
+                };
+                _pivotValue.NumberFormatValue = XLNumberFormatValue.FromKey(ref key);
             }
         }
 
         public String Format
         {
-            get => _pivotValue.NumberFormatCode;
+            get => _pivotValue.NumberFormatValue?.Format ?? string.Empty;
             set
             {
-                _pivotValue.NumberFormatCode = value;
-                _pivotValue.NumberFormatId = null;
+                if (string.IsNullOrEmpty(value))
+                {
+                    _pivotValue.NumberFormatValue = null;
+                    return;
+                }
+
+                var key = new XLNumberFormatKey
+                {
+                    NumberFormatId = -1,
+                    Format = value,
+                };
+                _pivotValue.NumberFormatValue = XLNumberFormatValue.FromKey(ref key);
             }
         }
 
@@ -40,7 +60,7 @@ namespace ClosedXML.Excel
         public IXLPivotValue SetFormat(String value)
         {
             Format = value;
-            _pivotValue.NumberFormatId = value switch
+            NumberFormatId = value switch
             {
                 "General" => 0,
                 "0" => 1,
@@ -50,7 +70,7 @@ namespace ClosedXML.Excel
                 "0%" => 9,
                 "0.00%" => 10,
                 "0.00E+00" => 11,
-                _ => null,
+                _ => -1,
             };
 
             return _pivotValue;

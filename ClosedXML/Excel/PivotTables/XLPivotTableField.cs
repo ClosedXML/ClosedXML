@@ -21,7 +21,7 @@ internal class XLPivotTableField
     {
         _pivotTable = pivotTable;
         ShowAll = false; // The XML default value is true, but Excel always has false, so let's follow Excel.
-        Subtotals.Add(XLSubtotalFunction.Automatic);
+        Subtotals = new HashSet<XLSubtotalFunction> { XLSubtotalFunction.Automatic };
     }
 
     internal XLPivotTable PivotTable => _pivotTable;
@@ -127,7 +127,17 @@ internal class XLPivotTableField
 
     internal uint? RankBy { get; init; }
 
-    internal HashSet<XLSubtotalFunction> Subtotals { get; init; } = new();
+    /// <summary>
+    /// Subtotal functions represented in XML. It's kind of convoluted mess, because
+    /// it represents three possible results:
+    /// <list type="bullet">
+    ///   <item>None - Collection is empty.</item>
+    ///   <item>Automatic - Collection contains only <see cref="XLSubtotalFunction.Automatic"/>.</item>
+    ///   <item>Custom - Collection contains subtotal functions other than <see cref="XLSubtotalFunction.Automatic"/>.
+    ///       The <see cref="XLSubtotalFunction.Automatic"/> is ignored in that case, even if it is present.</item>
+    /// </list>.
+    /// </summary>
+    internal HashSet<XLSubtotalFunction> Subtotals { get; init; }
 
     internal bool ShowPropCell { get; init; } = false;
 

@@ -55,7 +55,22 @@ internal class XLPivotTableAxisField : IXLPivotField
         set => GetField().SubtotalCaption = value;
     }
 
-    public IReadOnlyCollection<XLSubtotalFunction> Subtotals => GetField().Subtotals;
+    public IReadOnlyCollection<XLSubtotalFunction> Subtotals
+    {
+        get
+        {
+            var subtotal = GetField().Subtotals;
+            var isCustomSubtotal = subtotal.Count > 1 && subtotal.Contains(XLSubtotalFunction.Automatic);
+            if (isCustomSubtotal)
+            {
+                // When subtotal is custom, the automatic is not shown
+                subtotal = new HashSet<XLSubtotalFunction>(subtotal);
+                subtotal.Remove(XLSubtotalFunction.Automatic);
+            }
+
+            return subtotal;
+        }
+    }
 
     public bool IncludeNewItemsInFilter
     {

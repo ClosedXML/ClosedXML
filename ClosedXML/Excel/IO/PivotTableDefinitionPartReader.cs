@@ -555,7 +555,8 @@ internal class PivotTableDefinitionPartReader
                 var showDataAsFormat = dataField.ShowDataAs?.Value.ToClosedXml() ?? XLPivotCalculation.Normal;
                 var baseField = dataField.BaseField?.Value ?? -1;
                 var baseItem = dataField.BaseItem?.Value ?? 1048832;
-                var numberFormatId = dataField.NumberFormatId?.Value; // TODO: Load properly number format
+                var numberFormatId = dataField.NumberFormatId?.Value;
+                var numberFormat = context.GetNumberFormat(numberFormatId);
                 var xlDataField = new XLPivotDataField(xlPivotTable, checked((int)field))
                 {
                     DataFieldName = name,
@@ -563,7 +564,7 @@ internal class PivotTableDefinitionPartReader
                     ShowDataAsFormat = showDataAsFormat,
                     BaseField = baseField,
                     BaseItem = baseItem,
-                    NumberFormatId = checked((int?)numberFormatId),
+                    NumberFormatValue = numberFormat,
                 };
                 xlPivotTable.DataFields.AddField(xlDataField);
             }

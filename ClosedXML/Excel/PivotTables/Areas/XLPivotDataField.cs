@@ -52,7 +52,7 @@ internal class XLPivotDataField : IXLPivotValue
     public XLPivotSummary Subtotal
     {
         get => _subtotal;
-        init => _subtotal = value;
+        set => _subtotal = value;
     }
 
     /// <summary>
@@ -89,15 +89,7 @@ internal class XLPivotDataField : IXLPivotValue
     /// <summary>
     /// Formatting to apply to the data field. If <see cref="XLPivotFormat"/> disagree, this has precedence.
     /// </summary>
-    public int? NumberFormatId { get; set; }
-
-    /// <summary>
-    /// A custom number format string for the value of the field. If empty, use <see cref="NumberFormatId"/>.
-    /// Because pivot field uses only reference to the styles table, this is transformed before saving.
-    /// </summary>
-    internal string NumberFormatCode { get; set; } = string.Empty;
-
-    internal bool HasCustomNumberFormat => !string.IsNullOrEmpty(NumberFormatCode);
+    internal XLNumberFormatValue? NumberFormatValue { get; set; }
 
     #region IXLPivotValue
 

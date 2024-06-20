@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// <em>General</em> number format.
         /// </summary>
-        private static readonly XLNumberFormatKey DefaultKey = new XLNumberFormatKey
+        private static readonly XLNumberFormatKey DefaultKey = new XLNumberFormatKey()
         {
             NumberFormatId = 0,
             Format = string.Empty

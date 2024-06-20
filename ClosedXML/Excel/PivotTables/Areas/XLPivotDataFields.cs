@@ -28,33 +28,12 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
 
     public IXLPivotValue Add(string sourceName)
     {
-        return Add(sourceName, sourceName);
+        return AddField(sourceName, sourceName);
     }
 
     public IXLPivotValue Add(string sourceName, string customName)
     {
-        if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var fieldIndex))
-        {
-            throw new ArgumentOutOfRangeException($"Field '{sourceName}' is not in the pivot cache.");
-        }
-
-        // 'Data' field is not allowed in data axis, so cast directly to uint.
-        var dataField = new XLPivotDataField(_pivotTable, fieldIndex.Value)
-        {
-            DataFieldName = customName,
-        };
-        AddField(dataField);
-
-        // If there are multiple values, at least axis must contain 'data' field.
-        // Otherwise, Excel requires a repair.
-        if (_fields.Count > 1 &&
-            !_pivotTable.ColumnAxis.ContainsDataField &&
-            !_pivotTable.ColumnAxis.ContainsDataField)
-        {
-            _pivotTable.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
-        }
-
-        return dataField;
+        return AddField(sourceName, customName);
     }
 
     public void Clear()
@@ -122,6 +101,32 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
     }
 
     #endregion
+
+    internal XLPivotDataField AddField(string sourceName, string? customName)
+    {
+        if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var fieldIndex))
+        {
+            throw new ArgumentOutOfRangeException($"Field '{sourceName}' is not in the pivot cache.");
+        }
+
+        // 'Data' field is not allowed in data axis, so cast directly to uint.
+        var dataField = new XLPivotDataField(_pivotTable, fieldIndex.Value)
+        {
+            DataFieldName = customName,
+        };
+        AddField(dataField);
+
+        // If there are multiple values, at least axis must contain 'data' field.
+        // Otherwise, Excel requires a repair.
+        if (_fields.Count > 1 &&
+            !_pivotTable.RowAxis.ContainsDataField &&
+            !_pivotTable.ColumnAxis.ContainsDataField)
+        {
+            _pivotTable.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+        }
+
+        return dataField;
+    }
 
     internal void AddField(XLPivotDataField dataField)
     {

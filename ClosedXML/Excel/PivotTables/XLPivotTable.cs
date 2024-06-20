@@ -1212,7 +1212,7 @@ namespace ClosedXML.Excel
         internal FieldIndex AddFieldToAxis(string sourceName, string customName, XLPivotAxis axis)
         {
             // Only slices axes can be added through this method.
-            Debug.Assert(axis is XLPivotAxis.AxisCol or XLPivotAxis.AxisRow or XLPivotAxis.AxisValues);
+            Debug.Assert(axis is XLPivotAxis.AxisCol or XLPivotAxis.AxisRow or XLPivotAxis.AxisPage);
             if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
             {
                 if (axis != XLPivotAxis.AxisRow && axis != XLPivotAxis.AxisCol)
@@ -1356,19 +1356,26 @@ namespace ClosedXML.Excel
         internal void UpdateCacheFields(IReadOnlyList<string> oldFieldNames)
         {
             // Should be better, but at least refresh fields. A lot of attributes are not
-            // kept/initialized from the table.
-            var newNames = PivotCache.FieldNames.ToHashSet();
-            var keptDataNames = new List<string>();
+            // kept/initialized from the table. We can't just reuse original objects, because
+            // all indices are wrong. Make a copy and then re-set the original properties that
+            // are saved before GC takes them.
+            var newNames = new HashSet<string>(PivotCache.FieldNames, XLHelper.NameComparer);
+
+            // Source and custom name might not be valid at this point, so keep them.
+            var keptDataFields = new List<(string SourceName, string? CustomName, XLPivotDataField Field)>();
             foreach (var dataField in DataFields)
             {
-                var oldName = oldFieldNames[dataField.Field];
-                keptDataNames.Add(oldName);
+                var oldSourceName = oldFieldNames[dataField.Field];
+                if (newNames.Contains(oldSourceName))
+                {
+                    keptDataFields.Add((oldSourceName, dataField.DataFieldName, dataField));
+                }
             }
 
-            var includeValuesField = keptDataNames.Count > 1;
-            var filterSourceNames = GetKeptNames(Filters.Fields, oldFieldNames, newNames, includeValuesField);
-            var rowAxisSourceNames = GetKeptNames(RowAxis.Fields, oldFieldNames, newNames, includeValuesField);
-            var columnAxisSourceNames = GetKeptNames(ColumnAxis.Fields, oldFieldNames, newNames, includeValuesField);
+            var includeValuesField = keptDataFields.Count > 1;
+            var keptFilterSourceNames = GetKeptNames(Filters.Fields, oldFieldNames, newNames, includeValuesField);
+            var keptRowSourceNames = GetKeptNames(RowAxis.Fields, oldFieldNames, newNames, includeValuesField);
+            var keptColumnSourceNames = GetKeptNames(ColumnAxis.Fields, oldFieldNames, newNames, includeValuesField);
 
             Filters.Clear();
             RowAxis.Clear();
@@ -1386,17 +1393,20 @@ namespace ClosedXML.Excel
                 _fields.Add(field);
             }
 
-            foreach (var filterName in filterSourceNames)
+            foreach (var filterName in keptFilterSourceNames)
                 Filters.Add(filterName, filterName);
 
-            foreach (var rowName in rowAxisSourceNames)
+            foreach (var rowName in keptRowSourceNames)
                 RowAxis.AddField(rowName, rowName);
 
-            foreach (var columnName in columnAxisSourceNames)
+            foreach (var columnName in keptColumnSourceNames)
                 ColumnAxis.AddField(columnName, columnName);
 
-            foreach (var dataName in keptDataNames)
-                DataFields.Add(dataName);
+            foreach (var keptDataField in keptDataFields)
+            {
+                var dataField = DataFields.AddField(keptDataField.SourceName, keptDataField.CustomName);
+                dataField.Subtotal = keptDataField.Field.Subtotal;
+            }
 
             static List<string> GetKeptNames(
                 IReadOnlyList<FieldIndex> fieldIndexes,

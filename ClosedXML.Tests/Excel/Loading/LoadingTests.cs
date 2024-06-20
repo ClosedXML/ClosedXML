@@ -65,7 +65,7 @@ namespace ClosedXML.Tests.Excel
                 return TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i)));
             }
         }
-        
+
         [Test]
         public void CorrectlyLoadValidationWithSheetReference()
         {
@@ -188,10 +188,13 @@ namespace ClosedXML.Tests.Excel
                 var pt = ws.PivotTable("PivotTableSubtotals");
 
                 var subtotals = pt.RowLabels.Get("Group").Subtotals.ToArray();
-                Assert.AreEqual(3, subtotals.Length);
-                Assert.AreEqual(XLSubtotalFunction.Average, subtotals[0]);
-                Assert.AreEqual(XLSubtotalFunction.Count, subtotals[1]);
-                Assert.AreEqual(XLSubtotalFunction.Sum, subtotals[2]);
+
+                CollectionAssert.AreEquivalent(new[]
+                {
+                    XLSubtotalFunction.Average,
+                    XLSubtotalFunction.Count,
+                    XLSubtotalFunction.Sum,
+                }, subtotals);
             }
         }
 

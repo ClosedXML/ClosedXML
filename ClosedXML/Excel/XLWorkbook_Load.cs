@@ -183,6 +183,7 @@ namespace ClosedXML.Excel
 
             Stylesheet s = workbookPart.WorkbookStylesPart?.Stylesheet;
             NumberingFormats numberingFormats = s?.NumberingFormats;
+            LoadNumberFormats(numberingFormats, context);
             Fills fills = s?.Fills;
             Borders borders = s?.Borders;
             Fonts fonts = s?.Fonts;
@@ -526,6 +527,22 @@ namespace ClosedXML.Excel
                         PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws, context);
                     }
                 }
+            }
+        }
+
+        private static void LoadNumberFormats(NumberingFormats numberingFormats, LoadContext context)
+        {
+            if (numberingFormats is null)
+                return;
+
+            foreach (var nf in numberingFormats.ChildElements.Cast<NumberingFormat>())
+            {
+                var numberFormatId = nf.NumberFormatId?.Value;
+                var formatCode = nf.FormatCode?.Value;
+                if (numberFormatId is null || string.IsNullOrEmpty(formatCode))
+                    continue;
+
+                context.AddNumberFormat(numberFormatId.Value, formatCode);
             }
         }
 
