@@ -637,7 +637,7 @@ namespace ClosedXML.Excel
         private void SetExcelDefaults()
         {
             ShowMissing = true;
-            MissingCaption = null;
+            MissingCaption = string.Empty;
             ShowColumnHeaders = true;
             ShowRowHeaders = true;
 
@@ -833,7 +833,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Test to display for missing items, when <see cref="ShowMissing"/> is <c>true</c>.
         /// </summary>
-        internal string? MissingCaption { get; set; }
+        internal string MissingCaption { get; set; }
 
         /// <summary>
         /// Flag indicating if <see cref="MissingCaption"/> should be shown when cell has no value.

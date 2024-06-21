@@ -657,7 +657,7 @@ internal class PivotTableDefinitionPartReader
         var grandTotalCaption = pivotTable.GrandTotalCaption?.Value;
         var errorCaption = pivotTable.ErrorCaption?.Value;
         var showError = pivotTable.ShowError?.Value ?? false;
-        var missingCaption = pivotTable.MissingCaption?.Value;
+        var missingCaption = pivotTable.MissingCaption?.Value ?? string.Empty;
         var showMissing = pivotTable.ShowMissing?.Value ?? true;
         var pageStyle = pivotTable.PageStyle?.Value;
         var pivotTableStyleName = pivotTable.PivotTableStyleName?.Value;
