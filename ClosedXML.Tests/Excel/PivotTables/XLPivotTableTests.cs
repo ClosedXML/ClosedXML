@@ -350,7 +350,9 @@ namespace ClosedXML.Tests
         [Test]
         public void SharedItemsWithVariousDataTypesInTableColumn()
         {
-            // Load an excel that contains a table which has various combinations of types in columns
+            // Load an excel that contains a table which has various combinations of types in columns.
+            // The pivot cache definition contain various flags in shared items for each field and the
+            // test checks the flags in cache are set correctly (they are determined in cache writer).
             TestHelper.LoadSaveAndCompare(
                 @"Other\PivotTableReferenceFiles\VariousDataTypesInTableColumns\input.xlsx",
                 @"Other\PivotTableReferenceFiles\VariousDataTypesInTableColumns\output.xlsx");
