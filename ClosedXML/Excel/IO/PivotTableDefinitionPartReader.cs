@@ -539,7 +539,7 @@ internal class PivotTableDefinitionPartReader
                     HierarchyUniqueName = hierarchyUniqueName,
                     HierarchyDisplayName = hierarchyDisplayName,
                 };
-                xlPivotTable.AddPageField(xlPageField);
+                xlPivotTable.Filters.AddField(xlPageField);
             }
         }
 

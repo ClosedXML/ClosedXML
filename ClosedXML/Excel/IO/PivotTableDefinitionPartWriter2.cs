@@ -223,11 +223,11 @@ internal class PivotTableDefinitionPartWriter2
         WriteAxis(xml, pt.RowAxis, "rowFields", "rowItems");
         WriteAxis(xml, pt.ColumnAxis, "colFields", "colItems");
 
-        if (pt.PageFields.Count > 0)
+        if (pt.Filters.Fields.Count > 0)
         {
             xml.WriteStartElement("pageFields", Main2006SsNs);
-            xml.WriteAttribute("count", pt.PageFields.Count);
-            foreach (var pageField in pt.PageFields)
+            xml.WriteAttribute("count", pt.Filters.Fields.Count);
+            foreach (var pageField in pt.Filters.Fields)
             {
                 xml.WriteStartElement("pageField", Main2006SsNs);
                 xml.WriteAttribute("fld", pageField.Field);

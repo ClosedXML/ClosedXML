@@ -19,8 +19,6 @@ namespace ClosedXML.Excel
         /// reference same field multiple times, so it mostly stores data in data fields).
         /// </summary>
         private readonly List<XLPivotTableField> _fields = new();
-        // TODO: Delete and replace with Filters.
-        private readonly List<XLPivotPageField> _pageFields = new();
         private readonly List<XLPivotFormat> _formats = new();
         private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
         private XLPivotCache _cache;
@@ -93,8 +91,6 @@ namespace ClosedXML.Excel
         internal XLPivotTableAxis RowAxis { get; }
 
         internal XLPivotTableAxis ColumnAxis { get; }
-
-        internal IReadOnlyList<XLPivotPageField> PageFields => _pageFields;
 
         internal XLPivotDataFields DataFields { get; }
 
@@ -697,11 +693,6 @@ namespace ClosedXML.Excel
             _fields.Add(field);
         }
 
-        internal void AddPageField(XLPivotPageField pageField)
-        {
-            _pageFields.Add(pageField);
-        }
-
         internal void AddFormat(XLPivotFormat pivotFormat)
         {
             _formats.Add(pivotFormat);
@@ -1207,7 +1198,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Add field to a specific axis (page/row/col). Only modified <see cref="PivotFields"/>, doesn't modify
-        /// additional info in <see cref="RowAxis"/>, <see cref="ColumnAxis"/> or <see cref="PageFields"/>.
+        /// additional info in <see cref="RowAxis"/>, <see cref="ColumnAxis"/> or <see cref="Filters"/>.
         /// </summary>
         internal FieldIndex AddFieldToAxis(string sourceName, string customName, XLPivotAxis axis)
         {
@@ -1235,38 +1226,36 @@ namespace ClosedXML.Excel
             field.Axis = axis;
 
             // If it is an axis, all possible values to field items, because they should be referenced in items.
-            if (axis is XLPivotAxis.AxisRow or XLPivotAxis.AxisCol)
+            // Page field must have default item, otherwise Excel asks for repair.
+            var sharedItems = _cache.GetFieldSharedItems(index);
+            for (var i = 0; i < sharedItems.Count; ++i)
             {
-                var sharedItems = _cache.GetFieldSharedItems(index);
-                for (var i = 0; i < sharedItems.Count; ++i)
-                {
-                    // TODO: use distinct
-                    field.AddItem(new XLPivotFieldItem(field, i));
-                }
+                // TODO: use distinct
+                field.AddItem(new XLPivotFieldItem(field, i));
+            }
 
-                // Subtotal items must be synchronized with subtotals. If field has a an item for
-                // subtotal function, but doesn't declare subtotals function, Excel will try to
-                // repair workbook. Subtotal items can be in any order.
-                foreach (var subtotalFunction in field.Subtotals.Where(x => x != XLSubtotalFunction.None))
+            // Subtotal items must be synchronized with subtotals. If field has a an item for
+            // subtotal function, but doesn't declare subtotals function, Excel will try to
+            // repair workbook. Subtotal items can be in any order.
+            foreach (var subtotalFunction in field.Subtotals.Where(x => x != XLSubtotalFunction.None))
+            {
+                var itemType = subtotalFunction switch
                 {
-                    var itemType = subtotalFunction switch
-                    {
-                        XLSubtotalFunction.Automatic => XLPivotItemType.Default,
-                        XLSubtotalFunction.Sum => XLPivotItemType.Sum,
-                        XLSubtotalFunction.Count => XLPivotItemType.CountA,
-                        XLSubtotalFunction.Average => XLPivotItemType.Avg,
-                        XLSubtotalFunction.Minimum => XLPivotItemType.Min,
-                        XLSubtotalFunction.Maximum => XLPivotItemType.Max,
-                        XLSubtotalFunction.Product => XLPivotItemType.Product,
-                        XLSubtotalFunction.CountNumbers => XLPivotItemType.Count,
-                        XLSubtotalFunction.StandardDeviation => XLPivotItemType.StdDev,
-                        XLSubtotalFunction.PopulationStandardDeviation => XLPivotItemType.StdDevP,
-                        XLSubtotalFunction.Variance => XLPivotItemType.Var,
-                        XLSubtotalFunction.PopulationVariance => XLPivotItemType.VarP,
-                        _ => throw new UnreachableException(),
-                    };
-                    field.AddItem(new XLPivotFieldItem(field, null) { ItemType = itemType });
-                }
+                    XLSubtotalFunction.Automatic => XLPivotItemType.Default,
+                    XLSubtotalFunction.Sum => XLPivotItemType.Sum,
+                    XLSubtotalFunction.Count => XLPivotItemType.CountA,
+                    XLSubtotalFunction.Average => XLPivotItemType.Avg,
+                    XLSubtotalFunction.Minimum => XLPivotItemType.Min,
+                    XLSubtotalFunction.Maximum => XLPivotItemType.Max,
+                    XLSubtotalFunction.Product => XLPivotItemType.Product,
+                    XLSubtotalFunction.CountNumbers => XLPivotItemType.Count,
+                    XLSubtotalFunction.StandardDeviation => XLPivotItemType.StdDev,
+                    XLSubtotalFunction.PopulationStandardDeviation => XLPivotItemType.StdDevP,
+                    XLSubtotalFunction.Variance => XLPivotItemType.Var,
+                    XLSubtotalFunction.PopulationVariance => XLPivotItemType.VarP,
+                    _ => throw new UnreachableException(),
+                };
+                field.AddItem(new XLPivotFieldItem(field, null) { ItemType = itemType });
             }
 
             return index;
@@ -1373,7 +1362,7 @@ namespace ClosedXML.Excel
             }
 
             var includeValuesField = keptDataFields.Count > 1;
-            var keptFilterSourceNames = GetKeptNames(Filters.Fields, oldFieldNames, newNames, includeValuesField);
+            var keptFilterSourceNames = GetKeptNames(Filters.Fields.Select(x => (FieldIndex)x.Field).ToList(), oldFieldNames, newNames, includeValuesField);
             var keptRowSourceNames = GetKeptNames(RowAxis.Fields, oldFieldNames, newNames, includeValuesField);
             var keptColumnSourceNames = GetKeptNames(ColumnAxis.Fields, oldFieldNames, newNames, includeValuesField);
 
@@ -1442,7 +1431,7 @@ namespace ClosedXML.Excel
 
             return RowAxis.Fields.Contains(fieldIndex) ||
                    ColumnAxis.Fields.Contains(fieldIndex) ||
-                   Filters.Fields.Contains(fieldIndex);
+                   Filters.Contains(fieldIndex);
         }
 
         internal int GetFieldIndex(XLPivotTableField field)
