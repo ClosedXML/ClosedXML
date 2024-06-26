@@ -645,7 +645,12 @@ internal class PivotTableDefinitionPartReader
         var name = pivotTable.Name?.Value ?? throw PartStructureException.MissingAttribute();
         var cacheId = pivotTable.CacheId?.Value ?? throw PartStructureException.MissingAttribute();
         var dataOnRows = pivotTable.DataOnRows?.Value ?? false;
-        var dataPosition = pivotTable.DataPosition?.Value;
+
+        // DataPosition attribute is skipped, because it basically represents a field on one of axis.
+        // Excel requires that dataPosition and field with index -2 must be in list of respective axis
+        // at correct place, otherwise it crashes. To make things simple, we set the value when it is
+        // encountered on the correct axis (plus there is a check that field is not used on multiple axes
+        // that would cause exception).
         var autoFormatId = pivotTable.AutoFormatId?.Value;
         var applyNumberFormats = pivotTable.ApplyNumberFormats?.Value ?? false;
         var applyBorderFormats = pivotTable.ApplyBorderFormats?.Value ?? false;
@@ -715,7 +720,7 @@ internal class PivotTableDefinitionPartReader
         {
             Name = name,
             DataOnRows = dataOnRows,
-            DataPosition = dataPosition is not null ? checked((int)dataPosition) : null,
+            DataPosition = null, // 'data' field is set when during axis loading (if present).
             AutoFormatId = autoFormatId,
             ApplyNumberFormats = applyNumberFormats,
             ApplyBorderFormats = applyBorderFormats,
