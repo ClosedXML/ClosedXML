@@ -78,6 +78,54 @@ namespace ClosedXML.Tests.Excel.Ranges
             }
         }
 
+        [Theory]
+        [TestCase("A5:F5")]
+        [TestCase("A5:F6")]
+        public void RangesBelowStayMergedAfterRangeDeleted(string deletedRangeAddress)
+        {
+            //There is an edge case when a merged range of same size as the deleted range got unmerged (see #2358)
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var deletedRange = ws.Range(deletedRangeAddress);
+            var rangeHeight = deletedRange.LastRow().RowNumber() - deletedRange.FirstRow().RowNumber() + 1;
+            var mergedRange = ws.Range(
+                deletedRange.LastRow().RowNumber() + 1,
+                deletedRange.FirstColumn().ColumnNumber(),
+                deletedRange.LastRow().RowNumber() + rangeHeight,
+                deletedRange.LastColumn().ColumnNumber()
+            );
+            mergedRange.Merge();
+
+            deletedRange.Delete(XLShiftDeletedCells.ShiftCellsUp);
+
+            Assert.IsTrue(mergedRange.IsMerged());
+            Assert.AreEqual(deletedRangeAddress, mergedRange.RangeAddress.ToString());
+        }
+
+        [Theory]
+        [TestCase("A5:A8")]
+        [TestCase("A5:B8")]
+        public void RangesToTheRightStayMergedAfterRangeDeleted(string deletedRangeAddress)
+        {
+            //There is an edge case when a merged range of same size as the deleted range got unmerged (see #2358)
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var deletedRange = ws.Range(deletedRangeAddress);
+            var rangeWidth = deletedRange.LastColumn().ColumnNumber() - deletedRange.FirstColumn().ColumnNumber() + 1;
+            var mergedRange = ws.Range(
+                deletedRange.FirstRow().RowNumber(),
+                deletedRange.LastColumn().ColumnNumber() + 1,
+                deletedRange.LastRow().RowNumber(),
+                deletedRange.LastColumn().ColumnNumber() + rangeWidth
+            );
+            mergedRange.Merge();
+
+            deletedRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
+
+            Assert.IsTrue(mergedRange.IsMerged());
+            Assert.AreEqual(deletedRangeAddress, mergedRange.RangeAddress.ToString());
+        }
+
         private void SetContent(IXLCell cell)
         {
             cell.FormulaA1 = $"\"Formula \" & \"{cell.Address}\"";

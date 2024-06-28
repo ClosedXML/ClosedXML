@@ -1510,6 +1510,7 @@ namespace ClosedXML.Excel
 
             WorksheetRangeShiftedRows(range, rowsShifted);
 
+            bool collapsed = false;
             foreach (var storedRange in rangesToShift)
             {
                 if (storedRange.IsEntireColumn())
@@ -1519,8 +1520,15 @@ namespace ClosedXML.Excel
                     continue;
 
                 storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
+                if (range.RangeAddress == storedRange.RangeAddress)
+                {
+                    collapsed = true;
+                }
             }
-            range.WorksheetRangeShiftedRows(range, rowsShifted);
+            if (!collapsed)
+            {
+                range.WorksheetRangeShiftedRows(range, rowsShifted);
+            }
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
@@ -1532,6 +1540,7 @@ namespace ClosedXML.Excel
 
             WorksheetRangeShiftedColumns(range, columnsShifted);
 
+            bool collapsed = false;
             foreach (var storedRange in rangesToShift)
             {
                 if (storedRange.IsEntireRow())
@@ -1541,8 +1550,15 @@ namespace ClosedXML.Excel
                     continue;
 
                 storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
+                if (range.RangeAddress == storedRange.RangeAddress)
+                {
+                    collapsed = true;
+                }
             }
-            range.WorksheetRangeShiftedColumns(range, columnsShifted);
+            if (!collapsed)
+            {
+                range.WorksheetRangeShiftedColumns(range, columnsShifted);
+            }
         }
 
         public XLRow Row(Int32 rowNumber, Boolean pingCells)
