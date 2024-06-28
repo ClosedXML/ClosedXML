@@ -215,6 +215,18 @@ internal class PivotTableDefinitionPartWriter2
 
             // TODO: autoSortScope, but not yet represented.
 
+            if (pf.RepeatItemLabels)
+            {
+                xml.WriteStartElement("extLst");
+                xml.WriteStartElement("ext");
+                xml.WriteAttributeString("uri", "{2946ED86-A175-432a-8AC1-64E0C546D7DE}");
+                xml.WriteStartElement("pivotField", X14Main2009SsNs);
+                xml.WriteAttributeDefault("fillDownLabels", pf.RepeatItemLabels, false);
+                xml.WriteEndElement(); // pivotField
+                xml.WriteEndElement(); // ext
+                xml.WriteEndElement(); // extLst
+            }
+
             xml.WriteEndElement();
         }
 
