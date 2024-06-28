@@ -34,7 +34,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TestPivotTableVersioningAttributes()
         {
-            // Pivot table definitions in input file has created and refreshed versioning attributes = 3
+            // Pivot cache definitions in input file has created and refreshed version attributes = 3
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\VersioningAttributes\inputfile.xlsx")))
             {
                 TestHelper.CreateAndCompare(() =>
@@ -50,7 +50,7 @@ namespace ClosedXML.Tests
                     pt.Values.Add("Id", "Count of Id").SetSummaryFormula(XLPivotSummary.Count);
 
                     return wb;
-                    // Pivot table definitions in output file has created and refreshed versioning attributes = 5
+                    // Pivot cache definitions in output file has created and refreshed version attributes = 5
                 }, @"Other\PivotTableReferenceFiles\VersioningAttributes\outputfile.xlsx");
             }
         }
