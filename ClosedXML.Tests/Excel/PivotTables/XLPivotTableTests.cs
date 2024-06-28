@@ -827,6 +827,9 @@ namespace ClosedXML.Tests
             // Opening the saved file in Excel throws an error 'Reference isn't valid'
             // on load, because of `RefreshOnLoad` flag. That flag is always enabled because
             // ClosedXML relies on Excel to rebuild the table and fix it.
+            // At this time, there is no content, only shape, because don't have engine
+            // to determine correct layout and values. Change RefreshDataOnOpen to 0 and change
+            // PT in Excel to see the values (aka gimp on Excel PT engine).
             TestHelper.LoadSaveAndCompare(
                 @"Other\PivotTableReferenceFiles\PivotTableWithoutSourceData-input.xlsx",
                 @"Other\PivotTableReferenceFiles\PivotTableWithoutSourceData-output.xlsx");
