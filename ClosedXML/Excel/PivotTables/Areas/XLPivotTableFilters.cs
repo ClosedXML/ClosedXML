@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel;
@@ -19,7 +20,7 @@ internal class XLPivotTableFilters : IXLPivotFields
     /// <summary>
     /// Filter fields in correct order. The layout is determined by
     /// <see cref="XLPivotTable.FilterFieldsPageWrap"/> and
-    /// <see cref="XLPivotTable.FilterFieldsPageWrap"/>
+    /// <see cref="XLPivotTable.FilterAreaOrder"/>.
     /// </summary>
     private readonly List<XLPivotPageField> _fields = new();
 
@@ -121,5 +122,26 @@ internal class XLPivotTableFilters : IXLPivotFields
     internal void AddField(XLPivotPageField pageField)
     {
         _fields.Add(pageField);
+    }
+
+    /// <summary>
+    /// Number of rows/cols occupied by the filter area. Filter area is above the pivot table and it
+    /// optional (i.e. size <c>0</c> indicates no filter).
+    /// </summary>
+    internal (int Columns, int Rows) GetFilterArea()
+    {
+        var pageWrap = _pivotTable.FilterFieldsPageWrap;
+        if (pageWrap == 0)
+            pageWrap = int.MaxValue;
+
+        var dim1 = Math.DivRem(_fields.Count, pageWrap, out var dim2);
+        dim1 = _fields.Count > 0 ? dim1 + 1 : dim1;
+
+        return _pivotTable.FilterAreaOrder switch
+        {
+            XLFilterAreaOrder.DownThenOver => new(dim1, dim2),
+            XLFilterAreaOrder.OverThenDown => new(dim2, dim1),
+            _ => throw new UnreachableException(),
+        };
     }
 }

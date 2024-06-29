@@ -502,8 +502,8 @@ internal class PivotTableDefinitionPartReader
         xlPivotTable.FirstHeaderRow = location.FirstHeaderRow?.Value ?? throw PartStructureException.MissingAttribute();
         xlPivotTable.FirstDataRow = location.FirstDataRow?.Value ?? throw PartStructureException.MissingAttribute();
         xlPivotTable.FirstDataCol = location.FirstDataColumn?.Value ?? throw PartStructureException.MissingAttribute();
-        xlPivotTable.RowPageCount = location.RowPageCount?.Value ?? 0;
-        xlPivotTable.ColumnPageCount = location.ColumnsPerPage?.Value ?? 0;
+
+        // Skip `rowPageCount` and `colPageCount`, because they are derived from filterAreaOrder, filterFieldsPageWrap and pageField count
 
         // Load pivot fields
         var pivotFields = pivotTable.PivotFields;

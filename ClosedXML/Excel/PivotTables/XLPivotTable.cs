@@ -22,6 +22,7 @@ namespace ClosedXML.Excel
         private readonly List<XLPivotFormat> _formats = new();
         private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
         private XLPivotCache _cache;
+        private int _filterFieldsPageWrap;
 
         internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
@@ -707,8 +708,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Area of a pivot table. Area doesn't include page fields, they are above the area with
-        /// one empty row between area and filters. Size of filter area is held in
-        /// <see cref="RowPageCount"/> and <see cref="ColumnPageCount"/>
+        /// one empty row between area and filters.
         /// </summary>
         /// <remarks>Not kept in sync with <see cref="TargetCell"/>.</remarks>
         internal XLSheetRange Area { get; set; } = new XLSheetRange(1, 1, 1, 1); // TODO: Sync with targetCell
@@ -727,18 +727,6 @@ namespace ClosedXML.Excel
         /// First column of pivot table data area, relative to the <see cref="Area"/>.
         /// </summary>
         internal uint FirstDataCol { get; set; }
-
-        /// <summary>
-        /// Number of rows occupied by the filter area. Filter area is above the pivot table and it
-        /// optional (i.e. value <c>0</c> indicates no filter).
-        /// </summary>
-        internal uint RowPageCount { get; set; }
-
-        /// <summary>
-        /// Number of column occupied by the filter area. Filter area is above the pivot table and it
-        /// optional (i.e. value <c>0</c> indicates no filter).
-        /// </summary>
-        internal uint ColumnPageCount { get; set; }
 
         #endregion
 
@@ -962,12 +950,19 @@ namespace ClosedXML.Excel
         /// <remarks>Also called UseAutoFormatting.</remarks>
         public Boolean AutofitColumns { get; set; } = false;
 
-        /// <summary>
-        /// Specifies the number of page fields to display before starting another row or column.
-        /// Value &lt;= 0 means unlimited.
-        /// </summary>
+        /// <inheritdoc />
         /// <remarks>Also called PageWrap.</remarks>
-        public Int32 FilterFieldsPageWrap { get; set; }
+        public Int32 FilterFieldsPageWrap
+        {
+            get => _filterFieldsPageWrap;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
+
+                _filterFieldsPageWrap = value;
+            }
+        }
 
         /// <summary>
         /// Page field layout setting that indicates layout order of page fields. The layout uses

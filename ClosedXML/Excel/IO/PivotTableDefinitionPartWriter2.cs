@@ -106,8 +106,10 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteAttribute("firstHeaderRow", pt.FirstHeaderRow);
         xml.WriteAttribute("firstDataRow", pt.FirstDataRow);
         xml.WriteAttribute("firstDataCol", pt.FirstDataCol);
-        xml.WriteAttributeDefault("rowPageCount", pt.RowPageCount, 0);
-        xml.WriteAttributeDefault("colPageCount", pt.ColumnPageCount, 0);
+
+        var filterArea = pt.Filters.GetFilterArea();
+        xml.WriteAttributeDefault("rowPageCount", filterArea.Rows, 0);
+        xml.WriteAttributeDefault("colPageCount", filterArea.Columns, 0);
         xml.WriteEndElement(); // location
 
         // Pivot Fields

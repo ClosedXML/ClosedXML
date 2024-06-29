@@ -28,6 +28,10 @@ namespace ClosedXML.Excel
         String ColumnHeaderCaption { get; set; }
         String RowHeaderCaption { get; set; }
 
+        /// <summary>
+        /// Top left corner cell of a pivot table. If the pivot table contains filters fields, the target cell is top
+        /// left cell of the first filter field.
+        /// </summary>
         IXLCell TargetCell { get; set; }
 
         /// <summary>
@@ -39,6 +43,12 @@ namespace ClosedXML.Excel
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
         XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown
+
+        /// <summary>
+        /// Specifies the number of page fields to display before starting another row or column.
+        /// Value = 0 means unlimited.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">If value &lt; 0.</exception>
         Int32 FilterFieldsPageWrap { get; set; } // PageWrap
         String ErrorValueReplacement { get; set; } // ErrorCaption
         String EmptyCellReplacement { get; set; } // MissingCaption
