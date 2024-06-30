@@ -26,7 +26,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var internalPt = (XLPivotTable)pt;
             Assert.IsEmpty(internalPt.PivotFields[0].Items);
 
-            var idField = pt.RowLabels.Add("ID", "Item ID");
+            var idField = pt.RowLabels.Add("ID", "Item ID").AddSubtotal(XLSubtotalFunction.Automatic);
 
             Assert.AreEqual("ID", idField.SourceName);
             Assert.AreEqual("Item ID", idField.CustomName);

@@ -137,6 +137,11 @@ internal class XLPivotTableField
     ///       The <see cref="XLSubtotalFunction.Automatic"/> is ignored in that case, even if it is present.</item>
     /// </list>.
     /// </summary>
+    /// <remarks>
+    /// Excel requires that pivot field contains a item if and only if  there is a declared subtotal function.
+    /// The subtotal items must be kept at the end of the <see cref="_items"/>, otherwise Excel will try to repair
+    /// workbook.
+    /// </remarks>
     internal HashSet<XLSubtotalFunction> Subtotals { get; init; }
 
     internal bool ShowPropCell { get; init; } = false;
@@ -179,10 +184,16 @@ internal class XLPivotTableField
 
     internal void AddSubtotal(XLSubtotalFunction value)
     {
-        if (value == XLSubtotalFunction.None)
-            return;
-
         Subtotals.Add(value);
+        var subtotalItemType = GetItemTypeForSubtotal(value);;
+        _items.Add(new XLPivotFieldItem(this, null) { ItemType = subtotalItemType });
+    }
+
+    internal void RemoveSubtotal(XLSubtotalFunction value)
+    {
+        Subtotals.Remove(value);
+        var subtotalItemType = GetItemTypeForSubtotal(value);
+        _items.RemoveAll(item => item.ItemType == subtotalItemType);
     }
 
     internal void SetLayout(XLPivotLayout value)
@@ -222,5 +233,26 @@ internal class XLPivotTableField
         var newItem = new XLPivotFieldItem(this, sharedItemIndex);
         _items.Add(newItem);
         return newItem;
+    }
+
+    private static XLPivotItemType GetItemTypeForSubtotal(XLSubtotalFunction value)
+    {
+        var subtotalItemType = value switch
+        {
+            XLSubtotalFunction.Automatic => XLPivotItemType.Default,
+            XLSubtotalFunction.Sum => XLPivotItemType.Sum,
+            XLSubtotalFunction.Count => XLPivotItemType.CountA,
+            XLSubtotalFunction.Average => XLPivotItemType.Avg,
+            XLSubtotalFunction.Minimum => XLPivotItemType.Min,
+            XLSubtotalFunction.Maximum => XLPivotItemType.Max,
+            XLSubtotalFunction.Product => XLPivotItemType.Product,
+            XLSubtotalFunction.CountNumbers => XLPivotItemType.Count,
+            XLSubtotalFunction.StandardDeviation => XLPivotItemType.StdDev,
+            XLSubtotalFunction.PopulationStandardDeviation => XLPivotItemType.StdDevP,
+            XLSubtotalFunction.Variance => XLPivotItemType.Var,
+            XLSubtotalFunction.PopulationVariance => XLPivotItemType.VarP,
+            _ => throw new UnreachableException()
+        };
+        return subtotalItemType;
     }
 }

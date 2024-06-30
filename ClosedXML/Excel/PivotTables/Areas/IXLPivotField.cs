@@ -8,12 +8,11 @@ namespace ClosedXML.Excel
     public enum XLSubtotalFunction
     {
         Automatic,
-        None,
         Sum,
         Count,
         Average,
-        Minimum,
         Maximum,
+        Minimum,
         Product,
         CountNumbers,
         StandardDeviation,

@@ -73,6 +73,16 @@ pivot cache.
 
 Generally, this change doesn't matter, unless the table changes sizes.
 
+*********************
+Pivot table subtotals
+*********************
+
+``XLSubtotalFunction.None`` has been removed and ``XLSubtotalFunction.Maximum``
+and ``XLSubtotalFunction.Minimum`` have changed order in the enum declaration.
+
+``IXLPivotField.Subtotals`` is no longer modifiable list, but only read only
+list. At this time, there is no function to modify subtotals.
+
 *******
 Sorting
 *******

@@ -1232,7 +1232,7 @@ namespace ClosedXML.Excel
             // Subtotal items must be synchronized with subtotals. If field has a an item for
             // subtotal function, but doesn't declare subtotals function, Excel will try to
             // repair workbook. Subtotal items can be in any order.
-            foreach (var subtotalFunction in field.Subtotals.Where(x => x != XLSubtotalFunction.None))
+            foreach (var subtotalFunction in field.Subtotals)
             {
                 var itemType = subtotalFunction switch
                 {

@@ -48,9 +48,9 @@ internal class XLPivotTableAxis : IXLPivotFields
 
     internal bool ContainsDataField => _fields.Any(x => x.IsDataField);
 
-    IXLPivotField IXLPivotFields.Add(String sourceName) => AddField(sourceName, sourceName);
+    IXLPivotField IXLPivotFields.Add(String sourceName) => Add(sourceName, sourceName);
 
-    IXLPivotField IXLPivotFields.Add(String sourceName, String customName) => AddField(sourceName, customName);
+    IXLPivotField IXLPivotFields.Add(String sourceName, String customName) => Add(sourceName, customName);
 
     void IXLPivotFields.Clear() => Clear();
 
@@ -121,6 +121,18 @@ internal class XLPivotTableAxis : IXLPivotFields
             throw new ArgumentException("Field is already used on an axis.");
 
         _fields.Add(fieldIndex);
+    }
+
+    private XLPivotTableAxisField Add(String sourceName, String customName)
+    {
+        var field = AddField(sourceName, customName);
+
+        // Excel by default adds a subtotal, but previous versions of ClosedXML didn't have them,
+        // so keep API behavior.
+        if (field.Offset != FieldIndex.DataField.Value)
+            _pivotTable.PivotFields[field.Offset].RemoveSubtotal(XLSubtotalFunction.Automatic);
+
+        return field;
     }
 
     internal XLPivotTableAxisField AddField(String sourceName, String customName)
