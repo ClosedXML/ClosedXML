@@ -186,5 +186,25 @@ namespace ClosedXML.Excel
                    Row >= range.FirstPoint.Row &&
                    Row <= range.LastPoint.Row;
         }
+
+        /// <summary>
+        /// Return a new point that has its row coordinate shifted by <paramref name="rowShift"/>.
+        /// </summary>
+        /// <param name="rowShift">How many rows, positive - new point downwards, negative - new point is upwards relative to the current point.</param>
+        /// <returns>Shifted point.</returns>
+        internal XLSheetPoint ShiftRow(int rowShift)
+        {
+            return new XLSheetPoint(Row + rowShift, Column);
+        }
+
+        /// <summary>
+        /// Return a new point that has its column coordinate shifted by <paramref name="columnShift"/>.
+        /// </summary>
+        /// <param name="columnShift">How many columns, positive - new point is to the right, negative - new point is to the left.</param>
+        /// <returns>Shifted point.</returns>
+        internal XLSheetPoint ShiftColumn(int columnShift)
+        {
+            return new XLSheetPoint(Row, Column + columnShift);
+        }
     }
 }

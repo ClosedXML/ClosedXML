@@ -848,6 +848,28 @@ namespace ClosedXML.Tests
             }, @"Other\PivotTableReferenceFiles\ChartsheetAndPivotTable.xlsx");
         }
 
+        [Test]
+        public void Property_TargetCell_sets_value_of_the_top_left_corner_of_pivot_table()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var data = ws.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "City", "Flavor", "Sales"),
+                ("Cake", "Tokyo", "Vanilla", 7),
+            });
+            var pt = ws.PivotTables.Add("pt", ws.Cell("E1"), data);
+            pt.ReportFilters.Add("City");
+
+            // Even when we added filter and a gap row, the target cell is still E1
+            Assert.AreEqual("E1", pt.TargetCell.Address.ToString());
+            Assert.AreEqual("E3", ((XLPivotTable)pt).Area.FirstPoint.ToString());
+
+            pt.TargetCell = ws.Cell("E2");
+            Assert.AreEqual("E2", pt.TargetCell.Address.ToString());
+            Assert.AreEqual("E4", ((XLPivotTable)pt).Area.FirstPoint.ToString());
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;

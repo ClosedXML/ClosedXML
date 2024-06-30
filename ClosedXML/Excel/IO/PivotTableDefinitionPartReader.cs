@@ -46,7 +46,6 @@ internal class PivotTableDefinitionPartReader
         if (target != null && pivotSource != null)
         {
             var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, differentialFormats, context);
-            pt.TargetCell = target;
             ws.PivotTables.Add(pt);
 
             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);

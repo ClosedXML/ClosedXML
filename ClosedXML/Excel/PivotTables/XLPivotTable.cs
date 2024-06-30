@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Name}")]
     internal class XLPivotTable : IXLPivotTable
     {
+        private readonly XLWorksheet _worksheet;
         private String _name;
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace ClosedXML.Excel
 
         internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
-            Worksheet = worksheet;
+            _worksheet = worksheet;
             Guid = Guid.NewGuid();
 
             Filters = new XLPivotTableFilters(this);
@@ -40,7 +41,24 @@ namespace ClosedXML.Excel
         }
 
         IXLPivotCache IXLPivotTable.PivotCache { get => PivotCache; set => PivotCache = (XLPivotCache)value; }
-        public IXLCell TargetCell { get; set; }
+
+        public IXLCell TargetCell
+        {
+            get
+            {
+                var filterRows = Filters.GetSizeWithGap().Height;
+                var tableCorner = Area.FirstPoint;
+                var targetPoint = tableCorner.ShiftRow(-filterRows);
+                return _worksheet.Internals.CellsCollection.GetCell(targetPoint);
+            }
+            set
+            {
+                var filterRows = Filters.GetSizeWithGap().Height;
+                var valuePoint = ((XLCell)value).SheetPoint;
+                var tableCorner = valuePoint.ShiftRow(filterRows);
+                Area = Area.At(tableCorner);
+            }
+        }
 
         public XLPivotCache PivotCache
         {
@@ -664,7 +682,7 @@ namespace ClosedXML.Excel
             UseCustomListsForSorting = true; //	Custom List AutoSort
         }
 
-        public IXLWorksheet Worksheet { get; }
+        public IXLWorksheet Worksheet => _worksheet;
 
         public IXLPivotTableStyleFormats StyleFormats { get; } = new XLPivotTableStyleFormats();
 
@@ -710,8 +728,7 @@ namespace ClosedXML.Excel
         /// Area of a pivot table. Area doesn't include page fields, they are above the area with
         /// one empty row between area and filters.
         /// </summary>
-        /// <remarks>Not kept in sync with <see cref="TargetCell"/>.</remarks>
-        internal XLSheetRange Area { get; set; } = new XLSheetRange(1, 1, 1, 1); // TODO: Sync with targetCell
+        internal XLSheetRange Area { get; set; } = new(1, 1, 1, 1);
 
         /// <summary>
         /// First row of pivot table header, relative to the <see cref="Area"/>.

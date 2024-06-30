@@ -298,5 +298,28 @@ namespace ClosedXML.Excel
         {
             return LeftColumn == 1 && RightColumn == XLHelper.MaxColumnNumber;
         }
+
+        /// <summary>
+        /// Return a new range that has the same size as the current one,
+        /// </summary>
+        /// <param name="topLeftCorner">New top left coordinate of returned range.</param>
+        /// <returns>New range.</returns>
+        internal XLSheetRange At(XLSheetPoint topLeftCorner)
+        {
+            var bottomRightCorner = topLeftCorner.ShiftColumn(Width - 1).ShiftRow(Height - 1);
+            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+        }
+
+        /// <summary>
+        /// Return a new range that has been shifted in vertical direction by <paramref name="rowShift"/>.
+        /// </summary>
+        /// <param name="rowShift">By how much to shift the range, positive - downwards, negative - upwards.</param>
+        /// <returns>Newly created area.</returns>
+        internal XLSheetRange ShiftRows(int rowShift)
+        {
+            var topLeftCorner = FirstPoint.ShiftRow(rowShift);
+            var bottomRightCorner = LastPoint.ShiftRow(rowShift);
+            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+        }
     }
 }

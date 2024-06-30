@@ -1,5 +1,3 @@
-#nullable disable
-
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
@@ -99,7 +97,13 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (index == -1)
             return;
 
+        var removedRows = _fields.Count > 1 ? 1 : 2;
+        var movedArea = _pivotTable.Area.ShiftRows(-removedRows);
+
         _fields.RemoveAt(index);
+        _pivotTable.RemoveFieldFromAxis(index);
+
+        _pivotTable.Area = movedArea;
     }
 
     internal IReadOnlyList<XLPivotPageField> Fields => _fields;
@@ -109,8 +113,13 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
             throw new ArgumentException(nameof(sourceName), $"The column '{sourceName}' does not appear in the source range.");
 
+        var addedRows = _fields.Count > 0 ? 1 : 2;
+        var movedArea = _pivotTable.Area.ShiftRows(addedRows);
+
         var index = _pivotTable.AddFieldToAxis(sourceName, customName, XLPivotAxis.AxisPage);
         _fields.Add(new XLPivotPageField(index));
+
+        _pivotTable.Area = movedArea;
         return new XLPivotTablePageField(_pivotTable, index);
     }
 
@@ -128,7 +137,7 @@ internal class XLPivotTableFilters : IXLPivotFields
     /// Number of rows/cols occupied by the filter area. Filter area is above the pivot table and it
     /// optional (i.e. size <c>0</c> indicates no filter).
     /// </summary>
-    internal (int Columns, int Rows) GetFilterArea()
+    internal (int Width, int Height) GetSize()
     {
         var pageWrap = _pivotTable.FilterFieldsPageWrap;
         if (pageWrap == 0)
@@ -143,5 +152,16 @@ internal class XLPivotTableFilters : IXLPivotFields
             XLFilterAreaOrder.OverThenDown => new(dim2, dim1),
             _ => throw new UnreachableException(),
         };
+    }
+
+    /// <summary>
+    /// Number of rows/cols occupied by the filter area, including the gap below, if there is at least one filter.
+    /// </summary>
+    internal (int Width, int Height) GetSizeWithGap()
+    {
+        var filtersSize = GetSize();
+        return filtersSize.Height > 0
+            ? (filtersSize.Width, filtersSize.Height + 1)
+            : filtersSize;
     }
 }
