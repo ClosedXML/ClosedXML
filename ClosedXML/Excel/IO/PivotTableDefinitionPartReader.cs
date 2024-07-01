@@ -922,28 +922,29 @@ internal class PivotTableDefinitionPartReader
         {
             foreach (var item in items.Cast<Item>())
             {
+                // Attributes `sd` and `d` were swapped in spec.
                 var approximatelyHasChildren = item.ChildItems?.Value ?? false;
-                var isExpanded = item.Expanded?.Value ?? false;
+                var details = item.Expanded?.Value ?? false;
                 var drillAcrossAttributes = item.DrillAcrossAttributes?.Value ?? true;
                 var calculatedMember = item.Calculated?.Value ?? false;
                 var hidden = item.Hidden?.Value ?? false;
                 var missing = item.Missing?.Value ?? false;
                 var itemUserCaption = item.ItemName;
                 var valueIsString = item.HasStringVlue?.Value ?? false;
-                var hideDetails = item.HideDetails?.Value ?? true;
+                var showDetails = item.HideDetails?.Value ?? true;
                 var itemIndex = item.Index?.Value;
                 var itemType = item.ItemType?.Value.ToClosedXml() ?? XLPivotItemType.Data;
                 var xlItem = new XLPivotFieldItem(xlField, itemIndex is null ? null : checked((int)itemIndex.Value))
                 {
                     ApproximatelyHasChildren = approximatelyHasChildren,
-                    IsExpanded = isExpanded,
+                    Details = details,
                     DrillAcrossAttributes = drillAcrossAttributes,
                     CalculatedMember = calculatedMember,
                     Hidden = hidden,
                     Missing = missing,
                     ItemUserCaption = itemUserCaption,
                     ValueIsString = valueIsString,
-                    HideDetails = hideDetails,
+                    ShowDetails = showDetails,
                     ItemType = itemType,
                 };
 

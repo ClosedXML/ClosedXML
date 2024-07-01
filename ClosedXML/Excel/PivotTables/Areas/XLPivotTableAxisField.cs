@@ -1,7 +1,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel;
 
@@ -121,8 +121,15 @@ internal class XLPivotTableAxisField : IXLPivotField
 
     public bool Collapsed
     {
-        get => !GetFieldValue(f => f.AllDrilled, false);
-        set => GetField().AllDrilled = !value;
+        get
+        {
+            return GetFieldValue(f => !f.Items.Any(i => i.ShowDetails), false);
+        }
+        set
+        {
+            foreach (var item in GetField().Items)
+                item.ShowDetails = !value;
+        }
     }
 
     public XLPivotSortType SortType

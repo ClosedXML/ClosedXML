@@ -48,12 +48,17 @@ internal class XLPivotFieldItem
     /// </summary>
     internal bool Hidden { get; set; } = false;
 
-    /// <summary>Flag indicating that the item has a character value.</summary>
+    /// <summary>
+    /// Flag indicating that the item has a character value.
+    /// </summary>
     /// <remarks>Allowed for OLAP pivot tables only.</remarks>
     internal bool ValueIsString { get; init; } = false;
 
-    /// <remarks>Allowed for non-OLAP pivot tables only.</remarks>
-    internal bool HideDetails { get; init; } = true;
+    /// <summary>
+    /// Excel uses the <c>sd</c> attribute to indicate whether the item is expanded.
+    /// </summary>
+    /// <remarks>Allowed for non-OLAP pivot tables only. Spec for the <c>sd</c> had to be patched..</remarks>
+    internal bool ShowDetails { get; set; } = true;
 
     /// <remarks>Allowed for non-OLAP pivot tables only.</remarks>
     internal bool CalculatedMember { get; init; } = false;
@@ -76,8 +81,12 @@ internal class XLPivotFieldItem
     /// <remarks>Allowed for OLAP pivot tables only.</remarks>
     internal bool DrillAcrossAttributes { get; init; } = true;
 
-    /// <remarks>Allowed for OLAP pivot tables only.</remarks>
-    internal bool IsExpanded { get; init; }
+    /// <summary>
+    /// Attributes <c>sd</c> (show detail) and <c>d</c> (detail) were swapped in spec, fixed by OI29500.
+    /// A flag that indicates whether details are hidden for this item?
+    /// </summary>
+    /// <remarks><c>d</c> attribute. Allowed for OLAP pivot tables only.</remarks>
+    internal bool Details { get; init; }
 
     #endregion XML attributes
 

@@ -61,7 +61,15 @@ namespace ClosedXML.Excel
         Boolean InsertBlankLines { get; set; }
         Boolean ShowBlankItems { get; set; }
         Boolean InsertPageBreaks { get; set; }
+
+        /// <summary>
+        /// Are all items of the field collapsed?
+        /// </summary>
+        /// <remarks>
+        /// If only a subset of items is collapsed, getter returns <c>false</c>.
+        /// </remarks>
         Boolean Collapsed { get; set; }
+
         XLPivotSortType SortType { get; set; }
 
         /// <inheritdoc cref="CustomName"/>

@@ -202,12 +202,12 @@ internal class PivotTableDefinitionPartWriter2
 
                     xml.WriteAttributeDefault("h", pfItem.Hidden, false);
                     xml.WriteAttributeDefault("s", pfItem.ValueIsString, false);
-                    xml.WriteAttributeDefault("sd", pfItem.HideDetails, true);
+                    xml.WriteAttributeDefault("sd", pfItem.ShowDetails, true);
                     xml.WriteAttributeDefault("f", pfItem.CalculatedMember, false);
                     xml.WriteAttributeDefault("m", pfItem.Missing, false);
                     xml.WriteAttributeDefault("c", pfItem.ApproximatelyHasChildren, false);
                     xml.WriteAttributeOptional("x", pfItem.ItemIndex);
-                    xml.WriteAttributeDefault("d", pfItem.IsExpanded, false);
+                    xml.WriteAttributeDefault("d", pfItem.Details, false);
                     xml.WriteAttributeDefault("e", pfItem.DrillAcrossAttributes, true);
                     xml.WriteEndElement(); // item
                 }
