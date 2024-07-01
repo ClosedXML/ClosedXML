@@ -51,13 +51,14 @@ internal class XLPivotTableFilters : IXLPivotFields
 
     public IXLPivotField Get(String sourceName)
     {
-        if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var index))
+        if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var fieldIndex))
             throw new KeyNotFoundException($"Field with source name '{sourceName}' not found in {XLPivotAxis.AxisPage}.");
 
-        if (_fields.All(f => f.Field != index))
+        var filterField = _fields.SingleOrDefault(f => f.Field == fieldIndex);
+        if (filterField is null)
             throw new KeyNotFoundException($"Field with source name '{sourceName}' not found in {XLPivotAxis.AxisPage}.");
 
-        return new XLPivotTablePageField(_pivotTable, index);
+        return new XLPivotTablePageField(_pivotTable, filterField);
     }
 
     public IXLPivotField Get(Int32 index)
@@ -65,7 +66,7 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (index < 0 || index >= _fields.Count)
             throw new IndexOutOfRangeException();
 
-        return new XLPivotTablePageField(_pivotTable, _fields[index].Field);
+        return new XLPivotTablePageField(_pivotTable, _fields[index]);
     }
 
     IEnumerator<IXLPivotField> IEnumerable<IXLPivotField>.GetEnumerator() => GetEnumerator();
@@ -75,7 +76,7 @@ internal class XLPivotTableFilters : IXLPivotFields
     public IEnumerator<XLPivotTablePageField> GetEnumerator()
     {
         foreach (var field in _fields)
-            yield return new XLPivotTablePageField(_pivotTable, field.Field);
+            yield return new XLPivotTablePageField(_pivotTable, field);
     }
 
     public Int32 IndexOf(String sourceName)
@@ -115,12 +116,13 @@ internal class XLPivotTableFilters : IXLPivotFields
 
         var addedRows = _fields.Count > 0 ? 1 : 2;
         var movedArea = _pivotTable.Area.ShiftRows(addedRows);
-
-        var index = _pivotTable.AddFieldToAxis(sourceName, customName, XLPivotAxis.AxisPage);
-        _fields.Add(new XLPivotPageField(index));
+        
+        var fieldIndex = _pivotTable.AddFieldToAxis(sourceName, customName, XLPivotAxis.AxisPage);
+        var filterField = new XLPivotPageField(fieldIndex);
+        _fields.Add(filterField);
 
         _pivotTable.Area = movedArea;
-        return new XLPivotTablePageField(_pivotTable, index);
+        return new XLPivotTablePageField(_pivotTable, filterField);
     }
 
     internal bool Contains(FieldIndex fieldIndex)

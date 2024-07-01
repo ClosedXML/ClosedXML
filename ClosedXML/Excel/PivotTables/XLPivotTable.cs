@@ -1287,6 +1287,7 @@ namespace ClosedXML.Excel
                 field.Name = null;
                 field.Axis = null;
                 field.DataField = false;
+                field.MultipleItemSelectionAllowed = false;
             }
         }
 

@@ -1,5 +1,4 @@
 #nullable disable
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,24 +11,15 @@ namespace ClosedXML.Excel;
 internal class XLPivotTablePageField : IXLPivotField
 {
     private readonly XLPivotTable _pivotTable;
-    private readonly FieldIndex _index;
+    private readonly XLPivotPageField _filterField;
 
-    internal XLPivotTablePageField(XLPivotTable pivotTable, FieldIndex index)
+    internal XLPivotTablePageField(XLPivotTable pivotTable, XLPivotPageField filterField)
     {
         _pivotTable = pivotTable;
-        _index = index;
+        _filterField = filterField;
     }
 
-    public string SourceName
-    {
-        get
-        {
-            if (_index.IsDataField)
-                throw new InvalidOperationException("Filter field can't contain data field.");
-
-            return _pivotTable.PivotCache.FieldNames[_index];
-        }
-    }
+    public string SourceName => _pivotTable.PivotCache.FieldNames[_filterField.Field];
 
     public string CustomName
     {
@@ -196,9 +186,40 @@ internal class XLPivotTablePageField : IXLPivotField
 
     public IXLPivotField AddSelectedValue(XLCellValue value)
     {
-        var fieldItem = GetField().GetOrAddItem(value);
-        fieldItem.Hidden = false;
-        return this;
+        // Try to keep the original behavior of ClosedXML - it always allows multiple selected items for added values.
+        // But it's complete kludge with no sane semantic that will be nuked ASAP.
+        var pivotField = GetField();
+
+        var nothingSelected = _filterField.ItemIndex is null && !pivotField.MultipleItemSelectionAllowed;
+        if (nothingSelected)
+        {
+            var fieldItem = pivotField.GetOrAddItem(value);
+            _filterField.ItemIndex = (uint?)fieldItem.ItemIndex;
+            return this;
+        }
+
+        var oneItemSelected = _filterField.ItemIndex is not null && !pivotField.MultipleItemSelectionAllowed;
+        if (oneItemSelected)
+        {
+            // Switch to multiple
+            pivotField.MultipleItemSelectionAllowed = true;
+            foreach (var item in pivotField.Items.Where(x => x.ItemType == XLPivotItemType.Data))
+                item.Hidden = true;
+
+            var selectedItem = pivotField.Items.Single(i => i.ItemIndex == _filterField.ItemIndex);
+            selectedItem.Hidden = false;
+            _filterField.ItemIndex = null;
+            var fieldItem = pivotField.GetOrAddItem(value);
+            fieldItem.Hidden = false;
+            return this;
+        }
+        else
+        {
+            // Add another item to selected item filters.
+            var fieldItem = pivotField.GetOrAddItem(value);
+            fieldItem.Hidden = false;
+            return this;
+        }
     }
 
     public IXLPivotField AddSelectedValues(IEnumerable<XLCellValue> values)
@@ -213,13 +234,10 @@ internal class XLPivotTablePageField : IXLPivotField
     public bool IsOnRowAxis => false;
     public bool IsOnColumnAxis => false;
     public bool IsInFilterList => true;
-    public int Offset => _index;
+    public int Offset => _filterField.Field;
 
     private XLPivotTableField GetField()
     {
-        if (_index.IsDataField)
-            throw new InvalidOperationException("Can't set this property on a data field.");
-
-        return _pivotTable.PivotFields[_index];
+        return _pivotTable.PivotFields[_filterField.Field];
     }
 }

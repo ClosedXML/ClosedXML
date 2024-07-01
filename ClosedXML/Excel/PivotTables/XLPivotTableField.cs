@@ -83,7 +83,7 @@ internal class XLPivotTableField
 
     internal bool DragToColumn { get; init; } = true;
 
-    internal bool MultipleItemSelectionAllowed { get; init; } = false;
+    internal bool MultipleItemSelectionAllowed { get; set; } = false;
 
     internal bool DragToPage { get; init; } = true;
 
