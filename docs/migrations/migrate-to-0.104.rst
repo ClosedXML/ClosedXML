@@ -81,7 +81,7 @@ Pivot table subtotals
 and ``XLSubtotalFunction.Minimum`` have changed order in the enum declaration.
 
 ``IXLPivotField.Subtotals`` is no longer modifiable list, but only read only
-list. At this time, there is no function to modify subtotals.
+list. At this time, there is no function to remove subtotal function for a field.
 
 *******
 Sorting

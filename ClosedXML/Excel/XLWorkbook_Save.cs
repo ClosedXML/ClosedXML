@@ -528,7 +528,7 @@ namespace ClosedXML.Excel
             XLWorksheet xlWorksheet,
             SaveContext context)
         {
-            foreach (var pt in xlWorksheet.PivotTables.Cast<XLPivotTable>())
+            foreach (var pt in xlWorksheet.PivotTables)
             {
                 PivotTablePart pivotTablePart;
                 var createNewPivotTablePart = String.IsNullOrWhiteSpace(pt.RelId);

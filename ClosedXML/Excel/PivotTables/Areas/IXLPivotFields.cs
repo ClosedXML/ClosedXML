@@ -7,7 +7,7 @@ namespace ClosedXML.Excel;
 /// <summary>
 /// <para>
 /// A collection of fields on <see cref="IXLPivotTable.ColumnLabels">column labels</see>,
-/// <see cref="IXLPivotTable.ColumnLabels">row labels</see> or
+/// <see cref="IXLPivotTable.RowLabels">row labels</see> or
 /// <see cref="IXLPivotTable.ReportFilters">report filters</see> of a
 /// <see cref="IXLPivotTable"/>.
 /// </para>

@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     internal struct XLNumberFormatKey : IEquatable<XLNumberFormatKey>
     {
         /// <summary>
-        /// Number format identifier of predefined format, see<see cref="XLPredefinedFormat"/>.
+        /// Number format identifier of predefined format, see <see cref="XLPredefinedFormat"/>.
         /// If -1, the format is custom and stored in the <see cref="Format"/>.
         /// </summary>
         public int NumberFormatId { get; set; }

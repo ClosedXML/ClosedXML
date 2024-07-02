@@ -28,7 +28,6 @@ namespace ClosedXML.Excel
         internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
             _worksheet = worksheet;
-            Guid = Guid.NewGuid();
 
             Filters = new XLPivotTableFilters(this);
             RowAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisRow);
@@ -116,8 +115,6 @@ namespace ClosedXML.Excel
         internal IReadOnlyList<XLPivotFormat> Formats => _formats;
 
         internal IReadOnlyList<XLPivotConditionalFormat> ConditionalFormats => _conditionalFormats;
-
-        internal Guid Guid { get; }
 
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
@@ -749,6 +746,10 @@ namespace ClosedXML.Excel
 
         #region Attributes of PivotTableDefinition in same order as XSD
 
+        /// <summary>
+        /// Determines the whether 'data' field is on <see cref="RowAxis"/> (<c>true</c>) or
+        /// <see cref="ColumnAxis"/>(<c>false</c>).
+        /// </summary>
         internal bool DataOnRows { get; set; } = false;
 
         /// <summary>
@@ -1229,19 +1230,23 @@ namespace ClosedXML.Excel
                 return FieldIndex.DataField;
             }
 
-            var index = GetUnusedFieldIndex(sourceName, customName);
-            var field = _fields[index];
+            if (!_cache.TryGetFieldIndex(sourceName, out var fieldIndex))
+                throw new InvalidOperationException($"Field '{sourceName}' not found in pivot cache.");
+
+            // Check actual fields.
+            var customNameUsed = _fields.Any(f => XLHelper.NameComparer.Equals(f.Name, customName));
+            if (customNameUsed)
+                throw new InvalidOperationException($"Custom name '{customName}' is already used.");
+
+            var field = _fields[fieldIndex];
             field.Name = customName;
             field.Axis = axis;
 
             // If it is an axis, all possible values to field items, because they should be referenced in items.
             // Page field must have default item, otherwise Excel asks for repair.
-            var sharedItems = _cache.GetFieldSharedItems(index);
+            var sharedItems = _cache.GetFieldSharedItems(fieldIndex);
             for (var i = 0; i < sharedItems.Count; ++i)
-            {
-                // TODO: use distinct
                 field.AddItem(new XLPivotFieldItem(field, i));
-            }
 
             // Subtotal items must be synchronized with subtotals. If field has a an item for
             // subtotal function, but doesn't declare subtotals function, Excel will try to
@@ -1267,7 +1272,7 @@ namespace ClosedXML.Excel
                 field.AddItem(new XLPivotFieldItem(field, null) { ItemType = itemType });
             }
 
-            return index;
+            return fieldIndex;
         }
 
         internal void RemoveFieldFromAxis(FieldIndex index)
@@ -1327,26 +1332,6 @@ namespace ClosedXML.Excel
 
             index = default;
             return false;
-        }
-
-        /// <summary>
-        /// Get index of a <paramref name="sourceName"/> field. If the field is already used
-        /// in any area, throw. If <paramref name="customName"/> is already used somewhere, throw.
-        /// </summary>
-        /// <param name="sourceName">Name of a field in <see cref="XLPivotCache"/>.</param>
-        /// <param name="customName">Proposed custom name of the field.</param>
-        /// <exception cref="InvalidOperationException">If field of custom name is already used.</exception>
-        private FieldIndex GetUnusedFieldIndex(string sourceName, string customName)
-        {
-            if (!PivotCache.TryGetFieldIndex(sourceName, out var fieldIndex))
-                throw new InvalidOperationException($"Field '{sourceName}' not found in pivot cache.");
-
-            // Check actual fields.
-            var customNameUsed = _fields.Any(f => XLHelper.NameComparer.Equals(f.Name, customName));
-            if (customNameUsed)
-                throw new InvalidOperationException($"Custom name '{customName}' is already used.");
-
-            return fieldIndex;
         }
 
         /// <summary>

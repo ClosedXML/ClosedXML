@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,9 +41,20 @@ internal class LoadContext
         return pivotCf;
     }
 
-    internal void AddNumberFormat(int numberFormatId, string numberFormat)
+    internal void LoadNumberFormats(NumberingFormats? numberingFormats)
     {
-        _numberFormats.Add(numberFormatId, numberFormat);
+        if (numberingFormats is null)
+            return;
+
+        foreach (var nf in numberingFormats.ChildElements.Cast<NumberingFormat>())
+        {
+            var numberFormatId = checked((int?)nf.NumberFormatId?.Value);
+            var formatCode = nf.FormatCode?.Value;
+            if (numberFormatId is null || string.IsNullOrEmpty(formatCode))
+                continue;
+
+            _numberFormats.Add(numberFormatId.Value, formatCode);
+        }
     }
 
     internal XLNumberFormatValue? GetNumberFormat(int? numberFormatId)
