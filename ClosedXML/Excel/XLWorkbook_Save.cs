@@ -500,8 +500,6 @@ namespace ClosedXML.Excel
 
         private void GeneratePivotCaches(WorkbookPart workbookPart, SaveContext context)
         {
-            context.PivotSources.Clear();
-
             var pivotTables = WorksheetsInternal.SelectMany<XLWorksheet, XLPivotTable>(ws => ws.PivotTables);
 
             var xlPivotCaches = pivotTables.Select(pt => pt.PivotCache).Distinct();

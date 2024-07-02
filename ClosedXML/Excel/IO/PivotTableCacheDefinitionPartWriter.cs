@@ -63,12 +63,6 @@ namespace ClosedXML.Excel.IO
             pivotCacheDefinition.SaveData = pivotCache.SaveSourceData;
             pivotCacheDefinition.RefreshOnLoad = true; //pt.RefreshDataOnOpen
 
-            var pivotSourceInfo = new PivotSourceInfo
-            {
-                Guid = pivotCache.Guid,
-                Fields = new Dictionary<String, PivotTableFieldInfo>()
-            };
-
             if (pivotCache.ItemsToRetainPerField == XLItemsToRetain.None)
                 pivotCacheDefinition.MissingItemsLimit = 0U;
             else if (pivotCache.ItemsToRetainPerField == XLItemsToRetain.Max)
@@ -256,12 +250,9 @@ namespace ClosedXML.Excel.IO
                     };
                     sharedItems.AppendChild(toAdd);
                 }
-
-                pivotSourceInfo.Fields.Add(cacheFieldName, ptfi);
             }
 
             // End CacheFields
-            context.PivotSources.Add(pivotSourceInfo.Guid, pivotSourceInfo);
         }
     }
 }
