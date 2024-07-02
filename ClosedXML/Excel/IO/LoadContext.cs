@@ -15,7 +15,7 @@ internal class LoadContext
     /// <summary>
     /// A dictionary of styles from <c>styles.xml</c>. Used in other places that reference number style by id reference.
     /// </summary>
-    private readonly Dictionary<uint, string> _numberFormats = new();
+    private readonly Dictionary<int, string> _numberFormats = new();
 
     internal void AddPivotTableCf(string sheetName, XLConditionalFormat conditionalFormat)
     {
@@ -40,12 +40,12 @@ internal class LoadContext
         return pivotCf;
     }
 
-    internal void AddNumberFormat(uint numberFormatId, string numberFormat)
+    internal void AddNumberFormat(int numberFormatId, string numberFormat)
     {
         _numberFormats.Add(numberFormatId, numberFormat);
     }
 
-    internal XLNumberFormatValue? GetNumberFormat(uint? numberFormatId)
+    internal XLNumberFormatValue? GetNumberFormat(int? numberFormatId)
     {
         if (numberFormatId is null)
         {
@@ -65,7 +65,7 @@ internal class LoadContext
         {
             var predefinedFormatKey = new XLNumberFormatKey
             {
-                NumberFormatId = checked((int)numberFormatId.Value),
+                NumberFormatId = numberFormatId.Value,
                 Format = string.Empty,
             };
             return XLNumberFormatValue.FromKey(ref predefinedFormatKey);

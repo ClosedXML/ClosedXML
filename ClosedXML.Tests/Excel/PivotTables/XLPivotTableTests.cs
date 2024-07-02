@@ -828,7 +828,7 @@ namespace ClosedXML.Tests
             // Opening the saved file in Excel throws an error 'Reference isn't valid'
             // on load, because of `RefreshOnLoad` flag. That flag is always enabled because
             // ClosedXML relies on Excel to rebuild the table and fix it.
-            // At this time, there is no content, only shape, because don't have engine
+            // At this time, there is no content, only shape, because we don't have an engine
             // to determine correct layout and values. Change RefreshDataOnOpen to 0 and change
             // PT in Excel to see the values (aka gimp on Excel PT engine).
             TestHelper.LoadSaveAndCompare(
@@ -848,6 +848,10 @@ namespace ClosedXML.Tests
                 Assert.True(wb.Worksheet("pivot").PivotTables.Contains("Pastries"));
             }, @"Other\PivotTableReferenceFiles\ChartsheetAndPivotTable.xlsx");
         }
+
+        #region IXLPivotTable properties
+
+        #region TargetCell
 
         [Test]
         public void Property_TargetCell_sets_value_of_the_top_left_corner_of_pivot_table()
@@ -870,6 +874,38 @@ namespace ClosedXML.Tests
             Assert.AreEqual("E2", pt.TargetCell.Address.ToString());
             Assert.AreEqual("E4", ((XLPivotTable)pt).Area.FirstPoint.ToString());
         }
+
+        #endregion
+
+        #region FilterAreaOrder
+
+        [TestCase(XLFilterAreaOrder.DownThenOver, "E5")]
+        [TestCase(XLFilterAreaOrder.OverThenDown, "E3")]
+        public void Property_FilterAreaOrder_determines_direction_in_which_are_filter_fields_laid_out(XLFilterAreaOrder order, string tableAddress)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var data = ws.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "City", "Flavor", "Sales"),
+                ("Cake", "Tokyo", "Vanilla", 7),
+            });
+
+            var pt = ws.PivotTables.Add("pt", ws.Cell("E1"), data);
+            pt.FilterAreaOrder = order;
+
+            pt.ReportFilters.Add("Name");
+            pt.ReportFilters.Add("City");
+            pt.ReportFilters.Add("Flavor");
+
+            // Indirect detection of filter fields layout: The address of pivot table are is
+            // determined by filter area order.
+            Assert.AreEqual(tableAddress, ((XLPivotTable)pt).Area.ToString());
+        }
+
+        #endregion
+
+        #endregion
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {

@@ -42,7 +42,13 @@ namespace ClosedXML.Excel
 
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
-        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown
+
+        /// <summary>
+        /// Filter fields layout setting that indicates layout order of filter fields. The layout
+        /// uses <see cref="FilterFieldsPageWrap"/> to determine when to break to a new row or
+        /// column. Default value is <see cref="XLFilterAreaOrder.DownThenOver"/>.
+        /// </summary>
+        XLFilterAreaOrder FilterAreaOrder { get; set; }
 
         /// <summary>
         /// Specifies the number of page fields to display before starting another row or column.

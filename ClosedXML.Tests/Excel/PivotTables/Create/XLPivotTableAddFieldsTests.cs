@@ -15,15 +15,7 @@ namespace ClosedXML.Tests.Excel.PivotTables.Create
         {
             TestHelper.CreateAndCompare(wb =>
             {
-                var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
-                {
-                    ("A", "B"),
-                    (1, 2),
-                });
-
-                var ws = wb.AddWorksheet();
-                ws.PivotTables.Add("Test", ws.FirstCell(), range);
-                ws.SetTabActive();
+                CreatePivotTableFor2X2(wb);
             }, @"Other\PivotTable\Create\Add_empty_table.xlsx");
         }
 
@@ -32,14 +24,7 @@ namespace ClosedXML.Tests.Excel.PivotTables.Create
         {
             TestHelper.CreateAndCompare(wb =>
             {
-                var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
-                {
-                ("A", "B"),
-                (1, 2),
-                });
-
-                var ws = wb.AddWorksheet().SetTabActive();
-                var pt = ws.PivotTables.Add("Test", ws.FirstCell(), range);
+                var pt = CreatePivotTableFor2X2(wb);
 
                 pt.ColumnLabels.Add("A");
             }, @"Other\PivotTable\Create\Add_one_column_without_value.xlsx");
@@ -50,14 +35,7 @@ namespace ClosedXML.Tests.Excel.PivotTables.Create
         {
             TestHelper.CreateAndCompare(wb =>
             {
-                var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
-                {
-                    ("A", "B"),
-                    (1, 2),
-                });
-
-                var ws = wb.AddWorksheet().SetTabActive();
-                var pt = ws.PivotTables.Add("Test", ws.FirstCell(), range);
+                var pt = CreatePivotTableFor2X2(wb);
 
                 pt.RowLabels.Add("A");
             }, @"Other\PivotTable\Create\Add_one_row_without_value.xlsx");
@@ -68,14 +46,7 @@ namespace ClosedXML.Tests.Excel.PivotTables.Create
         {
             TestHelper.CreateAndCompare(wb =>
             {
-                var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
-                {
-                    ("A", "B"),
-                    (1, 2),
-                });
-
-                var ws = wb.AddWorksheet().SetTabActive();
-                var pt = ws.PivotTables.Add("Test", ws.FirstCell(), range);
+                var pt = CreatePivotTableFor2X2(wb);
 
                 pt.ColumnLabels.Add("A");
                 pt.Values.Add("B");
@@ -87,20 +58,26 @@ namespace ClosedXML.Tests.Excel.PivotTables.Create
         {
             TestHelper.CreateAndCompare(wb =>
             {
-                var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
-                {
-                    ("A", "B"),
-                    (1, 2),
-                });
-
-                var ws = wb.AddWorksheet().SetTabActive();
-                var pt = ws.PivotTables.Add("Test", ws.FirstCell(), range);
+                var pt = CreatePivotTableFor2X2(wb);
 
                 pt.ColumnLabels.Add("A");
                 pt.Values.Add("B", "Sum of B").SetSummaryFormula(XLPivotSummary.Sum);
                 pt.Values.Add("B", "Count of B").SetSummaryFormula(XLPivotSummary.Count);
                 pt.SetShowGrandTotalsColumns(false);
             }, @"Other\PivotTable\Create\Add_one_column_and_two_values.xlsx");
+        }
+
+        private static IXLPivotTable CreatePivotTableFor2X2(XLWorkbook wb)
+        {
+            var range = wb.AddWorksheet().FirstCell().InsertData(new object[]
+            {
+                ("A", "B"),
+                (1, 2),
+            });
+
+            var ws = wb.AddWorksheet().SetTabActive();
+            var pt = ws.PivotTables.Add("Test", ws.FirstCell(), range);
+            return pt;
         }
     }
 }

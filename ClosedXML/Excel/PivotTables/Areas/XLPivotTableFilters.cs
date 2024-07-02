@@ -114,8 +114,9 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
             throw new ArgumentException(nameof(sourceName), $"The column '{sourceName}' does not appear in the source range.");
 
-        var addedRows = _fields.Count > 0 ? 1 : 2;
-        var movedArea = _pivotTable.Area.ShiftRows(addedRows);
+        var originalHeight = GetSizeWithGap(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
+        var modifiedHeight = GetSizeWithGap(_fields.Count + 1, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
+        var movedArea = _pivotTable.Area.ShiftRows(modifiedHeight - originalHeight);
         
         var fieldIndex = _pivotTable.AddFieldToAxis(sourceName, customName, XLPivotAxis.AxisPage);
         var filterField = new XLPivotPageField(fieldIndex);
@@ -141,19 +142,7 @@ internal class XLPivotTableFilters : IXLPivotFields
     /// </summary>
     internal (int Width, int Height) GetSize()
     {
-        var pageWrap = _pivotTable.FilterFieldsPageWrap;
-        if (pageWrap == 0)
-            pageWrap = int.MaxValue;
-
-        var dim1 = Math.DivRem(_fields.Count, pageWrap, out var dim2);
-        dim1 = _fields.Count > 0 ? dim1 + 1 : dim1;
-
-        return _pivotTable.FilterAreaOrder switch
-        {
-            XLFilterAreaOrder.DownThenOver => new(dim1, dim2),
-            XLFilterAreaOrder.OverThenDown => new(dim2, dim1),
-            _ => throw new UnreachableException(),
-        };
+        return GetSize(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap);
     }
 
     /// <summary>
@@ -161,7 +150,28 @@ internal class XLPivotTableFilters : IXLPivotFields
     /// </summary>
     internal (int Width, int Height) GetSizeWithGap()
     {
-        var filtersSize = GetSize();
+        return GetSizeWithGap(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap);
+    }
+
+    private static (int Width, int Height) GetSize(int fieldCount, XLFilterAreaOrder order, int filterWrap)
+    {
+        if (filterWrap == 0)
+            filterWrap = int.MaxValue;
+
+        var dim1 = Math.DivRem(fieldCount, filterWrap, out var dim2);
+        dim1 = fieldCount > 0 ? dim1 + 1 : dim1;
+
+        return order switch
+        {
+            XLFilterAreaOrder.DownThenOver => new(dim1, dim2),
+            XLFilterAreaOrder.OverThenDown => new(dim2, dim1),
+            _ => throw new UnreachableException(),
+        };
+    }
+
+    private static (int Width, int Height) GetSizeWithGap(int fieldCount, XLFilterAreaOrder order, int filterWrap)
+    {
+        var filtersSize = GetSize(fieldCount, order, filterWrap);
         return filtersSize.Height > 0
             ? (filtersSize.Width, filtersSize.Height + 1)
             : filtersSize;

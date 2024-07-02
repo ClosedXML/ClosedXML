@@ -981,10 +981,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        /// <summary>
-        /// Page field layout setting that indicates layout order of page fields. The layout uses
-        /// <see cref="FilterFieldsPageWrap"/> to determine when to break to a new row or column.
-        /// </summary>
+        /// <inheritdoc />
         /// <remarks>Also called <em>PageOverThenDown</em>.</remarks>
         public XLFilterAreaOrder FilterAreaOrder { get; set; } = XLFilterAreaOrder.DownThenOver;
 

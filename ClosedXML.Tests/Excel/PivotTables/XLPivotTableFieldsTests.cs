@@ -11,6 +11,8 @@ namespace ClosedXML.Tests.Excel.PivotTables
     {
         #region IXLPivotFields methods
 
+        #region Add
+
         [Test]
         public void Add_field_not_yet_in_table_adds_field_and_shared_items()
         {
@@ -70,11 +72,15 @@ namespace ClosedXML.Tests.Excel.PivotTables
             });
             var ptSheet = wb.AddWorksheet();
             var pt = ptSheet.PivotTables.Add("pt", ptSheet.Cell("A1"), range);
-            pt.RowLabels.Add("ID", "Item ID");
+            Assert.DoesNotThrow(() => pt.RowLabels.Add("ID", "Item ID"));
 
             var ex = Assert.Throws<InvalidOperationException>(() => pt.RowLabels.Add("nonexistent"))!;
             Assert.AreEqual("Field 'nonexistent' not found in pivot cache.", ex.Message);
         }
+
+        #endregion
+
+        #region Clear
 
         [Test]
         public void Clear_removes_all_fields_from_axis()
@@ -104,6 +110,10 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.Null(internalPt.PivotFields[1].Axis);
         }
 
+        #endregion
+
+        #region Contains
+
         [Test]
         public void Contains_checks_whether_field_is_present()
         {
@@ -125,6 +135,10 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.False(pt.RowLabels.Contains("nonexistent"));
         }
 
+        #endregion
+
+        #region Get(string sourceName)
+
         [Test]
         public void Get_field_by_source_name()
         {
@@ -145,6 +159,10 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.AreEqual("Field with source name 'color' not found in AxisRow.", ex.Message);
         }
 
+        #endregion
+
+        #region Get(int)
+
         [Test]
         public void Get_field_by_index()
         {
@@ -164,6 +182,10 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.Throws<IndexOutOfRangeException>(() => pt.RowLabels.Get(-2));
             Assert.Throws<IndexOutOfRangeException>(() => pt.RowLabels.Get(1));
         }
+
+        #endregion
+
+        #region IndexOf
 
         [Test]
         public void IndexOf_finds_field_in_axis_by_source_name()
@@ -186,6 +208,10 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.AreEqual(-1, pt.RowLabels.IndexOf("Color"));
         }
 
+        #endregion
+
+        #region Remove
+
         [Test]
         public void Remove_removes_field()
         {
@@ -205,6 +231,9 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             Assert.IsEmpty(pt.RowLabels);
         }
+
+        #endregion
+
         #endregion
     }
 }

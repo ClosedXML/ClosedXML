@@ -31,7 +31,7 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteAttribute("name", pt.Name);
         xml.WriteAttribute("cacheId", pt.PivotCache.CacheId!.Value); // TODO: Maybe not nullable?
         xml.WriteAttributeDefault("dataOnRows", pt.DataOnRows, false);
-        xml.WriteAttributeOptional("dataPosition", pt.DataPosition is not null ? checked((int)pt.DataPosition) : null);
+        xml.WriteAttributeOptional("dataPosition", pt.DataPosition);
         xml.WriteAttributeOptional("autoFormatId", pt.AutoFormatId);
 
         // Although apply*Formats do have default value `false`, Excel always writes them.
@@ -237,18 +237,19 @@ internal class PivotTableDefinitionPartWriter2
         WriteAxis(xml, pt.RowAxis, "rowFields", "rowItems");
         WriteAxis(xml, pt.ColumnAxis, "colFields", "colItems");
 
-        if (pt.Filters.Fields.Count > 0)
+        var filterFields = pt.Filters.Fields;
+        if (filterFields.Count > 0)
         {
             xml.WriteStartElement("pageFields", Main2006SsNs);
-            xml.WriteAttribute("count", pt.Filters.Fields.Count);
-            foreach (var pageField in pt.Filters.Fields)
+            xml.WriteAttribute("count", filterFields.Count);
+            foreach (var filterField in filterFields)
             {
                 xml.WriteStartElement("pageField", Main2006SsNs);
-                xml.WriteAttribute("fld", pageField.Field);
-                xml.WriteAttributeOptional("item", pageField.ItemIndex);
-                xml.WriteAttributeOptional("hier", pageField.HierarchyIndex);
-                xml.WriteAttributeOptional("name", pageField.HierarchyUniqueName);
-                xml.WriteAttributeOptional("cap", pageField.HierarchyDisplayName);
+                xml.WriteAttribute("fld", filterField.Field);
+                xml.WriteAttributeOptional("item", filterField.ItemIndex);
+                xml.WriteAttributeOptional("hier", filterField.HierarchyIndex);
+                xml.WriteAttributeOptional("name", filterField.HierarchyUniqueName);
+                xml.WriteAttributeOptional("cap", filterField.HierarchyDisplayName);
                 xml.WriteEndElement(); // pageField
             }
 
@@ -434,7 +435,7 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteStartElement("ext", Main2006SsNs);
             xml.WriteAttributeString("xmlns", "x14", null, X14Main2009SsNs);
             xml.WriteAttributeString("uri", "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}");
-            xml.WriteStartElement( "pivotTableDefinition", X14Main2009SsNs);
+            xml.WriteStartElement("pivotTableDefinition", X14Main2009SsNs);
             xml.WriteAttribute("enableEdit", pt.EnableCellEditing);
             xml.WriteAttribute("hideValuesRow", !pt.ShowValuesRow);
             xml.WriteEndElement(); // pivotTableDefinition

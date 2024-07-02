@@ -36,8 +36,15 @@ namespace ClosedXML.Excel
     public interface IXLPivotField
     {
         /// <summary>
+        /// <para>
         /// Name of the field in a pivot table <see cref="IXLPivotTable.PivotCache"/>. If the field
         /// is 'data' field, return <see cref="XLConstants.PivotTable.ValuesSentinalLabel"/>.
+        /// </para>
+        /// <para>
+        /// Note that field name in pivot cache is generally same as in the source data range, but
+        /// not always. Field names are unique in the cache and if the source data range contains
+        /// duplicate column names, the cache will rename them to keep all names unique.
+        /// </para>
         /// </summary>
         String SourceName { get; }
 

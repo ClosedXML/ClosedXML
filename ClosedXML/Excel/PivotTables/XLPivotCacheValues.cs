@@ -1,8 +1,8 @@
-using ClosedXML.Excel.Cells;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using ClosedXML.Excel.Cells;
 
 namespace ClosedXML.Excel
 {

@@ -537,7 +537,7 @@ namespace ClosedXML.Excel
 
             foreach (var nf in numberingFormats.ChildElements.Cast<NumberingFormat>())
             {
-                var numberFormatId = nf.NumberFormatId?.Value;
+                var numberFormatId = checked((int?)nf.NumberFormatId?.Value);
                 var formatCode = nf.FormatCode?.Value;
                 if (numberFormatId is null || string.IsNullOrEmpty(formatCode))
                     continue;
