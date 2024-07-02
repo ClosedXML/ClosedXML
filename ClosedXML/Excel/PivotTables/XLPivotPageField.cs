@@ -28,7 +28,7 @@ internal class XLPivotPageField
     /// through <see cref="XLPivotFieldItem.Hidden"/> flags. Items that are not selected are hidden,
     /// rest isn't.
     /// </summary>
-    internal uint? ItemIndex { get; set; }
+    internal int? ItemIndex { get; set; }
 
     // OLAP
     internal int? HierarchyIndex { get; init; }

@@ -194,7 +194,7 @@ internal class XLPivotTablePageField : IXLPivotField
         if (nothingSelected)
         {
             var fieldItem = pivotField.GetOrAddItem(value);
-            _filterField.ItemIndex = (uint?)fieldItem.ItemIndex;
+            _filterField.ItemIndex = fieldItem.ItemIndex;
             return this;
         }
 

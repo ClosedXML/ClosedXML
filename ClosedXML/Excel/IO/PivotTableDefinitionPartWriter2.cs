@@ -134,7 +134,7 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteAttributeOptional("uniqueMemberProperty", pf.UniqueMemberProperty);
             xml.WriteAttributeDefault("compact", pf.Compact, true);
             xml.WriteAttributeDefault("allDrilled", pf.AllDrilled, false);
-            xml.WriteAttributeOptional("numFmtId", pf.NumberFormatId);
+            xml.WriteAttributeOptional("numFmtId", context.GetNumberFormat(pf.NumberFormatValue));
             xml.WriteAttributeDefault("outline", pf.Outline, true);
             xml.WriteAttributeDefault("subtotalTop", pf.SubtotalTop, true);
             xml.WriteAttributeDefault("dragToRow", pf.DragToRow, true);
@@ -305,20 +305,7 @@ internal class PivotTableDefinitionPartWriter2
 
                 xml.WriteAttributeDefault("baseField", dataField.BaseField, -1);
                 xml.WriteAttributeDefault("baseItem", dataField.BaseItem, 1048832);
-
-                if (dataField.NumberFormatValue is not null)
-                {
-                    if (context.SharedNumberFormats.TryGetValue(dataField.NumberFormatValue, out var customFormat))
-                    {
-                        var numberFormatId = customFormat.NumberFormatId;
-                        xml.WriteAttributeOptional("numFmtId", numberFormatId);
-                    }
-                    else
-                    {
-                        var builtInNumberFormatId = dataField.NumberFormatValue.NumberFormatId;
-                        xml.WriteAttributeOptional("numFmtId", builtInNumberFormatId);
-                    }
-                }
+                xml.WriteAttributeOptional("numFmtId", context.GetNumberFormat(dataField.NumberFormatValue));
 
                 xml.WriteEndElement(); // dataField
             }

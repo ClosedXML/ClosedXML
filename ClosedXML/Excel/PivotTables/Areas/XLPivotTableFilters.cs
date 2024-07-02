@@ -98,8 +98,8 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (index == -1)
             return;
 
-        var removedRows = _fields.Count > 1 ? 1 : 2;
-        var movedArea = _pivotTable.Area.ShiftRows(-removedRows);
+        var heightDifference = GetHeightDifference(-1);
+        var movedArea = _pivotTable.Area.ShiftRows(heightDifference);
 
         _fields.RemoveAt(index);
         _pivotTable.RemoveFieldFromAxis(index);
@@ -114,9 +114,8 @@ internal class XLPivotTableFilters : IXLPivotFields
         if (sourceName == XLConstants.PivotTable.ValuesSentinalLabel)
             throw new ArgumentException(nameof(sourceName), $"The column '{sourceName}' does not appear in the source range.");
 
-        var originalHeight = GetSizeWithGap(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
-        var modifiedHeight = GetSizeWithGap(_fields.Count + 1, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
-        var movedArea = _pivotTable.Area.ShiftRows(modifiedHeight - originalHeight);
+        var heightDifference= GetHeightDifference(1);
+        var movedArea = _pivotTable.Area.ShiftRows(heightDifference);
         
         var fieldIndex = _pivotTable.AddFieldToAxis(sourceName, customName, XLPivotAxis.AxisPage);
         var filterField = new XLPivotPageField(fieldIndex);
@@ -151,6 +150,13 @@ internal class XLPivotTableFilters : IXLPivotFields
     internal (int Width, int Height) GetSizeWithGap()
     {
         return GetSizeWithGap(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap);
+    }
+
+    private int GetHeightDifference(int fieldChangeCount)
+    {
+        var originalHeight = GetSizeWithGap(_fields.Count, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
+        var modifiedHeight = GetSizeWithGap(_fields.Count + fieldChangeCount, _pivotTable.FilterAreaOrder, _pivotTable.FilterFieldsPageWrap).Height;
+        return modifiedHeight - originalHeight;
     }
 
     private static (int Width, int Height) GetSize(int fieldCount, XLFilterAreaOrder order, int filterWrap)

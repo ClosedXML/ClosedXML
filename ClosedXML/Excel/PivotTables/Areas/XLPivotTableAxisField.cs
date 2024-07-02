@@ -60,7 +60,7 @@ internal class XLPivotTableAxisField : IXLPivotField
         get
         {
             var subtotal = GetField().Subtotals;
-            var isCustomSubtotal = subtotal.Count > 1 && subtotal.Contains(XLSubtotalFunction.Automatic);
+            var isCustomSubtotal = subtotal.Count > 1 || (subtotal.Count > 0 && !subtotal.Contains(XLSubtotalFunction.Automatic));
             if (isCustomSubtotal)
             {
                 // When subtotal is custom, the automatic is not shown
@@ -146,7 +146,7 @@ internal class XLPivotTableAxisField : IXLPivotField
 
     public bool IsOnColumnAxis => GetFieldValue(f => f.Axis == XLPivotAxis.AxisCol, !_pivotTable.DataOnRows);
 
-    public bool IsInFilterList => GetFieldValue(f => f.Axis == XLPivotAxis.AxisPage, false);
+    public bool IsInFilterList => false;
 
     public int Offset => _index;
 

@@ -52,6 +52,18 @@ namespace ClosedXML.Excel
             /// between ids.
             /// </summary>
             public List<int> SstMap { get; set; }
+
+            #nullable enable
+            internal int? GetNumberFormat(XLNumberFormatValue? numberFormat)
+            {
+                if (numberFormat is null)
+                    return null;
+
+                return SharedNumberFormats.TryGetValue(numberFormat, out var customFormat)
+                    ? customFormat.NumberFormatId
+                    : numberFormat.NumberFormatId;
+            }
+            #nullable disable
         }
 
         #endregion Nested type: SaveContext

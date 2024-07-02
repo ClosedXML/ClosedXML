@@ -13,7 +13,7 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
     private readonly XLPivotTable _pivotTable;
 
     /// <summary>
-    /// Fields displayed on the axis, in the order of the fields on the axis.
+    /// Fields displayed in the data area of the pivot table, in the order fields are displayed.
     /// </summary>
     private readonly List<XLPivotDataField> _fields = new();
 
@@ -38,15 +38,14 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
 
     public void Clear()
     {
+        _fields.Clear();
         foreach (var field in _fields)
             _pivotTable.RemoveFieldFromAxis(field.Field);
-
-        _fields.Clear();
     }
 
     public bool Contains(string customName)
     {
-        return _fields.Any(x => XLHelper.NameComparer.Equals(x.CustomName, customName));
+        return IndexOf(customName) != -1;
     }
 
     public bool Contains(IXLPivotValue pivotValue)
@@ -82,10 +81,11 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
 
     public void Remove(string customName)
     {
-        var dataField = _fields.SingleOrDefault(x => XLHelper.NameComparer.Equals(x.CustomName, customName));
-        if (dataField is null)
+        var index = IndexOf(customName);
+        if (index == -1)
             return;
 
+        var dataField = _fields[index];
         _pivotTable.RemoveFieldFromAxis(dataField.Field);
         _fields.Remove(dataField);
     }
@@ -105,11 +105,11 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
     internal XLPivotDataField AddField(string sourceName, string? customName)
     {
         if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var fieldIndex))
-        {
             throw new ArgumentOutOfRangeException($"Field '{sourceName}' is not in the pivot cache.");
-        }
 
-        // 'Data' field is not allowed in data axis, so cast directly to uint.
+        if (fieldIndex.IsDataField)
+            throw new ArgumentException("'Values' field can be used only on row or column axis.");
+
         var dataField = new XLPivotDataField(_pivotTable, fieldIndex.Value)
         {
             DataFieldName = customName,
@@ -130,6 +130,7 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
 
     internal void AddField(XLPivotDataField dataField)
     {
+        // Excel invariant - data field must have the flag if and only if it is in the data fields collection.
         _fields.Add(dataField);
         _pivotTable.PivotFields[dataField.Field].DataField = true;
     }

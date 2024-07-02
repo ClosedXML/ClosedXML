@@ -91,6 +91,7 @@ internal class XLPivotTableAxis : IXLPivotFields
         if (index == -1)
             return;
 
+        _pivotTable.RemoveFieldFromAxis(_fields[index]);
         _fields.RemoveAt(index);
     }
 

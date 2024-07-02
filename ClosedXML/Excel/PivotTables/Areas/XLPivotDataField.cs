@@ -203,13 +203,13 @@ internal class XLPivotDataField : IXLPivotValue
 
     public string CustomName
     {
-        get => DataFieldName ?? _pivotTable.PivotCache.FieldNames[Field];
+        get => DataFieldName ?? _pivotTable.PivotFields[Field].Name ?? _pivotTable.PivotCache.FieldNames[Field];
         set => DataFieldName = value;
     }
 
     public IXLPivotValueFormat NumberFormat => new XLPivotValueFormat(this);
 
-    public string SourceName => _pivotTable.PivotFields[Field].Name ?? _pivotTable.PivotCache.FieldNames[Field];
+    public string SourceName => _pivotTable.PivotCache.FieldNames[Field];
 
     public XLPivotSummary SummaryFormula
     {
@@ -225,7 +225,8 @@ internal class XLPivotDataField : IXLPivotValue
 
     public IXLPivotValue SetBaseItemValue(XLCellValue value)
     {
-        BaseItemValue = value; return this;
+        BaseItemValue = value;
+        return this;
     }
 
     public IXLPivotValue SetCalculation(XLPivotCalculation value)
@@ -236,7 +237,8 @@ internal class XLPivotDataField : IXLPivotValue
 
     public IXLPivotValue SetCalculationItem(XLPivotCalculationItem value)
     {
-        CalculationItem = value; return this;
+        CalculationItem = value;
+        return this;
     }
 
     public IXLPivotValue SetSummaryFormula(XLPivotSummary value)

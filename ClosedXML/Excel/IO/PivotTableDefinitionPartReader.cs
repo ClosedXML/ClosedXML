@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -77,7 +78,7 @@ internal class PivotTableDefinitionPartReader
         if (pivotFields is not null)
         {
             foreach (var pivotField in pivotFields.Cast<PivotField>())
-                xlPivotTable.AddField(LoadPivotField(pivotField, xlPivotTable));
+                xlPivotTable.AddField(LoadPivotField(pivotField, xlPivotTable, context));
         }
 
         // Load row axis fields and items
@@ -95,7 +96,7 @@ internal class PivotTableDefinitionPartReader
             foreach (var pageField in pageFields.Cast<PageField>())
             {
                 var field = pageField.Field?.Value ?? throw PartStructureException.MissingAttribute();
-                var itemIndex = pageField.Item?.Value;
+                var itemIndex = checked((int?)pageField.Item?.Value);
                 var hierarchyIndex = pageField.Hierarchy?.Value;
                 var hierarchyUniqueName = pageField.Name;
                 var hierarchyDisplayName = pageField.Caption;
@@ -356,7 +357,7 @@ internal class PivotTableDefinitionPartReader
         return xlPivotTable;
     }
 
-    private static XLPivotTableField LoadPivotField(PivotField pivotField, XLPivotTable xlPivotTable)
+    private static XLPivotTableField LoadPivotField(PivotField pivotField, XLPivotTable xlPivotTable, LoadContext context)
     {
         var customName = pivotField.Name?.Value;
         var axis = pivotField.Axis?.Value.ToClosedXml();
@@ -367,7 +368,8 @@ internal class PivotTableDefinitionPartReader
         var uniqueMemberProperty = pivotField.UniqueMemberProperty?.Value;
         var compact = pivotField.Compact?.Value ?? true;
         var allDrilled = pivotField.AllDrilled?.Value ?? false;
-        var numberFormatId = pivotField.NumberFormatId?.Value; // TODO: Load properly number format
+        var numberFormatId = checked((int?)pivotField.NumberFormatId?.Value);
+        var numberFormat = context.GetNumberFormat(numberFormatId);
         var outline = pivotField.Outline?.Value ?? true;
         var subtotalTop = pivotField.SubtotalTop?.Value ?? true;
         var dragToRow = pivotField.DragToRow?.Value ?? true;
@@ -455,7 +457,7 @@ internal class PivotTableDefinitionPartReader
             UniqueMemberProperty = uniqueMemberProperty,
             Compact = compact,
             AllDrilled = allDrilled,
-            NumberFormatId = numberFormatId,
+            NumberFormatValue = numberFormat,
             Outline = outline,
             SubtotalTop = subtotalTop,
             DragToRow = dragToRow,

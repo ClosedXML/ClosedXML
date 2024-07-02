@@ -73,7 +73,7 @@ internal class XLPivotTableField
     /// </summary>
     internal bool AllDrilled { get; set; } = false;
 
-    internal uint? NumberFormatId { get; init; }
+    internal XLNumberFormatValue? NumberFormatValue { get; init; }
 
     internal bool Outline { get; set; } = true;
 
