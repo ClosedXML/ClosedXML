@@ -1,3 +1,5 @@
+using System;
+
 namespace ClosedXML.Excel;
 
 /// <summary>
@@ -7,11 +9,16 @@ internal class XLPivotPageField
 {
     internal XLPivotPageField(int field)
     {
+        if (field < 0)
+            throw new ArgumentOutOfRangeException();
+
         Field = field;
     }
 
     /// <summary>
-    /// Field index to <see cref="XLPivotTable.PivotFields"/>. Can't contain 'data' field <c>-2</c>.
+    /// Field index to <see cref="XLPivotTable.PivotFields"/>. Can't contain
+    /// <see cref="XLConstants.PivotTable.ValuesSentinalLabel">'data'</see>
+    /// field <c>-2</c>.
     /// </summary>
     internal int Field { get; }
 
@@ -21,7 +28,7 @@ internal class XLPivotPageField
     /// through <see cref="XLPivotFieldItem.Hidden"/> flags. Items that are not selected are hidden,
     /// rest isn't.
     /// </summary>
-    internal uint? ItemIndex { get; init; }
+    internal int? ItemIndex { get; set; }
 
     // OLAP
     internal int? HierarchyIndex { get; init; }

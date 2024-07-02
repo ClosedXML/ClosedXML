@@ -10,4 +10,13 @@ namespace ClosedXML.Excel
         IXLPivotStyleFormat Label { get; }
         IXLPivotStyleFormat Subtotal { get; }
     }
+
+    // TODO: Implement
+    internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
+    {
+        public IXLPivotValueStyleFormat DataValuesFormat { get; }
+        public IXLPivotStyleFormat Header { get; }
+        public IXLPivotStyleFormat Label { get; }
+        public IXLPivotStyleFormat Subtotal { get; }
+    }
 }

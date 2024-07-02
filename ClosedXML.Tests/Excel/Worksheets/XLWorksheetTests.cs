@@ -818,7 +818,6 @@ namespace ClosedXML.Tests
                     var copy = ws2.PivotTables.ElementAt(i).CastTo<XLPivotTable>();
 
                     Assert.AreEqual(ws2, copy.Worksheet);
-                    Assert.AreNotEqual(original.Guid, copy.Guid);
 
                     Assert.IsTrue(comparer.Equals(original, copy));
                 }

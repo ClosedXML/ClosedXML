@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
                 PivotSources = new Dictionary<Guid, PivotSourceInfo>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
-                SharedNumberFormats = new Dictionary<int, NumberFormatInfo>();
+                SharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
                 SharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
             public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
-            public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
+            public Dictionary<XLNumberFormatValue, NumberFormatInfo> SharedNumberFormats { get; private set; }
             public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -52,6 +52,18 @@ namespace ClosedXML.Excel
             /// between ids.
             /// </summary>
             public List<int> SstMap { get; set; }
+
+            #nullable enable
+            internal int? GetNumberFormat(XLNumberFormatValue? numberFormat)
+            {
+                if (numberFormat is null)
+                    return null;
+
+                return SharedNumberFormats.TryGetValue(numberFormat, out var customFormat)
+                    ? customFormat.NumberFormatId
+                    : numberFormat.NumberFormatId;
+            }
+            #nullable disable
         }
 
         #endregion Nested type: SaveContext

@@ -28,13 +28,13 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotCache pivotCache)
         {
-            var pivotTable = new XLPivotTable(Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet, (XLPivotCache)pivotCache)
             {
                 Name = name,
-                TargetCell = targetCell,
-                PivotCache = (XLPivotCache)pivotCache
+                Area = new XLSheetRange(XLSheetPoint.FromAddress(targetCell.Address)),
             };
             Add(pivotTable);
+            pivotTable.UpdateCacheFields(Array.Empty<string>());
             return pivotTable;
         }
 

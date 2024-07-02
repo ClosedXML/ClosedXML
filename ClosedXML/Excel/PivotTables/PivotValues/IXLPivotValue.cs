@@ -87,6 +87,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// The value of a base item to calculate a value to show in the pivot table. The base item is selected from values of a base field.
+        /// Returns <c>blank</c>, when value can't be determined.
         /// </summary>
         /// <remarks>Used only if the value should be showed <b>Show Values As</b> in the value field settings.</remarks>
         /// <value>
@@ -99,8 +100,15 @@ namespace ClosedXML.Excel
 
         XLPivotCalculation Calculation { get; set; }
         XLPivotCalculationItem CalculationItem { get; set; }
+
+        /// <summary>
+        /// Get custom name of pivot value. If custom name is not specified, return source name as
+        /// a fallback.
+        /// </summary>
         String CustomName { get; set; }
+
         IXLPivotValueFormat NumberFormat { get; }
+
         String SourceName { get; }
         XLPivotSummary SummaryFormula { get; set; }
 

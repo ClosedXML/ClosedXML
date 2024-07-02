@@ -231,6 +231,9 @@ namespace ClosedXML.Excel.IO
                     var fieldValues = pivotCache.GetFieldValues(fieldIdx);
                     var recordItem = record.ElementAt(fieldIdx);
 
+                    // Don't add values to the shared items of a cache when record value is added, because we want 1:1
+                    // read/write. Read them from definition. Whatever is in shared items now should be written out,
+                    // unless there is a cache refresh. Basically trust the author of the workbook that it is valid.
                     switch (recordItem)
                     {
                         case MissingItem:

@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace ClosedXML.Excel;
 
 /// <summary>
@@ -11,14 +14,20 @@ namespace ClosedXML.Excel;
 /// </remarks>
 internal class XLPivotFieldItem
 {
+    private readonly XLPivotTable _pivotTable;
     private readonly XLPivotTableField _pivotField;
 
-    internal XLPivotFieldItem(XLPivotTableField pivotField, uint? itemIndex)
+    internal XLPivotFieldItem(XLPivotTableField pivotField, int? itemIndex)
     {
-        // TODO: Check that index is in shared items of cached fields.
+        if (itemIndex.HasValue && itemIndex.Value < 0)
+            throw new ArgumentOutOfRangeException(nameof(itemIndex));
+
         _pivotField = pivotField;
+        _pivotTable = pivotField.PivotTable;
         ItemIndex = itemIndex;
     }
+
+    #region XML attributes
 
     /// <summary>
     /// If present, must be unique within the containing field items.
@@ -37,14 +46,19 @@ internal class XLPivotFieldItem
     /// Allowed for non-OLAP pivot tables only.
     /// </para>
     /// </summary>
-    internal bool Hidden { get; init; } = false;
+    internal bool Hidden { get; set; } = false;
 
-    /// <summary>Flag indicating that the item has a character value/</summary>
+    /// <summary>
+    /// Flag indicating that the item has a character value.
+    /// </summary>
     /// <remarks>Allowed for OLAP pivot tables only.</remarks>
     internal bool ValueIsString { get; init; } = false;
 
-    /// <remarks>Allowed for non-OLAP pivot tables only.</remarks>
-    internal bool HideDetails { get; init; } = true;
+    /// <summary>
+    /// Excel uses the <c>sd</c> attribute to indicate whether the item is expanded.
+    /// </summary>
+    /// <remarks>Allowed for non-OLAP pivot tables only. Spec for the <c>sd</c> had to be patched..</remarks>
+    internal bool ShowDetails { get; set; } = true;
 
     /// <remarks>Allowed for non-OLAP pivot tables only.</remarks>
     internal bool CalculatedMember { get; init; } = false;
@@ -60,12 +74,36 @@ internal class XLPivotFieldItem
 
     /// <summary>
     /// Index to an item in the sharedItems of the field. The index must be unique in containing field items. When <see cref="ItemType"/> is <see cref="XLPivotItemType.Data"/>, it must be set.
+    /// Never negative.
     /// </summary>
-    internal uint? ItemIndex { get; }
+    internal int? ItemIndex { get; }
 
     /// <remarks>Allowed for OLAP pivot tables only.</remarks>
-    internal bool DrillAcrossAttributes { get; init; }
+    internal bool DrillAcrossAttributes { get; init; } = true;
 
-    /// <remarks>Allowed for OLAP pivot tables only.</remarks>
-    internal bool IsExpanded { get; init; }
+    /// <summary>
+    /// Attributes <c>sd</c> (show detail) and <c>d</c> (detail) were swapped in spec, fixed by OI29500.
+    /// A flag that indicates whether details are hidden for this item?
+    /// </summary>
+    /// <remarks><c>d</c> attribute. Allowed for OLAP pivot tables only.</remarks>
+    internal bool Details { get; init; }
+
+    #endregion XML attributes
+
+    [MemberNotNullWhen(true, nameof(ItemIndex))]
+    private bool ValueIsData => ItemType == XLPivotItemType.Data;
+
+    /// <summary>
+    /// Get value of an item from cache or null if not data item.
+    /// </summary>
+    internal XLCellValue? GetValue()
+    {
+        if (!ValueIsData)
+            return null;
+
+        var fieldIndex = _pivotTable.GetFieldIndex(_pivotField);
+        var sharedItems = _pivotTable.PivotCache.GetFieldSharedItems(fieldIndex);
+        var itemIndex = ItemIndex.Value;
+        return sharedItems[checked((uint)itemIndex)];
+    }
 }

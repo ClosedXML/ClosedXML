@@ -16,7 +16,7 @@ namespace ClosedXML.Extensions
 
         public static void WriteAttributeOptional(this XmlWriter w, String attrName, String? value)
         {
-            if (value is not null)
+            if (!string.IsNullOrEmpty(value))
                 w.WriteAttribute(attrName, value);
         }
 

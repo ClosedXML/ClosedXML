@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     internal class XLPivotCache : IXLPivotCache
     {
         private readonly XLWorkbook _workbook;
-        private readonly Dictionary<String, Int32> _fieldIndexes = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<String, Int32> _fieldIndexes = new(XLHelper.NameComparer);
         private readonly List<String> _fieldNames = new();
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace ClosedXML.Excel
                 throw new InvalidReferenceException();
 
             Debug.Assert(sheet is not null && foundArea is not null);
+            var oldFieldNames = _fieldNames.ToList();
             _fieldIndexes.Clear();
             _fieldNames.Clear();
             _values.Clear();
@@ -64,47 +65,26 @@ namespace ClosedXML.Excel
                 for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
                 {
                     var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
-                    switch (value.Type)
-                    {
-                        case XLDataType.Blank:
-                            sharedItems.AddMissing();
-                            fieldRecords.AddMissing();
-                            break;
-                        case XLDataType.Boolean:
-                            sharedItems.AddBoolean(value.GetBoolean());
-                            fieldRecords.AddBoolean(value.GetBoolean());
-                            break;
-                        case XLDataType.Number:
-                            sharedItems.AddNumber(value.GetNumber());
-                            fieldRecords.AddNumber(value.GetNumber());
-                            break;
-                        case XLDataType.Text:
-                            sharedItems.AddString(value.GetText());
-                            fieldRecords.AddString(value.GetText());
-                            break;
-                        case XLDataType.Error:
-                            sharedItems.AddError(value.GetError());
-                            fieldRecords.AddError(value.GetError());
-                            break;
-                        case XLDataType.DateTime:
-                            sharedItems.AddDateTime(value.GetDateTime());
-                            fieldRecords.AddDateTime(value.GetDateTime());
-                            break;
-                        case XLDataType.TimeSpan:
-                            // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
-                            var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
-                            fieldRecords.AddDateTime(adjustedTimeSpan);
-                            sharedItems.AddDateTime(adjustedTimeSpan);
-                            break;
-                        default:
-                            throw new NotSupportedException();
-                    }
+                    fieldRecords.Add(value);
                 }
 
                 AddField(AdjustedFieldName(header), fieldRecords);
             }
 
+            UpdatePivotTables();
             return this;
+
+            void UpdatePivotTables()
+            {
+                foreach (var worksheet in _workbook.WorksheetsInternal)
+                {
+                    foreach (var pivotTable in worksheet.PivotTables)
+                    {
+                        if (pivotTable.PivotCache == this)
+                            pivotTable.UpdateCacheFields(oldFieldNames);
+                    }
+                }
+            }
         }
 
         public IXLPivotCache SetItemsToRetainPerField(XLItemsToRetain value) { ItemsToRetainPerField = value; return this; }

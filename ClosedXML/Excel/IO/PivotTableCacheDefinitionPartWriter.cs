@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using ClosedXML.Excel.Cells;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -117,11 +116,8 @@ namespace ClosedXML.Excel.IO
             {
                 var cacheFieldName = pivotCache.FieldNames[fieldIdx];
                 var fieldValues = pivotCache.GetFieldValues(fieldIdx);
-                var fieldSharedItems = pivotCache.GetFieldSharedItems(fieldIdx);
-
-                var distinctFieldSharedItems = fieldSharedItems
+                var xlSharedItems = pivotCache.GetFieldSharedItems(fieldIdx)
                     .GetCellValues()
-                    .Distinct(XLCellValueComparer.OrdinalIgnoreCase)
                     .ToArray();
 
                 // .CacheFields is cleared when workbook is begin saved
@@ -146,17 +142,17 @@ namespace ClosedXML.Excel.IO
 
                 var ptfi = new PivotTableFieldInfo
                 {
-                    IsTotallyBlankField = fieldSharedItems.Count == 0,
-                    MixedDataType = distinctFieldSharedItems
+                    IsTotallyBlankField = xlSharedItems.Length == 0,
+                    MixedDataType = xlSharedItems
                         .Select(v => v.Type)
                         .Distinct()
                         .Count() > 1,
-                    DistinctValues = distinctFieldSharedItems,
+                    DistinctValues = xlSharedItems,
                 };
 
                 var stats = fieldValues.Stats;
 
-                sharedItems.Count = fieldValues.SharedCount != 0 ? checked((uint)distinctFieldSharedItems.Length) : null;
+                sharedItems.Count = fieldValues.SharedCount != 0 ? checked((uint)xlSharedItems.Length) : null;
 
                 // https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.shareditems?view=openxml-2.8.1#remarks
                 // The following attributes are not required or used if there are no items in sharedItems.
@@ -245,7 +241,7 @@ namespace ClosedXML.Excel.IO
 
                 sharedItems.LongText = OpenXmlHelper.GetBooleanValue(stats.LongText, false);
 
-                foreach (var value in distinctFieldSharedItems)
+                foreach (var value in xlSharedItems)
                 {
                     OpenXmlElement toAdd = value.Type switch
                     {

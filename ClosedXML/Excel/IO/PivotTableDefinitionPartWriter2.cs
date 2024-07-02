@@ -106,8 +106,10 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteAttribute("firstHeaderRow", pt.FirstHeaderRow);
         xml.WriteAttribute("firstDataRow", pt.FirstDataRow);
         xml.WriteAttribute("firstDataCol", pt.FirstDataCol);
-        xml.WriteAttributeDefault("rowPageCount", pt.RowPageCount, 0);
-        xml.WriteAttributeDefault("colPageCount", pt.ColumnPageCount, 0);
+
+        var filterArea = pt.Filters.GetSize();
+        xml.WriteAttributeDefault("rowPageCount", filterArea.Height, 0);
+        xml.WriteAttributeDefault("colPageCount", filterArea.Width, 0);
         xml.WriteEndElement(); // location
 
         // Pivot Fields
@@ -132,7 +134,7 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteAttributeOptional("uniqueMemberProperty", pf.UniqueMemberProperty);
             xml.WriteAttributeDefault("compact", pf.Compact, true);
             xml.WriteAttributeDefault("allDrilled", pf.AllDrilled, false);
-            xml.WriteAttributeOptional("numFmtId", pf.NumberFormatId);
+            xml.WriteAttributeOptional("numFmtId", context.GetNumberFormat(pf.NumberFormatValue));
             xml.WriteAttributeDefault("outline", pf.Outline, true);
             xml.WriteAttributeDefault("subtotalTop", pf.SubtotalTop, true);
             xml.WriteAttributeDefault("dragToRow", pf.DragToRow, true);
@@ -166,18 +168,18 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteAttributeOptional("dataSourceSort", pf.DataSourceSort);
             xml.WriteAttributeDefault("nonAutoSortDefault", pf.NonAutoSortDefault, false);
             xml.WriteAttributeOptional("rankBy", pf.RankBy);
-            xml.WriteAttributeDefault("defaultSubtotal", pf.DefaultSubtotal, true);
-            xml.WriteAttributeDefault("sumSubtotal", pf.SumSubtotal, false);
-            xml.WriteAttributeDefault("countASubtotal", pf.CountASubtotal, false);
-            xml.WriteAttributeDefault("avgSubtotal", pf.AvgSubtotal, false);
-            xml.WriteAttributeDefault("maxSubtotal", pf.MaxSubtotal, false);
-            xml.WriteAttributeDefault("minSubtotal", pf.MinSubtotal, false);
-            xml.WriteAttributeDefault("productSubtotal", pf.ProductSubtotal, false);
-            xml.WriteAttributeDefault("countSubtotal", pf.CountSubtotal, false);
-            xml.WriteAttributeDefault("stdDevSubtotal", pf.StdDevSubtotal, false);
-            xml.WriteAttributeDefault("stdDevPSubtotal", pf.StdDevPSubtotal, false);
-            xml.WriteAttributeDefault("varSubtotal", pf.VarSubtotal, false);
-            xml.WriteAttributeDefault("varPSubtotal", pf.VarPSubtotal, false);
+            xml.WriteAttributeDefault("defaultSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Automatic), true);
+            xml.WriteAttributeDefault("sumSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Sum), false);
+            xml.WriteAttributeDefault("countASubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Count), false);
+            xml.WriteAttributeDefault("avgSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Average), false);
+            xml.WriteAttributeDefault("maxSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Maximum), false);
+            xml.WriteAttributeDefault("minSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Minimum), false);
+            xml.WriteAttributeDefault("productSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Product), false);
+            xml.WriteAttributeDefault("countSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.CountNumbers), false);
+            xml.WriteAttributeDefault("stdDevSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.StandardDeviation), false);
+            xml.WriteAttributeDefault("stdDevPSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.PopulationStandardDeviation), false);
+            xml.WriteAttributeDefault("varSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.Variance), false);
+            xml.WriteAttributeDefault("varPSubtotal", pf.Subtotals.Contains(XLSubtotalFunction.PopulationVariance), false);
             xml.WriteAttributeDefault("showPropCell", pf.ShowPropCell, false);
             xml.WriteAttributeDefault("showPropTip", pf.ShowPropTip, false);
             xml.WriteAttributeDefault("showPropAsCaption", pf.ShowPropAsCaption, false);
@@ -200,12 +202,12 @@ internal class PivotTableDefinitionPartWriter2
 
                     xml.WriteAttributeDefault("h", pfItem.Hidden, false);
                     xml.WriteAttributeDefault("s", pfItem.ValueIsString, false);
-                    xml.WriteAttributeDefault("sd", pfItem.HideDetails, true);
+                    xml.WriteAttributeDefault("sd", pfItem.ShowDetails, true);
                     xml.WriteAttributeDefault("f", pfItem.CalculatedMember, false);
                     xml.WriteAttributeDefault("m", pfItem.Missing, false);
                     xml.WriteAttributeDefault("c", pfItem.ApproximatelyHasChildren, false);
                     xml.WriteAttributeOptional("x", pfItem.ItemIndex);
-                    xml.WriteAttributeDefault("d", pfItem.IsExpanded, false);
+                    xml.WriteAttributeDefault("d", pfItem.Details, false);
                     xml.WriteAttributeDefault("e", pfItem.DrillAcrossAttributes, true);
                     xml.WriteEndElement(); // item
                 }
@@ -215,6 +217,18 @@ internal class PivotTableDefinitionPartWriter2
 
             // TODO: autoSortScope, but not yet represented.
 
+            if (pf.RepeatItemLabels)
+            {
+                xml.WriteStartElement("extLst");
+                xml.WriteStartElement("ext");
+                xml.WriteAttributeString("uri", "{2946ED86-A175-432a-8AC1-64E0C546D7DE}");
+                xml.WriteStartElement("pivotField", X14Main2009SsNs);
+                xml.WriteAttributeDefault("fillDownLabels", pf.RepeatItemLabels, false);
+                xml.WriteEndElement(); // pivotField
+                xml.WriteEndElement(); // ext
+                xml.WriteEndElement(); // extLst
+            }
+
             xml.WriteEndElement();
         }
 
@@ -223,18 +237,19 @@ internal class PivotTableDefinitionPartWriter2
         WriteAxis(xml, pt.RowAxis, "rowFields", "rowItems");
         WriteAxis(xml, pt.ColumnAxis, "colFields", "colItems");
 
-        if (pt.PageFields.Count > 0)
+        var filterFields = pt.Filters.Fields;
+        if (filterFields.Count > 0)
         {
             xml.WriteStartElement("pageFields", Main2006SsNs);
-            xml.WriteAttribute("count", pt.PageFields.Count);
-            foreach (var pageField in pt.PageFields)
+            xml.WriteAttribute("count", filterFields.Count);
+            foreach (var filterField in filterFields)
             {
                 xml.WriteStartElement("pageField", Main2006SsNs);
-                xml.WriteAttribute("fld", pageField.Field);
-                xml.WriteAttributeOptional("item", pageField.ItemIndex);
-                xml.WriteAttributeOptional("hier", pageField.HierarchyIndex);
-                xml.WriteAttributeOptional("name", pageField.HierarchyUniqueName);
-                xml.WriteAttributeOptional("cap", pageField.HierarchyDisplayName);
+                xml.WriteAttribute("fld", filterField.Field);
+                xml.WriteAttributeOptional("item", filterField.ItemIndex);
+                xml.WriteAttributeOptional("hier", filterField.HierarchyIndex);
+                xml.WriteAttributeOptional("name", filterField.HierarchyUniqueName);
+                xml.WriteAttributeOptional("cap", filterField.HierarchyDisplayName);
                 xml.WriteEndElement(); // pageField
             }
 
@@ -290,7 +305,8 @@ internal class PivotTableDefinitionPartWriter2
 
                 xml.WriteAttributeDefault("baseField", dataField.BaseField, -1);
                 xml.WriteAttributeDefault("baseItem", dataField.BaseItem, 1048832);
-                xml.WriteAttributeOptional("numFmtId", dataField.NumberFormatId);
+                xml.WriteAttributeOptional("numFmtId", context.GetNumberFormat(dataField.NumberFormatValue));
+
                 xml.WriteEndElement(); // dataField
             }
 
@@ -377,7 +393,47 @@ internal class PivotTableDefinitionPartWriter2
             xml.WriteEndElement(); // conditionalFormats
         }
 
+        var hasDefaultTheme =
+            pt.Theme == XLPivotTableTheme.None &&
+            pt.ShowRowHeaders == false &&
+            pt.ShowColumnHeaders == false &&
+            pt.ShowRowStripes == false &&
+            pt.ShowColumnStripes == false &&
+            pt.ShowLastColumn == false;
+        if (!hasDefaultTheme)
+        {
+            xml.WriteStartElement("pivotTableStyleInfo", Main2006SsNs);
+            if (pt.Theme != XLPivotTableTheme.None)
+                xml.WriteAttribute("name", pt.Theme.ToString());
+
+            xml.WriteAttributeDefault("showRowHeaders", pt.ShowRowHeaders, false);
+            xml.WriteAttributeDefault("showColHeaders", pt.ShowColumnHeaders, false);
+            xml.WriteAttributeDefault("showRowStripes", pt.ShowRowStripes, false);
+            xml.WriteAttributeDefault("showColStripes", pt.ShowColumnStripes, false);
+            xml.WriteAttributeDefault("showLastColumn", pt.ShowLastColumn, false);
+            xml.WriteEndElement(); // pivotTableStyleInfo
+        }
+
+        // Because extensions are pretty large, always write them.
+        xml.WriteStartElement("extLst");
+
+        {
+            // See [MS-XLSX] 2.2.4.5 Pivot Table
+            xml.WriteStartElement("ext", Main2006SsNs);
+            xml.WriteAttributeString("xmlns", "x14", null, X14Main2009SsNs);
+            xml.WriteAttributeString("uri", "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}");
+            xml.WriteStartElement("pivotTableDefinition", X14Main2009SsNs);
+            xml.WriteAttribute("enableEdit", pt.EnableCellEditing);
+            xml.WriteAttribute("hideValuesRow", !pt.ShowValuesRow);
+            xml.WriteEndElement(); // pivotTableDefinition
+            xml.WriteEndElement(); // ext
+        }
+
+        xml.WriteEndElement(); // extList
+
         xml.WriteEndElement(); // pivotTableDefinition
+
+        xml.Close();
     }
 
     private static void WriteAxis(XmlWriter xml, XLPivotTableAxis axis, string fieldsElement, string itemsElement)

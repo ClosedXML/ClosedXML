@@ -9,7 +9,15 @@ namespace ClosedXML.Excel
         XLPivotTableTheme Theme { get; set; }
 
         IXLPivotFields ReportFilters { get; }
+
+        /// <summary>
+        /// Labels displayed in columns (i.e. horizontal axis) of the pivot table.
+        /// </summary>
         IXLPivotFields ColumnLabels { get; }
+
+        /// <summary>
+        /// Labels displayed in rows (i.e. vertical axis) of the pivot table.
+        /// </summary>
         IXLPivotFields RowLabels { get; }
         IXLPivotValues Values { get; }
 
@@ -20,6 +28,10 @@ namespace ClosedXML.Excel
         String ColumnHeaderCaption { get; set; }
         String RowHeaderCaption { get; set; }
 
+        /// <summary>
+        /// Top left corner cell of a pivot table. If the pivot table contains filters fields, the target cell is top
+        /// left cell of the first filter field.
+        /// </summary>
         IXLCell TargetCell { get; set; }
 
         /// <summary>
@@ -30,7 +42,19 @@ namespace ClosedXML.Excel
 
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
-        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown
+
+        /// <summary>
+        /// Filter fields layout setting that indicates layout order of filter fields. The layout
+        /// uses <see cref="FilterFieldsPageWrap"/> to determine when to break to a new row or
+        /// column. Default value is <see cref="XLFilterAreaOrder.DownThenOver"/>.
+        /// </summary>
+        XLFilterAreaOrder FilterAreaOrder { get; set; }
+
+        /// <summary>
+        /// Specifies the number of page fields to display before starting another row or column.
+        /// Value = 0 means unlimited.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">If value &lt; 0.</exception>
         Int32 FilterFieldsPageWrap { get; set; } // PageWrap
         String ErrorValueReplacement { get; set; } // ErrorCaption
         String EmptyCellReplacement { get; set; } // MissingCaption
@@ -87,6 +111,14 @@ namespace ClosedXML.Excel
 
         IXLPivotTable SetShowGrandTotalsRows(); IXLPivotTable SetShowGrandTotalsRows(Boolean value);
 
+        /// <summary>
+        /// Should pivot table display a grand total for each row in the last column of a pivot
+        /// table (it will enlarge pivot table for extra column).
+        /// </summary>
+        /// <remarks>
+        /// This API has inverse row/column names than the Excel. Excel: <em>On for rows
+        /// </em> should use this method <em>ShowGrandTotalsColumns</em>.
+        /// </remarks>
         IXLPivotTable SetShowGrandTotalsColumns(); IXLPivotTable SetShowGrandTotalsColumns(Boolean value);
 
         IXLPivotTable SetFilteredItemsInSubtotals(); IXLPivotTable SetFilteredItemsInSubtotals(Boolean value);

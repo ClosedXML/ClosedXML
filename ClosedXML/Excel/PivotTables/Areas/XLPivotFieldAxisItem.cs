@@ -11,7 +11,7 @@ namespace ClosedXML.Excel;
 /// </remarks>
 internal class XLPivotFieldAxisItem
 {
-    public XLPivotFieldAxisItem(XLPivotItemType itemType, uint dataItem, IEnumerable<int> fieldItems)
+    public XLPivotFieldAxisItem(XLPivotItemType itemType, int dataItem, IEnumerable<int> fieldItems)
     {
         ItemType = itemType;
         DataItem = dataItem;
@@ -31,9 +31,9 @@ internal class XLPivotFieldAxisItem
     internal XLPivotItemType ItemType { get; }
 
     /// <summary>
-    /// If this item (row/column) contains 'data' field, this contains an index into the <see cref="XLPivotTable._dataFields"/>
+    /// If this item (row/column) contains 'data' field, this contains an index into the <see cref="XLPivotTable.DataFields"/>
     /// that should be used as a value. The value for 'data' field in the <see cref="FieldItem"/> is ignored, but Excel fills
     /// same number as this index.
     /// </summary>
-    internal uint DataItem { get; }
+    internal int DataItem { get; }
 }

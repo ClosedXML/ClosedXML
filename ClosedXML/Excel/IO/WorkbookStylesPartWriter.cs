@@ -61,7 +61,7 @@ namespace ClosedXML.Excel.IO
             UInt32 fontCount = 1;
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
-            var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
+            var xlPivotTablesCustomFormats = new HashSet<string>();
             var xlStyles = new HashSet<XLStyleValue>();
 
             foreach (var worksheet in workbook.WorksheetsInternal)
@@ -81,8 +81,11 @@ namespace ClosedXML.Excel.IO
                     xlStyles.Add(c.StyleValue);
                 }
 
-                foreach (var ptnf in worksheet.PivotTables.SelectMany<XLPivotTable, IXLPivotValueFormat>(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))
-                    pivotTableNumberFormats.Add(ptnf);
+                var xlPivotTableCustomFormats = worksheet.PivotTables
+                    .SelectMany<XLPivotTable, XLPivotDataField>(pt => pt.DataFields)
+                    .Where(x => x.NumberFormatValue is not null && !string.IsNullOrEmpty(x.NumberFormatValue.Format))
+                    .Select(x => x.NumberFormatValue.Format);
+                xlPivotTablesCustomFormats.UnionWith(xlPivotTableCustomFormats);
             }
 
             var alignments = xlStyles.Select(s => s.Alignment).Distinct().ToList();
@@ -110,12 +113,12 @@ namespace ClosedXML.Excel.IO
                 .Where(nf => nf.NumberFormatId == -1)
                 .ToHashSet();
 
-            foreach (var pivotNumberFormat in pivotTableNumberFormats.Where(nf => nf.NumberFormatId == -1))
+            foreach (var pivotNumberFormat in xlPivotTablesCustomFormats)
             {
                 var numberFormatKey = new XLNumberFormatKey
                 {
                     NumberFormatId = -1,
-                    Format = pivotNumberFormat.Format
+                    Format = pivotNumberFormat
                 };
                 var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
 
@@ -125,7 +128,7 @@ namespace ClosedXML.Excel.IO
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, customNumberFormats, defaultFormatId);
             foreach (var nf in allSharedNumberFormats)
             {
-                context.SharedNumberFormats.Add(nf.Value.NumberFormatId, nf.Value);
+                context.SharedNumberFormats.Add(nf.Key, nf.Value);
             }
 
             ResolveFonts(workbookStylesPart, context);

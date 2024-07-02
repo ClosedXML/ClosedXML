@@ -183,6 +183,7 @@ namespace ClosedXML.Excel
 
             Stylesheet s = workbookPart.WorkbookStylesPart?.Stylesheet;
             NumberingFormats numberingFormats = s?.NumberingFormats;
+            context.LoadNumberFormats(numberingFormats);
             Fills fills = s?.Fills;
             Borders borders = s?.Borders;
             Fonts fonts = s?.Fonts;
@@ -561,7 +562,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
+        
         /// <summary>
         /// Calculate expected column width as a number displayed in the column in Excel from
         /// number of characters that should fit into the width and a font.
