@@ -3,6 +3,9 @@ using System;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// An immutable style value.
+    /// </summary>
     internal sealed class XLStyleValue : IEquatable<XLStyleValue?>
     {
         private static readonly XLStyleRepository Repository = new(key => new XLStyleValue(key));
