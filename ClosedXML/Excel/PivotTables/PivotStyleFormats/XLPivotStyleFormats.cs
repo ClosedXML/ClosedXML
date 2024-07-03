@@ -3,59 +3,95 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+/// <summary>
+/// An API for grand totals from <see cref="XLPivotTableStyleFormats"/>.
+/// </summary>
+internal class XLPivotStyleFormats : IXLPivotStyleFormats
 {
-    internal class XLPivotStyleFormats : IXLPivotStyleFormats
+    private readonly XLPivotTable _pivotTable;
+    private readonly bool _isRowGrand;
+
+    internal XLPivotStyleFormats(XLPivotTable pivotTable, bool isRowGrand)
     {
-        private readonly IXLPivotField? _pivotField;
-        private readonly Dictionary<XLPivotStyleFormatElement, IXLPivotStyleFormat> _styleFormats = new Dictionary<XLPivotStyleFormatElement, IXLPivotStyleFormat>();
+        _pivotTable = pivotTable;
+        _isRowGrand = isRowGrand;
+    }
 
-        public XLPivotStyleFormats()
-            : this(null)
-        { }
+    #region IXLPivotStyleFormats members
 
-        public XLPivotStyleFormats(IXLPivotField? pivotField)
+    public IXLPivotStyleFormat ForElement(XLPivotStyleFormatElement element)
+    {
+        if (element == XLPivotStyleFormatElement.None)
+            throw new ArgumentException("Choose an enum value that represents an element", nameof(element));
+
+        return GetPivotStyleFormatFor(element);
+    }
+
+    public IEnumerator<IXLPivotStyleFormat> GetEnumerator()
+    {
+        var elements = new[]
         {
-            this._pivotField = pivotField;
-        }
+            XLPivotStyleFormatElement.Label,
+            XLPivotStyleFormatElement.Data,
+            XLPivotStyleFormatElement.All,
+        };
 
-        #region IXLPivotStyleFormats members
-
-        public IXLPivotStyleFormat ForElement(XLPivotStyleFormatElement element)
+        foreach (var element in elements)
         {
-            if (element == XLPivotStyleFormatElement.None)
-                throw new ArgumentException("Choose an enum value that represents an element", nameof(element));
-
-            if (!_styleFormats.TryGetValue(element, out IXLPivotStyleFormat pivotStyleFormat))
+            foreach (var format in _pivotTable.Formats)
             {
-                pivotStyleFormat = new XLPivotStyleFormat(_pivotField) { AppliesTo = element };
-                _styleFormats.Add(element, pivotStyleFormat);
+                if (AreaBelongsToGrandTotal(format.PivotArea, element))
+                {
+                    // Each pivot style format modifies all formats, so return only once per element.
+                    yield return GetPivotStyleFormatFor(element);
+                    break;
+                }
             }
-
-            return pivotStyleFormat;
         }
+    }
 
-        public IEnumerator<IXLPivotStyleFormat> GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    #endregion IXLPivotStyleFormats members
+
+    private XLPivotStyleFormat GetPivotStyleFormatFor(XLPivotStyleFormatElement element)
+    {
+        return new XLPivotStyleFormat(_pivotTable, FilterElement, ElementFactory)
         {
-            return _styleFormats.Values.GetEnumerator();
-        }
+            AppliesTo = element
+        };
 
-        IEnumerator IEnumerable.GetEnumerator()
+        bool FilterElement(XLPivotArea pivotArea) => AreaBelongsToGrandTotal(pivotArea, element);
+        XLPivotArea ElementFactory() => CreateGrandArea(element);
+    }
+
+    private bool AreaBelongsToGrandTotal(XLPivotArea area, XLPivotStyleFormatElement element)
+    {
+        return
+            area.References.Count == 0 &&
+            area.Field is null &&
+            area.Type == XLPivotAreaType.Normal &&
+            area.DataOnly == (element == XLPivotStyleFormatElement.Data) &&
+            area.LabelOnly == (element == XLPivotStyleFormatElement.Label) &&
+            area.GrandRow == _isRowGrand &&
+            area.GrandCol == !_isRowGrand &&
+            area.CacheIndex == false &&
+            area.Offset is null &&
+            !area.CollapsedLevelsAreSubtotals &&
+            area.Axis is null &&
+            area.FieldPosition is null;
+    }
+
+    private XLPivotArea CreateGrandArea(XLPivotStyleFormatElement element)
+    {
+        return new XLPivotArea
         {
-            return GetEnumerator();
-        }
-
-        #endregion IXLPivotStyleFormats members
-
-        public void Add(IXLPivotStyleFormat styleFormat)
-        {
-            _styleFormats.Add(styleFormat.AppliesTo, styleFormat);
-        }
-
-        public void AddRange(IEnumerable<IXLPivotStyleFormat> styleFormats)
-        {
-            foreach (var styleFormat in styleFormats)
-                Add(styleFormat);
-        }
+            DataOnly = (element == XLPivotStyleFormatElement.Data),
+            LabelOnly = (element == XLPivotStyleFormatElement.Label),
+            GrandRow = _isRowGrand,
+            GrandCol = !_isRowGrand,
+        };
     }
 }

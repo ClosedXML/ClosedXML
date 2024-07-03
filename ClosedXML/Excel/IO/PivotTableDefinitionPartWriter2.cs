@@ -332,9 +332,9 @@ internal class PivotTableDefinitionPartWriter2
                 }
 
                 // DxfId is optional.
-                if (format.DxfStyle.Value != XLStyleValue.Default)
+                if (format.DxfStyleValue != XLStyleValue.Default)
                 {
-                    var dxfId = context.DifferentialFormats[format.DxfStyle.Value];
+                    var dxfId = context.DifferentialFormats[format.DxfStyleValue];
                     xml.WriteAttribute("dxfId", dxfId);
                 }
 

@@ -1,25 +1,20 @@
 // Keep this file CodeMaid organised and cleaned
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+internal class XLPivotTableStyleFormats : IXLPivotTableStyleFormats
 {
-    internal class XLPivotTableStyleFormats : IXLPivotTableStyleFormats
+    private readonly XLPivotTable _pivotTable;
+
+    public XLPivotTableStyleFormats(XLPivotTable pivotTable)
     {
-        private IXLPivotStyleFormats? columnGrandTotalFormats;
-        private IXLPivotStyleFormats? rowGrandTotalFormats;
-
-        #region IXLPivotTableStyleFormats members
-
-        public IXLPivotStyleFormats ColumnGrandTotalFormats
-        {
-            get { return columnGrandTotalFormats ?? (columnGrandTotalFormats = new XLPivotStyleFormats()); }
-            set { columnGrandTotalFormats = value; }
-        }
-
-        public IXLPivotStyleFormats RowGrandTotalFormats
-        {
-            get { return rowGrandTotalFormats ?? (rowGrandTotalFormats = new XLPivotStyleFormats()); }
-            set { rowGrandTotalFormats = value; }
-        }
-
-        #endregion IXLPivotTableStyleFormats members
+        _pivotTable = pivotTable;
     }
+
+    #region IXLPivotTableStyleFormats members
+
+    public IXLPivotStyleFormats ColumnGrandTotalFormats => new XLPivotStyleFormats(_pivotTable, isRowGrand: false);
+
+    public IXLPivotStyleFormats RowGrandTotalFormats => new XLPivotStyleFormats(_pivotTable, isRowGrand: true);
+
+    #endregion IXLPivotTableStyleFormats members
 }

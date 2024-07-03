@@ -681,7 +681,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet => _worksheet;
 
-        public IXLPivotTableStyleFormats StyleFormats { get; } = new XLPivotTableStyleFormats();
+        public IXLPivotTableStyleFormats StyleFormats => new XLPivotTableStyleFormats(this);
 
         public IEnumerable<IXLPivotStyleFormat> AllStyleFormats
         {
