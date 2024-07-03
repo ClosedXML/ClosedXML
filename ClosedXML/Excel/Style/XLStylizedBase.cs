@@ -18,27 +18,21 @@ namespace ClosedXML.Excel
         /// Read-only style property.
         /// </summary>
         internal virtual XLStyleValue StyleValue { get; private protected set; }
+
+        /// <inheritdoc cref="IXLStylized.StyleValue"/>
         XLStyleValue IXLStylized.StyleValue
         {
             get { return StyleValue; }
         }
 
-        /// <summary>
-        /// Editable style of the workbook element. Modification of this property DOES affect styles of child objects as well - they will
-        /// be changed accordingly. Accessing this property causes a new <see cref="XLStyle"/> instance generated so use this property
-        /// with caution. If you need only _read_ the style consider using <see cref="StyleValue"/> property instead.
-        /// </summary>
+        /// <inheritdoc cref="IXLStylized.Style"/>
         public IXLStyle Style
         {
             get { return InnerStyle; }
             set { SetStyle(value, true); }
         }
 
-        /// <summary>
-        /// Editable style of the workbook element. Modification of this property DOES NOT affect styles of child objects.
-        /// Accessing this property causes a new <see cref="XLStyle"/> instance generated so use this property with caution. If you need
-        /// only _read_ the style consider using <see cref="StyleValue"/> property instead.
-        /// </summary>
+        /// <inheritdoc cref="IXLStylized.InnerStyle"/>
         public IXLStyle InnerStyle
         {
             get { return new XLStyle(this, StyleValue.Key); }
