@@ -46,8 +46,6 @@ namespace ClosedXML.Excel
 
         public abstract IXLRanges RangesUsed { get; }
 
-        public abstract IEnumerable<IXLStyle> Styles { get; }
-
         #endregion Properties
 
         protected XLStylizedBase(XLStyleValue styleValue)

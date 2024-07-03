@@ -217,23 +217,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-                if (_worksheet != null)
-                    yield return _worksheet.Style;
-                else
-                {
-                    foreach (IXLStyle s in Rows.SelectMany(row => row.Styles))
-                    {
-                        yield return s;
-                    }
-                }
-            }
-        }
-
         public override IXLRanges RangesUsed
         {
             get

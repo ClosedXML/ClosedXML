@@ -207,15 +207,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                foreach (IXLCell cell in Cells())
-                    yield return cell.Style;
-            }
-        }
-
         #endregion IXLStylized Members
 
         #endregion Public properties
