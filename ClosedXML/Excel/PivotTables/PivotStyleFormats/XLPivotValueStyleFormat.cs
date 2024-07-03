@@ -5,9 +5,10 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotValueStyleFormat : XLPivotStyleFormat, IXLPivotValueStyleFormat
     {
-        public XLPivotValueStyleFormat(IXLPivotField? field = null, IXLStyle? style = null)
-            : base(field, style)
-        { }
+        public XLPivotValueStyleFormat(IXLPivotField? field = null)
+            : base(field)
+        {
+        }
 
         #region IXLPivotValueStyleFormat members
 

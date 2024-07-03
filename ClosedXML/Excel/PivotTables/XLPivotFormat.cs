@@ -16,7 +16,7 @@ internal class XLPivotFormat
     internal XLPivotArea PivotArea { get; }
 
     /// <summary>
-    /// Should the formatting (determined by <see cref="DxfStyle"/>) be applied or not?
+    /// Should the formatting (determined by <see cref="DxfStyleValue"/>) be applied or not?
     /// </summary>
     internal XLPivotFormatAction Action { get; init; } = XLPivotFormatAction.Formatting;
 
@@ -25,5 +25,5 @@ internal class XLPivotFormat
     /// <see cref="Action"/> is blank. Empty dxf is represented by <see cref="XLStyle.Default"/>,
     /// until we get better dxf representation.
     /// </summary>
-    internal XLStyle DxfStyle { get; init; } = XLStyle.Default;
+    internal XLStyleValue DxfStyleValue { get; set; } = XLStyle.Default.Value;
 }

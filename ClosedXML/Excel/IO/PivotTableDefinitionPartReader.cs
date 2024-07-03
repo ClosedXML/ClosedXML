@@ -161,7 +161,7 @@ internal class PivotTableDefinitionPartReader
                 var xlFormat = new XLPivotFormat(xlPivotArea)
                 {
                     Action = action,
-                    DxfStyle = dxfStyle,
+                    DxfStyleValue = dxfStyle.Value,
                 };
                 xlPivotTable.AddFormat(xlFormat);
             }

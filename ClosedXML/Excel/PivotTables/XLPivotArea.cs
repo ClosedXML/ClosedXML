@@ -29,13 +29,15 @@ internal class XLPivotArea
 
     /// <summary>
     /// Flag indicating whether only the data values (in the data area of the view) for an item
-    /// selection are selected and does not include the item labels.
+    /// selection are selected and does not include the item labels. Can't be set with together
+    /// with <see cref="LabelOnly"/>.
     /// </summary>
     internal bool DataOnly { get; init; } = true;
 
     /// <summary>
     /// Flag indicating whether only the item labels for an item selection are selected and does
-    /// not include the data values(in the data area of the view).
+    /// not include the data values(in the data area of the view). Can't be set with together
+    /// with <see cref="DataOnly"/>.
     /// </summary>
     internal bool LabelOnly { get; init; } = false;
 

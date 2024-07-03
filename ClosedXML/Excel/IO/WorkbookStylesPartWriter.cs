@@ -229,11 +229,11 @@ namespace ClosedXML.Excel.IO
                     // Add Dxf from new pivot table structures.
                     foreach (var xlPivotFormat in pt.Formats)
                     {
-                        var xlStyle = xlPivotFormat.DxfStyle;
-                        if (xlStyle.Value != XLStyleValue.Default &&
-                            !context.DifferentialFormats.ContainsKey(xlStyle.Value))
+                        var xlStyleValue = xlPivotFormat.DxfStyleValue;
+                        if (xlStyleValue != XLStyleValue.Default &&
+                            !context.DifferentialFormats.ContainsKey(xlStyleValue))
                         {
-                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
+                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyleValue, context);
                         }
                     }
 

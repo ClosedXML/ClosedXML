@@ -217,7 +217,6 @@ namespace ClosedXML.Excel
 
         internal struct PivotSourceInfo
         {
-            public Guid Guid;
             public IDictionary<String, PivotTableFieldInfo> Fields;
         }
 
