@@ -33,19 +33,6 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Column; }
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-
-                int column = ColumnNumber();
-
-                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
-                    yield return cell.Style;
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get

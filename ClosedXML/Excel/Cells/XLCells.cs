@@ -213,16 +213,6 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-                foreach (XLCell c in this)
-                    yield return c.Style;
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get

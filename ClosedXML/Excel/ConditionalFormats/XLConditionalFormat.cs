@@ -171,14 +171,6 @@ namespace ClosedXML.Excel
 
         public Boolean CopyDefaultModify { get; set; }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get { yield break; }

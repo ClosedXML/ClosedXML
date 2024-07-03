@@ -9,14 +9,6 @@ namespace ClosedXML.Excel
         {
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-            }
-        }
-
         public override IXLRanges RangesUsed
         {
             get { return new XLRanges(); }

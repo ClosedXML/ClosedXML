@@ -1092,14 +1092,6 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-            }
-        }
-
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {
             //XLCell cannot have children so the base method may be optimized

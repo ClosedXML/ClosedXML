@@ -16,12 +16,6 @@ namespace ClosedXML.Excel
         IXLStyle Style { get; set; }
 
         /// <summary>
-        /// Method that returns all style within the stylized element. That means style of the element itself
-        /// and all its descendants (not just children).
-        /// </summary>
-        IEnumerable<IXLStyle> Styles { get; }
-
-        /// <summary>
         /// Editable style of the workbook element. Modification of this property DOES NOT affect styles of child objects.
         /// Accessing this property causes a new <see cref="XLStyle"/> instance generated so use this property with caution. If you need
         /// only _read_ the style consider using <see cref="StyleValue"/> property instead.

@@ -38,19 +38,6 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Row; }
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-
-                int row = RowNumber();
-
-                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
-                    yield return cell.Style;
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get

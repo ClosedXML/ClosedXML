@@ -126,16 +126,6 @@ namespace ClosedXML.Excel
             get { return _rangeFactory; }
         }
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return GetStyle();
-                foreach (XLCell c in Internals.CellsCollection.GetCells())
-                    yield return c.Style;
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get

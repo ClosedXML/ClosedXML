@@ -214,23 +214,6 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public override IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                yield return Style;
-                if (_worksheet != null)
-                    yield return _worksheet.Style;
-                else
-                {
-                    foreach (IXLStyle s in Columns.SelectMany(col => col.Styles))
-                    {
-                        yield return s;
-                    }
-                }
-            }
-        }
-
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
