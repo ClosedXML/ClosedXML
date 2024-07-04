@@ -67,8 +67,7 @@ namespace ClosedXML.Excel
 
         internal XLAlignmentValue WithWrapText(bool wrapText)
         {
-            var keyCopy = Key;
-            keyCopy.WrapText = wrapText;
+            var keyCopy = Key with { WrapText = wrapText };
             return FromKey(ref keyCopy);
         }
     }

@@ -519,29 +519,9 @@ namespace ClosedXML.Excel.IO
 
         private static bool AlignmentsAreEqual(Alignment alignment, XLAlignmentValue xlAlignment)
         {
-            if (alignment != null)
+            if (alignment is not null)
             {
-                var a = XLAlignmentValue.Default.Key;
-                if (alignment.Indent != null)
-                    a.Indent = (Int32)alignment.Indent.Value;
-
-                if (alignment.Horizontal != null)
-                    a.Horizontal = alignment.Horizontal.Value.ToClosedXml();
-                if (alignment.Vertical != null)
-                    a.Vertical = alignment.Vertical.Value.ToClosedXml();
-
-                if (alignment.ReadingOrder != null)
-                    a.ReadingOrder = alignment.ReadingOrder.Value.ToClosedXml();
-                if (alignment.WrapText != null)
-                    a.WrapText = alignment.WrapText.Value;
-                if (alignment.TextRotation != null)
-                    a.TextRotation = OpenXmlHelper.GetClosedXmlTextRotation(alignment);
-                if (alignment.ShrinkToFit != null)
-                    a.ShrinkToFit = alignment.ShrinkToFit.Value;
-                if (alignment.RelativeIndent != null)
-                    a.RelativeIndent = alignment.RelativeIndent.Value;
-                if (alignment.JustifyLastLine != null)
-                    a.JustifyLastLine = alignment.JustifyLastLine.Value;
+                var a = OpenXmlHelper.AlignmentToClosedXml(alignment, XLAlignmentValue.Default.Key);
                 return a.Equals(xlAlignment.Key);
             }
             else
