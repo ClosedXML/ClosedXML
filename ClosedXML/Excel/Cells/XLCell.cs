@@ -1263,7 +1263,7 @@ namespace ClosedXML.Excel
         /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
         private IXLDataValidation FindDataValidation()
         {
-            Worksheet.DataValidations.TryGet(AsRange().RangeAddress, out var dataValidation);
+            Worksheet.DataValidations.TryGet(new XLRangeAddress(Address, Address), out var dataValidation);
             return dataValidation;
         }
 
@@ -1458,7 +1458,9 @@ namespace ClosedXML.Excel
                     _rowNumber + sourceCell.Address.RowNumber - minRow,
                     _columnNumber + sourceCell.Address.ColumnNumber - minColumn
                     ).CopyFromInternal(sourceCell as XLCell,
-                    XLCellCopyOptions.All & ~XLCellCopyOptions.ConditionalFormats); //Conditional formats are copied separately
+                    XLCellCopyOptions.All
+                        & ~XLCellCopyOptions.ConditionalFormats
+                        & ~XLCellCopyOptions.DataValidations); //Conditional formats and data validation are copied separately
             }
 
             var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
