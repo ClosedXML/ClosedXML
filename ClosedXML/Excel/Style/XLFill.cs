@@ -99,15 +99,14 @@ namespace ClosedXML.Excel
                     && XLColor.IsNullOrTransparent(BackgroundColor))
                 {
                     var patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
-                    Modify(k =>
+                    Modify(k => k with
                     {
-                        k.BackgroundColor = value.Key;
-                        k.PatternType = patternType;
-                        return k;
+                        BackgroundColor = value.Key,
+                        PatternType = patternType,
                     });
                 }
                 else
-                    Modify(k => { k.BackgroundColor = value.Key; return k; });
+                    Modify(k => k with { BackgroundColor = value.Key });
             }
         }
 
@@ -123,7 +122,7 @@ namespace ClosedXML.Excel
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
-                Modify(k => { k.PatternColor = value.Key; return k; });
+                Modify(k => k with { PatternColor = value.Key });
             }
         }
 
@@ -137,15 +136,14 @@ namespace ClosedXML.Excel
                 {
                     // If fill was empty and the pattern changes to non-empty we have to specify a background color too.
                     // Otherwise the fill will be considered empty and pattern won't update (the cached empty fill will be used).
-                    Modify(k =>
+                    Modify(k => k with
                     {
-                        k.BackgroundColor = XLColor.FromTheme(XLThemeColor.Text1).Key;
-                        k.PatternType = value;
-                        return k;
+                        BackgroundColor = XLColor.FromTheme(XLThemeColor.Text1).Key,
+                        PatternType = value,
                     });
                 }
                 else
-                    Modify(k => { k.PatternType = value; return k; });
+                    Modify(k => k with { PatternType = value });
             }
         }
 
