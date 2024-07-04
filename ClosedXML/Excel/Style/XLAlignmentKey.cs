@@ -2,23 +2,23 @@ namespace ClosedXML.Excel;
 
 public readonly record struct XLAlignmentKey
 {
-    public XLAlignmentHorizontalValues Horizontal { get; init; }
+    public required XLAlignmentHorizontalValues Horizontal { get; init; }
 
-    public XLAlignmentVerticalValues Vertical { get; init; }
+    public required XLAlignmentVerticalValues Vertical { get; init; }
 
-    public int Indent { get; init; }
+    public required int Indent { get; init; }
 
-    public bool JustifyLastLine { get; init; }
+    public required bool JustifyLastLine { get; init; }
 
-    public XLAlignmentReadingOrderValues ReadingOrder { get; init; }
+    public required XLAlignmentReadingOrderValues ReadingOrder { get; init; }
 
     public required int RelativeIndent { get; init; }
 
-    public bool ShrinkToFit { get; init; }
+    public required bool ShrinkToFit { get; init; }
 
-    public int TextRotation { get; init; }
+    public required int TextRotation { get; init; }
 
-    public bool WrapText { get; init; }
+    public required bool WrapText { get; init; }
 
     public override string ToString()
     {
