@@ -562,7 +562,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-        
+
         /// <summary>
         /// Calculate expected column width as a number displayed in the column in Excel from
         /// number of characters that should fit into the width and a font.
@@ -2753,11 +2753,10 @@ namespace ClosedXML.Excel
                 var xlNumberFormat = xlStyle.NumberFormat;
                 if (formatCode.Length > 0)
                 {
-                    xlNumberFormat.Format = formatCode;
-                    xlNumberFormat.NumberFormatId = -1;
+                    xlNumberFormat = XLNumberFormatKey.ForFormat(formatCode);
                 }
                 else
-                    xlNumberFormat.NumberFormatId = (Int32)numberFormatId.Value;
+                    xlNumberFormat = xlNumberFormat with { NumberFormatId = (Int32)numberFormatId.Value };
                 xlStyle.NumberFormat = xlNumberFormat;
             }
         }

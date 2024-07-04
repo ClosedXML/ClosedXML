@@ -91,8 +91,8 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void XLNumberFormatKey_GetHashCode_IsCaseSensitive()
         {
-            var numberFormatKey1 = new XLNumberFormatKey { Format = "MM" };
-            var numberFormatKey2 = new XLNumberFormatKey { Format = "mm" };
+            var numberFormatKey1 = XLNumberFormatKey.ForFormat("MM");
+            var numberFormatKey2 = XLNumberFormatKey.ForFormat("mm");
 
             Assert.AreNotEqual(numberFormatKey1.GetHashCode(), numberFormatKey2.GetHashCode());
         }
@@ -100,8 +100,8 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void XLNumberFormatKey_Equals_IsCaseSensitive()
         {
-            var numberFormatKey1 = new XLNumberFormatKey { Format = "MM" };
-            var numberFormatKey2 = new XLNumberFormatKey { Format = "mm" };
+            var numberFormatKey1 = XLNumberFormatKey.ForFormat("MM");
+            var numberFormatKey2 = XLNumberFormatKey.ForFormat("mm");
 
             Assert.IsFalse(numberFormatKey1.Equals(numberFormatKey2));
         }

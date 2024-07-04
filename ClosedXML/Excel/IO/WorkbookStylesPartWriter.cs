@@ -115,11 +115,7 @@ namespace ClosedXML.Excel.IO
 
             foreach (var pivotNumberFormat in xlPivotTablesCustomFormats)
             {
-                var numberFormatKey = new XLNumberFormatKey
-                {
-                    NumberFormatId = -1,
-                    Format = pivotNumberFormat
-                };
+                var numberFormatKey = XLNumberFormatKey.ForFormat(pivotNumberFormat);
                 var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
 
                 customNumberFormats.Add(numberFormat);
