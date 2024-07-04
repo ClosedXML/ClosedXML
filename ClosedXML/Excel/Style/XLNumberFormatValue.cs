@@ -55,8 +55,7 @@ namespace ClosedXML.Excel
 
         internal XLNumberFormatValue WithNumberFormatId(int numberFormatId)
         {
-            var keyCopy = Key;
-            keyCopy.NumberFormatId = numberFormatId;
+            var keyCopy = Key with { NumberFormatId = numberFormatId };
             return FromKey(ref keyCopy);
         }
     }

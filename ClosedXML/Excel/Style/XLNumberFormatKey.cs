@@ -1,48 +1,37 @@
-#nullable disable
-
 using System;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+internal readonly record struct XLNumberFormatKey
 {
-    internal struct XLNumberFormatKey : IEquatable<XLNumberFormatKey>
+    /// <summary>
+    /// The value <c>-1</c> that is set to <see cref="NumberFormatId"/>, if <see cref="Format"/> is
+    /// set to user-defined format (non-empty string).
+    /// </summary>
+    public const int CustomFormatNumberId = -1;
+
+    /// <summary>
+    /// Number format identifier of predefined format, see <see cref="XLPredefinedFormat"/>.
+    /// If -1, the format is custom and stored in the <see cref="Format"/>.
+    /// </summary>
+    public required int NumberFormatId { get; init; }
+
+    public required string Format { get; init; }
+
+    public static XLNumberFormatKey ForFormat(string customFormat)
     {
-        /// <summary>
-        /// Number format identifier of predefined format, see <see cref="XLPredefinedFormat"/>.
-        /// If -1, the format is custom and stored in the <see cref="Format"/>.
-        /// </summary>
-        public int NumberFormatId { get; set; }
+        if (string.IsNullOrEmpty(customFormat))
+            throw new ArgumentException();
 
-        public string Format { get; set; }
-
-        public override int GetHashCode()
+        return new XLNumberFormatKey
         {
-            unchecked
-            {
-                var hashCode = -759193072;
-                hashCode = hashCode * -1521134295 + NumberFormatId;
-                hashCode = hashCode * -1521134295 + (Format == null ? 0 : Format.GetHashCode());
-                return hashCode;
-            }
-        }
+            NumberFormatId = CustomFormatNumberId,
+            Format = customFormat,
+        };
+    }
 
-        public bool Equals(XLNumberFormatKey other)
-        {
-            return NumberFormatId == other.NumberFormatId &&
-                   string.Equals(Format, other.Format);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is XLNumberFormatKey other && Equals(other);
-        }
-
-        public override string ToString()
-        {
-            return $"{Format}/{NumberFormatId}";
-        }
-
-        public static bool operator ==(XLNumberFormatKey left, XLNumberFormatKey right) => left.Equals(right);
-
-        public static bool operator !=(XLNumberFormatKey left, XLNumberFormatKey right) => !(left.Equals(right));
+    public override string ToString()
+    {
+        return $"{Format}/{NumberFormatId}";
     }
 }
