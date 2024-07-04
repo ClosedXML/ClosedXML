@@ -630,56 +630,12 @@ namespace ClosedXML.Excel.IO
             return border;
         }
 
-        private static bool BordersAreEqual(Border b, XLBorderValue xlBorder)
+        private static bool BordersAreEqual(Border border, XLBorderValue xlBorder)
         {
-            var nb = XLBorderValue.Default.Key;
-            if (b.DiagonalUp != null)
-                nb.DiagonalUp = b.DiagonalUp.Value;
-
-            if (b.DiagonalDown != null)
-                nb.DiagonalDown = b.DiagonalDown.Value;
-
-            if (b.DiagonalBorder != null)
-            {
-                if (b.DiagonalBorder.Style != null)
-                    nb.DiagonalBorder = b.DiagonalBorder.Style.Value.ToClosedXml();
-                if (b.DiagonalBorder.Color != null)
-                    nb.DiagonalBorderColor = b.DiagonalBorder.Color.ToClosedXMLColor().Key;
-            }
-
-            if (b.LeftBorder != null)
-            {
-                if (b.LeftBorder.Style != null)
-                    nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
-                if (b.LeftBorder.Color != null)
-                    nb.LeftBorderColor = b.LeftBorder.Color.ToClosedXMLColor().Key;
-            }
-
-            if (b.RightBorder != null)
-            {
-                if (b.RightBorder.Style != null)
-                    nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
-                if (b.RightBorder.Color != null)
-                    nb.RightBorderColor = b.RightBorder.Color.ToClosedXMLColor().Key;
-            }
-
-            if (b.TopBorder != null)
-            {
-                if (b.TopBorder.Style != null)
-                    nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
-                if (b.TopBorder.Color != null)
-                    nb.TopBorderColor = b.TopBorder.Color.ToClosedXMLColor().Key;
-            }
-
-            if (b.BottomBorder != null)
-            {
-                if (b.BottomBorder.Style != null)
-                    nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
-                if (b.BottomBorder.Color != null)
-                    nb.BottomBorderColor = b.BottomBorder.Color.ToClosedXMLColor().Key;
-            }
-
-            return nb.Equals(xlBorder.Key);
+            var convertedBorder = OpenXmlHelper.BorderToClosedXml(
+                border,
+                XLBorderValue.Default.Key);
+            return convertedBorder.Equals(xlBorder.Key);
         }
 
         private static Dictionary<XLFillValue, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,

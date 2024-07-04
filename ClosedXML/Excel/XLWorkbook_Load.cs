@@ -2600,56 +2600,9 @@ namespace ClosedXML.Excel
             {
                 uint borderId = cellFormat.BorderId.Value;
                 var border = (Border)borders.ElementAt((Int32)borderId);
-                var xlBorder = xlStyle.Border;
-                if (border != null)
+                if (border is not null)
                 {
-                    var bottomBorder = border.BottomBorder;
-                    if (bottomBorder != null)
-                    {
-                        if (bottomBorder.Style != null)
-                            xlBorder.BottomBorder = bottomBorder.Style.Value.ToClosedXml();
-
-                        if (bottomBorder.Color != null)
-                            xlBorder.BottomBorderColor = bottomBorder.Color.ToClosedXMLColor().Key;
-                    }
-                    var topBorder = border.TopBorder;
-                    if (topBorder != null)
-                    {
-                        if (topBorder.Style != null)
-                            xlBorder.TopBorder = topBorder.Style.Value.ToClosedXml();
-                        if (topBorder.Color != null)
-                            xlBorder.TopBorderColor = topBorder.Color.ToClosedXMLColor().Key;
-                    }
-                    var leftBorder = border.LeftBorder;
-                    if (leftBorder != null)
-                    {
-                        if (leftBorder.Style != null)
-                            xlBorder.LeftBorder = leftBorder.Style.Value.ToClosedXml();
-                        if (leftBorder.Color != null)
-                            xlBorder.LeftBorderColor = leftBorder.Color.ToClosedXMLColor().Key;
-                    }
-                    var rightBorder = border.RightBorder;
-                    if (rightBorder != null)
-                    {
-                        if (rightBorder.Style != null)
-                            xlBorder.RightBorder = rightBorder.Style.Value.ToClosedXml();
-                        if (rightBorder.Color != null)
-                            xlBorder.RightBorderColor = rightBorder.Color.ToClosedXMLColor().Key;
-                    }
-                    var diagonalBorder = border.DiagonalBorder;
-                    if (diagonalBorder != null)
-                    {
-                        if (diagonalBorder.Style != null)
-                            xlBorder.DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml();
-                        if (diagonalBorder.Color != null)
-                            xlBorder.DiagonalBorderColor = diagonalBorder.Color.ToClosedXMLColor().Key;
-                        if (border.DiagonalDown != null)
-                            xlBorder.DiagonalDown = border.DiagonalDown;
-                        if (border.DiagonalUp != null)
-                            xlBorder.DiagonalUp = border.DiagonalUp;
-                    }
-
-                    xlStyle.Border = xlBorder;
+                    xlStyle.Border = OpenXmlHelper.BorderToClosedXml(border, xlStyle.Border);
                 }
             }
 

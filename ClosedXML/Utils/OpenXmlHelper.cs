@@ -245,6 +245,62 @@ namespace ClosedXML.Utils
             };
         }
 
+        public static XLBorderKey BorderToClosedXml(Border b, XLBorderKey defaultBorder)
+        {
+            var nb = defaultBorder;
+
+            var diagonalBorder = b.DiagonalBorder;
+            if (diagonalBorder is not null)
+            {
+                if (diagonalBorder.Style is not null)
+                    nb = nb with { DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml() };
+                if (diagonalBorder.Color is not null)
+                    nb = nb with { DiagonalBorderColor = diagonalBorder.Color.ToClosedXMLColor().Key };
+                if (b.DiagonalUp is not null)
+                    nb = nb with { DiagonalUp = b.DiagonalUp.Value };
+                if (b.DiagonalDown is not null)
+                    nb = nb with { DiagonalDown = b.DiagonalDown.Value };
+            }
+
+            var leftBorder = b.LeftBorder;
+            if (leftBorder is not null)
+            {
+                if (leftBorder.Style is not null)
+                    nb = nb with { LeftBorder = leftBorder.Style.Value.ToClosedXml() };
+                if (leftBorder.Color is not null)
+                    nb = nb with { LeftBorderColor = leftBorder.Color.ToClosedXMLColor().Key };
+            }
+
+            var rightBorder = b.RightBorder;
+            if (rightBorder is not null)
+            {
+                if (rightBorder.Style is not null)
+                    nb = nb with { RightBorder = rightBorder.Style.Value.ToClosedXml() };
+                if (rightBorder.Color is not null)
+                    nb = nb with { RightBorderColor = rightBorder.Color.ToClosedXMLColor().Key };
+            }
+
+            var topBorder = b.TopBorder;
+            if (topBorder is not null)
+            {
+                if (topBorder.Style is not null)
+                    nb = nb with { TopBorder = topBorder.Style.Value.ToClosedXml() };
+                if (topBorder.Color is not null)
+                    nb = nb with { TopBorderColor = topBorder.Color.ToClosedXMLColor().Key };
+            }
+
+            var bottomBorder = b.BottomBorder;
+            if (bottomBorder is not null)
+            {
+                if (bottomBorder.Style is not null)
+                    nb = nb with { BottomBorder = bottomBorder.Style.Value.ToClosedXml() };
+                if (bottomBorder.Color is not null)
+                    nb = nb with { BottomBorderColor = bottomBorder.Color.ToClosedXMLColor().Key };
+            }
+
+            return nb;
+        }
+
         #endregion Public Methods
 
         #region Private Methods
