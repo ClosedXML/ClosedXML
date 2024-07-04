@@ -1,70 +1,56 @@
-#nullable disable
-
 using System;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+internal readonly record struct XLFillKey
 {
-    internal struct XLFillKey : IEquatable<XLFillKey>
+    public required XLColorKey BackgroundColor { get; init; }
+
+    public required XLColorKey PatternColor { get; init; }
+
+    public required XLFillPatternValues PatternType { get; init; }
+
+    public override int GetHashCode()
     {
-        public XLColorKey BackgroundColor { get; set; }
+        var hash = new HashCode();
 
-        public XLColorKey PatternColor { get; set; }
+        if (HasNoFill()) return hash.ToHashCode();
 
-        public XLFillPatternValues PatternType { get; set; }
+        hash.Add(PatternType);
+        hash.Add(BackgroundColor);
 
-        public override int GetHashCode()
-        {
-            var hashCode = 2043579837;
-
-            if (HasNoFill()) return hashCode;
-
-            hashCode = hashCode * -1521134295 + (int)PatternType;
-            hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
-
-            if (HasNoForeground()) return hashCode;
+        if (HasNoForeground()) return hash.ToHashCode();
                 
-            hashCode = hashCode * -1521134295 + PatternColor.GetHashCode();
+        hash.Add(PatternColor);
             
-            return hashCode;
-        }
+        return hash.ToHashCode();
+    }
 
-        public bool Equals(XLFillKey other)
-        {
-            if (HasNoFill() && other.HasNoFill())
-                return true;
+    public bool Equals(XLFillKey other)
+    {
+        if (HasNoFill() && other.HasNoFill())
+            return true;
 
-            return BackgroundColor == other.BackgroundColor
-                   && PatternType == other.PatternType
-                   && (HasNoForeground() && other.HasNoForeground() ||
-                       PatternColor == other.PatternColor);
-        }
+        return BackgroundColor == other.BackgroundColor
+               && PatternType == other.PatternType
+               && (HasNoForeground() && other.HasNoForeground() ||
+                   PatternColor == other.PatternColor);
+    }
 
-        private bool HasNoFill()
-        {
-            return PatternType == XLFillPatternValues.None
-                || (PatternType == XLFillPatternValues.Solid && XLColor.IsTransparent(BackgroundColor));
-        }
+    private bool HasNoFill()
+    {
+        return PatternType == XLFillPatternValues.None
+               || (PatternType == XLFillPatternValues.Solid && XLColor.IsTransparent(BackgroundColor));
+    }
 
-        private bool HasNoForeground()
-        {
-            return PatternType == XLFillPatternValues.Solid ||
-                   PatternType == XLFillPatternValues.None;
-        }
+    private bool HasNoForeground()
+    {
+        return PatternType == XLFillPatternValues.Solid ||
+               PatternType == XLFillPatternValues.None;
+    }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is XLFillKey)
-                return Equals((XLFillKey)obj);
-            return base.Equals(obj);
-        }
-
-        public override string ToString()
-        {
-            return $"{PatternType} {BackgroundColor}/{PatternColor}";
-        }
-
-        public static bool operator ==(XLFillKey left, XLFillKey right) => left.Equals(right);
-
-        public static bool operator !=(XLFillKey left, XLFillKey right) => !(left.Equals(right));
+    public override string ToString()
+    {
+        return $"{PatternType} {BackgroundColor}/{PatternColor}";
     }
 }
