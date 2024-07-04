@@ -385,11 +385,12 @@ namespace ClosedXML.Excel
             var cellClearOptions = clearOptions
                     & ~XLClearOptions.ConditionalFormats
                     & ~XLClearOptions.DataValidation
-                    & ~XLClearOptions.MergedRanges;
+                    & ~XLClearOptions.MergedRanges
+                    & ~XLClearOptions.Sparklines;
             var cellUsedOptions = cellClearOptions.ToCellsUsedOptions();
             foreach (var cell in CellsUsed(cellUsedOptions))
             {
-                // We'll clear the conditional formatting, data validations
+                // We'll clear the conditional formatting, data validations, sparklines
                 // and merged ranges later down.
                 (cell as XLCell).Clear(cellClearOptions, true);
             }
@@ -1415,7 +1416,7 @@ namespace ClosedXML.Excel
                     rowModifier = RowCount();
                     break;
             }
-            
+
             var mergesToRemove = Worksheet.Internals.MergedRanges.Where(Contains).ToList();
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
 
