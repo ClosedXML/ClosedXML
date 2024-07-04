@@ -12,7 +12,7 @@ public readonly record struct XLAlignmentKey
 
     public XLAlignmentReadingOrderValues ReadingOrder { get; init; }
 
-    public int RelativeIndent { get; init; }
+    public required int RelativeIndent { get; init; }
 
     public bool ShrinkToFit { get; init; }
 
@@ -20,14 +20,11 @@ public readonly record struct XLAlignmentKey
 
     public bool WrapText { get; init; }
 
-    public bool TopToBottom { get; init; }
-
     public override string ToString()
     {
         return
             $"{Horizontal} {Vertical} {ReadingOrder} Indent: {Indent} RelativeIndent: {RelativeIndent} TextRotation: {TextRotation} " +
             (WrapText ? "WrapText" : "") +
-            (JustifyLastLine ? "JustifyLastLine" : "") +
-            (TopToBottom ? "TopToBottom" : "");
+            (JustifyLastLine ? "JustifyLastLine" : "");
     }
 }

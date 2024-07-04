@@ -48,8 +48,6 @@ namespace ClosedXML.Excel
 
         public bool WrapText { get { return Key.WrapText; } }
 
-        public bool TopToBottom { get { return Key.TopToBottom; } }
-
         private XLAlignmentValue(XLAlignmentKey key)
         {
             Key = key;
