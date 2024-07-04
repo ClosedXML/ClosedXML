@@ -2592,29 +2592,7 @@ namespace ClosedXML.Excel
             var alignment = cellFormat.Alignment;
             if (alignment != null)
             {
-                var xlAlignment = xlStyle.Alignment;
-                if (alignment.Horizontal != null)
-                    xlAlignment.Horizontal = alignment.Horizontal.Value.ToClosedXml();
-                if (alignment.Indent != null && alignment.Indent != 0)
-                    xlAlignment.Indent = Int32.Parse(alignment.Indent.ToString());
-                if (alignment.JustifyLastLine != null)
-                    xlAlignment.JustifyLastLine = alignment.JustifyLastLine;
-                if (alignment.ReadingOrder != null)
-                {
-                    xlAlignment.ReadingOrder =
-                        (XLAlignmentReadingOrderValues)Int32.Parse(alignment.ReadingOrder.ToString());
-                }
-                if (alignment.RelativeIndent != null)
-                    xlAlignment.RelativeIndent = alignment.RelativeIndent;
-                if (alignment.ShrinkToFit != null)
-                    xlAlignment.ShrinkToFit = alignment.ShrinkToFit;
-                if (alignment.TextRotation != null)
-                    xlAlignment.TextRotation = OpenXmlHelper.GetClosedXmlTextRotation(alignment);
-                if (alignment.Vertical != null)
-                    xlAlignment.Vertical = alignment.Vertical.Value.ToClosedXml();
-                if (alignment.WrapText != null)
-                    xlAlignment.WrapText = alignment.WrapText;
-
+                var xlAlignment = OpenXmlHelper.AlignmentToClosedXml(alignment, xlStyle.Alignment);
                 xlStyle.Alignment = xlAlignment;
             }
 

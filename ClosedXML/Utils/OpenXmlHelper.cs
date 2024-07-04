@@ -227,6 +227,24 @@ namespace ClosedXML.Utils
 
 #nullable enable
 
+        public static XLAlignmentKey AlignmentToClosedXml(Alignment alignment, XLAlignmentKey defaultAlignment)
+        {
+            return new XLAlignmentKey
+            {
+                Indent = checked((int?)alignment.Indent?.Value) ?? defaultAlignment.Indent,
+                Horizontal = alignment.Horizontal?.Value.ToClosedXml() ?? defaultAlignment.Horizontal,
+                Vertical = alignment.Vertical?.Value.ToClosedXml() ?? defaultAlignment.Vertical,
+                ReadingOrder = alignment.ReadingOrder?.Value.ToClosedXml() ?? defaultAlignment.ReadingOrder,
+                WrapText = alignment.WrapText?.Value ?? defaultAlignment.WrapText,
+                TextRotation = alignment.TextRotation is not null
+                    ? OpenXmlHelper.GetClosedXmlTextRotation(alignment)
+                    : defaultAlignment.TextRotation,
+                ShrinkToFit = alignment.ShrinkToFit?.Value ?? defaultAlignment.ShrinkToFit,
+                RelativeIndent = alignment.RelativeIndent?.Value ?? defaultAlignment.RelativeIndent,
+                JustifyLastLine = alignment.JustifyLastLine?.Value ?? defaultAlignment.JustifyLastLine,
+            };
+        }
+
         #endregion Public Methods
 
         #region Private Methods
