@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
             get { return Key.Bold; }
             set
             {
-                Modify(k => { k.Bold = value; return k; });
+                Modify(k => k with { Bold = value });
             }
         }
 
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
             get { return Key.Italic; }
             set
             {
-                Modify(k => { k.Italic = value; return k; });
+                Modify(k => k with { Italic = value });
             }
         }
 
@@ -145,7 +145,7 @@ namespace ClosedXML.Excel
             get { return Key.Underline; }
             set
             {
-                Modify(k => { k.Underline = value; return k; });
+                Modify(k => k with { Underline = value });
             }
         }
 
@@ -154,7 +154,7 @@ namespace ClosedXML.Excel
             get { return Key.Strikethrough; }
             set
             {
-                Modify(k => { k.Strikethrough = value; return k; });
+                Modify(k => k with { Strikethrough = value });
             }
         }
 
@@ -163,7 +163,7 @@ namespace ClosedXML.Excel
             get { return Key.VerticalAlignment; }
             set
             {
-                Modify(k => { k.VerticalAlignment = value; return k; });
+                Modify(k => k with { VerticalAlignment = value });
             }
         }
 
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
             get { return Key.Shadow; }
             set
             {
-                Modify(k => { k.Shadow = value; return k; });
+                Modify(k => k with { Shadow = value });
             }
         }
 
@@ -181,7 +181,7 @@ namespace ClosedXML.Excel
             get { return Key.FontSize; }
             set
             {
-                Modify(k => { k.FontSize = value; return k; });
+                Modify(k => k with { FontSize = value });
             }
         }
 
@@ -196,7 +196,7 @@ namespace ClosedXML.Excel
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
-                Modify(k => { k.FontColor = value.Key; return k; });
+                Modify(k => k with { FontColor = value.Key });
             }
         }
 
@@ -205,7 +205,7 @@ namespace ClosedXML.Excel
             get { return Key.FontName; }
             set
             {
-                Modify(k => { k.FontName = value; return k; });
+                Modify(k => k with { FontName = value });
             }
         }
 
@@ -214,7 +214,7 @@ namespace ClosedXML.Excel
             get { return Key.FontFamilyNumbering; }
             set
             {
-                Modify(k => { k.FontFamilyNumbering = value; return k; });
+                Modify(k => k with { FontFamilyNumbering = value });
             }
         }
 
@@ -223,7 +223,7 @@ namespace ClosedXML.Excel
             get { return Key.FontCharSet; }
             set
             {
-                Modify(k => { k.FontCharSet = value; return k; });
+                Modify(k => k with { FontCharSet = value });
             }
         }
 
@@ -232,7 +232,7 @@ namespace ClosedXML.Excel
             get { return Key.FontScheme; }
             set
             {
-                Modify(k => { k.FontScheme = value; return k; });
+                Modify(k => k with { FontScheme = value });
             }
         }
 

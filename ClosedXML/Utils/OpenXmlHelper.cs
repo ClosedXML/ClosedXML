@@ -301,6 +301,59 @@ namespace ClosedXML.Utils
             return nb;
         }
 
+        public static XLFontKey FontToClosedXml(Font f, XLFontKey nf)
+        {
+            nf = nf with
+            {
+                Bold = GetBoolean(f.Bold),
+                Italic = GetBoolean(f.Italic),
+                Shadow = GetBoolean(f.Shadow),
+                Strikethrough = GetBoolean(f.Strike),
+            };
+
+            var underline = f.Underline;
+            if (underline is not null)
+            {
+                var value = underline.Val?.Value.ToClosedXml() ??
+                            XLFontUnderlineValues.Single;
+                nf = nf with { Underline = value };
+            }
+
+            var verticalTextAlignment = f.VerticalTextAlignment;
+            if (verticalTextAlignment is not null)
+            {
+                var value = verticalTextAlignment.Val?.Value.ToClosedXml() ??
+                            XLFontVerticalTextAlignmentValues.Baseline;
+                nf = nf with { VerticalAlignment = value };
+            }
+
+            var fontSize = f.FontSize?.Val;
+            if (fontSize is not null)
+                nf = nf with { FontSize = fontSize.Value };
+
+            var color = f.Color;
+            if (color is not null)
+                nf = nf with { FontColor = color.ToClosedXMLColor().Key };
+
+            var fontName = f.FontName?.Val?.Value ?? string.Empty;
+            if (!string.IsNullOrEmpty(fontName))
+                nf = nf with { FontName = fontName };
+
+            var fontFamilyNumbering = f.FontFamilyNumbering?.Val?.Value;
+            if (fontFamilyNumbering is not null)
+                nf = nf with { FontFamilyNumbering = (XLFontFamilyNumberingValues)fontFamilyNumbering };
+
+            var fontCharSet = f.FontCharSet?.Val?.Value;
+            if (fontCharSet is not null)
+                nf = nf with { FontCharSet = (XLFontCharSet)fontCharSet };
+
+            var fontScheme = f.FontScheme;
+            if (fontScheme is not null)
+                nf = nf with { FontScheme = fontScheme?.Val?.Value.ToClosedXml() ?? XLFontScheme.None };
+
+            return nf;
+        }
+
         #endregion Public Methods
 
         #region Private Methods
