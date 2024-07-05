@@ -2610,57 +2610,9 @@ namespace ClosedXML.Excel
             {
                 var fontId = cellFormat.FontId;
                 var font = (DocumentFormat.OpenXml.Spreadsheet.Font)fonts.ElementAt((Int32)fontId.Value);
-
-                var xlFont = xlStyle.Font;
-                if (font != null)
+                if (font is not null)
                 {
-                    xlFont.Bold = OpenXmlHelper.GetBoolean(font.Bold);
-
-                    if (font.Color != null)
-                        xlFont.FontColor = font.Color.ToClosedXMLColor().Key;
-
-                    if (font.FontFamilyNumbering != null && (font.FontFamilyNumbering).Val != null)
-                    {
-                        xlFont.FontFamilyNumbering =
-                            (XLFontFamilyNumberingValues)Int32.Parse((font.FontFamilyNumbering).Val.ToString());
-                    }
-                    if (font.FontName != null)
-                    {
-                        if ((font.FontName).Val != null)
-                            xlFont.FontName = (font.FontName).Val;
-                    }
-                    if (font.FontSize != null)
-                    {
-                        if ((font.FontSize).Val != null)
-                            xlFont.FontSize = (font.FontSize).Val;
-                    }
-
-                    xlFont.Italic = OpenXmlHelper.GetBoolean(font.Italic);
-                    xlFont.Shadow = OpenXmlHelper.GetBoolean(font.Shadow);
-                    xlFont.Strikethrough = OpenXmlHelper.GetBoolean(font.Strike);
-
-                    if (font.Underline != null)
-                    {
-                        xlFont.Underline = font.Underline.Val != null
-                                            ? (font.Underline).Val.Value.ToClosedXml()
-                                            : XLFontUnderlineValues.Single;
-                    }
-
-                    if (font.VerticalTextAlignment != null)
-                    {
-                        xlFont.VerticalAlignment = font.VerticalTextAlignment.Val != null
-                                                    ? (font.VerticalTextAlignment).Val.Value.ToClosedXml()
-                                                    : XLFontVerticalTextAlignmentValues.Baseline;
-                    }
-
-                    if (font.FontScheme is not null)
-                    {
-                        xlFont.FontScheme = font.FontScheme.Val is not null
-                            ? font.FontScheme.Val.Value.ToClosedXml()
-                            : XLFontScheme.None;
-                    }
-
-                    xlStyle.Font = xlFont;
+                    xlStyle.Font = OpenXmlHelper.FontToClosedXml(font, xlStyle.Font);
                 }
             }
 

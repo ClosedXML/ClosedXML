@@ -857,38 +857,12 @@ namespace ClosedXML.Excel.IO
             return font;
         }
 
-        private static bool FontsAreEqual(Font f, XLFontValue xlFont)
+        private static bool FontsAreEqual(Font font, XLFontValue xlFont)
         {
-            var nf = XLFontValue.Default.Key;
-            nf.Bold = f.Bold != null;
-            nf.Italic = f.Italic != null;
-
-            if (f.Underline != null)
-            {
-                nf.Underline = f.Underline.Val != null
-                    ? f.Underline.Val.Value.ToClosedXml()
-                    : XLFontUnderlineValues.Single;
-            }
-            nf.Strikethrough = f.Strike != null;
-            if (f.VerticalTextAlignment != null)
-            {
-                nf.VerticalAlignment = f.VerticalTextAlignment.Val != null
-                    ? f.VerticalTextAlignment.Val.Value.ToClosedXml()
-                    : XLFontVerticalTextAlignmentValues.Baseline;
-            }
-            nf.Shadow = f.Shadow != null;
-            if (f.FontSize != null)
-                nf.FontSize = f.FontSize.Val;
-            if (f.Color != null)
-                nf.FontColor = f.Color.ToClosedXMLColor().Key;
-            if (f.FontName != null)
-                nf.FontName = f.FontName.Val;
-            if (f.FontFamilyNumbering != null)
-                nf.FontFamilyNumbering = (XLFontFamilyNumberingValues)f.FontFamilyNumbering.Val.Value;
-            if (f.FontScheme?.Val != null)
-                nf.FontScheme = f.FontScheme.Val.Value.ToClosedXml();
-
-            return nf.Equals(xlFont.Key);
+            var convertedFont = OpenXmlHelper.FontToClosedXml(
+                font,
+                XLFontValue.Default.Key);
+            return convertedFont.Equals(xlFont.Key);
         }
 
         private static Dictionary<XLNumberFormatValue, NumberFormatInfo> ResolveNumberFormats(
