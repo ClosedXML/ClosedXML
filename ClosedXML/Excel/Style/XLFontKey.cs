@@ -4,29 +4,29 @@ namespace ClosedXML.Excel;
 
 internal readonly record struct XLFontKey
 {
-    public bool Bold { get; init; }
+    public required bool Bold { get; init; }
 
-    public bool Italic { get; init; }
+    public required bool Italic { get; init; }
 
-    public XLFontUnderlineValues Underline { get; init; }
+    public required XLFontUnderlineValues Underline { get; init; }
 
-    public bool Strikethrough { get; init; }
+    public required bool Strikethrough { get; init; }
 
-    public XLFontVerticalTextAlignmentValues VerticalAlignment { get; init; }
+    public required XLFontVerticalTextAlignmentValues VerticalAlignment { get; init; }
 
-    public bool Shadow { get; init; }
+    public required bool Shadow { get; init; }
 
-    public double FontSize { get; init; }
+    public required double FontSize { get; init; }
 
-    public XLColorKey FontColor { get; init; }
+    public required XLColorKey FontColor { get; init; }
 
-    public string FontName { get; init; }
+    public required string FontName { get; init; }
 
-    public XLFontFamilyNumberingValues FontFamilyNumbering { get; init; }
+    public required XLFontFamilyNumberingValues FontFamilyNumbering { get; init; }
 
-    public XLFontCharSet FontCharSet { get; init; }
+    public required XLFontCharSet FontCharSet { get; init; }
 
-    public XLFontScheme FontScheme { get; init; }
+    public required XLFontScheme FontScheme { get; init; }
 
     public bool Equals(XLFontKey other)
     {

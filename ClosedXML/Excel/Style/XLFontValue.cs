@@ -21,6 +21,7 @@ namespace ClosedXML.Excel
             Underline = XLFontUnderlineValues.None,
             Strikethrough = false,
             VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+            Shadow = false,
             FontSize = 11,
             FontColor = XLColor.FromArgb(0, 0, 0).Key,
             FontName = "Calibri",
