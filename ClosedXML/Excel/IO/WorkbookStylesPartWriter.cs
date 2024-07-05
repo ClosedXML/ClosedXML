@@ -502,12 +502,13 @@ namespace ClosedXML.Excel.IO
         private static bool ProtectionsAreEqual(Protection protection, XLProtectionValue xlProtection)
         {
             var p = XLProtectionValue.Default.Key;
-            if (protection != null)
+            if (protection is not null)
             {
-                if (protection.Locked != null)
-                    p.Locked = protection.Locked.Value;
-                if (protection.Hidden != null)
-                    p.Hidden = protection.Hidden.Value;
+                if (protection.Locked is not null)
+                    p = p with { Locked = protection.Locked.Value };
+
+                if (protection.Hidden is not null)
+                    p = p with { Hidden = protection.Hidden.Value };
             }
             return p.Equals(xlProtection.Key);
         }
