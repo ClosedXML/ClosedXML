@@ -503,13 +503,8 @@ namespace ClosedXML.Excel.IO
         {
             var p = XLProtectionValue.Default.Key;
             if (protection is not null)
-            {
-                if (protection.Locked is not null)
-                    p = p with { Locked = protection.Locked.Value };
+                p = OpenXmlHelper.ProtectionToClosedXml(protection, p);
 
-                if (protection.Hidden is not null)
-                    p = p with { Hidden = protection.Hidden.Value };
-            }
             return p.Equals(xlProtection.Key);
         }
 
