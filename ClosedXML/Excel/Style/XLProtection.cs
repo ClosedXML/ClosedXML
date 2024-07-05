@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             get { return Key.Locked; }
             set
             {
-                Modify(k => { k.Locked = value; return k; });
+                Modify(k => k with { Locked = value });
             }
         }
 
@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
             get { return Key.Hidden; }
             set
             {
-                Modify(k => { k.Hidden = value; return k; });
+                Modify(k => k with { Hidden = value });
             }
         }
 
