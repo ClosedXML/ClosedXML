@@ -265,9 +265,8 @@ namespace ClosedXML.Excel
 
             _style.Modify(styleKey =>
             {
-                var align = styleKey.Alignment;
-                styleKey.Alignment = modification(align);
-                return styleKey;
+                var alignment = modification(styleKey.Alignment);
+                return styleKey with { Alignment = alignment };
             });
         }
 

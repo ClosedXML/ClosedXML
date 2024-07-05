@@ -2558,24 +2558,17 @@ namespace ClosedXML.Excel
 
             var cellFormat = (CellFormat)s.CellFormats.ElementAt(styleIndex);
 
-            xlStyle.IncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
+            var xlIncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
+            xlStyle = xlStyle with { IncludeQuotePrefix = xlIncludeQuotePrefix };
 
             if (cellFormat.ApplyProtection != null)
             {
                 var protection = cellFormat.Protection;
+                var xlProtection = XLProtectionValue.Default.Key;
+                if (protection is not null)
+                    xlProtection = OpenXmlHelper.ProtectionToClosedXml(protection, xlProtection);
 
-                if (protection == null)
-                    xlStyle.Protection = XLProtectionValue.Default.Key;
-                else
-                {
-                    xlStyle.Protection = new XLProtectionKey
-                    {
-                        Hidden = protection.Hidden != null && protection.Hidden.HasValue &&
-                                                              protection.Hidden.Value,
-                        Locked = protection.Locked == null ||
-                                (protection.Locked.HasValue && protection.Locked.Value)
-                    };
-                }
+                xlStyle = xlStyle with { Protection = xlProtection };
             }
 
             if (UInt32HasValue(cellFormat.FillId))
@@ -2585,7 +2578,7 @@ namespace ClosedXML.Excel
                 {
                     var xlFill = new XLFill();
                     OpenXmlHelper.LoadFill(fill, xlFill, differentialFillFormat: false);
-                    xlStyle.Fill = xlFill.Key;
+                    xlStyle = xlStyle with { Fill = xlFill.Key };
                 }
             }
 
@@ -2593,7 +2586,7 @@ namespace ClosedXML.Excel
             if (alignment != null)
             {
                 var xlAlignment = OpenXmlHelper.AlignmentToClosedXml(alignment, xlStyle.Alignment);
-                xlStyle.Alignment = xlAlignment;
+                xlStyle = xlStyle with { Alignment = xlAlignment };
             }
 
             if (UInt32HasValue(cellFormat.BorderId))
@@ -2602,7 +2595,8 @@ namespace ClosedXML.Excel
                 var border = (Border)borders.ElementAt((Int32)borderId);
                 if (border is not null)
                 {
-                    xlStyle.Border = OpenXmlHelper.BorderToClosedXml(border, xlStyle.Border);
+                    var xlBorder = OpenXmlHelper.BorderToClosedXml(border, xlStyle.Border);
+                    xlStyle = xlStyle with { Border = xlBorder };
                 }
             }
 
@@ -2612,7 +2606,8 @@ namespace ClosedXML.Excel
                 var font = (DocumentFormat.OpenXml.Spreadsheet.Font)fonts.ElementAt((Int32)fontId.Value);
                 if (font is not null)
                 {
-                    xlStyle.Font = OpenXmlHelper.FontToClosedXml(font, xlStyle.Font);
+                    var xlFont = OpenXmlHelper.FontToClosedXml(font, xlStyle.Font);
+                    xlStyle = xlStyle with { Font = xlFont };
                 }
             }
 
@@ -2640,7 +2635,7 @@ namespace ClosedXML.Excel
                 }
                 else
                     xlNumberFormat = xlNumberFormat with { NumberFormatId = (Int32)numberFormatId.Value };
-                xlStyle.NumberFormat = xlNumberFormat;
+                xlStyle = xlStyle with { NumberFormat = xlNumberFormat };
             }
         }
 

@@ -20,10 +20,11 @@ namespace ClosedXML.Excel
 
             return new XLStyleKey
             {
-                Font = XLFont.GenerateKey(initialStyle.Font),
                 Alignment = XLAlignment.GenerateKey(initialStyle.Alignment),
                 Border = XLBorder.GenerateKey(initialStyle.Border),
                 Fill = XLFill.GenerateKey(initialStyle.Fill),
+                Font = XLFont.GenerateKey(initialStyle.Font),
+                IncludeQuotePrefix = initialStyle.IncludeQuotePrefix,
                 NumberFormat = XLNumberFormat.GenerateKey(initialStyle.NumberFormat),
                 Protection = XLProtection.GenerateKey(initialStyle.Protection)
             };
@@ -97,7 +98,7 @@ namespace ClosedXML.Excel
             get { return new XLFont(this, Value.Font); }
             set
             {
-                Modify(k => { k.Font = XLFont.GenerateKey(value); return k; });
+                Modify(k => k with { Font = XLFont.GenerateKey(value) });
             }
         }
 
@@ -106,7 +107,7 @@ namespace ClosedXML.Excel
             get { return new XLAlignment(this, Value.Alignment); }
             set
             {
-                Modify(k => { k.Alignment = XLAlignment.GenerateKey(value); return k; });
+                Modify(k => k with { Alignment = XLAlignment.GenerateKey(value) });
             }
         }
 
@@ -115,7 +116,7 @@ namespace ClosedXML.Excel
             get { return new XLBorder(_container, this, Value.Border); }
             set
             {
-                Modify(k => { k.Border = XLBorder.GenerateKey(value); return k; });
+                Modify(k => k with { Border = XLBorder.GenerateKey(value) });
             }
         }
 
@@ -124,7 +125,7 @@ namespace ClosedXML.Excel
             get { return new XLFill(this, Value.Fill); }
             set
             {
-                Modify(k => { k.Fill = XLFill.GenerateKey(value); return k; });
+                Modify(k => k with { Fill = XLFill.GenerateKey(value) });
             }
         }
 
@@ -133,7 +134,7 @@ namespace ClosedXML.Excel
             get { return Value.IncludeQuotePrefix; }
             set
             {
-                Modify(k => { k.IncludeQuotePrefix = value; return k; });
+                Modify(k => k with { IncludeQuotePrefix = value });
             }
         }
 
@@ -148,7 +149,7 @@ namespace ClosedXML.Excel
             get { return new XLNumberFormat(this, Value.NumberFormat); }
             set
             {
-                Modify(k => { k.NumberFormat = XLNumberFormat.GenerateKey(value); return k; });
+                Modify(k => k with { NumberFormat = XLNumberFormat.GenerateKey(value) });
             }
         }
 
@@ -157,7 +158,7 @@ namespace ClosedXML.Excel
             get { return new XLProtection(this, Value.Protection); }
             set
             {
-                Modify(k => { k.Protection = XLProtection.GenerateKey(value); return k; });
+                Modify(k => k with { Protection = XLProtection.GenerateKey(value) });
             }
         }
 

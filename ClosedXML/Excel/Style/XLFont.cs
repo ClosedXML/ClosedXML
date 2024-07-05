@@ -114,9 +114,8 @@ namespace ClosedXML.Excel
 
             _style.Modify(styleKey =>
             {
-                var font = styleKey.Font;
-                styleKey.Font = modification(font);
-                return styleKey;
+                var font = modification(styleKey.Font);
+                return styleKey with { Font = font };
             });
         }
 

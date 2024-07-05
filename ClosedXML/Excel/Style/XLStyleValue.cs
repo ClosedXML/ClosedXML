@@ -175,22 +175,19 @@ namespace ClosedXML.Excel
 
         internal XLStyleValue WithAlignment(XLAlignmentValue alignment)
         {
-            var keyCopy = Key;
-            keyCopy.Alignment = alignment.Key;
+            var keyCopy = Key with { Alignment = alignment.Key };
             return FromKey(ref keyCopy);
         }
 
         internal XLStyleValue WithIncludeQuotePrefix(bool includeQuotePrefix)
         {
-            var keyCopy = Key;
-            keyCopy.IncludeQuotePrefix = includeQuotePrefix;
+            var keyCopy = Key with { IncludeQuotePrefix = includeQuotePrefix };
             return FromKey(ref keyCopy);
         }
 
         internal XLStyleValue WithNumberFormat(XLNumberFormatValue numberFormat)
         {
-            var keyCopy = Key;
-            keyCopy.NumberFormat = numberFormat.Key;
+            var keyCopy = Key with { NumberFormat = numberFormat.Key };
             return FromKey(ref keyCopy);
         }
     }

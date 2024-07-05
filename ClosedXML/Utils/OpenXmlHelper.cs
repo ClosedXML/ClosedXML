@@ -350,8 +350,19 @@ namespace ClosedXML.Utils
             var fontScheme = f.FontScheme;
             if (fontScheme is not null)
                 nf = nf with { FontScheme = fontScheme?.Val?.Value.ToClosedXml() ?? XLFontScheme.None };
-
             return nf;
+        }
+
+        public static XLProtectionKey ProtectionToClosedXml(Protection protection, XLProtectionKey p)
+        {
+            // OI29500, hidden default is false, locked default is true.
+            if (protection.Hidden is not null)
+                p = p with { Hidden = protection.Hidden.Value };
+
+            if (protection.Locked is not null)
+                p = p with { Locked = protection.Locked.Value };
+
+            return p;
         }
 
         #endregion Public Methods

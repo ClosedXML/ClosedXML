@@ -460,9 +460,8 @@ namespace ClosedXML.Excel
 
             _style.Modify(styleKey =>
             {
-                var border = styleKey.Border;
-                styleKey.Border = modification(border);
-                return styleKey;
+                var border = modification(styleKey.Border);
+                return styleKey with { Border = border };
             });
         }
 

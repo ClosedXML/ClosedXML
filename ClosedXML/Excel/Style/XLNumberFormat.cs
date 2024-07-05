@@ -110,9 +110,8 @@ internal class XLNumberFormat : IXLNumberFormat
 
         _style.Modify(styleKey =>
         {
-            var numberFormat = styleKey.NumberFormat;
-            styleKey.NumberFormat = modification(numberFormat);
-            return styleKey;
+            var numberFormat = modification(styleKey.NumberFormat);
+            return styleKey with { NumberFormat = numberFormat };
         });
     }
 
