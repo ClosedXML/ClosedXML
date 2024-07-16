@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>11.0</LangVersion>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <!-- netstandard 2.0 doesn't contain nullable annotations for BCL, so we want to export
          annotations for our consumers, but no warnings for our code. Warnings will be
          emitted by netstandard2.1 target -->
