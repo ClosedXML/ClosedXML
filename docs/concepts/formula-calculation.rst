@@ -80,7 +80,7 @@ Loaded formulas
 ---------------
 
 When a formula is loaded and the cell also contains a value, the formula is not
-makred as dirty on load. That is done under assumption that file contains the
+marked as dirty on load. That is done under assumption that file contains the
 truth about what value of a cell should be.
 
 If a cell contains a formula, but not a value, the formula is marked as a dirty
