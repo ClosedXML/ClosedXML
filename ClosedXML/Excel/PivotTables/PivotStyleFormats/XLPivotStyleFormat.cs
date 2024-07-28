@@ -22,6 +22,8 @@ internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
         _pivotTable = pivotTable;
         _filter = filter;
         _factory = factory;
+
+        // Value is Default, because it's a differential style that can't be represented yet.
         _styleValue = XLStyle.Default.Value;
     }
 
@@ -55,6 +57,10 @@ internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
         get => _styleValue;
         set
         {
+            // This sets the style of everything to the passed style, while ModifyStyle
+            // is for fluent API that can modify format styles individually. Because initial
+            // value of _styleValue is Default, this setter shouldn't be used as a basis
+            // for modifying the DxStyleValue.
             _styleValue = value;
             foreach (var format in GetFormats())
                 format.DxfStyleValue = value;
@@ -63,8 +69,16 @@ internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
 
     public void ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
     {
-        var styleKey = modification(StyleValue.Key);
-        StyleValue = XLStyleValue.FromKey(ref styleKey);
+        var styleKey = modification(_styleValue.Key);
+        _styleValue = XLStyleValue.FromKey(ref styleKey);
+
+        // Do not use StyleValue setter, because some formats might have different formats and
+        // we should only modify them, not replace other potentially different style props of formats.
+        foreach (var format in GetFormats())
+        {
+            var formatStyleValue = modification(format.DxfStyleValue.Key);
+            format.DxfStyleValue = XLStyleValue.FromKey(ref formatStyleValue);
+        }
     }
 
     #endregion IXLStylized
