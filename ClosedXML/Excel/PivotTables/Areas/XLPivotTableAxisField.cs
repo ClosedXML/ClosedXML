@@ -140,7 +140,7 @@ internal class XLPivotTableAxisField : IXLPivotField
 
     public IReadOnlyList<XLCellValue> SelectedValues => Array.Empty<XLCellValue>();
 
-    public IXLPivotFieldStyleFormats StyleFormats => new XLPivotTableAxisFieldStyleFormats();
+    public IXLPivotFieldStyleFormats StyleFormats => new XLPivotTableAxisFieldStyleFormats(_pivotTable, this);
 
     public bool IsOnRowAxis => GetFieldValue(f => f.Axis == XLPivotAxis.AxisRow, _pivotTable.DataOnRows);
 
