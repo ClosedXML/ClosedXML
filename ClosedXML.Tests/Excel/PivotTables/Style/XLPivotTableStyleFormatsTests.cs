@@ -7,7 +7,7 @@ namespace ClosedXML.Tests.Excel.PivotTables.Style;
 internal class XLPivotTableStyleFormatsTests
 {
     [Test]
-    public void Add_grand_total_styles()
+    public void Add_grand_row_total_styles()
     {
         TestHelper.CreateAndCompare(wb =>
         {
