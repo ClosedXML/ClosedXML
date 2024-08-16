@@ -24,6 +24,10 @@ namespace ClosedXML.Excel
         private readonly List<XLPivotConditionalFormat> _conditionalFormats = new();
         private XLPivotCache _cache;
         private int _filterFieldsPageWrap;
+        private bool _outline = true;
+        private bool _outlineData = false;
+        private bool _compact = true;
+        private bool _compactData = true;
 
         internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
@@ -620,7 +624,30 @@ namespace ClosedXML.Excel
 
         public XLPivotLayout Layout
         {
-            set { ImplementedFields.ForEach(f => f.SetLayout(value)); }
+            set
+            {
+                switch (value)
+                {
+                    case XLPivotLayout.Compact:
+                        _compact = _compactData = true;
+                        _outline = _outlineData = false;
+                        break;
+                    case XLPivotLayout.Outline:
+                        _compact = _compactData = false;
+                        _outline = _outlineData = true;
+                        break;
+                    case XLPivotLayout.Tabular:
+                        _compact = _compactData = false;
+                        _outline = _outlineData = false;
+                        break;
+                    default:
+                        throw new UnreachableException();
+                }
+
+                // It is necessary to set layout for each pivot field, even ones that are not displayed on an axis. Without it, the tabular layout
+                // doesn't display headers for axis fields and only display one "Column labels" button instead.
+                PivotFields.ForEach(f => f.SetLayout(value));
+            }
         }
 
         public IXLPivotTable SetLayout(XLPivotLayout value)
@@ -1078,14 +1105,22 @@ namespace ClosedXML.Excel
         /// <see cref="XLPivotTableField.Compact"/> flag set to <c>true</c>. By new, it means field
         /// added to page, axes or data fields, not a new field from cache.
         /// </summary>
-        internal bool Compact { get; init; } = true;
+        internal bool Compact
+        {
+            get => _compact;
+            init => _compact = value;
+        }
 
         /// <summary>
         /// A flag indicating whether new fields should have their
         /// <see cref="XLPivotTableField.Outline"/> flag set to <c>true</c>. By new, it means field
         /// added to page, axes or data fields, not a new field from cache.
         /// </summary>
-        internal bool Outline { get; init; } = true;
+        internal bool Outline
+        {
+            get => _outline;
+            init => _outline = value;
+        }
 
         /// <summary>
         /// <para>
@@ -1103,7 +1138,11 @@ namespace ClosedXML.Excel
         /// <remarks>Doesn't seem to do much in column axis, only in row axis. Also, Excel
         ///     sometimes seems to favor <see cref="Outline"/> flag instead (likely some less used
         ///     paths in the Excel code).</remarks>
-        internal bool OutlineData { get; init; } = false;
+        internal bool OutlineData
+        {
+            get => _outlineData;
+            init => _outlineData = value;
+        }
 
         /// <summary>
         /// <para>
@@ -1121,7 +1160,11 @@ namespace ClosedXML.Excel
         /// <remarks>Doesn't seem to do much in column axis, only in row axis. Also, Excel
         ///     sometimes seems to favor <see cref="Compact"/> flag instead (likely some less used
         ///     paths in the Excel code).</remarks>
-        internal bool CompactData { get; init; } = true;
+        internal bool CompactData
+        {
+            get => _compactData;
+            init => _compactData = value;
+        }
 
         /// <summary>
         /// A flag that indicates whether data fields in the pivot table are published and

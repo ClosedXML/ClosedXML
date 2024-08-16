@@ -66,6 +66,18 @@ internal class XLPivotTableField
 
     internal string? UniqueMemberProperty { get; init; }
 
+    /// <summary>
+    /// <para>
+    /// Should the headers be displayed in a same column. This field has meaning only when
+    /// <see cref="Outline"/> is set to <c>true</c>. Excel displays the flag in <em>Field settings
+    /// - Layout &amp; Print - Display labels from next field in the same column</em>.
+    /// </para>
+    /// <para>
+    /// The value doesn't affect anything individually per field. When <em>ALL</em> fields of the pivot table
+    /// are <c>false</c>, the headers are displayed individually. If <em>ANY</em> field is <c>true</c>, headers
+    /// are grouped to single column.
+    /// </para>
+    /// </summary>
     internal bool Compact { get; set; } = true;
 
     /// <summary>
@@ -201,7 +213,9 @@ internal class XLPivotTableField
         switch (value)
         {
             case XLPivotLayout.Compact:
-                Outline = false;
+                // Compact form is a subtype of outline form. In Excel GUI, it is a checkbox under
+                // outline mode.
+                Outline = true;
                 Compact = true;
                 break;
             case XLPivotLayout.Outline:
