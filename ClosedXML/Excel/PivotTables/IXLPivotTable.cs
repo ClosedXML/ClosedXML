@@ -169,6 +169,10 @@ namespace ClosedXML.Excel
         Boolean ShowRowStripes { get; set; }
         Boolean ShowColumnStripes { get; set; }
         XLPivotSubtotals Subtotals { get; set; }
+
+        /// <summary>
+        /// Set the layout of the pivot table. It also changes layout of all pivot fields.
+        /// </summary>
         XLPivotLayout Layout { set; }
         Boolean InsertBlankLines { set; }
 

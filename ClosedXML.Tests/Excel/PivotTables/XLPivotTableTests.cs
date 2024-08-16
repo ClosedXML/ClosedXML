@@ -904,6 +904,44 @@ namespace ClosedXML.Tests
 
         #endregion
 
+        #region Layout
+
+        [TestCase(XLPivotLayout.Outline, "Property_layout_sets_layout_of_pivot_table_and_all_fields-outline.xlsx")]
+        [TestCase(XLPivotLayout.Tabular, "Property_layout_sets_layout_of_pivot_table_and_all_fields-tabular.xlsx")]
+        [TestCase(XLPivotLayout.Compact, "Property_layout_sets_layout_of_pivot_table_and_all_fields-compact.xlsx")]
+        public void Property_layout_sets_layout_of_pivot_table_and_all_fields(XLPivotLayout layout, string testFile)
+        {
+            // The pivot table also contains unused field Currency. It is there, because tabular
+            // layout doesn't display header fields properly (i.e. one header per axis field),
+            // unless all (even fields that are not on any axis) have the same field layout.
+            TestHelper.CreateAndCompare(wb =>
+            {
+                var dataSheet = wb.AddWorksheet();
+                var dataRange = dataSheet.Cell("A1").InsertData(new object[]
+                {
+                    ("Name", "Size", "Month", "Season", "Price", "Currency"),
+                    ("Cake", "Small", "Jan", "Winter", 9, "EUR"),
+                    ("Pie", "Small", "Jan", "Winter", 7, "EUR"),
+                    ("Cake", "Large", "Feb", "Summer", 3, "CZK"),
+                });
+
+                var ptSheet = wb.AddWorksheet().SetTabActive();
+                ptSheet.Column("A").Width = 15;
+                var pt = dataRange.CreatePivotTable(ptSheet.Cell("A1"), "pivot table");
+
+                // Add at least two fields to each axis to make each layout distinctive.
+                pt.RowLabels.Add("Name");
+                pt.RowLabels.Add("Size");
+                pt.ColumnLabels.Add("Month");
+                pt.ColumnLabels.Add("Season");
+                pt.Values.Add("Price");
+
+                pt.Layout = layout;
+            }, $@"Other\PivotTable\TableProps\{testFile}");
+        }
+
+        #endregion
+
         #endregion
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
