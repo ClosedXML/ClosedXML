@@ -1045,7 +1045,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static Regex definedNameRegex = new Regex(@"\A'.*'!.*\z", RegexOptions.Compiled);
+        private static Regex definedNameRegex = new Regex(@"\A('?).*\1!.*\z", RegexOptions.Compiled);
 
         private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
