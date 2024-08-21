@@ -59,6 +59,15 @@ namespace ClosedXML.Excel
         String CustomName { get; set; }
 
         String SubtotalCaption { get; set; }
+
+        /// <summary>
+        /// Get subtotals of the field. The content of the collection depends on the type of subtotal:
+        /// <list type="bullet">
+        ///   <item>None - the collection is empty.</item>
+        ///   <item>Automatic - the collection contains one element with function <see cref="XLSubtotalFunction.Automatic"/>.</item>
+        ///   <item>Custom - the collection contains a set of functions (at least one) except the <see cref="XLSubtotalFunction.Automatic"/>.</item>
+        /// </list>
+        /// </summary>
         IReadOnlyCollection<XLSubtotalFunction> Subtotals { get; }
         Boolean IncludeNewItemsInFilter { get; set; }
         Boolean Outline { get; set; }
