@@ -49,32 +49,7 @@ internal class XLPivotReference
     /// </summary>
     internal bool Relative { get; init; } = false;
 
-    /// <summary>
-    /// Is the aggregate function included in the filter?
-    /// </summary>
-    internal bool DefaultSubtotal { get; init; } = false;
-
-    internal bool SumSubtotal { get; init; } = false;
-
-    internal bool CountASubtotal { get; init; } = false;
-
-    internal bool AvgSubtotal { get; init; } = false;
-
-    internal bool MaxSubtotal { get; init; } = false;
-
-    internal bool MinSubtotal { get; init; } = false;
-
-    internal bool ProductSubtotal { get; init; } = false;
-
-    internal bool CountSubtotal { get; init; } = false;
-
-    internal bool StdDevSubtotal { get; init; } = false;
-
-    internal bool StdDevPSubtotal { get; init; } = false;
-
-    internal bool VarSubtotal { get; init; } = false;
-
-    internal bool VarPSubtotal { get; init; } = false;
+    internal HashSet<XLSubtotalFunction> Subtotals { get; init; }= new();
 
     internal void AddFieldItem(uint fieldItem)
     {

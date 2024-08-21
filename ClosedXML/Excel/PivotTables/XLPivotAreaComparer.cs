@@ -75,18 +75,7 @@ internal class XLPivotAreaComparer : IEqualityComparer<XLPivotArea>
                    x.Selected == y.Selected &&
                    x.ByPosition == y.ByPosition &&
                    x.Relative == y.Relative &&
-                   x.DefaultSubtotal == y.DefaultSubtotal &&
-                   x.SumSubtotal == y.SumSubtotal &&
-                   x.CountASubtotal == y.CountASubtotal &&
-                   x.AvgSubtotal == y.AvgSubtotal &&
-                   x.MaxSubtotal == y.MaxSubtotal &&
-                   x.MinSubtotal == y.MinSubtotal &&
-                   x.ProductSubtotal == y.ProductSubtotal &&
-                   x.CountSubtotal == y.CountSubtotal &&
-                   x.StdDevSubtotal == y.StdDevSubtotal &&
-                   x.StdDevPSubtotal == y.StdDevPSubtotal &&
-                   x.VarSubtotal == y.VarSubtotal &&
-                   x.VarPSubtotal == y.VarPSubtotal;
+                   x.Subtotals.SetEquals(y.Subtotals);
         }
 
         public int GetHashCode(XLPivotReference obj)
@@ -99,18 +88,10 @@ internal class XLPivotAreaComparer : IEqualityComparer<XLPivotArea>
             hashCode.Add(obj.Selected);
             hashCode.Add(obj.ByPosition);
             hashCode.Add(obj.Relative);
-            hashCode.Add(obj.DefaultSubtotal);
-            hashCode.Add(obj.SumSubtotal);
-            hashCode.Add(obj.CountASubtotal);
-            hashCode.Add(obj.AvgSubtotal);
-            hashCode.Add(obj.MaxSubtotal);
-            hashCode.Add(obj.MinSubtotal);
-            hashCode.Add(obj.ProductSubtotal);
-            hashCode.Add(obj.CountSubtotal);
-            hashCode.Add(obj.StdDevSubtotal);
-            hashCode.Add(obj.StdDevPSubtotal);
-            hashCode.Add(obj.VarSubtotal);
-            hashCode.Add(obj.VarPSubtotal);
+
+            foreach (var subtotal in obj.Subtotals)
+                hashCode.Add(subtotal);
+
             return hashCode.ToHashCode();
         }
     }

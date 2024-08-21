@@ -544,18 +544,19 @@ internal class PivotTableDefinitionPartWriter2
                 xml.WriteAttributeDefault("selected", reference.Selected, true);
                 xml.WriteAttributeDefault("byPosition", reference.ByPosition, false);
                 xml.WriteAttributeDefault("relative", reference.Relative, false);
-                xml.WriteAttributeDefault("defaultSubtotal", reference.DefaultSubtotal, false);
-                xml.WriteAttributeDefault("sumSubtotal", reference.SumSubtotal, false);
-                xml.WriteAttributeDefault("countASubtotal", reference.CountASubtotal, false);
-                xml.WriteAttributeDefault("avgSubtotal", reference.AvgSubtotal, false);
-                xml.WriteAttributeDefault("maxSubtotal", reference.MaxSubtotal, false);
-                xml.WriteAttributeDefault("minSubtotal", reference.MinSubtotal, false);
-                xml.WriteAttributeDefault("productSubtotal", reference.ProductSubtotal, false);
-                xml.WriteAttributeDefault("countSubtotal", reference.CountSubtotal, false);
-                xml.WriteAttributeDefault("stdDevSubtotal", reference.StdDevSubtotal, false);
-                xml.WriteAttributeDefault("stdDevPSubtotal", reference.StdDevPSubtotal, false);
-                xml.WriteAttributeDefault("varSubtotal", reference.VarSubtotal, false);
-                xml.WriteAttributeDefault("varPSubtotal", reference.VarPSubtotal, false);
+                var subtotals = reference.Subtotals;
+                xml.WriteAttributeDefault("defaultSubtotal", subtotals.Contains(XLSubtotalFunction.Automatic), false);
+                xml.WriteAttributeDefault("sumSubtotal", subtotals.Contains(XLSubtotalFunction.Sum), false);
+                xml.WriteAttributeDefault("countASubtotal", subtotals.Contains(XLSubtotalFunction.Count), false);
+                xml.WriteAttributeDefault("avgSubtotal", subtotals.Contains(XLSubtotalFunction.Average), false);
+                xml.WriteAttributeDefault("maxSubtotal", subtotals.Contains(XLSubtotalFunction.Maximum), false);
+                xml.WriteAttributeDefault("minSubtotal", subtotals.Contains(XLSubtotalFunction.Minimum), false);
+                xml.WriteAttributeDefault("productSubtotal", subtotals.Contains(XLSubtotalFunction.Product), false);
+                xml.WriteAttributeDefault("countSubtotal", subtotals.Contains(XLSubtotalFunction.CountNumbers), false);
+                xml.WriteAttributeDefault("stdDevSubtotal", subtotals.Contains(XLSubtotalFunction.StandardDeviation), false);
+                xml.WriteAttributeDefault("stdDevPSubtotal", subtotals.Contains(XLSubtotalFunction.PopulationStandardDeviation), false);
+                xml.WriteAttributeDefault("varSubtotal", subtotals.Contains(XLSubtotalFunction.Variance), false);
+                xml.WriteAttributeDefault("varPSubtotal", subtotals.Contains(XLSubtotalFunction.PopulationVariance), false);
 
                 foreach (var fieldItem in reference.FieldItems)
                 {
