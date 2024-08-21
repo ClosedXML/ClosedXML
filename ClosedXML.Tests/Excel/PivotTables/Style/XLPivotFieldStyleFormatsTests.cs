@@ -65,4 +65,42 @@ internal class XLPivotFieldStyleFormatsTests
             styledHeaderField.StyleFormats.Header.Style.Font.SetFontColor(XLColor.Red);
         }, $@"Other\PivotTable\Style\{testFile}");
     }
+
+    [Test]
+    public void Set_pivot_field_subtotals_style()
+    {
+        // In the test we set two subtotals, one for name and other for month. The month one
+        // is there to check the subtotal of a last field on an multi-field axis is displayed
+        // correctly (it needs Outline:0 attribute to be displayed correctly in Excel).
+        TestHelper.CreateAndCompare(wb =>
+        {
+            var dataSheet = wb.AddWorksheet();
+            var dataRange = dataSheet.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "Month", "Price"),
+                ("Cake", "Jan", 9),
+                ("Pie", "Jan", 7),
+                ("Cake", "Feb", 3),
+            });
+
+            var ptSheet = wb.AddWorksheet().SetTabActive();
+            var pt = dataRange.CreatePivotTable(ptSheet.Cell("A1"), "pivot table");
+            pt.Values.Add("Price");
+            var nameField = pt.RowLabels.Add("Name")
+                .AddSubtotal(XLSubtotalFunction.Sum)
+                .SetSubtotalsAtTop(false);
+            var monthField = pt.RowLabels.Add("Month")
+                .AddSubtotal(XLSubtotalFunction.Maximum)
+                .AddSubtotal(XLSubtotalFunction.Minimum)
+                .SetSubtotalsAtTop(false);
+
+            // Set two style in two steps to check that second one doesn't overwrite first one
+            // and also that second access modifies the same pivot area.
+            nameField.StyleFormats.Subtotal.Style.Font.SetFontColor(XLColor.GoldenBrown);
+            nameField.StyleFormats.Subtotal.Style.Fill.SetBackgroundColor(XLColor.Yellow);
+
+            monthField.StyleFormats.Subtotal.Style.Font.SetFontColor(XLColor.Green).Font.SetBold();
+            monthField.StyleFormats.Subtotal.Style.Fill.SetBackgroundColor(XLColor.Red);
+        }, @"Other\PivotTable\Style\Set_pivot_field_subtotals_style.xlsx");
+    }
 }

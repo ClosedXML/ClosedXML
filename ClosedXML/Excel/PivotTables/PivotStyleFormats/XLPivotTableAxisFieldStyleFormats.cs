@@ -1,4 +1,6 @@
 #nullable disable
+using System.Linq;
+
 namespace ClosedXML.Excel;
 
 internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
@@ -88,7 +90,50 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
         }
     }
 
-    public IXLPivotStyleFormat Subtotal { get; }
+    public IXLPivotStyleFormat Subtotal
+    {
+        get
+        {
+            /* <pivotArea outline="0">
+             *   <references count="1">
+             *     <reference field="0"
+             *                count="0"
+             *                defaultSubtotal="1"/>
+             *   </references>
+             * </pivotArea>
+             */
+            // Subtotal fields in reference can't mix default and custom subtotals. It always must
+            // reference only one type. Excel doesn't select correct area if they are mixed.
+            // The outline flag has weird behavior, but is required for subtotals of last field in
+            // an axis with multiple fields (i.e. subtotals are displayed at the bottom).
+            var subtotals = _axisField.Subtotals;
+            var subtotalArea = new XLPivotArea
+            {
+                Outline = false
+            };
+            subtotalArea.AddReference(new XLPivotReference
+            {
+                Field = unchecked((uint)_axisField.Offset),
+                DefaultSubtotal = subtotals.Contains(XLSubtotalFunction.Automatic),
+                SumSubtotal = subtotals.Contains(XLSubtotalFunction.Sum),
+                CountASubtotal = subtotals.Contains(XLSubtotalFunction.Count),
+                AvgSubtotal = subtotals.Contains(XLSubtotalFunction.Average),
+                MaxSubtotal = subtotals.Contains(XLSubtotalFunction.Maximum),
+                MinSubtotal = subtotals.Contains(XLSubtotalFunction.Minimum),
+                ProductSubtotal = subtotals.Contains(XLSubtotalFunction.Product),
+                CountSubtotal = subtotals.Contains(XLSubtotalFunction.CountNumbers),
+                StdDevSubtotal = subtotals.Contains(XLSubtotalFunction.StandardDeviation),
+                StdDevPSubtotal = subtotals.Contains(XLSubtotalFunction.PopulationStandardDeviation),
+                VarSubtotal = subtotals.Contains(XLSubtotalFunction.Variance),
+                VarPSubtotal = subtotals.Contains(XLSubtotalFunction.PopulationVariance),
+            });
+
+            return new XLPivotStyleFormat(
+                _pivotTable,
+                area => XLPivotAreaComparer.Instance.Equals(area, subtotalArea),
+                () => subtotalArea);
+        }
+    }
 
     #endregion
 
