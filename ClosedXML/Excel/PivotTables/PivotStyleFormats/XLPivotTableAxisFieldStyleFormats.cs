@@ -106,7 +106,7 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
             // reference only one type. Excel doesn't select correct area if they are mixed.
             // The outline flag has weird behavior, but is required for subtotals of last field in
             // an axis with multiple fields (i.e. subtotals are displayed at the bottom).
-            var subtotals = _axisField.Subtotals;
+            var subtotals = _axisField.Subtotals.ToHashSet();
             var subtotalArea = new XLPivotArea
             {
                 Outline = false
@@ -114,18 +114,7 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
             subtotalArea.AddReference(new XLPivotReference
             {
                 Field = unchecked((uint)_axisField.Offset),
-                DefaultSubtotal = subtotals.Contains(XLSubtotalFunction.Automatic),
-                SumSubtotal = subtotals.Contains(XLSubtotalFunction.Sum),
-                CountASubtotal = subtotals.Contains(XLSubtotalFunction.Count),
-                AvgSubtotal = subtotals.Contains(XLSubtotalFunction.Average),
-                MaxSubtotal = subtotals.Contains(XLSubtotalFunction.Maximum),
-                MinSubtotal = subtotals.Contains(XLSubtotalFunction.Minimum),
-                ProductSubtotal = subtotals.Contains(XLSubtotalFunction.Product),
-                CountSubtotal = subtotals.Contains(XLSubtotalFunction.CountNumbers),
-                StdDevSubtotal = subtotals.Contains(XLSubtotalFunction.StandardDeviation),
-                StdDevPSubtotal = subtotals.Contains(XLSubtotalFunction.PopulationStandardDeviation),
-                VarSubtotal = subtotals.Contains(XLSubtotalFunction.Variance),
-                VarPSubtotal = subtotals.Contains(XLSubtotalFunction.PopulationVariance),
+                Subtotals = subtotals,
             });
 
             return new XLPivotStyleFormat(

@@ -631,24 +631,50 @@ internal class PivotTableDefinitionPartReader
         var varSubtotal = reference.ApplyVarianceInSubtotal?.Value ?? false;
         var varPSubtotal = reference.ApplyVariancePInSubtotal?.Value ?? false;
 
+        var subtotals = new HashSet<XLSubtotalFunction>();
+        if (defaultSubtotal)
+            subtotals.Add(XLSubtotalFunction.Automatic);
+
+        if (sumSubtotal)
+            subtotals.Add(XLSubtotalFunction.Sum);
+
+        if (countASubtotal)
+            subtotals.Add(XLSubtotalFunction.Count);
+
+        if (avgSubtotal)
+            subtotals.Add(XLSubtotalFunction.Average);
+
+        if (maxSubtotal)
+            subtotals.Add(XLSubtotalFunction.Maximum);
+
+        if (minSubtotal)
+            subtotals.Add(XLSubtotalFunction.Minimum);
+
+        if (productSubtotal)
+            subtotals.Add(XLSubtotalFunction.Product);
+
+        if (countSubtotal)
+            subtotals.Add(XLSubtotalFunction.CountNumbers);
+
+        if (stdDevSubtotal)
+            subtotals.Add(XLSubtotalFunction.StandardDeviation);
+
+        if (stdDevPSubtotal)
+            subtotals.Add(XLSubtotalFunction.PopulationStandardDeviation);
+
+        if (varSubtotal)
+            subtotals.Add(XLSubtotalFunction.Variance);
+
+        if (varPSubtotal)
+            subtotals.Add(XLSubtotalFunction.PopulationVariance);
+
         var xlReference = new XLPivotReference
         {
             Field = field,
             Selected = selected,
             ByPosition = byPosition,
             Relative = relative,
-            DefaultSubtotal = defaultSubtotal,
-            SumSubtotal = sumSubtotal,
-            CountASubtotal = countASubtotal,
-            AvgSubtotal = avgSubtotal,
-            MaxSubtotal = maxSubtotal,
-            MinSubtotal = minSubtotal,
-            ProductSubtotal = productSubtotal,
-            CountSubtotal = countSubtotal,
-            StdDevSubtotal = stdDevSubtotal,
-            StdDevPSubtotal = stdDevPSubtotal,
-            VarSubtotal = varSubtotal,
-            VarPSubtotal = varPSubtotal,
+            Subtotals = subtotals,
         };
 
         // Add indexes after the reference is initialized, so it can check values by cacheIndex/byPosition.
