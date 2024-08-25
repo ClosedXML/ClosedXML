@@ -20,6 +20,8 @@ internal class XLPivotTableAxisField : IXLPivotField
         _index = index;
     }
 
+    #region IXLPivotField memebers
+
     public string SourceName
     {
         get
@@ -179,37 +181,37 @@ internal class XLPivotTableAxisField : IXLPivotField
         GetField().SetLayout(value);
         return this;
     }
-    
+
     public IXLPivotField SetSubtotalsAtTop(bool value)
     {
         SubtotalsAtTop = value;
         return this;
     }
-    
+
     public IXLPivotField SetRepeatItemLabels(bool value)
     {
         RepeatItemLabels = value;
         return this;
     }
-    
+
     public IXLPivotField SetInsertBlankLines(bool value)
     {
         InsertBlankLines = value;
         return this;
     }
-    
+
     public IXLPivotField SetShowBlankItems(bool value)
     {
         ShowBlankItems = value;
         return this;
     }
-    
+
     public IXLPivotField SetInsertPageBreaks(bool value)
     {
         InsertPageBreaks = value;
         return this;
     }
-    
+
     public IXLPivotField SetCollapsed(bool value)
     {
         Collapsed = true;
@@ -225,6 +227,26 @@ internal class XLPivotTableAxisField : IXLPivotField
     public IXLPivotField AddSelectedValue(XLCellValue value) => this;
 
     public IXLPivotField AddSelectedValues(IEnumerable<XLCellValue> values) => this;
+
+    #endregion IXLPivotField members
+
+    internal XLPivotAxis Axis => IsOnColumnAxis ? XLPivotAxis.AxisCol : XLPivotAxis.AxisRow;
+
+    /// <summary>
+    /// Get position of the field on the axis, starting at 0.
+    /// </summary>
+    internal int Position
+    {
+        get
+        {
+            var axis = IsOnColumnAxis ? _pivotTable.ColumnAxis : _pivotTable.RowAxis;
+            var position = axis.IndexOf(_index);
+            if (position == -1)
+                throw new InvalidOperationException("Field is not on the axis.");
+
+            return position;
+        }
+    }
 
     private XLPivotTableField GetField()
     {

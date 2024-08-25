@@ -87,6 +87,16 @@ internal class XLPivotTableField
 
     internal XLNumberFormatValue? NumberFormatValue { get; init; }
 
+    /// <summary>
+    /// <para>
+    /// A flag that determines if field is in tabular form (<c>false</c>) or outline form
+    /// (<c>true</c>). If it is in outline form, the <see cref="Compact"/> can also switch
+    /// to <see cref="XLPivotLayout.Compact"/> form.
+    /// </para>
+    /// <para>
+    /// Excel displays it on <em>Field Settings - Layout &amp; Print</em> as a radio box.
+    /// </para>
+    /// </summary>
     internal bool Outline { get; set; } = true;
 
     internal bool SubtotalTop { get; set; } = true;
