@@ -105,6 +105,11 @@ internal class XLPivotTableAxis : IXLPivotFields
             yield return new XLPivotTableAxisField(_pivotTable, fieldIndex);
     }
 
+    internal int IndexOf(FieldIndex index)
+    {
+        return _fields.IndexOf(index);
+    }
+
     internal bool Contains(string sourceName)
     {
         if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var index))

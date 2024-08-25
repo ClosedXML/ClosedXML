@@ -16,7 +16,58 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
 
     public IXLPivotValueStyleFormat DataValuesFormat { get; }
 
-    public IXLPivotStyleFormat Header { get; }
+    public IXLPivotStyleFormat Header
+    {
+        get
+        {
+            /*
+             * <x:pivotArea field="4"
+             *  type="button"
+             *  axis="axisCol"
+             *  fieldPosition="0"/>
+             *
+             * The area must have field position and axis, otherwise the style is not correctly
+             * displayed.
+             */
+            // If table is not compact, each field has it's own header and thus pivot area must
+            // contain correct position of the field on the axis. If table is compact, there is
+            // only one header and its position is first in axis, because it's the only one.
+            var fieldPosition = _pivotTable.Compact ? 0 : _axisField.Position;
+            var fieldAxis = _axisField.Axis;
+            return new XLPivotStyleFormat(
+                _pivotTable,
+                AreaIsHeader,
+                CreateHeaderArea);
+
+            bool AreaIsHeader(XLPivotArea area)
+            {
+                return
+                    area.References.Count == 0 &&
+                    area.Field == _axisField.Offset &&
+                    area.Type == XLPivotAreaType.Button &&
+                    area.DataOnly &&
+                    !area.LabelOnly &&
+                    !area.GrandRow &&
+                    !area.GrandCol &&
+                    area.CacheIndex == false &&
+                    area.Offset is null &&
+                    !area.CollapsedLevelsAreSubtotals &&
+                    area.Axis == fieldAxis &&
+                    area.FieldPosition == fieldPosition;
+            }
+
+            XLPivotArea CreateHeaderArea()
+            {
+                return new XLPivotArea
+                {
+                    Field = _axisField.Offset,
+                    Type = XLPivotAreaType.Button,
+                    Axis = fieldAxis,
+                    FieldPosition = (uint)fieldPosition,
+                };
+            }
+        }
+    }
 
     public IXLPivotStyleFormat Label
     {
