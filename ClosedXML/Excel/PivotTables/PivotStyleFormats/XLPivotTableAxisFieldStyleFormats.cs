@@ -1,5 +1,4 @@
 #nullable disable
-using System.Linq;
 
 namespace ClosedXML.Excel;
 
@@ -36,38 +35,18 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
             // only one header and its position is first in axis, because it's the only one.
             var fieldPosition = _pivotTable.Compact ? 0 : _axisField.Position;
             var fieldAxis = _axisField.Axis;
+            var headerArea = new XLPivotArea
+            {
+                Field = _axisField.Offset,
+                Type = XLPivotAreaType.Button,
+                Axis = fieldAxis,
+                FieldPosition = (uint)fieldPosition,
+            };
+
             return new XLPivotStyleFormat(
                 _pivotTable,
-                AreaIsHeader,
-                CreateHeaderArea);
-
-            bool AreaIsHeader(XLPivotArea area)
-            {
-                return
-                    area.References.Count == 0 &&
-                    area.Field == _axisField.Offset &&
-                    area.Type == XLPivotAreaType.Button &&
-                    area.DataOnly &&
-                    !area.LabelOnly &&
-                    !area.GrandRow &&
-                    !area.GrandCol &&
-                    area.CacheIndex == false &&
-                    area.Offset is null &&
-                    !area.CollapsedLevelsAreSubtotals &&
-                    area.Axis == fieldAxis &&
-                    area.FieldPosition == fieldPosition;
-            }
-
-            XLPivotArea CreateHeaderArea()
-            {
-                return new XLPivotArea
-                {
-                    Field = _axisField.Offset,
-                    Type = XLPivotAreaType.Button,
-                    Axis = fieldAxis,
-                    FieldPosition = (uint)fieldPosition,
-                };
-            }
+                area => XLPivotAreaComparer.Instance.Equals(area, headerArea),
+                () => headerArea);
         }
     }
 
@@ -83,10 +62,20 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
 			 *	   </x:references>
 			 * </x:pivotArea>
              */
+            var labelArea = new XLPivotArea
+            {
+                DataOnly = false,
+                LabelOnly = true,
+            };
+            labelArea.AddReference(new XLPivotReference
+            {
+                Field = (uint)_axisField.Offset,
+            });
+
             return new XLPivotStyleFormat(
                 _pivotTable,
-                area => AreaBelongsToField(area, XLPivotStyleFormatElement.Label),
-                () => CreateFieldArea(XLPivotStyleFormatElement.Label));
+                area => XLPivotAreaComparer.Instance.Equals(area, labelArea),
+                () => labelArea);
         }
     }
 
@@ -125,41 +114,4 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
     }
 
     #endregion
-
-    private bool AreaBelongsToField(XLPivotArea area, XLPivotStyleFormatElement element)
-    {
-        if (area.References.Count != 1)
-            return false;
-
-        var field = area.References[0].Field;
-        if (field is null || (int)field != _axisField.Offset)
-            return false;
-
-        return
-            area.Field is null &&
-            area.Type == XLPivotAreaType.Normal &&
-            area.DataOnly == (element == XLPivotStyleFormatElement.Data) &&
-            area.LabelOnly == (element == XLPivotStyleFormatElement.Label) &&
-            !area.GrandRow &&
-            !area.GrandCol &&
-            area.CacheIndex == false &&
-            area.Offset is null &&
-            !area.CollapsedLevelsAreSubtotals &&
-            area.Axis is null &&
-            area.FieldPosition is null;
-    }
-
-    private XLPivotArea CreateFieldArea(XLPivotStyleFormatElement element)
-    {
-        var area = new XLPivotArea
-        {
-            DataOnly = (element == XLPivotStyleFormatElement.Data),
-            LabelOnly = (element == XLPivotStyleFormatElement.Label),
-        };
-        area.AddReference(new XLPivotReference
-        {
-            Field = (uint)_axisField.Offset,
-        });
-        return area;
-    }
 }
