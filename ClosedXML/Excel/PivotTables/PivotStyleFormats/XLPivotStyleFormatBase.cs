@@ -13,12 +13,12 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal abstract class XLPivotStyleFormatBase : IXLPivotStyleFormat, IXLStylized
 {
-    private readonly XLPivotTable _pivotTable;
+    protected readonly XLPivotTable PivotTable;
     private XLStyleValue _styleValue;
 
     protected XLPivotStyleFormatBase(XLPivotTable pivotTable)
     {
-        _pivotTable = pivotTable;
+        PivotTable = pivotTable;
 
         // Value is Default, because it's a differential style that can't be represented yet.
         _styleValue = XLStyle.Default.Value;
@@ -87,7 +87,7 @@ internal abstract class XLPivotStyleFormatBase : IXLPivotStyleFormat, IXLStylize
     private IEnumerable<XLPivotFormat> GetFormats()
     {
         var exists = false;
-        foreach (var format in _pivotTable.Formats)
+        foreach (var format in PivotTable.Formats)
         {
             if (format.Action == XLPivotFormatAction.Formatting && Filter(format.PivotArea))
             {
@@ -102,7 +102,7 @@ internal abstract class XLPivotStyleFormatBase : IXLPivotStyleFormat, IXLStylize
             {
                 DxfStyleValue = _styleValue
             };
-            _pivotTable.AddFormat(format);
+            PivotTable.AddFormat(format);
             yield return format;
         }
     }

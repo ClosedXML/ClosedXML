@@ -144,4 +144,36 @@ internal class XLPivotFieldStyleFormatsTests
                 .Style.Fill.BackgroundColor = XLColor.LightBlue;
         }, @"Other\PivotTable\Style\Style_values_at_intersection_of_row_and_column.xlsx");
     }
+
+    [Test]
+    public void Style_data_cells_at_intersection_of_values_field_and_row_or_column_field()
+    {
+        // Style all data cells that display 'Max Price' value (i.e. value cells and grand totals)
+        // and lie on a row that represents the 'flavor' field. 'lie on' means it intersects a row
+        // that contains field label.
+        TestHelper.CreateAndCompare(wb =>
+        {
+            var dataSheet = wb.AddWorksheet();
+            var dataRange = dataSheet.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "Flavor", "Price"),
+                ("Cake", "Vanilla", 9),
+                ("Pie", "Peach", 7),
+                ("Cake", "Lemon", 3),
+            });
+
+            var ptSheet = wb.AddWorksheet().SetTabActive();
+            var pt = dataRange.CreatePivotTable(ptSheet.Cell("A1"), "pivot table");
+
+            pt.RowLabels.Add("Name");
+            pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+            var flavorField = pt.ColumnLabels.Add("Flavor");
+            pt.Values.Add("Price");
+            var maxPrice = pt.Values.Add("Price", "Max Price").SetSummaryFormula(XLPivotSummary.Maximum);
+
+            flavorField.StyleFormats.DataValuesFormat
+                .ForValueField(maxPrice)
+                .Style.Fill.BackgroundColor = XLColor.LightBlue;
+        }, @"Other\PivotTable\Style\Style_data_cells_at_intersection_of_values_field_and_row_or_column_field.xlsx");
+    }
 }
