@@ -83,6 +83,17 @@ and ``XLSubtotalFunction.Minimum`` have changed order in the enum declaration.
 ``IXLPivotField.Subtotals`` is no longer modifiable list, but only read only
 list. At this time, there is no function to remove subtotal function for a field.
 
+***************************
+Pivot table fileter styling
+***************************
+
+Ability to style filter area in pivot tables has been removed. The API is still
+there under ```pivotTable.ReportFilters.Get("filter field).StyleFormats```, but
+it throws ```NotImplementedException```.
+
+It will get re-implemented in a later versions.
+
+
 *******
 Sorting
 *******

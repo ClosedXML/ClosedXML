@@ -5,23 +5,20 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel;
 
-internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
+/// <summary>
+/// A base class for pivot styling API. It has takes a selected <see cref="XLPivotArea"/>
+/// and applies the style using <c>.Style*</c> API. The derived classes are responsible for
+/// exposing API so user can define an area and then create the desired area (from what user
+/// specified) through <see cref="GetCurrentArea"/> method.
+/// </summary>
+internal abstract class XLPivotStyleFormatBase : IXLPivotStyleFormat, IXLStylized
 {
     private readonly XLPivotTable _pivotTable;
-    private readonly Func<XLPivotArea, bool> _filter;
-    private readonly Func<XLPivotArea> _factory;
     private XLStyleValue _styleValue;
 
-    public XLPivotStyleFormat(IXLPivotField? field)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal XLPivotStyleFormat(XLPivotTable pivotTable, Func<XLPivotArea, bool> filter, Func<XLPivotArea> factory)
+    protected XLPivotStyleFormatBase(XLPivotTable pivotTable)
     {
         _pivotTable = pivotTable;
-        _filter = filter;
-        _factory = factory;
 
         // Value is Default, because it's a differential style that can't be represented yet.
         _styleValue = XLStyle.Default.Value;
@@ -83,14 +80,16 @@ internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
 
     #endregion IXLStylized
 
-    internal IList<AbstractPivotFieldReference> FieldReferences { get; } = new List<AbstractPivotFieldReference>();
+    internal abstract XLPivotArea GetCurrentArea();
+
+    internal abstract bool Filter(XLPivotArea area);
 
     private IEnumerable<XLPivotFormat> GetFormats()
     {
         var exists = false;
         foreach (var format in _pivotTable.Formats)
         {
-            if (format.Action == XLPivotFormatAction.Formatting && _filter(format.PivotArea))
+            if (format.Action == XLPivotFormatAction.Formatting && Filter(format.PivotArea))
             {
                 exists = true;
                 yield return format;
@@ -99,7 +98,7 @@ internal class XLPivotStyleFormat : IXLPivotStyleFormat, IXLStylized
 
         if (!exists)
         {
-            var format = new XLPivotFormat(_factory())
+            var format = new XLPivotFormat(GetCurrentArea())
             {
                 DxfStyleValue = _styleValue
             };

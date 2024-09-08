@@ -1,4 +1,5 @@
 #nullable disable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -230,7 +231,7 @@ internal class XLPivotTablePageField : IXLPivotField
         return this;
     }
 
-    public IXLPivotFieldStyleFormats StyleFormats => new XLPivotFieldStyleFormats(this);
+    public IXLPivotFieldStyleFormats StyleFormats => throw new NotImplementedException("Styles for filter fields are not yet implemented.");
     public bool IsOnRowAxis => false;
     public bool IsOnColumnAxis => false;
     public bool IsInFilterList => true;

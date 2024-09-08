@@ -103,4 +103,45 @@ internal class XLPivotFieldStyleFormatsTests
             monthField.StyleFormats.Subtotal.Style.Fill.SetBackgroundColor(XLColor.Red);
         }, @"Other\PivotTable\Style\Set_pivot_field_subtotals_style.xlsx");
     }
+
+    [Test]
+    public void Style_values_at_intersection_of_row_and_column()
+    {
+        // Style cells that belong to a row/column that represent a specific field.
+        // The question for data cell is this: does the row/column of the cell
+        // intersects a label that belongs to specified field? 
+        // Therefore, some cells are not styled, because they don't satisfy the
+        // condition: grand columns, labels, rows that lie on name field row, but
+        // not month field row.
+        // You can switch layout to Table and the demo styles will be overlapped.
+        TestHelper.CreateAndCompare(wb =>
+        {
+            var dataSheet = wb.AddWorksheet();
+            var dataRange = dataSheet.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "Flavor", "Month", "Price"),
+                ("Cake", "Vanilla", "Jan", 9),
+                ("Pie", "Peach", "Jan", 7),
+                ("Cake", "Lemon", "Feb", 3),
+            });
+
+            var ptSheet = wb.AddWorksheet().SetTabActive();
+            var pt = dataRange.CreatePivotTable(ptSheet.Cell("A1"), "pivot table");
+            var nameRowField = pt.RowLabels.Add("Name");
+            var monthRowField = pt.RowLabels.Add("Month");
+            var flavorColumnField = pt.ColumnLabels.Add("Flavor");
+            pt.Values.Add("Price");
+
+            // To demonstrate styling of data values on a row,
+            // also display subtotals for name field.
+            nameRowField.AddSubtotal(XLSubtotalFunction.Sum);
+            nameRowField.SubtotalsAtTop = true;
+
+            nameRowField.StyleFormats.DataValuesFormat
+                .Style.Font.SetFontColor(XLColor.Red);
+            monthRowField.StyleFormats.DataValuesFormat
+                .AndWith(flavorColumnField)
+                .Style.Fill.BackgroundColor = XLColor.LightBlue;
+        }, @"Other\PivotTable\Style\Style_values_at_intersection_of_row_and_column.xlsx");
+    }
 }
