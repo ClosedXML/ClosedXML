@@ -9,14 +9,14 @@ namespace ClosedXML.Excel;
 public interface IXLPivotValueStyleFormat : IXLPivotStyleFormat
 {
     /// <summary>
-    /// Adds a further limitation so the <see cref="IXLPivotStyleFormat.Style"/> is only applied to cells in a pivot table
+    /// Adds a limitation so the <see cref="IXLPivotStyleFormat.Style"/> is only applied to cells in a pivot table
     /// that also belong to the <paramref name="field"/> (label or data).
     /// </summary>
     /// <param name="field">Only cells in a pivot table under this field will be styled.</param>
     IXLPivotValueStyleFormat AndWith(IXLPivotField field);
 
     /// <summary>
-    /// Adds a further limitation so the <see cref="IXLPivotStyleFormat.Style"/> is only applied to cells in a pivot table
+    /// Adds a limitation so the <see cref="IXLPivotStyleFormat.Style"/> is only applied to cells in a pivot table
     /// that also belong to the <paramref name="field"/> data cells. The cell values also must satisfy the <paramref name="predicate"/>.
     /// </summary>
     /// <remarks>
