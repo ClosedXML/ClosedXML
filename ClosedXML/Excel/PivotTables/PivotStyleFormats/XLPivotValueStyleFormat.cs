@@ -7,8 +7,8 @@ namespace ClosedXML.Excel;
 internal class XLPivotValueStyleFormat : XLPivotStyleFormatBase, IXLPivotValueStyleFormat
 {
     /// <summary>
-    /// A list of references that specify which data cells will be styles.
-    /// A data cell will be styles, if it lies on all referenced fields.
+    /// A list of references that specify which data cells will be styled.
+    /// A data cell will be styled, if it lies on all referenced fields.
     /// The term "lie on" means that either column or a row of data cell
     /// intersects a label cell of referenced field.
     /// </summary>
