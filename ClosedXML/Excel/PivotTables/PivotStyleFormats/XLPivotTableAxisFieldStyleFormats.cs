@@ -15,7 +15,7 @@ internal class XLPivotTableAxisFieldStyleFormats : IXLPivotFieldStyleFormats
 
     #region IXLPivotFieldStyleFormats
 
-    public IXLPivotValueStyleFormat DataValuesFormat { get; }
+    public IXLPivotValueStyleFormat DataValuesFormat => new XLPivotValueStyleFormat(_pivotTable, _axisField.Offset);
 
     public IXLPivotStyleFormat Header
     {

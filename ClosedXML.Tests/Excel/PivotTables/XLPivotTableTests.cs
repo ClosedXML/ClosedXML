@@ -210,6 +210,7 @@ namespace ClosedXML.Tests
         [Ignore("PT styles will be fixed in a different PR")]
         public void PivotTableStyleFormatsTest()
         {
+/*
             using (var ms = new MemoryStream())
             {
                 using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
@@ -289,6 +290,7 @@ namespace ClosedXML.Tests
                     wb.Save();
                 }
             }
+*/
         }
 
         [Test]
