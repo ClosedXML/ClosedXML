@@ -105,7 +105,10 @@ internal class XLPivotDataFields : IXLPivotValues, IReadOnlyCollection<XLPivotDa
     internal XLPivotDataField AddField(string sourceName, string? customName)
     {
         if (!_pivotTable.TryGetSourceNameFieldIndex(sourceName, out var fieldIndex))
-            throw new ArgumentOutOfRangeException($"Field '{sourceName}' is not in the pivot cache.");
+        {
+            var validNames = string.Join("','", _pivotTable.PivotCache.FieldNames);
+            throw new ArgumentOutOfRangeException(nameof(sourceName), $"Field '{sourceName}' is not in the fields of a pivot cache. Should be one of '{validNames}'.");
+        }
 
         if (fieldIndex.IsDataField)
             throw new ArgumentException("'Values' field can be used only on row or column axis.");

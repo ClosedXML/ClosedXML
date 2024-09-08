@@ -6,6 +6,9 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.PivotTables
 {
+    /// <summary>
+    /// Test methods of interface <see cref="IXLPivotFields"/> implemented through <see cref="XLPivotTableAxis"/>.
+    /// </summary>
     [TestFixture]
     internal class XLPivotTableAxisTests
     {
