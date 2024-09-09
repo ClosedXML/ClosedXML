@@ -17,7 +17,7 @@ namespace ClosedXML.Graphics
     {
         private static readonly byte[] APP0Identifer = Encoding.ASCII.GetBytes("JFIF\0");
         private static readonly byte[] APP1Identifer = Encoding.ASCII.GetBytes("Exif\0\0");
-        private static readonly byte[] APP2Identifer = Encoding.ASCII.GetBytes("Adobe\0");
+        private static readonly byte[] APP14Identifer = Encoding.ASCII.GetBytes("Adobe\0");
 
         protected override bool CheckHeader(Stream stream)
         {
@@ -33,8 +33,8 @@ namespace ClosedXML.Graphics
                         return IsIdentifier(stream, APP0Identifer);
                     case Marker.APP1:
                         return IsIdentifier(stream, APP1Identifer);
-                    case Marker.APP2:
-                        return IsIdentifier(stream, APP2Identifer);
+                    case Marker.APP14:
+                        return IsIdentifier(stream, APP14Identifer);
                     default:
                         stream.Position += length;
                         break;
@@ -131,7 +131,7 @@ namespace ClosedXML.Graphics
             public const ushort SOI = 0xFFD8;
             public const ushort APP0 = 0xFFE0;
             public const ushort APP1 = 0xFFE1;
-            public const ushort APP2 = 0xFFEE;
+            public const ushort APP14 = 0xFFEE;
             public static readonly ushort[] SOFx = new ushort[] { 0xFFC0, 0xFFC1, 0xFFC2, 0xFFC3, 0xFFC5, 0xFFC6, 0xFFC7, 0xFFC9, 0xFFCA, 0xFFCB, 0xFFCD, 0xFFCE, 0xFFCF };
         }
 
