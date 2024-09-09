@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel;
 
@@ -30,7 +31,21 @@ internal class XLPivotValueStyleFormat : XLPivotStyleFormatBase, IXLPivotValueSt
 
     public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<XLCellValue>? predicate)
     {
-        throw new NotImplementedException();
+        FieldIndex fieldIndex = field.Offset;
+        if (fieldIndex.IsDataField)
+            throw new ArgumentException("Field is a 'data' field.", nameof(field));
+
+        if (predicate is null)
+            return AndWith(field);
+
+        var pivotField = PivotTable.PivotFields[fieldIndex];
+        var filteredItems = pivotField.GetAllItems(predicate)
+            .WhereNotNull(fieldItem => fieldItem.ItemIndex)
+            .Select(itemIndex => (uint)itemIndex)
+            .ToList();
+
+        _fieldReferences.Add(new FieldReference(field.Offset, filteredItems));
+        return this;
     }
 
     public IXLPivotValueStyleFormat ForValueField(IXLPivotValue valueField)
@@ -72,5 +87,5 @@ internal class XLPivotValueStyleFormat : XLPivotStyleFormatBase, IXLPivotValueSt
         return XLPivotAreaComparer.Instance.Equals(area, currentArea);
     }
 
-    private record FieldReference(FieldIndex FieldIndex, uint[]? Items = null);
+    private record FieldReference(FieldIndex FieldIndex, IReadOnlyList<uint>? Items = null);
 }
