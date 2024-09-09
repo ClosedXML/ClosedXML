@@ -28,5 +28,10 @@ public interface IXLPivotValueStyleFormat : IXLPivotStyleFormat
     /// <param name="predicate">A predicate to determine which index of the field should be styled.</param>
     IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<XLCellValue> predicate);
 
+    /// <summary>
+    /// Adds a limitation so the <see cref="IXLPivotStyleFormat.Style"/> is only applied to cells in a pivot table
+    /// that display values for <paramref name="valueField"/> cells (i.e. data cells and grand total).
+    /// </summary>
+    /// <param name="valueField">One of <see cref="IXLPivotTable.Values">value fields</see> of the pivot table.</param>
     IXLPivotValueStyleFormat ForValueField(IXLPivotValue valueField);
 }
