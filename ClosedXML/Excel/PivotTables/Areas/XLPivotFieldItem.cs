@@ -38,7 +38,7 @@ internal class XLPivotFieldItem
 
     /// <summary>
     /// <para>
-    /// Flag indicating that the the item hidden. Used for <see cref="XLPivotPageField"/>. When
+    /// Flag indicating the item is hidden. Used for <see cref="XLPivotPageField"/>. When
     /// item field is a page field, the hidden flag mean unselected values in the page filter.
     /// Non-hidden values are selected in the filter.
     /// </para>
