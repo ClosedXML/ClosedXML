@@ -176,4 +176,34 @@ internal class XLPivotFieldStyleFormatsTests
                 .Style.Fill.BackgroundColor = XLColor.LightBlue;
         }, @"Other\PivotTable\Style\Style_data_cells_at_intersection_of_values_field_and_row_or_column_field.xlsx");
     }
+
+    [Test]
+    public void Style_data_cells_at_intersection_of_value_field_and_axis_field_with_specific_values()
+    {
+        TestHelper.CreateAndCompare(wb =>
+        {
+            var dataSheet = wb.AddWorksheet();
+            var dataRange = dataSheet.Cell("A1").InsertData(new object[]
+            {
+                ("Name", "Flavor", "Price"),
+                ("Cake", "Vanilla", 9),
+                ("Pie", "Peach", 7),
+                ("Cake", "Lemon", 3),
+                ("Waffle", "Peach", 5),
+                ("Waffle", "Chocolate", 7),
+            });
+
+            var ptSheet = wb.AddWorksheet().SetTabActive();
+            var pt = dataRange.CreatePivotTable(ptSheet.Cell("A1"), "pivot table");
+
+            var nameField = pt.RowLabels.Add("Name");
+            var flavorField = pt.ColumnLabels.Add("Flavor");
+            pt.Values.Add("Price");
+
+            nameField.StyleFormats.DataValuesFormat
+                .AndWith(nameField, x => x.IsText && x.GetText() == "Waffle")
+                .AndWith(flavorField, x => x.IsText && x.GetText() == "Peach" || x.GetText() == "Chocolate")
+                .Style.Fill.BackgroundColor = XLColor.LightBlue;
+        }, @"Other\PivotTable\Style\Style_data_cells_at_intersection_of_value_field_and_axis_field_with_specific_values.xlsx");
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -257,6 +258,52 @@ internal class XLPivotTableField
         var newItem = new XLPivotFieldItem(this, sharedItemIndex);
         _items.Add(newItem);
         return newItem;
+    }
+
+    /// <summary>
+    /// <para>
+    /// Filter all shared items of the field through a <paramref name="predicate"/> and return
+    /// all <see cref="Items">items</see> that represent a value that satisfies the <paramref
+    /// name="predicate"/>.
+    /// </para>
+    /// <para>
+    /// The <see cref="Items"/> don't necessarily contain all indexes to shared items
+    /// and if the value is missing in <see cref="Items"/> but is present in shared items,
+    /// add it (that's why method has prefix <c>All</c>).
+    /// </para>
+    /// </summary>
+    /// <param name="predicate">Condition to satisfy.</param>
+    internal List<XLPivotFieldItem> GetAllItems(Predicate<XLCellValue> predicate)
+    {
+        var fieldIndex = _pivotTable.GetFieldIndex(this);
+        var sharedItems = _pivotTable.PivotCache.GetFieldSharedItems(fieldIndex);
+
+        var pivotFieldItems = Items
+            .WhereNotNull(fieldItem => fieldItem.ItemIndex)
+            .Select((itemItem, index) => (Index: index, ItemIndex: (uint)itemItem))
+            .ToDictionary(x => x.ItemIndex, x => x.Index);
+        var filteredItems = new List<XLPivotFieldItem>();
+        for (uint sharedItemIndex = 0; sharedItemIndex < sharedItems.Count; ++sharedItemIndex)
+        {
+            var sharedItemValue = sharedItems[sharedItemIndex];
+            if (!predicate(sharedItemValue))
+                continue;
+
+            // Generally speaking, Excel created workbooks seem to always have all items
+            // for axis fields, but that is not true for workbooks created by other producers.
+            if (pivotFieldItems.TryGetValue(sharedItemIndex, out var index))
+            {
+                filteredItems.Add(Items[index]);
+            }
+            else
+            {
+                var addedItem = new XLPivotFieldItem(this, (int)sharedItemIndex);
+                AddItem(addedItem);
+                filteredItems.Add(addedItem);
+            }
+        }
+
+        return filteredItems;
     }
 
     private static XLPivotItemType GetItemTypeForSubtotal(XLSubtotalFunction value)

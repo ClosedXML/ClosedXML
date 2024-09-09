@@ -62,5 +62,14 @@ namespace ClosedXML.Excel
             }
             return false;
         }
+
+        /// <summary>
+        /// Select all <typeparamref name="TItem"/> that are not null.
+        /// </summary>
+        public static IEnumerable<TItem> WhereNotNull<T, TItem>(this IEnumerable<T> source, Func<T, TItem?> property)
+            where TItem : struct
+        {
+            return source.Select(property).Where(x => x.HasValue).Select(x => x!.Value);
+        }
     }
 }
