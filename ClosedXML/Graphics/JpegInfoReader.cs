@@ -62,6 +62,7 @@ namespace ClosedXML.Graphics
             double xDpi = 0, yDpi = 0;
             while (TryGetMarker(stream, out var marker) && TryGetLength(stream, out var length))
             {
+                var segmentStart = stream.Position;
                 if (marker == Marker.APP0)
                 {
                     const int versionLength = 2;
@@ -73,10 +74,6 @@ namespace ClosedXML.Graphics
 
                     xDpi = ConvertToDpi(xDensity, units);
                     yDpi = ConvertToDpi(yDensity, units);
-
-                    var xThumbnail = stream.ReadU8();
-                    var yThumbnail = stream.ReadU8();
-                    stream.Position += 3 * xThumbnail * yThumbnail;
                 }
                 else if (Marker.SOFx.Contains(marker))
                 {
@@ -88,10 +85,8 @@ namespace ClosedXML.Graphics
                     // End here, before we get to SOS segment that doesn't contain explicit segment length
                     return new XLPictureInfo(XLPictureFormat.Jpeg, new Size(width, height), Size.Empty, xDpi, yDpi);
                 }
-                else
-                {
-                    stream.Position += length;
-                }
+
+                stream.Position = segmentStart + length;
             }
 
             throw new ArgumentException("SOF not found in the JFIF.");
