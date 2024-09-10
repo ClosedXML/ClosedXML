@@ -1,8 +1,11 @@
-﻿using ClosedXML.Excel.Drawings;
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using ClosedXML.Excel.Drawings;
 using ClosedXML.Graphics;
 using NUnit.Framework;
-using System.Drawing;
-using System.Reflection;
 
 namespace ClosedXML.Tests.Graphics
 {
@@ -15,10 +18,11 @@ namespace ClosedXML.Tests.Graphics
             AssertRasterImage("SampleImagePng.png", XLPictureFormat.Png, new Size(252, 152), 96, 96);
         }
 
-        [Test]
-        public void CanReadJfif()
+        [TestCase("SampleImageJfif.jpg", 176, 270, 96, 96)]
+        [TestCase("jpeg-rgb.jpg", 200, 200, 0, 0)] // Adobe JPG, has APP14 marker right after SOI instead of APP0
+        public void CanReadJfif(string filename, int widthPx, int heightPx, int dpiX, int dpiY)
         {
-            AssertRasterImage("SampleImageJfif.jpg", XLPictureFormat.Jpeg, new Size(176, 270), 96, 96);
+            AssertRasterImage($"Jpg.{filename}", XLPictureFormat.Jpeg, new Size(widthPx, heightPx), dpiX, dpiY);
         }
 
         [Test]
