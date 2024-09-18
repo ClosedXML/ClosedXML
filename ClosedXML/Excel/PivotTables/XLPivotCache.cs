@@ -59,14 +59,8 @@ namespace ClosedXML.Excel
             for (var column = area.LeftColumn; column <= area.RightColumn; ++column)
             {
                 var header = sheet.Cell(area.TopRow, column).GetFormattedString();
-                var sharedItems = new XLPivotCacheSharedItems();
 
-                var fieldRecords = new XLPivotCacheValues(sharedItems, new List<XLPivotCacheValue>());
-                for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
-                {
-                    var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
-                    fieldRecords.Add(value);
-                }
+                var fieldRecords = new XLPivotCacheValues(valueSlice, column, area);
 
                 AddField(AdjustedFieldName(header), fieldRecords);
             }
