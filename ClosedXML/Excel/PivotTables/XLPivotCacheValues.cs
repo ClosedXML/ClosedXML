@@ -41,11 +41,13 @@ namespace ClosedXML.Excel
 
         private long? _maxDateTicks;
 
-        internal XLPivotCacheValues(XLPivotCacheSharedItems sharedItems, List<XLPivotCacheValue> values)
+        internal XLPivotCacheValues(ValueSlice valueSlice, int column, XLSheetRange area)
         {
-            _sharedItems = sharedItems;
-            _values = values;
+            _sharedItems = new XLPivotCacheSharedItems();
+            _values = new List<XLPivotCacheValue>();
             _stringStorage = new List<string>();
+
+            Initialize(valueSlice, column, area);
         }
 
         internal XLPivotCacheValues(XLPivotCacheSharedItems sharedItems, XLPivotCacheValuesStats stats)
@@ -94,41 +96,6 @@ namespace ClosedXML.Excel
         internal int SharedCount => _sharedItems.Count;
 
         internal XLPivotCacheSharedItems SharedItems => _sharedItems;
-
-        internal void Add(XLCellValue value)
-        {
-            switch (value.Type)
-            {
-                case XLDataType.Blank:
-                    AddMissing();
-                    break;
-                case XLDataType.Boolean:
-                    AddBoolean(value.GetBoolean());
-                    break;
-                case XLDataType.Number:
-                    AddNumber(value.GetNumber());
-                    break;
-                case XLDataType.Text:
-                    AddString(value.GetText());
-                    break;
-                case XLDataType.Error:
-                    AddError(value.GetError());
-                    break;
-                case XLDataType.DateTime:
-                    AddDateTime(value.GetDateTime());
-                    break;
-                case XLDataType.TimeSpan:
-                    // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
-                    var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
-                    AddDateTime(adjustedTimeSpan);
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
-
-            if (_sharedItems.IndexOf(value) == -1)
-                _sharedItems.Add(value);
-        }
 
         internal void AddMissing()
         {
@@ -261,6 +228,48 @@ namespace ClosedXML.Excel
             }
 
             return false;
+        }
+
+        private void Initialize(ValueSlice valueSlice, int column, XLSheetRange area)
+        {
+            var uniqueItems = new HashSet<XLCellValue>(XLCellValueComparer.OrdinalIgnoreCase);
+            for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
+            {
+                var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
+
+                // Add to shared items first, because value can be an index to shared items.
+                if (uniqueItems.Add(value))
+                    _sharedItems.Add(value);
+
+                switch (value.Type)
+                {
+                    case XLDataType.Blank:
+                        AddMissing();
+                        break;
+                    case XLDataType.Boolean:
+                        AddBoolean(value.GetBoolean());
+                        break;
+                    case XLDataType.Number:
+                        AddNumber(value.GetNumber());
+                        break;
+                    case XLDataType.Text:
+                        AddString(value.GetText());
+                        break;
+                    case XLDataType.Error:
+                        AddError(value.GetError());
+                        break;
+                    case XLDataType.DateTime:
+                        AddDateTime(value.GetDateTime());
+                        break;
+                    case XLDataType.TimeSpan:
+                        // TimeSpan is represented as datetime in pivot cache, e.g. 14:30 into 1899-12-30T14:30:00
+                        var adjustedTimeSpan = DateTime.FromOADate(0).Add(value.GetTimeSpan());
+                        AddDateTime(adjustedTimeSpan);
+                        break;
+                    default:
+                        throw new UnreachableException();
+                }
+            }
         }
 
         [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator", Justification = "double.IsInteger() in NET7 uses same method.")]
