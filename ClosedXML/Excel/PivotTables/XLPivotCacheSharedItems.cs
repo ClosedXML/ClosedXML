@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         private readonly List<string> _stringStorage = new();
 
         /// <summary>
-        /// Strings in a pivot table are case insensitive.
+        /// Strings in a pivot table are case-insensitive.
         /// </summary>
         private readonly Dictionary<string, int> _stringMap = new(StringComparer.OrdinalIgnoreCase);
 
