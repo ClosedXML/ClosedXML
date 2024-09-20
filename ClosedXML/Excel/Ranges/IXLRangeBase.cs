@@ -53,8 +53,6 @@ namespace ClosedXML.Excel
         /// </value>
         Boolean ShareString { set; }
 
-        IXLHyperlinks Hyperlinks { get; }
-
         /// <summary>
         ///   Returns the collection of cells.
         /// </summary>
