@@ -647,7 +647,9 @@ namespace ClosedXML.Excel
             return targetSheet;
         }
 
-        public new IXLHyperlinks Hyperlinks { get; private set; }
+        internal XLHyperlinks Hyperlinks { get; }
+
+        IXLHyperlinks IXLWorksheet.Hyperlinks => Hyperlinks;
 
         IXLDataValidations IXLWorksheet.DataValidations
         {

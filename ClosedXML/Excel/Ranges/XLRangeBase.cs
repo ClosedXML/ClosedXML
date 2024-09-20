@@ -167,19 +167,6 @@ namespace ClosedXML.Excel
             set { Cells().ForEach(c => c.ShareString = value); }
         }
 
-        public IXLHyperlinks Hyperlinks
-        {
-            get
-            {
-                var hyperlinks = new XLHyperlinks();
-                var hls = from hl in Worksheet.Hyperlinks
-                          where RangeAddress.Contains(hl.Cell.Address)
-                          select hl;
-                hls.ForEach(hyperlinks.Add);
-                return hyperlinks;
-            }
-        }
-
         public XLCellValue Value
         {
             set { Cells().ForEach(c => c.Value = value); }

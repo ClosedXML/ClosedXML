@@ -47,6 +47,11 @@ namespace ClosedXML.Excel
         IXLOutline Outline { get; }
 
         /// <summary>
+        /// All hyperlinks in the sheet.
+        /// </summary>
+        IXLHyperlinks Hyperlinks { get; }
+
+        /// <summary>
         /// Gets the first row of the worksheet.
         /// </summary>
         IXLRow FirstRow();
