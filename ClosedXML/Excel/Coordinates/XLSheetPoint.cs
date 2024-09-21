@@ -26,6 +26,11 @@ namespace ClosedXML.Excel
         /// </summary>
         public readonly Int32 Column;
 
+        public static implicit operator XLSheetRange(XLSheetPoint point)
+        {
+            return new XLSheetRange(point);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is XLSheetPoint point && Equals(point);

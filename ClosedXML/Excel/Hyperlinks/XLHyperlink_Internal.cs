@@ -63,6 +63,6 @@ namespace ClosedXML.Excel
             IsExternal = false;
         }
 
-        internal XLWorksheet Worksheet { get; set; }
+        internal XLHyperlinks Container { get; set; }
     }
 }

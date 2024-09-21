@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ClosedXML.Excel
@@ -67,7 +68,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public int BottomRow => LastPoint.Row;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is XLSheetRange range && Equals(range);
         }
@@ -266,11 +267,20 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Does this range intersects with <paramref name="other"/>.
+        /// </summary>
+        /// <returns><c>true</c> if intersects, <c>false</c> otherwise.</returns>
+        internal bool Intersects(XLSheetRange other)
+        {
+            return Intersect(other) is not null;
+        }
+
+        /// <summary>
         /// Do an intersection between this range and other range.
         /// </summary>
         /// <param name="other">Other range.</param>
         /// <returns>The intersection range if it exists and is non-empty or null, if intersection doesn't exist.</returns>
-        public XLSheetRange? Intersect(XLSheetRange other)
+        internal XLSheetRange? Intersect(XLSheetRange other)
         {
             var leftColumn = Math.Max(LeftColumn, other.LeftColumn);
             var rightColumn = Math.Min(RightColumn, other.RightColumn);
@@ -281,6 +291,17 @@ namespace ClosedXML.Excel
                 return null;
 
             return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+        }
+
+        /// <summary>
+        /// Does this range overlaps the <paramref name="otherRange"/>?
+        /// </summary>
+        internal bool Overlaps(XLSheetRange otherRange)
+        {
+            return TopRow <= otherRange.TopRow &&
+                RightColumn >= otherRange.RightColumn &&
+                BottomRow >= otherRange.BottomRow &&
+                LeftColumn <= otherRange.LeftColumn;
         }
 
         /// <summary>
@@ -320,6 +341,17 @@ namespace ClosedXML.Excel
             var topLeftCorner = FirstPoint.ShiftRow(rowShift);
             var bottomRightCorner = LastPoint.ShiftRow(rowShift);
             return new XLSheetRange(topLeftCorner, bottomRightCorner);
+        }
+
+        public IEnumerator<XLSheetPoint> GetEnumerator()
+        {
+            for (var row = TopRow; row <= BottomRow; ++row)
+            {
+                for (var col = LeftColumn; col <= RightColumn; ++col)
+                {
+                    yield return new XLSheetPoint(row, col);
+                }
+            }
         }
     }
 }

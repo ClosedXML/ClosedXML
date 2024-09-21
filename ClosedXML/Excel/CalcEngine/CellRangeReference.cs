@@ -71,22 +71,22 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 for (int co = range.RangeAddress.FirstAddress.ColumnNumber; co <= range.RangeAddress.LastAddress.ColumnNumber; co++)
                 {
-                    var value = GetCellValue(sheet, ro, co);
+                    var value = GetCellValue(sheet, new XLSheetPoint(ro, co));
                     yield return value;
                 }
             }
         }
 
-        private static XLCellValue GetCellValue(XLWorksheet sheet, int ro, int co)
+        private static XLCellValue GetCellValue(XLWorksheet sheet, XLSheetPoint point)
         {
-            var cell = sheet.GetCell(ro, co);
+            var cell = sheet.GetCell(point);
             if (cell is null)
                 return Blank.Value;
 
             if (cell.Formula is null || !cell.Formula.IsDirty)
                 return cell.CachedValue;
 
-            throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(ro, co)));
+            throw new GettingDataException(new XLBookPoint(sheet.SheetId, point));
         }
     }
 }

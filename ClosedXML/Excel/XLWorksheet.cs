@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
             DefinedNames = new XLDefinedNames(this);
             SheetView = new XLSheetView(this);
             Tables = new XLTables();
-            Hyperlinks = new XLHyperlinks();
+            Hyperlinks = new XLHyperlinks(this);
             DataValidations = new XLDataValidations(this);
             PivotTables = new XLPivotTables(this);
             _protection = new XLSheetProtection(DefaultProtectionAlgorithm);
@@ -1929,9 +1929,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get cell or null, if cell doesn't exist.
         /// </summary>
-        internal XLCell? GetCell(int ro, int co)
+        internal XLCell? GetCell(XLSheetPoint point)
         {
-            return Worksheet.Internals.CellsCollection.GetUsedCell(new XLSheetPoint(ro, co));
+            return Worksheet.Internals.CellsCollection.GetUsedCell(point);
         }
 
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)

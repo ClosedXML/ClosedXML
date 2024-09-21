@@ -92,7 +92,7 @@ namespace ClosedXML.Excel.CalcEngine
             // for them doesn't make sense.
             if (_recursive)
             {
-                var cell = sheet.GetCell(rowNumber, columnNumber);
+                var cell = sheet.GetCell(point);
                 return cell?.Value ?? Blank.Value;
             }
 
