@@ -148,21 +148,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal bool SettingHyperlink
-        {
-            get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].SettingHyperlink;
-            set
-            {
-                ref readonly var original = ref _cellsCollection.MiscSlice[_rowNumber, _columnNumber];
-                if (original.SettingHyperlink != value)
-                {
-                    var modified = original;
-                    modified.SettingHyperlink = value;
-                    _cellsCollection.MiscSlice.Set(_rowNumber, _columnNumber, in modified);
-                }
-            }
-        }
-
         internal UInt32? CellMetaIndex
         {
             get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].CellMetaIndex;
@@ -793,20 +778,14 @@ namespace ClosedXML.Excel
             return SliceHyperlink ?? CreateHyperlink();
         }
 
-        public void SetHyperlink(XLHyperlink hyperlink)
+#nullable enable
+        /// <inheritdoc />
+        public void SetHyperlink(XLHyperlink? hyperlink)
         {
-            Worksheet.Hyperlinks.TryDelete(Address);
+            SetCellHyperlink(hyperlink);
 
-            SliceHyperlink = hyperlink;
-
-            if (SliceHyperlink == null) return;
-
-            SliceHyperlink.Worksheet = Worksheet;
-            SliceHyperlink.Cell = this;
-
-            Worksheet.Hyperlinks.Add(SliceHyperlink);
-
-            if (SettingHyperlink) return;
+            if (hyperlink is null)
+                return;
 
             if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
                 Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
@@ -814,6 +793,23 @@ namespace ClosedXML.Excel
             if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
                 Style.Font.Underline = XLFontUnderlineValues.Single;
         }
+
+        internal void SetCellHyperlink(XLHyperlink? hyperlink)
+        {
+            Worksheet.Hyperlinks.TryDelete(Address);
+            if (hyperlink is null)
+            {
+                SliceHyperlink = null;
+                return;
+            }
+
+            SliceHyperlink = hyperlink;
+            SliceHyperlink.Worksheet = Worksheet;
+            SliceHyperlink.Cell = this;
+
+            Worksheet.Hyperlinks.Add(SliceHyperlink);
+        }
+#nullable disable
 
         public XLHyperlink CreateHyperlink()
         {
@@ -1358,9 +1354,7 @@ namespace ClosedXML.Excel
             SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
             if (source.SliceHyperlink != null)
             {
-                SettingHyperlink = true;
-                SetHyperlink(new XLHyperlink(source.GetHyperlink()));
-                SettingHyperlink = false;
+                SetCellHyperlink(new XLHyperlink(source.GetHyperlink()));
             }
         }
 

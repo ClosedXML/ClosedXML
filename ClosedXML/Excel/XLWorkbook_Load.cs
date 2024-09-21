@@ -2294,16 +2294,12 @@ namespace ClosedXML.Excel
                 var xlRange = ws.Range(hl.Reference.Value);
                 foreach (XLCell xlCell in xlRange.Cells())
                 {
-                    xlCell.SettingHyperlink = true;
-
                     if (hl.Id != null)
-                        xlCell.SetHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
+                        xlCell.SetCellHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
                     else if (hl.Location != null)
-                        xlCell.SetHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
+                        xlCell.SetCellHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
                     else
-                        xlCell.SetHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
-
-                    xlCell.SettingHyperlink = false;
+                        xlCell.SetCellHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
                 }
             }
         }

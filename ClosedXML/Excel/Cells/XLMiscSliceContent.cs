@@ -10,8 +10,6 @@
 
         internal uint? ValueMetaIndex { get; set; }
 
-        internal bool SettingHyperlink { get; set; }
-
         internal bool HasPhonetic { get; set; }
     }
 }
