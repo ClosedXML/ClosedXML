@@ -74,5 +74,32 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             Assert.AreEqual(expected, left.Intersect(right));
         }
+
+        [TestCase("A1", "A1", true)]
+        [TestCase("A1", "A2", false)]
+        [TestCase("B1:B3", "A2:C2", true)]
+        [TestCase("A1:A3", "B2:C2", false)]
+        [TestCase("A1:D6", "B2:C3", true)]
+        [TestCase("A1:C6", "B4:E10", true)]
+        public void Intersects_checks_whether_the_range_has_intersection_with_another(string leftOperand, string rightOperand, bool expected)
+        {
+            var left = XLSheetRange.Parse(leftOperand);
+            var right = XLSheetRange.Parse(rightOperand);
+
+            Assert.AreEqual(expected, left.Intersects(right));
+        }
+
+        [TestCase("A1", "A1", true)]
+        [TestCase("B1:C3", "B1:C3", true)]
+        [TestCase("A1:D4", "B2:C3", true)]
+        [TestCase("B3:C3", "B2:C3", false)]
+        [TestCase("A2:C2", "B2:C3", false)]
+        public void Overlaps_checks_whether_left_fully_overlaps_right(string leftOperand, string rightOperand, bool expected)
+        {
+            var left = XLSheetRange.Parse(leftOperand);
+            var right = XLSheetRange.Parse(rightOperand);
+
+            Assert.AreEqual(expected, left.Overlaps(right));
+        }
     }
 }

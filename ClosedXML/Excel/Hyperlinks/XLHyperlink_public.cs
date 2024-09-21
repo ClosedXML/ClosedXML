@@ -1,7 +1,6 @@
 #nullable disable
 
 using System;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -65,7 +64,22 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell Cell { get; internal set; }
+#nullable enable
+        /// <summary>
+        /// Gets top left cell of a hyperlink range. Return <c>null</c>,
+        /// if the hyperlink isn't in a worksheet.
+        /// </summary>
+        public IXLCell? Cell
+        {
+            get
+            {
+                if (Container is null)
+                    return null;
+
+                return Container.GetCell(this);
+            }
+        }
+#nullable disable
 
         public String InternalAddress
         {
@@ -84,8 +98,13 @@ namespace ClosedXML.Excel
                                     _internalAddress.Substring(_internalAddress.IndexOf('!') + 1))
                                : _internalAddress;
                 }
+
+                if (Container is null)
+                    throw new InvalidOperationException("Hyperlink is not attached to a worksheet.");
+
+                var sheetName = Container.WorksheetName;
                 return String.Concat(
-                    Worksheet.Name.EscapeSheetName(),
+                    sheetName.EscapeSheetName(),
                     '!',
                     _internalAddress);
             }
@@ -96,16 +115,16 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Tooltip displayed when user hovers over the hyperlink range. If not specified,
+        /// the link target is displayed in the tooltip.
+        /// </summary>
         public String Tooltip { get; set; }
 
+        /// <inheritdoc cref="IXLHyperlinks.Delete(XLHyperlink)"/>
         public void Delete()
         {
-            if (Cell == null) return;
-            Worksheet.Hyperlinks.Delete(Cell.Address);
-            if (Cell.Style.Font.FontColor.Equals(XLColor.FromTheme(XLThemeColor.Hyperlink)))
-                Cell.Style.Font.FontColor = Worksheet.StyleValue.Font.FontColor;
-
-            Cell.Style.Font.Underline = Worksheet.StyleValue.Font.Underline;
+            Container?.Delete(this);
         }
     }
 }
