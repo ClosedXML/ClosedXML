@@ -291,7 +291,7 @@ namespace ClosedXML.Excel
         /// <remarks>Shortcut for <c>Value.GetNumber()</c></remarks>
         /// <exception cref="InvalidCastException">If the value of the cell is not a number.</exception>
         Double GetDouble();
-        
+
         /// <summary>
         /// Gets the cell's value as a String.
         /// </summary>
@@ -376,7 +376,7 @@ namespace ClosedXML.Excel
         /// Returns the value of the cell if it formatted as a rich text.
         /// </summary>
         IXLRichText GetRichText();
-        
+
         IXLCells InsertCellsAbove(int numberOfRows);
 
         IXLCells InsertCellsAfter(int numberOfColumns);
@@ -502,7 +502,22 @@ namespace ClosedXML.Excel
 
         IXLCell SetFormulaR1C1(String formula);
 
-        void SetHyperlink(XLHyperlink hyperlink);
+#nullable enable
+        /// <summary>
+        /// Set hyperlink of a cell. When user clicks on a cell with hyperlink,
+        /// the Excel opens the target or moves cursor to the target cells in a
+        /// worksheet. The text of hyperlink is a cell value, the hyperlink
+        /// target and tooltip are defined by the <paramref name="hyperlink"/>
+        /// parameter.
+        /// </summary>
+        /// <remarks>
+        /// If the cell uses worksheet style, the method also sets <see cref="XLThemeColor.Hyperlink">
+        /// hyperlink font color from theme</see> and the underline property.
+        /// </remarks>
+        /// <param name="hyperlink">The new cell hyperlink. Use <c>null</c> to
+        ///   remove the hyperlink.</param>
+        void SetHyperlink(XLHyperlink? hyperlink);
+#nullable disable
 
         /// <inheritdoc cref="Value"/>
         /// <returns>This cell.</returns>
