@@ -101,5 +101,40 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             Assert.AreEqual(expected, left.Overlaps(right));
         }
+
+        [TestCase("B5:B8", "A1:C3", "B2:B5")] // Deleted area fully above (with a row space) with overlapping width
+        [TestCase("B5:B8", "A2:C4", "B2:B5")] // The deleted are ends exactly at the row above the area
+        [TestCase("B5:B8", "A6:C7", "B5:B6")] // The deleted is fully within the area, bot not at top/bottom row
+        [TestCase("B5:B8", "A5:C8", null)] // Delete are exactly covers the area
+        [TestCase("B5:B8", "A4:C9", null)] // Delete fully covers the area
+        [TestCase("B5:B8", "A9:C10", "B5:B8")] // The deleted is fully below the area.
+        [TestCase("B5:B8", "A6:C10", "B5:B5")] // The deleted partially intersects the area and is below.
+        [TestCase("B5:B8", "A1:A10", "B5:B8")] // Deleted area is fully on the left
+        [TestCase("B5:B8", "C1:C10", "B5:B8")] // Deleted area is fully on the right
+        [TestCase("B5:D8", "B9:C10", "B5:D8")] // Partial deletion is below -> not affected
+        public void TryDeleteAreaAndShiftUp_without_partial_cover(string leftOperand, string deleted, string expected)
+        {
+            var originalArea = XLSheetRange.Parse(leftOperand);
+            var deletedArea = XLSheetRange.Parse(deleted);
+            var expectedResult = expected is not null ? XLSheetRange.Parse(expected) : (XLSheetRange?)null;
+
+            var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
+
+            Assert.True(success);
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestCase("B5:D8", "A1:B3")] // Partial above
+        [TestCase("B5:D8", "C6:D8")] // Partial inside
+        [TestCase("B5:D8", "B1:B6")] // Partial above and inside
+        public void TryDeleteAreaAndShiftUp_with_partial_cover(string leftOperand, string deleted)
+        {
+            var originalArea = XLSheetRange.Parse(leftOperand);
+            var deletedArea = XLSheetRange.Parse(deleted);
+            var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
+
+            Assert.False(success);
+            Assert.Null(result);
+        }
     }
 }
