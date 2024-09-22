@@ -240,6 +240,18 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Create a new range from this one by taking a number of rows from the left column to the right.
+        /// </summary>
+        /// <param name="columns">How many columns to take, must be at least one.</param>
+        public XLSheetRange SliceFromLeft(int columns)
+        {
+            if (columns < 1)
+                throw new ArgumentOutOfRangeException();
+
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(FirstPoint.Row, LeftColumn + columns - 1));
+        }
+
+        /// <summary>
         /// Create a new range from this one by taking a number of rows from the bottom row up.
         /// </summary>
         /// <param name="columns">How many columns to take, must be at least one.</param>
@@ -343,6 +355,18 @@ namespace ClosedXML.Excel
             return new XLSheetRange(topLeftCorner, bottomRightCorner);
         }
 
+        /// <summary>
+        /// Return a new range that has been shifted in horizontal direction by <paramref name="columnShift"/>.
+        /// </summary>
+        /// <param name="columnShift">By how much to shift the range, positive - rightward, negative - leftward.</param>
+        /// <returns>Newly created area.</returns>
+        internal XLSheetRange ShiftColumns(int columnShift)
+        {
+            var topLeftCorner = FirstPoint.ShiftColumn(columnShift);
+            var bottomRightCorner = LastPoint.ShiftColumn(columnShift);
+            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+        }
+
         public IEnumerator<XLSheetPoint> GetEnumerator()
         {
             for (var row = TopRow; row <= BottomRow; ++row)
@@ -356,8 +380,74 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Take the area and reposition it as if the <paramref name="deletedArea"/> was removed
-        /// from sheet. Deleted rows above cause the area to shift it upwards, deleted rows in the
-        /// area decrease its height.
+        /// from sheet. If cells the left of the area are deleted, the area shifts to the left.
+        /// If <paramref name="deletedArea"/> is within the area, the width of the area decreases.
+        /// </summary>
+        /// <remarks>
+        /// If the method returns <c>false</c>, there is a partial cover and it's up to you to
+        /// decide what to do.
+        /// </remarks>
+        /// <returns>
+        /// The <paramref name="result"/> has a value <c>null</c> if the range was completely
+        /// removed by <paramref name="deletedArea"/>.
+        /// </returns>
+        internal bool TryDeleteAreaAndShiftLeft(XLSheetRange deletedArea, out XLSheetRange? result)
+        {
+            // Deleted area is fully upwards, downwards or to the right of this area.
+            if (deletedArea.BottomRow < TopRow ||
+                deletedArea.TopRow > BottomRow ||
+                deletedArea.LeftColumn > RightColumn)
+            {
+                result = this;
+                return true;
+            }
+
+            var doesntOverlapHeight = deletedArea.TopRow > TopRow ||
+                                      deletedArea.BottomRow < BottomRow;
+            var deletesColumnsToLeft = deletedArea.LeftColumn < LeftColumn;
+            var deletesColumnsOfArea = deletedArea.LeftColumn <= RightColumn &&
+                                       deletedArea.RightColumn >= LeftColumn;
+            if (doesntOverlapHeight && (deletesColumnsToLeft || deletesColumnsOfArea))
+            {
+                result = null;
+                return false;
+            }
+
+            var repositioned = this;
+            if (deletesColumnsOfArea)
+            {
+                // Decrease width of repositioned area
+                var left = Math.Max(deletedArea.LeftColumn, repositioned.LeftColumn);
+                var right = Math.Min(deletedArea.RightColumn, repositioned.RightColumn);
+                
+                var columnsToDelete = right - left + 1;
+                var newWidth = repositioned.Width - columnsToDelete;
+                if (newWidth == 0)
+                {
+                    result = null;
+                    return true;
+                }
+                
+                repositioned = repositioned.SliceFromLeft(newWidth);
+            }
+
+            if (deletesColumnsToLeft)
+            {
+                // There are some deleted columns to the left of the area -> shift left
+                var deletedLastColumnsOutwards = Math.Min(repositioned.LeftColumn - 1, deletedArea.RightColumn);
+
+                var shiftLeft = deletedLastColumnsOutwards - deletedArea.LeftColumn + 1;
+                repositioned = repositioned.ShiftColumns(-shiftLeft);
+            }
+
+            result = repositioned;
+            return true;
+        }
+
+        /// <summary>
+        /// Take the area and reposition it as if the <paramref name="deletedArea"/> was removed
+        /// from sheet. If cells upward of the area are deleted, the area shifts to the upward.
+        /// If <paramref name="deletedArea"/> is within the area, the height of the area decreases.
         /// </summary>
         /// <remarks>
         /// If the method returns <c>false</c>, there is a partial cover and it's up to you to
@@ -369,9 +459,10 @@ namespace ClosedXML.Excel
         /// </returns>
         internal bool TryDeleteAreaAndShiftUp(XLSheetRange deletedArea, out XLSheetRange? result)
         {
-            // Deleted area is fully on left or right side of this area.
+            // Deleted area is fully on left, right or bottom side of this area.
             if (deletedArea.RightColumn < LeftColumn ||
-                deletedArea.LeftColumn > RightColumn)
+                deletedArea.LeftColumn > RightColumn ||
+                deletedArea.TopRow > BottomRow)
             {
                 result = this;
                 return true;
