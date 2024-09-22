@@ -102,9 +102,44 @@ namespace ClosedXML.Tests.Excel.Coordinates
             Assert.AreEqual(expected, left.Overlaps(right));
         }
 
+        [TestCase("E4:G4", "B3:C5", "C4:E4")] // Deleted area fully to the left with overlapping width
+        [TestCase("E4:G4", "A2:D5", "A4:C4")] // The deleted are ends exactly at the column to the left of the area
+        [TestCase("E4:G4", "F1:F7", "E4:F4")] // The deleted is fully within the area, but not at left/right column
+        [TestCase("E4:G4", "E4:G4", null)] // Delete are exactly covers the area
+        [TestCase("E4:G4", "A1:Z9", null)] // Delete fully covers the area
+        [TestCase("E4:G4", "H1:K10", "E4:G4")] // The deleted is fully to the right of the area.
+        [TestCase("E4:G4", "G3:H5", "E4:F4")] // The deleted partially intersects the area and is to the right.
+        [TestCase("D4:E4", "A5:F9", "D4:E4")] // Deleted area is fully downward
+        [TestCase("D4:E4", "A1:F3", "D4:E4")] // Deleted area is fully upwards
+        [TestCase("D4:E4", "A5:F10", "D4:E4")] // Partial deletion is below -> not affected
+        public void TryDeleteAreaAndShiftLeft_without_partial_cover(string original, string deleted, string repositioned)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var deletedArea = XLSheetRange.Parse(deleted);
+            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+
+            var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
+
+            Assert.True(success);
+            Assert.AreEqual(repositionedArea, result);
+        }
+
+        [TestCase("D4:E8", "A1:B5")] // Partial left
+        [TestCase("D4:E8", "D2:E7")] // Partial inside
+        [TestCase("D4:E8", "C4:D6")] // Partial left and inside
+        public void TryDeleteAreaAndShiftLeft_with_partial_cover(string original, string deleted)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var deletedArea = XLSheetRange.Parse(deleted);
+            var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
+
+            Assert.False(success);
+            Assert.Null(result);
+        }
+
         [TestCase("B5:B8", "A1:C3", "B2:B5")] // Deleted area fully above (with a row space) with overlapping width
         [TestCase("B5:B8", "A2:C4", "B2:B5")] // The deleted are ends exactly at the row above the area
-        [TestCase("B5:B8", "A6:C7", "B5:B6")] // The deleted is fully within the area, bot not at top/bottom row
+        [TestCase("B5:B8", "A6:C7", "B5:B6")] // The deleted is fully within the area, but not at top/bottom row
         [TestCase("B5:B8", "A5:C8", null)] // Delete are exactly covers the area
         [TestCase("B5:B8", "A4:C9", null)] // Delete fully covers the area
         [TestCase("B5:B8", "A9:C10", "B5:B8")] // The deleted is fully below the area.
