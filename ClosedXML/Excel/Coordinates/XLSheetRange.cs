@@ -353,5 +353,70 @@ namespace ClosedXML.Excel
                 }
             }
         }
+
+        /// <summary>
+        /// Take the area and reposition it as if the <paramref name="deletedArea"/> was removed
+        /// from sheet. Deleted rows above cause the area to shift it upwards, deleted rows in the
+        /// area decrease its height.
+        /// </summary>
+        /// <remarks>
+        /// If the method returns <c>false</c>, there is a partial cover and it's up to you to
+        /// decide what to do.
+        /// </remarks>
+        /// <returns>
+        /// The <paramref name="result"/> has a value <c>null</c> if the range was completely
+        /// removed by <paramref name="deletedArea"/>.
+        /// </returns>
+        internal bool TryDeleteAreaAndShiftUp(XLSheetRange deletedArea, out XLSheetRange? result)
+        {
+            // Deleted area is fully on left or right side of this area.
+            if (deletedArea.RightColumn < LeftColumn ||
+                deletedArea.LeftColumn > RightColumn)
+            {
+                result = this;
+                return true;
+            }
+
+            var doesntOverlapWidth = deletedArea.LeftColumn > LeftColumn ||
+                                     deletedArea.RightColumn < RightColumn;
+            var deletesRowsAboveArea = deletedArea.TopRow < TopRow;
+            var deletesRowsOfArea = deletedArea.TopRow <= BottomRow &&
+                                    deletedArea.BottomRow >= TopRow;
+            if (doesntOverlapWidth && (deletesRowsAboveArea || deletesRowsOfArea))
+            {
+                result = null;
+                return false;
+            }
+
+            var repositioned = this;
+            if (deletesRowsOfArea)
+            {
+                // Decrease height of repositioned area
+                var top = Math.Max(deletedArea.TopRow, repositioned.TopRow);
+                var bottom = Math.Min(deletedArea.BottomRow, repositioned.BottomRow);
+
+                var rowsToDelete = bottom - top + 1;
+                var newHeight = repositioned.Height - rowsToDelete;
+                if (newHeight == 0)
+                {
+                    result = null;
+                    return true;
+                }
+
+                repositioned = repositioned.SliceFromTop(newHeight);
+            }
+
+            if (deletesRowsAboveArea)
+            {
+                // There are some deleted rows above the area -> shift up
+                var deletedLastRowAboveArea = Math.Min(repositioned.TopRow - 1, deletedArea.BottomRow);
+
+                var shiftUp = deletedLastRowAboveArea - deletedArea.TopRow + 1;
+                repositioned = repositioned.ShiftRows(-shiftUp);
+            }
+
+            result = repositioned;
+            return true;
+        }
     }
 }
