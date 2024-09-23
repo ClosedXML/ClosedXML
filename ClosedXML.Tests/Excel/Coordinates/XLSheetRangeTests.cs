@@ -102,6 +102,40 @@ namespace ClosedXML.Tests.Excel.Coordinates
             Assert.AreEqual(expected, left.Overlaps(right));
         }
 
+        [TestCase("D6:G10", "A1:C15", "D6:G10")] // Inserted are is fully to the left
+        [TestCase("D6:G10", "H1:K15", "D6:G10")] // Inserted are is fully to the right
+        [TestCase("D6:G10", "A11:K15", "D6:G10")] // Inserted are is fully below
+        [TestCase("D6:G10", "D6:G11", "D12:G16")] // Inserted area at the top row of the area
+        [TestCase("D6:G10", "C4:H7", "D10:G14")] // Inserted above the area
+        [TestCase("D6:G10", "D7:G9", "D6:G13")] // Inserted into the area
+        [TestCase("D6:G10", "D7:G9", "D6:G13")] // Inside the area, overlapping = extend
+        [TestCase("D6:G10", "D10:G11", "D6:G12")] // Last row of the area, overlapping = extend
+        [TestCase("A1048576", "A1048575", null)] // Completely pushed out of the range
+        [TestCase("A1048574:A1048576", "A1048570:A1048571", "A1048576")] // Partially pushed out of the range
+        [TestCase("A1048570:A1048572", "A1048571:A1048576", "A1048570:A1048576")] // Extend below last row
+        public void TryInsertAreaAndShiftDown_without_partial_cover(string original, string inserted, string repositioned)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var insertedArea = XLSheetRange.Parse(inserted);
+            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+
+            var success = originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result);
+
+            Assert.True(success);
+            Assert.AreEqual(repositionedArea, result);
+        }
+
+        [TestCase("D6:G10", "A6:E6")] // Left
+        [TestCase("D6:G10", "D5:D5")] // Above
+        [TestCase("D6:G10", "E7:H15")] // Right
+        public void TryInsertAreaAndShiftDown_with_partial_cover(string original, string inserted)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var insertedArea = XLSheetRange.Parse(inserted);
+
+            Assert.False(originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result));
+        }
+
         [TestCase("E4:G4", "B3:C5", "C4:E4")] // Deleted area fully to the left with overlapping width
         [TestCase("E4:G4", "A2:D5", "A4:C4")] // The deleted are ends exactly at the column to the left of the area
         [TestCase("E4:G4", "F1:F7", "E4:F4")] // The deleted is fully within the area, but not at left/right column

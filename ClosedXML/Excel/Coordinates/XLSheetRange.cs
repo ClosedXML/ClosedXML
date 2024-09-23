@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -379,6 +379,60 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Calculate size and position of the area when another area is inserted into a sheet.
+        /// </summary>
+        /// <param name="insertedArea">Inserted area.</param>
+        /// <param name="result">The result, might be <c>null</c> as a valid result if area is pushed out.</param>
+        /// <returns><c>true</c> if results wasn't partially shifted.</returns>
+        internal bool TryInsertAreaAndShiftDown(XLSheetRange insertedArea, out XLSheetRange? result)
+        {
+            // Inserted fully to the left, to the right or below
+            if (insertedArea.RightColumn < LeftColumn ||
+                insertedArea.LeftColumn > RightColumn ||
+                insertedArea.TopRow > BottomRow)
+            {
+                result = this;
+                return true;
+            }
+
+            var fullyOverlaps = insertedArea.LeftColumn <= LeftColumn &&
+                                insertedArea.RightColumn >= RightColumn;
+            if (!fullyOverlaps)
+            {
+                result = null;
+                return false;
+            }
+
+            // Are is effectively inserted into a seam at the top row of the insertedArea
+            if (insertedArea.TopRow <= TopRow)
+            {
+                // Area is completely pushed out
+                if (TopRow + insertedArea.Height > XLHelper.MaxRowNumber)
+                {
+                    result = null;
+                    return true;
+                }
+
+                // Area is partially pushed out
+                if (BottomRow + insertedArea.Height > XLHelper.MaxRowNumber)
+                {
+                    var pushedOutRowsCount = BottomRow + insertedArea.Height - XLHelper.MaxRowNumber;
+                    var keepRows = Height - pushedOutRowsCount;
+                    var resized = SliceFromTop(keepRows);
+                    result = resized.ShiftRows(insertedArea.Height);
+                    return true;
+                }
+
+                // Not pushed out = only shift
+                result = ShiftRows(insertedArea.Height);
+                return true;
+            }
+
+            result = ExtendBelow(insertedArea.Height);
+            return true;
+        }
+
+        /// <summary>
         /// Take the area and reposition it as if the <paramref name="deletedArea"/> was removed
         /// from sheet. If cells the left of the area are deleted, the area shifts to the left.
         /// If <paramref name="deletedArea"/> is within the area, the width of the area decreases.
@@ -419,7 +473,7 @@ namespace ClosedXML.Excel
                 // Decrease width of repositioned area
                 var left = Math.Max(deletedArea.LeftColumn, repositioned.LeftColumn);
                 var right = Math.Min(deletedArea.RightColumn, repositioned.RightColumn);
-                
+
                 var columnsToDelete = right - left + 1;
                 var newWidth = repositioned.Width - columnsToDelete;
                 if (newWidth == 0)
@@ -427,7 +481,7 @@ namespace ClosedXML.Excel
                     result = null;
                     return true;
                 }
-                
+
                 repositioned = repositioned.SliceFromLeft(newWidth);
             }
 
