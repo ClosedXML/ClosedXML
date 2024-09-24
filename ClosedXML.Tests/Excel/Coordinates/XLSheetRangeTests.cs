@@ -102,13 +102,47 @@ namespace ClosedXML.Tests.Excel.Coordinates
             Assert.AreEqual(expected, left.Overlaps(right));
         }
 
+        [TestCase("C4:F8", "C1:F3", "C4:F8")] // Inserted area is fully above
+        [TestCase("C4:F8", "A9:G12", "C4:F8")] // Inserted area is fully below
+        [TestCase("C4:F8", "G1:H5", "C4:F8")] // Inserted are is fully to the right
+        [TestCase("C4:F8", "C1:D11", "E4:H8")] // Inserted area at the left column of the area
+        [TestCase("C4:F8", "A1:B8", "E4:H8")] // Inserted area is fully to the left
+        [TestCase("C4:F8", "D4:E8", "C4:H8")] // Inserted into the area
+        [TestCase("C4:F8", "D2:I8", "C4:L8")] // Inside the area, overlapping = extend
+        [TestCase("C4:F8", "F4:F8", "C4:G8")] // Last column of the area, overlapping = extend
+        [TestCase("XFD1", "XFB1", null)] // Completely pushed out of the range
+        [TestCase("XFA1:XFD1", "XEZ1:XFA1", "XFC1:XFD1")] // Partially pushed out of the range
+        [TestCase("XFA1:XFD1", "XFB1:XFC1", "XFA1:XFD1")] // Extend below last row
+        public void TryInsertAreaAndShiftRight_without_partial_cover(string original, string inserted, string repositioned)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var insertedArea = XLSheetRange.Parse(inserted);
+            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+
+            var success = originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result);
+
+            Assert.True(success);
+            Assert.AreEqual(repositionedArea, result);
+        }
+
+        [TestCase("C4:F8", "B3:B4")] // Partially above
+        [TestCase("C4:F8", "B5:C7")] // In the middle
+        [TestCase("C4:F8", "A5:B9")] // Partially below
+        public void TryInsertAreaAndShiftRight_with_partial_cover(string original, string inserted)
+        {
+            var originalArea = XLSheetRange.Parse(original);
+            var insertedArea = XLSheetRange.Parse(inserted);
+
+            Assert.False(originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result));
+        }
+
         [TestCase("D6:G10", "A1:C15", "D6:G10")] // Inserted are is fully to the left
         [TestCase("D6:G10", "H1:K15", "D6:G10")] // Inserted are is fully to the right
         [TestCase("D6:G10", "A11:K15", "D6:G10")] // Inserted are is fully below
         [TestCase("D6:G10", "D6:G11", "D12:G16")] // Inserted area at the top row of the area
         [TestCase("D6:G10", "C4:H7", "D10:G14")] // Inserted above the area
         [TestCase("D6:G10", "D7:G9", "D6:G13")] // Inserted into the area
-        [TestCase("D6:G10", "D7:G9", "D6:G13")] // Inside the area, overlapping = extend
+        [TestCase("D6:G10", "A7:H9", "D6:G13")] // Inside the area, overlapping = extend
         [TestCase("D6:G10", "D10:G11", "D6:G12")] // Last row of the area, overlapping = extend
         [TestCase("A1048576", "A1048575", null)] // Completely pushed out of the range
         [TestCase("A1048574:A1048576", "A1048570:A1048571", "A1048576")] // Partially pushed out of the range
