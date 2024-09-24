@@ -1407,9 +1407,6 @@ namespace ClosedXML.Excel
             var mergesToRemove = Worksheet.Internals.MergedRanges.Where(Contains).ToList();
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
 
-            var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
-            hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
-
             var shiftedRange = AsRange();
             if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
                 Worksheet.NotifyRangeShiftedRows(shiftedRange, rowModifier * -1);

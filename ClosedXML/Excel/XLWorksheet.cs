@@ -1199,17 +1199,21 @@ namespace ClosedXML.Excel
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
             RemoveInvalidSparklines();
+
+            ISheetListener hyperlinks = Hyperlinks;
             if (columnsShifted > 0)
             {
                 var area = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
                     .ExtendRight(columnsShifted - 1);
                 Workbook.CalcEngine.OnInsertAreaAndShiftRight(range.Worksheet, area);
+                hyperlinks.OnInsertAreaAndShiftRight(range.Worksheet, area);
             }
             else if (columnsShifted < 0)
             {
                 var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
                 Workbook.CalcEngine.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
+                hyperlinks.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
             }
         }
 
@@ -1341,17 +1345,21 @@ namespace ClosedXML.Excel
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
+
+            ISheetListener hyperlinks = Hyperlinks;
             if (rowsShifted > 0)
             {
                 var area = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
                     .ExtendBelow(rowsShifted - 1);
                 Workbook.CalcEngine.OnInsertAreaAndShiftDown(range.Worksheet, area);
+                hyperlinks.OnInsertAreaAndShiftDown(range.Worksheet, area);
             }
             else if (rowsShifted < 0)
             {
                 var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
                 Workbook.CalcEngine.OnDeleteAreaAndShiftUp(range.Worksheet, area);
+                hyperlinks.OnDeleteAreaAndShiftUp(range.Worksheet, area);
             }
         }
 

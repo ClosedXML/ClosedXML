@@ -5,10 +5,12 @@ using System.Linq;
 
 namespace ClosedXML.Excel;
 
-internal class XLHyperlinks : IXLHyperlinks
+internal class XLHyperlinks : IXLHyperlinks, ISheetListener
 {
     private readonly XLWorksheet _worksheet;
     private readonly Dictionary<XLSheetRange, XLHyperlink> _hyperlinks = new();
+
+    private delegate (bool Success, XLSheetRange? RepositionedArea) RepositionFunc(XLSheetRange hyperlinkArea);
 
     internal XLHyperlinks(XLWorksheet worksheet)
     {
@@ -16,6 +18,67 @@ internal class XLHyperlinks : IXLHyperlinks
     }
 
     internal string WorksheetName => _worksheet.Name;
+
+    #region ISheetListener
+
+    void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+    {
+        RepositionOnChange(sheet, hyperlinkArea =>
+        {
+            var success = hyperlinkArea.TryInsertAreaAndShiftDown(insertedArea, out var newHlArea);
+            return (success, newHlArea);
+        });
+    }
+
+    void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+    {
+        RepositionOnChange(sheet, hyperlinkArea =>
+        {
+            var success = hyperlinkArea.TryInsertAreaAndShiftRight(insertedArea, out var newHlArea);
+            return (success, newHlArea);
+        });
+    }
+
+    void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+    {
+        RepositionOnChange(sheet, hyperlinkArea =>
+        {
+            var success = hyperlinkArea.TryDeleteAreaAndShiftLeft(deletedArea, out var newHlArea);
+            return (success, newHlArea);
+        });
+    }
+
+    void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+    {
+        RepositionOnChange(sheet, hyperlinkArea =>
+        {
+            var success = hyperlinkArea.TryDeleteAreaAndShiftUp(deletedArea, out var newHlArea);
+            return (success, newHlArea);
+        });
+    }
+
+    private void RepositionOnChange(XLWorksheet sheet, RepositionFunc reposition)
+    {
+        if (sheet != _worksheet)
+            return;
+
+        var hyperlinkAreas = _hyperlinks.Keys.ToArray();
+        foreach (var hyperlinkArea in hyperlinkAreas)
+        {
+            var (success, newHlArea) = reposition(hyperlinkArea);
+            if (!success)
+                continue; // Partial cover, don't move.
+
+            if (hyperlinkArea == newHlArea)
+                continue; // Nothing changed
+
+            _hyperlinks.Remove(hyperlinkArea, out var hyperlink);
+            if (newHlArea is not null)
+                _hyperlinks.Add(newHlArea.Value, hyperlink);
+        }
+    }
+
+    #endregion ISheetListener
 
     public IEnumerator<XLHyperlink> GetEnumerator()
     {
