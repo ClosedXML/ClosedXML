@@ -384,6 +384,60 @@ namespace ClosedXML.Excel
         /// <param name="insertedArea">Inserted area.</param>
         /// <param name="result">The result, might be <c>null</c> as a valid result if area is pushed out.</param>
         /// <returns><c>true</c> if results wasn't partially shifted.</returns>
+        internal bool TryInsertAreaAndShiftRight(XLSheetRange insertedArea, out XLSheetRange? result)
+        {
+            // Inserted fully upward, downward or to the right
+            if (insertedArea.BottomRow < TopRow ||
+                insertedArea.TopRow > BottomRow ||
+                insertedArea.LeftColumn > RightColumn)
+            {
+                result = this;
+                return true;
+            }
+
+            var fullyOverlaps = insertedArea.TopRow <= TopRow &&
+                                insertedArea.BottomRow >= BottomRow;
+            if (!fullyOverlaps)
+            {
+                result = null;
+                return false;
+            }
+
+            // Are is effectively inserted into a seam at the left column of the insertedArea
+            if (insertedArea.LeftColumn <= LeftColumn)
+            {
+                // Area is completely pushed out
+                if (LeftColumn + insertedArea.Width > XLHelper.MaxColumnNumber)
+                {
+                    result = null;
+                    return true;
+                }
+
+                // Area is partially pushed out
+                if (RightColumn + insertedArea.Width > XLHelper.MaxColumnNumber)
+                {
+                    var pushedOutColsCount = RightColumn + insertedArea.Width - XLHelper.MaxColumnNumber;
+                    var keepCols = Width - pushedOutColsCount;
+                    var resized = SliceFromLeft(keepCols);
+                    result = resized.ShiftColumns(insertedArea.Width);
+                    return true;
+                }
+
+                // Not pushed out = only shift
+                result = ShiftColumns(insertedArea.Width);
+                return true;
+            }
+
+            result = ExtendRight(insertedArea.Width);
+            return true;
+        }
+
+        /// <summary>
+        /// Calculate size and position of the area when another area is inserted into a sheet.
+        /// </summary>
+        /// <param name="insertedArea">Inserted area.</param>
+        /// <param name="result">The result, might be <c>null</c> as a valid result if area is pushed out.</param>
+        /// <returns><c>true</c> if results wasn't partially shifted.</returns>
         internal bool TryInsertAreaAndShiftDown(XLSheetRange insertedArea, out XLSheetRange? result)
         {
             // Inserted fully to the left, to the right or below
