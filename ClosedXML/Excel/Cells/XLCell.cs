@@ -785,12 +785,9 @@ namespace ClosedXML.Excel
                 Style.Font.Underline = XLFontUnderlineValues.Single;
         }
 
-        internal void SetCellHyperlink(XLHyperlink? hyperlink)
+        internal void SetCellHyperlink(XLHyperlink hyperlink)
         {
             Worksheet.Hyperlinks.Clear(SheetPoint);
-            if (hyperlink is null)
-                return;
-
             Worksheet.Hyperlinks.Add(SheetPoint, hyperlink);
         }
 #nullable disable
