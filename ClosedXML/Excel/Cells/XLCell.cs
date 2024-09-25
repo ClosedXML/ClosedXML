@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Graphics;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
@@ -728,7 +729,7 @@ namespace ClosedXML.Excel
 
         public string FormulaA1
         {
-            get => Formula?.GetFormulaA1(SheetPoint) ?? String.Empty;
+            get => Formula?.GetFormulaA1() ?? String.Empty;
 
             set
             {
@@ -754,7 +755,7 @@ namespace ClosedXML.Excel
 
                 value = value?.TrimFormulaEqual();
                 Formula = !String.IsNullOrWhiteSpace(value)
-                    ? XLCellFormula.NormalR1C1(value)
+                    ? XLCellFormula.NormalA1(FormulaConverter.ToA1(value, _rowNumber, _columnNumber))
                     : null;
                 InvalidateFormula();
             }

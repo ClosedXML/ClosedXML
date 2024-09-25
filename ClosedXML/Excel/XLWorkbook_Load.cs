@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using ClosedXML.Excel.IO;
+using ClosedXML.Parser;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;
 using Op = DocumentFormat.OpenXml.CustomProperties;
@@ -1305,14 +1306,15 @@ namespace ClosedXML.Excel
                     formulaSlice.Set(cellAddress, formula);
 
                     // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
-                    var formulaR1C1 = formula.GetFormulaR1C1(cellAddress);
+                    var formulaR1C1 = FormulaConverter.ToR1C1(formulaText, cellAddress.Row, cellAddress.Column);
                     sharedFormulasR1C1.Add(sharedIndex, formulaR1C1);
                 }
                 else
                 {
                     // Spec: The formula expression for a cell that is specified to be part of a shared formula
                     // (and is not the master) shall be ignored, and the master formula shall override.
-                    formula = XLCellFormula.NormalR1C1(sharedR1C1Formula);
+                    var sharedFormulaA1 = FormulaConverter.ToA1(sharedR1C1Formula, cellAddress.Row, cellAddress.Column);
+                    formula = XLCellFormula.NormalA1(sharedFormulaA1);
                     formulaSlice.Set(cellAddress, formula);
                 }
 
