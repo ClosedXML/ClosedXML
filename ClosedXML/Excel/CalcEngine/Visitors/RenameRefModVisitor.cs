@@ -12,6 +12,10 @@ internal class RenameRefModVisitor : RefModVisitor
     private readonly Dictionary<string, string?>? _sheets;
     private readonly Dictionary<string, string>? _tables;
 
+    /// <summary>
+    /// A mapping of sheets, from old name (key) to a new name (value).
+    /// The <c>null</c> value indicates sheet has been deleted.
+    /// </summary>
     internal IReadOnlyDictionary<string, string?> Sheets
     {
         init => _sheets = value.ToDictionary(x => x.Key, x => x.Value, XLHelper.SheetComparer);

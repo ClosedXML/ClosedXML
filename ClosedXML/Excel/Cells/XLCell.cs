@@ -729,7 +729,7 @@ namespace ClosedXML.Excel
 
         public string FormulaA1
         {
-            get => Formula?.GetFormulaA1() ?? String.Empty;
+            get => Formula?.A1 ?? String.Empty;
 
             set
             {
