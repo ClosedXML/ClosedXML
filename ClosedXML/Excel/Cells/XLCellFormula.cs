@@ -241,8 +241,8 @@ namespace ClosedXML.Excel
                 _input1 = input1Address,
                 _input2 = input2Address,
                 _flags = FormulaFlags.Is2D |
-                (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None) |
-                (input2Deleted ? FormulaFlags.Input2Deleted : FormulaFlags.None)
+                         (input1Deleted ? FormulaFlags.Input1Deleted : FormulaFlags.None) |
+                         (input2Deleted ? FormulaFlags.Input2Deleted : FormulaFlags.None)
             };
         }
 
@@ -313,6 +313,19 @@ namespace ClosedXML.Excel
                 A1 = res;
                 IsDirty = true;
             }
+        }
+
+        internal XLCellFormula GetMovedTo(XLSheetPoint origin, XLSheetPoint destination)
+        {
+            // I could in theory swap 1x1 array or dataTable, but not worth it in this path.
+            if (Type != FormulaType.Normal)
+                throw new InvalidOperationException("Can only swap normal formulas.");
+
+            var originR1C1 = FormulaConverter.ToR1C1(A1, origin.Row, origin.Column);
+            var targetA1 = FormulaConverter.ToA1(originR1C1, destination.Row, destination.Column);
+            var targetFormula = NormalA1(targetA1);
+            targetFormula.IsDirty = true;
+            return targetFormula;
         }
     }
 }

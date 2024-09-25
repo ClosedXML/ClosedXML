@@ -513,5 +513,46 @@ namespace ClosedXML.Tests
 
             Assert.AreEqual(expectedResult, actualAddresses);
         }
+
+        [Test]
+        public void Sorting_moves_values_and_fixes_formula_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var range = ws.Cell("A1").InsertData(new object[]
+            {
+                ("Price", "Amount", "Sales"),
+                (7, 5, Blank.Value),
+                (2, 14, Blank.Value),
+                (32, 2, Blank.Value),
+                (6, 9, Blank.Value)
+            });
+            ws.Cell("C2").FormulaA1 = "A2*B2 & \"(Cake)\""; // 35
+            ws.Cell("C3").FormulaA1 = "A3*B3 & \"(Pie)\""; // 28
+            ws.Cell("C4").FormulaA1 = "A4*B4 & \"(Waffle)\""; // 64
+            ws.Cell("C5").FormulaA1 = "A5*B5 & \"(Shortcake)\""; // 54
+
+            // Sort uses cached values - update them
+            ws.RecalculateAllFormulas();
+
+            range.Sort("3 DESC");
+
+            Assert.AreEqual(32, ws.Cell("A2").Value);
+            Assert.AreEqual( 6, ws.Cell("A3").Value);
+            Assert.AreEqual( 7, ws.Cell("A4").Value);
+            Assert.AreEqual( 2, ws.Cell("A5").Value);
+
+            Assert.AreEqual( 2, ws.Cell("B2").Value);
+            Assert.AreEqual( 9, ws.Cell("B3").Value);
+            Assert.AreEqual( 5, ws.Cell("B4").Value);
+            Assert.AreEqual(14, ws.Cell("B5").Value);
+
+            // Formulas has been moved around and their coordinates fixed after move
+            Assert.AreEqual("A2*B2 & \"(Waffle)\"", ws.Cell("C2").FormulaA1);
+            Assert.AreEqual("A3*B3 & \"(Shortcake)\"", ws.Cell("C3").FormulaA1);
+            Assert.AreEqual("A4*B4 & \"(Cake)\"", ws.Cell("C4").FormulaA1);
+            Assert.AreEqual("A5*B5 & \"(Pie)\"", ws.Cell("C5").FormulaA1);
+        }
     }
 }
