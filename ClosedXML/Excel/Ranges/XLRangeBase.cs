@@ -118,6 +118,7 @@ namespace ClosedXML.Excel
         {
             set
             {
+                value = value?.TrimFormulaEqual();
                 var range = XLSheetRange.FromRangeAddress(RangeAddress);
                 if (Worksheet.MergedRanges.Any(mr => mr.Intersects(this)))
                     throw new InvalidOperationException("Can't create array function over a merged range.");

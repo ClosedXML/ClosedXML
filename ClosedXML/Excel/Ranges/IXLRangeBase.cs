@@ -34,6 +34,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Create an array formula for all cells in the range.
         /// </summary>
+        /// <remarks>Setter trims the formula and if formula starts with an <c>=</c>, it is removed.</remarks>
         /// <exception cref="InvalidOperationException">When the range overlaps with a table, pivot table, merged cells or partially overlaps another array formula.</exception>
         String FormulaArrayA1 { set; }
 

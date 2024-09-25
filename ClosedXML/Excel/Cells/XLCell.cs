@@ -735,6 +735,7 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
+                value = value?.TrimFormulaEqual();
                 Formula = !String.IsNullOrWhiteSpace(value)
                     ? XLCellFormula.NormalA1(value)
                     : null;
@@ -751,6 +752,7 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
+                value = value?.TrimFormulaEqual();
                 Formula = !String.IsNullOrWhiteSpace(value)
                     ? XLCellFormula.NormalR1C1(value)
                     : null;

@@ -33,3 +33,13 @@ IXLHyperlinks.Delete returns bool
 
 Originally, it returned ```void```. The ```bool``` value indicates if a
 hyperlink was present and thus removed.
+
+**********************************
+Trim formula and remove equal sign
+**********************************
+
+The setters ```IXLCell.FormulaA1```, ```IXLCell.FormulaR1C1``` and
+```IXLRangeBase.FormulaArrayA1``` now trim the formula and remove the starting
+```=``` sign (i.e. ``` = A1+B4 ``` will turn into ```A1+B4```). A formula
+starting with an equals sign is not a valid formula per formula grammar and
+causes problems with parsing.

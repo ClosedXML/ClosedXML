@@ -99,12 +99,14 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets or sets the cell's formula with A1 references.
         /// </summary>
+        /// <remarks>Setter trims the formula and if formula starts with an <c>=</c>, it is removed.</remarks>
         /// <value>The formula with A1 references.</value>
         String FormulaA1 { get; set; }
 
         /// <summary>
         /// Gets or sets the cell's formula with R1C1 references.
         /// </summary>
+        /// <remarks>Setter trims the formula and if formula starts with an <c>=</c>, it is removed.</remarks>
         /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { get; set; }
 
