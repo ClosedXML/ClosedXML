@@ -871,6 +871,24 @@ namespace ClosedXML.Tests
             }
         }
 
+        [TestCase(" = 1 + SUM({ 1; 7})  - A8  ", "1 + SUM({ 1; 7})  - A8")]
+        public void FormulaA1_setter_trims_and_removes_equal_if_present(string formula, string expectedResult)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").FormulaA1 = formula;
+            Assert.AreEqual(expectedResult, ws.Cell("A1").FormulaA1);
+        }
+
+        [TestCase(" =  1 +   R[1]C[7]  ", "1 +   R[1]C[7]")]
+        public void FormulaR1C1_setter_trims_and_removes_equal_if_present(string formula, string expectedResult)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").FormulaR1C1 = formula;
+            Assert.AreEqual(expectedResult, ws.Cell("A1").FormulaR1C1);
+        }
+
         [Test]
         public void FormulaWithCircularReferenceFails()
         {
