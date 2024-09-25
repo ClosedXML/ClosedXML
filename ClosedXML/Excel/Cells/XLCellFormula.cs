@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +36,6 @@ namespace ClosedXML.Excel
         private XLSheetPoint _input1;
         private XLSheetPoint _input2;
         private FormulaFlags _flags;
-        private FormulaType _type;
 
         /// <summary>
         /// Is this formula dirty, i.e. is it potentially out of date due to changes
@@ -49,9 +46,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Formula in A1 notation. Doesn't start with <c>=</c> sign.
         /// </summary>
-        private string A1 { get; set; }
+        internal string A1 { get; private set; }
 
-        internal FormulaType Type => _type;
+        internal FormulaType Type { get; private init; }
 
         /// <summary>
         /// Range for array and data table formulas, otherwise default value.
@@ -115,12 +112,9 @@ namespace ClosedXML.Excel
         /// </summary>
         internal Boolean Input2Deleted => _flags.HasFlag(FormulaFlags.Input2Deleted);
 
-        /// <summary>
-        /// Get stored formula in A1 notation. Returned formula doesn't contain equal sign.
-        /// </summary>
-        public string GetFormulaA1()
+        private XLCellFormula(string a1)
         {
-            return A1;
+            A1 = a1;
         }
 
         /// <summary>
@@ -161,10 +155,9 @@ namespace ClosedXML.Excel
         /// <param name="formulaA1">Formula in A1 form. Shouldn't start with <c>=</c>.</param>
         internal static XLCellFormula NormalA1(string formulaA1)
         {
-            return new XLCellFormula
+            return new XLCellFormula(formulaA1)
             {
-                A1 = formulaA1,
-                _type = FormulaType.Normal,
+                Type = FormulaType.Normal,
                 _flags = FormulaFlags.None
             };
         }
@@ -177,10 +170,9 @@ namespace ClosedXML.Excel
         /// <param name="aca">A flag for always calculate array.</param>
         internal static XLCellFormula Array(string arrayFormulaA1, XLSheetRange range, bool aca)
         {
-            return new XLCellFormula
+            return new XLCellFormula(arrayFormulaA1)
             {
-                A1 = arrayFormulaA1,
-                _type = FormulaType.Array,
+                Type = FormulaType.Array,
                 _flags = aca ? FormulaFlags.AlwaysCalculateArray : FormulaFlags.None,
                 Range = range
             };
@@ -212,11 +204,11 @@ namespace ClosedXML.Excel
                 rowInput = string.Empty;
             }
 
-            return new XLCellFormula
+            var formula = string.Format(DataTableFormulaFormat, rowInput, colInput);
+            return new XLCellFormula(formula)
             {
-                A1 = string.Format(DataTableFormulaFormat, rowInput, colInput),
                 Range = range,
-                _type = FormulaType.DataTable,
+                Type = FormulaType.DataTable,
                 _input1 = input1Address,
                 _flags =
                     (isRowDataTable ? FormulaFlags.Is1DRow : FormulaFlags.None) |
@@ -241,11 +233,11 @@ namespace ClosedXML.Excel
         {
             var colInput = input1Deleted ? "#REF!" : input1Address.ToString();
             var rowInput = input2Deleted ? "#REF!" : input2Address.ToString();
-            return new XLCellFormula
+            var formula = string.Format(DataTableFormulaFormat, rowInput, colInput);
+            return new XLCellFormula(formula)
             {
-                A1 = string.Format(DataTableFormulaFormat, rowInput, colInput),
                 Range = range,
-                _type = FormulaType.DataTable,
+                Type = FormulaType.DataTable,
                 _input1 = input1Address,
                 _input2 = input2Address,
                 _flags = FormulaFlags.Is2D |
@@ -310,10 +302,10 @@ namespace ClosedXML.Excel
 
         public void RenameSheet(XLSheetPoint origin, string oldSheetName, string newSheetName)
         {
-            var a1 = GetFormulaA1();
+            var a1 = A1;
             var res = FormulaConverter.ModifyA1(a1, origin.Row, origin.Column, new RenameRefModVisitor
             {
-                Sheets = new Dictionary<string, string> { { oldSheetName, newSheetName } }
+                Sheets = new Dictionary<string, string?> { { oldSheetName, newSheetName } }
             });
 
             if (res != a1)

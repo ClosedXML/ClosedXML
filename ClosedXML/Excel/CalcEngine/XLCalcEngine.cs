@@ -226,7 +226,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void ApplyFormula(XLCellFormula formula, XLSheetPoint appliedPoint, XLWorksheet sheet, ValueSlice valueSlice, uint? recalculateSheetId)
         {
-            var formulaText = formula.GetFormulaA1();
+            var formulaText = formula.A1;
             if (formula.Type == FormulaType.Normal)
             {
                 var single = EvaluateFormula(
