@@ -62,7 +62,14 @@ namespace ClosedXML.Excel
 
         public void Swap(XLSheetPoint sp1, XLSheetPoint sp2)
         {
-            _formulas.Swap(sp1, sp2);
+            var value1 = _formulas[sp1];
+            var value2 = _formulas[sp2];
+
+            value1 = value1?.GetMovedTo(sp1, sp2);
+            value2 = value2?.GetMovedTo(sp2, sp1);
+
+            Set(sp1, value2);
+            Set(sp2, value1);
         }
 
         internal XLCellFormula? Get(XLSheetPoint point)
