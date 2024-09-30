@@ -223,6 +223,7 @@ namespace ClosedXML.Excel
         {
             return FirstCellUsed(XLCellsUsedOptions.AllContents);
         }
+
         IXLCell IXLRangeBase.FirstCellUsed(XLCellsUsedOptions options)
         {
             return FirstCellUsed(options, null);
@@ -242,6 +243,7 @@ namespace ClosedXML.Excel
         {
             return LastCellUsed(XLCellsUsedOptions.AllContents);
         }
+
         IXLCell IXLRangeBase.LastCellUsed(XLCellsUsedOptions options)
         {
             return LastCellUsed(options, null);
@@ -490,8 +492,8 @@ namespace ClosedXML.Excel
 
         public bool Contains(String rangeAddress)
         {
-            string addressToUse = rangeAddress.Contains("!")
-                                      ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
+            string addressToUse = rangeAddress.Contains('!')
+                                      ? rangeAddress.Substring(rangeAddress.LastIndexOf('!') + 1)
                                       : rangeAddress;
 
             XLAddress firstAddress;

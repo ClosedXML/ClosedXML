@@ -910,7 +910,7 @@ namespace ClosedXML.Tests
                 Assert.AreEqual(ws1.PageSetup.ShowComments, ws2.PageSetup.ShowComments);
                 Assert.AreEqual(ws1.PageSetup.PrintErrorValue, ws2.PageSetup.PrintErrorValue);
 
-                Assert.AreEqual(ws1.PageSetup.PrintAreas.Count(), ws2.PageSetup.PrintAreas.Count());
+                Assert.AreEqual(ws1.PageSetup.PrintAreas.PrintArea, ws2.PageSetup.PrintAreas.PrintArea);
 
                 Assert.AreEqual(ws1.PageSetup.Header.Left.GetText(XLHFOccurrence.AllPages), ws2.PageSetup.Header.Left.GetText(XLHFOccurrence.AllPages));
                 Assert.AreEqual(ws1.PageSetup.Footer.Right.GetText(XLHFOccurrence.OddPages), ws2.PageSetup.Footer.Right.GetText(XLHFOccurrence.OddPages));

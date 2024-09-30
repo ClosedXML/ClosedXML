@@ -1,14 +1,19 @@
 #nullable disable
 
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Parser;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPrintAreas : IXLPrintAreas
+    internal class XLPrintAreas : IXLPrintAreas, IWorkbookListener
     {
-        List<IXLRange> ranges = new List<IXLRange>();
+        public string PrintArea { get; private set; }
+
         private XLWorksheet worksheet;
+
         public XLPrintAreas(XLWorksheet worksheet)
         {
             this.worksheet = worksheet;
@@ -16,43 +21,54 @@ namespace ClosedXML.Excel
 
         public XLPrintAreas(XLPrintAreas defaultPrintAreas, XLWorksheet worksheet)
         {
-            ranges = defaultPrintAreas.ranges.ToList();
+            PrintArea = defaultPrintAreas.PrintArea;
             this.worksheet = worksheet;
         }
 
         public void Clear()
         {
-            ranges.Clear();
+            PrintArea = null;
         }
 
         public void Add(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn)
         {
-            ranges.Add(worksheet.Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn));
+            AddRange(worksheet.Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn));
         }
 
         public void Add(string rangeAddress)
         {
-            ranges.Add(worksheet.Range(rangeAddress));
+            AddRange(worksheet.Range(rangeAddress));
         }
 
         public void Add(string firstCellAddress, string lastCellAddress)
         {
-            ranges.Add(worksheet.Range(firstCellAddress, lastCellAddress));
+            AddRange(worksheet.Range(firstCellAddress, lastCellAddress));
         }
 
         public void Add(IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
-            ranges.Add(worksheet.Range(firstCellAddress, lastCellAddress));
+            AddRange(worksheet.Range(firstCellAddress, lastCellAddress));
         }
 
-        public IEnumerator<IXLRange> GetEnumerator()
+        private void AddRange(XLRange range)
         {
-            return ranges.GetEnumerator();
+            AddFormula(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public void AddFormula(string formula)
         {
-            return GetEnumerator();
+            if (string.IsNullOrWhiteSpace(PrintArea))
+                PrintArea = formula;
+            else
+                PrintArea += "," + formula;
+        }
+
+        public void OnSheetRenamed(string oldSheetName, string newSheetName)
+        {
+            PrintArea = FormulaConverter.ModifyA1(PrintArea, 1, 1, new RenameRefModVisitor
+            {
+                Sheets = new Dictionary<string, string> { { oldSheetName, newSheetName } }
+            });
         }
     }
 }

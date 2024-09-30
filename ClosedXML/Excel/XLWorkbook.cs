@@ -3,6 +3,7 @@
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Graphics;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -294,6 +295,7 @@ namespace ClosedXML.Excel
         }
 
 #nullable enable
+
         [Obsolete($"Use {nameof(DefinedName)} instead.")]
         public IXLDefinedName? NamedRange(String name) => DefinedName(name);
 
@@ -302,11 +304,11 @@ namespace ClosedXML.Excel
         {
             if (name.Contains("!"))
             {
-                var split = name.Split('!');
-                var first = split[0];
-                var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
-                var sheetlessName = split[1];
-                if (TryGetWorksheet(wsName, out XLWorksheet ws))
+                var indexOfExclamationMark = name.LastIndexOf('!');
+                var sheetName = name.Substring(0, indexOfExclamationMark).UnescapeSheetName();
+                var sheetlessName = name.Substring(indexOfExclamationMark + 1);
+
+                if (TryGetWorksheet(sheetName, out XLWorksheet ws))
                 {
                     if (ws.DefinedNames.TryGetScopedValue(sheetlessName, out var sheetDefinedName))
                         return sheetDefinedName;
@@ -344,12 +346,14 @@ namespace ClosedXML.Excel
                 return null;
             }
 
-            var split = rangeAddress.Split('!');
-            var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
+            var indexOfExclamationMark = rangeAddress.LastIndexOf('!');
+            var sheetName = rangeAddress.Substring(0, indexOfExclamationMark).UnescapeSheetName();
+            var range = rangeAddress.Substring(indexOfExclamationMark + 1);
+
+            if (TryGetWorksheet(sheetName, out XLWorksheet sheet))
             {
                 ws = sheet;
-                return sheet.Range(split[1]);
+                return sheet.Range(range);
             }
 
             ws = null;
@@ -364,12 +368,14 @@ namespace ClosedXML.Excel
                 return null;
             }
 
-            var split = cellAddress.Split('!');
-            var wsName = split[0].UnescapeSheetName();
-            if (TryGetWorksheet(wsName, out XLWorksheet sheet))
+            var indexOfExclamationMark = cellAddress.LastIndexOf('!');
+            var sheetName = cellAddress.Substring(0, indexOfExclamationMark).UnescapeSheetName();
+            var range = cellAddress.Substring(indexOfExclamationMark + 1);
+
+            if (TryGetWorksheet(sheetName, out XLWorksheet sheet))
             {
                 ws = sheet;
-                return sheet.Cell(split[1]);
+                return sheet.Cell(range);
             }
 
             ws = null;
@@ -872,12 +878,10 @@ namespace ClosedXML.Excel
             Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
         }
 
-
         public void Dispose()
         {
             // Leave this empty so that Janitor.Fody can do its work
         }
-
 
         public Boolean Use1904DateSystem { get; set; }
 

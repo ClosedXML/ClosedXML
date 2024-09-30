@@ -17,7 +17,6 @@ using System.Xml.Linq;
 using ClosedXML.Excel.IO;
 using ClosedXML.Parser;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
-using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
@@ -536,6 +535,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+
             LoadDefinedNames(workbook);
 
             PivotTableCacheDefinitionPartReader.Load(workbookPart, this);
@@ -1002,24 +1002,18 @@ namespace ClosedXML.Excel
                 var localSheetId = -1;
                 if (definedName.LocalSheetId?.HasValue ?? false) localSheetId = Convert.ToInt32(definedName.LocalSheetId.Value);
 
-                if (name == "_xlnm.Print_Area")
+                if (name == "_xlnm.Print_Area" && !string.IsNullOrWhiteSpace(definedName.Text))
                 {
-                    var fixedNames = validateDefinedNames(definedName.Text.Split(','));
-                    foreach (string area in fixedNames)
+                    if (definedName.LocalSheetId is null)
                     {
-                        if (area.Contains("["))
+                        PageOptions.PrintAreas.AddFormula(definedName.Text);
+                    }
+                    else
+                    {
+                        var ws = WorksheetsInternal.FirstOrDefault<XLWorksheet>(w => w.SheetId == (localSheetId + 1));
+                        if (ws is not null)
                         {
-                            var ws = WorksheetsInternal.FirstOrDefault<XLWorksheet>(w => w.SheetId == (localSheetId + 1));
-                            if (ws != null)
-                            {
-                                ws.PageSetup.PrintAreas.Add(area);
-                            }
-                        }
-                        else
-                        {
-                            ParseReference(area, out String sheetName, out String sheetArea);
-                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0 || sheetName.Length == 0))
-                                WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                            ws.PageSetup.PrintAreas.AddFormula(definedName.Text);
                         }
                     }
                 }
@@ -1046,7 +1040,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static Regex definedNameRegex = new Regex(@"\A('?).*\1!.*\z", RegexOptions.Compiled);
+        private static readonly Regex definedNameRegex = new Regex(@"\A('.*'|[^ ]+)!.*\z", RegexOptions.Compiled);
 
         private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
@@ -1106,15 +1100,20 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out string sheetName, out string sheetArea)
         {
             var sections = item.Trim().Split('!');
-            if (sections.Count() == 1)
+            if (sections.Length == 1)
             {
                 sheetName = string.Empty;
                 sheetArea = item;
             }
-            else
+            else if (sections.Length == 2)
             {
                 sheetName = string.Join("!", sections.Take(sections.Length - 1)).UnescapeSheetName();
                 sheetArea = sections[sections.Length - 1];
+            }
+            else
+            {
+                sheetName = item.Substring(0, item.LastIndexOf('!')).UnescapeSheetName();
+                sheetArea = item.Substring(item.LastIndexOf('!'));
             }
         }
 
@@ -1716,9 +1715,11 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.Equal:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, true, connector);
                                 break;
+
                             case XLFilterOperator.NotEqual:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, false, connector);
                                 break;
+
                             default:
                                 // OOXML allows only string, so do your best to convert back to a properly typed
                                 // variable. It's not perfect, but let's mimic Excel.
