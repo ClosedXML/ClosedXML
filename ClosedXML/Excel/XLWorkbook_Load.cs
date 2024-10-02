@@ -26,38 +26,39 @@ using static ClosedXML.Excel.XLPredefinedFormat.DateTime;
 namespace ClosedXML.Excel
 {
     using Ap;
+    using DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments;
     using Drawings;
     using Op;
     using System.Drawing;
 
     public partial class XLWorkbook
     {
-        private void Load(String file)
+        private void Load(String file, LoadOptions loadOptions)
         {
-            LoadSheets(file);
+            LoadSheets(file, loadOptions);
         }
 
-        private void Load(Stream stream)
+        private void Load(Stream stream, LoadOptions loadOptions)
         {
-            LoadSheets(stream);
+            LoadSheets(stream, loadOptions);
         }
 
-        private void LoadSheets(String fileName)
+        private void LoadSheets(String fileName, LoadOptions loadOptions)
         {
             using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+                LoadSpreadsheetDocument(dSpreadsheet, loadOptions);
         }
 
-        private void LoadSheets(Stream stream)
+        private void LoadSheets(Stream stream, LoadOptions loadOptions)
         {
             using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+                LoadSpreadsheetDocument(dSpreadsheet, loadOptions);
         }
 
-        private void LoadSheetsFromTemplate(String fileName)
+        private void LoadSheetsFromTemplate(String fileName, LoadOptions loadOptions)
         {
             using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
-                LoadSpreadsheetDocument(dSpreadsheet);
+                LoadSpreadsheetDocument(dSpreadsheet, loadOptions);
 
             // If we load a workbook as a template, we have to treat it as a "new" workbook.
             // The original file will NOT be copied into place before changes are applied
@@ -91,7 +92,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
+        private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet, LoadOptions loadOptions)
         {
             var context = new LoadContext();
             ShapeIdManager = new XLIdManager();
@@ -452,6 +453,31 @@ namespace ClosedXML.Excel
 
                 #region LoadComments
 
+                // TODO: add new variant to ThreadedCommentLoading to be able to support threaded comments natively.
+                //    Check which elements can be contained in a threaded coment and how comments relate to each other (threads/tree).
+                if (loadOptions.ThreadedCommentLoading == ThreadedCommentLoading.ConvertToNotes)
+                {
+                    if (worksheetPart.WorksheetThreadedCommentsParts != null)
+                    {
+                        foreach (var threadedCommentPart in worksheetPart.WorksheetThreadedCommentsParts)
+                        {
+                            foreach (var threadedComment in threadedCommentPart.RootElement.Elements<ThreadedComment> ())
+                            {
+                                // find cell by reference
+                                var cell = ws.Cell (threadedComment.Ref);
+
+                                // author etc. is handled by the backward-copmatible entries WorksheetCommentsPart
+                                foreach (var threadedCommentText in threadedComment.Elements<ThreadedCommentText> ())
+                                {
+                                    var xlComment = cell.GetComment() ?? cell.CreateComment ();
+
+                                    xlComment.AddText (threadedCommentText.InnerText.FixNewLines ());
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (worksheetPart.WorksheetCommentsPart != null)
                 {
                     var root = worksheetPart.WorksheetCommentsPart.Comments;
@@ -477,12 +503,25 @@ namespace ClosedXML.Excel
                             shapeIdString = shapeIdString.Substring(8);
 
                         int? shapeId = int.TryParse(shapeIdString, out int sid) ? (int?)sid : null;
-                        var xlComment = cell.CreateComment(shapeId);
+
+                        XLComment xlComment = null;
+                        if (loadOptions.ThreadedCommentLoading == ThreadedCommentLoading.ConvertToNotes)
+                        {
+                            xlComment = cell.GetComment () ?? cell.CreateComment (shapeId);
+
+                             if (shapeId != null)
+                                xlComment.ShapeId = shapeId.Value;
+                        }
+                        else
+                        {
+                            xlComment = cell.CreateComment(shapeId);
+                        }
 
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
                         ShapeIdManager.Add(xlComment.ShapeId);
 
-                        var runs = c.GetFirstChild<CommentText>().Elements<Run>();
+                        var commentText = c.GetFirstChild<CommentText> ();
+                        var runs = commentText.Elements<Run> ();
                         foreach (var run in runs)
                         {
                             var runProperties = run.RunProperties;

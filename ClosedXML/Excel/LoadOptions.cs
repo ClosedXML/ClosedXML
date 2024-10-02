@@ -6,11 +6,26 @@ using ClosedXML.Graphics;
 namespace ClosedXML.Excel
 {
     /// <summary>
+    /// An enum to define how threaded comments should be handled during loading of spreadsheets.
+    /// </summary>
+    public enum ThreadedCommentLoading
+    {
+        /// <summary>
+        /// Do not handle threaded comments at all.
+        /// </summary>
+        Skip,
+        /// <summary>
+        /// Opt into Converting threaded comments to the older format (also known as "Notes" in MS Excel).
+        /// </summary>
+        ConvertToNotes
+    }
+
+    /// <summary>
     /// A class that defines various aspects of a newly created workbook.
     /// </summary>
     public class LoadOptions
     {
-        private Point _dpi = new(96, 96);
+        private Point _dpi = new (96, 96);
 
         /// <summary>
         /// A graphics engine that will be used for workbooks without explicitly set engine.
@@ -34,7 +49,12 @@ namespace ClosedXML.Excel
         public Point Dpi
         {
             get => _dpi;
-            set => _dpi = value.X > 0 && value.Y > 0 ? value : throw new ArgumentException("DPI must be positive");
+            set => _dpi = value.X > 0 && value.Y > 0 ? value : throw new ArgumentException ("DPI must be positive");
         }
+
+        /// <summary>
+        /// Define how threaded comments should be handled during loading of spreadsheets.
+        /// </summary>
+        public ThreadedCommentLoading ThreadedCommentLoading { get; set; } = ThreadedCommentLoading.Skip;
     }
 }
