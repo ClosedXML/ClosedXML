@@ -195,9 +195,67 @@ namespace ClosedXML.Tests.Excel.Comments
                 static void AssertComment (string expectedComments, XLWorkbook wb)
                 {
                     var ws = wb.Worksheets.First ();
-                    var c = ws.FirstCellUsed ();
-                    Assert.AreEqual (expectedComments, c.GetComment ().Text);
-                    Assert.AreEqual ("tc={49C52447-16DF-491E-8BD1-273F700714C6}", c.GetComment ().Author);
+                    var c1 = ws.Cell ("A1");
+                    Assert.AreEqual (expectedComments, c1.GetComment ().Text);
+                    Assert.AreEqual ("tc={49C52447-16DF-491E-8BD1-273F700714C6}", c1.GetComment ().Author);
+
+                    var c2 = ws.Cell ("A2");
+                    Assert.AreEqual ("Author:\r\nA note", c2.GetComment ().Text);
+                    Assert.AreEqual ("tc={49C52447-16DF-491E-8BD1-273F700714C6}", c1.GetComment ().Author);
+                }
+            });
+        }
+
+        [Test]
+        public void CanRemoveCommentsWithoutAddingOthers_Regression ()
+        {
+            Assert.Multiple (() =>
+            {
+                using (var stream = new MemoryStream ())
+                {
+                    // arange
+                    using (var wb = new XLWorkbook ())
+                    {
+                        var sheet = wb.AddWorksheet ("sheet1");
+
+                        var a1 = sheet.Cell ("A1");
+                        var b5 = sheet.Cell ("B5");
+
+                        a1.SetValue ("test a1");
+                        b5.SetValue ("test b5");
+
+                        a1.GetComment().AddText ("no comment");
+
+                        var cellsWithComments3 = wb.Worksheets.SelectMany (_ => _.CellsUsed (XLCellsUsedOptions.Comments)).ToArray ();
+
+                        Assert.That (cellsWithComments3.Length, Is.EqualTo (1));
+
+                        wb.SaveAs (stream, true);
+                    }
+
+                    stream.Position = 0;
+
+                    using (var wb = new XLWorkbook (stream))
+                    {
+                        var cellsWithComments = wb.Worksheets.SelectMany (_ => _.CellsUsed (XLCellsUsedOptions.Comments)).ToArray ();
+
+                        Assert.That (cellsWithComments.Length, Is.EqualTo (1));
+
+                        cellsWithComments.ForEach (_ => _.Clear (XLClearOptions.Comments));
+
+                        wb.Save ();
+                    }
+
+                    // assert
+                    stream.Position = 0;
+
+                    using (var wb = new XLWorkbook (stream))
+                    {
+                        var cellsWithComments = wb.Worksheets.SelectMany (_ => _.CellsUsed (XLCellsUsedOptions.Comments)).ToArray ();
+
+                        // BUG? when adding a1.SetValue ("test a1"); this will return at least one cell instead of none
+                        Assert.That (cellsWithComments, Is.Empty);
+                    }
                 }
             });
         }

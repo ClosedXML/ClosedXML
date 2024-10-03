@@ -885,15 +885,18 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            var isValueEmpty = SliceCellValue.Type switch
+            if (options.HasFlag (XLCellsUsedOptions.Contents))
             {
-                XLDataType.Blank => true,
-                XLDataType.Text => SliceCellValue.GetText().Length == 0,
-                _ => false
-            };
+                var isValueEmpty = SliceCellValue.Type switch
+                {
+                    XLDataType.Blank => true,
+                    XLDataType.Text => SliceCellValue.GetText().Length == 0,
+                    _ => false
+                };
 
-            if (!isValueEmpty || HasFormula)
-                return false;
+                if (!isValueEmpty || HasFormula)
+                    return false;
+            }
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
