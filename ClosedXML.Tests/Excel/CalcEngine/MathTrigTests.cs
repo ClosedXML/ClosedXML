@@ -2140,26 +2140,49 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SumProduct()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().InsertData(Enumerable.Range(1, 10));
-                ws.FirstCell().CellRight().InsertData(Enumerable.Range(1, 10).Reverse());
+            ws.FirstCell().InsertData(Enumerable.Range(1, 10));
+            ws.FirstCell().CellRight().InsertData(Enumerable.Range(1, 10).Reverse());
 
-                Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
-                Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
-                Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+            Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
+            Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
+            Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
-                Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
 
-                // Blank cells and cells with text should be treated as zeros
-                ws.Range("A1:A5").Clear();
-                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+            // Scalar, one element array and single cell area are compatible
+            Assert.AreEqual(60, ws.Evaluate("SUMPRODUCT(A5, 4, {3})"));
 
-                ws.Range("A1:A5").SetValue("asdf");
-                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
-            }
+            // An array can be an argument
+            Assert.AreEqual(10, ws.Evaluate("SUMPRODUCT(A1:A3, {3;2;1})"));
+
+            // An array must have correct orientation, otherwise dimensions don't match
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("SUMPRODUCT(A1:A3, {3,2,1})"));
+
+            // Anything but number is counted as zero. The second array is zero for all values = result is 0.
+            Assert.AreEqual(0, ws.Evaluate("SUMPRODUCT({1,2,3,4}, {TRUE,FALSE,\"1\",\"\"})"));
+
+            // Any error returns error
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMPRODUCT({1,2}, {1,#N/A})"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMPRODUCT(A1, #N/A)"));
+            ws.Cell("A2").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMPRODUCT(A2, 5)"));
+
+            // Blank cells and cells with text should be treated as zeros
+            ws.Range("A1:A5").Clear();
+            Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+
+            // Non-number values are treated as zero
+            ws.Range("A1:A5").SetValue("asdf");
+            Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+
+            // Blank cell is considered as a blank and cause #VALUE! error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("SUMPRODUCT(Z1, 5)"));
+
+            // Blank value will cause #VALUE! error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("SUMPRODUCT(IF(TRUE,,), 5)"));
         }
 
         [Test]
