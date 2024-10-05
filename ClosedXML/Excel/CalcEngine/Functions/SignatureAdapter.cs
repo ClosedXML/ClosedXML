@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -235,6 +234,30 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     return err3;
 
                 return f(ctx, arg0, arg1, arg2, arg3);
+            };
+        }
+
+        /// <summary>
+        /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
+        /// that all <c>ReferenceArray</c> allocation is done once for a function. The method
+        /// shouldn't be used for functions that accept 3D references (e.g. SUMSQ). It is still
+        /// necessary to check all errors in the <paramref name="f"/>, adapt method doesn't do that
+        /// on its own (potential performance problem). The signature uses an array instead of
+        /// IReadOnlyList interface for performance reasons (can't JIT access props through interface).
+        /// </summary>
+        public static CalcEngineFunction Adapt(Func<CalcContext, Array[], AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var areas = new Array[args.Length];
+                for (var i = 0; i < args.Length; ++i)
+                {
+                    areas[i] = args[i].TryPickSingleOrMultiValue(out var scalar, out var array, ctx)
+                        ? new ScalarArray(scalar, 1, 1)
+                        : array;
+                }
+
+                return f(ctx, areas);
             };
         }
 

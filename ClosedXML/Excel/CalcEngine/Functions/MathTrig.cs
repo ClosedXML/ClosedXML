@@ -85,7 +85,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
-            ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("SUMPRODUCT", 1, 30, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
@@ -1027,40 +1027,32 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Sum();
         }
 
-        private static AnyValue SumProduct(CalcContext ctx, Span<AnyValue> args)
+        private static AnyValue SumProduct(CalcContext _, Array[] areas)
         {
-            if (args.Length < 1)
+            if (areas.Length < 1)
                 return XLError.IncompatibleValue;
 
             var width = 0;
             var height = 0;
 
             // Check that all arguments have same width and height.
-            foreach (var arg in args)
+            foreach (var area in areas)
             {
-                int argWidth;
-                int argHeight;
-                if (arg.TryPickSingleOrMultiValue(out var scalar, out var array, ctx))
-                {
-                    // We don't need to do this check for every value later, because scalar
-                    // blank value can only happen for 1x1.
-                    if (scalar.IsBlank)
-                        return XLError.IncompatibleValue;
+                var areaWidth = area.Width;
+                var areaHeight = area.Height;
 
-                    argWidth = 1;
-                    argHeight = 1;
-                }
-                else
-                {
-                    argWidth = array.Width;
-                    argHeight = array.Height;
-                }
+                // We don't need to do this check for every value later, because scalar
+                // blank value can only happen for 1x1.
+                if (areaWidth == 1 &&
+                    areaHeight == 1 &&
+                    area[0, 0].IsBlank)
+                    return XLError.IncompatibleValue;
 
                 // If this is the first argument, use it as a baseline width and height
-                if (width == 0) width = argWidth;
-                if (height == 0) height = argHeight;
+                if (width == 0) width = areaWidth;
+                if (height == 0) height = areaHeight;
 
-                if (width != argWidth || height != argHeight)
+                if (width != areaWidth || height != areaHeight)
                     return XLError.IncompatibleValue;
             }
 
@@ -1071,10 +1063,9 @@ namespace ClosedXML.Excel.CalcEngine
                 for (var colIdx = 0; colIdx < width; ++colIdx)
                 {
                     var product = 1.0;
-                    foreach (var arg in args)
+                    foreach (var area in areas)
                     {
-                        if (!arg.TryPickSingleOrMultiValue(out var scalar, out var array, ctx))
-                            scalar = array[rowIdx, colIdx];
+                        var scalar = area[rowIdx, colIdx];
 
                         if (scalar.TryPickError(out var error))
                             return error;
