@@ -12,7 +12,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
-            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
+            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, FunctionFlags.Range, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
             ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, AllowRange.All);
             //BETADIST	Returns the beta cumulative distribution function
             //BETAINV   Returns the inverse of the cumulative distribution function for a specified beta distribution
@@ -100,9 +100,48 @@ namespace ClosedXML.Excel.CalcEngine
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
 
-        private static object Average(List<Expression> p)
+        private static AnyValue Average(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).Average();
+            if (args.Length < 1)
+                return XLError.IncompatibleValue;
+
+            var sum = 0.0;
+            var count = 0;
+            foreach (var arg in args)
+            {
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    // Scalars are converted to number.
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    sum += number;
+                    count++;
+                }
+                else
+                {
+                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
+                        ? array
+                        : reference.GetCellsValues(ctx);
+                    foreach (var value in valuesIterator)
+                    {
+                        if (value.TryPickError(out var error))
+                            return error;
+
+                        // For arrays and references, only the number type is used. Other types are ignored.
+                        if (value.TryPickNumber(out var number))
+                        {
+                            sum += number;
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            if (count == 0)
+                return XLError.DivisionByZero;
+
+            return sum / count;
         }
 
         private static object AverageA(List<Expression> p)
@@ -144,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static OneOf<double, XLError> BinomDist(double x, double n, double p)
         {
-            if (!XLMath.CombinChecked(n ,x).TryPickT0(out var combinations, out var error))
+            if (!XLMath.CombinChecked(n, x).TryPickT0(out var combinations, out var error))
                 return error;
 
             x = Math.Floor(x);

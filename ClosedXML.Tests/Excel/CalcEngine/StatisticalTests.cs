@@ -25,7 +25,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = (double)ws.Evaluate("AVERAGE(G3:G45)");
             Assert.AreEqual(49.3255814, value, tolerance);
 
-            Assert.That(() => ws.Evaluate("AVERAGE(D3:D45)"), Throws.TypeOf<ApplicationException>());
+            // Column D contains only strings - no average, because non-number types are skipped
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("AVERAGE(D3:D45)"));
+
+            // Logical and text are converted when passed as scalar arguments
+            Assert.AreEqual(0.5, ws.Evaluate("AVERAGE(FALSE, TRUE, \"1\", \"0 0/2\")"));
+
+            // Non-numbers in array are skipped instead of being converted
+            Assert.AreEqual(-1, ws.Evaluate("AVERAGE({FALSE, TRUE, \"1\", \"0 0/2\", -1})"));
+
+            // Errors in scalar argument is propagated
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGE(1, #N/A)"));
+
+            // When a reference contains error, the result is error.
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGE(1, Z1)"));
+
+            // Blank scalar value is counted as 0
+            Assert.AreEqual(0.5, ws.Evaluate("AVERAGE(IF(TRUE,),1)"));
+
+            // Blank value in references are skipped
+            ws.Cell("Z1").Value = Blank.Value;
+            Assert.AreEqual(1, ws.Evaluate("AVERAGE(Z1,1)"));
         }
 
         [TestCase(6, 10, 0.5, 0.205078125)]
@@ -493,7 +514,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             //Act - Assert
             Assert.Throws<ApplicationException>(() =>
             {
-                ws.Evaluate("AVERAGE(D3:D45)");
+                ws.Evaluate("MEDIAN(D3:D45)");
             });
         }
 
