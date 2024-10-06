@@ -790,17 +790,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Var()
         {
             var ws = workbook.Worksheets.First();
-            double value;
-            Assert.That(() => ws.Evaluate(@"=VAR(D3:D45)"), Throws.InvalidOperationException);
 
-            value = (double)ws.Evaluate(@"=VAR(H3:H45)");
-            Assert.AreEqual(2241.560169, value, tolerance);
+            // Example from specification
+            Assert.AreEqual(2683.2, ws.Evaluate("VAR(1202,1220,1323,1254,1302)"));
 
-            value = (double)ws.Evaluate(@"=VAR(H:H)");
-            Assert.AreEqual(2241.560169, value, tolerance);
+            // Only non-convertible text in D column, thus less than 2 samples.
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VAR(D3:D45)"));
 
-            value = (double)workbook.Evaluate(@"=VAR(Data!H:H)");
-            Assert.AreEqual(2241.560169, value, tolerance);
+            // Calculate VAR from numeric values (reference contains only numbers)
+            Assert.AreEqual(2241.560169, (double)ws.Evaluate("VAR(H3:H45)"), tolerance);
+
+            // Ignores text values in the H column and only uses numeric ones, same as reference with only number
+            Assert.AreEqual(2241.560169, (double)ws.Evaluate("VAR(H:H)"), tolerance);
+            Assert.AreEqual(2241.560169, (double)workbook.Evaluate("VAR(Data!H:H)"), tolerance);
+
+            // Need at least two samples, otherwise returns error
+            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VAR({\"hello\"})"));
+            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VAR(5)"));
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR(5, 6)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR(FALSE, 1)"));
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR(0, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR(0, \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("VAR(0, 1, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.5, workbook.Evaluate("VAR({0, 1, \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument only uses number, ignores blanks, logical and text
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = true;
+            ws.Cell("Z3").Value = "100";
+            ws.Cell("Z4").Value = "hello";
+            ws.Cell("Z5").Value = 0;
+            ws.Cell("Z6").Value = 1;
+            Assert.AreEqual(0.5, ws.Evaluate("VAR(Z1:Z6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VAR(0, 1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VAR({0, 1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VAR(Z1)"));
         }
 
         [Test]
