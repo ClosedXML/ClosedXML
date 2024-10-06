@@ -849,17 +849,58 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void VarP()
         {
             var ws = workbook.Worksheets.First();
-            double value;
-            Assert.That(() => ws.Evaluate(@"=VARP(D3:D45)"), Throws.InvalidOperationException);
 
-            value = (double)ws.Evaluate(@"=VARP(H3:H45)");
-            Assert.AreEqual(2189.430863, value, tolerance);
+            // Example from specification
+            Assert.AreEqual(2146.56, (double)ws.Evaluate("VARP(1202,1220,1323,1254,1302)"), tolerance);
 
-            value = (double)ws.Evaluate(@"=VARP(H:H)");
-            Assert.AreEqual(2189.430863, value, tolerance);
+            // Only non-convertible text in D column, thus less than 1 sample.
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARP(D3:D45)"));
 
-            value = (double)workbook.Evaluate(@"=VARP(Data!H:H)");
-            Assert.AreEqual(2189.430863, value, tolerance);
+            // Calculate VARP from numeric values (reference contains only numbers)
+            Assert.AreEqual(2189.430863, (double)ws.Evaluate("VARP(H3:H45)"), tolerance);
+
+            // Ignores text values in the H column and only uses numeric ones, same as reference with only number
+            Assert.AreEqual(2189.430863, (double)ws.Evaluate("VARP(H:H)"), tolerance);
+            Assert.AreEqual(2189.430863, (double)workbook.Evaluate("VARP(Data!H:H)"), tolerance);
+
+            // Need at least one sample, otherwise returns error
+            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VARP({\"hello\"})"));
+            Assert.AreEqual(0, workbook.Evaluate("VARP(5)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.25, workbook.Evaluate("VARP(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.25, workbook.Evaluate("VARP(FALSE, 1)"));
+            Assert.AreEqual(0.25, workbook.Evaluate("VARP(0, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.25, workbook.Evaluate("VARP(0, \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("VARP(0, 1, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.25, workbook.Evaluate("VARP({0, 1, \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument only uses number, ignores blanks, logical and text
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = true;
+            ws.Cell("Z3").Value = "100";
+            ws.Cell("Z4").Value = "hello";
+            ws.Cell("Z5").Value = 0;
+            ws.Cell("Z6").Value = 1;
+            Assert.AreEqual(0.25, ws.Evaluate("VARP(Z1:Z6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARP(0, 1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARP({0, 1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARP(Z1)"));
         }
 
         [Test]

@@ -92,10 +92,10 @@ namespace ClosedXML.Excel.CalcEngine
             //TTEST	Returns the probability associated with a Student's t-test
             ce.RegisterFunction("VAR", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VARA", 1, int.MaxValue, VarA, AllowRange.All);
-            ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, AllowRange.All);
+            ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, AllowRange.All);
             ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP);
+            ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
             //WEIBULL	Returns the Weibull distribution
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
@@ -452,9 +452,15 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).Var();
         }
 
-        private static object VarP(List<Expression> p)
+        private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).VarP();
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tally, out var error))
+                return error;
+
+            if (tally.Count < 1)
+                return XLError.DivisionByZero;
+
+            return tally.SquareDiffSum / tally.Count;
         }
 
         private static object VarPA(List<Expression> p)
