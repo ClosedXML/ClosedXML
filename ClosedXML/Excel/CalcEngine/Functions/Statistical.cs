@@ -406,18 +406,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
-                return error;
-
-            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
-            var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
-            {
-                var diff = (sampleValue - stdDev.SampleMean);
-                var sum = stdDev.SquareDiffSum + diff * diff;
-                return (sum, stdDev.Count + 1, stdDev.SampleMean);
-            });
-
-            if (!result.TryPickT0(out var tallied, out error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tallied, out var error))
                 return error;
 
             if (tallied.Count <= 1)
@@ -433,18 +422,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
-                return error;
-
-            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
-            var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
-            {
-                var diff = sampleValue - stdDev.SampleMean;
-                var sum = stdDev.SquareDiffSum + diff * diff;
-                return (sum, stdDev.Count + 1, stdDev.SampleMean);
-            });
-
-            if (!result.TryPickT0(out var tallied, out error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tallied, out var error))
                 return error;
 
             if (tallied.Count < 1)
@@ -529,6 +507,28 @@ namespace ClosedXML.Excel.CalcEngine
         private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
             return new Tally(p, numbersOnly);
+        }
+
+        /// <summary>
+        /// Calculate <c>SUM((x_i - mean_x)^2)</c> and number of samples.
+        /// </summary>
+        private static OneOf<(double SquareDiffSum, int Count), XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
+        {
+            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
+                return error;
+
+            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
+            var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
+            {
+                var diff = sampleValue - stdDev.SampleMean;
+                var sum = stdDev.SquareDiffSum + diff * diff;
+                return (sum, stdDev.Count + 1, stdDev.SampleMean);
+            });
+
+            if (!result.TryPickT0(out var tallied, out error))
+                return error;
+
+            return (tallied.SquareDiffSum, tallied.Count);
         }
 
         /// <summary>
