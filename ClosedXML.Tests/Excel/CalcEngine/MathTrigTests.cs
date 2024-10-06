@@ -1368,8 +1368,53 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Product()
         {
-            object actual = XLWorkbook.EvaluateExpr("Product(2,3,4)");
-            Assert.AreEqual(24.0, actual);
+            Assert.AreEqual(24d, XLWorkbook.EvaluateExpr("PRODUCT(2,3,4)"));
+
+            // Examples from specification
+            Assert.AreEqual(1d, XLWorkbook.EvaluateExpr("PRODUCT(1)"));
+            Assert.AreEqual(120d, XLWorkbook.EvaluateExpr("PRODUCT(1,2,3,4,5)"));
+            Assert.AreEqual(24d, XLWorkbook.EvaluateExpr("PRODUCT({1,2;3,4})"));
+            Assert.AreEqual(120d, XLWorkbook.EvaluateExpr("PRODUCT({2,3},4,\"5\")"));
+
+            // If no arguments are passed, return 0
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr("PRODUCT({\"hello\"})"));
+
+            // Scalar blank is skipped
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("PRODUCT(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr("PRODUCT(FALSE, 1)"));
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("PRODUCT(2, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(5, XLWorkbook.EvaluateExpr("PRODUCT(\"5\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("PRODUCT(1, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(5, XLWorkbook.EvaluateExpr("PRODUCT({5, \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument only uses number, ignores blanks, logical and text
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = true;
+            ws.Cell("A3").Value = "100";
+            ws.Cell("A4").Value = "hello";
+            ws.Cell("A5").Value = 2;
+            ws.Cell("A6").Value = 3;
+            Assert.AreEqual(6, ws.Evaluate("PRODUCT(A1:A6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr("PRODUCT(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr("PRODUCT({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("A1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("PRODUCT(A1)"));
         }
 
         [Test]
