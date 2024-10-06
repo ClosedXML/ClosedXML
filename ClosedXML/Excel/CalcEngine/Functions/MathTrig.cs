@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ODD", 1, Odd);
             ce.RegisterFunction("PI", 0, Pi);
             ce.RegisterFunction("POWER", 2, Power);
-            ce.RegisterFunction("PRODUCT", 1, 255, Product);
+            ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("QUOTIENT", 2, Quotient);
             ce.RegisterFunction("RADIANS", 1, Radians);
             ce.RegisterFunction("RAND", 0, Rand);
@@ -695,12 +695,40 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Pow(p[0], p[1]);
         }
 
-        private static object Product(List<Expression> p)
+        private static AnyValue Product(CalcContext ctx, Span<AnyValue> args)
         {
-            if (p.Count == 0) return 0;
-            Double total = 1;
-            p.ForEach(v => total *= v);
-            return total;
+            double? product = null;
+            foreach (var arg in args)
+            {
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    if (scalar.IsBlank)
+                        continue;
+
+                    // Scalars are converted to number.
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    product = product.HasValue ? product.Value * number : number;
+                }
+                else
+                {
+                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
+                        ? array
+                        : ctx.GetNonBlankValues(reference);
+                    foreach (var value in valuesIterator)
+                    {
+                        if (value.TryPickError(out var error))
+                            return error;
+
+                        // For arrays and references, only the number type is used. Other types are ignored.
+                        if (value.TryPickNumber(out var number))
+                            product = product.HasValue ? product.Value * number : number;
+                    }
+                }
+            }
+
+            return product ?? 0;
         }
 
         private static object Quotient(List<Expression> p)
