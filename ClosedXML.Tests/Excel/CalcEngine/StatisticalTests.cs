@@ -591,18 +591,38 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Min()
         {
             var ws = workbook.Worksheets.First();
-            XLCellValue value;
-            value = ws.Evaluate(@"=MIN(D3:D45)");
-            Assert.AreEqual(0, value);
+            Assert.AreEqual(0, ws.Evaluate("MIN(D3:D45)"));
+            Assert.AreEqual(2, ws.Evaluate("MIN(G3:G45)"));
+            Assert.AreEqual(2, ws.Evaluate("MIN(G:G)"));
+            Assert.AreEqual(2, workbook.Evaluate("MIN(Data!G:G)"));
 
-            value = ws.Evaluate(@"=MIN(G3:G45)");
-            Assert.AreEqual(2, value);
+            // Scalar blank argument is converted
+            Assert.AreEqual(0, workbook.Evaluate("MIN(IF(TRUE,,), 1)"));
 
-            value = ws.Evaluate(@"=MIN(G:G)");
-            Assert.AreEqual(2, value);
+            // Scalar logical arguments is converted
+            Assert.AreEqual(0, workbook.Evaluate("MIN(FALSE, 1)"));
+            Assert.AreEqual(1, workbook.Evaluate("MIN(TRUE, 2)"));
 
-            value = workbook.Evaluate(@"=MIN(Data!G:G)");
-            Assert.AreEqual(2, value);
+            // Scalar text argument is converted is possible
+            Assert.AreEqual(2, workbook.Evaluate("MIN(\"2\", 3)"));
+
+            // Scalar text argument is not a number returns error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("MIN(\"hello\", 3)"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(5, workbook.Evaluate("MIN({5, TRUE, FALSE, \"1\", \"hello\"})"));
+
+            // Reference non-number arguments are ignored
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = "1";
+            ws.Cell("Z3").Value = "hello";
+            ws.Cell("Z4").Value = false;
+            ws.Cell("Z5").Value = true;
+            ws.Cell("Z6").Value = 5;
+            Assert.AreEqual(5, ws.Evaluate("MIN(Z1:Z6)"));
+
+            // If there is no value, return 0
+            Assert.AreEqual(0, ws.Evaluate("MIN({\"hello\"})"));
         }
 
         [Test]

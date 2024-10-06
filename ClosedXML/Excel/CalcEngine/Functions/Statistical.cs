@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MAX", 1, 255, Max, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, AllowRange.All);
             ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, AllowRange.All);
-            ce.RegisterFunction("MIN", 1, int.MaxValue, Min, AllowRange.All);
+            ce.RegisterFunction("MIN", 1, int.MaxValue, Min, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, AllowRange.All);
             //MODE	Returns the most common value in a data set
             //NEGBINOMDIST	Returns the negative binomial distribution
@@ -396,9 +396,15 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).Median();
         }
 
-        private static object Min(List<Expression> p)
+        private static AnyValue Min(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).Min();
+            if (args.Length < 1)
+                return XLError.IncompatibleValue;
+
+            double? min = null;
+            var result = TallyNumbers(ctx, args, min, static (min, itemValue) => min.HasValue ? Math.Min(min.Value, itemValue) : itemValue);
+
+            return result.Match<AnyValue>(m => m ?? 0, e => e);
         }
 
         private static object MinA(List<Expression> p)
@@ -497,6 +503,43 @@ namespace ClosedXML.Excel.CalcEngine
         private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
             return new Tally(p, numbersOnly);
+        }
+
+        /// <summary>
+        /// The method tries to convert scalar arguments to numbers, but ignores non-numbers in
+        /// reference/array. Any error found is propagated to the result.
+        /// </summary>
+        private static OneOf<T, XLError> TallyNumbers<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> tallyFunc)
+        {
+            var tally = initValue;
+            foreach (var arg in args)
+            {
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    // Scalars are converted to number.
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    tally = tallyFunc(tally, number);
+                }
+                else
+                {
+                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
+                        ? array
+                        : ctx.GetNonBlankValues(reference);
+                    foreach (var value in valuesIterator)
+                    {
+                        if (value.TryPickError(out var error))
+                            return error;
+
+                        // For arrays and references, only the number type is used. Other types are ignored.
+                        if (value.TryPickNumber(out var number))
+                            tally = tallyFunc(tally, number);
+                    }
+                }
+            }
+
+            return tally;
         }
     }
 }
