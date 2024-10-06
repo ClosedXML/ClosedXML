@@ -90,11 +90,11 @@ namespace ClosedXML.Excel.CalcEngine
             //TREND	Returns values along a linear trend
             //TRIMMEAN	Returns the mean of the interior of a data set
             //TTEST	Returns the probability associated with a Student's t-test
-            ce.RegisterFunction("VAR", 1, int.MaxValue, Var, AllowRange.All);
+            ce.RegisterFunction("VAR", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VARA", 1, int.MaxValue, VarA, AllowRange.All);
             ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, AllowRange.All);
             ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, AllowRange.All);
-            ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var);
+            ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP);
             //WEIBULL	Returns the Weibull distribution
             //ZTEST	Returns the one-tailed probability-value of a z-test
@@ -436,9 +436,15 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).StdP();
         }
 
-        private static object Var(List<Expression> p)
+        private static AnyValue Var(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).Var();
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tally, out var error))
+                return error;
+
+            if (tally.Count <= 1)
+                return XLError.DivisionByZero;
+
+            return tally.SquareDiffSum / (tally.Count - 1);
         }
 
         private static object VarA(List<Expression> p)
@@ -510,7 +516,11 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Calculate <c>SUM((x_i - mean_x)^2)</c> and number of samples.
+        /// Calculate <c>SUM((x_i - mean_x)^2)</c> and number of samples. This method uses two-pass algorithm.
+        /// There are several one-pass algorithms, but they are not numerically stable. In this case, accuracy
+        /// takes precedence (plus VAR/STDEV are not a very frequently used function). Excel might have used
+        /// those one-pass formulas in the past (see <em>Statistical flaws in Excel</em>), but doesn't seem to
+        /// be using them anymore.
         /// </summary>
         private static OneOf<(double SquareDiffSum, int Count), XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
         {
