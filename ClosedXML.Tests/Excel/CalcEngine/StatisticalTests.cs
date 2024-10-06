@@ -599,14 +599,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Scalar blank argument is converted
             Assert.AreEqual(0, workbook.Evaluate("MIN(IF(TRUE,,), 1)"));
 
-            // Scalar logical arguments is converted
+            // Scalar logical argument is converted
             Assert.AreEqual(0, workbook.Evaluate("MIN(FALSE, 1)"));
             Assert.AreEqual(1, workbook.Evaluate("MIN(TRUE, 2)"));
 
-            // Scalar text argument is converted is possible
+            // Scalar text argument is converted if possible
             Assert.AreEqual(2, workbook.Evaluate("MIN(\"2\", 3)"));
 
-            // Scalar text argument is not a number returns error
+            // Scalar text argument that is not convertible returns error
             Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("MIN(\"hello\", 3)"));
 
             // Array non-number arguments are ignored
