@@ -100,6 +100,30 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
+        /// This method goes over slices and returns a value for each non-blank cell. Because it is using
+        /// slice iterators, it scales with number of cells, not a size of area in reference (i.e. it works
+        /// fine even if reference is <c>A1:XFD1048576</c>). It also works for 3D references.  
+        /// </summary>
+        internal IEnumerable<ScalarValue> GetNonBlankValues(Reference reference)
+        {
+            foreach (var area in reference.Areas)
+            {
+                var sheet = area.Worksheet ?? Worksheet;
+                var range = XLSheetRange.FromRangeAddress(area);
+
+                // A value can be either in a non-empty value slice or a empty cell with a formula.
+                var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
+                while (enumerator.MoveNext())
+                {
+                    var point = enumerator.Current;
+                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                    if (!scalarValue.IsBlank)
+                        yield return scalarValue;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get cells with a value for a reference.
         /// </summary>
         /// <param name="reference">Reference for which to return cells.</param>
