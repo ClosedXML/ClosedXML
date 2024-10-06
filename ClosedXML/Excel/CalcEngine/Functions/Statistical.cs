@@ -23,7 +23,7 @@ namespace ClosedXML.Excel.CalcEngine
             //CHITEST	Returns the test for independence
             //CONFIDENCE	Returns the confidence interval for a population mean
             //CORREL	Returns the correlation coefficient between two data sets
-            ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, AllowRange.All);
+            ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
             ce.RegisterFunction("COUNTIF", 2, CountIf, AllowRange.Only, 0);
@@ -195,9 +195,35 @@ namespace ClosedXML.Excel.CalcEngine
             return binomDist;
         }
 
-        private static object Count(List<Expression> p)
+        private static AnyValue Count(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).Count();
+            if (args.Length < 1)
+                return XLError.IncompatibleValue;
+
+            var count = 0;
+            foreach (var arg in args)
+            {
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    // Scalars are converted to number.
+                    if (scalar.ToNumber(ctx.Culture).TryPickT0(out _, out _))
+                        count++;
+                }
+                else
+                {
+                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
+                        ? array
+                        : ctx.GetNonBlankValues(reference);
+                    foreach (var value in valuesIterator)
+                    {
+                        // For arrays and references, only the number type is used. Other types are ignored.
+                        if (value.TryPickNumber(out var number))
+                            count++;
+                    }
+                }
+            }
+
+            return count;
         }
 
         private static AnyValue CountA(CalcContext ctx, Span<AnyValue> values)

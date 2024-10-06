@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -136,7 +137,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal IEnumerable<XLCell> GetCells(XLSheetRange range, Func<XLCell, Boolean>? predicate = null)
         {
-            var enumerator = new CellsEnumerator(range, this);
+            var enumerator = new SlicesEnumerator(range, this);
 
             while (enumerator.MoveNext())
             {
@@ -309,7 +310,7 @@ namespace ClosedXML.Excel
 
             foreach (var columnNumber in usedColumns)
             {
-                var enumerator = new CellsEnumerator(new XLSheetRange(range.FirstPoint.Row, columnNumber, range.LastPoint.Row, columnNumber), this);
+                var enumerator = new SlicesEnumerator(new XLSheetRange(range.FirstPoint.Row, columnNumber, range.LastPoint.Row, columnNumber), this);
                 while (enumerator.MoveNext())
                 {
                     var cell = new XLCell(_ws, enumerator.Current);
@@ -326,7 +327,7 @@ namespace ClosedXML.Excel
 
         private int FindUsedRow(XLSheetRange searchRange, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate, bool reverse)
         {
-            var enumerator = new CellsEnumerator(searchRange, this, reverse);
+            var enumerator = new SlicesEnumerator(searchRange, this, reverse);
 
             while (enumerator.MoveNext())
             {
@@ -361,29 +362,42 @@ namespace ClosedXML.Excel
             MiscSlice.Swap(sp1, sp2);
         }
 
-        private struct CellsEnumerator
+        internal SlicesEnumerator ForValuesAndFormulas(XLSheetRange range)
+        {
+            var valueEnumerator = ValueSlice.GetEnumerator(range);
+            var formulaEnumerator = FormulaSlice.GetEnumerator(range);
+            return new SlicesEnumerator(false, valueEnumerator, formulaEnumerator);
+        }
+
+        /// <summary>
+        /// Enumerator that combines several other slice enumerators and enumerates
+        /// <see cref="XLSheetPoint"/> in any of them.
+        /// </summary>
+        internal struct SlicesEnumerator
         {
             private readonly List<IEnumerator<XLSheetPoint>> _enumerators;
             private readonly bool _reverse;
 
-            public CellsEnumerator(XLSheetRange range, XLCellsCollection cellsCollection, bool reverse = false)
+            public SlicesEnumerator(XLSheetRange range, XLCellsCollection cellsCollection, bool reverse = false)
+                : this(
+                    reverse,
+                    cellsCollection.ValueSlice.GetEnumerator(range, reverse),
+                    cellsCollection.FormulaSlice.GetEnumerator(range, reverse),
+                    cellsCollection.StyleSlice.GetEnumerator(range, reverse),
+                    cellsCollection.MiscSlice.GetEnumerator(range, reverse))
+            {
+            }
+
+            public SlicesEnumerator(bool reverse, params IEnumerator<XLSheetPoint>[] enumerators)
             {
                 Current = new XLSheetPoint(1, 1);
                 _reverse = reverse;
-                var valueEnumerator = cellsCollection.ValueSlice.GetEnumerator(range, reverse);
-                var formulaEnumerator = cellsCollection.FormulaSlice.GetEnumerator(range, reverse);
-                var styleEnumerator = cellsCollection.StyleSlice.GetEnumerator(range, reverse);
-                var kitchenSinkEnumerator = cellsCollection.MiscSlice.GetEnumerator(range, reverse);
-
                 _enumerators = new();
-                if (valueEnumerator.MoveNext())
-                    _enumerators.Add(valueEnumerator);
-                if (formulaEnumerator.MoveNext())
-                    _enumerators.Add(formulaEnumerator);
-                if (styleEnumerator.MoveNext())
-                    _enumerators.Add(styleEnumerator);
-                if (kitchenSinkEnumerator.MoveNext())
-                    _enumerators.Add(kitchenSinkEnumerator);
+                foreach (var enumerator in enumerators)
+                {
+                    if (enumerator.MoveNext())
+                        _enumerators.Add(enumerator);
+                }
             }
 
             public XLSheetPoint Current { get; private set; }

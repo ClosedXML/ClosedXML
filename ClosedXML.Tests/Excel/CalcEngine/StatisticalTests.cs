@@ -102,17 +102,40 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             XLCellValue value;
-            value = ws.Evaluate(@"=COUNT(D3:D45)");
+            value = ws.Evaluate("COUNT(D3:D45)");
             Assert.AreEqual(0, value);
 
-            value = ws.Evaluate(@"=COUNT(G3:G45)");
+            value = ws.Evaluate("COUNT(G3:G45)");
             Assert.AreEqual(43, value);
 
-            value = ws.Evaluate(@"=COUNT(G:G)");
+            value = ws.Evaluate("COUNT(G:G)");
             Assert.AreEqual(43, value);
 
-            value = workbook.Evaluate(@"=COUNT(Data!G:G)");
+            value = workbook.Evaluate("COUNT(Data!G:G)");
             Assert.AreEqual(43, value);
+
+            // Scalar blank, logical and text is counted as numbers
+            Assert.AreEqual(4, ws.Evaluate("COUNT(IF(TRUE,,),TRUE, FALSE, \"1\")"));
+
+            // Non-number values in arrays are not counted as numbers.
+            Assert.AreEqual(0, ws.Evaluate("COUNT({TRUE,FALSE,\"1\"})"));
+
+            // Text is not counted as number.
+            Assert.AreEqual(0, ws.Evaluate("COUNT(\"Hello\")"));
+
+            // Blank cells are not counted as numbers
+            ws.Cell("Z1").Value = Blank.Value;
+            Assert.AreEqual(0, ws.Evaluate("COUNT(Z1)"));
+
+            // Scalar errors are not propagated
+            Assert.AreEqual(1, ws.Evaluate("COUNT(1, #NULL!)"));
+
+            // Array errors are not propagated
+            Assert.AreEqual(1, ws.Evaluate("COUNT({1, #NULL!})"));
+
+            // Reference errors are not propagated
+            ws.Cell("Z1").Value = XLError.NullValue;
+            Assert.AreEqual(0, ws.Evaluate("COUNT(Z1)"));
         }
 
         [Test]
