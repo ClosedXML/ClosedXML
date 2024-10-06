@@ -629,17 +629,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void StDev()
         {
             var ws = workbook.Worksheets.First();
-            double value;
-            Assert.That(() => ws.Evaluate(@"=STDEV(D3:D45)"), Throws.TypeOf<ApplicationException>());
 
-            value = (double)ws.Evaluate(@"=STDEV(H3:H45)");
+            // Only non-convertible text in D column, thus less than 2 samples will return error
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEV(D3:D45)"));
+
+            // Calculate StDev from numeric values (reference contains only numbers)
+            var value = (double)ws.Evaluate("STDEV(H3:H45)");
             Assert.AreEqual(47.34511769, value, tolerance);
 
-            value = (double)ws.Evaluate(@"=STDEV(H:H)");
+            // Ignores text values in the H column and only uses numeric ones, same as reference with only number
+            value = (double)ws.Evaluate("STDEV(H:H)");
             Assert.AreEqual(47.34511769, value, tolerance);
 
-            value = (double)workbook.Evaluate(@"=STDEV(Data!H:H)");
+            value = (double)workbook.Evaluate("STDEV(Data!H:H)");
             Assert.AreEqual(47.34511769, value, tolerance);
+
+            // Need at least two values, otherwise returns error
+            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("STDEV(1)"));
+            Assert.AreEqual(0, workbook.Evaluate("STDEV(0, 0)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(IF(TRUE,), 1)"), tolerance);
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(FALSE, 1)"), tolerance);
+            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(0, TRUE)"), tolerance);
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(0, \"1\")"), tolerance);
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("STDEV(0, 1, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV({0, 1, \"Hello\", FALSE, TRUE})"), tolerance);
+
+            // Reference argument only uses number, ignores blanks, logical and text
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = true;
+            ws.Cell("Z3").Value = "100";
+            ws.Cell("Z4").Value = "hello";
+            ws.Cell("Z5").Value = 0;
+            ws.Cell("Z6").Value = 1;
+            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEV(Z1:Z6)"), tolerance);
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEV(0, 1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEV({0, 1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEV(Z1)"));
         }
 
         [Test]
