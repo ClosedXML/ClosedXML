@@ -362,28 +362,15 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, true).GeoMean();
         }
 
-        private static object Max(List<Expression> p)
-        {
-            return GetTally(p, true).Max();
-        }
-
         private static AnyValue Max(CalcContext ctx, Span<AnyValue> args)
         {
-            var result = args.Aggregate(
-                ctx,
-                initialValue: double.NegativeInfinity,
-                noElementsResult: 0,
-                aggregate: static (acc, current) => Math.Max(acc, current),
-                convert: static (value, ctx) => value.ToNumber(ctx.Culture),
-                collectionFilter: v => v.IsNumber || v.IsError); // Ignore blanks in references
+            if (args.Length < 1)
+                return XLError.IncompatibleValue;
 
-            if (!result.TryPickT0(out var maximum, out var error))
-                return error;
+            double? max = null;
+            var result = TallyNumbers(ctx, args, max, static (max, itemValue) => max.HasValue ? Math.Max(max.Value, itemValue) : itemValue);
 
-            if (double.IsInfinity(maximum))
-                return 0;
-
-            return maximum;
+            return result.Match<AnyValue>(m => m ?? 0, e => e);
         }
 
         private static object MaxA(List<Expression> p)
