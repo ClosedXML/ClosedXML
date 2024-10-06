@@ -80,10 +80,10 @@ namespace ClosedXML.Excel.CalcEngine
             //STANDARDIZE	Returns a normalized value
             ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, AllowRange.All);
-            ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, AllowRange.All);
+            ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, AllowRange.All);
             ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP);
+            ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
             //TDIST	Returns the Student's t-distribution
             //TINV	Returns the inverse of the Student's t-distribution
@@ -431,9 +431,26 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).Std();
         }
 
-        private static object StDevP(List<Expression> p)
+        private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).StdP();
+            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
+                return error;
+
+            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
+            var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
+            {
+                var diff = sampleValue - stdDev.SampleMean;
+                var sum = stdDev.SquareDiffSum + diff * diff;
+                return (sum, stdDev.Count + 1, stdDev.SampleMean);
+            });
+
+            if (!result.TryPickT0(out var tallied, out error))
+                return error;
+
+            if (tallied.Count < 1)
+                return XLError.DivisionByZero;
+
+            return Math.Sqrt(tallied.SquareDiffSum / tallied.Count);
         }
 
         private static object StDevPA(List<Expression> p)

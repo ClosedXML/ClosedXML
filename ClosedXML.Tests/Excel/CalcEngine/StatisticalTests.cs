@@ -688,17 +688,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void StDevP()
         {
             var ws = workbook.Worksheets.First();
-            double value;
-            Assert.That(() => ws.Evaluate(@"=STDEVP(D3:D45)"), Throws.InvalidOperationException);
 
-            value = (double)ws.Evaluate(@"=STDEVP(H3:H45)");
-            Assert.AreEqual(46.79135458, value, tolerance);
+            // Example from specification
+            Assert.AreEqual(21.66153785, (double)ws.Evaluate("STDEVP(123, 134, 143, 173, 112, 109)"), tolerance);
 
-            value = (double)ws.Evaluate(@"=STDEVP(H:H)");
-            Assert.AreEqual(46.79135458, value, tolerance);
+            // Column D contains only region names (non-convertible text), thus reference contains less than 1 sample that is required
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVP(D3:D45)"));
 
-            value = (double)workbook.Evaluate(@"=STDEVP(Data!H:H)");
-            Assert.AreEqual(46.79135458, value, tolerance);
+            // Calculate StDevP from numeric values (reference contains only numbers)
+            Assert.AreEqual(46.79135458, (double)ws.Evaluate("STDEVP(H3:H45)"), tolerance);
+
+            // StDevP ignores text values/blanks in the H column and only uses numeric ones, the result is same as the reference above that contains only numbers
+            Assert.AreEqual(46.79135458, (double)ws.Evaluate("STDEVP(H:H)"), tolerance);
+
+            Assert.AreEqual(46.79135458, (double)workbook.Evaluate("STDEVP(Data!H:H)"), tolerance);
+
+            // If sample size is 0, return error
+            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("STDEVP({TRUE})"));
+            Assert.AreEqual(0, workbook.Evaluate("STDEVP(100)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(FALSE, 1)"));
+            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(0, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(0, \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("STDEVP(0, 1, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP({0, 1, \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument only uses numbers, ignores blanks, logical and text
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = true;
+            ws.Cell("Z3").Value = "100";
+            ws.Cell("Z4").Value = "hello";
+            ws.Cell("Z5").Value = 0;
+            ws.Cell("Z6").Value = 1;
+            Assert.AreEqual(0.5, ws.Evaluate("STDEVP(Z1:Z6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEVP(0, 1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEVP({0, 1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVP(Z1)"));
         }
 
         [TestCase(@"=SUMIF(A1:A10, 1, A1:A10)", 1)]
