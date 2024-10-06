@@ -78,11 +78,11 @@ namespace ClosedXML.Excel.CalcEngine
             //SLOPE	Returns the slope of the linear regression line
             //SMALL	Returns the k-th smallest value in a data set
             //STANDARDIZE	Returns a normalized value
-            ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, AllowRange.All);
+            ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, AllowRange.All);
             ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, AllowRange.All);
             ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, AllowRange.All);
-            ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev);
+            ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
             //TDIST	Returns the Student's t-distribution
@@ -101,6 +101,11 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         private static AnyValue Average(CalcContext ctx, Span<AnyValue> args)
+        {
+            return AverageCalc(ctx, args).Match<AnyValue>(n => n, e => e);
+        }
+
+        private static OneOf<double, XLError> AverageCalc(CalcContext ctx, Span<AnyValue> args)
         {
             if (args.Length < 1)
                 return XLError.IncompatibleValue;
@@ -399,9 +404,26 @@ namespace ClosedXML.Excel.CalcEngine
             return GetTally(p, false).Min();
         }
 
-        private static object StDev(List<Expression> p)
+        private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).Std();
+            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
+                return error;
+
+            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
+            var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
+            {
+                var diff = (sampleValue - stdDev.SampleMean);
+                var sum = stdDev.SquareDiffSum + diff * diff;
+                return (sum, stdDev.Count + 1, stdDev.SampleMean);
+            });
+
+            if (!result.TryPickT0(out var tallied, out error))
+                return error;
+
+            if (tallied.Count <= 1)
+                return XLError.DivisionByZero;
+
+            return Math.Sqrt(tallied.SquareDiffSum / (tallied.Count - 1));
         }
 
         private static object StDevA(List<Expression> p)
