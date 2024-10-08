@@ -10,23 +10,13 @@ namespace ClosedXML.Excel.CalcEngine
     internal class Tally : IEnumerable<Object>
     {
         private readonly List<object> _list = new List<object>();
-        private readonly bool NumbersOnly;
 
         private double[]? _numericValues;
 
         public Tally()
-            : this(false)
         { }
 
-        public Tally(bool numbersOnly)
-            : this(null, numbersOnly)
-        { }
-
-        public Tally(IEnumerable<Expression> p)
-            : this(p, false)
-        { }
-
-        public Tally(IEnumerable<Expression>? p, bool numbersOnly)
+        public Tally(IEnumerable<Expression>? p)
         {
             if (p != null)
             {
@@ -35,8 +25,6 @@ namespace ClosedXML.Excel.CalcEngine
                     Add(e);
                 }
             }
-
-            NumbersOnly = numbersOnly;
         }
 
         public void Add(Expression e)
@@ -97,11 +85,6 @@ namespace ClosedXML.Excel.CalcEngine
             int medianIndex = (int)Math.Floor(nums.Length / 2d);
 
             return nums[medianIndex];
-        }
-
-        public double Count()
-        {
-            return Count(NumbersOnly);
         }
 
         public double Count(bool numbersOnly)
