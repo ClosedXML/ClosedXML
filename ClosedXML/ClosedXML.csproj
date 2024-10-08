@@ -47,7 +47,7 @@
     <PackageReference Include="RBush" Version="3.2.0" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
-    <PackageReference Include="System.IO.Packaging" Version="8.0.0" />
+    <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
     <PackageReference Include="ClosedXML.Parser" Version="[1.2.0,2.0.0)" />
   </ItemGroup>
 
