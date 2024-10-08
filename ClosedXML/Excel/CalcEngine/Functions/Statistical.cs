@@ -518,7 +518,7 @@ namespace ClosedXML.Excel.CalcEngine
         // utility for tallying statistics
         private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
-            return new Tally(p, numbersOnly);
+            return new Tally(p);
         }
 
         /// <summary>
