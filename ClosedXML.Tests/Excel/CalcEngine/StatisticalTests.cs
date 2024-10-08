@@ -395,29 +395,74 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             workbook.Dispose();
         }
 
-        [TestCase(@"H3:H45", ExpectedResult = 7.51126069234216)]
-        [TestCase(@"H:H", ExpectedResult = 7.51126069234216)]
-        [TestCase(@"Data!H:H", ExpectedResult = 7.51126069234216)]
-        [TestCase(@"H3:H10", ExpectedResult = 5.26214814727941)]
-        [TestCase(@"H3:H20", ExpectedResult = 7.01281435054797)]
-        [TestCase(@"H3:H30", ExpectedResult = 7.00137389296182)]
-        [TestCase(@"H3:H3", ExpectedResult = 1.99)]
-        [TestCase(@"H10:H20", ExpectedResult = 8.37855107505682)]
-        [TestCase(@"H15:H20", ExpectedResult = 15.8927310267677)]
-        [TestCase(@"H20:H30", ExpectedResult = 7.14321227391814)]
+        [TestCase("H3:H45", ExpectedResult = 7.51126069234216)]
+        [TestCase("H:H", ExpectedResult = 7.51126069234216)]
+        [TestCase("Data!H:H", ExpectedResult = 7.51126069234216)]
+        [TestCase("H3:H10", ExpectedResult = 5.26214814727941)]
+        [TestCase("H3:H20", ExpectedResult = 7.01281435054797)]
+        [TestCase("H3:H30", ExpectedResult = 7.00137389296182)]
+        [TestCase("H3:H3", ExpectedResult = 1.99)]
+        [TestCase("H10:H20", ExpectedResult = 8.37855107505682)]
+        [TestCase("H15:H20", ExpectedResult = 15.8927310267677)]
+        [TestCase("H20:H30", ExpectedResult = 7.14321227391814)]
         [DefaultFloatingPointTolerance(1e-12)]
         public double Geomean(string sourceValue)
         {
-            return (double)workbook.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})");
+            return (double)workbook.Worksheets.First().Evaluate($"GEOMEAN({sourceValue})");
         }
 
         [TestCase("D3:D45", ExpectedResult = XLError.NumberInvalid)]
         [TestCase("-1, 0, 3", ExpectedResult = XLError.NumberInvalid)]
+        [TestCase("0", ExpectedResult = XLError.NumberInvalid)]
         public XLError Geomean_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
             return (XLError)ws.Evaluate($"GEOMEAN({sourceValue})");
+        }
+
+        [Test]
+        [DefaultFloatingPointTolerance(1e-8)]
+        public void Geomean_behavior()
+        {
+            // Example from the specification
+            Assert.AreEqual(5.4444547024966, (double)XLWorkbook.EvaluateExpr("GEOMEAN(10.5,5.3,2.9)"));
+            Assert.AreEqual(6.6337805880630, (double)XLWorkbook.EvaluateExpr("GEOMEAN(10.5,{5.3,2.9},\"12\")"));
+
+            // GEOMEAN isn't limited by double scale, i.e. it doesn't use naive algorithm for large number.
+            Assert.AreEqual(1.0000000000000231E+307d, (double)XLWorkbook.EvaluateExpr("GEOMEAN(1E+307, 1E+307)"));
+
+            // Scalar blank is counted as a 0
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("GEOMEAN(IF(TRUE,), 1)"));
+
+            // Scalar logical and text is converted to numbers
+            Assert.AreEqual(2.236067977, (double)XLWorkbook.EvaluateExpr("GEOMEAN(TRUE, \"5\")"));
+
+            // Non-number values in arrays are ignored.
+            Assert.AreEqual(5.916079783, (double)XLWorkbook.EvaluateExpr("GEOMEAN({TRUE, FALSE, \"1\", 7}, 5)"));
+
+            // Scalar non-number text causes an error due to conversion.
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("GEOMEAN(\"Hello\", 5)"));
+
+            // Reference non-number arguments are ignored
+            var ws = workbook.Worksheets.First();
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = "1";
+            ws.Cell("Z3").Value = "hello";
+            ws.Cell("Z4").Value = false;
+            ws.Cell("Z5").Value = true;
+            ws.Cell("Z6").Value = 5;
+            Assert.AreEqual(5, (double)ws.Evaluate("GEOMEAN(Z1:Z6)"));
+
+            // Scalar errors are propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN(1, #NULL!)"));
+
+            // Array errors are propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN({1, #NULL!})"));
+
+            // Reference errors are propagated
+            ws.Cell("Z1").Value = XLError.NullValue;
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN(Z1)"));
         }
 
         [SetUp]
