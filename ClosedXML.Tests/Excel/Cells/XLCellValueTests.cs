@@ -563,5 +563,43 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.True(v.TryConvert(out ts, c));
             Assert.AreEqual(new TimeSpan(18, 0, 0), ts);
         }
+
+        [TestCase(1)]
+        [TestCase(10)] // microsecond
+        [TestCase(3000000001)] // 5 min 1 tick
+        public void TimeSpan_can_have_sub_millisecond_precision(long ticks)
+        {
+            var subMsTimeSpan = TimeSpan.FromTicks(ticks);
+            XLCellValue value = subMsTimeSpan;
+            Assert.AreEqual(subMsTimeSpan, value.GetTimeSpan());
+        }
+
+        [TestCase(1)]
+        [TestCase(10)] // microsecond
+        [TestCase(3000000001)] // 5 min 1 tick
+        public void TimeSpan_with_sub_millisecond_precision_is_written_and_loaded_correctly(long ticks)
+        {
+            // NetFx converts double to string using G15. Core changed it to G17, but ClosedXML still use G15.
+            var subMsTimeSpan = TimeSpan.FromTicks(ticks);
+            TestHelper.CreateSaveLoadAssert(
+                (_, ws) =>
+                {
+                    ws.Cell("A1").Value = subMsTimeSpan;
+                },
+                (_, ws) =>
+                {
+                    var cellValue = ws.Cell("A1").CachedValue;
+                    Assert.AreEqual(subMsTimeSpan, cellValue.GetTimeSpan());
+                });
+        }
+
+        [TestCase(long.MaxValue / (double)TimeSpan.TicksPerDay + 0.01)]
+        [TestCase(long.MinValue / (double)TimeSpan.TicksPerDay - 0.01)]
+        public void TimeSpan_throws_when_not_representable(double serialDateTime)
+        {
+            var value = XLCellValue.FromSerialTimeSpan(serialDateTime);
+            var ex = Assert.Throws<OverflowException>(() => value.GetTimeSpan())!;
+            Assert.AreEqual("The serial date time value is too large to be represented in a TimeSpan.", ex.Message);
+        }
     }
 }
