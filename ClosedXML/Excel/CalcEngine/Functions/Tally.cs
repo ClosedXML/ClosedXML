@@ -103,16 +103,6 @@ namespace ClosedXML.Excel.CalcEngine
             return nums.Sum(x => Math.Pow(x - Average(), 2));
         }
 
-        public object GeoMean()
-        {
-            var nums = NumericValuesInternal();
-
-            if (nums.Length == 0) return XLError.NumberInvalid;
-            if (HasNonPositiveNumbers()) return XLError.NumberInvalid;
-
-            return Math.Pow(Product(), 1.0 / nums.Length);
-        }
-
         public IEnumerator<object> GetEnumerator()
         {
             return _list.GetEnumerator();

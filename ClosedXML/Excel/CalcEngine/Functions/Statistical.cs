@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             //GAMMADIST	Returns the gamma distribution
             //GAMMAINV	Returns the inverse of the gamma cumulative distribution
             //GAMMALN	Returns the natural logarithm of the gamma function, Γ(x)
-            ce.RegisterFunction("GEOMEAN", 1, 255, Geomean, AllowRange.All); // Returns the geometric mean
+            ce.RegisterFunction("GEOMEAN", 1, 255, GeoMean, FunctionFlags.Range, AllowRange.All); // Returns the geometric mean
             //GROWTH	Returns values along an exponential trend
             //HARMEAN	Returns the harmonic mean
             //HYPGEOMDIST	Returns the hypergeometric distribution
@@ -362,9 +362,30 @@ namespace ClosedXML.Excel.CalcEngine
             return 0.5 * Math.Log((1 + x) / (1 - x));
         }
 
-        private static object Geomean(List<Expression> p)
+        private static AnyValue GeoMean(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).GeoMean();
+            // Rather than interrupting a cycle early, just add it all
+            // go through all values anyway. I don't want to code same
+            // loop 1000 times and non-positive numbers will be rare.
+            var state = (LogSum: 0.0, Count: 0);
+            var tally = TallyNumbers(ctx, args, state, static (state, itemValue) =>
+            {
+                var logSum = state.LogSum + Math.Log(itemValue);
+                return (logSum, state.Count + 1);
+            });
+
+            if (!tally.TryPickT0(out var geoMean, out var error))
+                return error;
+
+            if (geoMean.Count == 0)
+                return XLError.NumberInvalid;
+
+            // Some value was negative or zero. NaN plus whatever is NaN, infinity
+            // plus whatever is also infinity.
+            if (double.IsInfinity(geoMean.LogSum) || double.IsNaN(geoMean.LogSum))
+                return XLError.NumberInvalid;
+
+            return Math.Exp(geoMean.LogSum / geoMean.Count);
         }
 
         private static AnyValue Max(CalcContext ctx, Span<AnyValue> args)
