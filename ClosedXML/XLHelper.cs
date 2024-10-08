@@ -318,15 +318,27 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// A backward compatible version of <see cref="TimeSpan.FromDays(double)"/> that returns a value
-        /// rounded to milliseconds. In .Net Core 3.0 the behavior has changed and timespan includes microseconds
-        /// as well. As a result, the value 1:12:30 saved on one machine could become 1:12:29.999999 on another.
+        /// <para>
+        /// An alternative to <see cref="TimeSpan.FromDays(double)"/>. In NetFx, it returned a value
+        /// rounded to milliseconds. In .Net Core 3.0 the behavior has changed and conversion doesn't
+        /// round at all (=precision down to ticks). To avoid problems with a different behavior on
+        /// NetFx and Core (saving value 1:12:30 on NetFx machine could become 1:12:29.999999 on Core
+        /// one machine), we use instead this method for both runtimes (behaves as on Core).
+        /// </para>
+        /// <para>
+        /// TimeSpan has a resolution of 0.1 us (1.15e-12 as a serial date). ~12 digits of precision
+        /// are needed to accurately represent one day as a serial date time in that resolution. Double
+        /// has ~15 digits of precision, so it should be able to represent up to ~100 days in a ticks
+        /// precision.
+        /// </para>
         /// </summary>
         internal static TimeSpan GetTimeSpan(double totalDays)
         {
-            var timeSpan = TimeSpan.FromDays(totalDays);
-            var roundedMilliseconds = Math.Round(timeSpan.TotalMilliseconds);
-            return TimeSpan.FromMilliseconds(roundedMilliseconds);
+            var ticks = Math.Round(totalDays * TimeSpan.TicksPerDay, MidpointRounding.AwayFromZero);
+            if (ticks is > long.MaxValue or < long.MinValue)
+                throw new OverflowException("The serial date time value is too large to be represented in a TimeSpan.");
+
+            return TimeSpan.FromTicks(checked((long)ticks));
         }
 
         internal static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
