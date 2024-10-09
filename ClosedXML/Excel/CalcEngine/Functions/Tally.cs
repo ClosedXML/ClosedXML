@@ -72,14 +72,6 @@ namespace ClosedXML.Excel.CalcEngine
                 return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
         }
 
-        public object DevSq()
-        {
-            var nums = NumericValuesInternal();
-            if (nums.Length == 0) return XLError.IncompatibleValue;
-
-            return nums.Sum(x => Math.Pow(x - Average(), 2));
-        }
-
         public IEnumerator<object> GetEnumerator()
         {
             return _list.GetEnumerator();
