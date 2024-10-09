@@ -539,7 +539,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-10)]
         public double DevSq(string sourceValue)
         {
-            return (double)workbook.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})");
+            return (double)workbook.Worksheets.First().Evaluate($"DEVSQ({sourceValue})");
         }
 
         [TestCase("D3:D45", ExpectedResult = XLError.IncompatibleValue)]
