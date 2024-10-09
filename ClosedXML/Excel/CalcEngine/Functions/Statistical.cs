@@ -102,51 +102,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Average(CalcContext ctx, Span<AnyValue> args)
         {
-            return AverageCalc(ctx, args).Match<AnyValue>(n => n, e => e);
-        }
-
-        private static OneOf<double, XLError> AverageCalc(CalcContext ctx, Span<AnyValue> args)
-        {
             if (args.Length < 1)
                 return XLError.IncompatibleValue;
 
-            var sum = 0.0;
-            var count = 0;
-            foreach (var arg in args)
-            {
-                if (arg.TryPickScalar(out var scalar, out var collection))
-                {
-                    // Scalars are converted to number.
-                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
-                        return error;
+            var result = TallyNumbers(ctx, args, (Sum: 0.0, Count: 0), static (state, number) => (state.Sum + number, state.Count + 1));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
 
-                    sum += number;
-                    count++;
-                }
-                else
-                {
-                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : reference.GetCellsValues(ctx);
-                    foreach (var value in valuesIterator)
-                    {
-                        if (value.TryPickError(out var error))
-                            return error;
-
-                        // For arrays and references, only the number type is used. Other types are ignored.
-                        if (value.TryPickNumber(out var number))
-                        {
-                            sum += number;
-                            count++;
-                        }
-                    }
-                }
-            }
-
-            if (count == 0)
+            if (state.Count == 0)
                 return XLError.DivisionByZero;
 
-            return sum / count;
+            return state.Sum / state.Count;
         }
 
         private static AnyValue AverageA(CalcContext ctx, Span<AnyValue> args)
@@ -599,9 +565,17 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         private static OneOf<(double SquareDiffSum, int Count), XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!AverageCalc(ctx, args).TryPickT0(out var average, out var error))
-                return error;
+            // Calculate mean
+            var sumResult = TallyNumbers(ctx, args, (Sum: 0.0, Count: 0), static (state, number) => (state.Sum + number, state.Count + 1));
+            if (!sumResult.TryPickT0(out var averageState, out var sumError))
+                return sumError;
 
+            if (averageState.Count == 0)
+                return (0.0, 0);
+
+            var average = averageState.Sum / averageState.Count;
+
+            // Calculate sum of squares of deviations from sample mean
             var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
             var result = TallyNumbers(ctx, args, components, static (stdDev, sampleValue) =>
             {
@@ -610,7 +584,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return (sum, stdDev.Count + 1, stdDev.SampleMean);
             });
 
-            if (!result.TryPickT0(out var tallied, out error))
+            if (!result.TryPickT0(out var tallied, out var error))
                 return error;
 
             return (tallied.SquareDiffSum, tallied.Count);
