@@ -681,16 +681,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Median_CellRangeOfNonNumericValues_ThrowsApplicationException()
+        public void Median_with_area_without_numeric_values_returns_error()
         {
-            //Arrange
             var ws = workbook.Worksheets.First();
 
-            //Act - Assert
-            Assert.Throws<ApplicationException>(() =>
-            {
-                ws.Evaluate("MEDIAN(D3:D45)");
-            });
+            // Column D contains names of regions
+            Assert.AreEqual(XLError.NumberInvalid, ws.Evaluate("MEDIAN(D3:D45)"));
         }
 
         [Test]
@@ -737,6 +733,57 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             //Assert
             Assert.AreEqual(64.51, value, tolerance);
+        }
+
+        [Test]
+        public void Median_uses_only_numbers()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Examples from specification
+            Assert.AreEqual(15, ws.Evaluate("MEDIAN(10, 20)"));
+            Assert.AreEqual(-1.05, ws.Evaluate("MEDIAN(-3.5, 1.4, 6.9, -4.5)"));
+            Assert.AreEqual(-1.05, ws.Evaluate("MEDIAN({ -3.5,1.4,6.9},-4.5)"));
+
+            // Reference with no value will return error
+            ws.Cell("A1").Value = Blank.Value;
+            Assert.AreEqual(XLError.NumberInvalid, ws.Evaluate("MEDIAN(A1)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(3, ws.Evaluate("MEDIAN(IF(TRUE,,),6)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.5, ws.Evaluate("MEDIAN(TRUE, FALSE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(5, ws.Evaluate("MEDIAN(\"3\", \"7\")"));
+
+            // Scalar text that is not convertible will return conversion error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MEDIAN(\"Hello\")"));
+
+            // Array non-number values are ignored
+            Assert.AreEqual(7, ws.Evaluate("MEDIAN({7, TRUE,FALSE,\"1\"})"));
+
+            // Only numbers are used from reference, rest is ignored
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = true;
+            ws.Cell("A3").Value = "100";
+            ws.Cell("A4").Value = "hello";
+            ws.Cell("A5").Value = 0;
+            ws.Cell("A6").Value = 4;
+            ws.Cell("A7").Value = 5;
+            Assert.AreEqual(4, ws.Evaluate("MEDIAN(A1:A7)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MEDIAN(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MEDIAN({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("A1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MEDIAN(A1)"));
         }
 
         [Test]

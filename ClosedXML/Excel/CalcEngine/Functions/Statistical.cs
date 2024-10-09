@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.CalcEngine
             //LOGNORMDIST	Returns the cumulative lognormal distribution
             ce.RegisterFunction("MAX", 1, 255, Max, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, AllowRange.All);
+            ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MIN", 1, int.MaxValue, Min, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, AllowRange.All);
             //MODE	Returns the most common value in a data set
@@ -430,9 +430,31 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Max;
         }
 
-        private static object Median(List<Expression> p)
+        private static AnyValue Median(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, false).Median();
+            // There is a better median algorithm that uses two heaps, but NetFx
+            // doesn't have heap structure.
+            var list = new List<double>();
+            var result = TallyNumbers(ctx, args, list, static (list, number) =>
+            {
+                list.Add(number);
+                return list;
+            });
+
+            if (!result.TryPickT0(out var allNumbers, out var error))
+                return error;
+
+            if (allNumbers.Count == 0)
+                return XLError.NumberInvalid;
+
+            allNumbers.Sort();
+
+            var halfIndex = allNumbers.Count / 2;
+            var hasEvenCount = allNumbers.Count % 2 == 0;
+            if (hasEvenCount)
+                return (allNumbers[halfIndex - 1] + allNumbers[halfIndex]) / 2;
+
+            return allNumbers[halfIndex];
         }
 
         private static AnyValue Min(CalcContext ctx, Span<AnyValue> args)
