@@ -58,7 +58,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MIN", 1, int.MaxValue, Min, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, AllowRange.All);
+            ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, FunctionFlags.Range, AllowRange.All);
             //MODE	Returns the most common value in a data set
             //NEGBINOMDIST	Returns the negative binomial distribution
             //NORMDIST	Returns the normal cumulative distribution
@@ -442,9 +442,20 @@ namespace ClosedXML.Excel.CalcEngine
             return result.Match<AnyValue>(m => m ?? 0, e => e);
         }
 
-        private static object MinA(List<Expression> p)
+        private static AnyValue MinA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p).Min();
+            // Text in array is skipped, in reference counted as 0
+            var initState = (Min: double.MaxValue, HasValues: false);
+            var result = TallyAll(ctx, args, initState, static (state, value) => (Math.Min(state.Min, value), true), countArrayTextAsZero: false);
+
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
+
+            // Not even one non-ignored value found, return 0.
+            if (!state.HasValues)
+                return 0;
+
+            return state.Min;
         }
 
         private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
