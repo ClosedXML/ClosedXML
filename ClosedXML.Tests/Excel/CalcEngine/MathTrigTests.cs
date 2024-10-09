@@ -2233,10 +2233,50 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SumSq()
         {
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-            actual = XLWorkbook.EvaluateExpr(@"SumSq(3,4)");
-            Assert.AreEqual(25.0, actual);
+            // Examples from specification
+            Assert.AreEqual(4.0, XLWorkbook.EvaluateExpr("SUMSQ(2)"));
+            Assert.AreEqual(19.21, XLWorkbook.EvaluateExpr("SUMSQ(2.5, -3.6)"));
+            Assert.AreEqual(24.97, XLWorkbook.EvaluateExpr("SUMSQ({ 2.5, -3.6}, 2.4)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(16, XLWorkbook.EvaluateExpr("SUMSQ(IF(TRUE,), 4)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("SUMSQ(3, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(25, XLWorkbook.EvaluateExpr("SUMSQ(\"4\", \"3\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("SUMSQ(1, \"Hello\")"));
+
+            // Array logical arguments are ignored
+            Assert.AreEqual(4, XLWorkbook.EvaluateExpr("SUMSQ({2,TRUE,TRUE,FALSE,FALSE})"));
+
+            // Array text arguments are ignored
+            Assert.AreEqual(20, XLWorkbook.EvaluateExpr("SUMSQ({4, 2, \"hello\", \"10\" })"));
+
+            // Blank, logical and text from reference are ignored
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = true;
+            ws.Cell("A3").Value = "100";
+            ws.Cell("A4").Value = "hello";
+            ws.Cell("A5").Value = 1;
+            ws.Cell("A6").Value = 4;
+            Assert.AreEqual(17, ws.Evaluate("SUMSQ(A1:A6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr("SUMSQ(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr("SUMSQ({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("A1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMSQ(A1)"));
         }
 
         [Test]
