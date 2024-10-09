@@ -873,6 +873,65 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void MinA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Examples from specification
+            Assert.AreEqual(-3.5, ws.Evaluate("MINA(10.4, -3.5, 12.6)"));
+            Assert.AreEqual(-3.5, ws.Evaluate("MINA(10.4, {-3.5, 12.6})"));
+            Assert.AreEqual(0, ws.Evaluate("MINA({\"ABC\", TRUE})"));
+            ws.Cell("B3").Value = Blank.Value;
+            Assert.AreEqual(10, ws.Evaluate("MINA(10, 12, 15, B3)"));
+            ws.Cell("B3").Value = "Text";
+            Assert.AreEqual(0, ws.Evaluate("MINA(10, 12, 15, B3)"));
+
+            // Blanks in references are ignored and when MINA doesn't have any values, it returns 0
+            ws.Cell("A1").Value = Blank.Value;
+            Assert.AreEqual(0, ws.Evaluate("MINA(A1)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0, wb.Evaluate("MINA(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(0, wb.Evaluate("MINA(FALSE, 1)"));
+            Assert.AreEqual(1, wb.Evaluate("MINA(TRUE, 2)"));
+
+            // Scalar text is converted to a number
+            Assert.AreEqual(3, wb.Evaluate("MINA(\"3\", \"7\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("MINA(\"Hello\")"));
+
+            // Array logical arguments are ignored
+            Assert.AreEqual(2, wb.Evaluate("MINA({2, TRUE, TRUE, FALSE, FALSE})"));
+
+            // Array text arguments are ignored
+            Assert.AreEqual(2, wb.Evaluate("MINA({4, 2, \"hello\", \"1\"})"));
+
+            // Reference argument only counts logical as 0/1, text as 0 and ignores blanks.
+            ws.Cell("A1").Value = Blank.Value; // Ignores
+            ws.Cell("A2").Value = true; // Includes
+            ws.Cell("A3").Value = "100"; // Considers 0
+            ws.Cell("A4").Value = "hello"; // Considers 0
+            ws.Cell("A5").Value = -4; // Included
+            Assert.AreEqual(1, ws.Evaluate("MINA(A1:A2)"));
+            Assert.AreEqual(0, ws.Evaluate("MINA(A1:A3)"));
+            Assert.AreEqual(-4, ws.Evaluate("MINA(A1:A5)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("MINA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("MINA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MINA(B1)"));
+        }
+
+        [Test]
         public void StDev()
         {
             var ws = workbook.Worksheets.First();
