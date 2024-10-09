@@ -151,7 +151,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue AverageA(CalcContext ctx, Span<AnyValue> args)
         {
-            var state = (Sum:0.0, Count: 0);
+            var state = (Sum: 0.0, Count: 0);
             var result = TallyAll(ctx, args, state, static (state, value) => (state.Sum + value, state.Count + 1));
 
             if (!result.TryPickT0(out var tally, out var error))
@@ -402,10 +402,16 @@ namespace ClosedXML.Excel.CalcEngine
             if (args.Length < 1)
                 return XLError.IncompatibleValue;
 
-            double? max = null;
-            var result = TallyNumbers(ctx, args, max, static (max, itemValue) => max.HasValue ? Math.Max(max.Value, itemValue) : itemValue);
+            var state = (Max: double.MinValue, HasValues: false);
+            var result = TallyNumbers(ctx, args, state, static (state, value) => (Math.Max(state.Max, value), true));
 
-            return result.Match<AnyValue>(m => m ?? 0, e => e);
+            if (!result.TryPickT0(out var tally, out var error))
+                return error;
+
+            if (!tally.HasValues)
+                return 0;
+
+            return tally.Max;
         }
 
         private static object MaxA(List<Expression> p)
