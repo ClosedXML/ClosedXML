@@ -86,7 +86,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
             ce.RegisterFunction("SUMPRODUCT", 1, 30, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
+            ce.RegisterFunction("SUMSQ", 1, 255, SumSq, FunctionFlags.Range, AllowRange.All);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
             //ce.RegisterFunction("SUMXMY2", SumXMY2, 1);
@@ -1111,10 +1111,13 @@ namespace ClosedXML.Excel.CalcEngine
             return sum;
         }
 
-        private static object SumSq(List<Expression> p)
+        private static AnyValue SumSq(CalcContext ctx, Span<AnyValue> args)
         {
-            var t = new Tally(p);
-            return t.NumericValues().Sum(v => Math.Pow(v, 2));
+            var result = Statistical.TallyNumbers(ctx, args, 0.0, static (sumSq, number) => sumSq + number * number);
+            if (!result.TryPickT0(out var sumSq, out var error))
+                return error;
+
+            return sumSq;
         }
 
         private static object Tan(List<Expression> p)

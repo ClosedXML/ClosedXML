@@ -620,7 +620,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// The method tries to convert scalar arguments to numbers, but ignores non-numbers in
         /// reference/array. Any error found is propagated to the result.
         /// </summary>
-        private static OneOf<T, XLError> TallyNumbers<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> tallyFunc)
+        internal static OneOf<T, XLError> TallyNumbers<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> tallyFunc)
         {
             var tally = initValue;
             foreach (var arg in args)
