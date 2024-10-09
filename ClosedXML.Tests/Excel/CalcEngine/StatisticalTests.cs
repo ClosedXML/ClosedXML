@@ -542,12 +542,60 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)workbook.Worksheets.First().Evaluate($"DEVSQ({sourceValue})");
         }
 
-        [TestCase("D3:D45", ExpectedResult = XLError.IncompatibleValue)]
+        [TestCase("D3:D45", ExpectedResult = XLError.NumberInvalid)]
         public XLError Devsq_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
             return (XLError)ws.Evaluate($"DEVSQ({sourceValue})");
+        }
+
+        [Test]
+        [DefaultFloatingPointTolerance(1e-10)]
+        public void Devsq_is_calculated_from_numbers()
+        {
+            Assert.AreEqual(6.90666666666666, (double)XLWorkbook.EvaluateExpr("DEVSQ(5.6, 8.2, 9.2)"));
+            Assert.AreEqual(6.90666666666666, (double)XLWorkbook.EvaluateExpr("DEVSQ({ 5.6, 8.2, 9.2})"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.5, (double)workbook.Evaluate("DEVSQ(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(0.5, workbook.Evaluate("DEVSQ(FALSE, TRUE)"));
+
+            // Scalar text is converted to a number
+            Assert.AreEqual(14, workbook.Evaluate("DEVSQ(\"3\", \"2\", \"7\")"));
+
+            // Scalar text that is not convertible returns an error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("DEVSQ(\"Hello\")"));
+
+            // Array logical arguments are ignored
+            Assert.AreEqual(0, workbook.Evaluate("DEVSQ({2,TRUE,TRUE,FALSE,FALSE})"));
+            Assert.AreEqual(2.8, (double)workbook.Evaluate("DEVSQ({2, 1, 1, 0, 0})"));
+
+            // Array text arguments are ignored
+            Assert.AreEqual(2, workbook.Evaluate("DEVSQ({4, 2, \"hello\", \"10\" })"));
+
+            // Non-numerical reference values are ignored.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value; // Ignored
+            ws.Cell("A2").Value = true; // Ignored
+            ws.Cell("A3").Value = "100"; // Ignored
+            ws.Cell("A4").Value = "hello"; // Ignored
+            ws.Cell("A5").Value = 2; // Included
+            ws.Cell("A6").Value = 4; // Included
+            Assert.AreEqual(2, ws.Evaluate("DEVSQ(A1:A6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("DEVSQ(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("DEVSQ({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("A1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("DEVSQ(A1)"));
         }
 
         [TestCase(0, ExpectedResult = 0)]

@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COUNTIFS", 2, 255, CountIfs, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
-            ce.RegisterFunction("DEVSQ", 1, 255, DevSq, AllowRange.All); // Returns the sum of squares of deviations
+            ce.RegisterFunction("DEVSQ", 1, 255, DevSq, FunctionFlags.Range, AllowRange.All); // Returns the sum of squares of deviations
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
@@ -324,9 +324,17 @@ namespace ClosedXML.Excel.CalcEngine
             return count;
         }
 
-        private static object DevSq(List<Expression> p)
+        private static AnyValue DevSq(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, true).DevSq();
+            var result = GetSquareDiffSum(ctx, args);
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
+
+            // An outlier, most others return #DIV/0! when they can't calculate mean.
+            if (state.Count == 0)
+                return XLError.NumberInvalid;
+
+            return state.SquareDiffSum;
         }
 
         private static object Fisher(List<Expression> p)
@@ -436,7 +444,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MinA(List<Expression> p)
         {
-            return GetTally(p, false).Min();
+            return GetTally(p).Min();
         }
 
         private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
@@ -452,7 +460,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object StDevA(List<Expression> p)
         {
-            return GetTally(p, false).Std();
+            return GetTally(p).Std();
         }
 
         private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)
@@ -468,7 +476,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object StDevPA(List<Expression> p)
         {
-            return GetTally(p, false).StdP();
+            return GetTally(p).StdP();
         }
 
         private static AnyValue Var(CalcContext ctx, Span<AnyValue> args)
@@ -484,7 +492,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object VarA(List<Expression> p)
         {
-            return GetTally(p, false).Var();
+            return GetTally(p).Var();
         }
 
         private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)
@@ -500,7 +508,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object VarPA(List<Expression> p)
         {
-            return GetTally(p, false).VarP();
+            return GetTally(p).VarP();
         }
 
         private static AnyValue Large(CalcContext ctx, AnyValue arrayParam, double kParam)
@@ -551,7 +559,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // utility for tallying statistics
-        private static Tally GetTally(List<Expression> p, bool numbersOnly)
+        private static Tally GetTally(List<Expression> p)
         {
             return new Tally(p);
         }
