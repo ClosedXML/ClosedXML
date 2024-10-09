@@ -49,6 +49,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1, ws.Evaluate("AVERAGE(Z1,1)"));
         }
 
+        [Test]
+        public void AverageA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Examples from specification
+            ws.Cell("E1").Value = Blank.Value;
+            Assert.AreEqual(10, ws.Evaluate("AVERAGEA(10, E1)"));
+            ws.Cell("E2").Value = true;
+            Assert.AreEqual(5.5, ws.Evaluate("AVERAGEA(10, E2)"));
+            ws.Cell("E3").Value = false;
+            Assert.AreEqual(5, ws.Evaluate("AVERAGEA(10, E3)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.5, (double)workbook.Evaluate("AVERAGEA(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0.5, workbook.Evaluate("AVERAGEA(FALSE, 1)"));
+            Assert.AreEqual(0.5, workbook.Evaluate("AVERAGEA(0, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(2, workbook.Evaluate("AVERAGEA(3, \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("AVERAGEA(1, \"Hello\")"));
+
+            // Array logical arguments are ignored
+            Assert.AreEqual(2, workbook.Evaluate("AVERAGEA({2,TRUE,TRUE,FALSE,FALSE})"));
+
+            // Array text arguments are counted as zero (4+2+0+0)/4
+            Assert.AreEqual(1.5, workbook.Evaluate("AVERAGEA({4, 2, \"hello\", \"10\" })"));
+
+            // Reference argument only counts logical as 0/1, text as 0 and ignores blanks.
+            ws.Cell("Z1").Value = Blank.Value; // Not counted
+            ws.Cell("Z2").Value = true; // 1
+            ws.Cell("Z3").Value = "100"; // 0
+            ws.Cell("Z4").Value = "hello"; // 0
+            ws.Cell("Z5").Value = 0; // 0
+            ws.Cell("Z6").Value = 4; // 4
+            Assert.AreEqual(1, (double)ws.Evaluate("AVERAGEA(Z1:Z6)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("AVERAGEA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("AVERAGEA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("Z1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGEA(Z1)"));
+        }
+
         [TestCase(6, 10, 0.5, 0.205078125)]
         [TestCase(4, 20, 0.2, 0.2181994)] // p different than 0.5
         [TestCase(0, 5, 0.2, 0.32768)] // 0 out of 5 successes
