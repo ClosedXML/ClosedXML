@@ -55,7 +55,7 @@ namespace ClosedXML.Excel.CalcEngine
             //LOGINV	Returns the inverse of the lognormal distribution
             //LOGNORMDIST	Returns the cumulative lognormal distribution
             ce.RegisterFunction("MAX", 1, 255, Max, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, AllowRange.All);
+            ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, AllowRange.All);
             ce.RegisterFunction("MIN", 1, int.MaxValue, Min, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, AllowRange.All);
@@ -414,9 +414,20 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Max;
         }
 
-        private static object MaxA(List<Expression> p)
+        private static AnyValue MaxA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, false).Max();
+            // Text in array is skipped, in reference counted as 0
+            var state = (Max: double.MinValue, HasValues: false);
+            var result = TallyAll(ctx, args, state, static (state, value) => (Math.Max(state.Max, value), true), countArrayTextAsZero: false);
+
+            if (!result.TryPickT0(out var tally, out var error))
+                return error;
+
+            // Not even one non-ignored value found, return 0.
+            if (!tally.HasValues)
+                return 0;
+
+            return tally.Max;
         }
 
         private static object Median(List<Expression> p)
@@ -624,7 +635,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// A tally function for *A functions (e.g. AverageA, MinA, MaxA). The behavior is buggy in Excel,
         /// because they doesn't count logical values in array, but do count them in reference ¯\_(ツ)_/¯
         /// </summary>
-        private static OneOf<T, XLError> TallyAll<T>(CalcContext ctx, Span<AnyValue> args, T initialState, Func<T, double, T> tallyFunc)
+        /// <paramref name="countArrayTextAsZero">When there is a text value in an array, should it be tallied
+        ///   as <c>0</c> (<c>true</c>), or should it be ignored (<c>false</c>).</paramref>
+        private static OneOf<T, XLError> TallyAll<T>(CalcContext ctx, Span<AnyValue> args, T initialState, Func<T, double, T> tallyFunc, bool countArrayTextAsZero = true)
         {
             var state = initialState;
             foreach (var arg in args)
@@ -653,8 +666,10 @@ namespace ClosedXML.Excel.CalcEngine
                         {
                             state = tallyFunc(state, number);
                         }
-                        else if (value.IsText)
+                        else if (value.IsText && (!isArray || countArrayTextAsZero))
                         {
+                            // Some *A functions consider text in an array (e.g. {"3", "Hello"}) as a zero and others don't.
+                            // The text values from cells behave differently. Unlike array, the *A functions consider cell text as 0.
                             state = tallyFunc(state, 0);
                         }
                         else if (value.TryPickError(out var error))

@@ -627,6 +627,60 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void MaxA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Examples from specification
+            Assert.AreEqual(12.6, ws.Evaluate("MAXA(10.4,-3.5,12.6)"));
+            Assert.AreEqual(12.6, ws.Evaluate("MAXA(10.4,{-3.5,12.6})"));
+            Assert.AreEqual(0, ws.Evaluate("MAXA({\"ABC\",TRUE})"));
+            ws.Cell("B3").Value = Blank.Value;
+            Assert.AreEqual(-10, ws.Evaluate("MAX(-10,-12,-15,B3)"));
+            ws.Cell("B3").Value = 0;
+            Assert.AreEqual(0, ws.Evaluate("MAXA(-10,-12,-15,B3)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0, (double)workbook.Evaluate("MAXA(IF(TRUE,), -1)"));
+
+            // Scalar logical is converted to number
+            Assert.AreEqual(0, workbook.Evaluate("MAXA(FALSE, -1)"));
+            Assert.AreEqual(1, workbook.Evaluate("MAXA(0, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(7, workbook.Evaluate("MAXA(3, \"7\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("MAXA(1, \"Hello\")"));
+
+            // Array logical arguments are ignored
+            Assert.AreEqual(-2, workbook.Evaluate("MAXA({-2, TRUE, TRUE, FALSE, FALSE})"));
+
+            // Array text arguments are ignored
+            Assert.AreEqual(-2, workbook.Evaluate("MAXA({-4, -2, \"hello\", \"10\" })"));
+
+            // Reference argument only counts logical as 0/1, text as 0 and ignores blanks.
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = true;
+            ws.Cell("A3").Value = "100";
+            ws.Cell("A4").Value = "hello";
+            ws.Cell("A5").Value = -4;
+            Assert.AreEqual(1, ws.Evaluate("MAXA(A1:A5)"));
+            Assert.AreEqual(0, ws.Evaluate("MAXA(A3:A5)"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MAXA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MAXA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MAXA(B1)"));
+        }
+
+        [Test]
         public void Median_CellRangeOfNonNumericValues_ThrowsApplicationException()
         {
             //Arrange

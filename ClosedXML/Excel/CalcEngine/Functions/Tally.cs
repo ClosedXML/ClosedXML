@@ -136,8 +136,6 @@ namespace ClosedXML.Excel.CalcEngine
                 : nums.Aggregate(1d, (a, b) => a * b);
         }
 
-        public double Range() => Max() - Min();
-
         public double Std()
         {
             var values = NumericValuesInternal();
@@ -191,12 +189,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static double Sum2(IEnumerable<double> nums)
         {
             return nums.Sum(d => d * d);
-        }
-
-        private bool HasNonPositiveNumbers()
-        {
-            var nums = NumericValuesInternal();
-            return nums.Any(x => x <= 0);
         }
 
         private IEnumerable<double> NumericValuesEnumerable()
