@@ -13,7 +13,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
             ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, FunctionFlags.Range, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
-            ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, AllowRange.All);
+            ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, FunctionFlags.Range, AllowRange.All);
             //BETADIST	Returns the beta cumulative distribution function
             //BETAINV   Returns the inverse of the cumulative distribution function for a specified beta distribution
             ce.RegisterFunction("BINOMDIST", 4, 4, Adapt(BinomDist), FunctionFlags.Scalar); //BINOMDIST	Returns the individual term binomial distribution probability
@@ -149,9 +149,18 @@ namespace ClosedXML.Excel.CalcEngine
             return sum / count;
         }
 
-        private static object AverageA(List<Expression> p)
+        private static AnyValue AverageA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p, false).Average();
+            var state = (Sum:0.0, Count: 0);
+            var result = TallyAll(ctx, args, state, static (state, value) => (state.Sum + value, state.Count + 1));
+
+            if (!result.TryPickT0(out var tally, out var error))
+                return error;
+
+            if (tally.Count == 0)
+                return XLError.DivisionByZero;
+
+            return tally.Sum / tally.Count;
         }
 
         private static AnyValue BinomDist(double numberSuccesses, double numberTrials, double successProbability, bool cumulativeFlag)
@@ -603,6 +612,54 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             return tally;
+        }
+
+        /// <summary>
+        /// A tally function for *A functions (e.g. AverageA, MinA, MaxA). The behavior is buggy in Excel,
+        /// because they doesn't count logical values in array, but do count them in reference ¯\_(ツ)_/¯
+        /// </summary>
+        private static OneOf<T, XLError> TallyAll<T>(CalcContext ctx, Span<AnyValue> args, T initialState, Func<T, double, T> tallyFunc)
+        {
+            var state = initialState;
+            foreach (var arg in args)
+            {
+                if (arg.TryPickScalar(out var scalar, out var collection))
+                {
+                    // Scalars are converted to number.
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    // All scalars are counted
+                    state = tallyFunc(state, number);
+                }
+                else
+                {
+                    var isArray = collection.TryPickT0(out var array, out var reference);
+                    var valuesIterator = isArray ? array! : ctx.GetNonBlankValues(reference!);
+                    foreach (var value in valuesIterator)
+                    {
+                        // Blank lines are ignored. Logical are counted in reference, but not in array.
+                        if (!isArray && value.TryPickLogical(out var logical))
+                        {
+                            state = tallyFunc(state, logical ? 1 : 0);
+                        }
+                        else if (value.TryPickNumber(out var number))
+                        {
+                            state = tallyFunc(state, number);
+                        }
+                        else if (value.IsText)
+                        {
+                            state = tallyFunc(state, 0);
+                        }
+                        else if (value.TryPickError(out var error))
+                        {
+                            return error;
+                        }
+                    }
+                }
+            }
+
+            return state;
         }
     }
 }
