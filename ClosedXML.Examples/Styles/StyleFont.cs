@@ -48,7 +48,7 @@ namespace ClosedXML.Examples.Styles
             ws.Cell(++ro, co).Value = "FontScheme - Major";
             ws.Cell(ro, co).Style.Font.FontScheme = XLFontScheme.Major;
 
-            ws.Column(co).AdjustToContents();
+            ws.Column(co).Width = 31.571429;
 
             workbook.SaveAs(filePath);
         }
