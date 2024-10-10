@@ -9,6 +9,8 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Statistical
     {
+        private delegate OneOf<T, XLError> TallyFunc<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> numberTally);
+
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
@@ -327,14 +329,14 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue DevSq(CalcContext ctx, Span<AnyValue> args)
         {
             var result = GetSquareDiffSum(ctx, args);
-            if (!result.TryPickT0(out var state, out var error))
+            if (!result.TryPickT0(out var squareDiff, out var error))
                 return error;
 
             // An outlier, most others return #DIV/0! when they can't calculate mean.
-            if (state.Count == 0)
+            if (squareDiff.Count == 0)
                 return XLError.NumberInvalid;
 
-            return state.SquareDiffSum;
+            return squareDiff.Sum;
         }
 
         private static object Fisher(List<Expression> p)
@@ -460,13 +462,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tallied, out var error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
                 return error;
 
-            if (tallied.Count <= 1)
+            if (squareDiff.Count <= 1)
                 return XLError.DivisionByZero;
 
-            return Math.Sqrt(tallied.SquareDiffSum / (tallied.Count - 1));
+            return Math.Sqrt(squareDiff.Sum / (squareDiff.Count - 1));
         }
 
         private static object StDevA(List<Expression> p)
@@ -476,13 +478,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tallied, out var error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
                 return error;
 
-            if (tallied.Count < 1)
+            if (squareDiff.Count < 1)
                 return XLError.DivisionByZero;
 
-            return Math.Sqrt(tallied.SquareDiffSum / tallied.Count);
+            return Math.Sqrt(squareDiff.Sum / squareDiff.Count);
         }
 
         private static object StDevPA(List<Expression> p)
@@ -492,13 +494,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Var(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tally, out var error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
                 return error;
 
-            if (tally.Count <= 1)
+            if (squareDiff.Count <= 1)
                 return XLError.DivisionByZero;
 
-            return tally.SquareDiffSum / (tally.Count - 1);
+            return squareDiff.Sum / (squareDiff.Count - 1);
         }
 
         private static object VarA(List<Expression> p)
@@ -508,13 +510,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var tally, out var error))
+            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
                 return error;
 
-            if (tally.Count < 1)
+            if (squareDiff.Count < 1)
                 return XLError.DivisionByZero;
 
-            return tally.SquareDiffSum / tally.Count;
+            return squareDiff.Sum / squareDiff.Count;
         }
 
         private static object VarPA(List<Expression> p)
@@ -575,6 +577,13 @@ namespace ClosedXML.Excel.CalcEngine
             return new Tally(p);
         }
 
+        /// <inheritdoc cref="GetSquareDiffSum(CalcContext,Span{AnyValue}, TallyFunc{SumState})"/>
+        /// <remarks>This method converts scalar args to numbers and takes only numbers from array/references.</remarks>
+        private static OneOf<SumState, XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
+        {
+            return GetSquareDiffSum(ctx, args, TallyNumbers);
+        }
+
         /// <summary>
         /// Calculate <c>SUM((x_i - mean_x)^2)</c> and number of samples. This method uses two-pass algorithm.
         /// There are several one-pass algorithms, but they are not numerically stable. In this case, accuracy
@@ -582,15 +591,15 @@ namespace ClosedXML.Excel.CalcEngine
         /// those one-pass formulas in the past (see <em>Statistical flaws in Excel</em>), but doesn't seem to
         /// be using them anymore.
         /// </summary>
-        private static OneOf<(double SquareDiffSum, int Count), XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
+        private static OneOf<SumState, XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args, TallyFunc<SumState> tallyNumbers)
         {
             // Calculate mean
-            var sumResult = TallyNumbers(ctx, args, (Sum: 0.0, Count: 0), static (state, number) => (state.Sum + number, state.Count + 1));
+            var sumResult = tallyNumbers(ctx, args, new SumState(0.0, 0), static (state, number) => new SumState(state.Sum + number, state.Count + 1));
             if (!sumResult.TryPickT0(out var averageState, out var sumError))
                 return sumError;
 
             if (averageState.Count == 0)
-                return (0.0, 0);
+                return new SumState(0.0, 0);
 
             var average = averageState.Sum / averageState.Count;
 
@@ -606,9 +615,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (!result.TryPickT0(out var tallied, out var error))
                 return error;
 
-            return (tallied.SquareDiffSum, tallied.Count);
+            return new SumState(tallied.SquareDiffSum, tallied.Count);
         }
-
+        
         /// <summary>
         /// The method tries to convert scalar arguments to numbers, but ignores non-numbers in
         /// reference/array. Any error found is propagated to the result.
@@ -648,7 +657,14 @@ namespace ClosedXML.Excel.CalcEngine
 
         /// <summary>
         /// A tally function for *A functions (e.g. AverageA, MinA, MaxA). The behavior is buggy in Excel,
-        /// because they doesn't count logical values in array, but do count them in reference ¯\_(ツ)_/¯
+        /// because they doesn't count logical values in array, but do count them in reference ¯\_(ツ)_/¯.
+        ///
+        /// <list type="bullet">
+        ///   <item>Scalar values are converted to number, conversion might lead to errors.</item>
+        ///   <item>Array values ignore logical, text is evaluated as zero (unless <paramref name="countArrayTextAsZero"/> is <c>false</c>).</item>
+        ///   <item>Reference values include logical, text is evaluated as zero.</item>
+        /// </list>
+        /// Any error is propagated.
         /// </summary>
         /// <paramref name="countArrayTextAsZero">When there is a text value in an array, should it be tallied
         ///   as <c>0</c> (<c>true</c>), or should it be ignored (<c>false</c>).</paramref>
@@ -697,5 +713,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return state;
         }
+
+        private readonly record struct SumState(double Sum, int Count);
     }
 }
