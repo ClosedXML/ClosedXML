@@ -1319,6 +1319,11 @@ namespace ClosedXML.Excel.IO
                 var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
                 foreach (var removedPicture in xlPictures.Deleted)
                 {
+                    // Clear existing anchor of the deleted picture
+                    var existingAnchor = GetAnchorFromImageId(worksheetPart.DrawingsPart, removedPicture);
+                    if (existingAnchor != null)
+                        worksheetPart.DrawingsPart.WorksheetDrawing.RemoveChild(existingAnchor);
+
                     worksheetPart.DrawingsPart.DeletePart(removedPicture);
                 }
                 xlPictures.Deleted.Clear();
