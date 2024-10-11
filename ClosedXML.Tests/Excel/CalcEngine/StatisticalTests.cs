@@ -28,19 +28,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Column D contains only strings - no average, because non-number types are skipped
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("AVERAGE(D3:D45)"));
 
-            // Logical and text are converted when passed as scalar arguments
-            Assert.AreEqual(0.5, ws.Evaluate("AVERAGE(FALSE, TRUE, \"1\", \"0 0/2\")"));
-
             // Non-numbers in array are skipped instead of being converted
             Assert.AreEqual(-1, ws.Evaluate("AVERAGE({FALSE, TRUE, \"1\", \"0 0/2\", -1})"));
-
-            // Blank scalar value is counted as 0
-            Assert.AreEqual(0.5, ws.Evaluate("AVERAGE(IF(TRUE,),1)"));
 
             // Blank value in references are skipped
             ws.Cell("Z1").Value = Blank.Value;
             Assert.AreEqual(1, ws.Evaluate("AVERAGE(Z1,1)"));
 
+            AssertScalarToNumberConversion("AVERAGE", 0.5);
             AssertAnyErrorIsPropagated("AVERAGE");
         }
 
@@ -58,19 +53,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("E3").Value = false;
             Assert.AreEqual(5, ws.Evaluate("AVERAGEA(10, E3)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, (double)workbook.Evaluate("AVERAGEA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("AVERAGEA(FALSE, 1)"));
-            Assert.AreEqual(0.5, workbook.Evaluate("AVERAGEA(0, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(2, workbook.Evaluate("AVERAGEA(3, \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("AVERAGEA(1, \"Hello\")"));
-
             // Array logical arguments are ignored
             Assert.AreEqual(2, workbook.Evaluate("AVERAGEA({2,TRUE,TRUE,FALSE,FALSE})"));
 
@@ -86,6 +68,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 4; // 4
             Assert.AreEqual(1, (double)ws.Evaluate("AVERAGEA(Z1:Z6)"));
 
+            AssertScalarToNumberConversion("AVERAGEA", 0.5);
             AssertAnyErrorIsPropagated("AVERAGEA");
         }
 
@@ -536,18 +519,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(6.90666666666666, (double)XLWorkbook.EvaluateExpr("DEVSQ(5.6, 8.2, 9.2)"));
             Assert.AreEqual(6.90666666666666, (double)XLWorkbook.EvaluateExpr("DEVSQ({ 5.6, 8.2, 9.2})"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, (double)workbook.Evaluate("DEVSQ(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to a number
-            Assert.AreEqual(0.5, workbook.Evaluate("DEVSQ(FALSE, TRUE)"));
-
-            // Scalar text is converted to a number
-            Assert.AreEqual(14, workbook.Evaluate("DEVSQ(\"3\", \"2\", \"7\")"));
-
-            // Scalar text that is not convertible returns an error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("DEVSQ(\"Hello\")"));
-
             // Array logical arguments are ignored
             Assert.AreEqual(0, workbook.Evaluate("DEVSQ({2,TRUE,TRUE,FALSE,FALSE})"));
             Assert.AreEqual(2.8, (double)workbook.Evaluate("DEVSQ({2, 1, 1, 0, 0})"));
@@ -566,6 +537,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A6").Value = 4; // Included
             Assert.AreEqual(2, ws.Evaluate("DEVSQ(A1:A6)"));
 
+            AssertScalarToNumberConversion("DEVSQ", 0.5);
             AssertAnyErrorIsPropagated("DEVSQ");
         }
 
@@ -616,22 +588,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"MAX(-10, Data!X:Z)");
             Assert.AreEqual(-10, value);
 
-            // Blanks are not ignored as a value, only in references.
-            value = workbook.Evaluate(@"MAX(-10, IF(TRUE,,))");
-            Assert.AreEqual(0, value);
-
-            // Logical are converted
-            value = workbook.Evaluate(@"MAX(-10, TRUE)");
-            Assert.AreEqual(1, value);
-
-            // Numbers texts are converted
-            value = workbook.Evaluate(@"MAX(-10, ""10"")");
-            Assert.AreEqual(10, value);
-
-            // Non-number texts cause conversion error
-            value = workbook.Evaluate(@"MAX(-10, ""a"")");
-            Assert.AreEqual(XLError.IncompatibleValue, value);
-
             // Arrays - numbers are used
             value = workbook.Evaluate(@"MAX(-10, { -6, -5, 7 })");
             Assert.AreEqual(7, value);
@@ -640,6 +596,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"MAX(-10, { TRUE, FALSE, ""100"" })");
             Assert.AreEqual(-10, value);
 
+            AssertScalarToNumberConversion("MAX", 1);
             AssertAnyErrorIsPropagated("MAX");
         }
 
@@ -658,19 +615,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = 0;
             Assert.AreEqual(0, ws.Evaluate("MAXA(-10,-12,-15,B3)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0, (double)workbook.Evaluate("MAXA(IF(TRUE,), -1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0, workbook.Evaluate("MAXA(FALSE, -1)"));
-            Assert.AreEqual(1, workbook.Evaluate("MAXA(0, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(7, workbook.Evaluate("MAXA(3, \"7\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("MAXA(1, \"Hello\")"));
-
             // Array logical arguments are ignored
             Assert.AreEqual(-2, workbook.Evaluate("MAXA({-2, TRUE, TRUE, FALSE, FALSE})"));
 
@@ -686,6 +630,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1, ws.Evaluate("MAXA(A1:A5)"));
             Assert.AreEqual(0, ws.Evaluate("MAXA(A3:A5)"));
 
+            AssertScalarToNumberConversion("MAXA", 1);
             AssertAnyErrorIsPropagated("MAXA");
         }
 
@@ -759,18 +704,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").Value = Blank.Value;
             Assert.AreEqual(XLError.NumberInvalid, ws.Evaluate("MEDIAN(A1)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(3, ws.Evaluate("MEDIAN(IF(TRUE,,),6)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.5, ws.Evaluate("MEDIAN(TRUE, FALSE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(5, ws.Evaluate("MEDIAN(\"3\", \"7\")"));
-
-            // Scalar text that is not convertible will return conversion error
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MEDIAN(\"Hello\")"));
-
             // Array non-number values are ignored
             Assert.AreEqual(7, ws.Evaluate("MEDIAN({7, TRUE,FALSE,\"1\"})"));
 
@@ -784,6 +717,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A7").Value = 5;
             Assert.AreEqual(4, ws.Evaluate("MEDIAN(A1:A7)"));
 
+            AssertScalarToNumberConversion("MEDIAN", 0.5);
             AssertAnyErrorIsPropagated("MEDIAN");
         }
 
@@ -795,19 +729,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(2, ws.Evaluate("MIN(G3:G45)"));
             Assert.AreEqual(2, ws.Evaluate("MIN(G:G)"));
             Assert.AreEqual(2, workbook.Evaluate("MIN(Data!G:G)"));
-
-            // Scalar blank argument is converted
-            Assert.AreEqual(0, workbook.Evaluate("MIN(IF(TRUE,,), 1)"));
-
-            // Scalar logical argument is converted
-            Assert.AreEqual(0, workbook.Evaluate("MIN(FALSE, 1)"));
-            Assert.AreEqual(1, workbook.Evaluate("MIN(TRUE, 2)"));
-
-            // Scalar text argument is converted if possible
-            Assert.AreEqual(2, workbook.Evaluate("MIN(\"2\", 3)"));
-
-            // Scalar text argument that is not convertible returns error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("MIN(\"hello\", 3)"));
 
             // Array non-number arguments are ignored
             Assert.AreEqual(5, workbook.Evaluate("MIN({5, TRUE, FALSE, \"1\", \"hello\"})"));
@@ -824,6 +745,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // If there is no value, return 0
             Assert.AreEqual(0, ws.Evaluate("MIN({\"hello\"})"));
 
+            AssertScalarToNumberConversion("MIN", 0);
             AssertAnyErrorIsPropagated("MIN");
         }
 
@@ -846,19 +768,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").Value = Blank.Value;
             Assert.AreEqual(0, ws.Evaluate("MINA(A1)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0, wb.Evaluate("MINA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to a number
-            Assert.AreEqual(0, wb.Evaluate("MINA(FALSE, 1)"));
-            Assert.AreEqual(1, wb.Evaluate("MINA(TRUE, 2)"));
-
-            // Scalar text is converted to a number
-            Assert.AreEqual(3, wb.Evaluate("MINA(\"3\", \"7\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("MINA(\"Hello\")"));
-
             // Array logical arguments are ignored
             Assert.AreEqual(2, wb.Evaluate("MINA({2, TRUE, TRUE, FALSE, FALSE})"));
 
@@ -875,10 +784,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(0, ws.Evaluate("MINA(A1:A3)"));
             Assert.AreEqual(-4, ws.Evaluate("MINA(A1:A5)"));
 
+            AssertScalarToNumberConversion("MINA", 0);
             AssertAnyErrorIsPropagated("MINA");
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
         public void StDev()
         {
             var ws = workbook.Worksheets.First();
@@ -901,19 +812,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("STDEV(1)"));
             Assert.AreEqual(0, workbook.Evaluate("STDEV(0, 0)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(IF(TRUE,), 1)"), tolerance);
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(FALSE, 1)"), tolerance);
-            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(0, TRUE)"), tolerance);
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV(0, \"1\")"), tolerance);
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("STDEV(0, 1, \"Hello\")"));
-
             // Array non-number arguments are ignored
             Assert.AreEqual(0.707106781, (double)workbook.Evaluate("STDEV({0, 1, \"Hello\", FALSE, TRUE})"), tolerance);
 
@@ -926,6 +824,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEV(Z1:Z6)"), tolerance);
 
+            AssertScalarToNumberConversion("STDEV", 0.707106781);
             AssertAnyErrorIsPropagated("STDEV");
         }
 
@@ -938,18 +837,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Example from specification
             Assert.AreEqual(23.72902583, (double)ws.Evaluate("STDEVA(123, 134, 143, 173, 112, 109)"));
-
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to a number
-            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(FALSE, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(\"0\", \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("STDEVA(5, \"Hello\")"));
 
             // Array non-number arguments are ignored
             Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA({0, 1, \"9\", \"Hello\", FALSE, TRUE})"));
@@ -967,6 +854,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVA({\"hello\"})"));
 
+            AssertScalarToNumberConversion("STDEVA", 0.707106781);
             AssertAnyErrorIsPropagated("STDEVA");
         }
 
@@ -993,19 +881,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("STDEVP({TRUE})"));
             Assert.AreEqual(0, workbook.Evaluate("STDEVP(100)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(FALSE, 1)"));
-            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(0, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("STDEVP(0, \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("STDEVP(0, 1, \"Hello\")"));
-
             // Array non-number arguments are ignored
             Assert.AreEqual(0.5, workbook.Evaluate("STDEVP({0, 1, \"Hello\", FALSE, TRUE})"));
 
@@ -1018,6 +893,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.5, ws.Evaluate("STDEVP(Z1:Z6)"));
 
+            AssertScalarToNumberConversion("STDEVP", 0.5);
             AssertAnyErrorIsPropagated("STDEVP");
         }
 
@@ -1030,18 +906,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Example from specification
             Assert.AreEqual(21.66153785, (double)ws.Evaluate("STDEVPA(123, 134, 143, 173, 112, 109)"));
-
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to a number
-            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(FALSE, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(\"0\", \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("STDEVPA(5, \"Hello\")"));
 
             // Array non-number arguments are ignored
             Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA({0, 1, \"9\", \"Hello\", FALSE, TRUE})"));
@@ -1059,6 +923,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVPA({\"hello\"})"));
 
+            AssertScalarToNumberConversion("STDEVPA", 0.5);
             AssertAnyErrorIsPropagated("STDEVPA");
         }
 
@@ -1128,19 +993,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VAR(5)"));
             Assert.AreEqual(0.5, workbook.Evaluate("VAR(5, 6)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, workbook.Evaluate("VAR(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("VAR(FALSE, 1)"));
-            Assert.AreEqual(0.5, workbook.Evaluate("VAR(0, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("VAR(0, \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("VAR(0, 1, \"Hello\")"));
-
             // Array non-number arguments are ignored
             Assert.AreEqual(0.5, workbook.Evaluate("VAR({0, 1, \"Hello\", FALSE, TRUE})"));
 
@@ -1153,6 +1005,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.5, ws.Evaluate("VAR(Z1:Z6)"));
 
+            AssertScalarToNumberConversion("VAR", 0.5);
             AssertAnyErrorIsPropagated("VAR");
         }
 
@@ -1165,18 +1018,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Example from specification
             Assert.AreEqual(2683.2, ws.Evaluate("VARA(1202, 1220, 1323, 1254, 1302)"));
-
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, ws.Evaluate("VARA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.5, ws.Evaluate("VARA(FALSE, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(2, ws.Evaluate("VARA(\"5\", \"7\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("VARA(5, \"Hello\")"));
 
             // Array non-number arguments are ignored
             Assert.AreEqual(2, ws.Evaluate("VARA({5, 7, \"9\", \"Hello\", FALSE, TRUE})"));
@@ -1194,6 +1035,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARA({\"hello\"})"));
 
+            AssertScalarToNumberConversion("VARA", 0.5);
             AssertAnyErrorIsPropagated("VARA");
         }
 
@@ -1219,19 +1061,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VARP({\"hello\"})"));
             Assert.AreEqual(0, workbook.Evaluate("VARP(5)"));
 
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.25, workbook.Evaluate("VARP(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to number
-            Assert.AreEqual(0.25, workbook.Evaluate("VARP(FALSE, 1)"));
-            Assert.AreEqual(0.25, workbook.Evaluate("VARP(0, TRUE)"));
-
-            // Scalar text is converted to number
-            Assert.AreEqual(0.25, workbook.Evaluate("VARP(0, \"1\")"));
-
-            // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("VARP(0, 1, \"Hello\")"));
-
             // Array non-number arguments are ignored
             Assert.AreEqual(0.25, workbook.Evaluate("VARP({0, 1, \"Hello\", FALSE, TRUE})"));
 
@@ -1244,6 +1073,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.25, ws.Evaluate("VARP(Z1:Z6)"));
 
+            AssertScalarToNumberConversion("VARP", 0.25);
             AssertAnyErrorIsPropagated("VARP");
         }
 
@@ -1256,18 +1086,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Example from specification
             Assert.AreEqual(2146.56, ws.Evaluate("VARPA(1202, 1220, 1323, 1254, 1302)"));
-
-            // Scalar blank is converted to 0
-            Assert.AreEqual(0.25, ws.Evaluate("VARPA(IF(TRUE,), 1)"));
-
-            // Scalar logical is converted to a number
-            Assert.AreEqual(0.25, ws.Evaluate("VARPA(FALSE, TRUE)"));
-
-            // Scalar text is converted to a number
-            Assert.AreEqual(1, ws.Evaluate("VARPA(\"5\", \"7\")"));
-
-            // Scalar text that is not convertible returns error
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("VARPA(5, \"Hello\")"));
 
             // Array non-number arguments are ignored
             Assert.AreEqual(1, ws.Evaluate("VARPA({5, 7, \"9\", \"Hello\", FALSE, TRUE})"));
@@ -1285,6 +1103,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARPA({\"hello\"})"));
 
+            AssertScalarToNumberConversion("VARPA", 0.25);
             AssertAnyErrorIsPropagated("VARPA");
         }
 
@@ -1403,6 +1222,24 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws2.FirstCell().InsertData(new object[] { 1, 2.0, "3", 3, new DateTime(2020, 1, 1), true, new TimeSpan(10, 5, 30, 10) });
 
             return wb;
+        }
+
+        private static void AssertScalarToNumberConversion(string functionName, double result)
+        {
+            // Scalar blank is converted to 0
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(FALSE, TRUE)"));
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(0, TRUE)"));
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(FALSE, 1)"));
+
+            // Scalar text is converted to a number
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(\"0\", \"1\")"));
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"{functionName}(\"1\", \"0 0/2\")"));
+
+            // Scalar text that is not convertible returns error
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"{functionName}(5, \"Hello\")"));
         }
 
         /// <summary>
