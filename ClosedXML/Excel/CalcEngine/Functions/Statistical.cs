@@ -82,7 +82,7 @@ namespace ClosedXML.Excel.CalcEngine
             //SMALL	Returns the k-th smallest value in a data set
             //STANDARDIZE	Returns a normalized value
             ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, AllowRange.All);
+            ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, AllowRange.All);
             ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
@@ -472,9 +472,15 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(squareDiff.Sum / (squareDiff.Count - 1));
         }
 
-        private static object StDevA(List<Expression> p)
+        private static AnyValue StDevA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p).Std();
+            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+                return error;
+
+            if (squareDiff.Count <= 1)
+                return XLError.DivisionByZero;
+
+            return Math.Sqrt(squareDiff.Sum / (squareDiff.Count - 1));
         }
 
         private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)

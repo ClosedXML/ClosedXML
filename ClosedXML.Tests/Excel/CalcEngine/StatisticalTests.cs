@@ -991,6 +991,55 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void StDevA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Example from specification
+            Assert.AreEqual(23.72902583, (double)ws.Evaluate("STDEVA(123, 134, 143, 173, 112, 109)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(FALSE, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA(\"0\", \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("STDEVA(5, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEVA({0, 1, \"9\", \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument ignores blanks, uses numbers, logical and text as zero
+            ws.Cell("A1").Value = Blank.Value; // Ignore
+            ws.Cell("A2").Value = true; // Include
+            ws.Cell("A3").Value = ""; // Consider 0
+            ws.Cell("A4").Value = "100"; // Consider 0
+            ws.Cell("A5").Value = "hello"; // Consider 0
+            ws.Cell("A6").Value = 5;
+            ws.Cell("A7").Value = 7;
+            Assert.AreEqual(3.060501048, (double)ws.Evaluate("STDEVA(A1:A7)"));
+
+            // Need at least one sample, otherwise returns error (text in array is ignored)
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVA({\"hello\"})"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVA(B1)"));
+        }
+
+        [Test]
         public void StDevP()
         {
             var ws = workbook.Worksheets.First();
