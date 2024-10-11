@@ -429,7 +429,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("H15:H20", ExpectedResult = 15.8927310267677)]
         [TestCase("H20:H30", ExpectedResult = 7.14321227391814)]
         [DefaultFloatingPointTolerance(1e-12)]
-        public double Geomean(string sourceValue)
+        public double Geomean_calculation(string sourceValue)
         {
             return (double)workbook.Worksheets.First().Evaluate($"GEOMEAN({sourceValue})");
         }
@@ -446,7 +446,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [Test]
         [DefaultFloatingPointTolerance(1e-8)]
-        public void Geomean_behavior()
+        public void Geomean()
         {
             // Example from the specification
             Assert.AreEqual(5.4444547024966, (double)XLWorkbook.EvaluateExpr("GEOMEAN(10.5,5.3,2.9)"));
