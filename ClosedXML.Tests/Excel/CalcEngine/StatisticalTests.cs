@@ -1162,19 +1162,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(2683.2, ws.Evaluate("VARA(1202, 1220, 1323, 1254, 1302)"));
 
             // Scalar blank is converted to 0
-            Assert.AreEqual(0.5, workbook.Evaluate("VARA(IF(TRUE,), 1)"));
+            Assert.AreEqual(0.5, ws.Evaluate("VARA(IF(TRUE,), 1)"));
 
             // Scalar logical is converted to number
-            Assert.AreEqual(0.5, workbook.Evaluate("VARA(FALSE, TRUE)"));
+            Assert.AreEqual(0.5, ws.Evaluate("VARA(FALSE, TRUE)"));
 
             // Scalar text is converted to number
-            Assert.AreEqual(2, workbook.Evaluate("VARA(\"5\", \"7\")"));
+            Assert.AreEqual(2, ws.Evaluate("VARA(\"5\", \"7\")"));
 
             // Scalar text that is not convertible return error
-            Assert.AreEqual(XLError.IncompatibleValue, workbook.Evaluate("VARA(5, \"Hello\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("VARA(5, \"Hello\")"));
 
             // Array non-number arguments are ignored
-            Assert.AreEqual(2, workbook.Evaluate("VARA({5, 7, \"9\", \"Hello\", FALSE, TRUE})"));
+            Assert.AreEqual(2, ws.Evaluate("VARA({5, 7, \"9\", \"Hello\", FALSE, TRUE})"));
 
             // Reference argument ignores blanks, uses numbers, logical and text as zero
             ws.Cell("A1").Value = Blank.Value; // Ignore
@@ -1187,17 +1187,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(9.366666667, (double)ws.Evaluate("VARA(A1:A7)"));
 
             // Need at least one sample, otherwise returns error (text in array is ignored)
-            Assert.AreEqual(XLError.DivisionByZero, workbook.Evaluate("VARA({\"hello\"})"));
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARA({\"hello\"})"));
 
             // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARA(1, #NULL!)"));
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARA(1, #NULL!)"));
 
             // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARA({1, #NULL!})"));
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARA({1, #NULL!})"));
 
             // Reference error is propagated
             ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VAR(B1)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARA(B1)"));
         }
 
         [Test]
@@ -1256,6 +1256,55 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Reference error is propagated
             ws.Cell("Z1").Value = XLError.NoValueAvailable;
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARP(Z1)"));
+        }
+
+        [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void VarPA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Example from specification
+            Assert.AreEqual(2146.56, ws.Evaluate("VARPA(1202, 1220, 1323, 1254, 1302)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.25, ws.Evaluate("VARPA(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(0.25, ws.Evaluate("VARPA(FALSE, TRUE)"));
+
+            // Scalar text is converted to a number
+            Assert.AreEqual(1, ws.Evaluate("VARPA(\"5\", \"7\")"));
+
+            // Scalar text that is not convertible returns error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("VARPA(5, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(1, ws.Evaluate("VARPA({5, 7, \"9\", \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument ignores blanks, uses numbers, logical and text as zero
+            ws.Cell("A1").Value = Blank.Value; // Ignore
+            ws.Cell("A2").Value = true; // Include
+            ws.Cell("A3").Value = ""; // Consider 0
+            ws.Cell("A4").Value = "100"; // Consider 0
+            ws.Cell("A5").Value = "hello"; // Consider 0
+            ws.Cell("A6").Value = 5;
+            ws.Cell("A7").Value = 7;
+            Assert.AreEqual(7.805555556, (double)ws.Evaluate("VARPA(A1:A7)"));
+
+            // Need at least one sample, otherwise returns error (text in array is ignored)
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARPA({\"hello\"})"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARPA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARPA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARPA(B1)"));
         }
 
         [Test]

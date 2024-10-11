@@ -96,7 +96,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("VAR", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VARA", 1, int.MaxValue, VarA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, AllowRange.All);
+            ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
             //WEIBULL	Returns the Weibull distribution
@@ -526,9 +526,15 @@ namespace ClosedXML.Excel.CalcEngine
             return squareDiff.Sum / squareDiff.Count;
         }
 
-        private static object VarPA(List<Expression> p)
+        private static AnyValue VarPA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p).VarP();
+            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+                return error;
+
+            if (squareDiff.Count < 1)
+                return XLError.DivisionByZero;
+
+            return squareDiff.Sum / squareDiff.Count;
         }
 
         private static AnyValue Large(CalcContext ctx, AnyValue arrayParam, double kParam)
