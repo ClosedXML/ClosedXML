@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, AllowRange.All);
+            ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
@@ -494,9 +494,15 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(squareDiff.Sum / squareDiff.Count);
         }
 
-        private static object StDevPA(List<Expression> p)
+        private static AnyValue StDevPA(CalcContext ctx, Span<AnyValue> args)
         {
-            return GetTally(p).StdP();
+            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+                return error;
+
+            if (squareDiff.Count < 1)
+                return XLError.DivisionByZero;
+
+            return Math.Sqrt(squareDiff.Sum / squareDiff.Count);
         }
 
         private static AnyValue Var(CalcContext ctx, Span<AnyValue> args)
@@ -588,12 +594,6 @@ namespace ClosedXML.Excel.CalcEngine
             total.Sort();
 
             return total[^k];
-        }
-
-        // utility for tallying statistics
-        private static Tally GetTally(List<Expression> p)
-        {
-            return new Tally(p);
         }
 
         /// <remarks>

@@ -1098,6 +1098,55 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVP(Z1)"));
         }
 
+        [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void StDevPA()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Example from specification
+            Assert.AreEqual(21.66153785, (double)ws.Evaluate("STDEVPA(123, 134, 143, 173, 112, 109)"));
+
+            // Scalar blank is converted to 0
+            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(IF(TRUE,), 1)"));
+
+            // Scalar logical is converted to a number
+            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(FALSE, TRUE)"));
+
+            // Scalar text is converted to number
+            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA(\"0\", \"1\")"));
+
+            // Scalar text that is not convertible return error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("STDEVPA(5, \"Hello\")"));
+
+            // Array non-number arguments are ignored
+            Assert.AreEqual(0.5, (double)ws.Evaluate("STDEVPA({0, 1, \"9\", \"Hello\", FALSE, TRUE})"));
+
+            // Reference argument ignores blanks, uses numbers, logical and text as zero
+            ws.Cell("A1").Value = Blank.Value; // Ignore
+            ws.Cell("A2").Value = true; // Include
+            ws.Cell("A3").Value = ""; // Consider 0
+            ws.Cell("A4").Value = "100"; // Consider 0
+            ws.Cell("A5").Value = "hello"; // Consider 0
+            ws.Cell("A6").Value = 5;
+            ws.Cell("A7").Value = 7;
+            Assert.AreEqual(2.793842436, (double)ws.Evaluate("STDEVPA(A1:A7)"));
+
+            // Need at least one sample, otherwise returns error (text in array is ignored)
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVPA({\"hello\"})"));
+
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVPA(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVPA({1, #NULL!})"));
+
+            // Reference error is propagated
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVPA(B1)"));
+        }
+
         [TestCase(@"=SUMIF(A1:A10, 1, A1:A10)", 1)]
         [TestCase(@"=SUMIF(A1:A10, 2.0, A1:A10)", 2)]
         [TestCase(@"=SUMIF(A1:A10, 3, A1:A10)", 3)]
