@@ -34,19 +34,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Non-numbers in array are skipped instead of being converted
             Assert.AreEqual(-1, ws.Evaluate("AVERAGE({FALSE, TRUE, \"1\", \"0 0/2\", -1})"));
 
-            // Errors in scalar argument is propagated
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGE(1, #N/A)"));
-
-            // When a reference contains error, the result is error.
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGE(1, Z1)"));
-
             // Blank scalar value is counted as 0
             Assert.AreEqual(0.5, ws.Evaluate("AVERAGE(IF(TRUE,),1)"));
 
             // Blank value in references are skipped
             ws.Cell("Z1").Value = Blank.Value;
             Assert.AreEqual(1, ws.Evaluate("AVERAGE(Z1,1)"));
+
+            AssertAnyErrorIsPropagated("AVERAGE");
         }
 
         [Test]
@@ -91,15 +86,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 4; // 4
             Assert.AreEqual(1, (double)ws.Evaluate("AVERAGEA(Z1:Z6)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("AVERAGEA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("AVERAGEA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("AVERAGEA(Z1)"));
+            AssertAnyErrorIsPropagated("AVERAGEA");
         }
 
         [TestCase(6, 10, 0.5, 0.205078125)]
@@ -507,15 +494,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 5;
             Assert.AreEqual(5, (double)ws.Evaluate("GEOMEAN(Z1:Z6)"));
 
-            // Scalar errors are propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN(1, #NULL!)"));
-
-            // Array errors are propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN({1, #NULL!})"));
-
-            // Reference errors are propagated
-            ws.Cell("Z1").Value = XLError.NullValue;
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("GEOMEAN(Z1)"));
+            AssertAnyErrorIsPropagated("GEOMEAN");
         }
 
         [SetUp]
@@ -587,15 +566,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A6").Value = 4; // Included
             Assert.AreEqual(2, ws.Evaluate("DEVSQ(A1:A6)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("DEVSQ(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("DEVSQ({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("A1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("DEVSQ(A1)"));
+            AssertAnyErrorIsPropagated("DEVSQ");
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -669,9 +640,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"MAX(-10, { TRUE, FALSE, ""100"" })");
             Assert.AreEqual(-10, value);
 
-            // Arrays - errors immediately end evaluation.
-            value = workbook.Evaluate(@"MAX(-10, {#N/A})");
-            Assert.AreEqual(XLError.NoValueAvailable, value);
+            AssertAnyErrorIsPropagated("MAX");
         }
 
         [Test]
@@ -717,15 +686,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1, ws.Evaluate("MAXA(A1:A5)"));
             Assert.AreEqual(0, ws.Evaluate("MAXA(A3:A5)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MAXA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MAXA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MAXA(B1)"));
+            AssertAnyErrorIsPropagated("MAXA");
         }
 
         [Test]
@@ -823,15 +784,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A7").Value = 5;
             Assert.AreEqual(4, ws.Evaluate("MEDIAN(A1:A7)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MEDIAN(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("MEDIAN({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("A1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MEDIAN(A1)"));
+            AssertAnyErrorIsPropagated("MEDIAN");
         }
 
         [Test]
@@ -870,6 +823,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // If there is no value, return 0
             Assert.AreEqual(0, ws.Evaluate("MIN({\"hello\"})"));
+
+            AssertAnyErrorIsPropagated("MIN");
         }
 
         [Test]
@@ -920,15 +875,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(0, ws.Evaluate("MINA(A1:A3)"));
             Assert.AreEqual(-4, ws.Evaluate("MINA(A1:A5)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("MINA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("MINA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("MINA(B1)"));
+            AssertAnyErrorIsPropagated("MINA");
         }
 
         [Test]
@@ -979,15 +926,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.707106781, (double)ws.Evaluate("STDEV(Z1:Z6)"), tolerance);
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEV(0, 1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEV({0, 1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEV(Z1)"));
+            AssertAnyErrorIsPropagated("STDEV");
         }
 
         [Test]
@@ -1028,15 +967,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVA({\"hello\"})"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVA(B1)"));
+            AssertAnyErrorIsPropagated("STDEVA");
         }
 
         [Test]
@@ -1087,15 +1018,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.5, ws.Evaluate("STDEVP(Z1:Z6)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEVP(0, 1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("STDEVP({0, 1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVP(Z1)"));
+            AssertAnyErrorIsPropagated("STDEVP");
         }
 
         [Test]
@@ -1136,15 +1059,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("STDEVPA({\"hello\"})"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVPA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("STDEVPA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("STDEVPA(B1)"));
+            AssertAnyErrorIsPropagated("STDEVPA");
         }
 
         [TestCase(@"=SUMIF(A1:A10, 1, A1:A10)", 1)]
@@ -1238,15 +1153,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.5, ws.Evaluate("VAR(Z1:Z6)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VAR(0, 1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VAR({0, 1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VAR(Z1)"));
+            AssertAnyErrorIsPropagated("VAR");
         }
 
         [Test]
@@ -1287,15 +1194,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARA({\"hello\"})"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARA(B1)"));
+            AssertAnyErrorIsPropagated("VARA");
         }
 
         [Test]
@@ -1345,15 +1244,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("Z6").Value = 1;
             Assert.AreEqual(0.25, ws.Evaluate("VARP(Z1:Z6)"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARP(0, 1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, workbook.Evaluate("VARP({0, 1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("Z1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARP(Z1)"));
+            AssertAnyErrorIsPropagated("VARP");
         }
 
         [Test]
@@ -1394,15 +1285,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Need at least one sample, otherwise returns error (text in array is ignored)
             Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("VARPA({\"hello\"})"));
 
-            // Scalar error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARPA(1, #NULL!)"));
-
-            // Array error is propagated
-            Assert.AreEqual(XLError.NullValue, ws.Evaluate("VARPA({1, #NULL!})"));
-
-            // Reference error is propagated
-            ws.Cell("B1").Value = XLError.NoValueAvailable;
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("VARPA(B1)"));
+            AssertAnyErrorIsPropagated("VARPA");
         }
 
         [Test]
@@ -1520,6 +1403,27 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws2.FirstCell().InsertData(new object[] { 1, 2.0, "3", 3, new DateTime(2020, 1, 1), true, new TimeSpan(10, 5, 30, 10) });
 
             return wb;
+        }
+
+        /// <summary>
+        /// Assert that a function propagates any error, whether from scalar, array or reference argument.
+        /// </summary>
+        /// <param name="functionName">Name of a function that accepts any value as argument.</param>
+        private static void AssertAnyErrorIsPropagated(string functionName)
+        {
+            // Scalar error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr($"{functionName}(1, #NULL!)"));
+
+            // Array error is propagated
+            Assert.AreEqual(XLError.NullValue, XLWorkbook.EvaluateExpr($"{functionName}({{1, #NULL!}})"));
+
+            // Reference error is propagated
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B1").Value = XLError.NoValueAvailable;
+            ws.Cell("B2").Value = 1;
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate($"{functionName}(B1)"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate($"{functionName}(B1:B2)"));
         }
     }
 }
