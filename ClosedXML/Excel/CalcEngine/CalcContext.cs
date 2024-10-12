@@ -124,6 +124,26 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
+        /// This method should be used mostly for range arguments. If a value is scalar,
+        /// return a single value enumerable.
+        /// </summary>
+        internal IEnumerable<ScalarValue> GetNonBlankValues(AnyValue value)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+            {
+                if (scalar.IsBlank)
+                    return System.Array.Empty<ScalarValue>();
+
+                return new ScalarArray(scalar, 1, 1);
+            }
+
+            if (collection.TryPickT0(out var array, out var reference))
+                return array.Where(x => !x.IsBlank);
+            
+            return GetNonBlankValues(reference);
+        }
+
+        /// <summary>
         /// Get cells with a value for a reference.
         /// </summary>
         /// <param name="reference">Reference for which to return cells.</param>
