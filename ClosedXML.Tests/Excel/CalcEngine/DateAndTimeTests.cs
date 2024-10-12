@@ -293,32 +293,65 @@ namespace ClosedXML.Tests.Excel.DataValidations
             Assert.AreEqual(DateTime.Now.Date.ToSerialDateTime(), actual);
         }
 
-        [Test]
-        public void Weekday_1()
+        [TestCase("\"2/14/2008\"", 1, 5)]
+        [TestCase("\"2/14/2008\"", 2, 4)]
+        [TestCase("\"2/14/2008\"", 3, 3)]
+        [TestCase("\"2/14/2008\"", 11, 4)]
+        [TestCase("\"2/14/2008\"", 12, 3)]
+        [TestCase("\"2/14/2008\"", 13, 2)]
+        [TestCase("\"2/14/2008\"", 14, 1)]
+        [TestCase("\"2/14/2008\"", 15, 7)]
+        [TestCase("\"2/14/2008\"", 16, 6)]
+        [TestCase("\"2/14/2008\"", 17, 5)]
+        public void Weekday_calculates_week_day(string value, int flag, int expected)
         {
-            var actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 1)");
+            var actual = XLWorkbook.EvaluateExpr($"WEEKDAY({value}, {flag})");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Weekday_without_flag()
+        {
+            var actual = XLWorkbook.EvaluateExpr("WEEKDAY(\"2/14/2008\")");
             Assert.AreEqual(5, actual);
         }
 
         [Test]
-        public void Weekday_2()
+        public void Weekday_behavior()
         {
-            var actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 2)");
-            Assert.AreEqual(4, actual);
-        }
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-        [Test]
-        public void Weekday_3()
-        {
-            var actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 3)");
-            Assert.AreEqual(3, actual);
-        }
+            ws.Cell("A1").Value = 45577;
+            Assert.AreEqual(7, ws.Evaluate("WEEKDAY(A1)"));
 
-        [Test]
-        public void Weekday_Omitted()
-        {
-            var actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\")");
-            Assert.AreEqual(5, actual);
+            // Time of the day doesn't matter, serial date is truncated
+            Assert.AreEqual(7, XLWorkbook.EvaluateExpr("WEEKDAY(45577.9, 1.9)"));
+
+            Assert.AreEqual(7, XLWorkbook.EvaluateExpr("WEEKDAY(0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(-1)"));
+
+            // Year 10k
+            Assert.AreEqual(6, XLWorkbook.EvaluateExpr("WEEKDAY(2958465)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(2958466)"));
+
+            // Convert from logical/text to number
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("WEEKDAY(TRUE)"));
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("WEEKDAY(\"0 2/2\")"));
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("WEEKDAY(1, TRUE)"));
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("WEEKDAY(1, \"1 0/2\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("WEEKDAY(\"text\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("WEEKDAY(1, \"text\")"));
+
+            // Flag can only have some values
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(1, 0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(1, 4)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(1, 10)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKDAY(1, 18)"));
+
+            // Error is propagated
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("WEEKDAY(#N/A)"));
+            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("WEEKDAY(5, #N/A)"));
         }
 
         [Test]

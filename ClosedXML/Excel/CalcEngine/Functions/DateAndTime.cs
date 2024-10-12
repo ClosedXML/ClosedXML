@@ -10,6 +10,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class DateAndTime
     {
+        /// <summary>
+        /// Serial date of 9999-12-31. Date is generally considered invalid, if above that or below 0.
+        /// </summary>
+        private const int Year10K = 2958465;
+
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
@@ -30,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TIME", 3, Time); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
-            ce.RegisterFunction("WEEKDAY", 1, 2, Weekday); // Converts a serial number to a day of the week
+            ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, Workday, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
@@ -320,15 +325,55 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return DateTime.Today;
         }
 
-        private static object Weekday(List<Expression> p)
+        private static ScalarValue Weekday(CalcContext ctx, ScalarValue date, ScalarValue flag)
         {
-            var dayOfWeek = (int)((DateTime)p[0]).DayOfWeek;
-            var retType = p.Count == 2 ? (int)p[1] : 1;
+            if (!TryGetDate(ctx, date, out var serialDate, out var dateError))
+                return dateError;
 
-            if (retType == 2) return dayOfWeek;
-            if (retType == 1) return dayOfWeek + 1;
+            var flagValue = 1d;
+            if (!flag.IsBlank)
+            {
+                // Caller provided a value for optional parameter
+                if (!flag.ToNumber(ctx.Culture).TryPickT0(out flagValue, out var flagError))
+                    return flagError;
+            }
 
-            return dayOfWeek - 1;
+            var result = Weekday(serialDate, (int)Math.Truncate(flagValue));
+
+            if (!result.TryPickT0(out var weekday, out var weekdayError))
+                return weekdayError;
+
+            return weekday;
+        }
+
+        private static OneOf<int, XLError> Weekday(int serialDate, int startFlag)
+        {
+            // There are two offsets:
+            // - what is the starting day
+            // - how are days numbered (0-6, 1-7 ...)
+            int? weekStartOffset = startFlag switch
+            {
+                1 => 0, // Sun
+                2 => 6, // Mon
+                3 => 6, // Mon
+                11 => 6, // Mon
+                12 => 5, // Tue
+                13 => 4, // Wed
+                14 => 3, // Thu
+                15 => 2, // Fri
+                16 => 1, // Sat
+                17 => 0, // Sunday
+                _ => null,
+            };
+            if (weekStartOffset is null)
+                return XLError.NumberInvalid;
+
+            var numberOffset = startFlag == 3 ? 0 : 1;
+
+            // Because we don't go below 1900, there is no need to deal with UTC vs Gregorian calendar.
+            // It is affected by 1900 bug, so no accurate weekdays before 1900-02-29. It was Wednesday BTW :)
+            var weekday = (serialDate + 6 + weekStartOffset.Value) % 7 + numberOffset;
+            return weekday;
         }
 
         private static object Weeknum(List<Expression> p)
@@ -408,6 +453,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return Math.Floor((date2 - date1).TotalDays) / 365.0;
 
             return Days360(date1, date2, true) / 360.0;
+        }
+
+        private static bool TryGetDate(CalcContext ctx, ScalarValue value, out int serialDate, out XLError error)
+        {
+            if (!value.ToNumber(ctx.Culture).TryPickT0(out var serialDateTime, out error))
+            {
+                serialDate = default;
+                return false;
+            }
+
+            if (serialDateTime is < 0 or > Year10K)
+            {
+                serialDate = default;
+                error = XLError.NumberInvalid;
+                return false;
+            }
+
+            serialDate = (int)Math.Truncate(serialDateTime);
+            error = default;
+            return true;
         }
     }
 }
