@@ -220,42 +220,110 @@ namespace ClosedXML.Tests.Excel.DataValidations
         }
 
         [Test]
-        public void Networkdays_MultipleHolidaysGiven()
+        public void NetWorkDays_with_holidays()
         {
-            var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
             ws.FirstCell().SetValue("Date")
                 .CellBelow().SetValue(new DateTime(2008, 10, 1))
                 .CellBelow().SetValue(new DateTime(2009, 3, 1))
                 .CellBelow().SetValue(new DateTime(2008, 11, 26))
                 .CellBelow().SetValue(new DateTime(2008, 12, 4))
-                .CellBelow().SetValue(new DateTime(2009, 1, 21));
-            var actual = ws.Evaluate("Networkdays(A2,A3,A4:A6)");
-            Assert.AreEqual(105, actual);
+                .CellBelow().SetValue(new DateTime(2009, 1, 21))
+                .CellBelow().SetValue(new DateTime(2009, 1, 4)) // Holiday is on Sunday - do not count twice
+                .CellBelow().SetValue(new DateTime(2009, 1, 6))  // Workweek holiday is specified twice, shouldn't be counted twice
+                .CellBelow().SetValue(new DateTime(2009, 1, 6))
+                .CellBelow().SetValue(new DateTime(2008, 9, 30)) // Tuesday holiday just before the first date, shouldn't be counted
+                .CellBelow().SetValue(new DateTime(2009, 3, 2)) // Monday holiday just after the last date, shouldn't be counted
+                ;
+            var actual = ws.Evaluate("NETWORKDAYS(A2, A3, A4:A11)");
+            Assert.AreEqual(104, actual);
+        }
+
+        [TestCase("2024-10-01", "2024-10-01", 1)] // Tue-Tue
+        [TestCase("2024-10-01", "2024-10-02", 2)] // Tue-Wed
+        [TestCase("2024-10-01", "2024-10-03", 3)] // Tue-Thu
+        [TestCase("2024-10-01", "2024-10-04", 4)] // Tue-Fri
+        [TestCase("2024-10-01", "2024-10-05", 4)] // Tue-Sat
+        [TestCase("2024-10-01", "2024-10-06", 4)] // Tue-Sun
+        [TestCase("2024-10-01", "2024-10-07", 5)] // Tue-Mon
+        [TestCase("2024-09-29", "2024-10-12", 10)] // Sun-Sat
+        [TestCase("2024-09-29", "2024-10-13", 10)] // Sun-Sun
+        [TestCase("2024-09-29", "2024-10-14", 11)] // Sun-Mon
+        [TestCase("2024-09-29", "2024-10-15", 12)] // Sun-Tue
+        [TestCase("2024-09-29", "2024-10-16", 13)] // Sun-Wed
+        [TestCase("2024-09-29", "2024-10-17", 14)] // Sun-Thu
+        [TestCase("2024-09-29", "2024-10-18", 15)] // Sun-Fri
+        [TestCase("2024-09-29", "2024-10-19", 15)] // Sun-Sat
+        public void NetWorkDays_non_full_weeks_are_counted_correctly(string startDate, string endDate, int expected)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"NETWORKDAYS(\"{startDate}\", \"{endDate}\")");
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void Networkdays_NoHolidaysGiven()
+        [Culture("en-US")]
+        public void NetWorkDays_with_end_date_earlier_than_start_date()
         {
-            var actual = XLWorkbook.EvaluateExpr("Networkdays(\"10/01/2008\", \"3/01/2009\")");
-            Assert.AreEqual(108, actual);
-        }
-
-        [Test]
-        public void Networkdays_NegativeResult()
-        {
-            var actual = XLWorkbook.EvaluateExpr("Networkdays(\"3/01/2009\", \"10/01/2008\")");
+            var actual = XLWorkbook.EvaluateExpr("NETWORKDAYS(\"3/01/2009\", \"10/01/2008\")");
             Assert.AreEqual(-108, actual);
 
-            actual = XLWorkbook.EvaluateExpr("Networkdays(\"2016-01-01\", \"2015-12-23\")");
+            actual = XLWorkbook.EvaluateExpr("NETWORKDAYS(\"2016-01-01\", \"2015-12-23\")");
             Assert.AreEqual(-8, actual);
         }
 
         [Test]
-        public void Networkdays_OneHolidaysGiven()
+        [Culture("en-US")]
+        public void NetWorkDays_behavior()
         {
-            var actual = XLWorkbook.EvaluateExpr("Networkdays(\"10/01/2008\", \"3/01/2009\", \"11/26/2008\")");
+            using var wb = new XLWorkbook();
+            var actual = wb.Evaluate("NETWORKDAYS(\"10/01/2008\", \"3/01/2009\", \"11/26/2008\")");
             Assert.AreEqual(107, actual);
+
+            // Example from specification. Except spec wrong. The value is 1 off from Excel value.
+            Assert.AreEqual(22, wb.Evaluate("NETWORKDAYS(DATE(2006, 1, 1), DATE(2006, 1, 31))"));
+            Assert.AreEqual(-22, wb.Evaluate("NETWORKDAYS(DATE(2006, 1, 31), DATE(2006, 1, 1))"));
+            Assert.AreEqual(21, wb.Evaluate("NETWORKDAYS(DATE(2006, 1, 1), DATE(2006, 2, 1), { \"2006-01-02\", \"2006-01-16\" })"));
+
+            // Scalar number is accepted for holidays
+            Assert.AreEqual(6, wb.Evaluate("NETWORKDAYS(1, 10, 2)"));
+
+            // Scalar logical causes conversion error
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(TRUE, 10)"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(0, TRUE)"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(1, 10, TRUE)"));
+
+            // Scalar text is converted
+            Assert.AreEqual(6, wb.Evaluate("NETWORKDAYS(\"1\", \"10\", \"2\")"));
+            Assert.AreEqual(6, wb.Evaluate("NETWORKDAYS(1, 10, \"0 4/2\")"));
+            Assert.AreEqual(6, wb.Evaluate("NETWORKDAYS(1, 10, \"1900-01-02\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(\"Text\", 10)"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(1, \"Text\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(1, 10, \"Text\")"));
+
+            // Array accepts numbers and converts text
+            Assert.AreEqual(5, wb.Evaluate("NETWORKDAYS(1, 10, {\"2\", 3})"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(1, 10, {\"Text\"})"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("NETWORKDAYS(1, 10, {TRUE})"));
+
+            // Same conversion logic applies to reference values
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value; // Ignored
+            ws.Cell("A2").Value = false; // Causes conversion error
+            ws.Cell("A3").Value = true; // Causes conversion error
+            ws.Cell("A4").Value = 37147; // 2001-09-13
+            ws.Cell("A5").Value = "2001-09-12"; // Monday
+            ws.Cell("A6").Value = XLError.NoValueAvailable;
+
+            Assert.AreEqual(175, ws.Evaluate("NETWORKDAYS(\"2001-05-01\", \"2001-12-31\", A1)"));
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("NETWORKDAYS(\"2001-05-01\", \"2001-12-31\", A1:A3)"));
+            Assert.AreEqual(173, ws.Evaluate("NETWORKDAYS(\"2001-05-01\",\"2001-12-31\", A4:A5)"));
+
+            // Errors are propagated
+            Assert.AreEqual(XLError.NoValueAvailable, wb.Evaluate("NETWORKDAYS(#N/A, 10)"));
+            Assert.AreEqual(XLError.NoValueAvailable, wb.Evaluate("NETWORKDAYS(1, #N/A)"));
+            Assert.AreEqual(XLError.NoValueAvailable, wb.Evaluate("NETWORKDAYS(1, 10, {#N/A})"));
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("NETWORKDAYS(1, 10, A6)"));
         }
 
         [Test]

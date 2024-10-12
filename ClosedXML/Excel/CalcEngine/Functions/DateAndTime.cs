@@ -29,7 +29,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, Month); // Converts a serial number to a month
-            ce.RegisterFunction("NETWORKDAYS", 2, 3, Networkdays, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
+            ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, Second); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, Time); // Returns the serial number of a particular time
@@ -92,6 +92,40 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             return businessDays;
+        }
+
+        private static int BusinessDaysUntil(int firstDay, int lastDay, HashSet<int> holidays)
+        {
+            if (firstDay > lastDay)
+                return -BusinessDaysUntil(lastDay, firstDay, holidays);
+
+            var workDays = lastDay - firstDay + 1;
+            var fullWeekCount = Math.DivRem(workDays, 7, out var remainingDays);
+
+            // find out if there are weekends during the time exceeding the full weeks
+            for (var day = lastDay - remainingDays + 1; day <= lastDay; ++day)
+            {
+                var weekDay = WeekdayCalc(day);
+                if (weekDay is 1 or 7)
+                    workDays--;
+            }
+
+            // subtract the weekends during the full weeks in the interval
+            workDays -= fullWeekCount * 2;
+
+            // subtract the number of bank holidays during the time interval
+            foreach (var holidayDate in holidays)
+            {
+                if (firstDay <= holidayDate && holidayDate <= lastDay)
+                {
+                    // Don't subtract holiday if it is on Saturday or Sunday
+                    var holidayWeekDay = WeekdayCalc(holidayDate);
+                    if (holidayWeekDay != 1 && holidayWeekDay != 7)
+                        --workDays;
+                }
+            }
+
+            return workDays;
         }
 
         private static object Date(List<Expression> p)
@@ -277,19 +311,25 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return date.Month;
         }
 
-        private static object Networkdays(List<Expression> p)
+        private static ScalarValue NetWorkDays(CalcContext ctx, ScalarValue startDate, ScalarValue endDate, AnyValue holidays)
         {
-            var date1 = (DateTime)p[0];
-            var date2 = (DateTime)p[1];
-            var bankHolidays = new List<DateTime>();
-            if (p.Count == 3)
-            {
-                var t = new Tally { p[2] };
+            if (!TryGetDate(ctx, startDate, out var startSerialDate, out var startDateError))
+                return startDateError;
 
-                bankHolidays.AddRange(t.Select(XLHelper.GetDate));
+            if (!TryGetDate(ctx, endDate, out var endSerialDate, out var endDateError))
+                return endDateError;
+
+            // Use set to skip duplicate values
+            var allHolidays = new HashSet<int>();
+            foreach (var holidayValue in ctx.GetNonBlankValues(holidays))
+            {
+                if (!TryGetDate(ctx, holidayValue, out var holidayDate, out var error))
+                    return error;
+
+                allHolidays.Add(holidayDate);
             }
 
-            return BusinessDaysUntil(date1, date2, bankHolidays);
+            return BusinessDaysUntil(startSerialDate, endSerialDate, allHolidays);
         }
 
         private static object Now(List<Expression> p)
@@ -327,7 +367,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static ScalarValue Weekday(CalcContext ctx, ScalarValue date, ScalarValue flag)
         {
-            if (!TryGetDate(ctx, date, out var serialDate, out var dateError))
+            if (!TryGetDate(ctx, date, out var serialDate, out var dateError, acceptLogical: true))
                 return dateError;
 
             var flagValue = 1d;
@@ -372,8 +412,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             // Because we don't go below 1900, there is no need to deal with UTC vs Gregorian calendar.
             // It is affected by 1900 bug, so no accurate weekdays before 1900-02-29. It was Wednesday BTW :)
-            var weekday = (serialDate + 6 + weekStartOffset.Value) % 7 + numberOffset;
+            var weekday = WeekdayCalc(serialDate, weekStartOffset.Value, numberOffset);
             return weekday;
+        }
+
+        /// <summary>
+        /// Calculate week day. No checks. The default form is form 3 (week starts at Sun, range 1..7). 
+        /// </summary>
+        private static int WeekdayCalc(int serialDate, int weekStartOffset = 0, int numberOffset = 1)
+        {
+            return (serialDate + 6 + weekStartOffset) % 7 + numberOffset;
         }
 
         private static object Weeknum(List<Expression> p)
@@ -455,8 +503,17 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Days360(date1, date2, true) / 360.0;
         }
 
-        private static bool TryGetDate(CalcContext ctx, ScalarValue value, out int serialDate, out XLError error)
+        private static bool TryGetDate(CalcContext ctx, ScalarValue value, out int serialDate, out XLError error, bool acceptLogical = false)
         {
+            // For some reason, Excel dislikes logical for things that are "date" in functions.
+            // Someone likely though it was a good idea 40yrs ago.
+            if (value.IsLogical && !acceptLogical)
+            {
+                serialDate = default;
+                error = XLError.IncompatibleValue;
+                return false;
+            }
+
             if (!value.ToNumber(ctx.Culture).TryPickT0(out var serialDateTime, out error))
             {
                 serialDate = default;
