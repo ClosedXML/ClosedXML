@@ -105,6 +105,13 @@ namespace ClosedXML.Excel.IO
                     continue;
                 }
 
+                if (cacheField.Formula is not null)
+                {
+                    // PivotCacheRecords will be missing any fields with formulas, though they will be in the cache fields.
+                    // Skip adding these to the cache
+                    continue;
+                }
+
                 var fieldStats = ReadCacheFieldStats(cacheField);
                 var fieldSharedItems = cacheField.SharedItems is not null
                     ? ReadSharedItems(cacheField)
