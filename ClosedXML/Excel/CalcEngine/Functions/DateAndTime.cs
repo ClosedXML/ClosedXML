@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
@@ -37,7 +38,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
-            ce.RegisterFunction("WORKDAY", 2, 3, Workday, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
+            ce.RegisterFunction("WORKDAY", 2, 3, AdaptLastOptional(Workday), FunctionFlags.Range, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
+            ce.RegisterFunction("WORKDAY.LEGACY", 2, 3, Workday, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
             ce.RegisterFunction("YEARFRAC", 2, 3, Yearfrac); // Returns the year fraction representing the number of whole days between start_date and end_date
         }
@@ -94,10 +96,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return businessDays;
         }
 
-        private static int BusinessDaysUntil(int firstDay, int lastDay, HashSet<int> holidays)
+        private static int BusinessDaysUntil(int firstDay, int lastDay, ICollection<int> distinctHolidays)
         {
             if (firstDay > lastDay)
-                return -BusinessDaysUntil(lastDay, firstDay, holidays);
+                return -BusinessDaysUntil(lastDay, firstDay, distinctHolidays);
 
             var workDays = lastDay - firstDay + 1;
             var fullWeekCount = Math.DivRem(workDays, 7, out var remainingDays);
@@ -114,7 +116,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             workDays -= fullWeekCount * 2;
 
             // subtract the number of bank holidays during the time interval
-            foreach (var holidayDate in holidays)
+            foreach (var holidayDate in distinctHolidays)
             {
                 if (firstDay <= holidayDate && holidayDate <= lastDay)
                 {
@@ -458,6 +460,195 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return_date = return_date.PreviousWorkDay(bankHolidays);
 
             return return_date;
+        }
+
+        private static ScalarValue Workday(CalcContext ctx, ScalarValue startDateScalar, ScalarValue dayOffsetValue,
+            AnyValue holidays)
+        {
+            if (!TryGetDate(ctx, startDateScalar, out var startDate, out var startDateError))
+                return startDateError;
+
+            if (!dayOffsetValue.ToNumber(ctx.Culture).TryPickT0(out var dayOffsetDouble, out var dayOffsetError))
+                return dayOffsetError;
+
+            var dayOffset = (int)Math.Truncate(dayOffsetDouble);
+
+            // When offset is zero, return the startDate, regardless if it is Saturday or Sunday.
+            if (dayOffset == 0)
+                return startDate;
+
+            if (dayOffset > 0)
+            {
+                if (!GetHolidays(Comparer<int>.Default).TryPickT0(out var orderedHolidays, out var holidaysError))
+                    return holidaysError;
+
+                // The algorithm should count workdays for each segment between holiday days
+                // and sum them up. Once it finds that using next holiday would be larger than
+                // dayOffset we end the loop (also if we run out of holidays).
+                // The key benefit
+                // * the algorithm scales with number of holidays, not a number of days.
+                // * we know that days between holidays are holiday free, thus only weekdays
+                //   need to be accounted for.
+
+                // A date up to which we have counted workdays. It is inclusive, so if
+                // the lastDateSoFar is a workday, it is already counted in workdaysSoFar.
+                // lastDateSoFar can be anything, it can be workweek, weekend or holiday.
+                // startDate might be a holiday or workday or weekend. Either way,
+                // startDate - 1 will ensure it is processed as a first segment.
+                var lastDateSoFar = startDate;
+
+                // Number of workdays that have already been processed from startDate up to
+                // the lastDateSoFar (inclusive).
+                var workdaysSoFar = 0;
+
+                var startIsHoliday = orderedHolidays.Count > 0 && orderedHolidays[0] == startDate;
+                for (var i = startIsHoliday ? 1 : 0; i < orderedHolidays.Count; ++i)
+                {
+                    var holidayDate = orderedHolidays[i];
+
+                    // Because workdays up to and including lastDateSoFar has already been counted, we add + 1.
+                    // The holidayDate is not a Saturday or Sunday (it has been filtered out).
+                    // Because we know there is no holiday between lastDateSoFar (which might have been
+                    // a holiday or not) + 1 (by adding 1, we are sure it's not counted).
+                    // We are counting up to and including holidayDate. We can't use `holidayDate-1`, because
+                    // if two holidays were next to each other, the `holidayDate-1` might be *before* `lastDateSoFar+1`.
+                    var segmentWorkdays = BusinessDaysUntil(lastDateSoFar + 1, holidayDate, System.Array.Empty<int>());
+                    if (workdaysSoFar + segmentWorkdays > dayOffset)
+                    {
+                        // We know that the target day for desired dayOffset is in this segment.
+                        // Possibly at the start, in the middle or at the end. Because of it,
+                        // we know that there are no holidays from `lastDateSoFar..{resultDate}`.
+                        break;
+                    }
+
+                    // The segment workdays include holidayDate as a workday, use -1 so it is not counted.
+                    workdaysSoFar += segmentWorkdays - 1;
+
+                    // Because holidayDate has already been processed
+                    lastDateSoFar = holidayDate;
+                }
+
+                // At this point, we can just have to find the target date without any interference from holidays.
+                var remainingWorkdays = dayOffset - workdaysSoFar;
+                var weekCount = Math.DivRem(remainingWorkdays, 5, out var remaining);
+
+                // When we start on Sunday and want 5 dayOffset, ensure that we end up on friday of same week, not Sunday.
+                if (remaining == 0)
+                {
+                    // We know that weekCount is at least 1, so decreasing one won't go negative.
+                    weekCount -= 1;
+                    remaining += 5;
+                }
+
+                var workday = lastDateSoFar + weekCount * 7;
+                while (remaining-- > 0)
+                    workday = AddOneWorkingDay(workday);
+
+                return workday;
+            }
+            else
+            {
+                var cmp = Comparer<int>.Create(static (x, y) => y.CompareTo(x));
+                if (!GetHolidays(cmp).TryPickT0(out var orderedHolidays, out var holidaysError))
+                    return holidaysError;
+
+                var lastDateSoFar = startDate;
+                var workdaysSoFar = 0;
+
+                var startIsHoliday = orderedHolidays.Count > 0 && orderedHolidays[0] == startDate;
+                for (var i = startIsHoliday ? 1 : 0; i < orderedHolidays.Count; ++i)
+                {
+                    var holidayDate = orderedHolidays[i];
+
+                    var segmentWorkdays = lastDateSoFar - 1 != holidayDate
+                        ? BusinessDaysUntil(lastDateSoFar - 1, holidayDate, System.Array.Empty<int>())
+                        : -1;
+                    if (workdaysSoFar + segmentWorkdays < dayOffset)
+                        break;
+
+                    workdaysSoFar += segmentWorkdays + 1;
+                    lastDateSoFar = holidayDate;
+                }
+
+                var remainingWorkdays = dayOffset - workdaysSoFar;
+                var weekCount = Math.DivRem(remainingWorkdays, 5, out var remaining);
+
+                if (remaining == 0)
+                {
+                    weekCount += 1;
+                    remaining -= 5;
+                }
+
+                var workday = lastDateSoFar + weekCount * 7;
+                while (remaining < 0)
+                {
+                    workday = SubtractOneWorkingDay(workday);
+                    remaining += 1;
+                }
+
+                return workday;
+            }
+
+            static int AddOneWorkingDay(int baseDate)
+            {
+                // Depending on a day of week, we need to add 1 or more days
+                var calendarDaysToAdd = WeekdayCalc(baseDate) switch
+                {
+                    1 => 1, // Sunday -> Monday
+                    2 => 1, // Monday -> Tuesday
+                    3 => 1, // Tuesday -> Wednesday
+                    4 => 1, // Wednesday -> Thursday
+                    5 => 1, // Thursday -> Friday
+                    6 => 3, // Friday -> Monday
+                    7 => 2, // Saturday -> Monday
+                    _ => throw new UnreachableException(),
+                };
+                return baseDate + calendarDaysToAdd;
+            }
+
+            static int SubtractOneWorkingDay(int baseDate)
+            {
+                // Depending on a day of week, we need to add 1 or more days
+                var calendarDaysToAdd = WeekdayCalc(baseDate) switch
+                {
+                    1 => -2, // Sunday -> Friday
+                    2 => -3, // Monday -> Friday
+                    3 => -1, // Tuesday -> Monday
+                    4 => -1, // Wednesday -> Tuesday
+                    5 => -1, // Thursday -> Wednesday
+                    6 => -1, // Friday -> Thursday
+                    7 => -1, // Saturday -> Friday
+                    _ => throw new UnreachableException($"Date {baseDate}: {WeekdayCalc(baseDate)}"),
+                };
+                return baseDate + calendarDaysToAdd;
+            }
+
+
+            OneOf<List<int>, XLError> GetHolidays(IComparer<int> comparer)
+            {
+                // Use set to skip duplicate values
+                var distinctHolidays = new HashSet<int>();
+                foreach (var holidayValue in ctx.GetNonBlankValues(holidays))
+                {
+                    if (!TryGetDate(ctx, holidayValue, out var holidayDate, out var error))
+                        return error;
+
+                    if (comparer.Compare(holidayDate, startDate) < 0)
+                        continue;
+
+                    // Holiday is on Saturday or Sunday. It would be filtered out anyway.
+                    var weekDate = WeekdayCalc(holidayDate);
+                    if (weekDate is 1 or 7)
+                        continue;
+
+                    distinctHolidays.Add(holidayDate);
+                }
+
+                // Distinct, ordered holidays during a workweek
+                var sortedHolidays = new List<int>(distinctHolidays);
+                sortedHolidays.Sort(comparer);
+                return sortedHolidays;
+            }
         }
 
         private static DateTime Workday(DateTime startDate, DateTime testDate, int daysRequired, IReadOnlyCollection<DateTime> bankHolidays)
