@@ -587,39 +587,36 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [TestCase(2, 1, 3)]
         [TestCase(0, 5, 6)]
         [TestCase(2, 8, 12)]
+        [TestCase(10, -1, 9)]
+        [TestCase(10, -2, 6)]
+        [TestCase(10, -3, 5)]
+        [TestCase(9, -1, 6)]
+        [TestCase(9, -2, 5)]
+        [TestCase(8, -1, 6)]
+        [TestCase(7, -1, 6)]
+        [TestCase(6, -1, 5)]
         public void Workdays(int startDate, int dayOffset, int expected)
         {
             var actual = XLWorkbook.EvaluateExpr($"WORKDAY({startDate}, {dayOffset})");
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        [Ignore("Only for test")]
-        public void Workdays_against_excel()
+        [TestCase(0, 1, new[] { 1 }, 2)]
+        [TestCase(0, 1, new[] { 2 }, 3)]
+        [TestCase(0, 5, new[] { 2, 4 }, 10)]
+        [TestCase(0, 4, new[] { 2, 4, 6 }, 10)]
+        [TestCase(0, 3, new[] { 2, 3, 4, 6 }, 10)]
+        [TestCase(0, 2, new[] { 2, 3, 4, 5, 6 }, 10)]
+        [TestCase(0, 1, new[] { 2, 3, 5 }, 4)]
+        [TestCase(0, 2, new[] { 2, 3, 5 }, 6)]
+        [TestCase(2, 1, new[] { 2 }, 3)]
+        [TestCase(15, -1, new[] { 13 }, 12)] // 15 = Sunday
+        [TestCase(100, -5, new[] { 82, 93, 94, 95, 94, 100 }, 88)]
+        [TestCase(98, -2, new[] { 97 }, 95)]
+        public void Workdays_with_holiday(int startDate, int dayOffset, int[] holidays, int expected)
         {
-            using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet();
-            ws.Cell("A1").Value = "StartDate";
-            ws.Cell("B1").Value = "EndDate";
-            ws.Cell("C1").Value = "CML";
-            ws.Cell("D1").Value = "Excel";
-            ws.Cell("E1").Value = "Diff";
-            var row = 2;
-            for (var start = 0; start < 100; start++)
-            {
-                for (var end = start; end < 100; end++)
-                {
-                    ws.Cell(row, 1).Value = start;
-                    ws.Cell(row, 2).Value = end;
-                    ws.Cell(row, 3).Value = XLWorkbook.EvaluateExpr($"WORKDAY({start}, {end})");
-                    ws.Cell(row, 4).FormulaA1 = $"WORKDAY({start}, {end})";
-                    ws.Cell(row, 5).FormulaA1 = $"IF(C{row} <> D{row},\"DIFFERENT\", \"SAME\")";
-
-                    row++;
-                }
-            }
-
-            wb.SaveAs(@"C:\Temp\issues\workday.xlsx");
+            var actual = XLWorkbook.EvaluateExpr($"WORKDAY({startDate}, {dayOffset}, {{{string.Join(",", holidays)}}})");
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase("\"8/22/2008\"", 2008)]
