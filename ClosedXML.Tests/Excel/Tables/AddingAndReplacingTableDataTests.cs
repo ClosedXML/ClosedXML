@@ -77,6 +77,27 @@ namespace ClosedXML.Tests.Excel.Tables
             return wb;
         }
 
+        private XLWorkbook PrepareWorkbookWithDefinedNames()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("ListOfPeople");
+
+            var data = new[]
+            {
+                new Person{FirstName = "Francois", LastName = "Botha", Age = 39, DateOfBirth = new DateTime(1980,1,1), IsActive = true},
+                new Person{FirstName = "Leon", LastName = "Oosthuizen", Age = 40, DateOfBirth = new DateTime(1979,1,1), IsActive = false},
+                new Person{FirstName = "Rian", LastName = "Prinsloo", Age = 41, DateOfBirth = new DateTime(1978,1,1), IsActive = false}
+            };
+
+            ws.FirstCell().CellRight().CellBelow().InsertTable(data);
+
+            ws.Columns().AdjustToContents();
+
+            ws.DefinedNames.Add("ListOfPeople_Age", "ListOfPeople[Age]");
+
+            return wb;
+        }
+
         private Person[] NewData
         {
             get
@@ -564,6 +585,36 @@ namespace ClosedXML.Tests.Excel.Tables
 
                     Assert.AreEqual("40 is not old!", table.Worksheet.Cell("K5").Value);
                     Assert.AreEqual("40 is not old!", table.Worksheet.Cell("K6").Value);
+                }
+            }
+        }
+
+        [Test]
+        public void CanReplaceWhenWorksheetHasDefinedNames()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = PrepareWorkbookWithDefinedNames())
+                {
+                    var ws = wb.Worksheets.First();
+
+                    var table = ws.Tables.First();
+
+                    IEnumerable<Person> personEnumerable = NewData;
+                    var replacedRange = table.ReplaceData(personEnumerable);
+
+                    Assert.AreEqual("B3:G4", replacedRange.RangeAddress.ToString());
+                    ws.Columns().AdjustToContents();
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var table = wb.Worksheets.SelectMany(ws => ws.Tables).First();
+
+                    Assert.AreEqual(2, table.DataRange.RowCount());
+                    Assert.AreEqual(6, table.DataRange.ColumnCount());
                 }
             }
         }
