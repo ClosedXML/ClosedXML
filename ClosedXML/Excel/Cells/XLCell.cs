@@ -76,6 +76,8 @@ namespace ClosedXML.Excel
 
         public XLAddress Address => new(Worksheet, _rowNumber, _columnNumber, false, false);
 
+        public bool? IsInferiorMergedCellUserDefined { get; set; }
+
         internal XLSheetPoint SheetPoint => new(_rowNumber, _columnNumber);
 
         #region Slice fields
@@ -1967,6 +1969,11 @@ namespace ClosedXML.Excel
 
         internal bool IsInferiorMergedCell()
         {
+            if (this.IsInferiorMergedCellUserDefined.HasValue)
+            {
+                return this.IsInferiorMergedCellUserDefined.Value;
+            }
+
             return this.IsMerged() && !this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
         }
 
