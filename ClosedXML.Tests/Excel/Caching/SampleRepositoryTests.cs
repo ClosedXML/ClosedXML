@@ -33,13 +33,16 @@ namespace ClosedXML.Tests.Excel.Caching
         {
 #if !DEBUG
             // Arrange
-            int key = 12345;
+            var key = 12345;
             var sampleRepository = this.CreateSampleRepository();
 
             // Act
-            var storedEntityRef1 = new System.WeakReference(sampleRepository.Store(ref key, new SampleEntity(key)));
+            // In net8, JIT could make a hidden temporary variable for created object that would prevent
+            // GC collection. Therefore, make the reference in another method, so the hidden variable
+            // doesn't get inlined. https://github.com/dotnet/runtime/issues/63568#issuecomment-1008602069
+            var storedEntityRef1 = AddEntityToRepository(sampleRepository, ref key);
 
-            int count = 0;
+            var count = 0;
             do
             {
                 System.Threading.Thread.Sleep(50);
@@ -52,6 +55,13 @@ namespace ClosedXML.Tests.Excel.Caching
                 Assert.Fail("storedEntityRef1 was not GCed");
 
             Assert.IsFalse(sampleRepository.Any());
+
+            return;
+
+            static System.WeakReference AddEntityToRepository(SampleRepository repository, ref int key)
+            {
+                return new System.WeakReference(repository.Store(ref key, new SampleEntity(key)));
+            }
 #else
             Assert.Ignore("Can't run in DEBUG");
 #endif
