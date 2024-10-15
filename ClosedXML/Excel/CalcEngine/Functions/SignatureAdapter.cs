@@ -148,7 +148,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 var arg1Converted = ToScalarValue(args[1], ctx);
                 if (!arg1Converted.TryPickT0(out var arg1, out var err1))
-                    return err0;
+                    return err1;
 
                 return f(arg0, arg1);
             };
