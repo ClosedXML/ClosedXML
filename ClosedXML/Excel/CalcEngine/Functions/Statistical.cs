@@ -9,9 +9,6 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Statistical
     {
-        private delegate OneOf<T, XLError> TallyFunc<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> numberTally)
-            where T : struct;
-
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
@@ -105,11 +102,15 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Average(CalcContext ctx, Span<AnyValue> args)
         {
+            return Average(ctx, args, TallyNumbers.Default);
+        }
+
+        internal static AnyValue Average(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        {
             if (args.Length < 1)
                 return XLError.IncompatibleValue;
 
-            var result = TallyNumbers(ctx, args, (Sum: 0.0, Count: 0), static (state, number) => (state.Sum + number, state.Count + 1));
-            if (!result.TryPickT0(out var state, out var error))
+            if (!tally.Tally(ctx, args, new SumState()).TryPickT0(out var state, out var error))
                 return error;
 
             if (state.Count == 0)
@@ -120,16 +121,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue AverageA(CalcContext ctx, Span<AnyValue> args)
         {
-            var state = (Sum: 0.0, Count: 0);
-            var result = TallyAll(ctx, args, state, static (state, value) => (state.Sum + value, state.Count + 1), ignoreArrayText: false);
-
-            if (!result.TryPickT0(out var tally, out var error))
-                return error;
-
-            if (tally.Count == 0)
-                return XLError.DivisionByZero;
-
-            return tally.Sum / tally.Count;
+            return Average(ctx, args, TallyAll.WithArrayText);
         }
 
         private static AnyValue BinomDist(double numberSuccesses, double numberTrials, double successProbability, bool cumulativeFlag)
@@ -309,16 +301,14 @@ namespace ClosedXML.Excel.CalcEngine
             long processedCount = 0;
             for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
             {
-                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
-                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce)))
+                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(criteriaPair.Item2[i], criteriaPair.Item1, ce)))
                     count++;
 
                 processedCount++;
             }
 
             // Add count of empty cells outside the used range if they match criteria
-            if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
-                                                   string.Empty, criteriaPair.Item1, ce)))
+            if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteriaPair.Item1, ce)))
             {
                 count += (totalCount - processedCount);
             }
@@ -329,7 +319,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue DevSq(CalcContext ctx, Span<AnyValue> args)
         {
-            var result = GetSquareDiffSum(ctx, args);
+            var result = GetSquareDiffSum(ctx, args, TallyNumbers.Default);
             if (!result.TryPickT0(out var squareDiff, out var error))
                 return error;
 
@@ -353,13 +343,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Rather than interrupting a cycle early, just add it all
             // go through all values anyway. I don't want to code same
             // loop 1000 times and non-positive numbers will be rare.
-            var state = (LogSum: 0.0, Count: 0);
-            var tally = TallyNumbers(ctx, args, state, static (state, itemValue) =>
-            {
-                var logSum = state.LogSum + Math.Log(itemValue);
-                return (logSum, state.Count + 1);
-            });
-
+            var tally = TallyNumbers.Default.Tally(ctx, args, new LogSumState(0.0, 0));
             if (!tally.TryPickT0(out var geoMean, out var error))
                 return error;
 
@@ -376,12 +360,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Max(CalcContext ctx, Span<AnyValue> args)
         {
-            if (args.Length < 1)
-                return XLError.IncompatibleValue;
-
-            var state = (Max: double.MinValue, HasValues: false);
-            var result = TallyNumbers(ctx, args, state, static (state, value) => (Math.Max(state.Max, value), true));
-
+            var result = TallyNumbers.Default.Tally(ctx, args, new MaxState());
             if (!result.TryPickT0(out var tally, out var error))
                 return error;
 
@@ -394,9 +373,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue MaxA(CalcContext ctx, Span<AnyValue> args)
         {
             // Text in array is skipped, in reference counted as 0
-            var state = (Max: double.MinValue, HasValues: false);
-            var result = TallyAll(ctx, args, state, static (state, value) => (Math.Max(state.Max, value), true));
-
+            var result = TallyAll.Default.Tally(ctx, args, new MaxState());
             if (!result.TryPickT0(out var tally, out var error))
                 return error;
 
@@ -411,16 +388,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // There is a better median algorithm that uses two heaps, but NetFx
             // doesn't have heap structure.
-            var list = new List<double>();
-            var result = TallyNumbers(ctx, args, list, static (list, number) =>
-            {
-                list.Add(number);
-                return list;
-            });
-
-            if (!result.TryPickT0(out var allNumbers, out var error))
+            var result = TallyNumbers.Default.Tally(ctx, args, new ValuesState(new List<double>()));
+            if (!result.TryPickT0(out var state, out var error))
                 return error;
 
+            var allNumbers = state.Values;
             if (allNumbers.Count == 0)
                 return XLError.NumberInvalid;
 
@@ -436,20 +408,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Min(CalcContext ctx, Span<AnyValue> args)
         {
-            if (args.Length < 1)
-                return XLError.IncompatibleValue;
-
-            double? min = null;
-            var result = TallyNumbers(ctx, args, min, static (min, itemValue) => min.HasValue ? Math.Min(min.Value, itemValue) : itemValue);
-
-            return result.Match<AnyValue>(m => m ?? 0, e => e);
+            return Min(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue MinA(CalcContext ctx, Span<AnyValue> args)
+        private static AnyValue Min(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
-            // Text in array is skipped, in reference counted as 0
-            var initState = (Min: double.MaxValue, HasValues: false);
-            var result = TallyAll(ctx, args, initState, static (state, value) => (Math.Min(state.Min, value), true));
+            var result = tally.Tally(ctx, args, new MinState());
 
             if (!result.TryPickT0(out var state, out var error))
                 return error;
@@ -461,9 +425,14 @@ namespace ClosedXML.Excel.CalcEngine
             return state.Min;
         }
 
+        private static AnyValue MinA(CalcContext ctx, Span<AnyValue> args)
+        {
+            return Min(ctx, args, TallyAll.Default);
+        }
+
         private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyNumbers.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count <= 1)
@@ -474,7 +443,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDevA(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyAll.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count <= 1)
@@ -485,7 +454,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyNumbers.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count < 1)
@@ -496,7 +465,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue StDevPA(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyAll.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count < 1)
@@ -507,7 +476,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Var(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyNumbers.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count <= 1)
@@ -518,7 +487,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarA(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyAll.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count <= 1)
@@ -529,7 +498,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSum(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyNumbers.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count < 1)
@@ -540,7 +509,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarPA(CalcContext ctx, Span<AnyValue> args)
         {
-            if (!GetSquareDiffSumA(ctx, args).TryPickT0(out var squareDiff, out var error))
+            if (!GetSquareDiffSum(ctx, args, TallyAll.Default).TryPickT0(out var squareDiff, out var error))
                 return error;
 
             if (squareDiff.Count < 1)
@@ -596,22 +565,6 @@ namespace ClosedXML.Excel.CalcEngine
             return total[^k];
         }
 
-        /// <remarks>
-        /// This method converts scalar args to numbers and takes only numbers from array/references.
-        /// </remarks>
-        private static OneOf<SumState, XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args)
-        {
-            return GetSquareDiffSum(ctx, args, TallyNumbers, TallyNumbers);
-        }
-
-        /// <remarks>
-        /// This method converts scalar args to numbers, from array takes numbers and from references takes numbers, logical and text as zero.
-        /// </remarks>
-        private static OneOf<SumState, XLError> GetSquareDiffSumA(CalcContext ctx, Span<AnyValue> args)
-        {
-            return GetSquareDiffSum(ctx, args, TallyAll, TallyAll);
-        }
-
         /// <summary>
         /// Calculate <c>SUM((x_i - mean_x)^2)</c> and number of samples. This method uses two-pass algorithm.
         /// There are several one-pass algorithms, but they are not numerically stable. In this case, accuracy
@@ -619,138 +572,75 @@ namespace ClosedXML.Excel.CalcEngine
         /// those one-pass formulas in the past (see <em>Statistical flaws in Excel</em>), but doesn't seem to
         /// be using them anymore.
         /// </summary>
-        private static OneOf<SumState, XLError> GetSquareDiffSum(
-            CalcContext ctx,
-            Span<AnyValue> args,
-            TallyFunc<SumState> tallyMean,
-            TallyFunc<(double SquareDiffSum, int Count, double SampleMean)> tallySquareDiffSum)
+        private static OneOf<SquareDiff, XLError> GetSquareDiffSum(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
-            // Calculate mean
-            var sumResult = tallyMean(ctx, args, new SumState(0.0, 0), static (state, number) => new SumState(state.Sum + number, state.Count + 1));
-            if (!sumResult.TryPickT0(out var averageState, out var sumError))
+            if (!tally.Tally(ctx, args, new SumState(0.0, 0)).TryPickT0(out var sumState, out var sumError))
                 return sumError;
 
-            if (averageState.Count == 0)
-                return new SumState(0.0, 0);
+            if (sumState.Count == 0)
+                return new SquareDiff(0.0, 0, double.NaN);
 
-            var average = averageState.Sum / averageState.Count;
+            var sampleMean = sumState.Sum / sumState.Count;
 
             // Calculate sum of squares of deviations from sample mean
-            var components = (SquareDiffSum: 0.0, Count: 0, SampleMean: average);
-            var result = tallySquareDiffSum(ctx, args, components, static (stdDev, sampleValue) =>
-            {
-                var diff = sampleValue - stdDev.SampleMean;
-                var sum = stdDev.SquareDiffSum + diff * diff;
-                return (sum, stdDev.Count + 1, stdDev.SampleMean);
-            });
+            var initialSquareDiffState = new SquareDiff(Sum: 0.0, Count: 0, SampleMean: sampleMean);
+            var result = tally.Tally(ctx, args, initialSquareDiffState);
 
-            if (!result.TryPickT0(out var tallied, out var error))
+            if (!result.TryPickT0(out var squareDiff, out var error))
                 return error;
 
-            return new SumState(tallied.SquareDiffSum, tallied.Count);
+            return squareDiff;
         }
 
-        /// <summary>
-        /// The method tries to convert scalar arguments to numbers, but ignores non-numbers in
-        /// reference/array. Any error found is propagated to the result.
-        /// </summary>
-        internal static OneOf<T, XLError> TallyNumbers<T>(CalcContext ctx, Span<AnyValue> args, T initValue, Func<T, double, T> tallyNumber)
+        private readonly record struct SumState(double Sum, int Count) : ITallyState<SumState>
         {
-            var tally = initValue;
-            foreach (var arg in args)
+            public SumState Tally(double number) => new(Sum + number, Count + 1);
+        }
+
+        private readonly record struct SquareDiff(double Sum, int Count, double SampleMean) : ITallyState<SquareDiff>
+        {
+            public SquareDiff Tally(double sampleValue)
             {
-                if (arg.TryPickScalar(out var scalar, out var collection))
-                {
-                    // Scalars are converted to number.
-                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
-                        return error;
+                var diff = sampleValue - SampleMean;
+                var sum = Sum + diff * diff;
+                return new SquareDiff(sum, Count + 1, SampleMean);
+            }
+        }
 
-                    tally = tallyNumber(tally, number);
-                }
-                else
-                {
-                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : ctx.GetNonBlankValues(reference);
-                    foreach (var value in valuesIterator)
-                    {
-                        if (value.TryPickError(out var error))
-                            return error;
-
-                        // For arrays and references, only the number type is used. Other types are ignored.
-                        if (value.TryPickNumber(out var number))
-                            tally = tallyNumber(tally, number);
-                    }
-                }
+        private readonly record struct MinState(double Min, bool HasValues) : ITallyState<MinState>
+        {
+            public MinState() : this(double.MaxValue, false)
+            {
             }
 
-            return tally;
+            public MinState Tally(double number) => new(Math.Min(Min, number), true);
         }
 
-        private static OneOf<T, XLError> TallyAll<T>(CalcContext ctx, Span<AnyValue> args, T initialState, Func<T, double, T> tallyNumber)
+        private readonly record struct MaxState(double Max, bool HasValues) : ITallyState<MaxState>
         {
-            return TallyAll(ctx, args, initialState, tallyNumber, ignoreArrayText: true);
-        }
-
-        /// <summary>
-        /// A tally function for *A functions (e.g. AverageA, MinA, MaxA). The behavior is buggy in Excel,
-        /// because they doesn't count logical values in array, but do count them in reference ¯\_(ツ)_/¯.
-        ///
-        /// <list type="bullet">
-        ///   <item>Scalar values are converted to number, conversion might lead to errors.</item>
-        ///   <item>Array values ignore logical and text (unless <paramref name="ignoreArrayText"/> is <c>false</c>).</item>
-        ///   <item>Reference values include logical, text is evaluated as zero.</item>
-        /// </list>
-        /// Any error is propagated.
-        /// </summary>
-        /// <paramref name="ignoreArrayText">When there is a text value in an array, should it be ignored (<c>true</c>)
-        ///   or should it be tallied as <c>0</c> (<c>false</c>).</paramref>
-        private static OneOf<T, XLError> TallyAll<T>(CalcContext ctx, Span<AnyValue> args, T initialState, Func<T, double, T> tallyNumber, bool ignoreArrayText)
-        {
-            var state = initialState;
-            foreach (var arg in args)
+            public MaxState() : this(double.MinValue, false)
             {
-                if (arg.TryPickScalar(out var scalar, out var collection))
-                {
-                    // Scalars are converted to number.
-                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
-                        return error;
-
-                    // All scalars are counted
-                    state = tallyNumber(state, number);
-                }
-                else
-                {
-                    var isArray = collection.TryPickT0(out var array, out var reference);
-                    var valuesIterator = isArray ? array! : ctx.GetNonBlankValues(reference!);
-                    foreach (var value in valuesIterator)
-                    {
-                        // Blank lines are ignored. Logical are counted in reference, but not in array.
-                        if (!isArray && value.TryPickLogical(out var logical))
-                        {
-                            state = tallyNumber(state, logical ? 1 : 0);
-                        }
-                        else if (value.TryPickNumber(out var number))
-                        {
-                            state = tallyNumber(state, number);
-                        }
-                        else if (value.IsText && (!isArray || !ignoreArrayText))
-                        {
-                            // Some *A functions consider text in an array (e.g. {"3", "Hello"}) as a zero and others don't.
-                            // The text values from cells behave differently. Unlike array, the *A functions consider cell text as 0.
-                            state = tallyNumber(state, 0);
-                        }
-                        else if (value.TryPickError(out var error))
-                        {
-                            return error;
-                        }
-                    }
-                }
             }
 
-            return state;
+            public MaxState Tally(double number) => new(Math.Max(Max, number), true);
         }
 
-        private readonly record struct SumState(double Sum, int Count);
+        private readonly record struct LogSumState(double LogSum, int Count) : ITallyState<LogSumState>
+        {
+            public LogSumState Tally(double number)
+            {
+                var logSum = LogSum + Math.Log(number);
+                return new(logSum, Count + 1);
+            }
+        }
+
+        private readonly record struct ValuesState(List<double> Values) : ITallyState<ValuesState>
+        {
+            public ValuesState Tally(double number)
+            {
+                Values.Add(number);
+                return new ValuesState(Values);
+            }
+        }
     }
 }

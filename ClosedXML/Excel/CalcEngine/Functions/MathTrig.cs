@@ -1113,11 +1113,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue SumSq(CalcContext ctx, Span<AnyValue> args)
         {
-            var result = Statistical.TallyNumbers(ctx, args, 0.0, static (sumSq, number) => sumSq + number * number);
+            var result = TallyNumbers.Default.Tally(ctx, args, new SumSqState(0.0));
             if (!result.TryPickT0(out var sumSq, out var error))
                 return error;
 
-            return sumSq;
+            return sumSq.Sum;
         }
 
         private static object Tan(List<Expression> p)
@@ -1142,6 +1142,14 @@ namespace ClosedXML.Excel.CalcEngine
 
             var truncated = (int)(number * scaling);
             return (double)truncated / scaling;
+        }
+
+        private readonly record struct SumSqState(double Sum) : ITallyState<SumSqState>
+        {
+            public SumSqState Tally(double number)
+            {
+                return new SumSqState(Sum + number * number);
+            }
         }
     }
 }
