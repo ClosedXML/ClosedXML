@@ -596,6 +596,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"MAX(-10, { TRUE, FALSE, ""100"" })");
             Assert.AreEqual(-10, value);
 
+            // Reference argument ignores everything but number.
+            ws.Cell("Z1").Value = Blank.Value;
+            ws.Cell("Z2").Value = true;
+            ws.Cell("Z3").Value = "100";
+            ws.Cell("Z4").Value = "hello";
+            ws.Cell("Z5").Value = -4;
+            Assert.AreEqual(-4, ws.Evaluate("MAX(Z1:Z5)"));
+
             AssertScalarToNumberConversion("MAX", 1);
             AssertAnyErrorIsPropagated("MAX");
         }
