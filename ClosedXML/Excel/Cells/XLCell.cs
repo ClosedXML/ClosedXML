@@ -54,6 +54,7 @@ namespace ClosedXML.Excel
 
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
+
         private readonly XLCellsCollection _cellsCollection;
 
         private readonly int _rowNumber;
@@ -769,7 +770,6 @@ namespace ClosedXML.Excel
         }
 
 #nullable enable
-
         /// <inheritdoc />
         public void SetHyperlink(XLHyperlink? hyperlink)
         {
@@ -1463,7 +1463,7 @@ namespace ClosedXML.Excel
                     var useSheetName = false;
                     if (matchString.Contains('!'))
                     {
-                        sheetName = matchString.Substring(0, matchString.LastIndexOf('!'));
+                        sheetName = matchString.Substring(0, matchString.IndexOf('!'));
                         if (sheetName[0] == '\'')
                             sheetName = sheetName.Substring(1, sheetName.Length - 2);
                         useSheetName = true;
@@ -1473,7 +1473,7 @@ namespace ClosedXML.Excel
 
                     if (String.Compare(sheetName, shiftedWsName, true) == 0)
                     {
-                        var rangeAddress = matchString.Substring(matchString.LastIndexOf('!') + 1);
+                        var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
                         {
                             var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
@@ -1609,7 +1609,7 @@ namespace ClosedXML.Excel
                     var useSheetName = false;
                     if (matchString.Contains('!'))
                     {
-                        sheetName = matchString.Substring(0, matchString.LastIndexOf('!'));
+                        sheetName = matchString.Substring(0, matchString.IndexOf('!'));
                         if (sheetName[0] == '\'')
                             sheetName = sheetName.Substring(1, sheetName.Length - 2);
                         useSheetName = true;
@@ -1619,7 +1619,7 @@ namespace ClosedXML.Excel
 
                     if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
                     {
-                        var rangeAddress = matchString.Substring(matchString.LastIndexOf('!') + 1);
+                        var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1RowRegex.IsMatch(rangeAddress))
                         {
                             var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);

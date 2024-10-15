@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Visitors;
 using ClosedXML.Parser;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel;
 
@@ -149,11 +148,10 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
 
     internal void Add(String rangeAddress)
     {
-        var indexOfExclamationMark = rangeAddress.LastIndexOf('!');
-        var sheetName = rangeAddress.Substring(0, indexOfExclamationMark).UnescapeSheetName();
-        var range = rangeAddress.Substring(indexOfExclamationMark + 1);
-
-        var rangeToAdd = _container.Workbook.WorksheetsInternal.Worksheet(sheetName).Range(range);
+        var byExclamation = rangeAddress.Split('!');
+        var wsName = byExclamation[0].Replace("'", "");
+        var rng = byExclamation[1];
+        var rangeToAdd = _container.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
 
         var ranges = new XLRanges { rangeToAdd };
         RefersTo = _formula + "," + string.Join(",", ranges.Select(RangeToFixed));
@@ -176,7 +174,7 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
 
         var modified = FormulaConverter.ModifyA1(_formula, 1, 1, new RenameRefModVisitor
         {
-            Sheets = new Dictionary<string, string?> { { oldSheetName, newSheetName } }
+            Sheets = new Dictionary<string, string?> { { oldSheetName, newSheetName} }
         });
 
         RefersTo = modified;

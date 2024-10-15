@@ -1100,20 +1100,15 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out string sheetName, out string sheetArea)
         {
             var sections = item.Trim().Split('!');
-            if (sections.Length == 1)
+            if (sections.Count() == 1)
             {
                 sheetName = string.Empty;
                 sheetArea = item;
             }
-            else if (sections.Length == 2)
+            else
             {
                 sheetName = string.Join("!", sections.Take(sections.Length - 1)).UnescapeSheetName();
                 sheetArea = sections[sections.Length - 1];
-            }
-            else
-            {
-                sheetName = item.Substring(0, item.LastIndexOf('!')).UnescapeSheetName();
-                sheetArea = item.Substring(item.LastIndexOf('!'));
             }
         }
 
