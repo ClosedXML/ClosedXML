@@ -190,7 +190,7 @@ namespace ClosedXML.Excel.IO
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
 
             var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
-            differentialFormats.RemoveAllChildren();
+
             FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
 
             foreach (var ws in workbook.WorksheetsInternal)
