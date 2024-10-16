@@ -2,12 +2,13 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
-using SixLabors.Fonts;
-using SixLabors.Fonts.Unicode;
+using SkiaSharp;
 
 namespace ClosedXML.Graphics
 {
@@ -34,19 +35,20 @@ namespace ClosedXML.Graphics
             new PcxInfoReader() // Due to poor magic detection, keep last
         };
 
-        private readonly Lazy<IReadOnlyFontCollection> _fontCollection;
+        private readonly Lazy<List<SKFont>> _fontCollection;
         private readonly string _fallbackFont;
 
         /// <summary>
         /// A font loaded font in the size <see cref="FontMetricSize"/>. There is no benefit in having multiple allocated instances, everything is just scaled at the moment.
         /// </summary>
-        private readonly ConcurrentDictionary<MetricId, Font> _fonts = new();
-        private readonly Func<MetricId, Font> _loadFont;
+        private readonly ConcurrentDictionary<MetricId, SKFont> _fonts = new();
+        private readonly Func<MetricId, SKFont> _loadFont;
 
         /// <summary>
         /// Max digit width as a fraction of Em square. Multiply by font size to get pt size.
         /// </summary>
         private readonly ConcurrentDictionary<MetricId, double> _maxDigitWidths = new();
+
         private readonly Func<MetricId, double> _calculateMaxDigitWidth;
 
         /// <summary>
@@ -63,13 +65,24 @@ namespace ClosedXML.Graphics
             if (string.IsNullOrWhiteSpace(fallbackFont))
                 throw new ArgumentException(nameof(fallbackFont));
 
-            var fontCollection = new FontCollection();
+            var fontCollection = new List<SKFont>();
+
             AddEmbeddedFont(fontCollection);
 
-            _fontCollection = new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts());
+             _fontCollection = new Lazy<List<SKFont>>(() => AddSystemFonts(fontCollection));
             _fallbackFont = fallbackFont;
             _loadFont = LoadFont;
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
+        }
+
+        private List<SKFont> AddSystemFonts(List<SKFont> fontCollection)
+        {
+            foreach (var fontFamily in SKFontManager.Default.FontFamilies)
+            {
+               fontCollection.Add(SKTypeface.FromFamilyName(fontFamily).ToFont());
+            }
+
+            return fontCollection;
         }
 
         /// <summary>
@@ -87,16 +100,16 @@ namespace ClosedXML.Graphics
             if (fontStreams is null)
                 throw new ArgumentNullException(nameof(fontStreams));
 
-            var fontCollection = new FontCollection();
+            var fontCollection = new List<SKFont>();
             AddEmbeddedFont(fontCollection);
-            var fallbackFamily = fontCollection.Add(fallbackFontStream);
+            var fallbackFamily = SKTypeface.FromStream(fallbackFontStream).ToFont();
+            fontCollection.Add(fallbackFamily);
             foreach (var fontStream in fontStreams)
-                fontCollection.Add(fontStream);
-
+                fontCollection.Add(SKTypeface.FromStream(fontStream).ToFont());
             _fontCollection = useSystemFonts
-                ? new Lazy<IReadOnlyFontCollection>(() => fontCollection.AddSystemFonts())
-                : new Lazy<IReadOnlyFontCollection>(() => fontCollection);
-            _fallbackFont = fallbackFamily.Name;
+                ? new Lazy<List<SKFont>>(() => SKFontManager.Default.FontFamilies.Select(x => SKTypeface.FromFamilyName(x).ToFont()).ToList())
+                : new Lazy<List<SKFont>>(() => fontCollection);
+            _fallbackFont = fallbackFamily.Typeface.FamilyName;
             _loadFont = LoadFont;
             _calculateMaxDigitWidth = CalculateMaxDigitWidth;
         }
@@ -134,7 +147,8 @@ namespace ClosedXML.Graphics
         /// </summary>
         /// <param name="fallbackFontStream">A stream that contains a fallback font.</param>
         /// <param name="fontStreams">Fonts that should be loaded to the engine.</param>
-        public static IXLGraphicEngine CreateWithFontsAndSystemFonts(Stream fallbackFontStream, params Stream[] fontStreams)
+        public static IXLGraphicEngine CreateWithFontsAndSystemFonts(Stream fallbackFontStream,
+            params Stream[] fontStreams)
         {
             return new DefaultGraphicEngine(fallbackFontStream, true, fontStreams);
         }
@@ -152,13 +166,12 @@ namespace ClosedXML.Graphics
 
         public double GetDescent(IXLFontBase font, double dpiY)
         {
-            var metrics = GetMetrics(font);
-            return GetDescent(font, dpiY, metrics);
+            return GetDescent(font, dpiY, GetFont(font));
         }
 
-        private double GetDescent(IXLFontBase font, double dpiY, FontMetrics metrics)
+        private double GetDescent(IXLFontBase font, double dpiY, SKFont skFont)
         {
-            return PointsToPixels(-metrics.VerticalMetrics.Descender * font.FontSize / metrics.UnitsPerEm, dpiY);
+            return PointsToPixels(-skFont.Metrics.Descent * font.FontSize / skFont.Typeface.UnitsPerEm, dpiY);
         }
 
         public double GetMaxDigitWidth(IXLFontBase fontBase, double dpiX)
@@ -170,19 +183,18 @@ namespace ClosedXML.Graphics
 
         public double GetTextHeight(IXLFontBase font, double dpiY)
         {
-            var metrics = GetMetrics(font);
-            return PointsToPixels((metrics.VerticalMetrics.Ascender - 2 * metrics.VerticalMetrics.Descender) * font.FontSize / metrics.UnitsPerEm, dpiY);
+            var skFont = GetFont(font);
+            return PointsToPixels(
+                (skFont.Metrics.Ascent - 2 * skFont.Metrics.Descent) * font.FontSize / skFont.Typeface.UnitsPerEm,
+                dpiY);
         }
 
         public double GetTextWidth(string text, IXLFontBase fontBase, double dpiX)
         {
             var font = GetFont(fontBase);
-            var dimensionsPx = TextMeasurer.MeasureAdvance(text, new TextOptions(font)
-            {
-                Dpi = 72, // Normalize DPI, so 1px is 1pt
-                KerningMode = KerningMode.None
-            });
-            return PointsToPixels(dimensionsPx.Width / FontMetricSize * fontBase.FontSize, dpiX);
+            var paint = new SKPaint(font);
+            var width = paint.MeasureText(text);
+            return PointsToPixels(width / FontMetricSize * fontBase.FontSize, dpiX);
         }
 
         /// <inheritdoc />
@@ -190,114 +202,100 @@ namespace ClosedXML.Graphics
         {
             // SixLabors.Fonts don't have a way to get a glyph representation of a cluster
             // without a TextRenderer that has unacceptable performance.
-            var metric = GetMetrics(font);
-            var advanceFu = 0;
+            var skFont = GetFont(font);
+            var skPaint = new SKPaint(skFont);
+            var advanceFu = 0f;
             for (var i = 0; i < graphemeCluster.Length; ++i)
             {
-                var containsMetrics = metric.TryGetGlyphMetrics(
-                    new CodePoint(graphemeCluster[i]),
-                    TextAttributes.None,
-                    TextDecorations.None,
-                    LayoutMode.HorizontalTopBottom,
-                    ColorFontSupport.None,
-                    out var glyphs);
-
-                // As of SixLabors.Fonts 1.0.0, the TryGetGlyphMetrics method never fails. It returns .notdef glyph 0
-                // as a fallback glyph, but it might change in the future.
-                if (!containsMetrics)
+                if (!skPaint.ContainsGlyphs(graphemeCluster[i].ToString()))
+                {
                     continue;
+                }
 
-                foreach (var glyph in glyphs)
-                    advanceFu += glyph.AdvanceWidth;
+                foreach (var glyphWidth in skPaint.GetGlyphWidths(graphemeCluster[i].ToString()))
+                    advanceFu += glyphWidth;
             }
 
             var emInPx = font.FontSize / 72d * dpi.X;
-            var advancePx = PointsToPixels(advanceFu * font.FontSize / metric.UnitsPerEm, dpi.X);
-            var descentPx = GetDescent(font, dpi.Y, metric);
+            var advancePx = PointsToPixels(advanceFu * font.FontSize / skFont.Typeface.UnitsPerEm, dpi.X);
+            var descentPx = GetDescent(font, dpi.Y, skFont);
             return new GlyphBox(
                 (float)Math.Round(advancePx, MidpointRounding.AwayFromZero),
                 (float)Math.Round(emInPx, MidpointRounding.AwayFromZero),
                 (float)Math.Round(descentPx, MidpointRounding.AwayFromZero));
         }
 
-        private FontMetrics GetMetrics(IXLFontBase fontBase)
+        private SKFontMetrics GetMetrics(IXLFontBase fontBase)
         {
             var font = GetFont(fontBase);
-            return font.FontMetrics;
+            return font.Metrics;
         }
 
-        private Font GetFont(IXLFontBase fontBase)
+        private SKFont GetFont(IXLFontBase fontBase)
         {
             return GetFont(new MetricId(fontBase));
         }
 
-        private Font GetFont(MetricId metricId)
+        private SKFont GetFont(MetricId metricId)
         {
             return _fonts.GetOrAdd(metricId, _loadFont);
         }
 
-        private Font LoadFont(MetricId metricId)
+        private SKFont LoadFont(MetricId metricId)
         {
-            // First try the specified fallback font. On windows, unknown fonts should use MS Sans Serif
-            if (!_fontCollection.Value.TryGet(metricId.Name, out var fontFamily) &&
-                !_fontCollection.Value.TryGet(_fallbackFont, out fontFamily))
-            {
-                // If not present, e.g. it's unlikely to be present on Linux, use embedded font as an ultimate fallback.
-                fontFamily = _fontCollection.Value.Get(EmbeddedFontName);
-            }
-
-            return fontFamily.CreateFont(FontMetricSize); // Size is irrelevant for metric
+            SKFont font = (_fontCollection.Value.Find(x => x.Typeface.FamilyName == metricId.Name) ??
+                           _fontCollection.Value.Find(x => x.Typeface.FamilyName == _fallbackFont)) ??
+                          _fontCollection.Value.First(x => x.Typeface.FamilyName == EmbeddedFontName);
+            font.Size = FontMetricSize;
+            return font; // Size is irrelevant for metric
         }
 
-        private void AddEmbeddedFont(FontCollection fontCollection)
+        private void AddEmbeddedFont(List<SKFont> fontCollection)
         {
             var assembly = Assembly.GetExecutingAssembly();
             const string resourcePath = "ClosedXML.Graphics.Fonts.CarlitoBare-{0}.ttf";
 
             using var regular = assembly.GetManifestResourceStream(string.Format(resourcePath, "Regular"))!;
-            fontCollection.Add(regular);
+            fontCollection.Add(SKTypeface.FromStream(regular).ToFont());
 
             using var bold = assembly.GetManifestResourceStream(string.Format(resourcePath, "Bold"))!;
-            fontCollection.Add(bold);
+            fontCollection.Add(SKTypeface.FromStream(bold).ToFont());
 
             using var italic = assembly.GetManifestResourceStream(string.Format(resourcePath, "Italic"))!;
-            fontCollection.Add(italic);
+            fontCollection.Add(SKTypeface.FromStream(italic).ToFont());
 
             using var boldItalic = assembly.GetManifestResourceStream(string.Format(resourcePath, "BoldItalic"))!;
-            fontCollection.Add(boldItalic);
+            fontCollection.Add(SKTypeface.FromStream(boldItalic).ToFont());
         }
 
         private double CalculateMaxDigitWidth(MetricId metricId)
         {
             var font = GetFont(metricId);
-            var metrics = font.FontMetrics;
-            var maxWidth = int.MinValue;
+            var metrics = font.Metrics;
+            var maxWidth = float.MinValue;
+            var skPaint = new SKPaint(font);
             for (var c = '0'; c <= '9'; ++c)
             {
-                var containsMetrics = metrics.TryGetGlyphMetrics(
-                    new CodePoint(c),
-                    TextAttributes.None,
-                    TextDecorations.None,
-                    LayoutMode.HorizontalTopBottom,
-                    ColorFontSupport.None,
-                    out var glyphMetrics);
-                if (!containsMetrics)
+                if (!skPaint.ContainsGlyphs(c.ToString()))
+                {
                     continue;
+                }
 
-                var glyphAdvance = 0;
-                foreach (var glyphMetric in glyphMetrics)
-                    glyphAdvance += glyphMetric.AdvanceWidth;
+                var glyphAdvance = 0f;
+                foreach (var glyphWidth in skPaint.GetGlyphWidths(c.ToString()))
+                    glyphAdvance += glyphWidth;
 
                 maxWidth = Math.Max(maxWidth, glyphAdvance);
             }
-            return maxWidth / (double)metrics.UnitsPerEm;
+
+            return maxWidth / (double)font.Typeface.UnitsPerEm;
         }
 
         private static double PointsToPixels(double points, double dpi) => points / 72d * dpi;
 
         private readonly struct MetricId : IEquatable<MetricId>
         {
-            private readonly FontStyle _style;
+            private readonly SKFontStyle _style;
 
             public MetricId(IXLFontBase fontBase)
             {
@@ -311,16 +309,41 @@ namespace ClosedXML.Graphics
 
             public override bool Equals(object obj) => obj is MetricId other && Equals(other);
 
-            public override int GetHashCode() => (Name.GetHashCode() * 397) ^ (int)_style;
+            public override int GetHashCode() => (Name.GetHashCode() * 397) ^ StyleToInt(_style);
 
-            private static FontStyle GetFontStyle(IXLFontBase fontBase)
+            private int StyleToInt(SKFontStyle style)
+            {
+                if (style == SKFontStyle.BoldItalic)
+                {
+                    return 1;
+                }
+
+                if (style == SKFontStyle.Bold)
+                {
+                    return 2;
+                }
+
+                if (style == SKFontStyle.Italic)
+                {
+                    return 3;
+                }
+
+                if (style == SKFontStyle.Normal)
+                {
+                    return 4;
+                }
+
+                return 0;
+            }
+
+            private static SKFontStyle GetFontStyle(IXLFontBase fontBase)
             {
                 return fontBase switch
                 {
-                    { Bold: true, Italic: true } => FontStyle.BoldItalic,
-                    { Bold: true } => FontStyle.Bold,
-                    { Italic: true } => FontStyle.Italic,
-                    _ => FontStyle.Regular
+                    { Bold: true, Italic: true } => SKFontStyle.BoldItalic,
+                    { Bold: true } => SKFontStyle.Bold,
+                    { Italic: true } => SKFontStyle.Italic,
+                    _ => SKFontStyle.Normal
                 };
             }
         }
