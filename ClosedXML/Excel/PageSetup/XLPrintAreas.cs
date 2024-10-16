@@ -65,10 +65,13 @@ namespace ClosedXML.Excel
 
         public void OnSheetRenamed(string oldSheetName, string newSheetName)
         {
-            PrintArea = FormulaConverter.ModifyA1(PrintArea, 1, 1, new RenameRefModVisitor
+            if (!string.IsNullOrWhiteSpace(PrintArea))
             {
-                Sheets = new Dictionary<string, string> { { oldSheetName, newSheetName } }
-            });
+                PrintArea = FormulaConverter.ModifyA1(PrintArea, 1, 1, new RenameRefModVisitor
+                {
+                    Sheets = new Dictionary<string, string> { { oldSheetName, newSheetName } }
+                });
+            }
         }
     }
 }

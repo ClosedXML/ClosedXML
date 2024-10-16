@@ -44,41 +44,78 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void RenameWorkSheet()
+        public void RenameWorkSheet ()
         {
-            TestHelper.CreateSaveLoadAssert(
+            TestHelper.CreateSaveLoadAssert (
                 (_, ws) =>
                 {
-                    ws.PageSetup.PrintAreas.Add("A1:B2");
+                    ws.PageSetup.PrintAreas.Add ("A1:B2");
                     ws.Name = "NewSheetName";
                 },
                 (_, ws) =>
                 {
-                    Assert.AreEqual("NewSheetName!$A$1:$B$2", ws.PageSetup.PrintAreas.PrintArea);
+                    Assert.AreEqual ("NewSheetName!$A$1:$B$2", ws.PageSetup.PrintAreas.PrintArea);
                 });
         }
 
         [Test]
-        public void CopyWorksheet()
+        public void RenameWorkSheet_EmptyPrintArea()
         {
-            using var ms = new MemoryStream();
-            using (var wb = new XLWorkbook())
+            TestHelper.CreateSaveLoadAssert (
+                (_, ws) =>
+                {
+                    ws.Name = "NewSheetName";
+                },
+                (_, ws) =>
+                {
+                    Assert.IsNull (ws.PageSetup.PrintAreas.PrintArea);
+                });
+        }
+
+        [Test]
+        public void CopyWorksheet ()
+        {
+            using var ms = new MemoryStream ();
+            using (var wb = new XLWorkbook ())
             {
-                var sheet1 = wb.AddWorksheet("Sheet1");
-                sheet1.PageSetup.PrintAreas.Add("A1:B2");
+                var sheet1 = wb.AddWorksheet ("Sheet1");
+                sheet1.PageSetup.PrintAreas.Add ("A1:B2");
 
-                sheet1.CopyTo("Sheet2");
+                sheet1.CopyTo ("Sheet2");
 
-                wb.SaveAs(ms, true, true);
+                wb.SaveAs (ms, true, true);
             }
 
-            using (var wb = new XLWorkbook(ms))
+            using (var wb = new XLWorkbook (ms))
             {
-                Assert.That(wb.TryGetWorksheet("Sheet1", out XLWorksheet sheet1));
-                Assert.That(wb.TryGetWorksheet("Sheet2", out XLWorksheet sheet2));
+                Assert.That (wb.TryGetWorksheet ("Sheet1", out XLWorksheet sheet1));
+                Assert.That (wb.TryGetWorksheet ("Sheet2", out XLWorksheet sheet2));
 
-                Assert.AreEqual("Sheet1!$A$1:$B$2", sheet1.PageSetup.PrintAreas.PrintArea);
-                Assert.AreEqual("Sheet2!$A$1:$B$2", sheet2.PageSetup.PrintAreas.PrintArea);
+                Assert.AreEqual ("Sheet1!$A$1:$B$2", sheet1.PageSetup.PrintAreas.PrintArea);
+                Assert.AreEqual ("Sheet2!$A$1:$B$2", sheet2.PageSetup.PrintAreas.PrintArea);
+            }
+        }
+
+        [Test]
+        public void CopyWorksheet_EmptyPrintArea ()
+        {
+            using var ms = new MemoryStream ();
+            using (var wb = new XLWorkbook ())
+            {
+                var sheet1 = wb.AddWorksheet ("Sheet1");
+
+                sheet1.CopyTo ("Sheet2");
+
+                wb.SaveAs (ms, true, true);
+            }
+
+            using (var wb = new XLWorkbook (ms))
+            {
+                Assert.That (wb.TryGetWorksheet ("Sheet1", out XLWorksheet sheet1));
+                Assert.That (wb.TryGetWorksheet ("Sheet2", out XLWorksheet sheet2));
+
+                Assert.IsNull (sheet1.PageSetup.PrintAreas.PrintArea);
+                Assert.IsNull (sheet2.PageSetup.PrintAreas.PrintArea);
             }
         }
     }
