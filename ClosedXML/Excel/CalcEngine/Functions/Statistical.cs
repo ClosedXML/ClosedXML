@@ -175,7 +175,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Count(ctx, args, TallyNumbers.IgnoreErrors);
         }
 
-        private static AnyValue Count(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue Count(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             if (args.Length < 1)
                 return XLError.IncompatibleValue;
@@ -327,7 +327,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Max(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue Max(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue Max(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             var result = tally.Tally(ctx, args, new MaxState());
             if (!result.TryPickT0(out var state, out var error))
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Min(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue Min(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue Min(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             var result = tally.Tally(ctx, args, new MinState());
 
@@ -395,7 +395,7 @@ namespace ClosedXML.Excel.CalcEngine
             return StDev(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue StDev(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue StDev(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             if (!GetSquareDiffSum(ctx, args, tally).TryPickT0(out var squareDiff, out var error))
                 return error;
@@ -416,7 +416,7 @@ namespace ClosedXML.Excel.CalcEngine
             return StDevP(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue StDevP(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             if (!GetSquareDiffSum(ctx, args, tally).TryPickT0(out var squareDiff, out var error))
                 return error;
@@ -437,7 +437,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Var(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue Var(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue Var(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             if (!GetSquareDiffSum(ctx, args, tally).TryPickT0(out var squareDiff, out var error))
                 return error;
@@ -458,7 +458,7 @@ namespace ClosedXML.Excel.CalcEngine
             return VarP(ctx, args, TallyNumbers.Default);
         }
 
-        private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        internal static AnyValue VarP(CalcContext ctx, Span<AnyValue> args, ITally tally)
         {
             if (!GetSquareDiffSum(ctx, args, tally).TryPickT0(out var squareDiff, out var error))
                 return error;

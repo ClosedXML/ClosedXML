@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine.Functions;
 
@@ -6,6 +7,7 @@ internal class TallyNumbers : ITally
 {
     private readonly bool _ignoreScalarBlank;
     private readonly bool _ignoreErrors;
+    private readonly Func<CalcContext, Reference, IEnumerable<ScalarValue>> _getNonBlankValues;
 
     /// <summary>
     /// Tally numbers.
@@ -17,12 +19,21 @@ internal class TallyNumbers : ITally
     /// </summary>
     internal static readonly TallyNumbers WithoutScalarBlank = new(ignoreScalarBlank: true);
 
-    internal static readonly TallyNumbers IgnoreErrors = new(ignoreErrors: true);
+    /// <summary>
+    /// Tally numbers without values from cells that use <c>SUBTOTAL</c> function.
+    /// </summary>
+    internal static readonly TallyNumbers WithoutSubtotal = new(static (ctx, reference) => ctx.GetNonBlankValuesWithout("SUBTOTAL", reference));
 
-    private TallyNumbers(bool ignoreScalarBlank = false, bool ignoreErrors = false)
+    /// <summary>
+    /// Tally numbers. Any error (including conversion), logical, text is ignored and not tallied.
+    /// </summary>
+    internal static readonly TallyNumbers IgnoreErrors  = new(ignoreErrors: true);
+
+    private TallyNumbers(Func<CalcContext, Reference, IEnumerable<ScalarValue>>? getNonBlankValues = null, bool ignoreScalarBlank = false, bool ignoreErrors = false)
     {
         _ignoreScalarBlank = ignoreScalarBlank;
         _ignoreErrors = ignoreErrors;
+        _getNonBlankValues = getNonBlankValues ?? (static (ctx, reference) => ctx.GetNonBlankValues(reference));
     }
 
     /// <summary>
@@ -54,7 +65,7 @@ internal class TallyNumbers : ITally
             else
             {
                 var valuesIterator = !collection.TryPickT0(out var array, out var reference)
-                    ? ctx.GetNonBlankValues(reference)
+                    ? _getNonBlankValues(ctx, reference)
                     : array;
                 foreach (var value in valuesIterator)
                 {
