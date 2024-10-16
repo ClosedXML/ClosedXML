@@ -184,9 +184,12 @@ namespace ClosedXML.Graphics
         public double GetTextHeight(IXLFontBase font, double dpiY)
         {
             var skFont = GetFont(font);
-            return PointsToPixels(
-                (skFont.Metrics.Ascent - 2 * skFont.Metrics.Descent) * font.FontSize / skFont.Typeface.UnitsPerEm,
-                dpiY);
+            var paint = new SKPaint(skFont);
+
+            paint.TextSize = (float)font.FontSize;
+            paint.GetFontMetrics(out var metrics);
+
+            return PointsToPixels(metrics.XMax, dpiY);
         }
 
         public double GetTextWidth(string text, IXLFontBase fontBase, double dpiX)
