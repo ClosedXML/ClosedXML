@@ -16,60 +16,10 @@ namespace ClosedXML.Excel.CalcEngine
         public Tally()
         { }
 
-        public Tally(IEnumerable<Expression>? p)
-        {
-            if (p != null)
-            {
-                foreach (var e in p)
-                {
-                    Add(e);
-                }
-            }
-        }
-
-        public void Add(Expression e)
-        {
-            // handle enumerables
-            if (e is IEnumerable ienum)
-            {
-                foreach (var value in ienum)
-                {
-                    _list.Add(value);
-                }
-                _numericValues = null;
-                return;
-            }
-
-            // handle expressions
-            var val = e.Evaluate();
-            if (val is string || !(val is IEnumerable valEnumerable))
-                _list.Add(val);
-            else
-                foreach (var v in valEnumerable)
-                    _list.Add(v);
-
-            _numericValues = null;
-        }
-
         public void AddValue(Object v)
         {
             _list.Add(v);
             _numericValues = null;
-        }
-
-        public double Average()
-        {
-            var nums = NumericValuesInternal();
-            if (nums.Length == 0) throw new ApplicationException("No values");
-            return nums.Average();
-        }
-
-        public double Count(bool numbersOnly)
-        {
-            if (numbersOnly)
-                return NumericValuesInternal().Length;
-            else
-                return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
         }
 
         public IEnumerator<object> GetEnumerator()
@@ -82,80 +32,8 @@ namespace ClosedXML.Excel.CalcEngine
             return GetEnumerator();
         }
 
-        public double Max()
-        {
-            var nums = NumericValuesInternal();
-            return nums.Length == 0 ? 0 : nums.Max();
-        }
-
-        public double Min()
-        {
-            var nums = NumericValuesInternal();
-            return nums.Length == 0 ? 0 : nums.Min();
-        }
-
-        public double Product()
-        {
-            var nums = NumericValuesInternal();
-            return nums.Length == 0
-                ? 0
-                : nums.Aggregate(1d, (a, b) => a * b);
-        }
-
-        public double Std()
-        {
-            var values = NumericValuesInternal();
-            var count = values.Length;
-            double ret = 0;
-            if (count != 0)
-            {
-                //Compute the Average
-                double avg = values.Average();
-                //Perform the Sum of (value-avg)_2_2
-                double sum = values.Sum(d => Math.Pow(d - avg, 2));
-                //Put it all together
-                ret = Math.Sqrt((sum) / (count - 1));
-            }
-            else
-            {
-                throw new ApplicationException("No values");
-            }
-            return ret;
-        }
-
-        public double StdP()
-        {
-            var nums = NumericValuesInternal();
-            var avg = nums.Average();
-            var sum2 = nums.Sum(d => d * d);
-            var count = nums.Length;
-            return count <= 1 ? 0 : Math.Sqrt(sum2 / count - avg * avg);
-        }
-
         public double Sum() => NumericValuesInternal().Sum();
 
-        public double Var()
-        {
-            var nums = NumericValuesInternal();
-            var avg = nums.Average();
-            var sum2 = Sum2(nums);
-            var count = nums.Length;
-            return count <= 1 ? 0 : (sum2 / count - avg * avg) * count / (count - 1);
-        }
-
-        public double VarP()
-        {
-            var nums = NumericValuesInternal();
-            var avg = nums.Average();
-            var sum2 = Sum2(nums);
-            var count = nums.Length;
-            return count <= 1 ? 0 : sum2 / count - avg * avg;
-        }
-
-        private static double Sum2(IEnumerable<double> nums)
-        {
-            return nums.Sum(d => d * d);
-        }
 
         private IEnumerable<double> NumericValuesEnumerable()
         {
