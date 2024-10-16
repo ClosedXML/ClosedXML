@@ -697,38 +697,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Product(CalcContext ctx, Span<AnyValue> args)
         {
-            double? product = null;
-            foreach (var arg in args)
-            {
-                if (arg.TryPickScalar(out var scalar, out var collection))
-                {
-                    if (scalar.IsBlank)
-                        continue;
+            return Product(ctx, args, TallyNumbers.WithoutScalarBlank);
+        }
 
-                    // Scalars are converted to number.
-                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
-                        return error;
+        private static AnyValue Product(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        {
+            var result = tally.Tally(ctx, args, new ProductState(1, false));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
 
-                    product = product.HasValue ? product.Value * number : number;
-                }
-                else
-                {
-                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : ctx.GetNonBlankValues(reference);
-                    foreach (var value in valuesIterator)
-                    {
-                        if (value.TryPickError(out var error))
-                            return error;
-
-                        // For arrays and references, only the number type is used. Other types are ignored.
-                        if (value.TryPickNumber(out var number))
-                            product = product.HasValue ? product.Value * number : number;
-                    }
-                }
-            }
-
-            return product ?? 0;
+            return state.HasValues ? state.Product : 0;
         }
 
         private static object Quotient(List<Expression> p)
@@ -1150,6 +1128,11 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 return new SumSqState(Sum + number * number);
             }
+        }
+
+        private readonly record struct ProductState(double Product, bool HasValues) : ITallyState<ProductState>
+        {
+            public ProductState Tally(double number) => new(Product * number, true);
         }
     }
 }

@@ -4,7 +4,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions;
 
 internal class TallyNumbers : ITally
 {
-    internal static readonly ITally Default = new TallyNumbers();
+    private readonly bool _ignoreScalarBlank;
+
+    /// <summary>
+    /// Tally numbers.
+    /// </summary>
+    internal static readonly TallyNumbers Default = new();
+
+    /// <summary>
+    /// Ignore blank from scalar values. Basically used for <c>PRODUCT</c> function, so it doesn't end up with 0.
+    /// </summary>
+    internal static readonly TallyNumbers WithoutScalarBlank = new(true);
+
+    private TallyNumbers(bool ignoreScalarBlank = false)
+    {
+        _ignoreScalarBlank = ignoreScalarBlank;
+    }
 
     /// <summary>
     /// The method tries to convert scalar arguments to numbers, but ignores non-numbers in
@@ -18,6 +33,9 @@ internal class TallyNumbers : ITally
         {
             if (arg.TryPickScalar(out var scalar, out var collection))
             {
+                if (_ignoreScalarBlank && scalar.IsBlank)
+                    continue;
+
                 // Scalars are converted to number.
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
                     return error;
