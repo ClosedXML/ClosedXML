@@ -187,31 +187,9 @@ namespace ClosedXML.Excel.CalcEngine
             return state.Count;
         }
 
-        private static AnyValue CountA(CalcContext ctx, Span<AnyValue> values)
+        private static AnyValue CountA(CalcContext ctx, Span<AnyValue> args)
         {
-            var result = values.Aggregate(
-                ctx,
-                initialValue: 0,
-                noElementsResult: 0,
-                collectionFilter: value =>
-                {
-                    // Blanks in collections (i.e. references, because arrays can't contain blanks)
-                    // are not counted and thus are filtered out.
-                    if (value.IsBlank)
-                        return false;
-
-                    // Everything else is counted, including errors.
-                    return true;
-                },
-                // Any scalar value (including errors, including blank, if is passed directly as
-                // an argument) is counted as one non-empty element.
-                convert: (_, _) => 1,
-                aggregate: static (acc, cur) => acc + cur);
-
-            if (!result.TryPickT0(out var nonEmptyCount, out var error))
-                return error;
-
-            return nonEmptyCount;
+            return Count(ctx, args, TallyAll.IncludeErrors);
         }
 
         private static object CountBlank(List<Expression> p)

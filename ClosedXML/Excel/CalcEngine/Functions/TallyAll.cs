@@ -17,6 +17,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions;
 internal class TallyAll : ITally
 {
     private readonly bool _ignoreArrayText;
+    private readonly bool _includeErrors;
 
     /// <inheritdoc cref="TallyAll"/>
     /// <remarks>This tally ignores text in arrays.</remarks>
@@ -26,9 +27,15 @@ internal class TallyAll : ITally
     /// <remarks>This tally counts text in arrays as <c>0</c>.</remarks>
     internal static readonly ITally WithArrayText = new TallyAll(ignoreArrayText: false);
 
-    private TallyAll(bool ignoreArrayText)
+    /// <summary>
+    /// Include errors as number 0.
+    /// </summary>
+    internal static readonly ITally IncludeErrors = new TallyAll(includeErrors: true);
+
+    private TallyAll(bool ignoreArrayText = true, bool includeErrors = false)
     {
         _ignoreArrayText = ignoreArrayText;
+        _includeErrors = includeErrors;
     }
 
     public OneOf<T, XLError> Tally<T>(CalcContext ctx, Span<AnyValue> args, T initialState)
@@ -41,7 +48,12 @@ internal class TallyAll : ITally
             {
                 // Scalars are converted to number.
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
-                    return error;
+                {
+                    if (!_includeErrors)
+                        return error;
+
+                    number = 0;
+                }
 
                 // All scalars are counted
                 state = state.Tally(number);
@@ -79,7 +91,10 @@ internal class TallyAll : ITally
                     }
                     else if (value.TryPickError(out var error))
                     {
-                        return error;
+                        if (!_includeErrors)
+                            return error;
+
+                        state = state.Tally(0);
                     }
                 }
             }
