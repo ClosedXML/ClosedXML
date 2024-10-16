@@ -879,34 +879,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue Sum(CalcContext ctx, Span<AnyValue> args)
         {
-            var sum = 0.0;
-            foreach (var arg in args)
-            {
-                if (arg.TryPickScalar(out var scalar, out var collection))
-                {
-                    var conversionResult = scalar.ToNumber(ctx.Culture);
-                    if (!conversionResult.TryPickT0(out var number, out var error))
-                        return error;
+            return Sum(ctx, args, TallyNumbers.Default);
+        }
 
-                    sum += number;
-                }
-                else
-                {
-                    var valuesIterator = collection.TryPickT0(out var array, out var reference)
-                        ? array
-                        : reference.GetCellsValues(ctx);
-                    foreach (var value in valuesIterator)
-                    {
-                        // collections ignore strings and logical, only numbers (and errors) allowed
-                        if (value.TryPickNumber(out var number))
-                            sum += number;
-                        else if (value.TryPickError(out var error))
-                            return error;
-                    }
-                }
-            }
+        private static AnyValue Sum(CalcContext ctx, Span<AnyValue> args, ITally tally)
+        {
+            var result = tally.Tally(ctx, args, new SumState(0));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
 
-            return sum;
+            return state.Sum;
         }
 
         private static object SumIf(List<Expression> p)
@@ -1120,6 +1102,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             var truncated = (int)(number * scaling);
             return (double)truncated / scaling;
+        }
+
+        private readonly record struct SumState(double Sum) : ITallyState<SumState>
+        {
+            public SumState Tally(double number) => new(Sum + number);
         }
 
         private readonly record struct SumSqState(double Sum) : ITallyState<SumSqState>
