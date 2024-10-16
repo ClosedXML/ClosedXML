@@ -5,6 +5,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions;
 internal class TallyNumbers : ITally
 {
     private readonly bool _ignoreScalarBlank;
+    private readonly bool _ignoreErrors;
 
     /// <summary>
     /// Tally numbers.
@@ -14,11 +15,14 @@ internal class TallyNumbers : ITally
     /// <summary>
     /// Ignore blank from scalar values. Basically used for <c>PRODUCT</c> function, so it doesn't end up with 0.
     /// </summary>
-    internal static readonly TallyNumbers WithoutScalarBlank = new(true);
+    internal static readonly TallyNumbers WithoutScalarBlank = new(ignoreScalarBlank: true);
 
-    private TallyNumbers(bool ignoreScalarBlank = false)
+    internal static readonly TallyNumbers IgnoreErrors = new(ignoreErrors: true);
+
+    private TallyNumbers(bool ignoreScalarBlank = false, bool ignoreErrors = false)
     {
         _ignoreScalarBlank = ignoreScalarBlank;
+        _ignoreErrors = ignoreErrors;
     }
 
     /// <summary>
@@ -38,7 +42,12 @@ internal class TallyNumbers : ITally
 
                 // Scalars are converted to number.
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                {
+                    if (_ignoreErrors)
+                        continue;
+
                     return error;
+                }
 
                 tally = tally.Tally(number);
             }
@@ -50,7 +59,12 @@ internal class TallyNumbers : ITally
                 foreach (var value in valuesIterator)
                 {
                     if (value.TryPickError(out var error))
+                    {
+                        if (_ignoreErrors)
+                            continue;
+
                         return error;
+                    }
 
                     // For arrays and references, only the number type is used. Other types are ignored.
                     if (value.TryPickNumber(out var number))
