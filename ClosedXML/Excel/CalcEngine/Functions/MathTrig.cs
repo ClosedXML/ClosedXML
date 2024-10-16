@@ -845,35 +845,32 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static AnyValue Subtotal(CalcContext ctx, double number, List<Reference> p)
+        private static AnyValue Subtotal(CalcContext ctx, double number, AnyValue[] args)
         {
-            var cellsWithoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
-                .Where(cell =>
-                {
-                    if (!cell.HasFormula)
-                        return true;
-
-                    return !ctx.CalcEngine.Parse(cell.FormulaA1).Flags.HasFlag(FormulaFlags.HasSubtotal);
-                })
-                .Select(cell => new Expression(cell.Value));
-
-            var fId = (int)number;
-            var tally = new Tally(cellsWithoutSubtotal);
-
-            return fId switch
+            var funcNumber = number switch
             {
-                1 => tally.Average(),
-                2 => tally.Count(true),
-                3 => tally.Count(false),
-                4 => tally.Max(),
-                5 => tally.Min(),
-                6 => tally.Product(),
-                7 => tally.Std(),
-                8 => tally.StdP(),
-                9 => tally.Sum(),
-                10 => tally.Var(),
-                11 => tally.VarP(),
-                _ => throw new ArgumentException("Function not supported."),
+                >= 1 and < 12 => (int)number,
+                >= 101 and < 112 => (int)number,
+                _ => -1,
+            };
+
+            if (funcNumber < 0)
+                return XLError.IncompatibleValue;
+
+            return funcNumber switch
+            {
+                1 => Statistical.Average(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                2 => Statistical.Count(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                3 => Statistical.Count(ctx, args.AsSpan(), TallyAll.WithoutSubtotal),
+                4 => Statistical.Max(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                5 => Statistical.Min(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                6 => Product(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                7 => Statistical.StDev(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                8 => Statistical.StDevP(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                9 => Sum(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                10 => Statistical.Var(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                11 => Statistical.VarP(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
+                _ => throw new NotImplementedException(),
             };
         }
 

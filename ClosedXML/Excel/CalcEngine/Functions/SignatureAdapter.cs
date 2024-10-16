@@ -168,7 +168,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<CalcContext, double, List<Reference>, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<CalcContext, double, AnyValue[], AnyValue> f)
         {
             return (ctx, args) =>
             {
@@ -176,15 +176,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg0Converted.TryPickT0(out var arg0, out var err0))
                     return err0;
 
-                var argsLoop = new List<Reference>();
-                for (var i = 1; i < args.Length; ++i)
-                {
-                    if (!args[i].TryPickReference(out var reference, out var error))
-                        return error;
-
-                    argsLoop.Add(reference);
-                }
-
+                var argsLoop = args[1..].ToArray();
                 return f(ctx, arg0, argsLoop);
             };
         }

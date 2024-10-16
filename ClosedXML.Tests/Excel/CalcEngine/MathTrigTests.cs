@@ -1764,10 +1764,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = AddWorksheetWithCellValues(wb, 2, 3, "");
 
             var actual = ws.Evaluate("SUBTOTAL(3,A1,A2)");
-            Assert.AreEqual(2.0, actual);
+            Assert.AreEqual(2, actual);
 
-            actual = ws.Evaluate(@"SUBTOTAL(3,A3,A2)");
-            Assert.AreEqual(1.0, actual);
+            actual = ws.Evaluate("SUBTOTAL(3,A3,A2)");
+            Assert.AreEqual(2, actual);
         }
 
         [Test]
