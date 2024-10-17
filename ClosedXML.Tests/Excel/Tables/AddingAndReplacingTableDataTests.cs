@@ -569,6 +569,70 @@ namespace ClosedXML.Tests.Excel.Tables
         }
 
         [Test]
+        public void CanReplaceWhenWorksheetHasDefinedNamesWithoutSheetReferences()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = PrepareWorkbook())
+                {
+                    var ws = wb.Worksheets.First();
+
+                    ws.DefinedNames.Add("ListOfPeople_Age", "ListOfPeople[Age]");
+
+                    var table = ws.Tables.First();
+
+                    IEnumerable<Person> personEnumerable = NewData;
+                    var replacedRange = table.ReplaceData(personEnumerable);
+
+                    Assert.AreEqual("B3:G4", replacedRange.RangeAddress.ToString());
+                    ws.Columns().AdjustToContents();
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var table = wb.Worksheets.SelectMany(ws => ws.Tables).First();
+
+                    Assert.AreEqual(2, table.DataRange.RowCount());
+                    Assert.AreEqual(6, table.DataRange.ColumnCount());
+                }
+            }
+        }
+
+        [Test]
+        public void CanReplaceWhenWorksheetHasDefinedNamesWithSheetReferences()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = PrepareWorkbook())
+                {
+                    var ws = wb.Worksheets.First();
+
+                    ws.DefinedNames.Add("ListOfPeople_Age", "ListOfPeople!A1");
+
+                    var table = ws.Tables.First();
+
+                    IEnumerable<Person> personEnumerable = NewData;
+                    var replacedRange = table.ReplaceData(personEnumerable);
+
+                    Assert.AreEqual("B3:G4", replacedRange.RangeAddress.ToString());
+                    ws.Columns().AdjustToContents();
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var table = wb.Worksheets.SelectMany(ws => ws.Tables).First();
+
+                    Assert.AreEqual(2, table.DataRange.RowCount());
+                    Assert.AreEqual(6, table.DataRange.ColumnCount());
+                }
+            }
+        }
+
+        [Test]
         public void CanAppendWithUntypedEnumerableAndPropagateExtraColumns()
         {
             using (var ms = new MemoryStream())

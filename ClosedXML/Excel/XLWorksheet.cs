@@ -1481,11 +1481,14 @@ namespace ClosedXML.Excel
         {
             foreach (var definedName in definedNames)
             {
-                var newRangeList =
-                    definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
-                        newReference => newReference.Length > 0).ToList();
-                var unionFormula = string.Join(",", newRangeList);
-                definedName.SetRefersTo(unionFormula);
+                if (definedName.SheetReferencesList.Count() > 0)
+                {
+                    var newRangeList =
+                        definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
+                            newReference => newReference.Length > 0).ToList();
+                    var unionFormula = string.Join(",", newRangeList);
+                    definedName.SetRefersTo(unionFormula);
+                }
             }
         }
 
