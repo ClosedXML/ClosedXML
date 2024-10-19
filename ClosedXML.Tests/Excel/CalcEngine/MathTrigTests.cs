@@ -1686,12 +1686,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(2.5, ws.Cell("A3").Value);
             Assert.AreEqual(2.5, ws.Evaluate("SUBTOTAL(1, A1:A4)"));
+
+            ws.Row(2).Hide();
+            Assert.AreEqual(2, ws.Evaluate("SUBTOTAL(101, A1:A4)"));
         }
 
         [Test]
-        public void SubtotalCalc()
+        public void Subtotal10Calc()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.DefinedNames.Add("subtotalrange", "$A$37:$A$38");
 
@@ -1757,6 +1760,42 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Subtotal100Calc()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            ws.Cell("A1").Value = 1;
+            ws.Cell("B1").Value = 2;
+            ws.Cell("C1").Value = Blank.Value;
+            ws.Cell("A2").Value = "A";
+            ws.Cell("B2").Value = 4;
+            ws.Cell("C2").Value = 8;
+            ws.Cell("A3").FormulaA1 = "SUBTOTAL(109, A1:A2)";
+            ws.Cell("B3").FormulaA1 = "SUBTOTAL(109, B1:B2)";
+            ws.Cell("C3").FormulaA1 = "SUBTOTAL(109, C1:C2)";
+            ws.Cell("A4").Value = 16;
+            ws.Cell("B4").Value = 32;
+            ws.Cell("C4").Value = 64;
+            ws.Cell("A5").Value = 128;
+            ws.Cell("B5").Value = 256;
+            ws.Cell("C5").Value = 512;
+            ws.Cell("A6").FormulaA1 = "SUBTOTAL(109, A1:A5)";
+            ws.Cell("B6").FormulaA1 = "SUBTOTAL(109, B1:B5)";
+            ws.Cell("C6").FormulaA1 = "SUBTOTAL(109, C1:C5)";
+
+            ws.Row(2).Hide();
+            ws.Row(5).Hide();
+
+            Assert.AreEqual(1, ws.Cell("A3").Value);
+            Assert.AreEqual(2, ws.Cell("B3").Value);
+            Assert.AreEqual(0, ws.Cell("C3").Value);
+            Assert.AreEqual(17, ws.Cell("A6").Value);
+            Assert.AreEqual(34, ws.Cell("B6").Value);
+            Assert.AreEqual(64, ws.Cell("C6").Value);
+        }
+
+        [Test]
         public void SubtotalCount()
         {
             using var wb = new XLWorkbook();
@@ -1768,6 +1807,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(2, ws.Cell("A4").Value);
             Assert.AreEqual(1, ws.Evaluate("SUBTOTAL(2,A2:A4)"));
+
+            ws.Row(2).Hide();
+            Assert.AreEqual(1, ws.Evaluate("SUBTOTAL(102,A1:A4)"));
         }
 
         [Test]
@@ -1782,6 +1824,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(3, ws.Cell("A4").Value);
             Assert.AreEqual(3, ws.Evaluate("SUBTOTAL(3,A1:A4)"));
+
+            ws.Row(1).Hide();
+            Assert.AreEqual(2, ws.Evaluate("SUBTOTAL(103,A1:A4)"));
         }
 
         [Test]
@@ -1796,6 +1841,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(13, ws.Cell("A4").Value);
             Assert.AreEqual(3, ws.Evaluate("SUBTOTAL(4,A1:A4)"));
+
+            ws.Cell("A5").Value = 2.5;
+            ws.Row(2).Hide();
+            Assert.AreEqual(2.5, ws.Evaluate("SUBTOTAL(104,A1:A5)"));
         }
 
         [Test]
@@ -1810,6 +1859,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(-8, ws.Cell("A4").Value);
             Assert.AreEqual(2, ws.Evaluate("SUBTOTAL(5,A1:A4)"));
+
+            ws.Cell("A5").Value = 2.5;
+            ws.Row(1).Hide();
+            Assert.AreEqual(2.5, ws.Evaluate("SUBTOTAL(105,A1:A5)"));
         }
 
         [Test]
@@ -1824,6 +1877,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(6, ws.Cell("A4").Value);
             Assert.AreEqual(6, ws.Evaluate("SUBTOTAL(6,A1:A4)"));
+
+            ws.Row(2).Hide();
+            ws.Cell("A5").Value = 4;
+            Assert.AreEqual(8, ws.Evaluate("SUBTOTAL(106,A1:A5)"));
         }
 
         [Test]
@@ -1835,10 +1892,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").Value = 2;
             ws.Cell("A2").Value = 3;
             ws.Cell("A3").Value = "A";
-            ws.Cell("A4").FormulaA1 = "SUBTOTAL(7,A1,A2,A3)";
+            ws.Cell("A4").FormulaA1 = "SUBTOTAL(7,A1:A3,A5)";
+            ws.Cell("A5").Value = 5;
 
-            Assert.AreEqual(0.7071067811, (double)ws.Cell("A4").Value);
-            Assert.AreEqual(0.7071067811, (double)ws.Evaluate("SUBTOTAL(7,A1:A4)"));
+            Assert.AreEqual(1.5275252316, (double)ws.Cell("A4").Value);
+            Assert.AreEqual(1.5275252316, (double)ws.Evaluate("SUBTOTAL(7,A1:A5)"));
+
+            ws.Row(2).Hide();
+            Assert.AreEqual(2.1213203435, (double)ws.Evaluate("SUBTOTAL(107,A1:A5)"));
         }
 
         [Test]
@@ -1853,6 +1914,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(0.5, ws.Cell("A4").Value);
             Assert.AreEqual(0.5, ws.Evaluate("SUBTOTAL(8,A1:A4)"));
+
+            ws.Row(2).Hide();
+            ws.Cell("A5").Value = 3;
+            Assert.AreEqual(0.5, ws.Evaluate("SUBTOTAL(108,A1:A5)"));
         }
 
         [Test]
@@ -1867,6 +1932,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(5, ws.Cell("A4").Value);
             Assert.AreEqual(5, ws.Evaluate("SUBTOTAL(9,A1:A4)"));
+
+            ws.Row(2).Hide();
+
+            Assert.AreEqual(2, ws.Evaluate("SUBTOTAL(109, A1:A4)"));
         }
 
         [Test]
@@ -1883,6 +1952,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(3, ws.Cell("A6").Value);
             Assert.AreEqual(3, ws.Evaluate("SUBTOTAL(10,A1:A6)"));
+
+            ws.Row(1).Hide();
+            ws.Row(5).Hide();
+            Assert.AreEqual(8, ws.Evaluate("SUBTOTAL(110,A1:A6)"));
         }
 
         [Test]
@@ -1897,6 +1970,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(0.25, ws.Cell("A4").Value);
             Assert.AreEqual(0.25, ws.Evaluate("SUBTOTAL(11,A1:A4)"));
+
+            ws.Row(2).Hide();
+            ws.Cell("A5").Value = 4;
+            Assert.AreEqual(1, ws.Evaluate("SUBTOTAL(111,A1:A5)"));
         }
 
         [Test]
