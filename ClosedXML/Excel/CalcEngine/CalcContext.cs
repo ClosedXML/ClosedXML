@@ -126,7 +126,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        internal IEnumerable<ScalarValue> GetNonBlankValuesWithout(string function, Reference reference)
+        internal IEnumerable<ScalarValue> GetFilteredNonBlankValues(Reference reference, string function, bool skipHiddenRows = false)
         {
             // Allocate one per call, because visitor holds info whether function was found in a formula.
             var visitor = new FunctionVisitor(function);
@@ -134,12 +134,28 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var sheet = area.Worksheet ?? Worksheet;
                 var range = XLSheetRange.FromRangeAddress(area);
+                var currentRow = 0;
+                var rowIsHidden = true;
 
                 // A value can be either in a non-empty value slice or a empty cell with a formula.
                 var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
                 while (enumerator.MoveNext())
                 {
                     var point = enumerator.Current;
+
+                    if (skipHiddenRows)
+                    {
+                        // If row changed, update hidden info about current row
+                        if (currentRow != point.Row)
+                        {
+                            currentRow = point.Row;
+                            rowIsHidden = sheet.Internals.RowsCollection.TryGetValue(currentRow, out var row) && row.IsHidden;
+                        }
+
+                        if (rowIsHidden)
+                            continue;
+                    }
+
                     var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
                     if (CallsFunction(formula, visitor))
                         continue;
@@ -186,7 +202,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (collection.TryPickT0(out var array, out var reference))
                 return array.Where(x => !x.IsBlank);
-            
+
             return GetNonBlankValues(reference);
         }
 

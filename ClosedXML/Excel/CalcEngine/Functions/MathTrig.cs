@@ -3,6 +3,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -845,7 +846,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static AnyValue Subtotal(CalcContext ctx, double number, AnyValue[] args)
+        private static AnyValue Subtotal(CalcContext ctx, double number, AnyValue[] fnArgs)
         {
             var funcNumber = number switch
             {
@@ -857,20 +858,32 @@ namespace ClosedXML.Excel.CalcEngine
             if (funcNumber < 0)
                 return XLError.IncompatibleValue;
 
+            var args = fnArgs.AsSpan();
             return funcNumber switch
             {
-                1 => Statistical.Average(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                2 => Statistical.Count(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                3 => Statistical.Count(ctx, args.AsSpan(), TallyAll.WithoutSubtotal),
-                4 => Statistical.Max(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                5 => Statistical.Min(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                6 => Product(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                7 => Statistical.StDev(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                8 => Statistical.StDevP(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                9 => Sum(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                10 => Statistical.Var(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                11 => Statistical.VarP(ctx, args.AsSpan(), TallyNumbers.WithoutSubtotal),
-                _ => throw new NotImplementedException(),
+                1 => Statistical.Average(ctx, args, TallyNumbers.Subtotal10),
+                2 => Statistical.Count(ctx, args, TallyNumbers.Subtotal10),
+                3 => Statistical.Count(ctx, args, TallyAll.Subtotal10),
+                4 => Statistical.Max(ctx, args, TallyNumbers.Subtotal10),
+                5 => Statistical.Min(ctx, args, TallyNumbers.Subtotal10),
+                6 => Product(ctx, args, TallyNumbers.Subtotal10),
+                7 => Statistical.StDev(ctx, args, TallyNumbers.Subtotal10),
+                8 => Statistical.StDevP(ctx, args, TallyNumbers.Subtotal10),
+                9 => Sum(ctx, args, TallyNumbers.Subtotal10),
+                10 => Statistical.Var(ctx, args, TallyNumbers.Subtotal10),
+                11 => Statistical.VarP(ctx, args, TallyNumbers.Subtotal10),
+                101 => Statistical.Average(ctx, args, TallyNumbers.Subtotal100),
+                102 => Statistical.Count(ctx, args, TallyNumbers.Subtotal100),
+                103 => Statistical.Count(ctx, args, TallyAll.Subtotal100),
+                104 => Statistical.Max(ctx, args, TallyNumbers.Subtotal100),
+                105 => Statistical.Min(ctx, args, TallyNumbers.Subtotal100),
+                106 => Product(ctx, args, TallyNumbers.Subtotal100),
+                107 => Statistical.StDev(ctx, args, TallyNumbers.Subtotal100),
+                108 => Statistical.StDevP(ctx, args, TallyNumbers.Subtotal100),
+                109 => Sum(ctx, args, TallyNumbers.Subtotal100),
+                110 => Statistical.Var(ctx, args, TallyNumbers.Subtotal100),
+                111 => Statistical.VarP(ctx, args, TallyNumbers.Subtotal100),
+                _ => throw new UnreachableException(),
             };
         }
 

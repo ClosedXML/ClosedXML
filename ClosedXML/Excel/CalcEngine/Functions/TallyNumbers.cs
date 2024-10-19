@@ -20,14 +20,19 @@ internal class TallyNumbers : ITally
     internal static readonly TallyNumbers WithoutScalarBlank = new(ignoreScalarBlank: true);
 
     /// <summary>
-    /// Tally numbers without values from cells that use <c>SUBTOTAL</c> function.
+    /// Tally algorithm for <c>SUBTOTAL</c> functions 1..11.
     /// </summary>
-    internal static readonly TallyNumbers WithoutSubtotal = new(static (ctx, reference) => ctx.GetNonBlankValuesWithout("SUBTOTAL", reference));
+    internal static readonly TallyNumbers Subtotal10 = new(static (ctx, reference) => ctx.GetFilteredNonBlankValues(reference, "SUBTOTAL"));
+
+    /// <summary>
+    /// Tally algorithm for <c>SUBTOTAL</c> functions 101..111.
+    /// </summary>
+    internal static readonly TallyNumbers Subtotal100 = new(static (ctx, reference) => ctx.GetFilteredNonBlankValues(reference, "SUBTOTAL", skipHiddenRows: true));
 
     /// <summary>
     /// Tally numbers. Any error (including conversion), logical, text is ignored and not tallied.
     /// </summary>
-    internal static readonly TallyNumbers IgnoreErrors  = new(ignoreErrors: true);
+    internal static readonly TallyNumbers IgnoreErrors = new(ignoreErrors: true);
 
     private TallyNumbers(Func<CalcContext, Reference, IEnumerable<ScalarValue>>? getNonBlankValues = null, bool ignoreScalarBlank = false, bool ignoreErrors = false)
     {
