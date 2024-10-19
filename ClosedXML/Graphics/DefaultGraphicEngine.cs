@@ -171,14 +171,14 @@ namespace ClosedXML.Graphics
 
         private double GetDescent(IXLFontBase font, double dpiY, SKFont skFont)
         {
-            return PointsToPixels(-skFont.Metrics.Descent * font.FontSize / skFont.Typeface.UnitsPerEm, dpiY);
+            return PointsToPixels(-skFont.Metrics.Descent, dpiY);
         }
 
         public double GetMaxDigitWidth(IXLFontBase fontBase, double dpiX)
         {
             var metricId = new MetricId(fontBase);
             var maxDigitWidth = _maxDigitWidths.GetOrAdd(metricId, _calculateMaxDigitWidth);
-            return PointsToPixels(maxDigitWidth * fontBase.FontSize, dpiX);
+            return PointsToPixels(maxDigitWidth, dpiX);
         }
 
         public double GetTextHeight(IXLFontBase font, double dpiY)
@@ -197,7 +197,7 @@ namespace ClosedXML.Graphics
             var font = GetFont(fontBase);
             var paint = new SKPaint(font);
             var width = paint.MeasureText(text);
-            return PointsToPixels(width / FontMetricSize * fontBase.FontSize, dpiX);
+            return PointsToPixels(width , dpiX);
         }
 
         /// <inheritdoc />
@@ -207,6 +207,7 @@ namespace ClosedXML.Graphics
             // without a TextRenderer that has unacceptable performance.
             var skFont = GetFont(font);
             var skPaint = new SKPaint(skFont);
+
             var advanceFu = 0f;
             for (var i = 0; i < graphemeCluster.Length; ++i)
             {
@@ -220,18 +221,12 @@ namespace ClosedXML.Graphics
             }
 
             var emInPx = font.FontSize / 72d * dpi.X;
-            var advancePx = PointsToPixels(advanceFu * font.FontSize / skFont.Typeface.UnitsPerEm, dpi.X);
+            var advancePx = PointsToPixels(advanceFu, dpi.X);
             var descentPx = GetDescent(font, dpi.Y, skFont);
             return new GlyphBox(
                 (float)Math.Round(advancePx, MidpointRounding.AwayFromZero),
                 (float)Math.Round(emInPx, MidpointRounding.AwayFromZero),
                 (float)Math.Round(descentPx, MidpointRounding.AwayFromZero));
-        }
-
-        private SKFontMetrics GetMetrics(IXLFontBase fontBase)
-        {
-            var font = GetFont(fontBase);
-            return font.Metrics;
         }
 
         private SKFont GetFont(IXLFontBase fontBase)
@@ -277,6 +272,14 @@ namespace ClosedXML.Graphics
             var metrics = font.Metrics;
             var maxWidth = float.MinValue;
             var skPaint = new SKPaint(font);
+            using var fontPaint = new SKPaint
+            {
+                IsAntialias = true,
+                HintingLevel = SKPaintHinting.Normal,
+                TextAlign = SKTextAlign.Left,
+                TextSize = (float)font.Size,
+                Typeface = font.Typeface,
+            };
             for (var c = '0'; c <= '9'; ++c)
             {
                 if (!skPaint.ContainsGlyphs(c.ToString()))
@@ -284,6 +287,9 @@ namespace ClosedXML.Graphics
                     continue;
                 }
 
+                var textBounds = new SKRect();
+                var totalWidthMm = fontPaint.MeasureText(c.ToString(), ref textBounds);
+                var totalHeightMm = textBounds.Height;
                 var glyphAdvance = 0f;
                 foreach (var glyphWidth in skPaint.GetGlyphWidths(c.ToString()))
                     glyphAdvance += glyphWidth;
@@ -291,10 +297,10 @@ namespace ClosedXML.Graphics
                 maxWidth = Math.Max(maxWidth, glyphAdvance);
             }
 
-            return maxWidth / (double)font.Typeface.UnitsPerEm;
+            return maxWidth;
         }
 
-        private static double PointsToPixels(double points, double dpi) => points / 72d * dpi;
+        private static double PointsToPixels(double points, double dpi) => points  * dpi/ 72d;
 
         private readonly struct MetricId : IEquatable<MetricId>
         {
