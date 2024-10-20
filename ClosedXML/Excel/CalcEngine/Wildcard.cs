@@ -25,14 +25,29 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>zero-based index of a first character in a text that matches to a pattern or -1, if match wasn't found.</returns>
         public int Search(ReadOnlySpan<char> text)
         {
-            return Search(_pattern.AsSpan(), text);
+            return Search(_pattern.AsSpan(), text).StartIndex;
         }
 
-        private static int Search(ReadOnlySpan<char> pattern, ReadOnlySpan<char> text)
+        /// <summary>
+        /// Does pattern matches whole text?
+        /// </summary>
+        public static bool Matches(ReadOnlySpan<char> pattern, ReadOnlySpan<char> text)
+        {
+            var (startIndex, endIndex) = Search(pattern, text);
+            if (startIndex != 0)
+                return false;
+
+            if (endIndex != text.Length)
+                return false;
+
+            return true;
+        }
+
+        private static (int StartIndex, int EndIndex) Search(ReadOnlySpan<char> pattern, ReadOnlySpan<char> text)
         {
             // Excel limits pattern size to 255, likely to avoid performance problems due to backtracking.
             if (pattern.Length > 255)
-                return -1;
+                return (-1, 0);
 
             // Check to remove trailing escape ~
             if (pattern.Length >= 2 && pattern[pattern.Length - 1] == '~' && pattern[pattern.Length - 2] != '~')
@@ -57,20 +72,25 @@ namespace ClosedXML.Excel.CalcEngine
             if (patternIdx >= pattern.Length)
             {
                 // Whole pattern consists of * wildcards, any text satisfies the pattern.
-                return 0;
+                return (0, text.Length);
             }
 
             // Text index points to the first char of yet unprocessed text. As pattern segments are matched in a text, text index increases,
             // so the same substring of a text can't be used to match two segments.
             var textIdx = 0;
 
+            // Because of escapes, we can't just check end character for star, we have to track it. Updated for every segment is processed.
+            var endsWithStar = false;
+
             while (patternIdx < pattern.Length)
             {
                 if (textIdx >= text.Length)
                 {
                     // There is still a non-star pattern, but text has ended - there is no way we can find the last segment in the text.
-                    return -1;
+                    return (-1, 0);
                 }
+
+                endsWithStar = false;
 
                 // Each loop is searching only for a specific a segment in a text that hasn't yet been processed.
                 // Segment pattern starts after previous star wildcard and ends before next star wildcard/end of pattern.
@@ -79,7 +99,10 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     var segmentChar = pattern[segmentEnd];
                     if (segmentChar == '*')
+                    {
+                        endsWithStar = true;
                         break;
+                    }
 
                     if (segmentChar == '~' && segmentEnd + 1 < pattern.Length)
                         segmentEnd++;
@@ -94,7 +117,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (patternPosInSegment.TextStartIdx < 0)
                 {
                     // Segment pattern is not present in the text -> whole pattern isn't in the text
-                    return -1;
+                    return (-1, 0);
                 }
 
                 if (firstSegmentStartIdx < 0)
@@ -105,10 +128,16 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // Skip stars between segments. Due to backtracking, they are rather irrelevant.
                 while (patternIdx < pattern.Length && pattern[patternIdx] == '*')
+                {
+                    endsWithStar = true;
                     patternIdx++;
+                }
             }
 
-            return firstSegmentStartIdx;
+            if (endsWithStar)
+                textIdx = text.Length;
+
+            return (firstSegmentStartIdx, textIdx);
         }
         
         /// <summary>

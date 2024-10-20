@@ -88,6 +88,24 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(-1, SearchWildcard(new string('a', 1000), new string('a', 256)));
         }
 
+        [TestCase("?", "a", true)]
+        [TestCase("?", "ab", false)]
+        [TestCase("a?", "ab", true)]
+        [TestCase("a?", "abc", false)]
+        [TestCase("?b", "ab", true)]
+        [TestCase("?b", "aab", false)]
+        [TestCase("a*", "abc", true)]
+        [TestCase("*a*", "abc", true)]
+        [TestCase("*c", "abc", true)]
+        [TestCase("*a*a", "abc", false)]
+        [TestCase("*a*a", "aba", true)]
+        [TestCase("*a*a", @"zaba", true)]
+        [TestCase("a*", @"zaba", false)]
+        public void Matches(string pattern, string text, bool matches)
+        {
+            Assert.AreEqual(matches, Wildcard.Matches(pattern.AsSpan(), text.AsSpan()));
+        }
+
         private static int SearchWildcard(string text, string pattern)
         {
             return new Wildcard(pattern).Search(text.AsSpan());
