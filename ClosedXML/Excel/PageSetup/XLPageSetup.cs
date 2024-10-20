@@ -10,10 +10,9 @@ namespace ClosedXML.Excel
     {
         public XLPageSetup(XLPageSetup defaultPageOptions, XLWorksheet worksheet)
         {
-
             if (defaultPageOptions != null)
             {
-                PrintAreas = new XLPrintAreas(defaultPageOptions.PrintAreas as XLPrintAreas, worksheet);
+                PrintAreasInternal = new XLPrintAreas(defaultPageOptions.PrintAreasInternal, worksheet);
                 CenterHorizontally = defaultPageOptions.CenterHorizontally;
                 CenterVertically = defaultPageOptions.CenterVertically;
                 FirstPageNumber = defaultPageOptions.FirstPageNumber;
@@ -26,24 +25,22 @@ namespace ClosedXML.Excel
                 LastColumnToRepeatAtLeft = defaultPageOptions.LastColumnToRepeatAtLeft;
                 ShowComments = defaultPageOptions.ShowComments;
 
-
                 PaperSize = defaultPageOptions.PaperSize;
                 _pagesTall = defaultPageOptions.PagesTall;
                 _pagesWide = defaultPageOptions.PagesWide;
                 _scale = defaultPageOptions.Scale;
 
-
                 if (defaultPageOptions.Margins != null)
                 {
                     Margins = new XLMargins
-                                  {
-                                Top = defaultPageOptions.Margins.Top,
-                                Bottom = defaultPageOptions.Margins.Bottom,
-                                Left = defaultPageOptions.Margins.Left,
-                                Right = defaultPageOptions.Margins.Right,
-                                Header = defaultPageOptions.Margins.Header,
-                                Footer = defaultPageOptions.Margins.Footer
-                            };
+                    {
+                        Top = defaultPageOptions.Margins.Top,
+                        Bottom = defaultPageOptions.Margins.Bottom,
+                        Left = defaultPageOptions.Margins.Left,
+                        Right = defaultPageOptions.Margins.Right,
+                        Header = defaultPageOptions.Margins.Header,
+                        Footer = defaultPageOptions.Margins.Footer
+                    };
                 }
                 AlignHFWithMargins = defaultPageOptions.AlignHFWithMargins;
                 ScaleHFWithDocument = defaultPageOptions.ScaleHFWithDocument;
@@ -61,23 +58,26 @@ namespace ClosedXML.Excel
             }
             else
             {
-                PrintAreas = new XLPrintAreas(worksheet);
+                PrintAreasInternal = new XLPrintAreas(worksheet);
                 Header = new XLHeaderFooter(worksheet);
                 Footer = new XLHeaderFooter(worksheet);
                 ColumnBreaks = new List<Int32>();
                 RowBreaks = new List<Int32>();
             }
         }
-        public IXLPrintAreas PrintAreas { get; private set; }
+        public IXLPrintAreas PrintAreas => PrintAreasInternal;
 
+        internal XLPrintAreas PrintAreasInternal { get; private set; }
 
         public Int32 FirstRowToRepeatAtTop { get; private set; }
         public Int32 LastRowToRepeatAtTop { get; private set; }
+
         public void SetRowsToRepeatAtTop(String range)
         {
             var arrRange = range.Replace("$", "").Split(':');
             SetRowsToRepeatAtTop(Int32.Parse(arrRange[0]), Int32.Parse(arrRange[1]));
         }
+
         public void SetRowsToRepeatAtTop(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop)
         {
             if (firstRowToRepeatAtTop <= 0) throw new ArgumentOutOfRangeException("The first row has to be greater than zero.");
@@ -88,6 +88,7 @@ namespace ClosedXML.Excel
         }
         public Int32 FirstColumnToRepeatAtLeft { get; private set; }
         public Int32 LastColumnToRepeatAtLeft { get; private set; }
+
         public void SetColumnsToRepeatAtLeft(String range)
         {
             var arrRange = range.Replace("$", "").Split(':');
@@ -96,10 +97,12 @@ namespace ClosedXML.Excel
             else
                 SetColumnsToRepeatAtLeft(arrRange[0], arrRange[1]);
         }
+
         public void SetColumnsToRepeatAtLeft(String firstColumnToRepeatAtLeft, String lastColumnToRepeatAtLeft)
         {
             SetColumnsToRepeatAtLeft(XLHelper.GetColumnNumberFromLetter(firstColumnToRepeatAtLeft), XLHelper.GetColumnNumberFromLetter(lastColumnToRepeatAtLeft));
         }
+
         public void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft)
         {
             if (firstColumnToRepeatAtLeft <= 0) throw new ArgumentOutOfRangeException("The first column has to be greater than zero.");
@@ -120,6 +123,7 @@ namespace ClosedXML.Excel
         public IXLMargins Margins { get; set; }
 
         private Int32 _pagesWide;
+
         public Int32 PagesWide
         {
             get
@@ -129,12 +133,13 @@ namespace ClosedXML.Excel
             set
             {
                 _pagesWide = value;
-                if (_pagesWide >0)
+                if (_pagesWide > 0)
                     _scale = 0;
             }
         }
 
         private Int32 _pagesTall;
+
         public Int32 PagesTall
         {
             get
@@ -144,12 +149,13 @@ namespace ClosedXML.Excel
             set
             {
                 _pagesTall = value;
-                if (_pagesTall >0)
+                if (_pagesTall > 0)
                     _scale = 0;
             }
         }
 
         private Int32 _scale;
+
         public Int32 Scale
         {
             get
@@ -171,13 +177,13 @@ namespace ClosedXML.Excel
             _pagesWide = 0;
             _pagesTall = 0;
         }
+
         public void FitToPages(Int32 pagesWide, Int32 pagesTall)
         {
             _pagesWide = pagesWide;
             this._pagesTall = pagesTall;
             _scale = 0;
         }
-
 
         public IXLHeaderFooter Header { get; private set; }
         public IXLHeaderFooter Footer { get; private set; }
@@ -195,12 +201,14 @@ namespace ClosedXML.Excel
 
         public List<Int32> RowBreaks { get; private set; }
         public List<Int32> ColumnBreaks { get; private set; }
+
         public void AddHorizontalPageBreak(Int32 row)
         {
             if (!RowBreaks.Contains(row))
                 RowBreaks.Add(row);
             RowBreaks.Sort();
         }
+
         public void AddVerticalPageBreak(Int32 column)
         {
             if (!ColumnBreaks.Contains(column))
@@ -220,41 +228,106 @@ namespace ClosedXML.Excel
         //    }
         //}
 
-        public IXLPageSetup SetPageOrientation(XLPageOrientation value) { PageOrientation = value; return this; }
-        public IXLPageSetup SetPagesWide(Int32 value) { PagesWide = value; return this; }
-        public IXLPageSetup SetPagesTall(Int32 value) { PagesTall = value; return this; }
-        public IXLPageSetup SetScale(Int32 value) { Scale = value; return this; }
-        public IXLPageSetup SetHorizontalDpi(Int32 value) { HorizontalDpi = value; return this; }
-        public IXLPageSetup SetVerticalDpi(Int32 value) { VerticalDpi = value; return this; }
-        public IXLPageSetup SetFirstPageNumber(Int32? value) { FirstPageNumber = value; return this; }
-        public IXLPageSetup SetCenterHorizontally() { CenterHorizontally = true; return this; }	public IXLPageSetup SetCenterHorizontally(Boolean value) { CenterHorizontally = value; return this; }
-        public IXLPageSetup SetCenterVertically() { CenterVertically = true; return this; }	public IXLPageSetup SetCenterVertically(Boolean value) { CenterVertically = value; return this; }
-        public IXLPageSetup SetPaperSize(XLPaperSize value) { PaperSize = value; return this; }
-        public IXLPageSetup SetScaleHFWithDocument() { ScaleHFWithDocument = true; return this; }	public IXLPageSetup SetScaleHFWithDocument(Boolean value) { ScaleHFWithDocument = value; return this; }
-        public IXLPageSetup SetAlignHFWithMargins() { AlignHFWithMargins = true; return this; }	public IXLPageSetup SetAlignHFWithMargins(Boolean value) { AlignHFWithMargins = value; return this; }
-        public IXLPageSetup SetShowGridlines() { ShowGridlines = true; return this; }	public IXLPageSetup SetShowGridlines(Boolean value) { ShowGridlines = value; return this; }
-        public IXLPageSetup SetShowRowAndColumnHeadings() { ShowRowAndColumnHeadings = true; return this; }	public IXLPageSetup SetShowRowAndColumnHeadings(Boolean value) { ShowRowAndColumnHeadings = value; return this; }
-        public IXLPageSetup SetBlackAndWhite() { BlackAndWhite = true; return this; }	public IXLPageSetup SetBlackAndWhite(Boolean value) { BlackAndWhite = value; return this; }
-        public IXLPageSetup SetDraftQuality() { DraftQuality = true; return this; }	public IXLPageSetup SetDraftQuality(Boolean value) { DraftQuality = value; return this; }
-        public IXLPageSetup SetPageOrder(XLPageOrderValues value) { PageOrder = value; return this; }
-        public IXLPageSetup SetShowComments(XLShowCommentsValues value) { ShowComments = value; return this; }
-        public IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value) { PrintErrorValue = value; return this; }
+        public IXLPageSetup SetPageOrientation(XLPageOrientation value)
+        { PageOrientation = value; return this; }
+
+        public IXLPageSetup SetPagesWide(Int32 value)
+        { PagesWide = value; return this; }
+
+        public IXLPageSetup SetPagesTall(Int32 value)
+        { PagesTall = value; return this; }
+
+        public IXLPageSetup SetScale(Int32 value)
+        { Scale = value; return this; }
+
+        public IXLPageSetup SetHorizontalDpi(Int32 value)
+        { HorizontalDpi = value; return this; }
+
+        public IXLPageSetup SetVerticalDpi(Int32 value)
+        { VerticalDpi = value; return this; }
+
+        public IXLPageSetup SetFirstPageNumber(Int32? value)
+        { FirstPageNumber = value; return this; }
+
+        public IXLPageSetup SetCenterHorizontally()
+        { CenterHorizontally = true; return this; }
+
+        public IXLPageSetup SetCenterHorizontally(Boolean value)
+        { CenterHorizontally = value; return this; }
+
+        public IXLPageSetup SetCenterVertically()
+        { CenterVertically = true; return this; }
+
+        public IXLPageSetup SetCenterVertically(Boolean value)
+        { CenterVertically = value; return this; }
+
+        public IXLPageSetup SetPaperSize(XLPaperSize value)
+        { PaperSize = value; return this; }
+
+        public IXLPageSetup SetScaleHFWithDocument()
+        { ScaleHFWithDocument = true; return this; }
+
+        public IXLPageSetup SetScaleHFWithDocument(Boolean value)
+        { ScaleHFWithDocument = value; return this; }
+
+        public IXLPageSetup SetAlignHFWithMargins()
+        { AlignHFWithMargins = true; return this; }
+
+        public IXLPageSetup SetAlignHFWithMargins(Boolean value)
+        { AlignHFWithMargins = value; return this; }
+
+        public IXLPageSetup SetShowGridlines()
+        { ShowGridlines = true; return this; }
+
+        public IXLPageSetup SetShowGridlines(Boolean value)
+        { ShowGridlines = value; return this; }
+
+        public IXLPageSetup SetShowRowAndColumnHeadings()
+        { ShowRowAndColumnHeadings = true; return this; }
+
+        public IXLPageSetup SetShowRowAndColumnHeadings(Boolean value)
+        { ShowRowAndColumnHeadings = value; return this; }
+
+        public IXLPageSetup SetBlackAndWhite()
+        { BlackAndWhite = true; return this; }
+
+        public IXLPageSetup SetBlackAndWhite(Boolean value)
+        { BlackAndWhite = value; return this; }
+
+        public IXLPageSetup SetDraftQuality()
+        { DraftQuality = true; return this; }
+
+        public IXLPageSetup SetDraftQuality(Boolean value)
+        { DraftQuality = value; return this; }
+
+        public IXLPageSetup SetPageOrder(XLPageOrderValues value)
+        { PageOrder = value; return this; }
+
+        public IXLPageSetup SetShowComments(XLShowCommentsValues value)
+        { ShowComments = value; return this; }
+
+        public IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value)
+        { PrintErrorValue = value; return this; }
 
         public Boolean DifferentFirstPageOnHF { get; set; }
+
         public IXLPageSetup SetDifferentFirstPageOnHF()
         {
             return SetDifferentFirstPageOnHF(true);
         }
+
         public IXLPageSetup SetDifferentFirstPageOnHF(Boolean value)
         {
             DifferentFirstPageOnHF = value;
             return this;
         }
         public Boolean DifferentOddEvenPagesOnHF { get; set; }
+
         public IXLPageSetup SetDifferentOddEvenPagesOnHF()
         {
             return SetDifferentOddEvenPagesOnHF(true);
         }
+
         public IXLPageSetup SetDifferentOddEvenPagesOnHF(Boolean value)
         {
             DifferentOddEvenPagesOnHF = value;

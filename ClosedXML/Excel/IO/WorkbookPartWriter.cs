@@ -229,23 +229,15 @@ namespace ClosedXML.Excel.IO
                     sheetId++;
                 }
 
-                if (worksheet.PageSetup.PrintAreas.Any())
+                if (!string.IsNullOrEmpty(worksheet.PageSetup.PrintAreas.PrintArea))
                 {
-                    var definedName = new DefinedName { Name = "_xlnm.Print_Area", LocalSheetId = sheetId };
-                    var worksheetName = worksheet.Name;
-                    var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
-                        (current, printArea) =>
-                            current +
-                            (worksheetName.EscapeSheetName() + "!" +
-                             printArea.RangeAddress.
-                                 FirstAddress.ToStringFixed(
-                                     XLReferenceStyle.A1) +
-                             ":" +
-                             printArea.RangeAddress.
-                                 LastAddress.ToStringFixed(
-                                     XLReferenceStyle.A1) +
-                             ","));
-                    definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
+                    var definedName = new DefinedName
+                    {
+                        Name = "_xlnm.Print_Area",
+                        LocalSheetId = sheetId,
+                        Text = worksheet.PageSetup.PrintAreas.PrintArea
+                    };
+
                     definedNames.AppendChild(definedName);
                 }
 
@@ -280,6 +272,7 @@ namespace ClosedXML.Excel.IO
 
                     if (!String.IsNullOrWhiteSpace(xlDefinedName.Comment))
                         definedName.Comment = xlDefinedName.Comment;
+
                     definedNames.AppendChild(definedName);
                 }
 
@@ -357,6 +350,5 @@ namespace ClosedXML.Excel.IO
             if (xlWorkbook.FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = xlWorkbook.FullCalculationOnLoad;
             if (xlWorkbook.FullPrecision) workbook.CalculationProperties.FullPrecision = xlWorkbook.FullPrecision;
         }
-
     }
 }
