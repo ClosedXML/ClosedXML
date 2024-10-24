@@ -1,11 +1,10 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLPrintAreas: IEnumerable<IXLRange>
+    public interface IXLPrintAreas
     {
         /// <summary>Removes the print areas from the worksheet.</summary>
         void Clear();
@@ -30,5 +29,12 @@ namespace ClosedXML.Excel
         /// <param name="firstCellAddress">The first cell address.</param>
         /// <param name="lastCellAddress"> The last cell address.</param>
         void Add(IXLAddress firstCellAddress, IXLAddress lastCellAddress);
+
+        /// <summary>Adds a formula to the print areas.</summary>
+        /// <param name="formula">The formula.</param>
+        void AddFormula(string formula);
+
+        /// <summary>Gets the complete print area.</summary>
+        string PrintArea { get; }
     }
 }

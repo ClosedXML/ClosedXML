@@ -243,6 +243,8 @@ namespace ClosedXML.Excel
                 {
                     yield return definedName;
                 }
+
+                yield return sheet.PageSetupInternal.PrintAreasInternal;
             }
         }
 

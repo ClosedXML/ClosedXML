@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using ClosedXML.Excel.InsertData;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel
 {
@@ -72,7 +73,7 @@ namespace ClosedXML.Excel
             SparklineGroupsInternal = new XLSparklineGroups(this);
             Internals = new XLWorksheetInternals(new XLCellsCollection(this), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
-            PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
+            PageSetupInternal = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
@@ -252,7 +253,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLPageSetup PageSetup { get; private set; }
+        public IXLPageSetup PageSetup => PageSetupInternal;
+
+        internal XLPageSetup PageSetupInternal { get; private set; }
 
         public IXLOutline Outline { get; private set; }
 
@@ -557,7 +560,6 @@ namespace ClosedXML.Excel
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-
         [Obsolete($"Used {nameof(DefinedName)} instead.")]
         IXLDefinedName IXLWorksheet.NamedRange(String name) => DefinedName(name);
 
@@ -622,7 +624,9 @@ namespace ClosedXML.Excel
             targetSheet.RowHeight = RowHeight;
             targetSheet.RowHeightChanged = RowHeightChanged;
             targetSheet.InnerStyle = InnerStyle;
-            targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
+            targetSheet.PageSetupInternal = new XLPageSetup(PageSetupInternal, targetSheet);
+            targetSheet.PageSetupInternal.PrintAreasInternal.OnSheetRenamed(this.Name, newSheetName);
+
             ((XLHeaderFooter)targetSheet.PageSetup.Header).Changed = true;
             ((XLHeaderFooter)targetSheet.PageSetup.Footer).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
@@ -1697,7 +1701,8 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
+        public IXLRanges MergedRanges
+        { get { return Internals.MergedRanges; } }
 
         IXLConditionalFormats IXLWorksheet.ConditionalFormats => ConditionalFormats;
 
