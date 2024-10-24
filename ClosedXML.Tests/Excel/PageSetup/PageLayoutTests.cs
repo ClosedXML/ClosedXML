@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SixLabors.Fonts;
 
 namespace ClosedXML.Tests.Excel.PageSetup
 {

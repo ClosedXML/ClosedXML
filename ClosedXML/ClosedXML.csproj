@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;NU1903;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,7 +45,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="RBush" Version="3.2.0" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <!-- Pre-6.0.0 System.IO.Packaging has a race condition https://github.com/dotnet/runtime/issues/43012 -->
     <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
     <PackageReference Include="ClosedXML.Parser" Version="[1.2.0,2.0.0)" />
@@ -53,7 +53,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
   </ItemGroup>
 </Project>
