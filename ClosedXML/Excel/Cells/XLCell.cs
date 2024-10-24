@@ -1866,7 +1866,18 @@ namespace ClosedXML.Excel
             set
             {
                 if (Formula is null)
+                {
+
+                    if (IsInferiorMergedCell())
+                    {
+                        //2024-10-24
+                        //when formulas get set from a range, inferior merged cells are silently ignored
+                        //but reference still gets set, causing an exception.
+                        //exit silently in this case to make the behaviour consistent.
+                        return;
+                    }
                     throw new ArgumentException("Cell doesn't contain a formula.");
+                }
 
                 if (value is null)
                 {
