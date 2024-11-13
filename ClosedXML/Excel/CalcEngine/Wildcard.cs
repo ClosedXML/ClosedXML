@@ -139,7 +139,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return (firstSegmentStartIdx, textIdx);
         }
-        
+
         /// <summary>
         /// Check if a segment can be found in a text.
         /// </summary>
