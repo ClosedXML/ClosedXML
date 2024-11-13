@@ -68,7 +68,7 @@ internal class TallyCriteria : ITally
         return state;
     }
 
-    private static IEnumerable<(int RowOfs, int ColOfs)> GetCombinedCoordinates(List<(XLSheetPoint Origin, IEnumerable<XLSheetPoint> Enumerable)> enumerables)
+    private static IEnumerable<XLSheetOffset> GetCombinedCoordinates(List<(XLSheetPoint Origin, IEnumerable<XLSheetPoint> Enumerable)> enumerables)
     {
         var enumerators = enumerables.Select(e => e.Enumerable.GetEnumerator()).ToList();
         try
@@ -83,31 +83,33 @@ internal class TallyCriteria : ITally
             // Until all elements are processed.
             while (true)
             {
-                // Get minimum point from all enumerators
-                var min = enumerators[0].Current;
-                var minOrigin = enumerables[0].Origin;
+                // Do all enumerators have same offset?
+                var allSame = true;
+                var minOfs = GetOffset(0);
                 for (var i = 1; i < enumerables.Count; ++i)
                 {
-                    var current = enumerators[i].Current;
-                    var comparison = current.CompareTo(min);
+                    var currentOfs = GetOffset(i);
+                    var comparison = currentOfs.CompareTo(minOfs);
+                    if (minOfs != currentOfs)
+                        allSame = false;
+
                     if (comparison < 0)
-                    {
-                        min = current;
-                        minOrigin = enumerables[i].Origin;
-                    }
+                        minOfs = currentOfs;
                 }
 
-                // Returns the offset of the minimum point
-                yield return (min.Row - minOrigin.Row, min.Column - minOrigin.Column);
+                // If all offsets are same, that means all criteria are
+                // satisfied for same offset.
+                if (allSame)
+                    yield return minOfs;
 
-                // Move all enumerators that point at the minimum to the next element
-                foreach (var enumerator in enumerators)
+                // Move all enumerators that point at the minimum offset
+                // to the next element.
+                for (var i = 0; i < enumerables.Count; ++i)
                 {
-                    // If would likely suffice, because enumerator doesn't contain duplicates
-                    // and it moves one element at a time.
-                    while (enumerator.Current.CompareTo(min) <= 0)
+                    var currentOfs = GetOffset(i);
+                    if (currentOfs.CompareTo(minOfs) <= 0)
                     {
-                        if (!enumerator.MoveNext())
+                        if (!enumerators[i].MoveNext())
                             yield break;
                     }
                 }
@@ -117,6 +119,13 @@ internal class TallyCriteria : ITally
         {
             foreach (var enumerator in enumerators)
                 enumerator.Dispose();
+        }
+
+        XLSheetOffset GetOffset(int i)
+        {
+            var origin = enumerables[i].Origin;
+            var point = enumerators[i].Current;
+            return point - origin;
         }
     }
 }

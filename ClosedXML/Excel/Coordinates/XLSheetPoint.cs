@@ -56,6 +56,14 @@ namespace ClosedXML.Excel
             return a.Row != b.Row || a.Column != b.Column;
         }
 
+        /// <summary>
+        /// Get offset that must be added to <paramref name="origin"/> so we can get <paramref name="target"/>.
+        /// </summary>
+        public static XLSheetOffset operator -(XLSheetPoint target, XLSheetPoint origin)
+        {
+            return new XLSheetOffset(target.Row - origin.Row, target.Column - origin.Column);
+        }
+
         /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
         public static XLSheetPoint Parse(String text) => Parse(text.AsSpan());
 

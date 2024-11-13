@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, AdaptLastOptional(SumIf), FunctionFlags.Range, AllowRange.Only, 0, 2);
-            ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
+            ce.RegisterFunction("SUMIFS", 3, 255, AdaptIfs(SumIfs), FunctionFlags.Range, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
             ce.RegisterFunction("SUMPRODUCT", 1, 30, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq, FunctionFlags.Range, AllowRange.All);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
@@ -921,73 +921,28 @@ namespace ClosedXML.Excel.CalcEngine
             return Sum(ctx, new[] { sumRange }, tally);
         }
 
-        private static object SumIfs(List<Expression> p)
+        private static AnyValue SumIfs(CalcContext ctx, AnyValue sumRange, List<(AnyValue Range, ScalarValue Criteria)> criteriaRanges)
         {
-            // get parameters
-            var sumRange = (IEnumerable)p[0];
-            var sumRangeDimensions = CalcEngineHelpers.GetRangeDimensions(p[0] as XObjectExpression);
-
-            var sumRangeValues = new List<object>();
-            foreach (var value in sumRange)
+            if (!sumRange.TryPickArea(out var sumArea, out var sumAreaError))
+                return sumAreaError;
+            
+            var tally = new TallyCriteria();
+            foreach (var (selectionRange, selectionCriteria) in criteriaRanges)
             {
-                sumRangeValues.Add(value);
-            }
+                var criteria = Criteria.Create(selectionCriteria, ctx.Culture);
+                if (!selectionRange.TryPickArea(out var selectionArea, out var selectionAreaError))
+                    return selectionAreaError;
 
-            var ce = new XLCalcEngine(CultureInfo.CurrentCulture);
-            var tally = new Tally();
-
-            int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
-
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
-            {
-                var criterionDimensions = CalcEngineHelpers.GetRangeDimensions(p[criteriaPair * 2 + 1] as XObjectExpression);
-                if (criterionDimensions != sumRangeDimensions)
-                {
+                // All areas must have same size, that is different
+                // from SUMIF where areas can have different size.
+                if (sumArea.RowSpan != selectionArea.RowSpan ||
+                    sumArea.ColumnSpan != selectionArea.ColumnSpan)
                     return XLError.IncompatibleValue;
-                }
+
+                tally.Add(selectionArea, criteria);
             }
 
-            // prepare criteria-parameters:
-            var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
-            {
-                if (p[criteriaPair * 2 + 1] is IEnumerable criteriaRange)
-                {
-                    var criterion = p[criteriaPair * 2 + 2].Evaluate();
-                    var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
-
-                    criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
-                        criterion,
-                        criteriaRangeValues);
-                }
-                else
-                {
-                    return XLError.CellReference;
-                }
-            }
-
-            for (var i = 0; i < sumRangeValues.Count; i++)
-            {
-                bool shouldUseValue = true;
-
-                foreach (var criteriaPair in criteriaRanges)
-                {
-                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        i < criteriaPair.Item2.Count ? criteriaPair.Item2[i] : string.Empty,
-                        criteriaPair.Item1,
-                        ce))
-                    {
-                        shouldUseValue = false;
-                        break; // we're done with the inner loop as we can't ever get true again.
-                    }
-                }
-
-                if (shouldUseValue)
-                    tally.AddValue(sumRangeValues[i]);
-            }
-
-            // done
-            return tally.Sum();
+            return Sum(ctx, new[] { sumRange }, tally);
         }
 
         private static AnyValue SumProduct(CalcContext _, Array[] areas)

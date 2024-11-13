@@ -2173,8 +2173,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var wb = new XLWorkbook())
             {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
-
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell(2, 1).Value = "Vegetables";
                 ws.Cell(3, 1).Value = "Vegetables";
@@ -2218,8 +2216,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var wb = new XLWorkbook())
             {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
-
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell(1, 1).Value = 100000;
                 ws.Cell(1, 2).Value = 7000;
@@ -2248,7 +2244,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var wb = new XLWorkbook())
             {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
                 var ws = wb.AddWorksheet("Sheet1");
 
                 var row = 2;

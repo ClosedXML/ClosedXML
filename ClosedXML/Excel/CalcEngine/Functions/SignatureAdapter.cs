@@ -258,6 +258,39 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         }
 
         /// <summary>
+        /// An adapter for <c>{SUM,COUNT,AVERAGE}IFS</c> functions.
+        /// </summary>
+        public static CalcEngineFunction AdaptIfs(Func<CalcContext, AnyValue, List<(AnyValue Range, ScalarValue Criteria)>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var tallyRange = args[0];
+
+                var criteriaRanges = new List<(AnyValue Range, ScalarValue Criteria)>();
+                var criteriaArgsCount = args.Length - 1;
+                var criteriaPairCount = (criteriaArgsCount + 1) / 2;
+                for (var i = 0; i < criteriaPairCount; ++i)
+                {
+                    var rangeArgIndex = 2 * i + 1;
+                    var range = args[rangeArgIndex];
+
+                    // Excel grammar requires odd number of arguments. We can't
+                    // do that, so use blank for missing pair value.
+                    var criteriaArgIndex = rangeArgIndex + 1;
+                    var criteriaArgConverted = criteriaArgIndex < args.Length
+                        ? ToScalarValue(args[criteriaArgIndex], ctx)
+                        : ScalarValue.Blank;
+                    if (!criteriaArgConverted.TryPickT0(out var criteriaArg, out var criteriaError))
+                        return criteriaError;
+
+                    criteriaRanges.Add((range, criteriaArg));
+                }
+
+                return f(ctx, tallyRange, criteriaRanges);
+            };
+        }
+
+        /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method
         /// shouldn't be used for functions that accept 3D references (e.g. SUMSQ). It is still
