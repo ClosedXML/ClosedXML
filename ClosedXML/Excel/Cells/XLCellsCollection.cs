@@ -362,6 +362,9 @@ namespace ClosedXML.Excel
             MiscSlice.Swap(sp1, sp2);
         }
 
+        /// <summary>
+        /// Gets used points in the range.
+        /// </summary>
         internal SlicesEnumerator ForValuesAndFormulas(XLSheetRange range)
         {
             var valueEnumerator = ValueSlice.GetEnumerator(range);

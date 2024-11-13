@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions;
 /// </summary>
 internal class Criteria
 {
-    // Values are by length of a prefix. The longer ones are before sorter ones.
+    // Values are ordered by length of a prefix. The longer ones are before sorter ones.
     private static readonly List<(string Prefix, Comparison Comparison)> AllComparisons = new()
     {
         ("<>", Comparison.NotEqual),
@@ -32,6 +32,11 @@ internal class Criteria
         _value = value;
         _culture = culture;
     }
+
+    /// <summary>
+    /// Can a blank value match the criteria?
+    /// </summary>
+    internal bool CanBlankValueMatch => _value.IsBlank && _comparison is Comparison.Equal or Comparison.None;
 
     internal static Criteria Create(ScalarValue criteria, CultureInfo culture)
     {
@@ -97,8 +102,8 @@ internal class Criteria
         if (_comparison == Comparison.NotEqual)
             return !value.IsBlank;
 
-        // Only sortable comparisons are left (>,<,). That never makes sense for
-        // blanks or other types is thus always false.
+        // Only sortable comparisons are left (>, <, >=, <=). That never makes
+        // sense for blanks or other types is thus always false.
         return false;
     }
 

@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -84,7 +83,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
             ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("SUMIF", 2, 3, SumIf, AllowRange.Only, 0, 2);
+            ce.RegisterFunction("SUMIF", 2, 3, AdaptLastOptional(SumIf), FunctionFlags.Range, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
             ce.RegisterFunction("SUMPRODUCT", 1, 30, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq, FunctionFlags.Range, AllowRange.All);
@@ -901,59 +900,25 @@ namespace ClosedXML.Excel.CalcEngine
             return state.Sum;
         }
 
-        private static object SumIf(List<Expression> p)
+        private static AnyValue SumIf(CalcContext ctx, AnyValue range, ScalarValue selectionCriteria, AnyValue sumRange)
         {
-            // get parameters
-            if (!CalcEngineHelpers.TryExtractRange(p[0], out var range, out var calculationErrorType))
-            {
-                return calculationErrorType;
-            }
+            // Sum range is optional. If not specified, use the range as the sum range.
+            if (sumRange.IsBlank)
+                sumRange = range;
 
-            // range of values to match the criteria against
-            // limit to first column only
-            var rangeColumn = new CellRangeReference(range!.Column(1).AsRange()) as IEnumerable;
+            var tally = new TallyCriteria();
+            var criteria = Criteria.Create(selectionCriteria, ctx.Culture);
 
-            // range of values to sum up
-            var sumRange = p.Count < 3 ?
-                p[0] as XObjectExpression :
-                p[2] as XObjectExpression;
+            // Excel doesn't support anything but area in the syntax, but we need to deal with it somehow.
+            if (!range.TryPickArea(out var area, out var areaError))
+                return areaError;
 
-            // the criteria to evaluate
-            var criteria = p[1].Evaluate();
+            if (!sumRange.TryPickArea(out _, out var sumAreaError))
+                return sumAreaError;
 
-            var rangeValues = rangeColumn.Cast<object>().ToList();
-            using var sumRangeEnumerator = sumRange.Cast<object>().GetEnumerator();
+            tally.Add(area, criteria);
 
-            // compute total
-            var ce = new XLCalcEngine(CultureInfo.CurrentCulture);
-            var tally = new Tally();
-            for (var i = 0; i < rangeValues.Count; i++)
-            {
-                // TODO: Replace this mess completely
-                var targetValue = rangeValues[i];
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce))
-                {
-                    if (!sumRangeEnumerator.MoveNext())
-                        break;
-                    var value = sumRangeEnumerator.Current!;
-                    tally.AddValue(value);
-                }
-                else
-                {
-                    try
-                    {
-                        if (!sumRangeEnumerator.MoveNext())
-                            break;
-                    }
-                    catch (GettingDataException)
-                    {
-                        // The referenced cell uses a dirty formula, but we are not using the value, so eat the exception.
-                    }
-                }
-            }
-
-            // done
-            return tally.Sum();
+            return Sum(ctx, new[] { sumRange }, tally);
         }
 
         private static object SumIfs(List<Expression> p)

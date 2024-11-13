@@ -952,6 +952,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void SumIf_specification_examples()
+        {
+            // Test examples from specification.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 3;
+            ws.Cell("B1").Value = 10;
+            ws.Cell("C1").Value = 7;
+            ws.Cell("D1").Value = 10;
+
+            Assert.AreEqual(20, ws.Evaluate("SUMIF(A1:D1,\"=10\")"));
+            Assert.AreEqual(27, ws.Evaluate("SUMIF(A1:D1,\">5\")"));
+            Assert.AreEqual(10, ws.Evaluate("SUMIF(A1:D1,\"<>10\")"));
+
+            ws.Cell("A2").Value = "apples";
+            ws.Cell("B2").Value = "melons";
+            ws.Cell("C2").Value = 10;
+            ws.Cell("D2").Value = 15;
+            Assert.AreEqual(10, ws.Evaluate("SUMIF(A2:B2,\"*es\",C2:D2)"));
+        }
+
+        [Test]
         [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
         [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
         [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]

@@ -241,6 +241,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptLastOptional(Func<CalcContext, AnyValue, ScalarValue, AnyValue, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0 = args[0];
+
+                var arg1Converted = ToScalarValue(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var arg2 = args.Length > 2 ? args[2] : AnyValue.Blank;
+
+                return f(ctx, arg0, arg1, arg2);
+            };
+        }
+
         /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method
