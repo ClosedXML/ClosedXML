@@ -141,8 +141,8 @@ internal class Criteria
 
         return _comparison switch
         {
-            Comparison.Equal or Comparison.None => Wildcard.Matches(actual.AsSpan(), value.GetText().AsSpan()),
-            Comparison.NotEqual => !Wildcard.Matches(actual.AsSpan(), value.GetText().AsSpan()),
+            Comparison.Equal or Comparison.None => new Wildcard(actual).Matches(value.GetText().AsSpan()),
+            Comparison.NotEqual => !new Wildcard(actual).Matches(value.GetText().AsSpan()),
             Comparison.LessThan => _culture.CompareInfo.Compare(value.GetText(), actual) < 0,
             Comparison.LessOrEqualTo => _culture.CompareInfo.Compare(value.GetText(), actual) <= 0,
             Comparison.GreaterThan => _culture.CompareInfo.Compare(value.GetText(), actual) > 0,
