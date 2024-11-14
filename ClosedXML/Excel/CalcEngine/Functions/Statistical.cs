@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
-            ce.RegisterFunction("COUNTIF", 2, CountIf, AllowRange.Only, 0);
+            ce.RegisterFunction("COUNTIF", 2, 2, Adapt((Func<CalcContext, AnyValue, ScalarValue, AnyValue>)CountIf), FunctionFlags.Range, AllowRange.Only, 0);
             ce.RegisterFunction("COUNTIFS", 2, 255, CountIfs, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
@@ -209,28 +209,22 @@ namespace ClosedXML.Excel.CalcEngine
             return 0d + totalCount - nonBlankCount;
         }
 
-        private static object CountIf(List<Expression> p)
+        private static AnyValue CountIf(CalcContext ctx, AnyValue countRange, ScalarValue selectionCriteria)
         {
-            XLCalcEngine ce = new XLCalcEngine(CultureInfo.CurrentCulture);
-            var cnt = 0.0;
-            long processedCount = 0;
-            if (p[0] is XObjectExpression ienum)
-            {
-                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
-                var criteria = p[1].Evaluate();
-                foreach (var value in ienum)
-                {
-                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
-                        cnt++;
-                    processedCount++;
-                }
+            // Excel doesn't support anything but area in the syntax, but we need to deal with it somehow.
+            if (!countRange.TryPickArea(out var countArea, out var areaError))
+                return areaError;
 
-                // Add count of empty cells outside the used range if they match criteria
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
-                    cnt += (totalCount - processedCount);
-            }
+            var tally = new TallyCriteria(static _ => 1);
+            var criteria = Criteria.Create(selectionCriteria, ctx.Culture);
+            tally.Add(countArea, criteria);
 
-            return cnt;
+            // TallyCriteria only sums up the value.
+            var result = tally.Tally(ctx, new[] { countRange }, new CountState(0));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
+
+            return state.Count;
         }
 
         private static object CountIfs(List<Expression> p)
@@ -450,7 +444,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarA(CalcContext ctx, Span<AnyValue> args)
         {
-            return Var(ctx, args,TallyAll.Default);
+            return Var(ctx, args, TallyAll.Default);
         }
 
         private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)

@@ -18,6 +18,21 @@ internal class TallyCriteria : ITally
     private readonly List<(XLRangeAddress Area, Criteria Criteria)> _criteriaRanges = new();
 
     /// <summary>
+    /// A method to convert a value in the tally area to a number. If scalar value shouldn't be tallied, return null.
+    /// </summary>
+    private readonly Func<ScalarValue, double?> _toNumber;
+
+    internal TallyCriteria()
+        : this(static cellValue => cellValue.TryPickNumber(out var number) ? number : null)
+    {
+    }
+
+    internal TallyCriteria(Func<ScalarValue, double?> toNumber)
+    {
+        _toNumber = toNumber;
+    }
+
+    /// <summary>
     /// Add criteria to the tally that limit which values should be tallied.
     /// </summary>
     internal void Add(XLRangeAddress area, Criteria criteria)
@@ -60,8 +75,9 @@ internal class TallyCriteria : ITally
                 var origin = area.FirstAddress;
                 var shifted = new XLSheetPoint(origin.RowNumber + rowOfs, origin.ColumnNumber + colOfs);
                 var cellValue = ctx.GetCellValue(area.Worksheet, shifted.Row, shifted.Column);
-                if (cellValue.TryPickNumber(out var number))
-                    state = state.Tally(number);
+                var number = _toNumber(cellValue);
+                if (number is not null)
+                    state = state.Tally(number.Value);
             }
         }
 
