@@ -44,7 +44,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RBush" Version="3.2.0" />
+    <PackageReference Include="RBush" Version="4.0.0" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <PackageReference Include="ClosedXML.Parser" Version="[1.2.0,2.0.0)" />
   </ItemGroup>
