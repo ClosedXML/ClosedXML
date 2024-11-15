@@ -251,23 +251,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void CountBlank()
         {
-            var ws = workbook.Worksheets.First();
-            XLCellValue value;
-            value = ws.Evaluate(@"=COUNTBLANK(B:B)");
-            Assert.AreEqual(1048532, value);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = 0;
+            ws.Cell("A3").Value = 1;
+            ws.Cell("A4").Value = false;
+            ws.Cell("A5").Value = true;
+            ws.Cell("A6").Value = "";
+            ws.Cell("A7").Value = "Text";
+            ws.Cell("A8").Value = XLError.DivisionByZero;
 
-            value = ws.Evaluate(@"=COUNTBLANK(D43:D49)");
-            Assert.AreEqual(4, value);
+            // Blank and empty text value is counted as blank
+            Assert.AreEqual(1, ws.Evaluate("COUNTBLANK(A1)"));
+            Assert.AreEqual(string.Empty, ws.Cell("A6").Value);
+            Assert.AreEqual(1, ws.Evaluate("COUNTBLANK(A6)"));
 
-            value = ws.Evaluate(@"=COUNTBLANK(E3:E45)");
-            Assert.AreEqual(0, value);
+            // Anything else isn't counted as blank
+            Assert.AreEqual(2, ws.Evaluate("COUNTBLANK(A1:A8)"));
 
-            value = ws.Evaluate(@"=COUNTBLANK(A1)");
-            Assert.AreEqual(1, value);
+            Assert.AreEqual(17179869178d, ws.Evaluate("COUNTBLANK(A:XFD)"));
 
-            Assert.Throws<MissingContextException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
-            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
-            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
+            // Check that all others argument types. The Excel grammar doesn't allow that,
+            // so use IF workaround for that.
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,))")); // Blank
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,FALSE))")); // Logical
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,1))")); // Number
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,\"\"))")); // Text
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("COUNTBLANK(IF(TRUE,#DIV/0!))")); // Error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,{1}))")); // Array
         }
 
         [Test]

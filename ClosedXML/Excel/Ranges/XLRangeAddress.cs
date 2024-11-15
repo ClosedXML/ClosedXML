@@ -132,6 +132,8 @@ namespace ClosedXML.Excel
 
         public int NumberOfCells => ColumnSpan * RowSpan;
 
+        internal long Size => ColumnSpan * (long)RowSpan;
+
         public int RowSpan
         {
             get

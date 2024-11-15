@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine
             //CORREL	Returns the correlation coefficient between two data sets
             ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
+            ce.RegisterFunction("COUNTBLANK", 1, 1, Adapt(CountBlank), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTIF", 2, 2, Adapt((Func<CalcContext, AnyValue, ScalarValue, AnyValue>)CountIf), FunctionFlags.Range, AllowRange.Only, 0);
             ce.RegisterFunction("COUNTIFS", 2, 255, AdaptIfs(CountIfs), FunctionFlags.Range, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
             //COVAR	Returns covariance, the average of the products of paired deviations
@@ -192,21 +192,18 @@ namespace ClosedXML.Excel.CalcEngine
             return Count(ctx, args, TallyAll.IncludeErrors);
         }
 
-        private static object CountBlank(List<Expression> p)
+        private static AnyValue CountBlank(CalcContext ctx, AnyValue arg)
         {
-            if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
-                return XLError.NoValueAvailable;
+            if (!arg.TryPickArea(out var area, out var error))
+                return error;
 
-            var e = (XObjectExpression)p[0];
-            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
-            long nonBlankCount = 0;
-            foreach (var value in e)
-            {
-                if (!CalcEngineHelpers.ValueIsBlank(value))
-                    nonBlankCount++;
-            }
+            // To be efficient for cases like whole sheet with only few values, calculate
+            // the blank count as number of total area size without non-blank cells.
+            var nonBlankCount = ctx.GetNonBlankValues(new Reference(area))
+                .Where(static value => !value.IsBlank && !(value.IsText && value.GetText().Length == 0))
+                .LongCount();
 
-            return 0d + totalCount - nonBlankCount;
+            return area.Size - nonBlankCount;
         }
 
         private static AnyValue CountIf(CalcContext ctx, AnyValue countRange, ScalarValue selectionCriteria)
