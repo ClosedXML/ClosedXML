@@ -272,35 +272,31 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         }
 
         /// <summary>
-        /// An adapter for <c>{SUM,COUNT,AVERAGE}IFS</c> functions.
+        /// An adapter for <c>{SUM,AVERAGE}IFS</c> functions.
         /// </summary>
         public static CalcEngineFunction AdaptIfs(Func<CalcContext, AnyValue, List<(AnyValue Range, ScalarValue Criteria)>, AnyValue> f)
         {
             return (ctx, args) =>
             {
                 var tallyRange = args[0];
+                if (!ToCriteria(ctx, args[1..]).TryPickT0(out var criteria, out var error))
+                    return error;
 
-                var criteriaRanges = new List<(AnyValue Range, ScalarValue Criteria)>();
-                var criteriaArgsCount = args.Length - 1;
-                var criteriaPairCount = (criteriaArgsCount + 1) / 2;
-                for (var i = 0; i < criteriaPairCount; ++i)
-                {
-                    var rangeArgIndex = 2 * i + 1;
-                    var range = args[rangeArgIndex];
+                return f(ctx, tallyRange, criteria);
+            };
+        }
 
-                    // Excel grammar requires odd number of arguments. We can't
-                    // do that, so use blank for missing pair value.
-                    var criteriaArgIndex = rangeArgIndex + 1;
-                    var criteriaArgConverted = criteriaArgIndex < args.Length
-                        ? ToScalarValue(args[criteriaArgIndex], ctx)
-                        : ScalarValue.Blank;
-                    if (!criteriaArgConverted.TryPickT0(out var criteriaArg, out var criteriaError))
-                        return criteriaError;
+        /// <summary>
+        /// An adapter for <c>COUNTIFS</c> function.
+        /// </summary>
+        public static CalcEngineFunction AdaptIfs(Func<CalcContext, List<(AnyValue Range, ScalarValue Criteria)>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                if (!ToCriteria(ctx, args).TryPickT0(out var criteria, out var error))
+                    return error;
 
-                    criteriaRanges.Add((range, criteriaArg));
-                }
-
-                return f(ctx, tallyRange, criteriaRanges);
+                return f(ctx, criteria);
             };
         }
 
@@ -493,6 +489,29 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return OneOf<ScalarValue, XLError>.FromT1(XLError.IncompatibleValue);
         }
 
+        private static OneOf<List<(AnyValue Range, ScalarValue Criteria)>, XLError> ToCriteria(CalcContext ctx, ReadOnlySpan<AnyValue> args)
+        {
+            var allCriteria = new List<(AnyValue Range, ScalarValue Criteria)>();
+            var pairCount = (args.Length + 1) / 2;
+            for (var i = 0; i < pairCount; ++i)
+            {
+                var rangeArgIndex = 2 * i;
+                var range = args[rangeArgIndex];
+
+                // Excel grammar requires even number of arguments. We can't
+                // do that, so use blank for missing pair value.
+                var criteriaArgIndex = rangeArgIndex + 1;
+                var criteriaArgConverted = criteriaArgIndex < args.Length
+                    ? ToScalarValue(args[criteriaArgIndex], ctx)
+                    : ScalarValue.Blank;
+                if (!criteriaArgConverted.TryPickT0(out var criteria, out var criteriaError))
+                    return criteriaError;
+
+                allCriteria.Add((range, criteria));
+            }
+
+            return allCriteria;
+        }
         #endregion
     }
 }

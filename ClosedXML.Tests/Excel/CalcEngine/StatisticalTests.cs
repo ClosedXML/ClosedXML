@@ -346,15 +346,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("=COUNTIFS(B1:D1, \"=Yes\")", 1)]
         [TestCase("=COUNTIFS(B1:B4, \"=Yes\", C1:C4, \"=Yes\")", 2)]
-        [TestCase("= COUNTIFS(B4:D4, \"=Yes\", B2:D2, \"=Yes\")", 1)]
+        [TestCase("=COUNTIFS(B4:D4, \"=Yes\", B2:D2, \"=Yes\")", 1)]
         public void CountIfs_ReferenceExample1FromExcelDocumentations(
             string formula,
             int expectedOutcome)
         {
             using (var wb = new XLWorkbook())
             {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
-
                 var ws = wb.AddWorksheet("Sheet1");
 
                 ws.Cell(1, 1).Value = "Davidoski";
@@ -410,6 +408,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var value = ws.Evaluate(formula);
             Assert.AreEqual(expectedResult, value);
+        }
+
+        [TestCase("COUNTIFS(H1:I3, 1, D1:F2, 2)")]
+        [TestCase("COUNTIFS(A:B, \"A*\", C:C, \">2\")")]
+        public void CountIfs_returns_error_when_areas_dimensions_are_different(string formula)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula));
         }
 
         [OneTimeTearDown]
