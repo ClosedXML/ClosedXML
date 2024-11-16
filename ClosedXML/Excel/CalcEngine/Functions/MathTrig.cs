@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ASINH", 1, 1, Adapt(Asinh), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN", 1, 1, Adapt(Atan), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN2", 2, Atan2);
-            ce.RegisterFunction("ATANH", 1, Atanh);
+            ce.RegisterFunction("ATANH", 1, 1, Adapt(Atanh), FunctionFlags.Scalar);
             ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 2, Ceiling);
             ce.RegisterFunction("CEILING.MATH", 1, 3, CeilingMath);
@@ -221,13 +221,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Atan2(y, x);
         }
 
-        private static object Atanh(List<Expression> p)
+        private static ScalarValue Atanh(double number)
         {
-            double input = p[0];
-            if (Math.Abs(input) >= 1)
+            if (Math.Abs(number) >= 1)
                 return XLError.NumberInvalid;
 
-            return XLMath.ATanh(p[0]);
+            return XLMath.ATanh(number);
         }
 
         private static object Base(List<Expression> p)

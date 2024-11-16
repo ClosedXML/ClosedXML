@@ -349,19 +349,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-0.999, -3.8002011672502)]
         public void Atanh_ReturnsCorrectResults(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"ATANH({0})",
-                    input.ToString(CultureInfo.InvariantCulture)));
-
+            var actual = (double)XLWorkbook.EvaluateExpr($"ATANH({input})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
         [Theory]
         public void Atanh_ThrowsNumberExceptionWhenAbsOfInput1OrGreater([Range(1, 5, 0.2)] double input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", input.ToString(CultureInfo.InvariantCulture))));
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ATANH({input})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ATANH({-input})"));
         }
 
         [TestCase(0, 36, "0")]
