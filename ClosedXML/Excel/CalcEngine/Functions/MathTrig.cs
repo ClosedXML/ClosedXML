@@ -1,10 +1,8 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
@@ -20,7 +18,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ABS", 1, 1, Adapt(Abs), FunctionFlags.Scalar);
-            ce.RegisterFunction("ACOS", 1, Acos);
+            ce.RegisterFunction("ACOS", 1, 1, Adapt(Acos), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
             ce.RegisterFunction("ACOTH", 1, Acoth);
@@ -137,13 +135,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Abs(number);
         }
 
-        private static object Acos(List<Expression> p)
+        private static ScalarValue Acos(double number)
         {
-            double input = p[0];
-            if (Math.Abs(input) > 1)
+            if (Math.Abs(number) > 1)
                 return XLError.NumberInvalid;
 
-            return Math.Acos(p[0]);
+            return Math.Acos(number);
         }
 
         private static object Acosh(List<Expression> p)

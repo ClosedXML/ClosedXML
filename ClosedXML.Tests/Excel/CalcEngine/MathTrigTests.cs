@@ -49,16 +49,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1, 0)]
         public void Acos_ReturnsCorrectValue(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOS({input.ToInvariantString()})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
         [Theory]
-        public void Acos_ThrowsNumberExceptionOutsideRange([Range(1.1, 3, 0.1)] double input)
+        public void Acos_returns_error_when_number_outside_range([Range(1.1, 3, 0.1)] double input)
         {
             // checking input and it's additive inverse as both are outside range.
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture))));
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({input.ToInvariantString()})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({(-input).ToInvariantString()})"));
         }
 
         [Theory]
