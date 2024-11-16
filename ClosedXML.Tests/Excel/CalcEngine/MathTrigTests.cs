@@ -676,10 +676,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8.4, 2223.53348628359)]
         public void Cosh_ReturnsCorrectResult(double input, double expectedResult)
         {
-            var actualResult = (double)XLWorkbook.EvaluateExpr(string.Format("COSH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actualResult = (double)XLWorkbook.EvaluateExpr($"COSH({input})");
             Assert.AreEqual(expectedResult, actualResult, tolerance);
-            var actualResult2 = (double)XLWorkbook.EvaluateExpr(string.Format("COSH({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            var actualResult2 = (double)XLWorkbook.EvaluateExpr($"COSH({-input})");
             Assert.AreEqual(expectedResult, actualResult2, tolerance);
+        }
+
+        [TestCase(711)]
+        [TestCase(-711)]
+        [TestCase(100000)]
+        public void Cosh_too_large_returns_error(double input)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"COSH({input})"));
         }
 
         [TestCase(1, 0.642092616)]
