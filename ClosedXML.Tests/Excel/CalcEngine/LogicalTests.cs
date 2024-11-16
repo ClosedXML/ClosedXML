@@ -1,7 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -133,8 +132,26 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            Assert.AreEqual(true, ws.Evaluate(@"ISREF(IF(TRUE, A1))"));
-            Assert.AreEqual(true, ws.Evaluate(@"ISREF(IF(FALSE,, A1))"));
+            Assert.AreEqual(true, ws.Evaluate("ISREF(IF(TRUE, A1))"));
+            Assert.AreEqual(true, ws.Evaluate("ISREF(IF(FALSE,, A1))"));
+        }
+
+        [Test]
+        public void If_has_scalar_condition_and_range_values()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new[] { 1, 2, 3 });
+            ws.Cell("B1").InsertData(new[] { 4, 5, 6 });
+            ws.Cell("C1").InsertData(new[] { true, false, true });
+            for (var row = 1; row <= 4; ++row)
+                ws.Cell(row, 4).FormulaA1 = "SUM(IF(C1:C3, A1:A3, B1:B3))";
+
+            // Condition is implicitely intersected, because it's a scalar parameter
+            Assert.AreEqual(6, ws.Cell("D1").Value);
+            Assert.AreEqual(15, ws.Cell("D2").Value);
+            Assert.AreEqual(6, ws.Cell("D3").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("D4").Value);
         }
 
         [Test]
