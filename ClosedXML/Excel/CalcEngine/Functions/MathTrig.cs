@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ACOTH", 1, Acoth);
             ce.RegisterFunction("ARABIC", 1, Arabic);
             ce.RegisterFunction("ASIN", 1, 1, Adapt(Asin), FunctionFlags.Scalar);
-            ce.RegisterFunction("ASINH", 1, Asinh);
+            ce.RegisterFunction("ASINH", 1, 1, Adapt(Asinh), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN", 1, Atan);
             ce.RegisterFunction("ATAN2", 2, Atan2);
             ce.RegisterFunction("ATANH", 1, Atanh);
@@ -201,9 +201,9 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Asin(number);
         }
 
-        private static object Asinh(List<Expression> p)
+        private static ScalarValue Asinh(double number)
         {
-            return XLMath.ASinh(p[0]);
+            return XLMath.Asinh(number);
         }
 
         private static object Atan(List<Expression> p)

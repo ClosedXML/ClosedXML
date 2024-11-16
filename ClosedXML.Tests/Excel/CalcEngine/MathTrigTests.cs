@@ -225,9 +225,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(5, 2.31243834127275)]
         public void Asinh_ReturnsCorrectResult(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ASINH({input})");
             Assert.AreEqual(expectedResult, actual, tolerance);
-            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            var minusActual = (double)XLWorkbook.EvaluateExpr($"ASINH({-input})");
             Assert.AreEqual(-expectedResult, minusActual, tolerance);
         }
 

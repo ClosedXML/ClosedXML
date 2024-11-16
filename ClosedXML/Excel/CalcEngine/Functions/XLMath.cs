@@ -37,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (grads / 10.0) * 9.0;
         }
 
-        public static double ASinh(double x)
+        public static double Asinh(double x)
         {
             return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
         }
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static double ACsch(double x)
         {
-            return (ASinh(1.0 / x));
+            return (Asinh(1.0 / x));
         }
 
         public static double Sech(double x)
