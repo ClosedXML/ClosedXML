@@ -1007,6 +1007,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"FACTDOUBLE(""x"")"));
         }
 
+        [TestCase(0, 0, 0)]
+        [TestCase(0, 1, 0)]
         [TestCase(24.3, 5, 20)]
         [TestCase(6.7, 1, 6)]
         [TestCase(-8.1, 2, -10)]
@@ -1015,7 +1017,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, -2.1, -4.2)]
         public void Floor(double input, double significance, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})");
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
@@ -1023,13 +1025,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-6.7, 0)]
         public void Floor_ThrowsDivisionByZeroOnZeroSignificance(double input, double significance)
         {
-            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
         }
 
         [TestCase(6.7, -1)]
         public void Floor_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
         }
 
         [Test]

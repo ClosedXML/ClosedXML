@@ -45,7 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("EXP", 1, 1, Adapt(Exp), FunctionFlags.Scalar);
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
             ce.RegisterFunction("FACTDOUBLE", 1, 1, Adapt(FactDouble), FunctionFlags.Scalar);
-            ce.RegisterFunction("FLOOR", 2, Floor);
+            ce.RegisterFunction("FLOOR", 2, 2, Adapt(Floor), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
@@ -456,19 +456,22 @@ namespace ClosedXML.Excel.CalcEngine
             return fact;
         }
 
-        private static object Floor(List<Expression> p)
+        private static ScalarValue Floor(double number, double significance)
         {
-            double number = p[0];
-            double significance = p[1];
+            // Rounding down, to zero. If we are at the zero, there is nowhere to go.
+            if (number == 0)
+                return 0;
+
+            if (number > 0 && significance < 0)
+                return XLError.NumberInvalid;
 
             if (significance == 0)
                 return XLError.DivisionByZero;
-            else if (significance < 0 && number > 0)
-                return XLError.NumberInvalid;
-            else if (significance < 0)
+
+            if (significance < 0)
                 return -Math.Floor(-number / -significance) * -significance;
-            else
-                return Math.Floor(number / significance) * significance;
+
+            return Math.Floor(number / significance) * significance;
         }
 
         private static object FloorMath(List<Expression> p)
