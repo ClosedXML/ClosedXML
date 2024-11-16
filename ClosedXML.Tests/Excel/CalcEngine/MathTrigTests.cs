@@ -856,7 +856,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-1, -57.2957795130823)]
         public void Degrees_ReturnsCorrectResult(double input, double expected)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"DEGREES({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"DEGREES({input})");
             Assert.AreEqual(expected, actual, tolerance);
         }
 

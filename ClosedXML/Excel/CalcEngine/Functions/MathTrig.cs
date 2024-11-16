@@ -40,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
-            ce.RegisterFunction("DEGREES", 1, Degrees);
+            ce.RegisterFunction("DEGREES", 1, 1, Adapt(Degrees), FunctionFlags.Scalar);
             ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
@@ -405,9 +405,9 @@ namespace ClosedXML.Excel.CalcEngine
             return result;
         }
 
-        private static object Degrees(List<Expression> p)
+        private static ScalarValue Degrees(double number)
         {
-            return p[0] * (180.0 / Math.PI);
+            return number * (180.0 / Math.PI);
         }
 
         private static object Even(List<Expression> p)
