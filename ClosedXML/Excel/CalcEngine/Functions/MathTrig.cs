@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ASIN", 1, 1, Adapt(Asin), FunctionFlags.Scalar);
             ce.RegisterFunction("ASINH", 1, 1, Adapt(Asinh), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN", 1, 1, Adapt(Atan), FunctionFlags.Scalar);
-            ce.RegisterFunction("ATAN2", 2, Atan2);
+            ce.RegisterFunction("ATAN2", 2, 2, Adapt(Atan2), FunctionFlags.Scalar);
             ce.RegisterFunction("ATANH", 1, 1, Adapt(Atanh), FunctionFlags.Scalar);
             ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 2, Ceiling);
@@ -211,10 +211,8 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Atan(number);
         }
 
-        private static object Atan2(List<Expression> p)
+        private static ScalarValue Atan2(double x, double y)
         {
-            double x = p[0];
-            double y = p[1];
             if (x == 0 && y == 0)
                 return XLError.DivisionByZero;
 
@@ -296,7 +294,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return -Math.Ceiling(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
-        private static AnyValue Combin(double number, double numberChosen)
+        private static ScalarValue Combin(double number, double numberChosen)
         {
             var combinationsResult = XLMath.CombinChecked(number, numberChosen);
             if (!combinationsResult.TryPickT0(out var combinations, out var error))
@@ -919,7 +917,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (!sumRange.TryPickArea(out var sumArea, out var sumAreaError))
                 return sumAreaError;
-            
+
             var tally = new TallyCriteria();
             foreach (var (selectionRange, selectionCriteria) in criteriaRanges)
             {
