@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CSCH", 1, Csch);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, 1, Adapt(Degrees), FunctionFlags.Scalar);
-            ce.RegisterFunction("EVEN", 1, Even);
+            ce.RegisterFunction("EVEN", 1, 1, Adapt(Even), FunctionFlags.Scalar);
             ce.RegisterFunction("EXP", 1, Exp);
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
@@ -410,9 +410,9 @@ namespace ClosedXML.Excel.CalcEngine
             return number * (180.0 / Math.PI);
         }
 
-        private static object Even(List<Expression> p)
+        private static ScalarValue Even(double number)
         {
-            var num = (int)Math.Ceiling(p[0]);
+            var num = Math.Ceiling(number);
             var addValue = num >= 0 ? 1 : -1;
             return XLMath.IsEven(num) ? num : num + addValue;
         }

@@ -135,6 +135,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Math.Abs(value % 2) == 0;
         }
 
+        public static Boolean IsEven(double value)
+        {
+            // Check the number doesn't have any fractions and that it is even.
+            // Due to rounding after division, only checking for % 2 could fail
+            // for numbers really close to whole number.
+            var hasNoFraction = value % 1 == 0;
+            var isEven = value % 2 == 0;
+            return hasNoFraction && isEven;
+        }
+
         public static Boolean IsOdd(Int32 value)
         {
             return Math.Abs(value % 2) != 0;

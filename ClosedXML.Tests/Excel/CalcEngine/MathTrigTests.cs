@@ -860,40 +860,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expected, actual, tolerance);
         }
 
-        [Test]
-        public void Even()
-        {
-            object actual = XLWorkbook.EvaluateExpr("Even(3)");
-            Assert.AreEqual(4, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(2)");
-            Assert.AreEqual(2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(-1)");
-            Assert.AreEqual(-2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(-2)");
-            Assert.AreEqual(-2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(0)");
-            Assert.AreEqual(0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(1.5)");
-            Assert.AreEqual(2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Even(2.01)");
-            Assert.AreEqual(4, actual);
-        }
-
-        [TestCase(1.5, 2)]
         [TestCase(3, 4)]
         [TestCase(2, 2)]
         [TestCase(-1, -2)]
+        [TestCase(-2, -2)]
         [TestCase(0, 0)]
+        [TestCase(1.5, 2)]
+        [TestCase(2.01, 4)]
+        [TestCase(1e+100, 1e+100)]
         [TestCase(Math.PI, 4)]
-        public void Even_ReturnsCorrectResults(double input, double expectedResult)
+        public void Even(double number, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = XLWorkbook.EvaluateExpr($"EVEN({number})");
             Assert.AreEqual(expectedResult, actual);
         }
 
