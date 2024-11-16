@@ -959,15 +959,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"FACT(""x"")"));
         }
 
-        [Test]
-        public void FactDouble()
-        {
-            object actual1 = XLWorkbook.EvaluateExpr("FactDouble(6)");
-            Assert.AreEqual(48.0, actual1);
-            object actual2 = XLWorkbook.EvaluateExpr("FactDouble(7)");
-            Assert.AreEqual(105.0, actual2);
-        }
-
         [TestCase(0, 1L)]
         [TestCase(1, 1L)]
         [TestCase(2, 2L)]
@@ -993,20 +984,27 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(2.8, 2L)]
         public void FactDouble_ReturnsCorrectResult(double input, long expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"FACTDOUBLE({input})");
             Assert.AreEqual(expectedResult, actual);
+        }
+
+        [TestCase(301)]
+        [TestCase(1e+100)]
+        public void FactDouble_returns_error_on_too_large_value(double n)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"FACTDOUBLE({n})"));
         }
 
         [Theory]
         public void FactDouble_ThrowsNumberExceptionForInputSmallerThanMinus1([Range(-10, -2)] int input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"FACTDOUBLE({input})"));
         }
 
         [Test]
         public void FactDouble_ThrowsValueExceptionForNonNumericInput()
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE(""x"")")));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"FACTDOUBLE(""x"")"));
         }
 
         [TestCase(24.3, 5, 20)]

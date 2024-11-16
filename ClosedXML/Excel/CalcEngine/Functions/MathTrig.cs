@@ -44,7 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("EVEN", 1, 1, Adapt(Even), FunctionFlags.Scalar);
             ce.RegisterFunction("EXP", 1, 1, Adapt(Exp), FunctionFlags.Scalar);
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
-            ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
+            ce.RegisterFunction("FACTDOUBLE", 1, 1, Adapt(FactDouble), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR", 2, Floor);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
@@ -434,25 +434,25 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.Factorial((int)Math.Floor(n));
         }
 
-        private static object FactDouble(List<Expression> p)
+        private static ScalarValue FactDouble(double n)
         {
-            var input = p[0].Evaluate();
-
-            if (!(input is long || input is int || input is byte || input is double || input is float))
-                return XLError.IncompatibleValue;
-
-            var num = Math.Floor(p[0]);
-            double fact = 1.0;
-
+            var num = Math.Floor(n);
             if (num < -1)
                 return XLError.NumberInvalid;
 
+            var fact = 1.0;
+
             if (num > 1)
             {
-                var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
-                for (int i = start; i <= num; i += 2)
+                var start = XLMath.IsEven(num) ? 2 : 1;
+                for (var i = start; i <= num; i += 2)
+                {
                     fact *= i;
+                    if (double.IsInfinity(fact))
+                        return XLError.NumberInvalid;
+                }
             }
+
             return fact;
         }
 
