@@ -248,9 +248,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(5, 1.37340076694502)]
         public void Atan_ReturnsCorrectResult(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ATAN({input})");
             Assert.AreEqual(expectedResult, actual, tolerance);
-            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            var minusActual = (double)XLWorkbook.EvaluateExpr($"ATAN({-input})");
             Assert.AreEqual(-expectedResult, minusActual, tolerance);
         }
 
