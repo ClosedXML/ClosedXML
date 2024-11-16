@@ -65,7 +65,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Acosh_NumbersBelow1ThrowNumberException([Range(-1, 0.9, 0.1)] double input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOSH({input})"));
         }
 
         [TestCase(1.2, 0.622362504)]
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1, 0)]
         public void Acosh_ReturnsCorrectValue(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOSH({input})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 

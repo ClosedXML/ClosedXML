@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             ce.RegisterFunction("ABS", 1, 1, Adapt(Abs), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOS", 1, 1, Adapt(Acos), FunctionFlags.Scalar);
-            ce.RegisterFunction("ACOSH", 1, Acosh);
+            ce.RegisterFunction("ACOSH", 1, 1, Adapt(Acosh), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOT", 1, Acot);
             ce.RegisterFunction("ACOTH", 1, Acoth);
             ce.RegisterFunction("ARABIC", 1, Arabic);
@@ -143,13 +143,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Acos(number);
         }
 
-        private static object Acosh(List<Expression> p)
+        private static ScalarValue Acosh(double number)
         {
-            double number = p[0];
             if (number < 1)
                 return XLError.NumberInvalid;
 
-            return XLMath.ACosh(p[0]);
+            return XLMath.ACosh(number);
         }
 
         private static object Acot(List<Expression> p)
