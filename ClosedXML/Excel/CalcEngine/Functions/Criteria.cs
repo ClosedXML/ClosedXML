@@ -36,7 +36,23 @@ internal class Criteria
     /// <summary>
     /// Can a blank value match the criteria?
     /// </summary>
-    internal bool CanBlankValueMatch => _value.IsBlank && _comparison is Comparison.Equal or Comparison.None;
+    internal bool CanBlankValueMatch
+    {
+        get
+        {
+            // Criteria accepts only values equal to blank (it's either blank or empty text).
+            // Therefore blank values must be included, because blank is equal to blank.
+            if (_comparison is Comparison.Equal or Comparison.None && _value.IsBlank)
+                return true;
+
+            // Criteria accepts only values that are not a concrete value. Blank values
+            // are not concrete values and therefore must be included.
+            if (_comparison == Comparison.NotEqual && !_value.IsBlank)
+                return true;
+
+            return false;
+        }
+    }
 
     internal static Criteria Create(ScalarValue criteria, CultureInfo culture)
     {

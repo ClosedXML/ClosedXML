@@ -16,7 +16,14 @@ internal class CriteriaTests
     public void Selection_criteria_uses_type_and_comparator_to_match_values(ScalarValue selectionCriteria, XLCellValue value, bool expectedResult)
     {
         var criteria = Criteria.Create(selectionCriteria, CultureInfo.CurrentCulture);
-        Assert.AreEqual(expectedResult, criteria.Match(value));
+        var matchResult = criteria.Match(value);
+        Assert.AreEqual(expectedResult, matchResult);
+
+        // TallyCriteria skips unused (=blank) cells as an optimization (e.g. SUMIF over whole column/sheet),
+        // unless it's possible that blanks will match the criteria. Assert that when tested value matches and
+        // is blank, teh TallyCriteria will include blank cells.
+        if (matchResult && value.IsBlank)
+            Assert.True(criteria.CanBlankValueMatch);
     }
 
     public static IEnumerable<object> CriteriaTestCases
@@ -163,6 +170,7 @@ internal class CriteriaTests
             yield return S("<>?", "ab");
             yield return S("<>?", 1);
             yield return S("<>?", true);
+            yield return S("<>B", Blank.Value);
 
             // Text comparison are culture dependent and don't use wildcards
             // In Czech, order of letters is 'h', 'ch', 'i' (yes, there is a two grapheme letter).

@@ -2303,6 +2303,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula));
         }
 
+        [TestCase("SUMIFS(A1:A3, B1:B3,\"<>B\")", 11)]
+        [TestCase("SUMIFS(A1:A3, B1:B3,\"<>\")", 110)]
+        public void SumIfs_matches_blank_cells_when_criteria_is_not_equal(string formula, double expectedSum)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 1;
+            ws.Cell("A2").Value = 10;
+            ws.Cell("A3").Value = 100;
+            ws.Cell("B1").Value = Blank.Value;
+            ws.Cell("B2").Value = string.Empty;
+            ws.Cell("B3").Value = "B";
+
+            Assert.AreEqual(expectedSum, ws.Evaluate(formula));
+        }
+
         [Test]
         public void SumProduct()
         {
