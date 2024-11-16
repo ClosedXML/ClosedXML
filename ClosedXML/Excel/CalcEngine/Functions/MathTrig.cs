@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, 1, Adapt(Degrees), FunctionFlags.Scalar);
             ce.RegisterFunction("EVEN", 1, 1, Adapt(Even), FunctionFlags.Scalar);
-            ce.RegisterFunction("EXP", 1, Exp);
+            ce.RegisterFunction("EXP", 1, 1, Adapt(Exp), FunctionFlags.Scalar);
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
             ce.RegisterFunction("FLOOR", 2, Floor);
@@ -417,9 +417,13 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.IsEven(num) ? num : num + addValue;
         }
 
-        private static object Exp(List<Expression> p)
+        private static ScalarValue Exp(double number)
         {
-            return Math.Exp(p[0]);
+            var exp = Math.Exp(number);
+            if (double.IsInfinity(exp))
+                return XLError.NumberInvalid;
+
+            return exp;
         }
 
         private static ScalarValue Fact(double n)

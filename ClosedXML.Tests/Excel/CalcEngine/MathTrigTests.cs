@@ -888,10 +888,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(10, 22026.4657948067)]
         [TestCase(11, 59874.1417151978)]
         [TestCase(12, 162754.791419004)]
-        public void Exp_ReturnsCorrectResults(double input, double expectedResult)
+        [TestCase(-1E+100, 0)]
+        public void Exp_returns_correct_results(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EXP({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"EXP({input})");
             Assert.AreEqual(expectedResult, actual, tolerance);
+        }
+
+        [TestCase(710)]
+        public void Exp_with_too_large_result_return_error(double input)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"EXP({input})"));
         }
 
         [Test]
