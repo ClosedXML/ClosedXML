@@ -132,7 +132,7 @@ namespace ClosedXML.Excel.CalcEngine
             return radians / Math.PI * 200.0;
         }
 
-        private static AnyValue Abs(double number)
+        private static ScalarValue Abs(double number)
         {
             return Math.Abs(number);
         }
@@ -426,7 +426,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Exp(p[0]);
         }
 
-        private static AnyValue Fact(double n)
+        private static ScalarValue Fact(double n)
         {
             if (n is < 0 or >= 171)
                 return XLError.NumberInvalid;

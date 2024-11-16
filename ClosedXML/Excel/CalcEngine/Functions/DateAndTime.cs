@@ -495,7 +495,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
         }
 
-        private static AnyValue Year(double serialDateTime)
+        private static ScalarValue Year(double serialDateTime)
         {
             serialDateTime = Math.Truncate(serialDateTime);
             if (serialDateTime < 0)

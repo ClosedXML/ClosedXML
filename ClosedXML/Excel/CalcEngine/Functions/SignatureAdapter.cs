@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<double, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<double, ScalarValue> f)
         {
             return (ctx, args) =>
             {
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg0Converted.TryPickT0(out var arg0, out var err0))
                     return err0;
 
-                return f(arg0);
+                return f(arg0).ToAnyValue();
             };
         }
 
