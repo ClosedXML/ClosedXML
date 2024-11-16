@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CEILING.MATH", 1, 3, CeilingMath);
             ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
             ce.RegisterFunction("COMBINA", 2, CombinA);
-            ce.RegisterFunction("COS", 1, Cos);
+            ce.RegisterFunction("COS", 1, 1, Adapt(Cos), FunctionFlags.Scalar);
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("COT", 1, Cot);
             ce.RegisterFunction("COTH", 1, Coth);
@@ -321,9 +321,9 @@ namespace ClosedXML.Excel.CalcEngine
                 : (long)XLMath.Combin(n, k);
         }
 
-        private static object Cos(List<Expression> p)
+        private static ScalarValue Cos(double number)
         {
-            return Math.Cos(p[0]);
+            return Math.Cos(number);
         }
 
         private static object Cosh(List<Expression> p)

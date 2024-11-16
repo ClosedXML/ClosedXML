@@ -648,7 +648,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8.4, -0.519288654116686)]
         public void Cos_ReturnsCorrectResult(double input, double expectedResult)
         {
-            var actualResult = (double)XLWorkbook.EvaluateExpr(string.Format("COS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actualResult = (double)XLWorkbook.EvaluateExpr($"COS({input})");
             Assert.AreEqual(expectedResult, actualResult, tolerance);
         }
 
