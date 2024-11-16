@@ -8,6 +8,7 @@ using System.Linq;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
@@ -49,7 +50,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1, 0)]
         public void Acos_ReturnsCorrectValue(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"ACOS({input.ToInvariantString()})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOS({input})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
@@ -57,8 +58,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Acos_returns_error_when_number_outside_range([Range(1.1, 3, 0.1)] double input)
         {
             // checking input and it's additive inverse as both are outside range.
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({input.ToInvariantString()})"));
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({(-input).ToInvariantString()})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({input})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOS({-input})"));
         }
 
         [Theory]
