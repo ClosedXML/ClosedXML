@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("RANDBETWEEN", 2, 2, Adapt(RandBetween), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
             ce.RegisterFunction("ROUND", 2, 2, Adapt(Round), FunctionFlags.Scalar);
-            ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
+            ce.RegisterFunction("ROUNDDOWN", 2, 2, Adapt(RoundDown), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
             ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SECH", 1, Sech);
@@ -797,15 +797,10 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Round(value, digitCount, MidpointRounding.AwayFromZero);
         }
 
-        private static object RoundDown(List<Expression> p)
+        private static ScalarValue RoundDown(double value, double digits)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
-
-            if (value >= 0)
-                return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
-
-            return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+            var coef = Math.Pow(10, Math.Truncate(digits));
+            return Math.Truncate(value * coef) / coef;
         }
 
         private static object RoundUp(List<Expression> p)
