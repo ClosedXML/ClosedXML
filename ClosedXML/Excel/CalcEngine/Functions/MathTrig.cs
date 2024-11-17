@@ -68,7 +68,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("RAND", 0, 0, Adapt(Rand), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("RANDBETWEEN", 2, 2, Adapt(RandBetween), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
-            ce.RegisterFunction("ROUND", 2, Round);
+            ce.RegisterFunction("ROUND", 2, 2, Adapt(Round), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
             ce.RegisterFunction("SEC", 1, Sec);
@@ -783,21 +783,18 @@ namespace ClosedXML.Excel.CalcEngine
             throw new ArgumentException("Can only support classic roman types.");
         }
 
-        private static object Round(List<Expression> p)
+        private static ScalarValue Round(double value, double digits)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
-            if (digits >= 0)
+            var digitCount = (int)Math.Truncate(digits);
+            if (digits < 0)
             {
-                return Math.Round(value, digits, MidpointRounding.AwayFromZero);
+                var coef = Math.Pow(10, Math.Abs(digits));
+                var shifted = value / coef;
+                shifted = Math.Round(shifted, 0, MidpointRounding.AwayFromZero);
+                return shifted * coef;
             }
-            else
-            {
-                digits = Math.Abs(digits);
-                double temp = value / Math.Pow(10, digits);
-                temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
-                return temp * Math.Pow(10, digits);
-            }
+
+            return Math.Round(value, digitCount, MidpointRounding.AwayFromZero);
         }
 
         private static object RoundDown(List<Expression> p)

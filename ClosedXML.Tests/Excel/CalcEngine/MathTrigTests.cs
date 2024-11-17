@@ -1533,54 +1533,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual("MMMCMXCIX", actual);
         }
 
-        [Test]
-        public void Round()
+        [TestCase(2.15, 1, ExpectedResult = 2.2)]
+        [TestCase(2.149, 1, ExpectedResult = 2.1)]
+        [TestCase(-1.475, 2, ExpectedResult = -1.48)]
+        [TestCase(21.5, -1, ExpectedResult = 20.0)]
+        [TestCase(626.3, -3, ExpectedResult = 1000.0)]
+        [TestCase(1.98, -1, ExpectedResult = 0.0)]
+        [TestCase(-50.55, -2, ExpectedResult = -100.0)]
+        [TestCase(31.565, 2, ExpectedResult = 31.57)]
+        [TestCase(-31.565, 2, ExpectedResult = -31.57)]
+        [TestCase(1E+100, 2, ExpectedResult = 1E+100)]
+        [TestCase(1.25, 0, ExpectedResult = 1)]
+        public double Round(double number, double digits)
         {
-            object actual = XLWorkbook.EvaluateExpr("Round(2.15, 1)");
-            Assert.AreEqual(2.2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(2.149, 1)");
-            Assert.AreEqual(2.1, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(-1.475, 2)");
-            Assert.AreEqual(-1.48, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(21.5, -1)");
-            Assert.AreEqual(20.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(626.3, -3)");
-            Assert.AreEqual(1000.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(1.98, -1)");
-            Assert.AreEqual(0.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
-            Assert.AreEqual(-100.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("ROUND(59 * 0.535, 2)"); // (59 * 0.535) = 31.565
-            Assert.AreEqual(31.57, actual);
-
-            actual = XLWorkbook.EvaluateExpr("ROUND(59 * -0.535, 2)"); // (59 * -0.535) = -31.565
-            Assert.AreEqual(-31.57, actual);
-        }
-
-        [Test]
-        public void Round_References()
-        {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
-            ws.Cell("A1").SetValue(1);
-            ws.Cell("A2").SetValue(2);
-            ws.Cell("A3").SetValue(3);
-            ws.Cell("A4").SetValue(4);
-            ws.Cell("A5").SetValue(5);
-            ws.Cell("A6").SetValue(2);
-
-            // References are treated differently to constant values within calculations by the calc engine,
-            // so let's make sure to include a test to validate that everything keeps working in the future
-            ws.Cell("A8").FormulaA1 = "ROUND((-A1*A$2+A3*A$4)/(A$5+A$6),0)"; // (-1 * 2 + 3 * 4) / (5 + 3) = 1.25
-            var actual = ws.Cell("A8").Value;
-
-            Assert.AreEqual(1.0, actual);
+            return (double)XLWorkbook.EvaluateExpr($"ROUND({number}, {digits})");
         }
 
         [Test]
