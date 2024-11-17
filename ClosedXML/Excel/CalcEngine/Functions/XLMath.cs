@@ -150,6 +150,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Math.Abs(value % 2) != 0;
         }
 
+        public static Boolean IsOdd(double value)
+        {
+            var hasNoFraction = value % 1 == 0;
+            var isOdd = value % 2 != 0;
+            return hasNoFraction && isOdd;
+        }
+
         public static string ToRoman(int number)
         {
             if ((number < 0) || (number > 3999)) throw new ArgumentOutOfRangeException("insert value betwheen 1 and 3999");

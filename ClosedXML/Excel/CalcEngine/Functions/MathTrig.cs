@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
             ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
-            ce.RegisterFunction("ODD", 1, Odd);
+            ce.RegisterFunction("ODD", 1, 1, Adapt(Odd), FunctionFlags.Scalar);
             ce.RegisterFunction("PI", 0, Pi);
             ce.RegisterFunction("POWER", 2, Power);
             ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
@@ -695,9 +695,9 @@ namespace ClosedXML.Excel.CalcEngine
             return result;
         }
 
-        private static object Odd(List<Expression> p)
+        private static ScalarValue Odd(double number)
         {
-            var num = (int)Math.Ceiling(p[0]);
+            var num = Math.Ceiling(number);
             var addValue = num >= 0 ? 1 : -1;
             return XLMath.IsOdd(num) ? num : num + addValue;
         }

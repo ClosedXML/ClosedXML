@@ -1374,26 +1374,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1260.0, actual);
         }
 
-        [Test]
-        public void Odd()
+        [TestCase(1.5, ExpectedResult = 3)]
+        [TestCase(3, ExpectedResult = 3)]
+        [TestCase(2, ExpectedResult = 3)]
+        [TestCase(-1, ExpectedResult = -1)]
+        [TestCase(-2, ExpectedResult = -3)]
+        [TestCase(0, ExpectedResult = 1)]
+        [TestCase(1E+100, ExpectedResult = 1E+100)]
+        [DefaultFloatingPointTolerance(1e-12)]
+        public double Odd(double number)
         {
-            object actual = XLWorkbook.EvaluateExpr("Odd(1.5)");
-            Assert.AreEqual(3, actual);
-
-            object actual1 = XLWorkbook.EvaluateExpr("Odd(3)");
-            Assert.AreEqual(3, actual1);
-
-            object actual2 = XLWorkbook.EvaluateExpr("Odd(2)");
-            Assert.AreEqual(3, actual2);
-
-            object actual3 = XLWorkbook.EvaluateExpr("Odd(-1)");
-            Assert.AreEqual(-1, actual3);
-
-            object actual4 = XLWorkbook.EvaluateExpr("Odd(-2)");
-            Assert.AreEqual(-3, actual4);
-
-            actual = XLWorkbook.EvaluateExpr("Odd(0)");
-            Assert.AreEqual(1, actual);
+            return (double)XLWorkbook.EvaluateExpr($"ODD({number})");
         }
 
         [Test]
