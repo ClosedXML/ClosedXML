@@ -1111,6 +1111,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(720, actual3);
         }
 
+        [TestCase(86, 4.4543472962)]
+        [TestCase(2.7182818, 0.9999999895)]
+        [TestCase(20.085536923, 3)]
+        public void Ln_calculates_logarithm(double x, double ln)
+        {
+            Assert.AreEqual(ln, (double)XLWorkbook.EvaluateExpr($"LN({x})"), tolerance);
+        }
+
+        [TestCase(0)]
+        [TestCase(-0.7)]
+        [TestCase(-10)]
+        public void Ln_non_positive_returns_error(double x)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"LN({x})"));
+        }
+
         [Test]
         public void MDeterm()
         {

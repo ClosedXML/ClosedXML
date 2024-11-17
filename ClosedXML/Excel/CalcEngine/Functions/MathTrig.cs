@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
             ce.RegisterFunction("LCM", 1, 255, Lcm);
-            ce.RegisterFunction("LN", 1, Ln);
+            ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG", 1, 2, Log);
             ce.RegisterFunction("LOG10", 1, Log10);
             ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
@@ -548,9 +548,12 @@ namespace ClosedXML.Excel.CalcEngine
             return a * (b / Gcd(a, b));
         }
 
-        private static object Ln(List<Expression> p)
+        private static ScalarValue Ln(double x)
         {
-            return Math.Log(p[0]);
+            if (x <= 0)
+                return XLError.NumberInvalid;
+
+            return Math.Log(x);
         }
 
         private static object Log(List<Expression> p)
