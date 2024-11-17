@@ -1487,11 +1487,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("QUOTIENT(1, 0)"));
         }
 
-        [Test]
-        public void Radians()
+        [TestCase(270, ExpectedResult = 4.71238898038469)]
+        [TestCase(-180, ExpectedResult = -Math.PI)]
+        [DefaultFloatingPointTolerance(XLHelper.Epsilon)]
+        public double Radians(double angle)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("Radians(270)");
-            Assert.AreEqual(4.71238898038469, actual, XLHelper.Epsilon);
+            return (double)XLWorkbook.EvaluateExpr($"RADIANS({angle})");
         }
 
         [Test]
