@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
             ce.RegisterFunction("LCM", 1, 255, Lcm);
             ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
-            ce.RegisterFunction("LOG", 1, 2, Log);
+            ce.RegisterFunction("LOG", 1, 2, AdaptLastOptional(Log, 10), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG10", 1, Log10);
             ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
             ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
@@ -556,10 +556,15 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Log(x);
         }
 
-        private static object Log(List<Expression> p)
+        private static ScalarValue Log(double x, double @base)
         {
-            var lbase = p.Count > 1 ? (double)p[1] : 10;
-            return Math.Log(p[0], lbase);
+            if (x <= 0 || @base <= 0)
+                return XLError.NumberInvalid;
+
+            if (Math.Abs(@base - 1.0) < XLHelper.Epsilon)
+                return XLError.DivisionByZero;
+
+            return Math.Log(x, @base);
         }
 
         private static object Log10(List<Expression> p)

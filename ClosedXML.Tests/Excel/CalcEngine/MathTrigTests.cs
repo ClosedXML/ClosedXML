@@ -1127,6 +1127,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"LN({x})"));
         }
 
+        [TestCase(10, 10, 1)]
+        [TestCase(8, 2, 3)]
+        [TestCase(86, 2.7182818, 4.4543473428883)]
+        public void Log_calculates_logarithm(double x, double @base, double result)
+        {
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"LOG({x}, {@base})"), tolerance);
+        }
+
+        [Test]
+        public void Log_default_base_is_10()
+        {
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("LOG(100)"));
+        }
+
+        [Test]
+        public void Log_error_conditions()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("LOG(0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("LOG(1,0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("LOG(0,0)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("LOG(10,1)"));
+        }
+
         [Test]
         public void MDeterm()
         {
