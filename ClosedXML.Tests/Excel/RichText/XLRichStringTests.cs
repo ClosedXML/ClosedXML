@@ -827,5 +827,23 @@ namespace ClosedXML.Tests
                 Assert.AreEqual(phoneticsWithSpace, richText.Phonetics.First().Text);
             }
         }
+
+        [Test]
+        public void Preserve_end_of_line_in_xml()
+        {
+            // When text run in a rich text contains end of line (regardless if CR, LF or CRLF),
+            // the written element must be marked with xml:space="preserve". Excel would process
+            // text differently (trim ect, see XML spec) and that means there would be a data
+            // loss (trimmed ends of line). Another problem would be phonetic runs. They use indexes
+            // to the text run, but if text would be trimmed, they might suddenly have out-of-bounds
+            // values and Excel would try to repair the workbook.
+            // The source files contains a text run with end of line at the start and end. It also
+            // contains phonetic run for the kanji in the text that would be out-of-bounds if space
+            // attribute there. The input is from Excel, output is by ClosedXML. Output must contain
+            // the space attribute.
+            TestHelper.LoadSaveAndCompare(
+                @"Other\RichText\kanji-with-new-line-input.xlsx",
+                @"Other\RichText\kanji-with-new-line-output.xlsx");
+        }
     }
 }
