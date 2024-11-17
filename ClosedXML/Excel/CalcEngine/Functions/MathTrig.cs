@@ -48,7 +48,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FLOOR", 2, 2, Adapt(Floor), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
-            ce.RegisterFunction("INT", 1, Int);
+            ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
             ce.RegisterFunction("LCM", 1, 255, Lcm);
             ce.RegisterFunction("LN", 1, Ln);
             ce.RegisterFunction("LOG", 1, 2, Log);
@@ -532,9 +532,9 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static object Int(List<Expression> p)
+        private static ScalarValue Int(double number)
         {
-            return Math.Floor(p[0]);
+            return Math.Floor(number);
         }
 
         private static object Lcm(List<Expression> p)

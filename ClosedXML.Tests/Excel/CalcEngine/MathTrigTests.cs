@@ -1091,7 +1091,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-8.9, -9)]
         public void Int(double input, double expected)
         {
-            var actual = XLWorkbook.EvaluateExpr(string.Format(@"INT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = XLWorkbook.EvaluateExpr($"INT({input})");
             Assert.AreEqual(expected, actual);
         }
 
