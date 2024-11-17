@@ -1471,17 +1471,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("PRODUCT(A1)"));
         }
 
-        [Test]
-        public void Quotient()
+        [TestCase(5, 2, ExpectedResult = 2)]
+        [TestCase(4.5, 3.1, ExpectedResult = 1)]
+        [TestCase(-10, 3, ExpectedResult = -3)]
+        [TestCase(-10, -4, ExpectedResult = 2)]
+        [TestCase(1E+100, 1E+40, ExpectedResult = 1E+60)]
+        public double Quotient(double x, double y)
         {
-            object actual = XLWorkbook.EvaluateExpr("Quotient(5,2)");
-            Assert.AreEqual(2, actual);
+            return (double)XLWorkbook.EvaluateExpr($"QUOTIENT({x}, {y})");
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Quotient(4.5,3.1)");
-            Assert.AreEqual(1, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Quotient(-10,3)");
-            Assert.AreEqual(-3, actual);
+        [Test]
+        public void Quotient_errors()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("QUOTIENT(1, 0)"));
         }
 
         [Test]

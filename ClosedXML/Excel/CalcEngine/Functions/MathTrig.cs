@@ -63,7 +63,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("PI", 0, 0, Adapt(Pi), FunctionFlags.Scalar);
             ce.RegisterFunction("POWER", 2, 2, Adapt(Power), FunctionFlags.Scalar);
             ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("QUOTIENT", 2, Quotient);
+            ce.RegisterFunction("QUOTIENT", 2, 2, Adapt(Quotient), FunctionFlags.Scalar);
             ce.RegisterFunction("RADIANS", 1, Radians);
             ce.RegisterFunction("RAND", 0, Rand);
             ce.RegisterFunction("RANDBETWEEN", 2, RandBetween);
@@ -741,12 +741,12 @@ namespace ClosedXML.Excel.CalcEngine
             return state.HasValues ? state.Product : 0;
         }
 
-        private static object Quotient(List<Expression> p)
+        private static ScalarValue Quotient(double dividend, double divisor)
         {
-            Double n = p[0];
-            Double k = p[1];
+            if (divisor == 0)
+                return XLError.DivisionByZero;
 
-            return (int)(n / k);
+            return Math.Truncate(dividend / divisor);
         }
 
         private static object Radians(List<Expression> p)
