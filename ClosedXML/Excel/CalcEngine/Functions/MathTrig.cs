@@ -70,7 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
             ce.RegisterFunction("ROUND", 2, 2, Adapt(Round), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDDOWN", 2, 2, Adapt(RoundDown), FunctionFlags.Scalar);
-            ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
+            ce.RegisterFunction("ROUNDUP", 2, 2, Adapt(RoundUp), FunctionFlags.Scalar);
             ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SECH", 1, Sech);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum, AllowRange.Only, 3);
@@ -803,15 +803,13 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Truncate(value * coef) / coef;
         }
 
-        private static object RoundUp(List<Expression> p)
+        private static ScalarValue RoundUp(double value, double digits)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
-
+            var coef = Math.Pow(10, Math.Truncate(digits));
             if (value >= 0)
-                return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+                return Math.Ceiling(value * coef) / coef;
 
-            return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+            return Math.Floor(value * coef) / coef;
         }
 
         private static object Sec(List<Expression> p)

@@ -1560,26 +1560,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"ROUNDDOWN({number}, {digits})");
         }
 
-        [Test]
-        public void RoundUp()
+        [TestCase(3.2, 0, ExpectedResult = 4)]
+        [TestCase(76.9, 0, ExpectedResult = 77.0)]
+        [TestCase(3.14159, 3, ExpectedResult = 3.142)]
+        [TestCase(-3.14159, 1, ExpectedResult = -3.2)]
+        [TestCase(31415.92654, -2, ExpectedResult = 31500.0)]
+        [TestCase(0, 3, ExpectedResult = 0)]
+        [TestCase(11, 0, ExpectedResult = 11)]
+        public double RoundUp(double number, double digits)
         {
-            object actual = XLWorkbook.EvaluateExpr("RoundUp(3.2, 0)");
-            Assert.AreEqual(4.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("RoundUp(76.9, 0)");
-            Assert.AreEqual(77.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("RoundUp(3.14159, 3)");
-            Assert.AreEqual(3.142, actual);
-
-            actual = XLWorkbook.EvaluateExpr("RoundUp(-3.14159, 1)");
-            Assert.AreEqual(-3.2, actual);
-
-            actual = XLWorkbook.EvaluateExpr("RoundUp(31415.92654, -2)");
-            Assert.AreEqual(31500.0, actual);
-
-            actual = XLWorkbook.EvaluateExpr("RoundUp(0, 3)");
-            Assert.AreEqual(0.0, actual);
+            return (double)XLWorkbook.EvaluateExpr($"ROUNDUP({number}, {digits})");
         }
 
         [TestCase(0, 1)]
