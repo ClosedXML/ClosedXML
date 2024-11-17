@@ -61,7 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
             ce.RegisterFunction("ODD", 1, 1, Adapt(Odd), FunctionFlags.Scalar);
             ce.RegisterFunction("PI", 0, 0, Adapt(Pi), FunctionFlags.Scalar);
-            ce.RegisterFunction("POWER", 2, Power);
+            ce.RegisterFunction("POWER", 2, 2, Adapt(Power), FunctionFlags.Scalar);
             ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("QUOTIENT", 2, Quotient);
             ce.RegisterFunction("RADIANS", 1, Radians);
@@ -707,9 +707,24 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.PI;
         }
 
-        private static object Power(List<Expression> p)
+        private static ScalarValue Power(double x, double y)
         {
-            return Math.Pow(p[0], p[1]);
+            // The value of x is negative and y is not a whole number, #NUM! is returned.
+            var isPowerFraction = y % 1 != 0;
+            if (x < 0 && isPowerFraction)
+                return XLError.NumberInvalid;
+
+            if (x == 0 && y == 0)
+                return XLError.NumberInvalid;
+
+            if (x == 0 && y < 0)
+                return XLError.DivisionByZero;
+
+            var power = Math.Pow(x, y);
+            if (double.IsInfinity(power) || double.IsNaN(power))
+                return XLError.NumberInvalid;
+
+            return power;
         }
 
         private static AnyValue Product(CalcContext ctx, Span<AnyValue> args)

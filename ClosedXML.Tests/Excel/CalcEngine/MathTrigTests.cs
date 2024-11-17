@@ -1393,6 +1393,32 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(Math.PI, XLWorkbook.EvaluateExpr("PI()"));
         }
 
+        [TestCase(2, 3, ExpectedResult = 8)]
+        [TestCase(2, 0.5, ExpectedResult = 1.414213562373)]
+        [TestCase(-1.234, 5.0, ExpectedResult = -2.861381721051)]
+        [TestCase(1.234, 5.1, ExpectedResult = 2.9221823578798)]
+        [DefaultFloatingPointTolerance(1e-12)]
+        public double Power(double x, double y)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"POWER({x}, {y})");
+        }
+
+        [Test]
+        public void Power_errors()
+        {
+            // Negative base and fractional exponent
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("POWER(-5, 0.5)"));
+
+            // Spec says this should be #DIV/0!, but Excel says #NUM!
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("POWER(0, 0)"));
+
+            // base is zero and exponent is negative -> #NUM!
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("POWER(0, -5)"));
+
+            // Result is not representable (e.g. out fo range)
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("POWER(1e+100, 1e+100)"));
+        }
+
         [Test]
         public void Product()
         {
