@@ -500,7 +500,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static int Gcd(int a, int b)
         {
-            return b == 0 ? a : Gcd(b, a % b);
+            while (b != 0)
+                (a, b) = (b, a % b);
+
+            return a;
         }
 
         private static double[,] GetArray(Expression expression)
