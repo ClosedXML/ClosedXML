@@ -1506,6 +1506,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void RandBetween()
+        {
+            for (var i = 0; i < 100; ++i)
+            {
+                var randomNumber = (double)XLWorkbook.EvaluateExpr("RANDBETWEEN(10, 20)");
+                Assert.That(randomNumber, Is.GreaterThanOrEqualTo(10).And.LessThanOrEqualTo(20));
+            }
+
+            Assert.AreEqual(101, (double)XLWorkbook.EvaluateExpr("RANDBETWEEN(100.5, 100.9)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("RANDBETWEEN(100.9, 100.5)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("RANDBETWEEN(20, 5)"));
+            Assert.That((double)XLWorkbook.EvaluateExpr("RANDBETWEEN(1E+100, 1E+110)"), Is.GreaterThanOrEqualTo(1E+100).And.LessThanOrEqualTo(1E+110));
+        }
+
+        [Test]
         public void Roman()
         {
             object actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");

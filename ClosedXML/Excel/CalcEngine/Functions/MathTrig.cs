@@ -66,7 +66,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("QUOTIENT", 2, 2, Adapt(Quotient), FunctionFlags.Scalar);
             ce.RegisterFunction("RADIANS", 1, 1, Adapt(Radians), FunctionFlags.Scalar);
             ce.RegisterFunction("RAND", 0, 0, Adapt(Rand), FunctionFlags.Scalar | FunctionFlags.Volatile);
-            ce.RegisterFunction("RANDBETWEEN", 2, RandBetween);
+            ce.RegisterFunction("RANDBETWEEN", 2, 2, Adapt(RandBetween), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
             ce.RegisterFunction("ROUND", 2, Round);
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
@@ -759,9 +759,16 @@ namespace ClosedXML.Excel.CalcEngine
             return _rnd.NextDouble();
         }
 
-        private static object RandBetween(List<Expression> p)
+        private static ScalarValue RandBetween(double lowerBound, double upperBound)
         {
-            return _rnd.Next((int)(double)p[0], (int)(double)p[1]);
+            if (lowerBound > upperBound)
+                return XLError.NumberInvalid;
+
+            lowerBound = Math.Ceiling(lowerBound);
+            upperBound = Math.Ceiling(upperBound);
+
+            var range = upperBound - lowerBound;
+            return lowerBound + Math.Round(_rnd.NextDouble() * range, MidpointRounding.AwayFromZero);
         }
 
         private static object Roman(List<Expression> p)
