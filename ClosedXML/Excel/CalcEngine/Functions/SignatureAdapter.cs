@@ -15,9 +15,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         // We have many functions with same signature and the adapters should be reusable. Convert parameters
         // through value converters below. We can hopefully generate them at a later date, so try to keep them similar.
 
-        public static CalcEngineFunction Adapt(Func<AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<ScalarValue> f)
         {
-            return (_, _) => f();
+            return (_, _) => f().ToAnyValue();
         }
 
         public static CalcEngineFunction AdaptCoerced(Func<Boolean, AnyValue> f)

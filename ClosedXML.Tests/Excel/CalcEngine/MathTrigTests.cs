@@ -1388,6 +1388,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Pi()
+        {
+            Assert.AreEqual(Math.PI, XLWorkbook.EvaluateExpr("PI()"));
+        }
+
+        [Test]
         public void Product()
         {
             Assert.AreEqual(24d, XLWorkbook.EvaluateExpr("PRODUCT(2,3,4)"));

@@ -60,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
             ce.RegisterFunction("ODD", 1, 1, Adapt(Odd), FunctionFlags.Scalar);
-            ce.RegisterFunction("PI", 0, Pi);
+            ce.RegisterFunction("PI", 0, 0, Adapt(Pi), FunctionFlags.Scalar);
             ce.RegisterFunction("POWER", 2, Power);
             ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("QUOTIENT", 2, Quotient);
@@ -702,7 +702,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.IsOdd(num) ? num : num + addValue;
         }
 
-        private static object Pi(List<Expression> p)
+        private static ScalarValue Pi()
         {
             return Math.PI;
         }
