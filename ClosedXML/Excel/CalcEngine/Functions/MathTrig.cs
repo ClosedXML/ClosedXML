@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
             ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
-            ce.RegisterFunction("MOD", 2, Mod);
+            ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
             ce.RegisterFunction("MROUND", 2, MRound);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
             ce.RegisterFunction("ODD", 1, Odd);
@@ -623,10 +623,10 @@ namespace ClosedXML.Excel.CalcEngine
             return C;
         }
 
-        private static object Mod(List<Expression> p)
+        private static ScalarValue Mod(double number, double divisor)
         {
-            double number = p[0];
-            double divisor = p[1];
+            if (divisor == 0)
+                return XLError.DivisionByZero;
 
             return number - Math.Floor(number / divisor) * divisor;
         }

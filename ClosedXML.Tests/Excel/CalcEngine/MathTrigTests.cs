@@ -1311,39 +1311,26 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A6").Value);
         }
 
-        [Test]
-        public void Mod()
+        [TestCase(1.5, 1, 0.5)]
+        [TestCase(3, 2, 1)]
+        [TestCase(-3, 2, 1)]
+        [TestCase(-3, -2, -1)]
+        [TestCase(-4.3, -0.5, -0.3)]
+        [TestCase(6.9, -0.2, -0.1)]
+        [TestCase(0.7, 0.6, 0.1)]
+        [TestCase(6.2, 1.1, 0.7)]
+        public void Mod(double x, double y, double result)
         {
-            double actual;
+            var actual = (double)XLWorkbook.EvaluateExpr($"MOD({x}, {y})");
+            Assert.AreEqual(result, actual, tolerance);
+        }
 
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(1.5, 1)");
-            Assert.AreEqual(0.5, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(3, 2)");
-            Assert.AreEqual(1, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-3, 2)");
-            Assert.AreEqual(1, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(3, -2)");
-            Assert.AreEqual(-1, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-3, -2)");
-            Assert.AreEqual(-1, actual, tolerance);
-
-            //////
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-4.3, -0.5)");
-            Assert.AreEqual(-0.3, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(6.9, -0.2)");
-            Assert.AreEqual(-0.1, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(0.7, 0.6)");
-            Assert.AreEqual(0.1, actual, tolerance);
-
-            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(6.2, 1.1)");
-            Assert.AreEqual(0.7, actual, tolerance);
+        [Test]
+        public void Mod_divisor_zero_returns_error()
+        {
+            // Spec says that "If y is 0, the return value is unspecified", but Excel says #DIV/0!, so let's go with that.
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("MOD(1, 0)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("MOD(0, 0)"));
         }
 
         [TestCase(10, 3, ExpectedResult = 9.0)]
