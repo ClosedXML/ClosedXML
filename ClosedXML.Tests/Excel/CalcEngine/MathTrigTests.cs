@@ -1352,17 +1352,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(0.89999, 0.2, ExpectedResult = 0.8)]
         [TestCase(15.5, 3, ExpectedResult = 15.0)]
         [TestCase(1.4, 0.5, ExpectedResult = 1.5)]
+        [TestCase(3, 7, ExpectedResult = 0)]
+        [TestCase(3, 0, ExpectedResult = 0)]
         [DefaultFloatingPointTolerance(1e-12)]
         public double MRound(double number, double multiple)
         {
-            return (double)XLWorkbook.EvaluateExpr(string.Format(CultureInfo.InvariantCulture, "MROUND({0}, {1})", number, multiple));
+            return (double)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
         }
 
         [TestCase(123456.123, -10)]
         [TestCase(-123456.123, 5)]
         public void MRoundExceptions(double number, double multiple)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(FormattableString.Invariant($"MROUND({number}, {multiple})")));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})"));
         }
 
         [Test]

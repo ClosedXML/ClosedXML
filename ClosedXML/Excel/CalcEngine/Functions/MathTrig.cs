@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
-            ce.RegisterFunction("MROUND", 2, MRound);
+            ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
             ce.RegisterFunction("ODD", 1, Odd);
             ce.RegisterFunction("PI", 0, Pi);
@@ -631,10 +631,10 @@ namespace ClosedXML.Excel.CalcEngine
             return number - Math.Floor(number / divisor) * divisor;
         }
 
-        private static object MRound(List<Expression> p)
+        private static ScalarValue MRound(double number, double multiple)
         {
-            var number = (Double)p[0];
-            var multiple = (Double)p[1];
+            if (multiple == 0)
+                return 0;
 
             if (Math.Sign(number) != Math.Sign(multiple))
                 return XLError.NumberInvalid;
