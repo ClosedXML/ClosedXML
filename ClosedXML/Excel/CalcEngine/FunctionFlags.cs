@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -33,6 +31,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// Function returns array. Functions without this flag return a scalar value.
         /// CalcEngine treats such functions differently for array formulas.
         /// </summary>
-        ReturnsArray = 4
+        ReturnsArray = 4,
+
+        /// <summary>
+        /// Function is not deterministic.
+        /// </summary>
+        /// <example>RAND(), DATE()</example>
+        Volatile = 8,
     }
 }

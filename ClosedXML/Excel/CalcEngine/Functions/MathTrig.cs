@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("PRODUCT", 1, 255, Product, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("QUOTIENT", 2, 2, Adapt(Quotient), FunctionFlags.Scalar);
             ce.RegisterFunction("RADIANS", 1, 1, Adapt(Radians), FunctionFlags.Scalar);
-            ce.RegisterFunction("RAND", 0, Rand);
+            ce.RegisterFunction("RAND", 0, 0, Adapt(Rand), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("RANDBETWEEN", 2, RandBetween);
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
             ce.RegisterFunction("ROUND", 2, Round);
@@ -754,7 +754,7 @@ namespace ClosedXML.Excel.CalcEngine
             return angle * Math.PI / 180.0;
         }
 
-        private static object Rand(List<Expression> p)
+        private static ScalarValue Rand()
         {
             return _rnd.NextDouble();
         }

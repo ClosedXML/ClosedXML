@@ -1496,6 +1496,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Rand()
+        {
+            for (var i = 0; i < 100; ++i)
+            {
+                var randomNumber = (double)XLWorkbook.EvaluateExpr("RAND()");
+                Assert.That(randomNumber, Is.GreaterThanOrEqualTo(0).And.LessThan(1));
+            }
+        }
+
+        [Test]
         public void Roman()
         {
             object actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");
