@@ -1150,6 +1150,24 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("LOG(10,1)"));
         }
 
+        [Ignore("LOG10 is interpreted as cell function. Remove when parser is updated.")]
+        [TestCase(86, 1.93449845124)]
+        [TestCase(10, 1)]
+        [TestCase(1E5, 5)]
+        public void Log10_calculates_logarithm(double x, double expectedResult)
+        {
+            Assert.AreEqual(expectedResult, (double)XLWorkbook.EvaluateExpr($"LOG10({x})"), tolerance);
+        }
+
+        [Ignore("LOG10 is interpreted as cell function. Remove when parser is updated.")]
+        [TestCase(0)]
+        [TestCase(-5)]
+        [TestCase(-0.5)]
+        public void Log10_error_conditions(double x)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"LOG10({x})"));
+        }
+
         [Test]
         public void MDeterm()
         {

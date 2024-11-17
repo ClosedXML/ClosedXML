@@ -52,7 +52,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LCM", 1, 255, Lcm);
             ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG", 1, 2, AdaptLastOptional(Log, 10), FunctionFlags.Scalar);
-            ce.RegisterFunction("LOG10", 1, Log10);
+            ce.RegisterFunction("LOG10", 1, 1, Adapt(Log10), FunctionFlags.Scalar);
             ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
             ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
@@ -567,9 +567,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Log(x, @base);
         }
 
-        private static object Log10(List<Expression> p)
+        private static ScalarValue Log10(double x)
         {
-            return Math.Log10(p[0]);
+            if (x <= 0)
+                return XLError.NumberInvalid;
+
+            return Math.Log10(x);
         }
 
         private static object MDeterm(List<Expression> p)
