@@ -1520,17 +1520,44 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.That((double)XLWorkbook.EvaluateExpr("RANDBETWEEN(1E+100, 1E+110)"), Is.GreaterThanOrEqualTo(1E+100).And.LessThanOrEqualTo(1E+110));
         }
 
-        [Test]
-        public void Roman()
+        [TestCase(1, 0, ExpectedResult = "I")]
+        [TestCase(3046, 1, ExpectedResult = @"MMMVLI")]
+        [TestCase(3999, 1, ExpectedResult = @"MMMLMVLIV")]
+        [TestCase(999, 0, ExpectedResult = @"CMXCIX")]
+        [TestCase(999.99, 0.9, ExpectedResult = @"CMXCIX")]
+        [TestCase(999, 1, ExpectedResult = @"LMVLIV")]
+        [TestCase(999, 2, ExpectedResult = @"XMIX")]
+        [TestCase(999, 3, ExpectedResult = @"VMIV")]
+        [TestCase(999, 4, ExpectedResult = @"IM")]
+        public string Roman(double value, double form)
         {
-            object actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");
-            Assert.AreEqual("MMMXLVI", actual);
+            return (string)XLWorkbook.EvaluateExpr($"ROMAN({value}, {form})");
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Roman(270)");
-            Assert.AreEqual("CCLXX", actual);
+        [Test]
+        public void Roman_value_0_is_empty_string()
+        {
+            Assert.AreEqual(string.Empty, XLWorkbook.EvaluateExpr("ROMAN(0, 0)"));
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Roman(3999, true)");
-            Assert.AreEqual("MMMCMXCIX", actual);
+        [Test]
+        public void Roman_has_optional_second_argument_with_default_value_0()
+        {
+            Assert.AreEqual(@"CMXCIX", XLWorkbook.EvaluateExpr("ROMAN(999)"));
+        }
+
+        [Test]
+        public void Roman_form_must_be_between_0_and_4()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("ROMAN(1, -1)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("ROMAN(1, 5)"));
+        }
+
+        [Test]
+        public void Roman_value_must_be_between_0_and_3999()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("ROMAN(-1, 0)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("ROMAN(4000, 0)"));
         }
 
         [TestCase(2.15, 1, ExpectedResult = 2.2)]

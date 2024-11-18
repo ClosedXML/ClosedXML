@@ -13,6 +13,12 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private static readonly Random _rnd = new Random();
 
+        /// <summary>
+        /// Key: roman form. Value: A collection of subtract symbols and subtract value.
+        /// Collection is sorted by subtract value in descending order.
+        /// </summary>
+        private static readonly Lazy<IReadOnlyDictionary<int, IReadOnlyList<(string Symbol, int Value)>>> RomanForms = new(BuildRomanForms) ;
+
         #region Register
 
         public static void Register(FunctionRegistry ce)
@@ -67,7 +73,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("RADIANS", 1, 1, Adapt(Radians), FunctionFlags.Scalar);
             ce.RegisterFunction("RAND", 0, 0, Adapt(Rand), FunctionFlags.Scalar | FunctionFlags.Volatile);
             ce.RegisterFunction("RANDBETWEEN", 2, 2, Adapt(RandBetween), FunctionFlags.Scalar | FunctionFlags.Volatile);
-            ce.RegisterFunction("ROMAN", 1, 2, Roman);
+            ce.RegisterFunction("ROMAN", 1, 2, AdaptLastOptional(Roman, 0), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUND", 2, 2, Adapt(Round), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDDOWN", 2, 2, Adapt(RoundDown), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDUP", 2, 2, Adapt(RoundUp), FunctionFlags.Scalar);
@@ -771,16 +777,32 @@ namespace ClosedXML.Excel.CalcEngine
             return lowerBound + Math.Round(_rnd.NextDouble() * range, MidpointRounding.AwayFromZero);
         }
 
-        private static object Roman(List<Expression> p)
+        private static ScalarValue Roman(double number, double formValue)
         {
-            if (p.Count == 1
-                || (Boolean.TryParse((string)p[1], out bool boolTemp) && boolTemp)
-                || (Int32.TryParse((string)p[1], out int intTemp) && intTemp == 1))
+            if (number == 0)
+                return string.Empty;
+
+            if (number is < 0 or > 3999)
+                return XLError.IncompatibleValue;
+
+            var form = (int)Math.Truncate(formValue);
+            if (form is < 0 or > 4)
+                return XLError.IncompatibleValue;
+
+            // The result can have at most 15 chars
+            var result = new StringBuilder(15);
+            var subtractValues = RomanForms.Value[form];
+            foreach (var subtract in subtractValues)
             {
-                return XLMath.ToRoman((int)p[0]);
+                // While the number is larger than the current value, append the symbol
+                while (number >= subtract.Value)
+                {
+                    result.Append(subtract.Symbol);
+                    number -= subtract.Value;
+                }
             }
 
-            throw new ArgumentException("Can only support classic roman types.");
+            return result.ToString();
         }
 
         private static ScalarValue Round(double value, double digits)
@@ -1061,6 +1083,61 @@ namespace ClosedXML.Excel.CalcEngine
 
             var truncated = (int)(number * scaling);
             return (double)truncated / scaling;
+        }
+
+        private static Dictionary<int, IReadOnlyList<(string Symbol, int Value)>> BuildRomanForms()
+        {
+            // Roman numbers can have several forms and each one has a different set of possible values.
+            // In Excel, each successive one has more subtract values than previous one.
+            var allForms = new Dictionary<int, IReadOnlyList<(string Symbol, int Value)>>();
+            var form0 = new List<(string Symbol, int Value)>
+            {
+                ("M", 1000), ("CM", 900),
+                ("D", 500), ("CD", 400),
+                ("C", 100), ("XC", 90),
+                ("L", 50), ("XL", 40),
+                ("X", 10), ("IX", 9),
+                ("V", 5), ("IV", 4),
+                ("I", 1),
+            };
+            allForms.Add(0, form0);
+
+            var form1Additions = new (string Symbol, int Value)[]
+            {
+                ("LM", 950),
+                ("LD", 450),
+                ("VC", 95),
+                ("VL", 45),
+            };
+            var form1 = form0.Concat(form1Additions).OrderByDescending(x => x.Value).ToArray();
+            allForms.Add(1, form1);
+
+            var form2Additions = new (string Symbol, int Value)[]
+            {
+                ("XM", 990),
+                ("XD", 490),
+                ("IC", 99),
+                ("IL", 49),
+            };
+            var form2 = form1.Concat(form2Additions).OrderByDescending(x => x.Value).ToArray();
+            allForms.Add(2, form2);
+
+            var form3Additions = new (string Symbol, int Value)[]
+            {
+                ("VM", 995),
+                ("VD", 495),
+            };
+            var form3 = form2.Concat(form3Additions).OrderByDescending(x => x.Value).ToArray();
+            allForms.Add(3, form3);
+
+            var form4Additions = new (string Symbol, int Value)[]
+            {
+                ("IM", 999),
+                ("ID", 499),
+            };
+            var form4 = form3.Concat(form4Additions).OrderByDescending(x => x.Value).ToArray();
+            allForms.Add(4, form4);
+            return allForms;
         }
 
         private readonly record struct SumState(double Sum) : ITallyState<SumState>
