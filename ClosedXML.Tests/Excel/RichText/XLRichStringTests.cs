@@ -701,7 +701,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CanChangeInlinedRichText()
         {
-            void testRichText(IXLRichText richText)
+            static void AssertRichText(IXLRichText richText)
             {
                 Assert.IsNotNull(richText);
                 Assert.IsTrue(richText.Any());
@@ -715,7 +715,7 @@ namespace ClosedXML.Tests
                 using (var workbook = new XLWorkbook(inputStream))
                 {
                     var richText = workbook.Worksheets.First().Cell("A1").GetRichText();
-                    testRichText(richText);
+                    AssertRichText(richText);
                     richText.AddText(" - changed");
                     workbook.SaveAs(outputStream);
                 }
@@ -727,7 +727,7 @@ namespace ClosedXML.Tests
                     Assert.IsTrue(cell.HasRichText);
                     var rt = cell.GetRichText();
                     Assert.AreEqual("Year (range: 3 yrs) - changed", rt.ToString());
-                    testRichText(rt);
+                    AssertRichText(rt);
                 }
             }
         }
@@ -781,8 +781,12 @@ namespace ClosedXML.Tests
             richText.AddText("Hello");
             Assert.AreEqual(cell.Value, "Hello");
 
-            richText.AddText(" World");
+            var world = richText.AddText(" World");
             Assert.AreEqual(cell.Value, "Hello World");
+
+            world.Text = " World!";
+            Assert.AreEqual(cell.Value, "Hello World!");
+            Assert.AreEqual(cell.GetRichText().Text, "Hello World!");
 
             richText.ClearText();
             Assert.AreEqual(cell.Value, string.Empty);

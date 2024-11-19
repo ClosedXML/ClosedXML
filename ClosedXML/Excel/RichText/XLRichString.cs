@@ -9,16 +9,25 @@ namespace ClosedXML.Excel
         private readonly IXLWithRichString _withRichString;
         private readonly XLFont _font;
         private readonly Action _onChange;
+        private string _text;
 
         public XLRichString(String text, IXLFontBase font, IXLWithRichString withRichString, Action? onChange)
         {
-            Text = text;
+            _text = text;
             _font = new XLFont(font);
             _withRichString = withRichString;
             _onChange = onChange ?? (() => { });
         }
 
-        public String Text { get; set; }
+        public String Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                _onChange();
+            }
+        }
 
         public IXLRichString AddText(String text)
         {
@@ -235,7 +244,7 @@ namespace ClosedXML.Excel
             FontScheme = value; return this;
         }
 
-        public override bool Equals(object obj) => Equals(obj as XLRichString);
+        public override bool Equals(object? obj) => Equals(obj as XLRichString);
 
         public Boolean Equals(IXLRichString? other) => Equals(other as XLRichString);
 

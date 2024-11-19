@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         private XLPhonetics _phonetics;
         protected T Container;
 
-        public XLFormattedText(IXLFormattedText<T> defaultRichText, IXLFontBase defaultFont)
+        protected XLFormattedText(IXLFormattedText<T> defaultRichText, IXLFontBase defaultFont)
             : this(defaultFont)
         {
             foreach (var rt in defaultRichText)
@@ -28,13 +28,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLFormattedText(String text, IXLFontBase defaultFont)
+        protected XLFormattedText(String text, IXLFontBase defaultFont)
             : this(defaultFont)
         {
             AddText(text);
         }
 
-        public XLFormattedText(IXLFontBase defaultFont)
+        protected XLFormattedText(IXLFontBase defaultFont)
         {
             Length = 0;
             _defaultFont = defaultFont;
