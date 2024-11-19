@@ -316,6 +316,24 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptIndex(Func<CalcContext, AnyValue, List<int>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0 = args[0];
+                var numbers = new List<int>(args.Length - 1);
+                for (var i = 1; i < args.Length; ++i)
+                {
+                    if (!ToNumber(args[i], ctx).TryPickT0(out var number, out var error))
+                        return error;
+
+                    numbers.Add((int)number);
+                }
+
+                return f(ctx, arg0, numbers);
+            };
+        }
+
         /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method

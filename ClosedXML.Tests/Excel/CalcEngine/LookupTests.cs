@@ -321,35 +321,132 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Index()
+        public void Index_reference()
         {
-            Assert.AreEqual("Kivell", ws.Evaluate(@"=INDEX(B2:J12, 3, 4)"));
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("B2").Value = "B2";
+            sheet.Cell("B4").Value = "B4";
+            sheet.Cell("B5").Value = "B5";
+            sheet.Cell("E2").Value = "E2";
+            sheet.Cell("E4").Value = "E4";
 
-            // We don't support optional parameter fully here yet.
-            // Supposedly, if you omit e.g. the row number, then ROW() of the calling cell should be assumed
-            // Assert.AreEqual("Gill", ws.Evaluate(@"=INDEX(B2:J12, , 4)"));
+            // A single cell
+            AssertIndex("INDEX(B2:J12, 3, 4)", 1, 1, "E4");
 
-            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:I2, 4)"));
+            // Row number is omitted, so take all rows from the range. The result is a column E2:E12
+            AssertIndex("INDEX(B2:J12, 0, 4)", 11, 1, "E2");
+            AssertIndex("INDEX(B2:J12, , 4)", 11, 1, "E2");
 
-            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4)"));
-            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4, 1)"));
-            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4, )"));
+            // Column number is omitted, so take all column from the range. The result is a column B4:J4
+            AssertIndex("INDEX(B2:J12, 3, 0)", 1, 9, "B4");
+            AssertIndex("INDEX(B2:J12, 3, )", 1, 9, "B4");
 
-            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:J2, 1, 4)"));
-            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:J2, , 4)"));
+            // The range is a row and there is only one parameter. Take the index from the row.
+            AssertIndex("INDEX(B2:I2, 4)", 1, 1, "E2");
+
+            // The range is a column and there is only one parameter. Take the index from the column.
+            AssertIndex("INDEX(B2:B12, 4)", 1, 1, "B5");
+
+            // Take whole range.
+            AssertIndex("INDEX(B2:J12, 0, 0)", 11, 9, "B2");
+
+            // Select second area from multi-area reference
+            AssertIndex("INDEX((H4:J10, B2:J12, A1), 1, 1, 2)", 1, 1, "B2");
+            return;
+
+            void AssertIndex(string formula, int rows, int cols, XLCellValue value)
+            {
+                Assert.AreEqual(value, sheet.Evaluate($"INDEX({formula},1,1)"));
+                Assert.AreEqual(rows, sheet.Evaluate($"ROWS({formula})"));
+                Assert.AreEqual(cols, sheet.Evaluate($"COLUMNS({formula})"));
+                Assert.AreEqual(true, sheet.Evaluate($"ISREF({formula})"));
+            }
         }
 
         [Test]
-        public void Index_Exceptions()
+        public void Index_reference_errors()
         {
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I10, 20, 1)"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I10, 1, 10)"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 10)"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 4, 1)"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:I2, 4, )"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, 20)"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, 20, )"));
-            Assert.AreEqual(XLError.CellReference, ws.Evaluate(@"INDEX(B2:B10, , 4)"));
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+
+            // Row bounds
+            Assert.AreEqual(XLError.IncompatibleValue, sheet.Evaluate("INDEX(A1, -1, 1)"));
+            Assert.AreEqual(XLError.CellReference, sheet.Evaluate("INDEX(B3:C5, 4, 1)"));
+
+            // Column bounds
+            Assert.AreEqual(XLError.IncompatibleValue, sheet.Evaluate("INDEX(A1, 1, -1)"));
+            Assert.AreEqual(XLError.CellReference, sheet.Evaluate("INDEX(B3:C5, 1, 3)"));
+
+            // Area bounds
+            Assert.AreEqual(XLError.IncompatibleValue, sheet.Evaluate("INDEX((A1, B1, C1), 1, 1, 0)"));
+            Assert.AreEqual(XLError.CellReference, sheet.Evaluate("INDEX((A1, B1, C1),1, 1, 4)"));
+        }
+
+        [Test]
+        public void Index_array()
+        {
+            // A single element
+            AssertIndex("INDEX({1,2,3;4,5,6}, 2, 3)", 1, 1, 6);
+
+            // Row number is omitted, so take all rows from the array at third column. The result is a column {3;6}
+            AssertIndex("INDEX({1,2,3;4,5,6}, 0, 3)", 2, 1, 3);
+            AssertIndex("INDEX({1,2,3;4,5,6}, , 3)", 2, 1, 3);
+
+            // Column number is omitted, so take all columns from the array at second row. The result is a row {4,5,6}
+            AssertIndex("INDEX({1,2,3;4,5,6}, 2, 0)", 1, 3, 4);
+            AssertIndex("INDEX({1,2,3;4,5,6}, 2, )", 1, 3, 4);
+
+            // The array is a row and there is only one parameter. Take the index from the row.
+            AssertIndex("INDEX({1,2,3,4,5,6,7}, 5)", 1, 1, 5);
+
+            // The array is a column and there is only one parameter. Take the index from the column.
+            AssertIndex("INDEX({1;2;3;4;5;6;7}, 6)", 1, 1, 6);
+
+            // Take whole range.
+            AssertIndex("INDEX({1,2,3;4,5,6}, 0, 0)", 2, 3, 1);
+
+            return;
+
+            void AssertIndex(string formula, int rows, int cols, XLCellValue value)
+            {
+                Assert.AreEqual(value, XLWorkbook.EvaluateExpr(formula));
+                Assert.AreEqual(rows, XLWorkbook.EvaluateExpr($"ROWS({formula})"));
+                Assert.AreEqual(cols, XLWorkbook.EvaluateExpr($"COLUMNS({formula})"));
+                Assert.AreEqual(false, XLWorkbook.EvaluateExpr($"ISREF({formula})"));
+            }
+        }
+
+        [Test]
+        public void Index_array_errors()
+        {
+            // Row bounds
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX({1}, -1, 1)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX({1,2;3,4;5,6}, 4, 1)"));
+
+            // Column bounds
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX({1}, 1, -1)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX({1,2;3,4;5,6}, 1, 3)"));
+
+            // Area bounds
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX({1}, 1, 1, 0)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX({1}, 1, 1, 2)"));
+        }
+
+        [Test]
+        public void Index_scalar()
+        {
+            Assert.AreEqual("Text", XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, 1)"));
+            Assert.AreEqual("Text", XLWorkbook.EvaluateExpr("INDEX(\"Text\", 0, 0)"));
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("TYPE(INDEX(\"Text\", 1, 1))"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX(IF(TRUE,), 1, 1)"));
+
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX(\"Text\", -1, 1)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 2, 1)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, -1)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, 2)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, 1, 0)"));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, 1, 2)"));
         }
 
         [Test]

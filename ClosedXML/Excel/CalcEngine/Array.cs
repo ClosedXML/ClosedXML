@@ -358,4 +358,42 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override int Height => _original.Width;
     }
+
+    /// <summary>
+    /// An array that is a rectangular slice of the original array.
+    /// </summary>
+    internal class SlicedArray : Array
+    {
+        private readonly Array _original;
+        private readonly int _rowOfs;
+        private readonly int _colOfs;
+
+        /// <summary>
+        /// Create a sliced array from the original array.
+        /// </summary>
+        /// <param name="original">Original array.</param>
+        /// <param name="rowOfs">The row offset indicating the starting row of the slice in the original array.</param>
+        /// <param name="rows">The number of rows in the sliced array.</param>
+        /// <param name="colOfs">The column offset indicating the starting column of the slice in the original array.</param>
+        /// <param name="cols">The number of columns in the sliced array.</param>
+        public SlicedArray(Array original, int rowOfs, int rows, int colOfs, int cols)
+        {
+            if (rowOfs < 0 || rows < 1 || colOfs < 0 || cols < 1 ||
+                rowOfs + rows > original.Height ||
+                colOfs + cols > original.Width)
+                throw new ArgumentOutOfRangeException();
+
+            _original = original;
+            _rowOfs = rowOfs;
+            Height = rows;
+            _colOfs = colOfs;
+            Width = cols;
+        }
+
+        public override ScalarValue this[int y, int x] => _original[y + _rowOfs, x + _colOfs];
+
+        public override int Width { get; }
+
+        public override int Height { get; }
+    }
 }

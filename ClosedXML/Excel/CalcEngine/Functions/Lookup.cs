@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, AdaptLastOptional(Hlookup, true), FunctionFlags.Range, AllowRange.Only, 1); // Looks in the top row of an array and returns the value of the indicated cell
             ce.RegisterFunction("HYPERLINK", 1, 2, Adapt(Hyperlink), FunctionFlags.Scalar | FunctionFlags.SideEffect); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
-            ce.RegisterFunction("INDEX", 2, 4, Index, AllowRange.Only, 0, 1); // Uses an index to choose a value from a reference or array
+            ce.RegisterFunction("INDEX", 2, 4, AdaptIndex(Index), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.Only, 0); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
             ce.RegisterFunction("MATCH", 2, 3, Match, AllowRange.Only, 1); // Looks up values in a reference or array
@@ -120,58 +120,112 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return friendlyName?.ToAnyValue() ?? linkLocation;
         }
 
-        private static object Index(List<Expression> p)
+        public static AnyValue Index(CalcContext ctx, AnyValue value, List<int> p)
         {
-            // This is one of the few functions that is "overloaded"
-            if (!CalcEngineHelpers.TryExtractRange(p[0], out var range, out var error))
-                return error;
+            var areaNumber = p.Count > 2 ? p[2] : 1;
+            if (areaNumber < 1)
+                return XLError.IncompatibleValue;
 
-            if (range.ColumnCount() > 1 && range.RowCount() > 1)
+            if (!value.IsReference && areaNumber > 1)
+                return XLError.CellReference;
+
+            // There must be two paths, one for array and one for reference. Reference path
+            // must return reference, so it behaves correctly with implicit intersection.
+            OneOf<XLRangeAddress, Array> data;
+            if (value.TryPickScalar(out var scalar, out var collection))
             {
-                var row_num = (int)p[1];
-                var column_num = (int)p[2];
+                if (scalar.IsBlank)
+                    return XLError.IncompatibleValue;
 
-                if (row_num > range.RowCount())
-                    return XLError.CellReference;
-
-                if (column_num > range.ColumnCount())
-                    return XLError.CellReference;
-
-                return range.Row(row_num).Cell(column_num).Value;
+                data = new ScalarArray(scalar, 1, 1);
             }
-            else if (p.Count == 2)
+            else if (collection.TryPickT0(out var valueArray, out var reference))
             {
-                var cellOffset = (int)p[1];
-                if (cellOffset > range.RowCount() * range.ColumnCount())
-                    return XLError.CellReference;
-
-                return range.Cells().ElementAt(cellOffset - 1).Value;
+                data = valueArray;
             }
             else
             {
-                int column_num = 1;
-                int row_num = 1;
-
-                if (!(p[1] is EmptyValueExpression))
-                    row_num = (int)p[1];
-
-                if (!(p[2] is EmptyValueExpression))
-                    column_num = (int)p[2];
-
-                var rangeIsRow = range.RowCount() == 1;
-                if (rangeIsRow && row_num > 1)
+                if (areaNumber > reference.Areas.Count)
                     return XLError.CellReference;
 
-                if (!rangeIsRow && column_num > 1)
-                    return XLError.CellReference;
+                data = reference.Areas[areaNumber - 1];
+            }
 
-                if (row_num > range.RowCount())
-                    return XLError.CellReference;
+            var width = data.Match(static area => area.ColumnSpan, static array => array.Width);
+            var height = data.Match(static area => area.RowSpan, static array => array.Height);
 
-                if (column_num > range.ColumnCount())
-                    return XLError.CellReference;
+            var rowNumber = 0;
+            var colNumber = 0;
+            if (p.Count == 1)
+            {
+                if (width == 1)
+                    rowNumber = p[0];
 
-                return range.Row(row_num).Cell(column_num).Value;
+                if (height == 1)
+                    colNumber = p[0];
+            }
+
+            if (p.Count >= 2)
+            {
+                rowNumber = p[0];
+                colNumber = p[1];
+            }
+
+            // Check the bounded values
+            if (rowNumber < 0 || colNumber < 0)
+                return XLError.IncompatibleValue;
+
+            if (rowNumber > height || colNumber > width)
+                return XLError.CellReference;
+
+            return data.TryPickT0(out var area, out var array)
+                ? IndexArea(area, rowNumber, colNumber)
+                : IndexArray(array, rowNumber, colNumber);
+
+            static Reference IndexArea(XLRangeAddress area, int rowNumber, int colNumber)
+            {
+                // Return whole area
+                if (rowNumber == 0 && colNumber == 0)
+                    return new Reference(area);
+
+                // Return one column at colNumber
+                if (rowNumber == 0)
+                {
+                    var topCell = new XLAddress(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber + colNumber - 1, true, true);
+                    var bottomCell = new XLAddress(area.Worksheet, area.LastAddress.RowNumber, area.FirstAddress.ColumnNumber + colNumber - 1, true, true);
+                    return new Reference(new XLRangeAddress(topCell, bottomCell));
+                }
+
+                // Return one row at rowNumber
+                if (colNumber == 0)
+                {
+                    var leftCell = new XLAddress(area.Worksheet, area.FirstAddress.RowNumber + rowNumber - 1, area.FirstAddress.ColumnNumber, true, true);
+                    var rightCell = new XLAddress(area.Worksheet, area.FirstAddress.RowNumber + rowNumber - 1, area.LastAddress.ColumnNumber, true, true);
+                    return new Reference(new XLRangeAddress(leftCell, rightCell));
+                }
+
+                // Return single cell reference.
+                var areaCorner = area.FirstAddress;
+                var cellAddress = new XLAddress(area.Worksheet, areaCorner.RowNumber + rowNumber - 1, areaCorner.ColumnNumber + colNumber - 1, true, true);
+                return new Reference(new XLRangeAddress(cellAddress, cellAddress));
+            }
+
+            static AnyValue IndexArray(Array array, int rowNumber, int colNumber)
+            {
+                // Return whole array
+                if (rowNumber == 0 && colNumber == 0)
+                    return array;
+
+                // Return one column at colNumber
+                if (rowNumber == 0)
+                    return new SlicedArray(array, 0, array.Height, colNumber - 1, 1);
+
+                // Return one row at rowNumber
+                if (colNumber == 0)
+                    return new SlicedArray(array, rowNumber - 1, 1, 0, array.Width);
+
+                // Return single value
+                return array[rowNumber - 1, colNumber - 1].ToAnyValue();
             }
         }
 
