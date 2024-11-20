@@ -287,9 +287,11 @@ namespace ClosedXML.Excel
 
         public TimeSpan GetTimeSpan() => Value.GetTimeSpan();
 
-        public Boolean TryGetValue<T>(out T value)
+        public Boolean TryGetValue(Type type, out object value)
         {
             XLCellValue currentValue;
+            value = null;
+
             try
             {
                 currentValue = Value;
@@ -297,97 +299,96 @@ namespace ClosedXML.Excel
             catch
             {
                 // May fail for formula evaluation
-                value = default;
                 return false;
             }
 
-            var targetType = typeof(T);
-            var isNullable = targetType.IsNullableType();
+            bool isNullable = type.IsNullableType();
+            Type underlyingType = type.GetUnderlyingType();
+
             if (isNullable && currentValue.TryConvert(out Blank _))
             {
-                value = default;
-                return true;
-            }
-
-            // JIT compiles a separate version for each T value type and one for all reference types
-            // Optimization then removes the double casting for value types.
-            var underlyingType = targetType.GetUnderlyingType();
-            if (underlyingType == typeof(DateTime) && currentValue.TryConvert(out DateTime dateTime))
-            {
-                value = (T)(object)dateTime;
+                value = null;
                 return true;
             }
 
             var culture = CultureInfo.CurrentCulture;
+
+            if (underlyingType == typeof(DateTime) && currentValue.TryConvert(out DateTime dateTime))
+            {
+                value = dateTime;
+                return true;
+            }
+
             if (underlyingType == typeof(TimeSpan) && currentValue.TryConvert(out TimeSpan timeSpan, culture))
             {
-                value = (T)(object)timeSpan;
+                value = timeSpan;
                 return true;
             }
 
             if (underlyingType == typeof(Boolean) && currentValue.TryConvert(out Boolean boolean))
             {
-                value = (T)(object)boolean;
+                value = boolean;
                 return true;
             }
 
-            if (TryGetStringValue(out value, currentValue)) return true;
+            if (TryGetStringValue(type, out var stringValue, currentValue))
+            {
+                value = stringValue;
+                return true;
+            }
 
             if (underlyingType == typeof(XLError))
             {
                 if (currentValue.IsError)
                 {
-                    value = (T)(object)currentValue.GetError();
+                    value = currentValue.GetError();
                     return true;
                 }
 
                 return false;
             }
 
-            // Type code of an enum is a type of an integer, so do this check before numbers
             if (underlyingType.IsEnum)
             {
                 var strValue = currentValue.ToString(culture);
                 if (Enum.IsDefined(underlyingType, strValue))
                 {
-                    value = (T)Enum.Parse(underlyingType, strValue, ignoreCase: false);
+                    value = Enum.Parse(underlyingType, strValue, ignoreCase: false);
                     return true;
                 }
-                value = default;
                 return false;
             }
 
-            var typeCode = Type.GetTypeCode(underlyingType);
+            TypeCode typeCode = Type.GetTypeCode(underlyingType);
 
-            // T is a floating point numbers
+            // Floating point numbers
             if (typeCode >= TypeCode.Single && typeCode <= TypeCode.Decimal)
             {
-                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                if (!currentValue.TryConvert(out double doubleValue, culture))
                     return false;
 
-                if (typeCode == TypeCode.Single && doubleValue is < Single.MinValue or > Single.MaxValue)
-                    return false;
-
-                value = typeCode switch
+                switch (typeCode)
                 {
-                    TypeCode.Single => (T)(object)(Single)doubleValue,
-                    TypeCode.Double => (T)(object)doubleValue,
-                    TypeCode.Decimal => (T)(object)(Decimal)doubleValue,
-                    _ => throw new NotSupportedException()
-                };
-                return true;
+                    case TypeCode.Single when doubleValue >= Single.MinValue && doubleValue <= Single.MaxValue:
+                        value = (float)doubleValue;
+                        return true;
+                    case TypeCode.Double:
+                        value = doubleValue;
+                        return true;
+                    case TypeCode.Decimal when doubleValue >= (double)Decimal.MinValue && doubleValue <= (double)Decimal.MaxValue:
+                        value = (decimal)doubleValue;
+                        return true;
+                }
+                return false;
             }
 
-            // T is an integer
+            // Integer types
             if (typeCode >= TypeCode.SByte && typeCode <= TypeCode.UInt64)
             {
-                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                if (!currentValue.TryConvert(out double doubleValue, culture) || !doubleValue.Equals(Math.Truncate(doubleValue)))
                     return false;
 
-                if (!doubleValue.Equals(Math.Truncate(doubleValue)))
-                    return false;
-
-                var valueIsWithinBounds = typeCode switch
+                bool valueIsWithinBounds = typeCode switch
                 {
                     TypeCode.SByte => doubleValue >= SByte.MinValue && doubleValue <= SByte.MaxValue,
                     TypeCode.Byte => doubleValue >= Byte.MinValue && doubleValue <= Byte.MaxValue,
@@ -397,26 +398,72 @@ namespace ClosedXML.Excel
                     TypeCode.UInt32 => doubleValue >= UInt32.MinValue && doubleValue <= UInt32.MaxValue,
                     TypeCode.Int64 => doubleValue >= Int64.MinValue && doubleValue <= Int64.MaxValue,
                     TypeCode.UInt64 => doubleValue >= UInt64.MinValue && doubleValue <= UInt64.MaxValue,
-                    _ => throw new NotSupportedException()
+                    _ => false
                 };
                 if (!valueIsWithinBounds)
                     return false;
 
                 value = typeCode switch
                 {
-                    TypeCode.SByte => (T)(object)(SByte)doubleValue,
-                    TypeCode.Byte => (T)(object)(Byte)doubleValue,
-                    TypeCode.Int16 => (T)(object)(Int16)doubleValue,
-                    TypeCode.UInt16 => (T)(object)(UInt16)doubleValue,
-                    TypeCode.Int32 => (T)(object)(Int32)doubleValue,
-                    TypeCode.UInt32 => (T)(object)(UInt32)doubleValue,
-                    TypeCode.Int64 => (T)(object)(Int64)doubleValue,
-                    TypeCode.UInt64 => (T)(object)(UInt64)doubleValue,
+                    TypeCode.SByte => (sbyte)doubleValue,
+                    TypeCode.Byte => (byte)doubleValue,
+                    TypeCode.Int16 => (short)doubleValue,
+                    TypeCode.UInt16 => (ushort)doubleValue,
+                    TypeCode.Int32 => (int)doubleValue,
+                    TypeCode.UInt32 => (uint)doubleValue,
+                    TypeCode.Int64 => (long)doubleValue,
+                    TypeCode.UInt64 => (ulong)doubleValue,
                     _ => throw new NotSupportedException()
                 };
                 return true;
             }
 
+            return false;
+        }
+
+        public Boolean TryGetValue<T>(out T value)
+        {
+            value = default;
+            var result = TryGetValue(typeof(T), out object value2);
+            if (!result) value = (T)value2;
+            return result;
+        }
+
+        private static bool TryGetStringValue(Type type, out object value, XLCellValue currentValue)
+        {
+            if (type == typeof(string))
+            {
+                var s = currentValue.ToString(CultureInfo.CurrentCulture);
+                var matches = utfPattern.Matches(s);
+
+                if (matches.Count == 0)
+                {
+                    value = Convert.ChangeType(s, type);
+                    return true;
+                }
+
+                var sb = new StringBuilder();
+                var lastIndex = 0;
+
+                foreach (var match in matches.Cast<Match>())
+                {
+                    var matchString = match.Value;
+                    var matchIndex = match.Index;
+                    sb.Append(s.Substring(lastIndex, matchIndex - lastIndex));
+
+                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+
+                    lastIndex = matchIndex + matchString.Length;
+                }
+
+                if (lastIndex < s.Length)
+                    sb.Append(s.Substring(lastIndex));
+
+                value = Convert.ChangeType(sb.ToString(), type);
+                return true;
+            }
+
+            value = null;
             return false;
         }
 
@@ -457,13 +504,7 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        public T GetValue<T>()
-        {
-            if (TryGetValue(out T retVal))
-                return retVal;
-
-            throw new InvalidCastException($"Cannot convert {Address.ToStringRelative(true)}'s value to " + typeof(T));
-        }
+        public T GetValue<T>() => (T)GetValue(typeof(T));
 
         public String GetString() => Value.ToString(CultureInfo.CurrentCulture);
 
@@ -2056,6 +2097,14 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             return obj is XLCell cell && cell.Worksheet == Worksheet && cell.SheetPoint == SheetPoint;
+        }
+
+        public object GetValue(Type type)
+        {
+            if (TryGetValue(type, out object retVal))
+                return retVal;
+
+            throw new InvalidCastException($"Cannot convert {Address.ToStringRelative(true)}'s value to " + type);
         }
     }
 }

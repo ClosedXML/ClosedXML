@@ -354,9 +354,25 @@ namespace ClosedXML.Excel
         /// <inheritdoc cref="TryGetValue{T}"/>
         /// </summary>
         /// <remarks>Conversion logic is identical with <see cref="TryGetValue{T}"/>.</remarks>
+        /// <param name="type">The requested type into which will the value be converted.</param>
+        /// <param name="value">Value to store the value.</param>
+        Boolean TryGetValue(Type type, out object value);
+
+        /// <summary>
+        /// <inheritdoc cref="TryGetValue{T}"/>
+        /// </summary>
+        /// <remarks>Conversion logic is identical with <see cref="TryGetValue{T}"/>.</remarks>
         /// <typeparam name="T">The requested type into which will the value be converted.</typeparam>
         /// <exception cref="InvalidCastException">If the value can't be converted to the type of T</exception>
         T GetValue<T>();
+
+        /// <summary>
+        /// <inheritdoc cref="TryGetValue{T}"/>
+        /// </summary>
+        /// <remarks>Conversion logic is identical with <see cref="GetValue{T}"/>.</remarks>
+        /// <param name="type">The requested type into which will the value be converted.</param>
+        /// <exception cref="InvalidCastException">If the value can't be converted to the type of T</exception>
+        object GetValue(Type type);
 
         /// <summary>
         /// Return cell's value represented as a string. Doesn't use cell's formatting or style.
