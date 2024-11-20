@@ -103,7 +103,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("a*", @"zaba", false)]
         public void Matches(string pattern, string text, bool matches)
         {
-            Assert.AreEqual(matches, Wildcard.Matches(pattern.AsSpan(), text.AsSpan()));
+            Assert.AreEqual(matches, new Wildcard(pattern).Matches(text.AsSpan()));
         }
 
         private static int SearchWildcard(string text, string pattern)

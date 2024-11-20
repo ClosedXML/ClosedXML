@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
 
         internal static Boolean PreserveSpaces(this String value)
         {
-            return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(Environment.NewLine);
+            return value.StartsWith(' ') || value.EndsWith(' ') || value.AsSpan().IndexOfAny('\n', '\r', '\t') >= 0;
         }
 
         internal static String ToCamel(this String value)

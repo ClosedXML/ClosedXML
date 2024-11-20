@@ -701,7 +701,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CanChangeInlinedRichText()
         {
-            void testRichText(IXLRichText richText)
+            static void AssertRichText(IXLRichText richText)
             {
                 Assert.IsNotNull(richText);
                 Assert.IsTrue(richText.Any());
@@ -715,7 +715,7 @@ namespace ClosedXML.Tests
                 using (var workbook = new XLWorkbook(inputStream))
                 {
                     var richText = workbook.Worksheets.First().Cell("A1").GetRichText();
-                    testRichText(richText);
+                    AssertRichText(richText);
                     richText.AddText(" - changed");
                     workbook.SaveAs(outputStream);
                 }
@@ -727,7 +727,7 @@ namespace ClosedXML.Tests
                     Assert.IsTrue(cell.HasRichText);
                     var rt = cell.GetRichText();
                     Assert.AreEqual("Year (range: 3 yrs) - changed", rt.ToString());
-                    testRichText(rt);
+                    AssertRichText(rt);
                 }
             }
         }
@@ -781,8 +781,12 @@ namespace ClosedXML.Tests
             richText.AddText("Hello");
             Assert.AreEqual(cell.Value, "Hello");
 
-            richText.AddText(" World");
+            var world = richText.AddText(" World");
             Assert.AreEqual(cell.Value, "Hello World");
+
+            world.Text = " World!";
+            Assert.AreEqual(cell.Value, "Hello World!");
+            Assert.AreEqual(cell.GetRichText().Text, "Hello World!");
 
             richText.ClearText();
             Assert.AreEqual(cell.Value, string.Empty);
@@ -826,6 +830,24 @@ namespace ClosedXML.Tests
                 Assert.AreEqual(textWithSpaces, richText.First().Text);
                 Assert.AreEqual(phoneticsWithSpace, richText.Phonetics.First().Text);
             }
+        }
+
+        [Test]
+        public void Preserve_end_of_line_in_xml()
+        {
+            // When text run in a rich text contains end of line (regardless if CR, LF or CRLF),
+            // the written element must be marked with xml:space="preserve". Excel would process
+            // text differently (trim ect, see XML spec) and that means there would be a data
+            // loss (trimmed ends of line). Another problem would be phonetic runs. They use indexes
+            // to the text run, but if text would be trimmed, they might suddenly have out-of-bounds
+            // values and Excel would try to repair the workbook.
+            // The source files contains a text run with end of line at the start and end. It also
+            // contains phonetic run for the kanji in the text that would be out-of-bounds if space
+            // attribute there. The input is from Excel, output is by ClosedXML. Output must contain
+            // the space attribute.
+            TestHelper.LoadSaveAndCompare(
+                @"Other\RichText\kanji-with-new-line-input.xlsx",
+                @"Other\RichText\kanji-with-new-line-output.xlsx");
         }
     }
 }

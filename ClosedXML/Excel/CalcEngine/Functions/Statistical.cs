@@ -25,9 +25,9 @@ namespace ClosedXML.Excel.CalcEngine
             //CORREL	Returns the correlation coefficient between two data sets
             ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
-            ce.RegisterFunction("COUNTIF", 2, CountIf, AllowRange.Only, 0);
-            ce.RegisterFunction("COUNTIFS", 2, 255, CountIfs, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
+            ce.RegisterFunction("COUNTBLANK", 1, 1, Adapt(CountBlank), FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("COUNTIF", 2, 2, Adapt((Func<CalcContext, AnyValue, ScalarValue, AnyValue>)CountIf), FunctionFlags.Range, AllowRange.Only, 0);
+            ce.RegisterFunction("COUNTIFS", 2, 255, AdaptIfs(CountIfs), FunctionFlags.Range, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
             ce.RegisterFunction("DEVSQ", 1, 255, DevSq, FunctionFlags.Range, AllowRange.All); // Returns the sum of squares of deviations
@@ -192,93 +192,64 @@ namespace ClosedXML.Excel.CalcEngine
             return Count(ctx, args, TallyAll.IncludeErrors);
         }
 
-        private static object CountBlank(List<Expression> p)
+        private static AnyValue CountBlank(CalcContext ctx, AnyValue arg)
         {
-            if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
-                return XLError.NoValueAvailable;
+            if (!arg.TryPickArea(out var area, out var error))
+                return error;
 
-            var e = (XObjectExpression)p[0];
-            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
-            long nonBlankCount = 0;
-            foreach (var value in e)
-            {
-                if (!CalcEngineHelpers.ValueIsBlank(value))
-                    nonBlankCount++;
-            }
+            // To be efficient for cases like whole sheet with only few values, calculate
+            // the blank count as number of total area size without non-blank cells.
+            var nonBlankCount = ctx.GetNonBlankValues(new Reference(area))
+                .Where(static value => !value.IsBlank && !(value.IsText && value.GetText().Length == 0))
+                .LongCount();
 
-            return 0d + totalCount - nonBlankCount;
+            return area.Size - nonBlankCount;
         }
 
-        private static object CountIf(List<Expression> p)
+        private static AnyValue CountIf(CalcContext ctx, AnyValue countRange, ScalarValue selectionCriteria)
         {
-            XLCalcEngine ce = new XLCalcEngine(CultureInfo.CurrentCulture);
-            var cnt = 0.0;
-            long processedCount = 0;
-            if (p[0] is XObjectExpression ienum)
-            {
-                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
-                var criteria = p[1].Evaluate();
-                foreach (var value in ienum)
-                {
-                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
-                        cnt++;
-                    processedCount++;
-                }
+            // Excel doesn't support anything but area in the syntax, but we need to deal with it somehow.
+            if (!countRange.TryPickArea(out var countArea, out var areaError))
+                return areaError;
 
-                // Add count of empty cells outside the used range if they match criteria
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
-                    cnt += (totalCount - processedCount);
-            }
+            var tally = new TallyCriteria(static _ => 1);
+            var criteria = Criteria.Create(selectionCriteria, ctx.Culture);
+            tally.Add(countArea, criteria);
 
-            return cnt;
+            // TallyCriteria only sums up the value.
+            var result = tally.Tally(ctx, new[] { countRange }, new CountState(0));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
+
+            return state.Count;
         }
 
-        private static object CountIfs(List<Expression> p)
+        private static AnyValue CountIfs(CalcContext ctx, List<(AnyValue Range, ScalarValue Criteria)> criteriaRanges)
         {
-            // get parameters
-            var ce = new XLCalcEngine(CultureInfo.CurrentCulture);
-            long count = 0;
+            if (!criteriaRanges[0].Range.TryPickArea(out var countArea, out var areaError))
+                return areaError;
 
-            int numberOfCriteria = p.Count / 2;
-
-            long totalCount = 0;
-            // prepare criteria-parameters:
-            var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            var tally = new TallyCriteria(static _ => 1);
+            foreach (var (selectionRange, selectionCriteria) in criteriaRanges)
             {
-                var criteriaRange = (XObjectExpression)p[criteriaPair * 2];
-                var criterion = p[(criteriaPair * 2) + 1].Evaluate();
-                var criteriaRangeValues = new List<object>();
-                foreach (var value in criteriaRange)
-                {
-                    criteriaRangeValues.Add(value);
-                }
+                var criteria = Criteria.Create(selectionCriteria, ctx.Culture);
+                if (!selectionRange.TryPickArea(out var selectionArea, out var selectionAreaError))
+                    return selectionAreaError;
 
-                criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
-                    criterion,
-                    criteriaRangeValues);
+                // All areas must have same size.
+                if (countArea.RowSpan != selectionArea.RowSpan ||
+                    countArea.ColumnSpan != selectionArea.ColumnSpan)
+                    return XLError.IncompatibleValue;
 
-                if (totalCount == 0)
-                    totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
+                tally.Add(selectionArea, criteria);
             }
 
-            long processedCount = 0;
-            for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
-            {
-                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(criteriaPair.Item2[i], criteriaPair.Item1, ce)))
-                    count++;
+            // The values in the range aren't used, so just use first area
+            var result = tally.Tally(ctx, new[] { criteriaRanges[0].Range }, new CountState(0));
+            if (!result.TryPickT0(out var state, out var error))
+                return error;
 
-                processedCount++;
-            }
-
-            // Add count of empty cells outside the used range if they match criteria
-            if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteriaPair.Item1, ce)))
-            {
-                count += (totalCount - processedCount);
-            }
-
-            // done
-            return count;
+            return state.Count;
         }
 
         private static AnyValue DevSq(CalcContext ctx, Span<AnyValue> args)
@@ -450,7 +421,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue VarA(CalcContext ctx, Span<AnyValue> args)
         {
-            return Var(ctx, args,TallyAll.Default);
+            return Var(ctx, args, TallyAll.Default);
         }
 
         private static AnyValue VarP(CalcContext ctx, Span<AnyValue> args)

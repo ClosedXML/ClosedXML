@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Functions;
 using NUnit.Framework;
 
@@ -12,25 +13,40 @@ internal class CriteriaTests
     [Test]
     [SetCulture("cs-CZ")] // cs-CZ has ',' as a decimal separator (e.g. '1,2' is one point two).
     [TestCaseSource(nameof(CriteriaTestCases))]
-    public void Selection_criteria_uses_type_and_comparator_to_match_values(string selectionCriteria, XLCellValue value, bool expectedResult)
+    public void Selection_criteria_uses_type_and_comparator_to_match_values(ScalarValue selectionCriteria, XLCellValue value, bool expectedResult)
     {
         var criteria = Criteria.Create(selectionCriteria, CultureInfo.CurrentCulture);
-        Assert.AreEqual(expectedResult, criteria.Match(value));
+        var matchResult = criteria.Match(value);
+        Assert.AreEqual(expectedResult, matchResult);
+
+        // TallyCriteria skips unused (=blank) cells as an optimization (e.g. SUMIF over whole column/sheet),
+        // unless it's possible that blanks will match the criteria. Assert that when tested value matches and
+        // is blank, teh TallyCriteria will include blank cells.
+        if (matchResult && value.IsBlank)
+            Assert.True(criteria.CanBlankValueMatch);
     }
 
     public static IEnumerable<object> CriteriaTestCases
     {
         get
         {
-            // Blank without compare is interpreted as number 0
-            yield return S("", 0);
-            yield return S("", "0 0/2");
-            yield return F("", Blank.Value);
-            yield return F("", "");
-            yield return F(" ", 0);
-            yield return S(" ", " ");
+            // These test cases were checked with SUMIF function, Excel 2022, english language.
 
-            // Blank with equal op is interpreted as blank and type checked
+            // Real blank is interpreted as number 0. Criteria with a real blank value has to be
+            // passed as an argument through cell reference or SUMIF(A1:A5, IF(TRUE,), B1:B5).
+            yield return S(ScalarValue.Blank, 0);
+            yield return S(ScalarValue.Blank, "0 0/2");
+            yield return F(ScalarValue.Blank, Blank.Value);
+            yield return F(ScalarValue.Blank, "");
+
+            // Criteria of a empty string behaves matches only empty string or blank.
+            yield return S("", Blank.Value);
+            yield return S("", "");
+            yield return F("", 0);
+            yield return F(" ", "");
+            yield return F(" ", 0);
+
+            // Blank with equal op is interpreted as blank and type checked.
             yield return S("=", Blank.Value);
             yield return F("=", 0);
             yield return F("=", "0 0/2");
@@ -154,6 +170,7 @@ internal class CriteriaTests
             yield return S("<>?", "ab");
             yield return S("<>?", 1);
             yield return S("<>?", true);
+            yield return S("<>B", Blank.Value);
 
             // Text comparison are culture dependent and don't use wildcards
             // In Czech, order of letters is 'h', 'ch', 'i' (yes, there is a two grapheme letter).
@@ -204,10 +221,10 @@ internal class CriteriaTests
 
             yield break;
 
-            static object[] S(string s, XLCellValue v)
+            static object[] S(ScalarValue s, XLCellValue v)
                 => new object[] { s, v, true };
 
-            static object[] F(string s, XLCellValue v)
+            static object[] F(ScalarValue s, XLCellValue v)
                 => new object[] { s, v, false };
         }
     }

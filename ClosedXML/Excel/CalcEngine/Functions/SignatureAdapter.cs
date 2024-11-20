@@ -15,9 +15,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         // We have many functions with same signature and the adapters should be reusable. Convert parameters
         // through value converters below. We can hopefully generate them at a later date, so try to keep them similar.
 
-        public static CalcEngineFunction Adapt(Func<AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<ScalarValue> f)
         {
-            return (_, _) => f();
+            return (_, _) => f().ToAnyValue();
         }
 
         public static CalcEngineFunction AdaptCoerced(Func<Boolean, AnyValue> f)
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<double, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<double, ScalarValue> f)
         {
             return (ctx, args) =>
             {
@@ -40,11 +40,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg0Converted.TryPickT0(out var arg0, out var err0))
                     return err0;
 
-                return f(arg0);
+                return f(arg0).ToAnyValue();
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<double, double, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<double, double, ScalarValue> f)
         {
             return (ctx, args) =>
             {
@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg1Converted.TryPickT0(out var arg1, out var err1))
                     return err1;
 
-                return f(arg0, arg1);
+                return f(arg0, arg1).ToAnyValue();
             };
         }
 
@@ -154,6 +154,20 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, AnyValue, ScalarValue, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0 = args[0];
+
+                var arg1Converted = ToScalarValue(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                return f(ctx, arg0, arg1);
+            };
+        }
+
         public static CalcEngineFunction AdaptLastOptional(Func<ScalarValue, AnyValue, AnyValue, AnyValue> f, AnyValue lastDefault)
         {
             return (ctx, args) =>
@@ -165,6 +179,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var arg1 = args[1];
                 var arg2 = args.Length > 2 ? args[2] : lastDefault;
                 return f(arg0, arg1, arg2);
+            };
+        }
+
+        public static CalcEngineFunction AdaptLastOptional(Func<double, double, ScalarValue> f, double lastDefault)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToNumber(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1Converted = ToNumber(args.Length > 1 ? args[1] : lastDefault, ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                return f(arg0, arg1).ToAnyValue();
             };
         }
 
@@ -238,6 +268,51 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var arg2 = args.Length > 2 ? args[2] : AnyValue.Blank;
 
                 return f(ctx, arg0, arg1, arg2).ToAnyValue();
+            };
+        }
+
+        public static CalcEngineFunction AdaptLastOptional(Func<CalcContext, AnyValue, ScalarValue, AnyValue, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0 = args[0];
+
+                var arg1Converted = ToScalarValue(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var arg2 = args.Length > 2 ? args[2] : AnyValue.Blank;
+
+                return f(ctx, arg0, arg1, arg2);
+            };
+        }
+
+        /// <summary>
+        /// An adapter for <c>{SUM,AVERAGE}IFS</c> functions.
+        /// </summary>
+        public static CalcEngineFunction AdaptIfs(Func<CalcContext, AnyValue, List<(AnyValue Range, ScalarValue Criteria)>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var tallyRange = args[0];
+                if (!ToCriteria(ctx, args[1..]).TryPickT0(out var criteria, out var error))
+                    return error;
+
+                return f(ctx, tallyRange, criteria);
+            };
+        }
+
+        /// <summary>
+        /// An adapter for <c>COUNTIFS</c> function.
+        /// </summary>
+        public static CalcEngineFunction AdaptIfs(Func<CalcContext, List<(AnyValue Range, ScalarValue Criteria)>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                if (!ToCriteria(ctx, args).TryPickT0(out var criteria, out var error))
+                    return error;
+
+                return f(ctx, criteria);
             };
         }
 
@@ -430,6 +505,29 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return OneOf<ScalarValue, XLError>.FromT1(XLError.IncompatibleValue);
         }
 
+        private static OneOf<List<(AnyValue Range, ScalarValue Criteria)>, XLError> ToCriteria(CalcContext ctx, ReadOnlySpan<AnyValue> args)
+        {
+            var allCriteria = new List<(AnyValue Range, ScalarValue Criteria)>();
+            var pairCount = (args.Length + 1) / 2;
+            for (var i = 0; i < pairCount; ++i)
+            {
+                var rangeArgIndex = 2 * i;
+                var range = args[rangeArgIndex];
+
+                // Excel grammar requires even number of arguments. We can't
+                // do that, so use blank for missing pair value.
+                var criteriaArgIndex = rangeArgIndex + 1;
+                var criteriaArgConverted = criteriaArgIndex < args.Length
+                    ? ToScalarValue(args[criteriaArgIndex], ctx)
+                    : ScalarValue.Blank;
+                if (!criteriaArgConverted.TryPickT0(out var criteria, out var criteriaError))
+                    return criteriaError;
+
+                allCriteria.Add((range, criteria));
+            }
+
+            return allCriteria;
+        }
         #endregion
     }
 }

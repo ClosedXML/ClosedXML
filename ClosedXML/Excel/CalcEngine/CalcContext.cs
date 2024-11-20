@@ -5,6 +5,7 @@ using System.Linq;
 using ClosedXML.Excel.CalcEngine.Visitors;
 using ClosedXML.Parser;
 using System;
+using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -122,6 +123,42 @@ namespace ClosedXML.Excel.CalcEngine
                     var scalarValue = GetCellValue(sheet, point.Row, point.Column);
                     if (!scalarValue.IsBlank)
                         yield return scalarValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return all points in the <paramref name="areaReference" /> that satisfy the <paramref name="criteria" />.
+        /// </summary>
+        internal IEnumerable<XLSheetPoint> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
+        {
+            var sheet = areaReference.Worksheet ?? Worksheet;
+            var area = XLSheetRange.FromRangeAddress(areaReference);
+
+            // This is a performance optimization when user specifies a whole column
+            // in the tally function (e.g. SUMIF(A:B, "5", C:D)).
+            if (criteria.CanBlankValueMatch)
+            {
+                // Criteria can match blank cells, thus it's not possible to use optimized
+                // used enumerators and we have to check value of each cell.
+                foreach (var point in area)
+                {
+                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                    if (criteria.Match(scalarValue))
+                        yield return point;
+                }
+            }
+            else
+            {
+                // The criteria can never match blank cells. That means we can skip all blank
+                // cells entirely and use optimized used enumerators.
+                var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(area);
+                while (enumerator.MoveNext())
+                {
+                    var point = enumerator.Current;
+                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                    if (criteria.Match(scalarValue))
+                        yield return point;
                 }
             }
         }

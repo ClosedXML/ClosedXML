@@ -37,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (grads / 10.0) * 9.0;
         }
 
-        public static double ASinh(double x)
+        public static double Asinh(double x)
         {
             return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
         }
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static double ACsch(double x)
         {
-            return (ASinh(1.0 / x));
+            return (Asinh(1.0 / x));
         }
 
         public static double Sech(double x)
@@ -135,29 +135,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Math.Abs(value % 2) == 0;
         }
 
+        public static Boolean IsEven(double value)
+        {
+            // Check the number doesn't have any fractions and that it is even.
+            // Due to rounding after division, only checking for % 2 could fail
+            // for numbers really close to whole number.
+            var hasNoFraction = value % 1 == 0;
+            var isEven = value % 2 == 0;
+            return hasNoFraction && isEven;
+        }
+
         public static Boolean IsOdd(Int32 value)
         {
             return Math.Abs(value % 2) != 0;
         }
 
-        public static string ToRoman(int number)
+        public static Boolean IsOdd(double value)
         {
-            if ((number < 0) || (number > 3999)) throw new ArgumentOutOfRangeException("insert value betwheen 1 and 3999");
-            if (number < 1) return string.Empty;
-            if (number >= 1000) return "M" + ToRoman(number - 1000);
-            if (number >= 900) return "CM" + ToRoman(number - 900);
-            if (number >= 500) return "D" + ToRoman(number - 500);
-            if (number >= 400) return "CD" + ToRoman(number - 400);
-            if (number >= 100) return "C" + ToRoman(number - 100);
-            if (number >= 90) return "XC" + ToRoman(number - 90);
-            if (number >= 50) return "L" + ToRoman(number - 50);
-            if (number >= 40) return "XL" + ToRoman(number - 40);
-            if (number >= 10) return "X" + ToRoman(number - 10);
-            if (number >= 9) return "IX" + ToRoman(number - 9);
-            if (number >= 5) return "V" + ToRoman(number - 5);
-            if (number >= 4) return "IV" + ToRoman(number - 4);
-            if (number >= 1) return "I" + ToRoman(number - 1);
-            throw new ArgumentOutOfRangeException("something bad happened");
+            var hasNoFraction = value % 1 == 0;
+            var isOdd = value % 2 != 0;
+            return hasNoFraction && isOdd;
         }
 
         public static int RomanToArabic(string text)

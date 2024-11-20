@@ -199,6 +199,30 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
+        /// <summary>
+        /// Parse text to a scalar value. Generally used in formulas or autofilter.
+        /// </summary>
+        /// <param name="text">Text to parse.</param>
+        /// <param name="culture">Culture used for parsing numbers or dates.</param>
+        /// <returns>Parsed scalar value.</returns>
+        public static ScalarValue Parse(string text, CultureInfo culture)
+        {
+            if (text is null)
+                return Blank;
+            if (text == String.Empty)
+                return Blank;
+            if (StringComparer.OrdinalIgnoreCase.Equals("TRUE", text))
+                return true;
+            if (StringComparer.OrdinalIgnoreCase.Equals("FALSE", text))
+                return false;
+            if (TextToNumber(text, culture).TryPickT0(out var number, out _))
+                return number;
+            if (XLErrorParser.TryParseError(text, out var error))
+                return error;
+
+            return text;
+        }
+
         public static OneOf<double, XLError> TextToNumber(string text, CultureInfo culture)
         {
             if (string.IsNullOrWhiteSpace(text))

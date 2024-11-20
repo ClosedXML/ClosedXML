@@ -251,23 +251,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void CountBlank()
         {
-            var ws = workbook.Worksheets.First();
-            XLCellValue value;
-            value = ws.Evaluate(@"=COUNTBLANK(B:B)");
-            Assert.AreEqual(1048532, value);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Blank.Value;
+            ws.Cell("A2").Value = 0;
+            ws.Cell("A3").Value = 1;
+            ws.Cell("A4").Value = false;
+            ws.Cell("A5").Value = true;
+            ws.Cell("A6").Value = "";
+            ws.Cell("A7").Value = "Text";
+            ws.Cell("A8").Value = XLError.DivisionByZero;
 
-            value = ws.Evaluate(@"=COUNTBLANK(D43:D49)");
-            Assert.AreEqual(4, value);
+            // Blank and empty text value is counted as blank
+            Assert.AreEqual(1, ws.Evaluate("COUNTBLANK(A1)"));
+            Assert.AreEqual(string.Empty, ws.Cell("A6").Value);
+            Assert.AreEqual(1, ws.Evaluate("COUNTBLANK(A6)"));
 
-            value = ws.Evaluate(@"=COUNTBLANK(E3:E45)");
-            Assert.AreEqual(0, value);
+            // Anything else isn't counted as blank
+            Assert.AreEqual(2, ws.Evaluate("COUNTBLANK(A1:A8)"));
 
-            value = ws.Evaluate(@"=COUNTBLANK(A1)");
-            Assert.AreEqual(1, value);
+            Assert.AreEqual(17179869178d, ws.Evaluate("COUNTBLANK(A:XFD)"));
 
-            Assert.Throws<MissingContextException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
-            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
-            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
+            // Check that all others argument types. The Excel grammar doesn't allow that,
+            // so use IF workaround for that.
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,))")); // Blank
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,FALSE))")); // Logical
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,1))")); // Number
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,\"\"))")); // Text
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("COUNTBLANK(IF(TRUE,#DIV/0!))")); // Error
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("COUNTBLANK(IF(TRUE,{1}))")); // Array
         }
 
         [Test]
@@ -346,15 +358,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("=COUNTIFS(B1:D1, \"=Yes\")", 1)]
         [TestCase("=COUNTIFS(B1:B4, \"=Yes\", C1:C4, \"=Yes\")", 2)]
-        [TestCase("= COUNTIFS(B4:D4, \"=Yes\", B2:D2, \"=Yes\")", 1)]
+        [TestCase("=COUNTIFS(B4:D4, \"=Yes\", B2:D2, \"=Yes\")", 1)]
         public void CountIfs_ReferenceExample1FromExcelDocumentations(
             string formula,
             int expectedOutcome)
         {
             using (var wb = new XLWorkbook())
             {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
-
                 var ws = wb.AddWorksheet("Sheet1");
 
                 ws.Cell(1, 1).Value = "Davidoski";
@@ -410,6 +420,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var value = ws.Evaluate(formula);
             Assert.AreEqual(expectedResult, value);
+        }
+
+        [TestCase("COUNTIFS(H1:I3, 1, D1:F2, 2)")]
+        [TestCase("COUNTIFS(A:B, \"A*\", C:C, \">2\")")]
+        public void CountIfs_returns_error_when_areas_dimensions_are_different(string formula)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula));
         }
 
         [OneTimeTearDown]
@@ -949,6 +968,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
             var ws = workbook.Worksheet("MixedData");
             Assert.AreEqual(expected, ws.Evaluate(formula));
+        }
+
+        [Test]
+        public void SumIf_specification_examples()
+        {
+            // Test examples from specification.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 3;
+            ws.Cell("B1").Value = 10;
+            ws.Cell("C1").Value = 7;
+            ws.Cell("D1").Value = 10;
+
+            Assert.AreEqual(20, ws.Evaluate("SUMIF(A1:D1,\"=10\")"));
+            Assert.AreEqual(27, ws.Evaluate("SUMIF(A1:D1,\">5\")"));
+            Assert.AreEqual(10, ws.Evaluate("SUMIF(A1:D1,\"<>10\")"));
+
+            ws.Cell("A2").Value = "apples";
+            ws.Cell("B2").Value = "melons";
+            ws.Cell("C2").Value = 10;
+            ws.Cell("D2").Value = 15;
+            Assert.AreEqual(10, ws.Evaluate("SUMIF(A2:B2,\"*es\",C2:D2)"));
         }
 
         [Test]
