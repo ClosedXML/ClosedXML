@@ -334,6 +334,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptMatch(Func<CalcContext, ScalarValue, AnyValue, int, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToScalarValue(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1 = args[1];
+                var arg2Converted = args.Length > 2 ? ToNumber(args[2], ctx) : 1;
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                return f(ctx, arg0, arg1, (int)arg2).ToAnyValue();
+            };
+        }
+
         /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method

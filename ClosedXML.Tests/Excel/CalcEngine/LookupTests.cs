@@ -449,59 +449,127 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("INDEX(\"Text\", 1, 1, 2)"));
         }
 
-        [Test]
-        public void Match()
+        [TestCase(@"MATCH(""Rep"", B2:I2, 0)", 4)]
+        [TestCase(@"MATCH(""Rep"", A2:Z2, 0)", 5)]
+        [TestCase(@"MATCH(""REP"", B2:I2, 0)", 4)]
+        [TestCase(@"MATCH(95, B3:I3, 0)", 6)]
+        [TestCase(@"MATCH(DATE(2015,1,6), B3:I3, 0)", 2)]
+        [TestCase(@"MATCH(1.99, 3:3, 0)", 8)]
+        [TestCase(@"MATCH(43, B:B, 0)", 45)]
+        [TestCase(@"MATCH(""cENtraL"", D3:D45, 0)", 2)]
+        [TestCase(@"MATCH(4.99, H:H, 0)", 5)]
+        [TestCase(@"MATCH(""Rapture"", B2:I2, 1)", 2)]
+        [TestCase(@"MATCH(22.5, B3:B45, 1)", 22)]
+        [TestCase(@"MATCH(""Rep"", B2:I2)", 4)]
+        [TestCase(@"MATCH(""Rep"", B2:I2, 1)", 4)]
+        [TestCase(@"MATCH(40, G3:G6, -1)", 2)]
+        [TestCase(@"MATCH(""Rep"", B2:I5)", XLError.NoValueAvailable)]
+        [TestCase(@"MATCH(""Dummy"", B2:I2, 0)", XLError.NoValueAvailable)]
+        [TestCase(@"MATCH(4.5,B3:B45,-1)", XLError.NoValueAvailable)]
+        public void Match_demo_sheet(string formula, object result)
         {
-            Object value;
-            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 0)");
-            Assert.AreEqual(4, value);
-
-            value = ws.Evaluate(@"=MATCH(""Rep"", A2:Z2, 0)");
-            Assert.AreEqual(5, value);
-
-            value = ws.Evaluate(@"=MATCH(""REP"", B2:I2, 0)");
-            Assert.AreEqual(4, value);
-
-            value = ws.Evaluate(@"=MATCH(95, B3:I3, 0)");
-            Assert.AreEqual(6, value);
-
-            value = ws.Evaluate(@"=MATCH(DATE(2015,1,6), B3:I3, 0)");
-            Assert.AreEqual(2, value);
-
-            value = ws.Evaluate(@"=MATCH(1.99, 3:3, 0)");
-            Assert.AreEqual(8, value);
-
-            value = ws.Evaluate(@"=MATCH(43, B:B, 0)");
-            Assert.AreEqual(45, value);
-
-            value = ws.Evaluate(@"=MATCH(""cENtraL"", D3:D45, 0)");
-            Assert.AreEqual(2, value);
-
-            value = ws.Evaluate(@"=MATCH(4.99, H:H, 0)");
-            Assert.AreEqual(5, value);
-
-            value = ws.Evaluate(@"=MATCH(""Rapture"", B2:I2, 1)");
-            Assert.AreEqual(2, value);
-
-            value = ws.Evaluate(@"=MATCH(22.5, B3:B45, 1)");
-            Assert.AreEqual(22, value);
-
-            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2)");
-            Assert.AreEqual(4, value);
-
-            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 1)");
-            Assert.AreEqual(4, value);
-
-            value = ws.Evaluate(@"=MATCH(40, G3:G6, -1)");
-            Assert.AreEqual(2, value);
+            var actual = ws.Evaluate(formula);
+            Assert.AreEqual(result, actual);
         }
 
         [Test]
-        public void Match_Exceptions()
+        public void Match_examples()
         {
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
+            // Examples from specification
+            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("MATCH(39,{25,38,40,41},1)"));
+            Assert.AreEqual(4, XLWorkbook.EvaluateExpr("MATCH(41,{25,38,40,41},0)"));
+
+            // Example from office website
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("A1").InsertData(new object[]
+            {
+                ("Product", "Count"),
+                ("Bananas", 25),
+                ("Oranges", 38),
+                ("Apples", 40),
+                ("Pears", 41),
+            });
+
+            Assert.AreEqual(2, sheet.Evaluate("MATCH(39,B2:B5,1)"));
+            Assert.AreEqual(4, sheet.Evaluate("MATCH(41,B2:B5,0)"));
+            Assert.AreEqual(XLError.NoValueAvailable, sheet.Evaluate("MATCH(40,B2:B5,-1)"));
+        }
+
+        [TestCase("MATCH(5, {10,5,4,5,5,5,5,5}, -1)", 2)] // Doesn't use bisection, otherwise it would pick later position
+        [TestCase("MATCH(5, {10,4,5}, -1)", 1)] // Because 4 is less than the target, search stops. Values should be descending.
+        [TestCase("MATCH(5, {\"5\",10,\"4\",FALSE,TRUE,#DIV/0!,5,3}, -1)", 7)] // Non-target values are ignored
+        [TestCase("MATCH(6, {\"4\",10,\"4\",FALSE,TRUE,#DIV/0!,5,3}, -1)", 2)] // Returned position is of the correct type, not just before less than target.
+        [TestCase("MATCH(5, {\"5\"}, -1)", XLError.NoValueAvailable)] // String values are not converted to numbers
+        [TestCase("MATCH(5, {4}, -1)", XLError.NoValueAvailable)]
+        [TestCase("MATCH(5, {10}, -1)", 1)]
+        [TestCase("MATCH(5, {TRUE}, -1)", XLError.NoValueAvailable)]
+        [TestCase("MATCH(\"c\", {\"E\",4,\"D\",\"B\"}, -1)", 3)]
+        [TestCase("MATCH(FALSE, {TRUE,TRUE,\"FALSE\",0,FALSE,FALSE}, -1)", 5)]
+        public void Match_from_descending(string formula, object result)
+        {
+            var actual = XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(result, actual);
+        }
+
+        [TestCase("MATCH(35,{25,38,24,35,70},0)", 4)] // Finds value even in unsorted
+        [TestCase("MATCH(35,{\"35\",38,24,35,70},0)", 4)] // String values are not converted, must match type
+        [TestCase("MATCH(1,{5},0)", XLError.NoValueAvailable)] // Nothing found
+        [TestCase("MATCH(\"35\",{35,38,24,\"35\",70},0)", 4)] // String target is not converted, must match type
+        [TestCase("MATCH(\"c*\",{\"a\",\"cd\"},0)", 2)] // Consider string targets wildcards
+        [TestCase("MATCH(TRUE, {0,\"TRUE\",FALSE,TRUE,1},0)", 4)]
+        public void Match_from_unsorted(string formula, object result)
+        {
+            var actual = XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(result, actual);
+        }
+
+        [TestCase("MATCH(39,{25,38,38,38,40,41},1)", 4)] // When there is a sequence of target values, return last one
+        [TestCase("MATCH(20,{25,38,40},1)", XLError.NoValueAvailable)] // Nothing found, even smallest value is greater than target
+        [TestCase("MATCH(25,{20,TRUE,FALSE,38,40},1)", 1)] // If found value is <= target, return position of value, not subsequent types that are ignored
+        [TestCase("MATCH(8, {FALSE;FALSE}, 1)", XLError.NoValueAvailable)] // Not even one value of target type
+        [TestCase("MATCH(5, {1,2,3}, 1)", 3)] // If target value is greater than the last element of same type, return the position of the last element
+        public void Match_from_ascending(string formula, object result)
+        {
+            var actual = XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(result, actual);
+        }
+
+        [TestCase("MATCH(17, {14;5;3;5;11;12;11;13;13;4})", 10)]
+        [TestCase("MATCH(12, {5;15;18;18;11;1;15;17})", 1)]
+        [TestCase("MATCH(4, {10,3,FALSE, FALSE,FALSE})", XLError.NoValueAvailable)]
+        [TestCase("MATCH(8, {14;0;17;FALSE;8})", XLError.NoValueAvailable)]
+        public void Match_from_ascending_matches_excel(string formula, object result)
+        {
+            // The bisection algorithm should match Excel. That is checked by supplying
+            // non-ascending data and checking the result against Excel result. Use random
+            // generator to generate formulas + compare with Excel when modifying the algorithm.
+            var actual = XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(result, actual);
+        }
+
+        [TestCase("MATCH(#DIV/0!,{1,2,3},1)", XLError.DivisionByZero)] // Scalar argument is error -> propagate
+        [TestCase("MATCH(IF(TRUE,),{1,2,3},1)", XLError.NoValueAvailable)] // Return not found for blank value
+        [TestCase("MATCH(1,{1,2;3,4},1)", XLError.NoValueAvailable)] // Must be either row or column, the array is 2x2
+        [TestCase("MATCH(1,{3,2,1},-2)", 3)] // Match type can be negative for match type -1
+        [TestCase("MATCH(1,{1,2,3}, 2)", 1)] // Match type can be positive for match type 1
+        [TestCase("MATCH(2,{1;2;3}, 2)", 2)] // Match returns position from start both in row or column
+        [TestCase("MATCH(2,{1,2,3}, 2)", 2)] // Match returns position from start both in row or column
+        [TestCase("MATCH(3,{1,2,3,4,5})", 3)] // Default match type is 1 (ascending bisection)
+        [TestCase("MATCH(3,3)", XLError.NoValueAvailable)] // Scalar values are not converted to 1x1 array
+        public void Match_edge_conditions(string formula, object result)
+        {
+            var actual = XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(result, actual);
+        }
+
+        [Test]
+        public void Match_accepts_single_cell_as_values()
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+            sheet.Cell("A1").Value = 5;
+            Assert.AreEqual(1, sheet.Evaluate("MATCH(5, A1)"));
         }
 
         [Test]

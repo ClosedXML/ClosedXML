@@ -192,6 +192,24 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
+        /// Return array from a single area reference or array. If value is scalar, return false.
+        /// </summary>
+        public bool TryPickCollectionArray(out Array array, CalcContext ctx)
+        {
+            if (TryPickArea(out var areaAddress, out _))
+            {
+                array = new ReferenceArray(areaAddress, ctx);
+                return true;
+            }
+
+            if (TryPickArray(out array))
+                return true;
+
+            array = null;
+            return false;
+        }
+
+        /// <summary>
         /// <para>
         /// Try to get a value more in line with an array formula semantic. The output is always
         /// either single value or an array.
