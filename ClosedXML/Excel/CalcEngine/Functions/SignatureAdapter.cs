@@ -403,7 +403,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                     arg3 = new ScalarArray(number, 1, 1);
                 }
-;
+
                 return f(ctx, arg0, arg1, arg2, arg3).ToAnyValue();
             };
         }

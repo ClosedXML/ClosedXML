@@ -849,6 +849,7 @@ namespace ClosedXML.Excel.CalcEngine
             var i = 0;
             foreach (var coefScalar in coefficients)
             {
+                ctx.ThrowIfCancelled();
                 if (!coefScalar.TryPickNumberOrBlank(out var coef, out var error))
                     return error;
 

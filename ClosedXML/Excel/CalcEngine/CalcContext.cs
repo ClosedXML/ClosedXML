@@ -5,6 +5,7 @@ using System.Linq;
 using ClosedXML.Excel.CalcEngine.Visitors;
 using ClosedXML.Parser;
 using System;
+using System.Threading;
 using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -73,6 +74,16 @@ namespace ClosedXML.Excel.CalcEngine
         public uint? RecalculateSheetId { get; set; }
 
         internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
+
+        internal CancellationToken CancellationToken { get; init; } = CancellationToken.None;
+
+        /// <summary>
+        /// A helper method to check is user cancelled the calculation in function loops.
+        /// </summary>
+        internal void ThrowIfCancelled()
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+        }
 
         internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
         {
