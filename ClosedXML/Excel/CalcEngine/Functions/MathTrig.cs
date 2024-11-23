@@ -78,7 +78,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUNDDOWN", 2, 2, Adapt(RoundDown), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDUP", 2, 2, Adapt(RoundUp), FunctionFlags.Scalar);
             ce.RegisterFunction("SEC", 1, Sec);
-            ce.RegisterFunction("SECH", 1, Sech);
+            ce.RegisterFunction("SECH", 1, 1, Adapt(Sech), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("SERIESSUM", 4, 4, AdaptSeriesSum(SeriesSum), FunctionFlags.Range, AllowRange.Only, 3);
             ce.RegisterFunction("SIGN", 1, 1, Adapt(Sign), FunctionFlags.Scalar);
             ce.RegisterFunction("SIN", 1, 1, Adapt(Sin), FunctionFlags.Scalar);
@@ -838,9 +838,9 @@ namespace ClosedXML.Excel.CalcEngine
                 return XLError.IncompatibleValue;
         }
 
-        private static object Sech(List<Expression> p)
+        private static ScalarValue Sech(double radians)
         {
-            return 1.0 / Math.Cosh(p[0]);
+            return 1.0 / Math.Cosh(radians);
         }
 
         private static ScalarValue SeriesSum(CalcContext ctx, double input, double initial, double step, Array coefficients)

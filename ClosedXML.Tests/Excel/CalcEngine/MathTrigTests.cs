@@ -1723,19 +1723,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-2, 0.265802229)]
         [TestCase(-1, 0.648054274)]
         [TestCase(0, 1)]
-        public void Sech_ReturnsCorrectNumber(double input, double expectedOutput)
+        [TestCase(1E+100, 0)]
+        [TestCase(1E-100, 1)]
+        public void Sech_ReturnsCorrectNumber(double radians, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"SECH({0})",
-                    input.ToString(CultureInfo.InvariantCulture)));
+            var result = (double)XLWorkbook.EvaluateExpr($"SECH({radians})");
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"SECH({0})",
-                    (-input).ToString(CultureInfo.InvariantCulture)));
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr($"SECH({-radians})");
             Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
         }
 
