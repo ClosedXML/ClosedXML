@@ -1624,6 +1624,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"SIN({arg})");
         }
 
+        [TestCase("0", 0)]
+        [TestCase("1", 1.1752011936438014)]
+        [TestCase("10", 11013.232874703393)]
+        [TestCase("100", 1.3440585709080678E+43)]
+        [TestCase("100", 1.3440585709080678E+43)]
+        [TestCase("711", XLError.NumberInvalid)]
+        [TestCase("-711", XLError.NumberInvalid)]
+        public void Sinh(string arg, object result)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"SINH({arg})");
+            Assert.AreEqual(result, actual);
+        }
+
         [TestCase(0, 1)]
         [TestCase(0.3, 1.0467516)]
         [TestCase(0.6, 1.21162831)]
