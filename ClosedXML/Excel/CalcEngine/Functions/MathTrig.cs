@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// Key: roman form. Value: A collection of subtract symbols and subtract value.
         /// Collection is sorted by subtract value in descending order.
         /// </summary>
-        private static readonly Lazy<IReadOnlyDictionary<int, IReadOnlyList<(string Symbol, int Value)>>> RomanForms = new(BuildRomanForms) ;
+        private static readonly Lazy<IReadOnlyDictionary<int, IReadOnlyList<(string Symbol, int Value)>>> RomanForms = new(BuildRomanForms);
 
         #region Register
 
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATAN2", 2, 2, Adapt(Atan2), FunctionFlags.Scalar);
             ce.RegisterFunction("ATANH", 1, 1, Adapt(Atanh), FunctionFlags.Scalar);
             ce.RegisterFunction("BASE", 2, 3, Base);
-            ce.RegisterFunction("CEILING", 2, Ceiling);
+            ce.RegisterFunction("CEILING", 2, 2, Adapt(Ceiling), FunctionFlags.Scalar);
             ce.RegisterFunction("CEILING.MATH", 1, 3, AdaptLastTwoOptional(CeilingMath, 1, 0), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
             ce.RegisterFunction("COMBINA", 2, CombinA);
@@ -266,34 +266,34 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
 
-        private static object Ceiling(List<Expression> p)
+        private static ScalarValue Ceiling(double number, double significance)
         {
-            double number = p[0];
-            double significance = p[1];
-
             if (significance == 0)
-                return 0d;
-            else if (significance < 0 && number > 0)
-                return XLError.NumberInvalid;
-            else if (significance < 0)
-                return -Math.Ceiling(-number / -significance) * -significance;
-            else
-                return Math.Ceiling(number / significance) * significance;
-        }
-
-        private static ScalarValue CeilingMath(double number, double step, double mode)
-        {
-            if (step == 0)
                 return 0;
 
-            step = Math.Abs(step);
+            if (significance < 0 && number > 0)
+                return XLError.NumberInvalid;
 
-            // Mode 1 basically mimics behavior of CEILING function,
-            // i.e. ceil away from zero even for negative numbers.
+            if (number < 0)
+                return -Math.Ceiling(-number / -significance) * -significance;
+
+            return Math.Ceiling(number / significance) * significance;
+        }
+
+        private static ScalarValue CeilingMath(double number, double significance, double mode)
+        {
+            if (significance == 0)
+                return 0;
+
+            significance = Math.Abs(significance);
+
+            // Mode 1 very similar to behavior of CEILING function, i.e. ceil
+            // away from zero even for negative numbers. Mode 1 is not the same
+            // as CEILING, e.g. CEILING(5.5, -2.1) vs CEILING.MATH(5.5, -2.1, 1)).
             if (number < 0 && mode != 0)
-                return Math.Floor(number / step) * step;
+                return Math.Floor(number / significance) * significance;
 
-            return Math.Ceiling(number / step) * step;
+            return Math.Ceiling(number / significance) * significance;
         }
 
         private static ScalarValue Combin(double number, double numberChosen)

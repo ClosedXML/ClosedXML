@@ -445,16 +445,24 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 2.1, -4.2)]
         [TestCase(-5.5, -2.1, -6.3)]
         [TestCase(-5.5, 0, 0)]
+        [TestCase(0, 0, 0)]
+        [TestCase(0, 0.1, 0)]
+        [TestCase(0, -0.1, 0)]
+        [TestCase(0.1, 0, 0)]
+        [TestCase(-0.1, 0, 0)]
         public void Ceiling(double input, double significance, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})");
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
         [TestCase(6.7, -1)]
-        public void Ceiling_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
+        [TestCase(0.1, -0.2)]
+        public void Ceiling_returns_error_on_different_number_and_significance(double input, double significance)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            // Spec says "if x and significance have different signs, #NUM! is returned.",
+            // but in reality it only happens when number is positive and step negative.
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})"));
         }
 
         [TestCase(24.3, 5, null, 25)]
@@ -480,13 +488,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 2.1, 10, -6.3)]
         [TestCase(-5.5, -2.1, 10, -6.3)]
         [TestCase(-5.5, 0, 10, 0)]
-        public void CeilingMath(double input, double? step, double? mode, double expectedResult)
+        public void CeilingMath(double input, double? significance, double? mode, double expectedResult)
         {
             var parameters = new StringBuilder();
             parameters.Append(input);
-            if (step != null)
+            if (significance != null)
             {
-                parameters.Append(", ").Append(step);
+                parameters.Append(", ").Append(significance);
                 if (mode != null)
                     parameters.Append(", ").Append(mode);
             }
