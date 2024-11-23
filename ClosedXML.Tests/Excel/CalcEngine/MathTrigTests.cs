@@ -2483,13 +2483,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMSQ(A1)"));
         }
 
-        [Test]
-        public void Trunc()
+        [TestCase(27.64799257, null, 27)]
+        [TestCase(0, null, 0)]
+        [TestCase(0, 0, 0)]
+        [TestCase(3.1415926, 0, 3)]
+        [TestCase(3.1415926, 1, 3.1)]
+        [TestCase(3.1415926, 3, 3.141)]
+        [TestCase(3.1415926, 5, 3.14159)]
+        [TestCase(-4.3, 0, -4)]
+        [TestCase(8.9, null, 8)]
+        [TestCase(-8.9, null, -8)]
+        [TestCase(0.45, null, 0)]
+        public void Trunc(double number, double? digits, object expectedResult)
         {
-            var input = 27.64799257;
-            var expectedResult = 27;
-            var actual = (double)XLWorkbook.EvaluateExpr($"TRUNC({input.ToString(CultureInfo.InvariantCulture)})");
-            Assert.AreEqual(expectedResult, actual);
+            var formula = digits is null ? $"TRUNC({number})" : $"TRUNC({number}, {digits})";
+            Assert.AreEqual(expectedResult, (double)XLWorkbook.EvaluateExpr(formula));
         }
 
         [TestCase(27.64799257, -1, 20)]
