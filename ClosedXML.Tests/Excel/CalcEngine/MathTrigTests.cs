@@ -1717,6 +1717,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
         }
 
+        [TestCase(0, 0)]
+        [TestCase(1, 1)]
+        [TestCase(2, 1.4142135624)]
+        [TestCase(1E+300, 1E+150)]
+        public void Sqrt(double x, double result)
+        {
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"SQRT({x})"), tolerance);
+        }
+
+        [TestCase(-1)]
+        [TestCase(-0.0001)]
+        public void Sqrt_returns_invalid_number_for_negative_numbers(double x)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"SQRT({x})"));
+        }
+
         [Test]
         public void SqrtPi()
         {
