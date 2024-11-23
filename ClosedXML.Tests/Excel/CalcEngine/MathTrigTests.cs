@@ -1612,6 +1612,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("0", ExpectedResult = 0)]
+        [TestCase("10.5", ExpectedResult = 1)]
+        [TestCase("-5.4", ExpectedResult = -1)]
+        [TestCase("-0.00001", ExpectedResult = -1)]
+        [TestCase("-1E+300", ExpectedResult = -1)]
+        [TestCase("\"0 1/2\"", ExpectedResult = 1)]
+        [TestCase("FALSE", ExpectedResult = 0)]
+        [TestCase("TRUE", ExpectedResult = 1)]
+        public double Sign(string arg)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"SIGN({arg})");
+        }
+
+        [TestCase("0", ExpectedResult = 0)]
         [TestCase("1", ExpectedResult = 0.8414709848078965)]
         [TestCase("-1", ExpectedResult = -0.8414709848078965)]
         [TestCase("PI()", ExpectedResult = 0)]
