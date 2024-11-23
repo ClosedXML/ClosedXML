@@ -42,16 +42,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.1", actual);
         }
 
-        [Test]
-        public void Exact()
+        [TestCase("A", "A", true)]
+        [TestCase("A", "a", false)]
+        [TestCase("", "", true)]
+        public void Exact(string lhs, string rhs, bool result)
         {
-            Object actual;
+            var actual = XLWorkbook.EvaluateExpr($"EXACT(\"{lhs}\", \"{rhs}\")");
+            Assert.AreEqual(result, actual);
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Exact(\"A\", \"A\")");
-            Assert.AreEqual(true, actual);
+        [Test]
+        public void Exact_converts_values_to_text()
+        {
+            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("EXACT(TRUE, \"true\")"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(TRUE, \"TRUE\")"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(1, \"1\")"));
+            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(IF(TRUE,), \"\")"));
 
-            actual = XLWorkbook.EvaluateExpr("Exact(\"A\", \"a\")");
-            Assert.AreEqual(false, actual);
+            // Check blank cell
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(true, ws.Evaluate("EXACT(A1, \"\")"));
+        }
+
+        [Test]
+        public void Exact_propagates_errors()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("EXACT(#DIV/0!, \"A\")"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("EXACT(\"A\", #DIV/0!)"));
         }
 
         [Test]

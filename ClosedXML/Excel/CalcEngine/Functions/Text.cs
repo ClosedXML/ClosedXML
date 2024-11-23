@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
             // LEGACY: Remove after switch to new engine. CONCATENATE function doesn't actually accept ranges, but it's legacy implementation has a check and there is a test.
             ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate, AllowRange.All); //	Joins several text items into one text item
             ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
-            ce.RegisterFunction("EXACT", 2, Exact); // Checks to see if two text values are identical
+            ce.RegisterFunction("EXACT", 2, 2, Adapt(Exact), FunctionFlags.Scalar); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
             ce.RegisterFunction("FIXED", 1, 3, Fixed); // Formats a number as text with a fixed number of decimals
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
@@ -475,12 +475,9 @@ namespace ClosedXML.Excel.CalcEngine
             return value.ToString("C" + dec);
         }
 
-        private static object Exact(List<Expression> p)
+        private static ScalarValue Exact(string lhs, string rhs)
         {
-            var t1 = (string)p[0];
-            var t2 = (string)p[1];
-
-            return t1 == t2;
+            return lhs == rhs;
         }
 
         private static object Fixed(List<Expression> p)
