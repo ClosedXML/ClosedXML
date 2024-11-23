@@ -81,7 +81,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SECH", 1, Sech);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum, AllowRange.Only, 3);
             ce.RegisterFunction("SIGN", 1, Sign);
-            ce.RegisterFunction("SIN", 1, Sin);
+            ce.RegisterFunction("SIN", 1, 1, Adapt(Sin), FunctionFlags.Scalar);
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, 1, Adapt(Sqrt), FunctionFlags.Scalar);
             ce.RegisterFunction("SQRTPI", 1, 1, Adapt(SqrtPi), FunctionFlags.Scalar);
@@ -871,9 +871,9 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sign(p[0]);
         }
 
-        private static object Sin(List<Expression> p)
+        private static ScalarValue Sin(double radians)
         {
-            return Math.Sin(p[0]);
+            return Math.Sin(radians);
         }
 
         private static object Sinh(List<Expression> p)

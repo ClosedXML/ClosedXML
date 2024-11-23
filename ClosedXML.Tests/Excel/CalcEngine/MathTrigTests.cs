@@ -1611,6 +1611,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"ROUNDUP({number}, {digits})");
         }
 
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("1", ExpectedResult = 0.8414709848078965)]
+        [TestCase("-1", ExpectedResult = -0.8414709848078965)]
+        [TestCase("PI()", ExpectedResult = 0)]
+        [TestCase("PI()/2", ExpectedResult = 1)]
+        [TestCase("30*PI()/180", ExpectedResult = 0.5)]
+        [TestCase("RADIANS(30)", ExpectedResult = 0.5)]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public double Sin(string arg)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"SIN({arg})");
+        }
+
         [TestCase(0, 1)]
         [TestCase(0.3, 1.0467516)]
         [TestCase(0.6, 1.21162831)]
