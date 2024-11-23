@@ -1691,26 +1691,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(11.4, 2.541355049)]
         [TestCase(45, 1.90359)]
         [TestCase(30, 6.48292)]
-        public void Sec_ReturnsCorrectNumber(double input, double expectedOutput)
+        public void Sec_returns_correct_number(double angle, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"SEC({0})",
-                    input.ToString(CultureInfo.InvariantCulture)));
+            var result = (double)XLWorkbook.EvaluateExpr($"SEC({angle})");
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"SEC({0})",
-                    (-input).ToString(CultureInfo.InvariantCulture)));
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr($"SEC({-angle})");
             Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
-        }
-
-        [Test]
-        public void Sec_ThrowsCellValueExceptionOnNonNumericValue()
-        {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"SEC(""number"")"));
         }
 
         [TestCase(-9, 0.00024682)]
@@ -1725,13 +1713,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(0, 1)]
         [TestCase(1E+100, 0)]
         [TestCase(1E-100, 1)]
-        public void Sech_ReturnsCorrectNumber(double radians, double expectedOutput)
+        public void Sech_returns_correct_number(double angle, double expectedOutput)
         {
-            var result = (double)XLWorkbook.EvaluateExpr($"SECH({radians})");
+            var result = (double)XLWorkbook.EvaluateExpr($"SECH({angle})");
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            var resultForNegative = (double)XLWorkbook.EvaluateExpr($"SECH({-radians})");
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr($"SECH({-angle})");
             Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
         }
 

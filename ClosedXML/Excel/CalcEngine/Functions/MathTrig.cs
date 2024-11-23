@@ -77,7 +77,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUND", 2, 2, Adapt(Round), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDDOWN", 2, 2, Adapt(RoundDown), FunctionFlags.Scalar);
             ce.RegisterFunction("ROUNDUP", 2, 2, Adapt(RoundUp), FunctionFlags.Scalar);
-            ce.RegisterFunction("SEC", 1, Sec);
+            ce.RegisterFunction("SEC", 1, 1, Adapt(Sec), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("SECH", 1, 1, Adapt(Sech), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("SERIESSUM", 4, 4, AdaptSeriesSum(SeriesSum), FunctionFlags.Range, AllowRange.Only, 3);
             ce.RegisterFunction("SIGN", 1, 1, Adapt(Sign), FunctionFlags.Scalar);
@@ -830,17 +830,17 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Floor(value * coef) / coef;
         }
 
-        private static object Sec(List<Expression> p)
+        private static ScalarValue Sec(double angle)
         {
-            if (double.TryParse(p[0], out double number))
-                return 1.0 / Math.Cos(number);
-            else
-                return XLError.IncompatibleValue;
+            // Cos is actually never 0, because PI/2 can't be represented
+            // as a double. It's just a really small number and the result
+            // is thus never infinity.
+            return 1.0 / Math.Cos(angle);
         }
 
-        private static ScalarValue Sech(double radians)
+        private static ScalarValue Sech(double angle)
         {
-            return 1.0 / Math.Cosh(radians);
+            return 1.0 / Math.Cosh(angle);
         }
 
         private static ScalarValue SeriesSum(CalcContext ctx, double input, double initial, double step, Array coefficients)
