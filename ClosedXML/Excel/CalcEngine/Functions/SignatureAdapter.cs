@@ -367,6 +367,47 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptSeriesSum(Func<CalcContext, double, double, double, Array, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                // SERIESSUM doesn't convert logical values to number...
+                if (args[0].IsLogical)
+                    return XLError.IncompatibleValue;
+
+                var arg0Converted = ToNumber(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                if (args[1].IsLogical)
+                    return XLError.IncompatibleValue;
+
+                var arg1Converted = ToNumber(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                if (args[2].IsLogical)
+                    return XLError.IncompatibleValue;
+
+                var arg2Converted = ToNumber(args[2], ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                if (args[3].TryPickSingleOrMultiValue(out var scalar, out var arg3, ctx))
+                {
+                    if (scalar.IsLogical)
+                        return XLError.IncompatibleValue;
+
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    arg3 = new ScalarArray(number, 1, 1);
+                }
+;
+                return f(ctx, arg0, arg1, arg2, arg3).ToAnyValue();
+            };
+        }
+
         /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method

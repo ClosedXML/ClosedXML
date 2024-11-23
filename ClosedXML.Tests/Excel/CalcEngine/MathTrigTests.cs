@@ -1727,12 +1727,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
         public void SeriesSum()
         {
             Assert.AreEqual(40.0, XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)"));
 
-            var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A2").FormulaA1 = "PI()/4";
             ws.Cell("A3").Value = 1;
             ws.Cell("A4").FormulaA1 = "-1/FACT(2)";
@@ -1740,7 +1741,58 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A6").FormulaA1 = "-1/FACT(6)";
 
             var actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
-            Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
+            Assert.AreEqual(0.70710321482284566, actual);
+        }
+
+        [TestCase("{1,2,3;4,5,6}")]
+        [TestCase("{1,2,3,4,5,6}")]
+        [TestCase("{1,2;3,4;5,6}")]
+        public void SeriesSum_takes_coefficients_row_by_row_left_to_right(string array)
+        {
+            Assert.AreEqual(1284, XLWorkbook.EvaluateExpr($"SERIESSUM(2,2,1,{array})"));
+        }
+
+        [Test]
+        public void SeriesSum_returns_invalid_number_error_when_result_is_too_large()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[] { 1, 2, 3, 4, 5 });
+            Assert.AreEqual(3E+300, ws.Evaluate("SERIESSUM(10,100,100,A1:A3)"));
+            Assert.AreEqual(XLError.NumberInvalid, ws.Evaluate("SERIESSUM(10,100,100,A1:A4)"));
+        }
+
+        [Test]
+        public void SeriesSum_coercion()
+        {
+            // For some weird reason, SERIESSUM doesn't convert logical
+            foreach (var invalidValue in new[] { "\"\"", "TRUE" })
+            {
+                Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"SERIESSUM({invalidValue},1,1,1)"));
+                Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"SERIESSUM(1,{invalidValue},1,1)"));
+                Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"SERIESSUM(1,1,{invalidValue},1)"));
+                Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"SERIESSUM(1,1,1,{invalidValue})"));
+            }
+
+            // Blank and text values are coerced to a number
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            foreach (var validArg in new[] { "A1", "\"0 0/2\"" })
+            {
+                Assert.AreEqual(0, ws.Evaluate($"SERIESSUM({validArg},1,1,1)"));
+                Assert.AreEqual(1, ws.Evaluate($"SERIESSUM(1,{validArg},1,1)"));
+                Assert.AreEqual(1, ws.Evaluate($"SERIESSUM(1,1,{validArg},1)"));
+            }
+
+            // Text is not converted in an area and causes conversion error
+            ws.Cell("B2").Value = "0";
+            ws.Cell("B3").Value = 5;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("SERIESSUM(1,1,1,B2:B3)"));
+
+            // Blank is interpreted as 0
+            ws.Cell("C1").Value = Blank.Value;
+            ws.Cell("C2").Value = 2;
+            Assert.AreEqual(2, ws.Evaluate("SERIESSUM(1,1,1,C1:C2)"));
         }
 
         [TestCase(0, 0)]

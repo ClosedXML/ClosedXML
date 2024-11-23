@@ -79,7 +79,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUNDUP", 2, 2, Adapt(RoundUp), FunctionFlags.Scalar);
             ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SECH", 1, Sech);
-            ce.RegisterFunction("SERIESSUM", 4, SeriesSum, AllowRange.Only, 3);
+            ce.RegisterFunction("SERIESSUM", 4, 4, AdaptSeriesSum(SeriesSum), FunctionFlags.Range, AllowRange.Only, 3);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, 1, Adapt(Sin), FunctionFlags.Scalar);
             ce.RegisterFunction("SINH", 1, 1, Adapt(Sinh), FunctionFlags.Scalar);
@@ -843,27 +843,23 @@ namespace ClosedXML.Excel.CalcEngine
             return 1.0 / Math.Cosh(p[0]);
         }
 
-        private static object SeriesSum(List<Expression> p)
+        private static ScalarValue SeriesSum(CalcContext ctx, double input, double initial, double step, Array coefficients)
         {
-            var x = (Double)p[0];
-            var n = (Double)p[1];
-            var m = (Double)p[2];
-            if (p[3] is XObjectExpression obj)
+            var total = 0d;
+            var i = 0;
+            foreach (var coefScalar in coefficients)
             {
-                Double total = 0;
-                Int32 i = 0;
-                foreach (var e in obj)
-                {
-                    total += (double)e * Math.Pow(x, n + i * m);
-                    i++;
-                }
+                if (!coefScalar.TryPickNumberOrBlank(out var coef, out var error))
+                    return error;
 
-                return total;
+                total += coef * Math.Pow(input, initial + i * step);
+                if (double.IsInfinity(total))
+                    return XLError.NumberInvalid;
+
+                i++;
             }
-            else
-            {
-                return p[3] * Math.Pow(x, n);
-            }
+
+            return total;
         }
 
         private static object Sign(List<Expression> p)

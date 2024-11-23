@@ -352,6 +352,32 @@ namespace ClosedXML.Excel.CalcEngine
             return false;
         }
 
+        /// <summary>
+        /// Try to pick a number (interpret blank as number 0).
+        /// </summary>
+        public bool TryPickNumberOrBlank(out double number, out XLError error)
+        {
+            if (_index == NumberValue)
+            {
+                number = _number;
+                error = default;
+                return true;
+            }
+
+            // This is mostly useful for unified approach area + array. Literal array
+            // can't contain blanks, but area can. In most cases, blank is interpreted as 0.
+            if (_index == BlankValue)
+            {
+                number = 0;
+                error = default;
+                return true;
+            }
+
+            number = default;
+            error = IsError ? _error : XLError.IncompatibleValue;
+            return false;
+        }
+
         public bool TryPickText(out string text, out XLError error)
         {
             if (_index == TextValue)
