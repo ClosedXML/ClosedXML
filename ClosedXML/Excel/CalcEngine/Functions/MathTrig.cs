@@ -95,7 +95,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
             //ce.RegisterFunction("SUMXMY2", SumXMY2, 1);
             ce.RegisterFunction("TAN", 1, 1, Adapt(Tan), FunctionFlags.Scalar);
-            ce.RegisterFunction("TANH", 1, Tanh);
+            ce.RegisterFunction("TANH", 1, 1, Adapt(Tanh), FunctionFlags.Scalar);
             ce.RegisterFunction("TRUNC", 1, 2, AdaptLastOptional(Trunc, 0), FunctionFlags.Scalar);
         }
 
@@ -1068,9 +1068,9 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Tan(radians);
         }
 
-        private static object Tanh(List<Expression> p)
+        private static ScalarValue Tanh(double number)
         {
-            return Math.Tanh(p[0]);
+            return Math.Tanh(number);
         }
 
         private static ScalarValue Trunc(double number, double digits)

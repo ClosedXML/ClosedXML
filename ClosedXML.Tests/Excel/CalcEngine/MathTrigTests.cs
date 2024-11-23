@@ -2502,6 +2502,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"TAN({radians})"));
         }
 
+        [TestCase(-1, -0.761594156)]
+        [TestCase(0, 0)]
+        [TestCase(1, 0.761594156)]
+        [TestCase(1E+300, 1)]
+        [TestCase(-1E+300, -1)]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void Tanh(double number, double result)
+        {
+            Assert.AreEqual(result, (double)XLWorkbook.EvaluateExpr($"TANH({number})"));
+        }
+
         [TestCase(27.64799257, null, 27)]
         [TestCase(0, null, 0)]
         [TestCase(0, 0, 0)]
