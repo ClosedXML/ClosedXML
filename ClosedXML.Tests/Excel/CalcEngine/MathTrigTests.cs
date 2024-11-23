@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -459,6 +460,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(24.3, 5, null, 25)]
         [TestCase(6.7, null, null, 7)]
         [TestCase(-8.1, 2, null, -8)]
+        [TestCase(-5.5, 2, -1, -6)]
+        [TestCase(-5.5, 2, -0.1, -6)]
         [TestCase(5.5, 2.1, 0, 6.3)]
         [TestCase(5.5, -2.1, 0, 6.3)]
         [TestCase(5.5, 0, 0, 0)]
@@ -477,14 +480,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 2.1, 10, -6.3)]
         [TestCase(-5.5, -2.1, 10, -6.3)]
         [TestCase(-5.5, 0, 10, 0)]
-        public void CeilingMath(double input, double? step, int? mode, double expectedResult)
+        public void CeilingMath(double input, double? step, double? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            var parameters = new StringBuilder();
+            parameters.Append(input);
             if (step != null)
             {
-                parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
+                parameters.Append(", ").Append(step);
                 if (mode != null)
-                    parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                    parameters.Append(", ").Append(mode);
             }
 
             var actual = (double)XLWorkbook.EvaluateExpr($"CEILING.MATH({parameters})");

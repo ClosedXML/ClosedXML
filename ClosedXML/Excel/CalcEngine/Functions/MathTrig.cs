@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATANH", 1, 1, Adapt(Atanh), FunctionFlags.Scalar);
             ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 2, Ceiling);
-            ce.RegisterFunction("CEILING.MATH", 1, 3, CeilingMath);
+            ce.RegisterFunction("CEILING.MATH", 1, 3, AdaptLastTwoOptional(CeilingMath, 1, 0), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
             ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, 1, Adapt(Cos), FunctionFlags.Scalar);
@@ -281,23 +281,19 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Ceiling(number / significance) * significance;
         }
 
-        private static object CeilingMath(List<Expression> p)
+        private static ScalarValue CeilingMath(double number, double step, double mode)
         {
-            double number = p[0];
-            double significance = 1;
-            if (p.Count > 1) significance = p[1];
+            if (step == 0)
+                return 0;
 
-            double mode = 0;
-            if (p.Count > 2) mode = p[2];
+            step = Math.Abs(step);
 
-            if (significance == 0)
-                return 0d;
-            else if (number >= 0)
-                return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
-            else if (mode == 0)
-                return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
-            else
-                return -Math.Ceiling(-number / Math.Abs(significance)) * Math.Abs(significance);
+            // Mode 1 basically mimics behavior of CEILING function,
+            // i.e. ceil away from zero even for negative numbers.
+            if (number < 0 && mode != 0)
+                return Math.Floor(number / step) * step;
+
+            return Math.Ceiling(number / step) * step;
         }
 
         private static ScalarValue Combin(double number, double numberChosen)

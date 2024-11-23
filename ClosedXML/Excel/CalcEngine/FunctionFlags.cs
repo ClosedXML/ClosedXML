@@ -38,5 +38,14 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <example>RAND(), DATE()</example>
         Volatile = 8,
+
+        /// <summary>
+        /// The function is a future function (i.e. functions not present in Excel 2007). Future
+        /// functions are displayed to the user with a name (e.g <c>SEC</c>), but are actually
+        /// stored in the workbook with a prefix <c>_xlfn</c> (e.g. <c>_xlfn.SEC</c>).
+        /// The prefix is there for backwards compatibility, to not clash with user defined
+        /// functions and other such reasons. See [MS-XLSX] 2.3.3 for complete list.
+        /// </summary>
+        Future = 16
     }
 }
