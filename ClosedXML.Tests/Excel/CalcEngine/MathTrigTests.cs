@@ -1736,11 +1736,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SqrtPi()
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("SqrtPi(1)");
-            Assert.AreEqual(1.7724538509055159, actual, XLHelper.Epsilon);
+            var actual = (double)XLWorkbook.EvaluateExpr("SQRTPI(1)");
+            Assert.AreEqual(1.7724538509055159, actual, tolerance);
 
-            actual = (double)XLWorkbook.EvaluateExpr("SqrtPi(2)");
-            Assert.AreEqual(2.5066282746310002, actual, XLHelper.Epsilon);
+            actual = (double)XLWorkbook.EvaluateExpr("SQRTPI(2)");
+            Assert.AreEqual(2.5066282746310002, actual, tolerance);
+
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("SQRTPI(-1)"));
         }
 
         [Test]

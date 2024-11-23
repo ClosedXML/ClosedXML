@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SIN", 1, Sin);
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, 1, Adapt(Sqrt), FunctionFlags.Scalar);
-            ce.RegisterFunction("SQRTPI", 1, SqrtPi);
+            ce.RegisterFunction("SQRTPI", 1, 1, Adapt(SqrtPi), FunctionFlags.Scalar);
             ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, AdaptLastOptional(SumIf), FunctionFlags.Range, AllowRange.Only, 0, 2);
@@ -881,18 +881,20 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sinh(p[0]);
         }
 
-        private static ScalarValue Sqrt(double x)
+        private static ScalarValue Sqrt(double number)
         {
-            if (x < 0)
+            if (number < 0)
                 return XLError.NumberInvalid;
 
-            return Math.Sqrt(x);
+            return Math.Sqrt(number);
         }
 
-        private static object SqrtPi(List<Expression> p)
+        private static ScalarValue SqrtPi(double number)
         {
-            var num = (Double)p[0];
-            return Math.Sqrt(Math.PI * num);
+            if (number < 0)
+                return XLError.NumberInvalid;
+
+            return Math.Sqrt(Math.PI * number);
         }
 
         private static AnyValue Subtotal(CalcContext ctx, double number, AnyValue[] fnArgs)
