@@ -94,7 +94,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
             //ce.RegisterFunction("SUMXMY2", SumXMY2, 1);
-            ce.RegisterFunction("TAN", 1, Tan);
+            ce.RegisterFunction("TAN", 1, 1, Adapt(Tan), FunctionFlags.Scalar);
             ce.RegisterFunction("TANH", 1, Tanh);
             ce.RegisterFunction("TRUNC", 1, 2, AdaptLastOptional(Trunc, 0), FunctionFlags.Scalar);
         }
@@ -1057,9 +1057,15 @@ namespace ClosedXML.Excel.CalcEngine
             return sumSq.Sum;
         }
 
-        private static object Tan(List<Expression> p)
+        private static ScalarValue Tan(double radians)
         {
-            return Math.Tan(p[0]);
+            // Cutoff point for Excel. .NET Core allows all values and .NET Fx ~< 1e+19.
+            // To ensure consistent behavior for all platforms, respect Excel limit. It's
+            // lower than both the .NET Core and the .NET Fx one.
+            if (Math.Abs(radians) >= 134217728)
+                return XLError.NumberInvalid;
+
+            return Math.Tan(radians);
         }
 
         private static object Tanh(List<Expression> p)

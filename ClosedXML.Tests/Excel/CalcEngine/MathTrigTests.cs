@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [SetCulture("en-US")]
     public class MathTrigTests
     {
-        private readonly double tolerance = 1e-10;
+        private const double tolerance = 1e-10;
 
         [Theory]
         public void Abs_ReturnsItselfOnPositiveNumbers([Range(0, 10, 0.1)] double input)
@@ -2481,6 +2481,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Reference error is propagated
             ws.Cell("A1").Value = XLError.NoValueAvailable;
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("SUMSQ(A1)"));
+        }
+
+        [TestCase(-1, ExpectedResult = -1.5574077247)]
+        [TestCase(0, ExpectedResult = 0)]
+        [TestCase(1, ExpectedResult = 1.5574077247)]
+        [TestCase(134217727, ExpectedResult = 3.2584564256)]
+        [TestCase(-134217727, ExpectedResult = -3.2584564256)]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public double Tan(double radians)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"TAN({radians})");
+        }
+
+        [TestCase(134217728)]
+        [TestCase(-134217728)]
+        [TestCase(1E+100)]
+        public void Tan_returns_invalid_number_for_radians_outside_limit(double radians)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"TAN({radians})"));
         }
 
         [TestCase(27.64799257, null, 27)]
