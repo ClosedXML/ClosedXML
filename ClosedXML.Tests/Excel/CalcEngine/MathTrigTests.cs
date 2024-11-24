@@ -717,14 +717,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(45, 0.617369624)]
         [TestCase(-2, 0.457657554)]
         [TestCase(-3, 7.015252551)]
-        public void Cot(double input, double expected)
+        public void Cot(double angle, double expected)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"COT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"COT({angle})");
             Assert.AreEqual(expected, actual, tolerance * 10.0);
         }
 
         [Test]
-        public void Cot_Input0()
+        public void Cot_returns_division_by_zero_error_on_zero_angle()
         {
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("COT(0)"));
         }

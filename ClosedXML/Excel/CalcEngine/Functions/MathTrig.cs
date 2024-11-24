@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, 1, Adapt(Cos), FunctionFlags.Scalar);
             ce.RegisterFunction("COSH", 1, 1, Adapt(Cosh), FunctionFlags.Scalar);
-            ce.RegisterFunction("COT", 1, Cot);
+            ce.RegisterFunction("COT", 1, 1, Adapt(Cot), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COTH", 1, Coth);
             ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
@@ -337,10 +337,9 @@ namespace ClosedXML.Excel.CalcEngine
             return cosh;
         }
 
-        private static object Cot(List<Expression> p)
+        private static ScalarValue Cot(double angle)
         {
-            var tan = Math.Tan(p[0]);
-
+            var tan = Math.Tan(angle);
             if (tan == 0)
                 return XLError.DivisionByZero;
 
