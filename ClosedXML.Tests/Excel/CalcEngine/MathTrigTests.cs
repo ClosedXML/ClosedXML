@@ -121,9 +121,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Theory]
-        public void Acoth_ForPlusMinusXSmallerThan1_ThrowsNumberException([Range(-0.9, 0.9, 0.1)] double input)
+        public void Acoth_returns_error_for_absolute_values_smaller_than_one([Range(-0.9, 0.9, 0.1)] double input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOTH({input})"));
         }
 
         [TestCase(-10, -0.100335348)]
@@ -144,9 +144,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8, 0.125657214)]
         [TestCase(9, 0.111571776)]
         [TestCase(10, 0.100335348)]
-        public void Acoth_ReturnsCorrectValue(double input, double expectedResult)
+        [TestCase(1E+100, 1E-100)]
+        public void Acoth_returns_correct_value(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOTH({input})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
