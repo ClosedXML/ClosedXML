@@ -26,6 +26,17 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         private static readonly Lazy<IReadOnlyDictionary<int, IReadOnlyList<(string Symbol, int Value)>>> RomanForms = new(BuildRomanForms);
 
+        private static readonly IReadOnlyDictionary<char, int> RomanSymbolValues = new Dictionary<char, int>
+        {
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        };
+
         #region Register
 
         public static void Register(FunctionRegistry ce)
@@ -35,7 +46,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ACOSH", 1, 1, Adapt(Acosh), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOT", 1, 1, Adapt(Acot), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("ACOTH", 1, 1, Adapt(Acoth), FunctionFlags.Scalar | FunctionFlags.Future);
-            ce.RegisterFunction("ARABIC", 1, Arabic);
+            ce.RegisterFunction("ARABIC", 1, 1, Adapt(Arabic), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("ASIN", 1, 1, Adapt(Asin), FunctionFlags.Scalar);
             ce.RegisterFunction("ASINH", 1, 1, Adapt(Asinh), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN", 1, 1, Adapt(Atan), FunctionFlags.Scalar);
@@ -187,25 +198,46 @@ namespace ClosedXML.Excel.CalcEngine
             return 0.5 * Math.Log((angle + 1) / (angle - 1));
         }
 
-        private static object Arabic(List<Expression> p)
+        private static ScalarValue Arabic(string input)
         {
-            string input = ((string)p[0]).Trim();
-
-            try
-            {
-                if (input.Length == 0)
-                    return 0;
-                if (input == "-")
-                    return XLError.NumberInvalid;
-                else if (input[0] == '-')
-                    return -XLMath.RomanToArabic(input.Substring(1));
-                else
-                    return XLMath.RomanToArabic(input);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
+            if (input.Length > 255)
                 return XLError.IncompatibleValue;
+
+            // Check minus sign
+            var text = input.AsSpan().Trim();
+            var minusSign = text.Length > 0 && text[0] == '-';
+            if (minusSign)
+                text = text[1..];
+
+            var total = 0;
+            for (var i = text.Length - 1; i >= 0; --i)
+            {
+                var addSymbol = char.ToUpperInvariant(text[i]);
+                if (!RomanSymbolValues.TryGetValue(addSymbol, out var addValue))
+                    return XLError.IncompatibleValue;
+
+                total += addValue;
+
+                // Standard roman numbers allow only one subtract symbol, Excel allows many
+                // subtract symbols of different types.
+                while (i > 0)
+                {
+                    var subtractSymbol = char.ToUpperInvariant(text[i - 1]);
+                    if (!RomanSymbolValues.TryGetValue(subtractSymbol, out var subtractValue))
+                        return XLError.IncompatibleValue;
+
+                    if (subtractValue >= addValue)
+                        break;
+
+                    total -= subtractValue;
+                    --i;
+                }
             }
+
+            if (minusSign && total == 0)
+                return XLError.NumberInvalid;
+
+            return minusSign ? -total : total;
         }
 
         private static ScalarValue Asin(double number)

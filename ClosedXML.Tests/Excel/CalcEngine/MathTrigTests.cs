@@ -152,26 +152,37 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("LVII", 57)]
-        [TestCase("mcmxii", 1912)]
+        [TestCase(@"mcmxii", 1912)]
         [TestCase("", 0)]
         [TestCase("-IV", -4)]
-        [TestCase("   XIV", 14)]
-        [TestCase("MCMLXXXIII ", 1983)]
-        public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
+        [TestCase("   XIV   ", 14)]
+        [TestCase(@"MCMLXXXIII ", 1983)]
+        [TestCase(@"IIIIIIIIM", 992)]
+        [TestCase(@"CIVIIX", 102)]
+        [TestCase(@"IIX", 8)]
+        [TestCase(@"VIII", 8)]
+        public void Arabic_returns_correct_number(string roman, int arabic)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ARABIC(\"{roman}\")");
             Assert.AreEqual(arabic, actual);
         }
 
         [Test]
-        public void Arabic_ThrowsNumberExceptionOnMinus()
+        public void Arabic_solitary_minus_is_not_valid_roman_number()
         {
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("ARABIC(\"-\")"));
         }
 
+        [Test]
+        public void Arabic_can_have_at_most_255_chars()
+        {
+            Assert.AreEqual(255000, XLWorkbook.EvaluateExpr($"ARABIC(\"{new string('M', 255)}\")"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"ARABIC(\"{new string('M', 256)}\")"));
+        }
+
         [TestCase("- I")]
         [TestCase("roman")]
-        public void Arabic_ThrowsValueExceptionOnInvalidNumber(string invalidRoman)
+        public void Arabic_returns_conversion_error_on_invalid_numbers(string invalidRoman)
         {
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
         }
