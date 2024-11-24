@@ -44,7 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COT", 1, 1, Adapt(Cot), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COTH", 1, 1, Adapt(Coth), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("CSC", 1, 1, Adapt(Csc), FunctionFlags.Scalar | FunctionFlags.Future);
-            ce.RegisterFunction("CSCH", 1, Csch);
+            ce.RegisterFunction("CSCH", 1, 1, Adapt(Csch), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, 1, Adapt(Degrees), FunctionFlags.Scalar);
             ce.RegisterFunction("EVEN", 1, 1, Adapt(Even), FunctionFlags.Scalar);
@@ -362,12 +362,12 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Sin(angle);
         }
 
-        private static object Csch(List<Expression> p)
+        private static ScalarValue Csch(double angle)
         {
-            if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
+            if (angle == 0)
                 return XLError.DivisionByZero;
 
-            return 1 / Math.Sinh(p[0]);
+            return 1 / Math.Sinh(angle);
         }
 
         private static object Decimal(List<Expression> p)

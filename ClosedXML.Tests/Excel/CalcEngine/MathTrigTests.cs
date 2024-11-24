@@ -804,13 +804,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(9, 0.00024682)]
         [TestCase(10, 0.000090799859712122200000)]
         [TestCase(11, 0.0000334034)]
-        public void CSch_CalculatesCorrectValues(double input, double expectedOutput)
+        public void Csch_calculates_correct_values(double input, double expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, (double)XLWorkbook.EvaluateExpr($@"CSCH({input})"), 0.000000001);
+            Assert.AreEqual(expectedOutput, (double)XLWorkbook.EvaluateExpr($"CSCH({input})"), 0.000000001);
         }
 
         [Test]
-        public void Csch_ReturnsDivisionByZeroErrorOnInput0()
+        public void Csch_returns_division_error_on_angle_zero()
         {
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("CSCH(0)"));
         }
