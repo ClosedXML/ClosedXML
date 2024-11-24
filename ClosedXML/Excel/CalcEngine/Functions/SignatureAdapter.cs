@@ -408,6 +408,45 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptMultinomial(Func<CalcContext, List<IEnumerable<ScalarValue>>, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                // This can skip blank values, because blank doesn't increase nominator
+                // and doesn't change denominator due to 0! = 1
+                var scalarCollections = new List<IEnumerable<ScalarValue>>(args.Length);
+                foreach (var arg in args)
+                    scalarCollections.Add(GetNonBlankScalars(arg, ctx));
+
+                return f(ctx, scalarCollections).ToAnyValue();
+            };
+
+            static IEnumerable<ScalarValue> GetNonBlankScalars(AnyValue value, CalcContext ctx)
+            {
+                if (value.TryPickScalar(out var scalar, out var collection))
+                {
+                    if (!scalar.IsBlank)
+                        yield return scalar;
+                }
+                else if (collection.TryPickT0(out var array, out var reference))
+                {
+                    foreach (var element in array)
+                    {
+                        if (!element.IsBlank)
+                            yield return element;
+                    }
+                }
+                else
+                {
+                    foreach (var element in ctx.GetNonBlankValues(reference))
+                    {
+                        if (!element.IsBlank)
+                            yield return element;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Adapt a function that accepts areas as arguments (e.g. SUMPRODUCT). The key benefit is
         /// that all <c>ReferenceArray</c> allocation is done once for a function. The method
@@ -464,7 +503,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 var arg1Converted = args.Length > 1 ? ToNumber(args[1], ctx) : defaultValue1;
                 if (!arg1Converted.TryPickT0(out var arg1, out var err1))
-                     return err1;
+                    return err1;
 
                 var arg2Converted = args.Length > 2 ? ToNumber(args[2], ctx) : defaultValue2;
                 if (!arg2Converted.TryPickT0(out var arg2, out var err2))

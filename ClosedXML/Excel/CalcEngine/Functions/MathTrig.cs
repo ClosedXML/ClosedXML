@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
             ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
-            ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
+            ce.RegisterFunction("MULTINOMIAL", 1, 255, AdaptMultinomial(Multinomial), FunctionFlags.Scalar, AllowRange.All);
             ce.RegisterFunction("ODD", 1, 1, Adapt(Odd), FunctionFlags.Scalar);
             ce.RegisterFunction("PI", 0, 0, Adapt(Pi), FunctionFlags.Scalar);
             ce.RegisterFunction("POWER", 2, 2, Adapt(Power), FunctionFlags.Scalar);
@@ -646,57 +646,37 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Round(number / multiple, MidpointRounding.AwayFromZero) * multiple;
         }
 
-        private static object Multinomial(List<Expression> p)
+        private static ScalarValue Multinomial(CalcContext ctx, List<IEnumerable<ScalarValue>> numberCollections)
         {
-            return Multinomial(p.ConvertAll(v => (double)v));
-        }
-
-        private static double Multinomial(List<double> numbers)
-        {
-            double numbersSum = 0;
-            foreach (var number in numbers)
+            var numbersSum = 0.0;
+            var denominator = 1.0;
+            foreach (var numberCollection in numberCollections)
             {
-                numbersSum += number;
-            }
-
-            double maxNumber = numbers.Max();
-            var denomFactorPowers = new double[(uint)numbers.Max() + 1];
-            foreach (var number in numbers)
-            {
-                for (int i = 2; i <= number; i++)
+                foreach (var scalar in numberCollection)
                 {
-                    denomFactorPowers[i]++;
+                    ctx.ThrowIfCancelled();
+                    if (scalar.IsLogical)
+                        return XLError.IncompatibleValue;
+
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    if (number < 0)
+                        return XLError.NumberInvalid;
+
+                    number = Math.Truncate(number);
+                    numbersSum += number;
+                    denominator *= XLMath.Factorial(number);
+                    if (double.IsInfinity(denominator))
+                        return XLError.NumberInvalid;
                 }
             }
 
-            for (int i = 2; i < denomFactorPowers.Length; i++)
-            {
-                denomFactorPowers[i]--; // reduce with nominator
-            }
+            var numerator = XLMath.Factorial(numbersSum);
+            if (double.IsInfinity(numerator))
+                return XLError.NumberInvalid;
 
-            int currentFactor = 2;
-            double currentPower = 1;
-            double result = 1;
-            for (double i = maxNumber + 1; i <= numbersSum; i++)
-            {
-                double tempDenom = 1;
-                while (tempDenom < result && currentFactor < denomFactorPowers.Length)
-                {
-                    if (currentPower > denomFactorPowers[currentFactor])
-                    {
-                        currentFactor++;
-                        currentPower = 1;
-                    }
-                    else
-                    {
-                        tempDenom *= currentFactor;
-                        currentPower++;
-                    }
-                }
-                result = result / tempDenom * i;
-            }
-
-            return result;
+            return numerator / denominator;
         }
 
         private static ScalarValue Odd(double number)

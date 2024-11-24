@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Text;
 
@@ -121,11 +119,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return result;
         }
 
-        internal static double Factorial(int n)
+        internal static double Factorial(double n)
         {
+            n = Math.Truncate(n);
             var factorial = 1d;
             while (n > 1)
+            {
                 factorial *= n--;
+
+                // n can be very large, stop when we reach infinity.
+                if (double.IsInfinity(factorial))
+                    return factorial;
+            }
 
             return factorial;
         }

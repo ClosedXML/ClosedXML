@@ -1379,8 +1379,50 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Multinomial()
         {
-            object actual = XLWorkbook.EvaluateExpr("Multinomial(2,3,4)");
-            Assert.AreEqual(1260.0, actual);
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("MULTINOMIAL(2)"));
+            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("MULTINOMIAL(2,3)"));
+            Assert.AreEqual(1260, XLWorkbook.EvaluateExpr("MULTINOMIAL(2,3,4)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("MULTINOMIAL(1E+100)"));
+        }
+
+        [Test]
+        public void Multinomial_accepts_ranges()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B2").InsertData(new[] { 2, 0, 5 });
+            ws.Cell("A5").InsertData(new[] { 3, 6 });
+
+            Assert.AreEqual(3087564480d, ws.Evaluate("MULTINOMIAL(B:XFD, 2, A5:A6)"));
+        }
+
+        [Test]
+        public void Multinomial_doesnt_accept_negative_values()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("MULTINOMIAL(5, -1)"));
+        }
+
+        [Test]
+        public void Multinomial_coercion()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = true;
+            ws.Cell("A2").Value = 5;
+            ws.Cell("A3").Value = "1 2/2";
+            ws.Cell("A4").Value = "one";
+
+            // True is not converted
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MULTINOMIAL(A1:A2)"));
+
+            // Text is coerced
+            Assert.AreEqual(21, ws.Evaluate("MULTINOMIAL(A2:A3)"));
+
+            // Text is coerced, errors are propagates
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MULTINOMIAL(A2:A4)"));
+
+            // Errors are propagates
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("MULTINOMIAL(5, #DIV/0!)"));
         }
 
         [TestCase(1.5, ExpectedResult = 3)]
