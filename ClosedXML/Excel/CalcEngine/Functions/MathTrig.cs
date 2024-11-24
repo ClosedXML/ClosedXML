@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ABS", 1, 1, Adapt(Abs), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOS", 1, 1, Adapt(Acos), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOSH", 1, 1, Adapt(Acosh), FunctionFlags.Scalar);
-            ce.RegisterFunction("ACOT", 1, Acot);
+            ce.RegisterFunction("ACOT", 1, 1, Adapt(Acot), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("ACOTH", 1, Acoth);
             ce.RegisterFunction("ARABIC", 1, Arabic);
             ce.RegisterFunction("ASIN", 1, 1, Adapt(Asin), FunctionFlags.Scalar);
@@ -157,16 +157,19 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ACosh(number);
         }
 
-        private static object Acot(List<Expression> p)
+        private static ScalarValue Acot(double angle)
         {
-            double x = Math.Atan(1.0 / p[0]);
+            if (angle == 0)
+                return Math.PI / 2;
+
+            var acot = Math.Atan(1.0 / angle);
 
             // Acot in Excel calculates the modulus of the function above.
             // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
-            while (x < 0)
-                x += Math.PI;
+            while (acot < 0)
+                acot += Math.PI;
 
-            return x;
+            return acot;
         }
 
         private static object Acoth(List<Expression> p)

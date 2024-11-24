@@ -116,7 +116,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(10, 0.099668652)]
         public void Acot_ReturnsCorrectValue(double input, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOT({input})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
