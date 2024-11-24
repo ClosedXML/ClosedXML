@@ -342,13 +342,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         public bool TryPickNumber(out double number)
         {
+            return TryPickNumber(out number, out _);
+        }
+
+        public bool TryPickNumber(out double number, out XLError error)
+        {
             if (_index == NumberValue)
             {
                 number = _number;
+                error = default;
                 return true;
             }
 
             number = default;
+            error = IsError ? _error : XLError.IncompatibleValue;
             return false;
         }
 

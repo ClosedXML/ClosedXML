@@ -1284,28 +1284,86 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
         public void MDeterm()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
-            ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
-            ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (2, 4),
+                (3, 5),
+            });
 
-            XLCellValue actual;
+            ws.Cell("A5").FormulaA1 = "MDETERM(A1:B2)";
+            var actual = ws.Cell("A5").Value;
+            Assert.AreEqual(-2, (double)actual);
 
-            ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
-            actual = ws.Cell("A5").Value;
-
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
-
-            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            ws.Cell("A6").FormulaA1 = "SUM(A5)";
             actual = ws.Cell("A6").Value;
+            Assert.AreEqual(-2, (double)actual);
 
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
-
-            ws.Cell("A7").FormulaA1 = "Sum(MDeterm(A1:B2))";
+            ws.Cell("A7").FormulaA1 = "SUM(MDETERM(A1:B2))";
             actual = ws.Cell("A7").Value;
+            Assert.AreEqual(-2, (double)actual);
+        }
 
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
+        [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void MDeterm_examples()
+        {
+            // Examples from spec
+            Assert.AreEqual(1, (double)XLWorkbook.EvaluateExpr("MDETERM({3,6,1;1,1,0;3,10,2})"));
+            Assert.AreEqual(-3, XLWorkbook.EvaluateExpr("MDETERM({3,6;1,1})"));
+
+            // Example from office website
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                ("Data", "Data", "Data", "Data"),
+                (1, 3, 8, 5),
+                (1, 3, 6, 1),
+                (1, 1, 1, 0),
+                (7, 3, 10, 2),
+            });
+            Assert.AreEqual(88, (double)ws.Evaluate("MDETERM(A2:D5)"));
+        }
+
+        [Test]
+        public void MDeterm_requires_equal_number_of_rows_and_columns()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("MDETERM({1,2})"));
+        }
+
+        [Test]
+        public void MDeterm_singular_matrix_returns_zero()
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr("MDETERM({1,2;1,2})"));
+        }
+
+        [Test]
+        public void MDeterm_requires_all_array_elements_are_numbers()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (2, 4),
+                (3, 5),
+            });
+
+            ws.Cell("B2").Value = Blank.Value;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MDETERM(A1:B2)"));
+
+            ws.Cell("B2").Value = "1";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MDETERM(A1:B2)"));
+
+            ws.Cell("B2").Value = true;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MDETERM(A1:B2)"));
+
+            ws.Cell("B2").Value = XLError.NameNotRecognized;
+            Assert.AreEqual(XLError.NameNotRecognized, ws.Evaluate("MDETERM(A1:B2)"));
         }
 
         [Test]

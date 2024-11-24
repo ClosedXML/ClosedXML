@@ -77,7 +77,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG", 1, 2, AdaptLastOptional(Log, 10), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG10", 1, 1, Adapt(Log10), FunctionFlags.Scalar);
-            ce.RegisterFunction("MDETERM", 1, MDeterm, AllowRange.All);
+            ce.RegisterFunction("MDETERM", 1, 1, Adapt(MDeterm), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
@@ -582,6 +582,29 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        private static OneOf<double[,], XLError> GetArray(AnyValue value, CalcContext ctx)
+        {
+            if (value.TryPickSingleOrMultiValue(out var scalar, out var array, ctx))
+                array = new ScalarArray(scalar, 1, 1);
+
+            var rows = array.Height;
+            var cols = array.Width;
+            var arr = new double[rows, cols];
+
+            for (var row = 0; row < rows; row++)
+            {
+                for (var col = 0; col < cols; col++)
+                {
+                    if (!array[row, col].TryPickNumber(out var number, out var error))
+                        return error;
+
+                    arr[row, col] = number;
+                }
+            }
+
+            return arr;
+        }
+
         private static ScalarValue Int(double number)
         {
             return Math.Floor(number);
@@ -644,12 +667,17 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Log10(x);
         }
 
-        private static object MDeterm(List<Expression> p)
+        private static AnyValue MDeterm(CalcContext ctx, AnyValue value)
         {
-            var arr = GetArray(p[0]);
-            var m = new XLMatrix(arr);
+            if (!GetArray(value, ctx).TryPickT0(out var array, out var error))
+                return error;
 
-            return m.Determinant();
+            var isSquare = array.GetLength(0) == array.GetLength(1);
+            if (!isSquare)
+                return XLError.IncompatibleValue;
+
+            var matrix = new XLMatrix(array);
+            return matrix.Determinant();
         }
 
         private static object MInverse(List<Expression> p)
