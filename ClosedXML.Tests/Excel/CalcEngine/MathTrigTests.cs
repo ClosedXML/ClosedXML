@@ -600,41 +600,37 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
-        public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
+        [TestCase(1, 0, 1)]
+        [TestCase(10, 15, 1307504)]
+        public void Combina_calculates_correct_values(int number, int chosen, int expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
-            Assert.AreEqual(expectedResult, (double)actualResult);
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
         [Theory]
-        public void Combina_Returns1WhenChosenIs0([Range(0, 10)] int number)
+        public void Combina_returns_one_when_chosen_is_zero([Range(0, 10)] int number)
         {
-            Combina_CalculatesCorrectValues(number, 0, 1);
+            var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, 0)");
+            Assert.AreEqual(1, actualResult);
         }
 
         [TestCase(-1, 2)]
         [TestCase(-3, -2)]
         [TestCase(2, -2)]
-        public void Combina_ThrowsNumExceptionOnInvalidValues(int number, int chosen)
+        [TestCase(int.MaxValue + 1d, 1)]
+        public void Combina_returns_error_on_invalid_values(double number, int chosen)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(
-                string.Format(
-                    @"COMBINA({0}, {1})",
-                    number.ToString(CultureInfo.InvariantCulture),
-                    chosen.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})"));
         }
 
         [TestCase(4.23, 3, 20)]
         [TestCase(10.4, 3.14, 220)]
         [TestCase(0, 0.4, 1)]
-        public void Combina_TruncatesNumbersCorrectly(double number, double chosen, int expectedResult)
+        public void Combina_truncates_numbers_to_zero(double number, double chosen, int expectedResult)
         {
-            var actualResult = XLWorkbook.EvaluateExpr(string.Format(
-                @"COMBINA({0}, {1})",
-                number.ToString(CultureInfo.InvariantCulture),
-                chosen.ToString(CultureInfo.InvariantCulture)));
-
-            Assert.AreEqual(expectedResult, (double)actualResult);
+            var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
         [TestCase(0, 1)]

@@ -38,7 +38,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CEILING", 2, 2, Adapt(Ceiling), FunctionFlags.Scalar);
             ce.RegisterFunction("CEILING.MATH", 1, 3, AdaptLastTwoOptional(CeilingMath, 1, 0), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
-            ce.RegisterFunction("COMBINA", 2, CombinA);
+            ce.RegisterFunction("COMBINA", 2, 2, Adapt(CombinA), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COS", 1, 1, Adapt(Cos), FunctionFlags.Scalar);
             ce.RegisterFunction("COSH", 1, 1, Adapt(Cosh), FunctionFlags.Scalar);
             ce.RegisterFunction("COT", 1, 1, Adapt(Cot), FunctionFlags.Scalar | FunctionFlags.Future);
@@ -307,22 +307,25 @@ namespace ClosedXML.Excel.CalcEngine
             return combinations;
         }
 
-        private static object CombinA(List<Expression> p)
+        private static ScalarValue CombinA(double number, double chosen)
         {
-            Int32 number = (int)p[0]; // casting truncates towards 0 as specified
-            Int32 chosen = (int)p[1];
+            number = Math.Truncate(number); // casting truncates towards 0 as specified
+            chosen = Math.Truncate(chosen);
 
-            if (number < 0 || number < chosen)
+            if (number < 0)
                 return XLError.NumberInvalid;
+
             if (chosen < 0)
                 return XLError.NumberInvalid;
 
-            int n = number + chosen - 1;
-            int k = number - 1;
+            var n = number + chosen - 1;
+            if (n > int.MaxValue)
+                return XLError.NumberInvalid;
 
-            return n == k || k == 0
+            var k = number - 1;
+            return chosen == 0 || k == 0
                 ? 1
-                : (long)XLMath.Combin(n, k);
+                : XLMath.Combin(n, k);
         }
 
         private static ScalarValue Cos(double number)
