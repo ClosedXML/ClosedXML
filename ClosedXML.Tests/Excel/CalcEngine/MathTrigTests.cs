@@ -1104,20 +1104,54 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void Lcm()
+        [TestCase("24, 36", ExpectedResult = 72)]
+        [TestCase("24.9, 36.9", ExpectedResult = 72)]
+        [TestCase("{24, 36}", ExpectedResult = 72)]
+        [TestCase("{1,2,3;4,5,6}", ExpectedResult = 60)]
+        [TestCase("{\"1\",\"2\",\"3\"}", ExpectedResult = 6)]
+        [TestCase("240, 360, 30", ExpectedResult = 720)]
+        [TestCase("5, 0", ExpectedResult = 0)]
+        [TestCase("0, 5", ExpectedResult = 0)]
+        public double Lcm(string args)
         {
-            object actual = XLWorkbook.EvaluateExpr("Lcm(24, 36)");
-            Assert.AreEqual(72, actual);
+            return (double)XLWorkbook.EvaluateExpr($"LCM({args})");
+        }
 
-            object actual1 = XLWorkbook.EvaluateExpr("Lcm(5, 0)");
-            Assert.AreEqual(0, actual1);
+        [Test]
+        public void Lcm_accepts_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (1, 2, 3),
+                ("4", "5", "6"),
+            });
+            Assert.AreEqual(60, ws.Evaluate("LCM(A1:B2,C1:C2)"));
 
-            object actual2 = XLWorkbook.EvaluateExpr("Lcm(0, 5)");
-            Assert.AreEqual(0, actual2);
+            // Blank is considered 0
+            Assert.AreEqual(0, ws.Evaluate("LCM(A1:A3)"));
 
-            object actual3 = XLWorkbook.EvaluateExpr("Lcm(240, 360, 30)");
-            Assert.AreEqual(720, actual3);
+            // Logical are not converted
+            ws.Cell("A3").Value = true;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("LCM(A1:A3)"));
+
+            // Unconvertable text causes error
+            ws.Cell("A3").Value = "one";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("LCM(A1:A3)"));
+        }
+
+        [TestCase]
+        public void Lcm_numbers_must_fit_in_double_without_precision_loss()
+        {
+            Assert.AreEqual(9.007E+15, XLWorkbook.EvaluateExpr("LCM(9.007E+15)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("LCM(9.008E+15)"));
+        }
+
+        [TestCase]
+        public void Lcm_numbers_must_be_zero_or_positive()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("LCM(-1)"));
         }
 
         [TestCase(86, 4.4543472962)]

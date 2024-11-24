@@ -184,6 +184,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, List<Array>, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arrays = new List<Array>();
+                foreach (var arg in args)
+                {
+                    if (arg.TryPickSingleOrMultiValue(out var scalar, out var array, ctx))
+                        array = new ScalarArray(scalar, 1, 1);
+
+                    arrays.Add(array);
+                }
+
+                return f(ctx, arrays).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction AdaptLastOptional(Func<ScalarValue, AnyValue, AnyValue, AnyValue> f, AnyValue lastDefault)
         {
             return (ctx, args) =>

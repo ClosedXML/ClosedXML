@@ -11,6 +11,13 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class MathTrig
     {
+        /// <summary>
+        /// Maximum integer number that can be precisely represented in a double.
+        /// Calculated as <c>Math.Pow(2, 53) - 1</c>, but use literal to make it
+        /// constant (=usable in pattern matching).
+        /// </summary>
+        private const double MaxDoubleInt = 9007199254740991;
+
         private static readonly Random _rnd = new Random();
 
         /// <summary>
@@ -55,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
-            ce.RegisterFunction("LCM", 1, 255, Lcm);
+            ce.RegisterFunction("LCM", 1, 255, Adapt(Lcm), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG", 1, 2, AdaptLastOptional(Log, 10), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG10", 1, 1, Adapt(Log10), FunctionFlags.Scalar);
@@ -510,6 +517,16 @@ namespace ClosedXML.Excel.CalcEngine
             return a;
         }
 
+        private static double Gcd(double a, double b)
+        {
+            a = Math.Truncate(a);
+            b = Math.Truncate(b);
+            while (b != 0)
+                (a, b) = (b, a % b);
+
+            return a;
+        }
+
         private static double[,] GetArray(Expression expression)
         {
             if (expression is XObjectExpression objectExpression
@@ -541,12 +558,31 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Floor(number);
         }
 
-        private static object Lcm(List<Expression> p)
+        private static ScalarValue Lcm(CalcContext ctx, List<Array> arrays)
         {
-            return p.Select(v => (int)v).Aggregate(Lcm);
+            var result = 1d;
+            foreach (var array in arrays)
+            {
+                foreach (var scalar in array)
+                {
+                    ctx.ThrowIfCancelled();
+                    if (scalar.IsLogical)
+                        return XLError.IncompatibleValue;
+
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
+
+                    if (number is < 0 or > MaxDoubleInt)
+                        return XLError.NumberInvalid;
+
+                    result = Lcm(result, Math.Truncate(number));
+                }
+            }
+
+            return result;
         }
 
-        private static int Lcm(int a, int b)
+        private static double Lcm(double a, double b)
         {
             if (a == 0 || b == 0) return 0;
             return a * (b / Gcd(a, b));
