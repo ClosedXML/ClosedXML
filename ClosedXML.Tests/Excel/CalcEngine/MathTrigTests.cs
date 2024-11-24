@@ -1084,18 +1084,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 2.1, 10, -4.2)]
         [TestCase(-5.5, -2.1, 10, -4.2)]
         [TestCase(-5.5, 0, 0, 0)]
-        public void FloorMath(double input, double? step, int? mode, double expectedResult)
+        [DefaultFloatingPointTolerance(tolerance)]
+        public void FloorMath(double input, double? significance, int? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
-            if (step != null)
+            var parameters = new StringBuilder();
+            parameters.Append(input);
+            if (significance != null)
             {
-                parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
+                parameters.Append(", ").Append(significance);
                 if (mode != null)
-                    parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                    parameters.Append(", ").Append(mode);
             }
 
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FLOOR.MATH({0})", parameters));
-            Assert.AreEqual(expectedResult, actual, tolerance);
+            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR.MATH({parameters})");
+            Assert.AreEqual(expectedResult, actual);
         }
 
         [TestCase("24,36", ExpectedResult = 12)]

@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FACT", 1, 1, Adapt(Fact), FunctionFlags.Scalar);
             ce.RegisterFunction("FACTDOUBLE", 1, 1, Adapt(FactDouble), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR", 2, 2, Adapt(Floor), FunctionFlags.Scalar);
-            ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
+            ce.RegisterFunction("FLOOR.MATH", 1, 3, AdaptLastTwoOptional(FloorMath, 1, 0), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("GCD", 1, 255, Adapt(Gcd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
             ce.RegisterFunction("LCM", 1, 255, Adapt(Lcm), FunctionFlags.Range, AllowRange.All);
@@ -298,7 +298,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             // Mode 1 very similar to behavior of CEILING function, i.e. ceil
             // away from zero even for negative numbers. Mode 1 is not the same
-            // as CEILING, e.g. CEILING(5.5, -2.1) vs CEILING.MATH(5.5, -2.1, 1)).
+            // as CEILING, e.g. CEILING(-5.5, 2.1) vs CEILING.MATH(-5.5, 2.1, 1)).
             if (number < 0 && mode != 0)
                 return Math.Floor(number / significance) * significance;
 
@@ -483,23 +483,21 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Floor(number / significance) * significance;
         }
 
-        private static object FloorMath(List<Expression> p)
+        private static ScalarValue FloorMath(double number, double significance, double mode)
         {
-            double number = p[0];
-            double significance = 1;
-            if (p.Count > 1) significance = p[1];
-
-            double mode = 0;
-            if (p.Count > 2) mode = p[2];
-
             if (significance == 0)
                 return 0d;
-            else if (number >= 0)
-                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
-            else if (mode == 0)
-                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
-            else
-                return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
+
+            significance = Math.Abs(significance);
+            if (number >= 0)
+                return Math.Floor(number / significance) * significance;
+
+            // Mode 0 floors numbers to lower number.
+            if (mode == 0)
+                return Math.Floor(number / significance) * significance;
+
+            // Mode !0 truncates negative number, i.e. closer to zero
+            return Math.Truncate(number / significance) * significance;
         }
 
         private static ScalarValue Gcd(CalcContext ctx, List<Array> arrays)
