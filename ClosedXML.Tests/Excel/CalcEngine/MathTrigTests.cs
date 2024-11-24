@@ -87,9 +87,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(5.7, 2.425828318)]
         [TestCase(6, 2.47788873)]
         [TestCase(1, 0)]
-        public void Acosh_ReturnsCorrectValue(double input, double expectedResult)
+        public void Acosh_returns_correct_number(double angle, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"ACOSH({input})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOSH({angle})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
@@ -114,16 +114,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8, 0.124354995)]
         [TestCase(9, 0.110657221)]
         [TestCase(10, 0.099668652)]
-        public void Acot_ReturnsCorrectValue(double input, double expectedResult)
+        public void Acot_returns_correct_number(double angle, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"ACOT({input})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOT({angle})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
         [Theory]
-        public void Acoth_returns_error_for_absolute_values_smaller_than_one([Range(-0.9, 0.9, 0.1)] double input)
+        public void Acoth_returns_error_for_absolute_angle_smaller_than_one([Range(-0.9, 0.9, 0.1)] double angle)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOTH({input})"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"ACOTH({angle})"));
         }
 
         [TestCase(-10, -0.100335348)]
@@ -145,9 +145,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(9, 0.111571776)]
         [TestCase(10, 0.100335348)]
         [TestCase(1E+100, 1E-100)]
-        public void Acoth_returns_correct_value(double input, double expectedResult)
+        public void Acoth_returns_correct_number(double angle, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"ACOTH({input})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"ACOTH({angle})");
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
@@ -721,13 +721,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Cot_returns_division_by_zero_error_on_zero_angle()
+        public void Cot_returns_division_by_zero_error_on_angle_zero()
         {
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("COT(0)"));
         }
 
         [Test]
-        public void Coth_returns_division_by_zero_error_on_zero_angle()
+        public void Coth_returns_division_by_zero_error_on_angle_zero()
         {
             Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("COTH(0)"));
         }
@@ -752,7 +752,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8, 1.000000225)]
         [TestCase(9, 1.00000003)]
         [TestCase(10, 1.000000004)]
-        public void Coth_Examples(double angle, double expected)
+        public void Coth_returns_correct_number(double angle, double expected)
         {
             var actual = (double)XLWorkbook.EvaluateExpr($"COTH({angle})");
             Assert.AreEqual(expected, actual, tolerance * 10.0);
@@ -784,9 +784,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8, 1.010756218)]
         [TestCase(9, 2.426486644)]
         [TestCase(10, -1.838163961)]
-        public void Csc_ReturnsCorrectValues(double input, double expected)
+        public void Csc_returns_correct_number(double angle, double expected)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"CSC({input})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"CSC({angle})");
             Assert.AreEqual(expected, actual, tolerance * 10);
         }
 
