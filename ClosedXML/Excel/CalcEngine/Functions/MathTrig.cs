@@ -45,7 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COTH", 1, 1, Adapt(Coth), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("CSC", 1, 1, Adapt(Csc), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("CSCH", 1, 1, Adapt(Csch), FunctionFlags.Scalar | FunctionFlags.Future);
-            ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
+            ce.RegisterFunction("DECIMAL", 2, 2, Adapt(Decimal), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("DEGREES", 1, 1, Adapt(Degrees), FunctionFlags.Scalar);
             ce.RegisterFunction("EVEN", 1, 1, Adapt(Even), FunctionFlags.Scalar);
             ce.RegisterFunction("EXP", 1, 1, Adapt(Exp), FunctionFlags.Scalar);
@@ -375,35 +375,33 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Sinh(angle);
         }
 
-        private static object Decimal(List<Expression> p)
+        private static ScalarValue Decimal(string text, double radix)
         {
-            string source = p[0];
-            double radix = p[1];
-
-            if (radix < 2 || radix > 36)
+            radix = Math.Truncate(radix);
+            if (radix is < 2 or > 36)
                 return XLError.NumberInvalid;
 
-            var asciiValues = Encoding.ASCII.GetBytes(source.ToUpperInvariant());
+            if (text.Length > 255)
+                return XLError.IncompatibleValue;
 
-            double result = 0;
-            int i = 0;
-
-            foreach (byte digit in asciiValues)
+            var result = 0d;
+            foreach (var digit in text.AsSpan().TrimStart())
             {
-                if (digit > 90)
+                var digitNumber = digit switch
                 {
-                    return XLError.NumberInvalid;
-                }
-
-                int digitNumber = digit >= 48 && digit < 58
-                    ? digit - 48
-                    : digit - 55;
+                    >= '0' and <= '9' => digit - '0',
+                    >= 'A' and <= 'Z' => digit - 'A' + 10,
+                    >= 'a' and <= 'z' => digit - 'a' + 10,
+                    _ => int.MaxValue,
+                };
 
                 if (digitNumber > radix - 1)
                     return XLError.NumberInvalid;
 
                 result = result * radix + digitNumber;
-                i++;
+
+                if (double.IsInfinity(result))
+                    return XLError.NumberInvalid;
             }
 
             return result;

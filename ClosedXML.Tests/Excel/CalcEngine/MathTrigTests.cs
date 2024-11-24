@@ -814,29 +814,47 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
-        [TestCase("zap", 36, 45745)]
-        public void Decimal(string inputString, int radix, int expectedResult)
+        [TestCase("zap", 36, 45745)] // Case insensitive
+        [TestCase("  1234", 10, 1234)] // Trims start
+        [TestCase("123", 10.9, 123)] // Radix truncated
+        [TestCase("1F", 10, XLError.NumberInvalid)]
+        [TestCase("", 10, 0)]
+        public void Decimal(string inputString, double radix, object expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr($"DECIMAL(\"{inputString}\", {radix})");
             Assert.AreEqual(expectedResult, actualResult);
         }
 
         [Theory]
-        public void Decimal_ReturnsErrorForRadiansGreater36([Range(37, 255)] int radix)
-        {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
-        }
-
-        [Theory]
-        public void Decimal_ReturnsErrorForRadiansSmaller2([Range(-5, 1)] int radix)
+        public void Decimal_radix_must_be_between_2_and_36([Range(37, 255), Range(-5, 1)] int radix)
         {
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
 
         [Test]
-        public void Decimal_ZeroIsZeroInAnyRadix([Range(2, 36)] int radix)
+        public void Decimal_zero_is_zero_in_any_radix([Range(2, 36)] int radix)
         {
             Assert.AreEqual(0, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+        }
+
+        [Test]
+        public void Decimal_text_must_be_less_than_256_chars_long()
+        {
+            var text = new string('0', 256);
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"DECIMAL(\"{text}\", 10)"));
+        }
+
+        [Test]
+        public void Decimal_returns_number_invalid_when_result_out_of_bounds()
+        {
+            Assert.AreEqual(1.4057081148316923E+308d, (double)XLWorkbook.EvaluateExpr($"DECIMAL(\"{new string('Z', 198)}\", 36)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DECIMAL(\"{new string('Z', 199)}\", 36)"));
+        }
+
+        [TestCase("101", "\"1 2/2\"", 5)] // 101 in binary is 5
+        public void Decimal_coercion(string input, string radix, object expectedResult)
+        {
+            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr($"DECIMAL({input}, {radix})"));
         }
 
         [Test]
