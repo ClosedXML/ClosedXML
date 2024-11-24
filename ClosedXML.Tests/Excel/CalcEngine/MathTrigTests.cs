@@ -1098,20 +1098,53 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
-        [Test]
-        public void Gcd()
+        [TestCase("24,36", ExpectedResult = 12)]
+        [TestCase("240,360,30", ExpectedResult = 30)]
+        [TestCase("24.9,36.9", ExpectedResult = 12)]
+        [TestCase("{24,36}", ExpectedResult = 12)]
+        [TestCase("{\"24\",\"36\"}", ExpectedResult = 12)]
+        [TestCase("5,0", ExpectedResult = 5)]
+        [TestCase("0,5", ExpectedResult = 5)]
+        public double Gcd(string args)
         {
-            object actual = XLWorkbook.EvaluateExpr("Gcd(24, 36)");
-            Assert.AreEqual(12, actual);
+            return (double)XLWorkbook.EvaluateExpr($"GCD({args})");
+        }
 
-            object actual1 = XLWorkbook.EvaluateExpr("Gcd(5, 0)");
-            Assert.AreEqual(5, actual1);
+        [Test]
+        public void Gcd_accepts_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                (120, 240),
+                ("60", "150"),
+            });
+            Assert.AreEqual(30, ws.Evaluate("GCD(A1:A2,B1:B2)"));
 
-            object actual2 = XLWorkbook.EvaluateExpr("Gcd(0, 5)");
-            Assert.AreEqual(5, actual2);
+            // Blank is considered 0
+            Assert.AreEqual(60, ws.Evaluate("GCD(A1:A3)"));
 
-            object actual3 = XLWorkbook.EvaluateExpr("Gcd(240, 360, 30)");
-            Assert.AreEqual(30, actual3);
+            // Logical are not converted
+            ws.Cell("A3").Value = true;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("GCD(A1:A3)"));
+
+            // Unconvertable text causes error
+            ws.Cell("A3").Value = "one";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("GCD(A1:A3)"));
+        }
+
+        [TestCase]
+        public void Gcd_numbers_must_fit_in_double_without_precision_loss()
+        {
+            Assert.AreEqual(9.007E+15, XLWorkbook.EvaluateExpr("GCD(9.007E+15)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("GCD(9.008E+15)"));
+        }
+
+        [TestCase]
+        public void Gcd_numbers_must_be_zero_or_positive()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("GCD(-1)"));
         }
 
         [TestCase(8.9, 8)]

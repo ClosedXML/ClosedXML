@@ -60,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FACTDOUBLE", 1, 1, Adapt(FactDouble), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR", 2, 2, Adapt(Floor), FunctionFlags.Scalar);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
-            ce.RegisterFunction("GCD", 1, 255, Gcd);
+            ce.RegisterFunction("GCD", 1, 255, Adapt(Gcd), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("INT", 1, 1, Adapt(Int), FunctionFlags.Scalar);
             ce.RegisterFunction("LCM", 1, 255, Adapt(Lcm), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("LN", 1, 1, Adapt(Ln), FunctionFlags.Scalar);
@@ -502,17 +502,28 @@ namespace ClosedXML.Excel.CalcEngine
                 return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
-        private static object Gcd(List<Expression> p)
+        private static ScalarValue Gcd(CalcContext ctx, List<Array> arrays)
         {
-            return p.Select(v => (int)v).Aggregate(Gcd);
-        }
+            var result = 0d;
+            foreach (var array in arrays)
+            {
+                foreach (var scalar in array)
+                {
+                    ctx.ThrowIfCancelled();
+                    if (scalar.IsLogical)
+                        return XLError.IncompatibleValue;
 
-        private static int Gcd(int a, int b)
-        {
-            while (b != 0)
-                (a, b) = (b, a % b);
+                    if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
+                        return error;
 
-            return a;
+                    if (number is < 0 or > MaxDoubleInt)
+                        return XLError.NumberInvalid;
+
+                    result = Gcd(number, Math.Truncate(result));
+                }
+            }
+
+            return result;
         }
 
         private static double Gcd(double a, double b)
