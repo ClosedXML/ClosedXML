@@ -1438,66 +1438,64 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void MMult()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
-            ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
-            ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
-            ws.Cell("A3").SetValue(2).CellRight().SetValue(4);
-            ws.Cell("A4").SetValue(3).CellRight().SetValue(5);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new[]
+            {
+                (2, 4),
+                (3, 5),
+                (2, 4),
+                (3, 5),
+            });
 
-            Object actual;
-
-            ws.Cell("A5").FormulaA1 = "MMult(A1:B2, A3:B4)";
-            actual = ws.Cell("A5").Value;
-
+            ws.Cell("A5").FormulaA1 = "MMULT(A1:B2, A3:B4)";
+            var actual = ws.Cell("A5").Value;
             Assert.AreEqual(16.0, actual);
 
-            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            ws.Cell("A6").FormulaA1 = "SUM(A5)";
             actual = ws.Cell("A6").Value;
-
             Assert.AreEqual(16.0, actual);
 
-            ws.Cell("A7").FormulaA1 = "Sum(MMult(A1:B2, A3:B4))";
+            ws.Cell("A7").FormulaA1 = "SUM(MMULT(A1:B2, A3:B4))";
             actual = ws.Cell("A7").Value;
-
             Assert.AreEqual(102.0, actual);
         }
 
         [Test]
-        public void MMult_HandlesNonSquareMatrices()
+        public void MMult_handles_non_square_matrices()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
-
-            // 2x3
-            ws.Cell("A1").SetValue(1).CellRight().SetValue(3).CellRight().SetValue(5);
-            ws.Cell("A2").SetValue(2).CellRight().SetValue(4).CellRight().SetValue(6);
-
-            // 3x4
-            ws.Cell("A3").SetValue(10).CellRight().SetValue(13).CellRight().SetValue(16).CellRight().SetValue(19);
-            ws.Cell("A4").SetValue(11).CellRight().SetValue(14).CellRight().SetValue(17).CellRight().SetValue(20);
-            ws.Cell("A5").SetValue(12).CellRight().SetValue(15).CellRight().SetValue(18).CellRight().SetValue(21);
-
-            Object actual;
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new object[]
+            {
+                // 2x3
+                (1, 3, 5),
+                (2, 4, 6),
+                // 3x4
+                (10, 13, 16, 19),
+                (11, 14, 17, 20),
+                (12, 15, 18, 21),
+            });
 
             // 2x4 output expected:
             // 103, 130, 157, 184
             // 136, 172, 208, 244
             ws.Cell("A6").FormulaA1 = "MMult(A1:C2, A3:D5)";
-
-            actual = ws.Cell("A6").Value;
+            var actual = ws.Cell("A6").Value;
             Assert.AreEqual(103.0, actual);
 
             ws.Cell("A7").FormulaA1 = "Sum(MMult(A1:C2, A3:D5))";
             actual = ws.Cell("A7").Value;
-
             Assert.AreEqual(1334, actual);
         }
 
         [TestCase("A2:C2", "A3:C3")] // 1x3 and 1x3
         [TestCase("A2:C4", "A5:C5")] // 3x3 and 1x3
         [TestCase("A2:C5", "A6:D6")] // 3x4 and 1x4
-        public void MMult_ThrowsWhenArray1RowsNotEqualToArray2Cols(string array1Range, string array2Range)
+        public void MMult_array1_rows_must_match_array2_column(string array1Range, string array2Range)
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
             ws.Cells($"{array1Range}").Value = 1.0;
             ws.Cells($"{array2Range}").Value = 1.0;

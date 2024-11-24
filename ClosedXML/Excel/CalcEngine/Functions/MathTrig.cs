@@ -79,7 +79,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LOG10", 1, 1, Adapt(Log10), FunctionFlags.Scalar);
             ce.RegisterFunction("MDETERM", 1, 1, Adapt(MDeterm), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("MINVERSE", 1, 1, Adapt(MInverse), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All);
-            ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
+            ce.RegisterFunction("MMULT", 2, 2, MMult, FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All);
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
             ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, AdaptMultinomial(Multinomial), FunctionFlags.Scalar, AllowRange.All);
@@ -556,32 +556,6 @@ namespace ClosedXML.Excel.CalcEngine
             return a;
         }
 
-        private static double[,] GetArray(Expression expression)
-        {
-            if (expression is XObjectExpression objectExpression
-                && objectExpression.Value is CellRangeReference cellRangeReference)
-            {
-                var range = cellRangeReference.Range;
-                var rowCount = range.RowCount();
-                var columnCount = range.ColumnCount();
-                var arr = new double[rowCount, columnCount];
-
-                for (int row = 0; row < rowCount; row++)
-                {
-                    for (int column = 0; column < columnCount; column++)
-                    {
-                        arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
-                    }
-                }
-
-                return arr;
-            }
-            else
-            {
-                return new[,] { { (double)expression } };
-            }
-        }
-
         private static OneOf<double[,], XLError> GetArray(AnyValue value, CalcContext ctx)
         {
             if (value.TryPickSingleOrMultiValue(out var scalar, out var array, ctx))
@@ -697,36 +671,30 @@ namespace ClosedXML.Excel.CalcEngine
             return new NumberArray(inverse.mat);
         }
 
-        private static object MMult(List<Expression> p)
+        private static AnyValue MMult(CalcContext ctx, Span<AnyValue> args)
         {
-            Double[,] A, B;
+            if (!GetArray(args[0], ctx).TryPickT0(out var matrixA, out var errorA))
+                return errorA;
 
-            try
-            {
-                A = GetArray(p[0]);
-                B = GetArray(p[1]);
-            }
-            catch (InvalidCastException)
-            {
-                return XLError.IncompatibleValue;
-            }
+            if (!GetArray(args[1], ctx).TryPickT0(out var matrixB, out var errorB))
+                return errorB;
 
-            if (A.GetLength(1) != B.GetLength(0))
+            if (matrixA.GetLength(1) != matrixB.GetLength(0))
                 return XLError.IncompatibleValue;
 
-            var C = new double[A.GetLength(0), B.GetLength(1)];
-            for (int i = 0; i < A.GetLength(0); i++)
+            var matrixC = new double[matrixA.GetLength(0), matrixB.GetLength(1)];
+            for (var i = 0; i < matrixA.GetLength(0); i++)
             {
-                for (int j = 0; j < B.GetLength(1); j++)
+                for (var j = 0; j < matrixB.GetLength(1); j++)
                 {
-                    for (int k = 0; k < A.GetLength(1); k++)
+                    for (var k = 0; k < matrixA.GetLength(1); k++)
                     {
-                        C[i, j] += A[i, k] * B[k, j];
+                        matrixC[i, j] += matrixA[i, k] * matrixB[k, j];
                     }
                 }
             }
 
-            return C;
+            return new NumberArray(matrixC);
         }
 
         private static ScalarValue Mod(double number, double divisor)
