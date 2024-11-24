@@ -78,7 +78,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LOG", 1, 2, AdaptLastOptional(Log, 10), FunctionFlags.Scalar);
             ce.RegisterFunction("LOG10", 1, 1, Adapt(Log10), FunctionFlags.Scalar);
             ce.RegisterFunction("MDETERM", 1, 1, Adapt(MDeterm), FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MINVERSE", 1, MInverse, AllowRange.All);
+            ce.RegisterFunction("MINVERSE", 1, 1, Adapt(MInverse), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All);
             ce.RegisterFunction("MMULT", 2, MMult, AllowRange.All);
             ce.RegisterFunction("MOD", 2, 2, Adapt(Mod), FunctionFlags.Scalar);
             ce.RegisterFunction("MROUND", 2, 2, Adapt(MRound), FunctionFlags.Scalar);
@@ -680,12 +680,21 @@ namespace ClosedXML.Excel.CalcEngine
             return matrix.Determinant();
         }
 
-        private static object MInverse(List<Expression> p)
+        private static AnyValue MInverse(CalcContext ctx, AnyValue value)
         {
-            var arr = GetArray(p[0]);
-            var m = new XLMatrix(arr);
+            if (!GetArray(value, ctx).TryPickT0(out var array, out var error))
+                return error;
 
-            return m.Invert().mat;
+            var isSquare = array.GetLength(0) == array.GetLength(1);
+            if (!isSquare)
+                return XLError.IncompatibleValue;
+
+            var matrix = new XLMatrix(array);
+            var inverse = matrix.Invert();
+            if (inverse.IsSingular())
+                return XLError.NumberInvalid;
+
+            return new NumberArray(inverse.mat);
         }
 
         private static object MMult(List<Expression> p)

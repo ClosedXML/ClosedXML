@@ -42,6 +42,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             set { mat[iRow, iCol] = value; }
         }
 
+        public Boolean IsSingular()
+        {
+            for (var row = 0; row < rows; row++)
+            {
+                for (var col = 0; col < cols; col++)
+                {
+                    var element = mat[row, col];
+                    if (double.IsNaN(element) || double.IsInfinity(element))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public Boolean IsSquare()
         {
             return (rows == cols);

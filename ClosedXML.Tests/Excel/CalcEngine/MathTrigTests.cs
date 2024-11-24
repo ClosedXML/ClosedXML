@@ -1367,29 +1367,72 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(tolerance)]
         public void MInverse()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
-            ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
-            ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
-            ws.Cell("A3").SetValue(0d).CellRight().SetValue(2).CellRight().SetValue(0d);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new[]
+            {
+                (1, 2, 1),
+                (3, 4, -1),
+                (0, 2, 0),
+            });
 
-            XLCellValue actual;
+            ws.Cell("A5").FormulaA1 = "MINVERSE(A1:C3)";
+            var actual = ws.Cell("A5").Value;
+            Assert.AreEqual(0.25, (double)actual);
 
-            ws.Cell("A5").FormulaA1 = "MInverse(A1:C3)";
-            actual = ws.Cell("A5").Value;
-
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
-
-            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            ws.Cell("A6").FormulaA1 = "SUM(A5)";
             actual = ws.Cell("A6").Value;
+            Assert.AreEqual(0.25, (double)actual);
 
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
-
-            ws.Cell("A7").FormulaA1 = "Sum(MInverse(A1:C3))";
+            ws.Cell("A7").FormulaA1 = "SUM(MINVERSE(A1:C3))";
             actual = ws.Cell("A7").Value;
+            Assert.AreEqual(0.5, (double)actual);
+        }
 
-            Assert.IsTrue(XLHelper.AreEqual(0.5, (double)actual));
+        [Test]
+        public void MInverse_returns_error_on_singular_matrix()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new[]
+            {
+                (1, 2),
+                (1, 2),
+            });
+            Assert.AreEqual(XLError.NumberInvalid, ws.Evaluate("MINVERSE(A1:B2)"));
+        }
+
+        [Test]
+        public void MInverse_requires_square_matrix()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("MINVERSE({1,2,3;7,5,5})"));
+        }
+
+        [Test]
+        public void MInverse_all_array_elements_must_be_numbers()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").InsertData(new[]
+            {
+                (1, 2),
+                (8, 4),
+            });
+
+            ws.Cell("B2").Value = Blank.Value;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MINVERSE(A1:B2)"));
+
+            ws.Cell("B2").Value = true;
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MINVERSE(A1:B2)"));
+
+            ws.Cell("B2").Value = "1";
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("MINVERSE(A1:B2)"));
+
+            ws.Cell("B2").Value = XLError.DivisionByZero;
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("MINVERSE(A1:B2)"));
         }
 
         [Test]
