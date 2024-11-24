@@ -762,9 +762,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Csc_On0_ThrowsDivisionByZeroException()
+        public void Csc_returns_division_by_zero_on_angle_zero()
         {
-            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"CSC(0)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("CSC(0)"));
         }
 
         [TestCase(-10, 1.838163961)]
@@ -789,7 +789,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(10, -1.838163961)]
         public void Csc_ReturnsCorrectValues(double input, double expected)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"CSC({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"CSC({input})");
             Assert.AreEqual(expected, actual, tolerance * 10);
         }
 
