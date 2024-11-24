@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATAN", 1, 1, Adapt(Atan), FunctionFlags.Scalar);
             ce.RegisterFunction("ATAN2", 2, 2, Adapt(Atan2), FunctionFlags.Scalar);
             ce.RegisterFunction("ATANH", 1, 1, Adapt(Atanh), FunctionFlags.Scalar);
-            ce.RegisterFunction("BASE", 2, 3, Base);
+            ce.RegisterFunction("BASE", 2, 3, AdaptLastOptional(Base, 1), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("CEILING", 2, 2, Adapt(Ceiling), FunctionFlags.Scalar);
             ce.RegisterFunction("CEILING.MATH", 1, 3, AdaptLastTwoOptional(CeilingMath, 1, 0), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("COMBIN", 2, 2, Adapt(Combin), FunctionFlags.Scalar);
@@ -242,37 +242,27 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ATanh(number);
         }
 
-        private static object Base(List<Expression> p)
+        private static ScalarValue Base(double number, double radix, double minLength)
         {
-            long number;
-            int radix;
-            int minLength = 0;
-
-            var rawNumber = p[0].Evaluate();
-            if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
-                number = Convert.ToInt64(rawNumber);
-            else
-                return XLError.IncompatibleValue;
-
-            var rawRadix = p[1].Evaluate();
-            if (rawRadix is long || rawRadix is int || rawRadix is byte || rawRadix is double || rawRadix is float)
-                radix = Convert.ToInt32(rawRadix);
-            else
-                return XLError.IncompatibleValue;
-
-            if (p.Count > 2)
-            {
-                var rawMinLength = p[2].Evaluate();
-                if (rawMinLength is long || rawMinLength is int || rawMinLength is byte || rawMinLength is double || rawMinLength is float)
-                    minLength = Convert.ToInt32(rawMinLength);
-                else
-                    return XLError.IncompatibleValue;
-            }
-
-            if (number < 0 || radix < 2 || radix > 36)
+            number = Math.Truncate(number);
+            radix = Math.Truncate(radix);
+            minLength = Math.Truncate(minLength);
+            if (number is < 0 or > MaxDoubleInt || radix is < 2 or > 36 || minLength is < 0 or > 255)
                 return XLError.NumberInvalid;
 
-            return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
+            var sb = new StringBuilder();
+            while (number > 0)
+            {
+                var digit = (int)(number % radix);
+                number = Math.Floor(number / radix);
+
+                var digitChar = digit < 10
+                    ? (char)(digit + '0')
+                    : (char)(digit - 10 + 'A');
+                sb.Insert(0, digitChar);
+            }
+
+            return sb.ToString().PadLeft((int)minLength, '0');
         }
 
         private static ScalarValue Ceiling(double number, double significance)

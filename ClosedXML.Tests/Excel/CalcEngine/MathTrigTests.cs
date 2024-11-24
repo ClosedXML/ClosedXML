@@ -396,9 +396,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(36, 36, "10")]
         [TestCase(255, 29, "8N")]
         [TestCase(255, 2, "11111111")]
-        public void Base_ReturnsCorrectResultOnInput(int input, int theBase, string expectedResult)
+        public void Base_returns_number_in_specified_base(int input, int radix, string expectedResult)
         {
-            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1})", input, theBase));
+            var actual = (string)XLWorkbook.EvaluateExpr($"BASE({input},{radix})");
             Assert.AreEqual(expectedResult, actual);
         }
 
@@ -406,36 +406,44 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(255, 2, 8, "11111111")]
         [TestCase(255, 2, 10, "0011111111")]
         [TestCase(10, 3, 4, "0101")]
-        public void Base_ReturnsCorrectResultOnInputWithMinimalLength(int input, int theBase, int minLength, string expectedResult)
+        [TestCase(0, 10, 0, "")]
+        public void Base_returns_text_of_at_least_minimal_length(int input, int radix, int minLength, string expectedResult)
         {
-            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1}, {2})", input, theBase, minLength));
+            var actual = (string)XLWorkbook.EvaluateExpr($"BASE({input},{radix},{minLength})");
             Assert.AreEqual(expectedResult, actual);
+        }
+
+        [Test]
+        public void Base_min_length_must_be_at_most_255()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("BASE(0,2,256)"));
         }
 
         [TestCase(@"""x""", "2", "2")]
         [TestCase("0", @"""x""", "2")]
         [TestCase("0", "2", @"""x""")]
-        public void Base_ThrowsCellValueExceptionOnAnyInputNotANumber(string input, string theBase, string minLength)
+        public void Base_coercion(string input, string radix, string minLength)
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"BASE({input}, {theBase}, {minLength})"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"BASE({input},{radix},{minLength})"));
         }
 
         [Theory]
-        public void Base_ThrowsNumberExceptionOnBaseSmallerThan2([Range(-2, 1)] int theBase)
+        public void Base_radix_must_be_between_2_and_36([Range(-2, 1), Range(37, 40)] int radix)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE(0, {0})", theBase.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"BASE(0,{radix})"));
         }
 
         [Theory]
-        public void Base_ThrowsNumberExceptionOnInputSmallerThan0([Range(-5, -1)] int input)
+        public void Base_number_must_be_zero_or_positive([Range(-5, -1)] int input)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, 2)", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"BASE({input},2)"));
         }
 
         [Theory]
-        public void Base_ThrowsNumberExceptionOnRadixGreaterThan36([Range(37, 40)] int radix)
+        public void Base_number_must_fit_in_double_without_precision_loss()
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE(1, {0})", radix.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(@"2GOPQOE5GCG", XLWorkbook.EvaluateExpr("BASE(9.007E+15,36)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("BASE(9.008E+15,36)"));
         }
 
         [TestCase(24.3, 5, 25)]
