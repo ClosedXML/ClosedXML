@@ -730,9 +730,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Cot_On0_ThrowsDivisionByZeroException()
+        public void Coth_returns_division_by_zero_error_on_zero_angle()
         {
-            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"COTH(0)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("COTH(0)"));
         }
 
         [TestCase(-10, -1.000000004)]
@@ -755,9 +755,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(8, 1.000000225)]
         [TestCase(9, 1.00000003)]
         [TestCase(10, 1.000000004)]
-        public void Coth_Examples(double input, double expected)
+        public void Coth_Examples(double angle, double expected)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"COTH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr($"COTH({angle})");
             Assert.AreEqual(expected, actual, tolerance * 10.0);
         }
 

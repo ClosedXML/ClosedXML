@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COS", 1, 1, Adapt(Cos), FunctionFlags.Scalar);
             ce.RegisterFunction("COSH", 1, 1, Adapt(Cosh), FunctionFlags.Scalar);
             ce.RegisterFunction("COT", 1, 1, Adapt(Cot), FunctionFlags.Scalar | FunctionFlags.Future);
-            ce.RegisterFunction("COTH", 1, Coth);
+            ce.RegisterFunction("COTH", 1, 1, Adapt(Coth), FunctionFlags.Scalar | FunctionFlags.Future);
             ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
@@ -346,13 +346,12 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / tan;
         }
 
-        private static object Coth(List<Expression> p)
+        private static ScalarValue Coth(double angle)
         {
-            double input = p[0];
-            if (input == 0)
+            if (angle == 0)
                 return XLError.DivisionByZero;
 
-            return 1 / Math.Tanh(input);
+            return 1 / Math.Tanh(angle);
         }
 
         private static object Csc(List<Expression> p)
