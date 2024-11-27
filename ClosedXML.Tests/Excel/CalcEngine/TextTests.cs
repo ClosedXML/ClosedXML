@@ -8,6 +8,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [SetCulture("en-US")]
     public class TextTests
     {
+        [TestCase(@"ABCDEF123", @"ABCDEF123")]
+        [TestCase(@"ァィゥェォッャュョヮ", @"ｧｨｩｪｫｯｬｭｮヮ")] // Small katakana, there is no half wa variant
+        [TestCase(@"アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン", @"ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ")]
+        [TestCase("！＂＃\uff04％＆＇（）＊\uff0b，－．／０１２３４５６７８９：；\uff1c\uff1d\uff1e？＠", @"!""#$%&'()*+,-./0123456789:;<=>?@")]
+        [TestCase(@"ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ", @"ABCDEFGHIJKLMNOPQRSTUVWXYZ")]
+        [TestCase("［＼］\uff3e＿\uff40ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ｛\uff5c｝\uff5e", @"[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")]
+        [TestCase(@"―‘’”、。「」゛゜・ー￥", @"ｰ`'""､｡｢｣ﾞﾟ･ｰ\")]
+        public void Asc_converts_fullwidth_characters_to_halfwidth_characters(string input, string expected)
+        {
+            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr($"ASC(\"{input}\")"));
+        }
+
         [Test]
         public void Char_Empty_Input_String()
         {
