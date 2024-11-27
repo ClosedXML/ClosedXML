@@ -21,22 +21,33 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Char_Empty_Input_String()
+        public void Char_returns_error_on_empty_string()
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"Char("""")"));
+            // Calc engine tries to coerce it to number and fails. It never even reaches the functions.
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"CHAR("""")"));
         }
 
-        [Test]
-        public void Char_Input_Too_Large()
+        [TestCase(0)]
+        [TestCase(256)]
+        [TestCase(9797)]
+        public void Char_number_must_be_between_1_and_255(int number)
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"Char(9797)"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"CHAR({number})"));
         }
 
-        [Test]
-        public void Char_Value()
+        [TestCase(48, '0')]
+        [TestCase(97, 'a')]
+        [TestCase(128, '€')]
+        [TestCase(138, 'Š')]
+        [TestCase(169, '©')]
+        [TestCase(182, '¶')]
+        [TestCase(230, 'æ')]
+        [TestCase(255, 'ÿ')]
+        [TestCase(255.9, 'ÿ')]
+        public void Char_interprets_number_as_win1252(double number, char expected)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Char(97)");
-            Assert.AreEqual("a", actual);
+            var actual = XLWorkbook.EvaluateExpr($"CHAR({number})");
+            Assert.AreEqual(expected.ToString(), actual);
         }
 
         [Test]

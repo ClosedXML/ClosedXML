@@ -43,3 +43,10 @@ The setters ```IXLCell.FormulaA1```, ```IXLCell.FormulaR1C1``` and
 ```=``` sign (i.e. ``` = A1+B4 ``` will turn into ```A1+B4```). A formula
 starting with an equals sign is not a valid formula per formula grammar and
 causes problems with parsing.
+
+*********
+Functions
+*********
+
+`CHAR` now uses win1252 to interpret passed values (values were previously
+interpreted as unicode codepoints).
