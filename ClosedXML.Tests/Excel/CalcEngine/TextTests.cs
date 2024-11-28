@@ -51,19 +51,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Clean_Empty_Input_String()
+        public void Clean_empty_string_is_empty_string()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Clean("""")");
-            Assert.AreEqual("", actual);
+            Assert.AreEqual("", XLWorkbook.EvaluateExpr(@"CLEAN("""")"));
         }
 
         [Test]
-        public void Clean_Value()
+        public void Clean_removes_control_characters()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Clean(CHAR(9)&""Monthly report""&CHAR(10))");
+            var actual = XLWorkbook.EvaluateExpr(@"CLEAN(CHAR(9)&""Monthly report""&CHAR(10))");
             Assert.AreEqual("Monthly report", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Clean(""   "")");
+            actual = XLWorkbook.EvaluateExpr(@"CLEAN(""   "")");
             Assert.AreEqual("   ", actual);
         }
 

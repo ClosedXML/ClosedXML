@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ASC", 1, 1, Adapt(Asc), FunctionFlags.Scalar); // Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
             //ce.RegisterFunction("BAHTTEXT	Converts a number to text, using the ß (baht) currency format
             ce.RegisterFunction("CHAR", 1, 1, Adapt(Char), FunctionFlags.Scalar); // Returns the character specified by the code number
-            ce.RegisterFunction("CLEAN", 1, Clean); //	Removes all nonprintable characters from text
+            ce.RegisterFunction("CLEAN", 1, 1, Adapt(Clean), FunctionFlags.Scalar); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, Code); // Returns a numeric code for the first character in a text string
             ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat, AllowRange.All); //	Joins several text items into one text item
 
@@ -137,6 +137,27 @@ namespace ClosedXML.Excel.CalcEngine
                 return char.ToString((char)value);
 
             return Windows1252[value - 0x80].ToString();
+        }
+
+        private static ScalarValue Clean(string text)
+        {
+            // Although standard says it removes only 0..1F, real one removes other characters as
+            // well. Based on `LEN(CLEAN(UNICHAR(A1))) = 0`, it removes 1-1F and 0x80-0x9F. ODF
+            // says to remove Cc and Cn, but Excel doesn't seem to remove Cn.
+            var result = new StringBuilder(text.Length);
+            foreach (char c in text)
+            {
+                int codePoint = c;
+                if (codePoint is >= 0 and <= 0x1F)
+                    continue;
+
+                if (codePoint is >= 0x80 and <= 0x9F)
+                    continue;
+
+                result.Append(c);
+            }
+
+            return result.ToString();
         }
 
         private static object Code(List<Expression> p)
@@ -530,19 +551,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return XLError.IncompatibleValue;
         }
-
-        private static object Clean(List<Expression> p)
-        {
-            var s = (string)p[0];
-
-            var result = new StringBuilder();
-            foreach (var c in from c in s let b = (byte)c where b >= 32 select c)
-            {
-                result.Append(c);
-            }
-            return result.ToString();
-        }
-
+        
         private static object Dollar(List<Expression> p)
         {
             Double value = p[0];
