@@ -41,9 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CLEAN", 1, 1, Adapt(Clean), FunctionFlags.Scalar); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, 1, Adapt(Code), FunctionFlags.Scalar); // Returns a numeric code for the first character in a text string
             ce.RegisterFunction("CONCAT", 1, 255, Adapt(Concat), FunctionFlags.Future | FunctionFlags.Range, AllowRange.All); // Joins several text items into one text item
-
-            // LEGACY: Remove after switch to new engine. CONCATENATE function doesn't actually accept ranges, but it's legacy implementation has a check and there is a test.
-            ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate, AllowRange.All); //	Joins several text items into one text item
+            ce.RegisterFunction("CONCATENATE", 1, 255, Adapt(Concatenate), FunctionFlags.Scalar, AllowRange.None); //	Joins several text items into one text item
             ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, 2, Adapt(Exact), FunctionFlags.Scalar); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
@@ -194,29 +192,17 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Concatenate(List<Expression> p)
+        private static ScalarValue Concatenate(CalcContext ctx, List<string> texts)
         {
-            var sb = new StringBuilder();
-            foreach (var x in p)
+            var totalLength = texts.Sum(static x => x.Length);
+            var sb = new StringBuilder(totalLength);
+            foreach (var text in texts)
             {
-                if (x is XObjectExpression objectExpression)
-                {
-                    if (objectExpression.Value is CellRangeReference cellRangeReference)
-                    {
-                        if (!cellRangeReference.Range.RangeAddress.IsValid)
-                            return XLError.CellReference;
-
-                        // Only single cell range references allows at this stage. See unit test for more details
-                        if (cellRangeReference.Range.RangeAddress.NumberOfCells > 1)
-                            return XLError.IncompatibleValue;
-                    }
-                    else
-                        // I'm unsure about what else objectExpression.Value could be, but let's throw CellReferenceException
-                        return XLError.CellReference;
-                }
-
-                sb.Append((string)x);
+                sb.Append(text);
+                if (sb.Length > 32767)
+                    return XLError.IncompatibleValue;
             }
+
             return sb.ToString();
         }
 

@@ -165,6 +165,24 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, List<string>, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var texts = new List<string>(args.Length);
+                foreach (var arg in args)
+                {
+                    var argConverted = ToText(arg, ctx);
+                    if (!argConverted.TryPickT0(out var text, out var error))
+                        return error;
+
+                    texts.Add(text);
+                }
+
+                return f(ctx, texts).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction Adapt(Func<CalcContext, AnyValue, AnyValue> f)
         {
             return (ctx, args) => f(ctx, args[0]);

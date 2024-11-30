@@ -177,55 +177,68 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Concatenate_Value()
+        [SetCulture("cs-CZ")]
+        public void Concatenate_concatenates_scalar_values()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Concatenate(""ABC"", ""123"")");
-            Assert.AreEqual("ABC123", actual);
+            using var wb = new XLWorkbook();
+            var actual = wb.Evaluate(@"CONCATENATE(""ABC"",123,4.56,IF(TRUE,),TRUE)");
+            Assert.AreEqual("ABC1234,56TRUE", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Concatenate("""", ""123"")");
+            actual = wb.Evaluate(@"CONCATENATE("""",""123"")");
             Assert.AreEqual("123", actual);
-
-            // TODO: Fix CONCATENATE when calling cell references are available
-            // In Excel, it seems that if the parameter is a range,
-            // CONCATENATE will return the cell in the range that is the same row number as the calling cell,
-            // i.e. the cell with the CONCATENATE function.
-            // Therefore we need reference info about the calling cell to solve this.
-            // If we can solve ROW(), then we can solve this too.
-            // For the example below, the calling cell doesn't share any
-
-            var ws = new XLWorkbook().AddWorksheet();
-
-            ws.FirstCell().SetValue(20)
-                .CellBelow().SetValue("AB")
-                .CellBelow().SetFormulaA1("=DATE(2019,1,1)");
-
-            // Calling cell is 1st row, so formula should return A1
-            //ws.Cell("B1").SetFormulaA1("=CONCATENATE(A1:A3)");
-            //Assert.AreEqual("20", ws.Cell("B1").Value);
-
-            // Calling cell is 2nd row, so formula should return A2
-            //ws.Cell("B2").SetFormulaA1("=CONCATENATE(A1:A3)");
-            //Assert.AreEqual("AB", ws.Cell("B2").Value);
-
-            // Calling cell is 3rd row, so formula should return A3's textual representation
-            //ws.Cell("B3").SetFormulaA1("=CONCATENATE(A1:A3)");
-            //Assert.AreEqual("43466", ws.Cell("B3").Value);
-
-            // Calling cell doesn't share row with any cell in parameter range. Throw CellValueException
-            //ws.Cell("A4").SetFormulaA1("=CONCATENATE(A1:A3)");
-            //Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A4").GetString());
         }
 
         [Test]
         public void Concatenate_with_references()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
             ws.Cell("A1").Value = "Hello";
             ws.Cell("B1").Value = "World";
+            ws.Cell("C1").FormulaA1 = "CONCATENATE(A1:A2,\" \",B1:B2)";
+            ws.Cell("A3").FormulaA1 = "CONCATENATE(A1:A2,\" \",B1:B2)";
 
-            Assert.AreEqual("Hello World", ws.Evaluate(@"=CONCATENATE(A1, "" "", B1)"));
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(@"=CONCATENATE(A1:A2, "" "", B1:B2)"));
+            Assert.AreEqual("Hello World", ws.Evaluate(@"CONCATENATE(A1,"" "",B1)"));
+
+            // The result on C1 is on the same row (only one intersected cell) means implicit intersection
+            // results in a one value per intersection and thus correct value. The A3 intersects two cells
+            // and thus results in #VALUE! error.
+            Assert.AreEqual("Hello World", ws.Cell("C1").Value);
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A3").Value);
+        }
+
+        [Test]
+        public void Concatenate_has_limit_of_32767_characters()
+        {
+            Assert.AreNotEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("CONCATENATE(REPT(\"A\",32767))"));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("CONCATENATE(REPT(\"A\",32768))"));
+        }
+
+        [Test]
+        public void Concatenate_uses_implicit_intersection_on_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetValue(20)
+                .CellBelow().SetValue("AB")
+                .CellBelow().SetFormulaA1("DATE(2019,1,1)");
+
+            // Calling cell is 1st row, so formula should return A1
+            ws.Cell("B1").SetFormulaA1("CONCATENATE(A1:A3)");
+            Assert.AreEqual("20", ws.Cell("B1").Value);
+
+            // Calling cell is 2nd row, so formula should return A2
+            ws.Cell("B2").SetFormulaA1("CONCATENATE(A1:A3)");
+            Assert.AreEqual("AB", ws.Cell("B2").Value);
+
+            // Calling cell is 3rd row, so formula should return A3's textual representation
+            ws.Cell("B3").SetFormulaA1("CONCATENATE(A1:A3)");
+            Assert.AreEqual("43466", ws.Cell("B3").Value);
+
+            // Calling cell doesn't share row with any cell in parameter range.
+            ws.Cell("A4").SetFormulaA1("CONCATENATE(A1:A3)");
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("A4").Value);
         }
 
         [Test]
