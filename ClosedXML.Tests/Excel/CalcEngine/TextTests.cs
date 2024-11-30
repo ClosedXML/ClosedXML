@@ -103,29 +103,77 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Concat_Value()
+        [SetCulture("cs-CZ")]
+        public void Concat_concatenates_scalar_values()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Concat(""ABC"", ""123"")");
-            Assert.AreEqual("ABC123", actual);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var actual = ws.Evaluate(@"CONCAT(""ABC"",123,TRUE,IF(TRUE,),1.25)");
+            Assert.AreEqual("ABC123TRUE1,25", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Concat("""", ""123"")");
+            actual = ws.Evaluate(@"CONCAT("""",""123"")");
             Assert.AreEqual("123", actual);
 
-            var ws = new XLWorkbook().AddWorksheet();
-
-            ws.FirstCell().SetValue(20)
+            ws.FirstCell().SetValue(20.5)
                 .CellBelow().SetValue("AB")
-                .CellBelow().SetFormulaA1("=DATE(2019,1,1)")
-                .CellBelow().SetFormulaA1("=CONCAT(A1:A3)");
+                .CellBelow().SetFormulaA1("DATE(2019,1,1)")
+                .CellBelow().SetFormulaA1("CONCAT(A1:A3)");
 
             actual = ws.Cell("A4").Value;
-            Assert.AreEqual("20AB43466", actual);
+            Assert.AreEqual("20,5AB43466", actual);
         }
 
         [Test]
-        public void Concat_EmptyValue()
+        public void Concat_concatenates_array_values()
         {
-            Assert.AreEqual("ABC123", XLWorkbook.EvaluateExpr(@"CONCAT(""ABC"", , ""123"", )"));
+            Assert.AreEqual("ABC0123456789Z", XLWorkbook.EvaluateExpr(@"CONCAT({""A"",""B"",""C""},{0,1},{2;3},{4,5,6;7,8,9},""Z"")"));
+        }
+
+        [Test]
+        public void Concat_concatenates_references()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("C2").InsertData(new object[]
+            {
+                ("A", "B", "C"),
+                (1, 2, 3, 4),
+                (5, 6, 7, 8),
+            });
+            Assert.AreEqual("ABC12345678AZ", ws.Evaluate("CONCAT(C2:E2,C3:F4,C2,\"Z\")"));
+        }
+
+        [Test]
+        public void Concat_has_limit_of_32767_characters()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("CONCAT(REPT(\"A\",32768))"));
+        }
+
+        [Test]
+        public void Concat_accepts_only_area_references()
+        {
+            // Only areas are accepted, not unions
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("CONCAT((C2:E2,C3:F4),C2,\"Z\")"));
+        }
+
+        [Test]
+        public void Concat_propagates_error_values()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"CONCAT(""ABC"",#DIV/0!,5)"));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr(@"CONCAT(""ABC"",{""D"",#DIV/0!,7},5)"));
+
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B5").SetValue(XLError.DivisionByZero).CellBelow().SetValue(5);
+            Assert.AreEqual(XLError.DivisionByZero, ws.Evaluate("CONCAT(\"ABC\",B5:B6)"));
+        }
+
+        [Test]
+        public void Concat_treats_blanks_as_empty_string()
+        {
+            Assert.AreEqual("ABC123", XLWorkbook.EvaluateExpr(@"CONCAT(""ABC"",,""123"",)"));
         }
 
         [Test]

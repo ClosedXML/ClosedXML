@@ -1,6 +1,5 @@
 using ExcelNumberFormat;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CHAR", 1, 1, Adapt(Char), FunctionFlags.Scalar); // Returns the character specified by the code number
             ce.RegisterFunction("CLEAN", 1, 1, Adapt(Clean), FunctionFlags.Scalar); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, 1, Adapt(Code), FunctionFlags.Scalar); // Returns a numeric code for the first character in a text string
-            ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat, AllowRange.All); //	Joins several text items into one text item
+            ce.RegisterFunction("CONCAT", 1, 255, Adapt(Concat), FunctionFlags.Future | FunctionFlags.Range, AllowRange.All); // Joins several text items into one text item
 
             // LEGACY: Remove after switch to new engine. CONCATENATE function doesn't actually accept ranges, but it's legacy implementation has a check and there is a test.
             ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate, AllowRange.All); //	Joins several text items into one text item
@@ -176,19 +175,22 @@ namespace ClosedXML.Excel.CalcEngine
             return code;
         }
 
-        private static object Concat(List<Expression> p)
+        private static ScalarValue Concat(CalcContext ctx, List<Array> texts)
         {
             var sb = new StringBuilder();
-            foreach (var x in p)
+            foreach (var array in texts)
             {
-                if (x is IEnumerable enumerable)
+                foreach (var scalar in array)
                 {
-                    foreach (var i in enumerable)
-                        sb.Append((string)(new Expression(i)));
+                    if (!scalar.ToText(ctx.Culture).TryPickT0(out var text, out var error))
+                        return error;
+
+                    sb.Append(text);
+                    if (sb.Length > 32767)
+                        return XLError.IncompatibleValue;
                 }
-                else
-                    sb.Append((string)x);
             }
+
             return sb.ToString();
         }
 
