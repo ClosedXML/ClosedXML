@@ -67,20 +67,39 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Code_Empty_Input_String()
+        public void Code_returns_error_on_empty_string()
         {
-            // Todo: more specific exception - ValueException?
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Code("""")"), Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(@"CODE("""")"));
+        }
+
+        [TestCase("A", 65)]
+        [TestCase("BCD", 66)]
+        [TestCase("€", 128)]
+        [TestCase("ÿ", 255)]
+        public void Code_returns_win1252_codepoint_of_first_character(string text, int expected)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"CODE(\"{text}\")");
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void Code_Value()
+        public void Code_is_inverse_to_char()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Code(""A"")");
-            Assert.AreEqual(65, actual);
+            for (var i = 1; i < 256; ++i)
+                Assert.AreEqual(i, XLWorkbook.EvaluateExpr($"CODE(CHAR({i}))"));
+        }
 
-            actual = XLWorkbook.EvaluateExpr(@"Code(""BCD"")");
-            Assert.AreEqual(66, actual);
+        [TestCase("π")]
+        [TestCase("ب")]
+        [TestCase("😃")]
+        [TestCase("♫")]
+        [TestCase("ひ")]
+        public void Code_returns_question_mark_code_on_non_win1252_chars(string text)
+        {
+            var expected = XLWorkbook.EvaluateExpr("CODE(\"?\")");
+            var actual = XLWorkbook.EvaluateExpr($"CODE(\"{text}\")");
+            Assert.AreEqual(63, expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]

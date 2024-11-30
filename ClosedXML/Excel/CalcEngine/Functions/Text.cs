@@ -26,13 +26,21 @@ namespace ClosedXML.Excel.CalcEngine
             "\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u00E6\u00E7\u00E8\u00E9\u00EA\u00EB\u00EC\u00ED\u00EE\u00EF" +
             "\u00F0\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA\u00FB\u00FC\u00FD\u00FE\u00FF";
 
+        private static readonly Lazy<Dictionary<int, string>> Windows1252Char = new(static () =>
+            Enumerable.Range(0, 0x80).Select(static i => (Char: (char)i, Code: i))
+                .Concat(Windows1252.Select(static (c, i) => (Char: c, Code: i + 0x80)))
+                .ToDictionary(x => x.Code, x => char.ToString(x.Char)));
+
+        private static readonly Lazy<Dictionary<char, int>> Windows1252Code = new(static () =>
+            Windows1252Char.Value.ToDictionary(x => x.Value[0], x => x.Key));
+
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ASC", 1, 1, Adapt(Asc), FunctionFlags.Scalar); // Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
             //ce.RegisterFunction("BAHTTEXT	Converts a number to text, using the ß (baht) currency format
             ce.RegisterFunction("CHAR", 1, 1, Adapt(Char), FunctionFlags.Scalar); // Returns the character specified by the code number
             ce.RegisterFunction("CLEAN", 1, 1, Adapt(Clean), FunctionFlags.Scalar); //	Removes all nonprintable characters from text
-            ce.RegisterFunction("CODE", 1, Code); // Returns a numeric code for the first character in a text string
+            ce.RegisterFunction("CODE", 1, 1, Adapt(Code), FunctionFlags.Scalar); // Returns a numeric code for the first character in a text string
             ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat, AllowRange.All); //	Joins several text items into one text item
 
             // LEGACY: Remove after switch to new engine. CONCATENATE function doesn't actually accept ranges, but it's legacy implementation has a check and there is a test.
@@ -132,11 +140,7 @@ namespace ClosedXML.Excel.CalcEngine
             // pre-unicode and Excel was mostly sold in US/EU.
             var value = checked((int)number);
 
-            // Values 1-127 in win-1252 are ASCII. The values directly map to codepoints.
-            if (value < 0x80)
-                return char.ToString((char)value);
-
-            return Windows1252[value - 0x80].ToString();
+            return Windows1252Char.Value[value];
         }
 
         private static ScalarValue Clean(string text)
@@ -160,10 +164,16 @@ namespace ClosedXML.Excel.CalcEngine
             return result.ToString();
         }
 
-        private static object Code(List<Expression> p)
+        private static ScalarValue Code(string text)
         {
-            var s = (string)p[0];
-            return (int)s[0];
+            // CODE should be an inverse function to CHAR
+            if (text.Length == 0)
+                return XLError.IncompatibleValue;
+
+            if (!Windows1252Code.Value.TryGetValue(text[0], out var code))
+                return Windows1252Code.Value['?'];
+
+            return code;
         }
 
         private static object Concat(List<Expression> p)
@@ -551,7 +561,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return XLError.IncompatibleValue;
         }
-        
+
         private static object Dollar(List<Expression> p)
         {
             Double value = p[0];
