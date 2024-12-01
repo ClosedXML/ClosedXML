@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -242,20 +243,60 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        [Ignore("Enable when CalcEngine error handling works properly.")]
-        public void Dollar_Empty_Input_String()
+        public void Dollar_coercion()
         {
-            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("Dollar(\"\", 3)"));
+            // Empty string is not coercible to number
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("DOLLAR(\"\", 3)"));
+        }
+
+        // en-US culture differs between .NET Fx and Core for negative currency -> no test for negative
+        [TestCase(123.54, 3, ExpectedResult = "$123.540")]
+        [TestCase(123.54, 3.9, ExpectedResult = "$123.540")]
+        [TestCase(1234.567, 2, ExpectedResult = "$1,234.57")]
+        [TestCase(1250, -2, ExpectedResult = "$1,300")]
+        [TestCase(1, -1E+100, ExpectedResult = "$0")]
+        public string Dollar_en(double number, double decimals)
+        {
+            using var wb = new XLWorkbook();
+            return wb.Evaluate($"DOLLAR({number},{decimals})").GetText();
+        }
+
+        [SetCulture("cs-CZ")]
+        [TestCase(123.54, 3, ExpectedResult = "123,540 Kč")]
+        [TestCase(-1234.567, 4, ExpectedResult = "-1 234,5670 Kč")]
+        [TestCase(-1250, -2, ExpectedResult = "-1 300 Kč")]
+        public string Dollar_cs(double number, double decimals)
+        {
+            using var wb = new XLWorkbook();
+            var formula = $"DOLLAR({number.ToString(CultureInfo.InvariantCulture)},{decimals.ToString(CultureInfo.InvariantCulture)})";
+            return wb.Evaluate(formula).GetText();
+        }
+
+        [SetCulture("de-DE")]
+        [TestCase(1234.567, 2, ExpectedResult = "1.234,57 €")]
+        [TestCase(1234.567, -2, ExpectedResult = "1.200 €")]
+        [TestCase(-1234.567, 4, ExpectedResult = "-1.234,5670 €")]
+        public string Dollar_de(double number, double decimals)
+        {
+            using var wb = new XLWorkbook();
+            var formula = $"DOLLAR({number.ToString(CultureInfo.InvariantCulture)},{decimals.ToString(CultureInfo.InvariantCulture)})";
+            return wb.Evaluate(formula).GetText();
         }
 
         [Test]
-        public void Dollar_Value()
+        public void Dollar_uses_two_decimal_places_by_default()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Dollar(123.54)");
+            using var wb = new XLWorkbook();
+            var actual = wb.Evaluate("DOLLAR(123.543)");
             Assert.AreEqual("$123.54", actual);
+        }
 
-            actual = XLWorkbook.EvaluateExpr(@"Dollar(123.54, 3)");
-            Assert.AreEqual("$123.540", actual);
+        [Test]
+        public void Dollar_can_have_at_most_127_decimal_places()
+        {
+            using var wb = new XLWorkbook();
+            Assert.AreEqual("$1." + new string('0', 99), wb.Evaluate("DOLLAR(1,99)"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("DOLLAR(1,128)"));
         }
 
         [Test]

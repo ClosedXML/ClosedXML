@@ -261,7 +261,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction AdaptLastOptional(Func<double, double, ScalarValue> f, double lastDefault)
+        public static CalcEngineFunction AdaptLastOptional(Func<CalcContext, double, double, ScalarValue> f, double lastDefault)
         {
             return (ctx, args) =>
             {
@@ -273,7 +273,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg1Converted.TryPickT0(out var arg1, out var err1))
                     return err1;
 
-                return f(arg0, arg1).ToAnyValue();
+                return f(ctx, arg0, arg1).ToAnyValue();
             };
         }
 

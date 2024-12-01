@@ -35,10 +35,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Dollar()
         {
-            object actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
+            using var wb = new XLWorkbook();
+            object actual = wb.Evaluate("DOLLAR(12345.123)");
             Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.12", actual);
 
-            actual = XLWorkbook.EvaluateExpr("Dollar(12345.123, 1)");
+            actual = wb.Evaluate("DOLLAR(12345.123, 1)");
             Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.1", actual);
         }
 

@@ -50,3 +50,7 @@ Functions
 
 `CHAR` now uses win1252 to interpret passed values (values were previously
 interpreted as unicode codepoints).
+
+`DOLLAR` now uses culture of a workbook, not ambient culture from
+`CultureInfo.CurrentCulture`. Reminder: `XLWorkbook.EvaluateExpr` uses
+invariant culture, not ambient culture.

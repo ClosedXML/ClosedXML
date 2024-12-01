@@ -41,8 +41,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CLEAN", 1, 1, Adapt(Clean), FunctionFlags.Scalar); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, 1, Adapt(Code), FunctionFlags.Scalar); // Returns a numeric code for the first character in a text string
             ce.RegisterFunction("CONCAT", 1, 255, Adapt(Concat), FunctionFlags.Future | FunctionFlags.Range, AllowRange.All); // Joins several text items into one text item
-            ce.RegisterFunction("CONCATENATE", 1, 255, Adapt(Concatenate), FunctionFlags.Scalar, AllowRange.None); //	Joins several text items into one text item
-            ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
+            ce.RegisterFunction("CONCATENATE", 1, 255, Adapt(Concatenate), FunctionFlags.Scalar); //	Joins several text items into one text item
+            ce.RegisterFunction("DOLLAR", 1, 2, AdaptLastOptional(Dollar, 2), FunctionFlags.Scalar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, 2, Adapt(Exact), FunctionFlags.Scalar); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
             ce.RegisterFunction("FIXED", 1, 3, Fixed); // Formats a number as text with a fixed number of decimals
@@ -550,12 +550,22 @@ namespace ClosedXML.Excel.CalcEngine
             return XLError.IncompatibleValue;
         }
 
-        private static object Dollar(List<Expression> p)
+        private static ScalarValue Dollar(CalcContext ctx, double number, double decimals)
         {
-            Double value = p[0];
-            int dec = p.Count == 2 ? (int)p[1] : 2;
+            // Excel has limit of 127 decimal places, but C# has limit of 99.
+            decimals = Math.Truncate(decimals);
+            if (decimals > 99)
+                return XLError.IncompatibleValue;
 
-            return value.ToString("C" + dec);
+            if (decimals >= 0)
+                return number.ToString("C" + decimals, ctx.Culture);
+
+            var factor = Math.Pow(10, -decimals);
+            var rounded = Math.Round(number / factor, 0, MidpointRounding.AwayFromZero);
+            if (rounded != 0)
+                rounded *= factor;
+
+            return rounded.ToString("C0", ctx.Culture);
         }
 
         private static ScalarValue Exact(string lhs, string rhs)

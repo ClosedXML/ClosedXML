@@ -622,7 +622,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Log(x);
         }
 
-        private static ScalarValue Log(double x, double @base)
+        private static ScalarValue Log(CalcContext ctx, double x, double @base)
         {
             if (x <= 0 || @base <= 0)
                 return XLError.NumberInvalid;
@@ -825,7 +825,7 @@ namespace ClosedXML.Excel.CalcEngine
             return lowerBound + Math.Round(_rnd.NextDouble() * range, MidpointRounding.AwayFromZero);
         }
 
-        private static ScalarValue Roman(double number, double formValue)
+        private static ScalarValue Roman(CalcContext ctx, double number, double formValue)
         {
             if (number == 0)
                 return string.Empty;
@@ -1131,7 +1131,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Tanh(number);
         }
 
-        private static ScalarValue Trunc(double number, double digits)
+        private static ScalarValue Trunc(CalcContext ctx, double number, double digits)
         {
             var scaling = Math.Pow(10, digits);
             return Math.Truncate(number * scaling) / scaling;
