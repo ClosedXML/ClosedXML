@@ -198,7 +198,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 0.5 * Math.Log((angle + 1) / (angle - 1));
         }
 
-        private static ScalarValue Arabic(string input)
+        private static ScalarValue Arabic(CalcContext ctx, string input)
         {
             if (input.Length > 255)
                 return XLError.IncompatibleValue;

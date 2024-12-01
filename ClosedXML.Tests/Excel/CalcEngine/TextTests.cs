@@ -521,18 +521,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return XLWorkbook.EvaluateExpr($"""LEN("{text}")""").GetNumber();
         }
 
-        [Test]
-        public void Lower_Empty_Input_String()
+        [SetCulture("en-US")]
+        [TestCase("", ExpectedResult = "")]
+        [TestCase("ABC", ExpectedResult = "abc")]
+        [TestCase("Intelligence 2.0!", ExpectedResult = "intelligence 2.0!")]
+        [TestCase("ͶꝎＫǢ", ExpectedResult = "ͷꝏｋǣ")] // Converts even non-latin chars
+        [TestCase("Σ SUM Σ end Σ", ExpectedResult = "σ sum σ end ς")] // Bug for bug behavior of Excel. Σ at the end is turned to ς
+        public string Lower_en(string text)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Lower("""")");
-            Assert.AreEqual("", actual);
+            using var wb = new XLWorkbook();
+            return wb.Evaluate($"""LOWER("{text}")""").GetText();
         }
 
-        [Test]
-        public void Lower_Value()
+        [SetCulture("tr-TR")]
+        [TestCase("INTELLIGENCE 2.0!", ExpectedResult = "ıntellıgence 2.0!")] // Turkey converts I to i without dot
+        [TestCase("ΣΣΣΣ", ExpectedResult = "σσσς")]
+        public string Lower_tr(string text)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Lower(""AbCdEfG"")");
-            Assert.AreEqual("abcdefg", actual);
+            using var wb = new XLWorkbook();
+            return wb.Evaluate($"""LOWER("{text}")""").GetText();
         }
 
         [Test]

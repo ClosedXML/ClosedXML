@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LEFT", 1, 2, AdaptLastOptional(Left, 1), FunctionFlags.Scalar); // Returns the leftmost characters from a text value
             //ce.RegisterFunction("LEFTB", 1, 2, AdaptLastOptional(Leftb, 1), FunctionFlags.Scalar); // Returns the leftmost bytes from a text value
             ce.RegisterFunction("LEN", 1, 1, Adapt(Len), FunctionFlags.Scalar); //, Returns the number of characters in a text string
-            ce.RegisterFunction("LOWER", 1, Lower); //	Converts text to lowercase
+            ce.RegisterFunction("LOWER", 1, 1, Adapt(Lower), FunctionFlags.Scalar); //	Converts text to lowercase
             ce.RegisterFunction("MID", 3, Mid); // Returns a specific number of characters from a text string starting at the position you specify
             ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("VALUE", 1, 1, Adapt(Value), FunctionFlags.Scalar); // Converts a text argument to a number
         }
 
-        private static ScalarValue Asc(string text)
+        private static ScalarValue Asc(CalcContext ctx, string text)
         {
             // Excel version only works when authoring language is set to a specific languages (e.g Japanese).
             // Function doesn't do anything when Excel is set to most locales (e.g. English). There is no further
@@ -142,7 +142,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Windows1252Char.Value[value];
         }
 
-        private static ScalarValue Clean(string text)
+        private static ScalarValue Clean(CalcContext ctx, string text)
         {
             // Although standard says it removes only 0..1F, real one removes other characters as
             // well. Based on `LEN(CLEAN(UNICHAR(A1))) = 0`, it removes 1-1F and 0x80-0x9F. ODF
@@ -163,7 +163,7 @@ namespace ClosedXML.Excel.CalcEngine
             return result.ToString();
         }
 
-        private static ScalarValue Code(string text)
+        private static ScalarValue Code(CalcContext ctx, string text)
         {
             // CODE should be an inverse function to CHAR
             if (text.Length == 0)
@@ -269,7 +269,7 @@ namespace ClosedXML.Excel.CalcEngine
             return text[..i];
         }
 
-        private static ScalarValue Len(string text)
+        private static ScalarValue Len(CalcContext ctx, string text)
         {
             // Excel counts code units, not codepoints, e.g. it returns 2 for emoji in astral
             // plane. LibreOffice returns 1 and most other functions (e.g. LEFT) use codepoints,
@@ -277,9 +277,30 @@ namespace ClosedXML.Excel.CalcEngine
             return text.Length;
         }
 
-        private static object Lower(List<Expression> p)
+        private static ScalarValue Lower(CalcContext ctx, string text)
         {
-            return ((string)p[0]).ToLower();
+            // Spec says "by doing a character-by-character conversion"
+            // so don't do the whole string at once.
+            var sb = new StringBuilder(text.Length);
+            for (var i = 0; i < text.Length; ++i)
+            {
+                var c = text[i];
+                char lowercase;
+                if (i == text.Length - 1 && c == 'Σ')
+                {
+                    // Spec: when Σ (U+03A3) is found in a word-final position, it is converted
+                    // to ς (U+03C2) instead of σ (U+03C3).
+                    lowercase = 'ς';
+                }
+                else
+                {
+                    lowercase = char.ToLower(c, ctx.Culture);
+                }
+
+                sb.Append(lowercase);
+            }
+
+            return sb.ToString();
         }
 
         private static object Mid(List<Expression> p)

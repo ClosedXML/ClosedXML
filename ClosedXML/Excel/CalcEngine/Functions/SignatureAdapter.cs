@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<string, ScalarValue> f)
+        public static CalcEngineFunction Adapt(Func<CalcContext, string, ScalarValue> f)
         {
             return (ctx, args) =>
             {
@@ -92,7 +92,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg0Converted.TryPickT0(out var arg0, out var err0))
                     return err0;
 
-                return f(arg0).ToAnyValue();
+                return f(ctx, arg0).ToAnyValue();
             };
         }
 
