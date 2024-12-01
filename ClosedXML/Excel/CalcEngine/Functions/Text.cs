@@ -52,7 +52,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("LEFTB", 1, 2, AdaptLastOptional(Leftb, 1), FunctionFlags.Scalar); // Returns the leftmost bytes from a text value
             ce.RegisterFunction("LEN", 1, 1, Adapt(Len), FunctionFlags.Scalar); //, Returns the number of characters in a text string
             ce.RegisterFunction("LOWER", 1, 1, Adapt(Lower), FunctionFlags.Scalar); //	Converts text to lowercase
-            ce.RegisterFunction("MID", 3, Mid); // Returns a specific number of characters from a text string starting at the position you specify
+            ce.RegisterFunction("MID", 3, 3, Adapt(Mid), FunctionFlags.Scalar); // Returns a specific number of characters from a text string starting at the position you specify
             ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
             ce.RegisterFunction("PROPER", 1, Proper); // Capitalizes the first letter in each word of a text value
@@ -303,16 +303,22 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Mid(List<Expression> p)
+        private static ScalarValue Mid(CalcContext ctx, string text, double startPos, double numChars)
         {
-            var str = (string)p[0];
-            var start = (int)p[1] - 1;
-            var length = (int)p[2];
-            if (start > str.Length - 1)
-                return String.Empty;
-            if (start + length > str.Length - 1)
-                return str.Substring(start);
-            return str.Substring(start, length);
+            // Unlike LEFT, MID uses code units and even cuts off half of surrogates,
+            // e.g. LEN(MID("😊😊",1,3)) = 3. Also, spec has parameters at wrong places.
+            if (startPos is < 1 or >= int.MaxValue + 1d || numChars is < 0 or >= int.MaxValue + 1d)
+                return XLError.IncompatibleValue;
+
+            var start = checked((int)Math.Truncate(startPos)) - 1;
+            var length = checked((int)Math.Truncate(numChars));
+            if (start >= text.Length - 1)
+                return string.Empty;
+
+            if (start + length >= text.Length)
+                return text[start..];
+
+            return text.Substring(start, length);
         }
 
         private static string MatchHandler(Match m)

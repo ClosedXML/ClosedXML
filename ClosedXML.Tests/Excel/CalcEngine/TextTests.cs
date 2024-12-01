@@ -543,31 +543,59 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Mid_Bigger_Than_Length()
+        public void Mid_returns_rest_of_text_when_end_is_out_of_text_bounds()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 1, 5)");
+            var actual = XLWorkbook.EvaluateExpr("""MID("ABC",1,5)""");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
-        public void Mid_Empty_Input_String()
+        public void Mid_when_start_is_after_end_of_text_return_empty_string()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid("""", 1, 1)");
+            var actual = XLWorkbook.EvaluateExpr("""MID("ABC",5,5)""");
             Assert.AreEqual("", actual);
         }
 
-        [Test]
-        public void Mid_Start_After()
+        [TestCase(0.9)]
+        [TestCase(0)]
+        [TestCase(-5)]
+        [TestCase(int.MaxValue + 1d)]
+        [TestCase(int.MaxValue + 5d)]
+        public void Mid_start_must_be_at_least_one_and_at_most_max_int(double start)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 5, 5)");
-            Assert.AreEqual("", actual);
+            var actual = XLWorkbook.EvaluateExpr($"""MID("ABC",{start},1)""");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
+        }
+
+        [TestCase(-0.1)]
+        [TestCase(-5)]
+        [TestCase(int.MaxValue + 1d)]
+        [TestCase(int.MaxValue + 5d)]
+        public void Mid_length_must_be_at_least_zero_and_at_most_max_int(double length)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"""MID("ABC",1,{length})""");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
+        }
+
+        [TestCase("", 1, 1, ExpectedResult = "")]
+        [TestCase("ABC", 2, 2, ExpectedResult = "BC")]
+        [TestCase("ABC", 2, 0, ExpectedResult = "")]
+        [TestCase("ABC", 3, 5, ExpectedResult = "")]
+        [TestCase(@"abcdef", 3, 2, ExpectedResult = "cd")]
+        [TestCase(@"abcdef", 4, 5, ExpectedResult = "def")]
+        public string Mid_returns_substring(string text, double start, double length)
+        {
+            return XLWorkbook.EvaluateExpr($"""MID("{text}",{start},{length})""").GetText();
         }
 
         [Test]
-        public void Mid_Value()
+        public void Mid_uses_code_units()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 2, 2)");
-            Assert.AreEqual("BC", actual);
+            // MID returns unpaired surrogates
+            Assert.AreEqual("😊\uD83D", XLWorkbook.EvaluateExpr("""MID("😊😊😊",1,3)"""));
+            Assert.AreEqual("😊😊", XLWorkbook.EvaluateExpr("""MID("😊😊😊",1,4)"""));
+            Assert.AreEqual("\uDE0A😊\uD83D", XLWorkbook.EvaluateExpr("""MID("😊😊😊",2,4)"""));
+            Assert.AreEqual(3, XLWorkbook.EvaluateExpr("""LEN(MID("😊😊😊",1,3))"""));
         }
 
         [TestCase("NUMBERVALUE(\"\")", 0d)]
