@@ -510,18 +510,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return XLWorkbook.EvaluateExpr($"""LEFT("{text}", {numChars})""").GetText();
         }
 
-        [Test]
-        public void Len_Empty_Input_String()
+        [TestCase("", ExpectedResult = 0)]
+        [TestCase("word", ExpectedResult = 4)]
+        [TestCase("A\r\n", ExpectedResult = 3)]
+        [TestCase("H", ExpectedResult = 1)]
+        [TestCase("\ud83d\ude0a", ExpectedResult = 2)] // Smile emoji
+        [TestCase("Smile: \ud83d\ude0a!", ExpectedResult = 10)] // Smile emoji
+        public double Len_returns_number_of_code_units(string text)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Len("""")");
-            Assert.AreEqual(0, actual);
-        }
-
-        [Test]
-        public void Len_Value()
-        {
-            Object actual = XLWorkbook.EvaluateExpr(@"Len(""word"")");
-            Assert.AreEqual(4, actual);
+            return XLWorkbook.EvaluateExpr($"""LEN("{text}")""").GetNumber();
         }
 
         [Test]

@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
             ce.RegisterFunction("LEFT", 1, 2, AdaptLastOptional(Left, 1), FunctionFlags.Scalar); // Returns the leftmost characters from a text value
             //ce.RegisterFunction("LEFTB", 1, 2, AdaptLastOptional(Leftb, 1), FunctionFlags.Scalar); // Returns the leftmost bytes from a text value
-            ce.RegisterFunction("LEN", 1, Len); //, Returns the number of characters in a text string
+            ce.RegisterFunction("LEN", 1, 1, Adapt(Len), FunctionFlags.Scalar); //, Returns the number of characters in a text string
             ce.RegisterFunction("LOWER", 1, Lower); //	Converts text to lowercase
             ce.RegisterFunction("MID", 3, Mid); // Returns a specific number of characters from a text string starting at the position you specify
             ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
@@ -262,17 +262,19 @@ namespace ClosedXML.Excel.CalcEngine
             while (numChars > 0 && i < text.Length)
             {
                 // Most C# text API will happily ignore invalid surrogate pairs, so do we
-                var isSurrogatePair = i + 1 < text.Length && char.IsSurrogatePair(text[i], text[i + 1]);
-                i += isSurrogatePair ? 2 : 1;
+                i += char.IsSurrogatePair(text, i) ? 2 : 1;
                 numChars--;
             }
 
             return text[..i];
         }
 
-        private static object Len(List<Expression> p)
+        private static ScalarValue Len(string text)
         {
-            return ((string)p[0]).Length;
+            // Excel counts code units, not codepoints, e.g. it returns 2 for emoji in astral
+            // plane. LibreOffice returns 1 and most other functions (e.g. LEFT) use codepoints,
+            // not code units. Sanity says count codepoints, but compatibility says code units.
+            return text.Length;
         }
 
         private static object Lower(List<Expression> p)
