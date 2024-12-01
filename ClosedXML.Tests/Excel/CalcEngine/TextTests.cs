@@ -415,22 +415,62 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Fixed_Input_Is_String()
+        public void Fixed_coercion()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Fixed(""asdf"")"), Throws.TypeOf<ApplicationException>());
+            using var wb = new XLWorkbook();
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("""FIXED("asdf")"""));
+            Assert.AreEqual("1234.0", wb.Evaluate("""FIXED(1234,1,"TRUE")"""));
+            Assert.AreEqual("1,234.0", wb.Evaluate("""FIXED(1234,1,"FALSE")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("""FIXED(1234,1,"0")"""));
         }
 
         [Test]
-        public void Fixed_Value()
+        public void Fixed_examples()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67, 4)");
+            using var wb = new XLWorkbook();
+            Assert.AreEqual("1,234,567.00", wb.Evaluate("FIXED(1234567)"));
+            Assert.AreEqual("1234567.5556", wb.Evaluate("FIXED(1234567.555555,4,TRUE)"));
+            Assert.AreEqual("0.5555550000", wb.Evaluate("FIXED(.555555,10)"));
+            Assert.AreEqual("1,235,000", wb.Evaluate("FIXED(1234567,-3)"));
+        }
+
+        [Test]
+        public void Fixed_en()
+        {
+            var actual = XLWorkbook.EvaluateExpr("FIXED(17300.67,4)");
             Assert.AreEqual("17,300.6700", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67, 2, TRUE)");
+            actual = XLWorkbook.EvaluateExpr("FIXED(17300.67,2,TRUE)");
             Assert.AreEqual("17300.67", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67)");
+            actual = XLWorkbook.EvaluateExpr("FIXED(17300.67)");
             Assert.AreEqual("17,300.67", actual);
+
+            actual = XLWorkbook.EvaluateExpr("FIXED(1,-1E+300)");
+            Assert.AreEqual("0", actual);
+        }
+
+        [Test]
+        [SetCulture("cs-CZ")]
+        public void Fixed_cs()
+        {
+            using var wb = new XLWorkbook();
+            var actual = wb.Evaluate("FIXED(17300.67,4)");
+            Assert.AreEqual("17 300,6700", actual);
+
+            actual = wb.Evaluate("FIXED(17300.67,2,TRUE)");
+            Assert.AreEqual("17300,67", actual);
+
+            actual = wb.Evaluate("FIXED(17300.67)");
+            Assert.AreEqual("17 300,67", actual);
+        }
+
+        [Test]
+        public void Fixed_can_have_at_most_127_decimal_places()
+        {
+            using var wb = new XLWorkbook();
+            Assert.AreEqual("1." + new string('0', 99), wb.Evaluate("FIXED(1,99)"));
+            Assert.AreEqual(XLError.IncompatibleValue, wb.Evaluate("FIXED(1,128)"));
         }
 
         [Test]

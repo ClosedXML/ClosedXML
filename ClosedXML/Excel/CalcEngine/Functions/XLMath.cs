@@ -161,5 +161,25 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var isOdd = value % 2 != 0;
             return hasNoFraction && isOdd;
         }
+
+        public static double Round(double value, double digits)
+        {
+            digits = Math.Truncate(digits);
+            if (digits < 0)
+            {
+                var coef = Math.Pow(10, Math.Abs(digits));
+                var shifted = value / coef;
+                shifted = Math.Round(shifted, 0, MidpointRounding.AwayFromZero);
+
+                // if coef is infinity
+                if (shifted == 0)
+                    return 0;
+
+                return shifted * coef;
+            }
+
+            // Double can store at most 15 digits and anything below that is float artefact
+            return Math.Round(value, (int)Math.Min(digits, 15), MidpointRounding.AwayFromZero);
+        }
     }
 }

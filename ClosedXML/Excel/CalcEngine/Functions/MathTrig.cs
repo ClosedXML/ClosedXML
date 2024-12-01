@@ -855,16 +855,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue Round(double value, double digits)
         {
-            var digitCount = (int)Math.Truncate(digits);
-            if (digits < 0)
-            {
-                var coef = Math.Pow(10, Math.Abs(digits));
-                var shifted = value / coef;
-                shifted = Math.Round(shifted, 0, MidpointRounding.AwayFromZero);
-                return shifted * coef;
-            }
-
-            return Math.Round(value, digitCount, MidpointRounding.AwayFromZero);
+            return XLMath.Round(value, digits);
         }
 
         private static ScalarValue RoundDown(double value, double digits)

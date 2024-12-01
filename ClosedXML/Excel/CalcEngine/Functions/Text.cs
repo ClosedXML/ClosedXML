@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClosedXML.Excel.CalcEngine.Functions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -45,7 +46,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("DOLLAR", 1, 2, AdaptLastOptional(Dollar, 2), FunctionFlags.Scalar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, 2, Adapt(Exact), FunctionFlags.Scalar); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
-            ce.RegisterFunction("FIXED", 1, 3, Fixed); // Formats a number as text with a fixed number of decimals
+            ce.RegisterFunction("FIXED", 1, 3, AdaptLastTwoOptional(Fixed, 2, false), FunctionFlags.Scalar); // Formats a number as text with a fixed number of decimals
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
             ce.RegisterFunction("LEFT", 1, 2, Left); // LEFTB	Returns the leftmost characters from a text value
             ce.RegisterFunction("LEN", 1, Len); //, Returns the number of characters in a text string
@@ -217,6 +218,29 @@ namespace ClosedXML.Excel.CalcEngine
             return index == -1
                 ? XLError.IncompatibleValue
                 : index + startIndex + 1;
+        }
+
+        private static ScalarValue Fixed(CalcContext ctx, double number, double numDecimals, bool suppressComma)
+        {
+            numDecimals = Math.Truncate(numDecimals);
+
+            // Excel allows up to 127 decimal digits. The .NET Core 8+ allows it, but older Core and
+            // Fx are more limited. To keep code sane, use 99, so N99 formatting string works everywhere.
+            if (numDecimals > 99)
+                return XLError.IncompatibleValue;
+
+            var culture = ctx.Culture;
+            if (suppressComma)
+            {
+                culture = (CultureInfo)culture.Clone();
+                culture.NumberFormat.NumberGroupSeparator = string.Empty;
+            }
+
+            var rounded = XLMath.Round(number, numDecimals);
+
+            // Number rounded to tens, hundreds... should be displayed without any decimal places
+            var digits = Math.Max(numDecimals, 0);
+            return rounded.ToString("N" + digits, culture);
         }
 
         private static object Left(List<Expression> p)
@@ -571,23 +595,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static ScalarValue Exact(string lhs, string rhs)
         {
             return lhs == rhs;
-        }
-
-        private static object Fixed(List<Expression> p)
-        {
-            var numberToFormat = p[0].Evaluate();
-            if (numberToFormat is string)
-                throw new ApplicationException("Input type can't be string");
-
-            Double value = p[0];
-            int decimal_places = p.Count >= 2 ? (int)p[1] : 2;
-            Boolean no_commas = p.Count == 3 && p[2];
-
-            var retVal = value.ToString("N" + decimal_places);
-            if (no_commas)
-                return retVal.Replace(",", String.Empty);
-            else
-                return retVal;
         }
     }
 }

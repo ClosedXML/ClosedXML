@@ -1827,6 +1827,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-31.565, 2, ExpectedResult = -31.57)]
         [TestCase(1E+100, 2, ExpectedResult = 1E+100)]
         [TestCase(1.25, 0, ExpectedResult = 1)]
+        [TestCase(1, -1E+100, ExpectedResult = 0)]
+        [TestCase(1.123456, 1E+100, ExpectedResult = 1.123456)] // Excel says 0 for anything over 2147483646
         public double Round(double number, double digits)
         {
             return (double)XLWorkbook.EvaluateExpr($"ROUND({number}, {digits})");
