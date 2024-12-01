@@ -48,7 +48,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FIND", 2, 3, AdaptLastOptional(Find), FunctionFlags.Scalar); //Finds one text value within another (case-sensitive)
             ce.RegisterFunction("FIXED", 1, 3, AdaptLastTwoOptional(Fixed, 2, false), FunctionFlags.Scalar); // Formats a number as text with a fixed number of decimals
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
-            ce.RegisterFunction("LEFT", 1, 2, Left); // LEFTB	Returns the leftmost characters from a text value
+            ce.RegisterFunction("LEFT", 1, 2, AdaptLastOptional(Left, 1), FunctionFlags.Scalar); // Returns the leftmost characters from a text value
+            //ce.RegisterFunction("LEFTB", 1, 2, AdaptLastOptional(Leftb, 1), FunctionFlags.Scalar); // Returns the leftmost bytes from a text value
             ce.RegisterFunction("LEN", 1, Len); //, Returns the number of characters in a text string
             ce.RegisterFunction("LOWER", 1, Lower); //	Converts text to lowercase
             ce.RegisterFunction("MID", 3, Mid); // Returns a specific number of characters from a text string starting at the position you specify
@@ -243,17 +244,30 @@ namespace ClosedXML.Excel.CalcEngine
             return rounded.ToString("N" + digits, culture);
         }
 
-        private static object Left(List<Expression> p)
+        private static ScalarValue Left(CalcContext ctx, string text, double numChars)
         {
-            var str = (string)p[0];
-            var n = 1;
-            if (p.Count > 1)
-            {
-                n = (int)p[1];
-            }
-            if (n >= str.Length) return str;
+            numChars = Math.Truncate(numChars);
+            if (numChars < 0)
+                return XLError.IncompatibleValue;
 
-            return str.Substring(0, n);
+            if (numChars >= text.Length)
+                return text;
+
+            // StringInfo.LengthInTextElements returns a length in graphemes, regardless of
+            // how is grapheme stored (e.g. denormalized family emoji is 7 code points long,
+            // with 4 emoji and 3 zero width joiners).
+            // Generally we should return number of codepoints, at least that's how Excel and
+            // LibreOffice do it (at least for LEFT).
+            var i = 0;
+            while (numChars > 0 && i < text.Length)
+            {
+                // Most C# text API will happily ignore invalid surrogate pairs, so do we
+                var isSurrogatePair = i + 1 < text.Length && char.IsSurrogatePair(text[i], text[i + 1]);
+                i += isSurrogatePair ? 2 : 1;
+                numChars--;
+            }
+
+            return text[..i];
         }
 
         private static object Len(List<Expression> p)

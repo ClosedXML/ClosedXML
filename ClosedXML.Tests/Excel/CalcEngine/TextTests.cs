@@ -474,31 +474,40 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Left_Bigger_Than_Length()
+        public void Left_returns_whole_text_when_requested_length_is_greater_than_text_length()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 5)");
+            var actual = XLWorkbook.EvaluateExpr(@"LEFT(""ABC"", 5)");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
-        public void Left_Default()
+        public void Left_takes_one_character_by_default()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"")");
+            var actual = XLWorkbook.EvaluateExpr("""LEFT("ABC")""");
             Assert.AreEqual("A", actual);
         }
 
         [Test]
-        public void Left_Empty_Input_String()
+        public void Left_returns_error_on_negative_number_of_chars()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left("""")");
-            Assert.AreEqual("", actual);
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""LEFT("ABC", -1)"""));
         }
 
         [Test]
-        public void Left_Value()
+        public void Left_returns_empty_string_on_empty_input()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 2)");
-            Assert.AreEqual("AB", actual);
+            var actual = XLWorkbook.EvaluateExpr("""LEFT("")""");
+            Assert.AreEqual("", actual);
+        }
+
+        [TestCase("ABC", 2, ExpectedResult = "AB")]
+        [TestCase("ABC", 2.9, ExpectedResult = "AB")]
+        [TestCase("ABC", 3, ExpectedResult = "ABC")]
+        [TestCase("\uD83D\uDC69Z", 1, ExpectedResult = "\uD83D\uDC69")] // Paired surrogate
+        [TestCase("\uD83D\uDC69Z", 2, ExpectedResult = "\uD83D\uDC69Z")] // Paired surrogate
+        public string Left_takes_specified_number_of_characters(string text, double numChars)
+        {
+            return XLWorkbook.EvaluateExpr($"""LEFT("{text}", {numChars})""").GetText();
         }
 
         [Test]
