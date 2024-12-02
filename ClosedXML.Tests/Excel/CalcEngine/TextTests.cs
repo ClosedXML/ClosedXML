@@ -876,23 +876,67 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void T_Empty_Input_String()
+        public void T_returns_empty_string_on_non_text()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"T("""")");
+            var actual = XLWorkbook.EvaluateExpr("T(TODAY())");
+            Assert.AreEqual("", actual);
+
+            actual = XLWorkbook.EvaluateExpr("T(IF(TRUE,,))");
+            Assert.AreEqual("", actual);
+
+            actual = XLWorkbook.EvaluateExpr("T(TRUE)");
+            Assert.AreEqual("", actual);
+
+            actual = XLWorkbook.EvaluateExpr("T(123)");
             Assert.AreEqual("", actual);
         }
 
         [Test]
-        public void T_Value()
+        public void T_propagates_error()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"T(""asdf"")");
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("T(#DIV/0!)"));
+        }
+
+        [Test]
+        public void T_returns_text_when_value_is_text()
+        {
+            var actual = XLWorkbook.EvaluateExpr("""T("asdf")""");
             Assert.AreEqual("asdf", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"T(Today())");
+            actual = XLWorkbook.EvaluateExpr("""T("")""");
             Assert.AreEqual("", actual);
+        }
 
-            actual = XLWorkbook.EvaluateExpr(@"T(TRUE)");
-            Assert.AreEqual("", actual);
+        [Test]
+        public void T_returns_array_of_results_when_argument_is_array()
+        {
+            const string formula = """T({"A",5,"B"})""";
+            Assert.AreEqual(3, XLWorkbook.EvaluateExpr($"""COLUMNS({formula})"""));
+            Assert.AreEqual(1, XLWorkbook.EvaluateExpr($"""ROWS({formula})"""));
+            Assert.AreEqual("A", XLWorkbook.EvaluateExpr($"""INDEX({formula},1,1)"""));
+            Assert.AreEqual("", XLWorkbook.EvaluateExpr($"""INDEX({formula},1,2)"""));
+            Assert.AreEqual("B", XLWorkbook.EvaluateExpr($"""INDEX({formula},1,3)"""));
+
+            // Array doesn't propagate single error, but returns errors in the array
+            Assert.AreEqual("A", XLWorkbook.EvaluateExpr("""INDEX(T({"A",#REF!}),1,1)"""));
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("""INDEX(T({"A",#REF!}),1,2)"""));
+        }
+
+        [Test]
+        public void T_returns_text_of_first_cell_in_reference()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = "ABC";
+            ws.Cell("B4").Value = 10;
+            ws.Cell("B5").Value = XLError.NoValueAvailable;
+
+            Assert.AreEqual("ABC", ws.Evaluate("T(B3:B4)"));
+            Assert.AreEqual(2, ws.Evaluate("TYPE(T(B3:B4))")); // Is text, not array
+
+            Assert.AreEqual(string.Empty, ws.Evaluate("T(B4:C4)"));
+
+            Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("T(B5:C5)"));
         }
 
         [Test]

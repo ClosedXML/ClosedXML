@@ -61,7 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("RIGHT", 1, 2, AdaptLastOptional(Right, 1), FunctionFlags.Scalar); // Returns the rightmost characters from a text value
             ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
-            ce.RegisterFunction("T", 1, T); // Converts its arguments to text
+            ce.RegisterFunction("T", 1, 1, Adapt(T), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, 1, Adapt(Trim), FunctionFlags.Scalar); // Removes spaces from text
@@ -452,13 +452,49 @@ namespace ClosedXML.Excel.CalcEngine
                 : text;
         }
 
-        private static object T(List<Expression> p)
+        private static AnyValue T(CalcContext ctx, AnyValue value)
         {
-            var value = p[0].Evaluate();
-            if (value is string)
-                return value;
-            else
-                return "";
+            if (value.TryPickScalar(out var scalar, out var collection))
+            {
+                if (scalar.TryPickError(out var scalarError))
+                    return scalarError;
+
+                return scalar.IsText ? scalar.GetText() : string.Empty;
+            }
+
+            if (collection.TryPickT0(out var array, out var reference))
+            {
+                var arrayResult = new ScalarValue[array.Height, array.Width];
+                for (var row = 0; row < array.Height; ++row)
+                {
+                    for (var col = 0; col < array.Width; ++col)
+                    {
+                        ctx.ThrowIfCancelled();
+                        var element = array[row, col];
+                        if (element.TryPickError(out var arrayError))
+                        {
+                            arrayResult[row, col] = arrayError;
+                        }
+                        else if (element.IsText)
+                        {
+                            arrayResult[row, col] = element.GetText();
+                        }
+                        else
+                        {
+                            arrayResult[row, col] = string.Empty;
+                        }
+                    }
+                }
+
+                return new ConstArray(arrayResult);
+            }
+
+            var area = reference.Areas[0];
+            var cellValue = ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber);
+            if (cellValue.TryPickError(out var cellError))
+                return cellError;
+
+            return cellValue.IsText ? cellValue.GetText() : string.Empty;
         }
 
         private static object _Text(List<Expression> p)
