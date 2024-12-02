@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin, AllowRange.Except, 0, 1); // Joins text via delimiter
-            ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
+            ce.RegisterFunction("TRIM", 1, 1, Adapt(Trim), FunctionFlags.Scalar); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, 1, Adapt(Value), FunctionFlags.Scalar); // Converts a text argument to a number
         }
@@ -538,11 +538,22 @@ namespace ClosedXML.Excel.CalcEngine
             return retVal;
         }
 
-        private static object Trim(List<Expression> p)
+        private static ScalarValue Trim(CalcContext ctx, string text)
         {
-            //Should not trim non breaking space
-            //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
-            return ((string)p[0]).Trim(' ');
+            const char space = ' ';
+            var span = text.AsSpan().Trim(space);
+            var sb = new StringBuilder(span.Length);
+            for (var i = 0; i < span.Length; ++i)
+            {
+                sb.Append(span[i]);
+                if (span[i] == space)
+                {
+                    while (i < span.Length - 1 && span[i + 1] == space)
+                        i++;
+                }
+            }
+
+            return sb.ToString();
         }
 
         private static object Upper(List<Expression> p)

@@ -989,18 +989,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expected, XLWorkbook.EvaluateExpr($@"TEXT(DATE({year}, {months}, {days}) + TIME({hour}, {minutes}, {seconds}), ""{format}"")"));
         }
 
-        [Test]
-        public void Trim_EmptyInput_String()
+        [TestCase("", ExpectedResult = "")]
+        [TestCase(" ", ExpectedResult = "")]
+        [TestCase("    ", ExpectedResult = "")]
+        [TestCase(" Break\r\n   Line   ", ExpectedResult = "Break\r\n Line")]
+        [TestCase("non-whitespace-text", ExpectedResult = "non-whitespace-text")]
+        [TestCase("white space text", ExpectedResult = "white space text")]
+        [TestCase(" some text with padding   ", ExpectedResult = "some text with padding")]
+        [TestCase(" \t  A  \t ", ExpectedResult = "\t A \t")]
+        public string Trim_trims_spaces_and_removes_multi_spaces_from_inside_text(string text)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Trim("""")");
-            Assert.AreEqual("", actual);
-        }
-
-        [Test]
-        public void Trim_Value()
-        {
-            Object actual = XLWorkbook.EvaluateExpr(@"Trim("" some text with padding   "")");
-            Assert.AreEqual("some text with padding", actual);
+            return XLWorkbook.EvaluateExpr($"""TRIM("{text}")""").GetText();
         }
 
         [Test]
