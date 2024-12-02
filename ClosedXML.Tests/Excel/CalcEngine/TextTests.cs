@@ -636,18 +636,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(expression));
         }
 
-        [Test]
-        public void Proper_Empty_Input_String()
+        [TestCase("", ExpectedResult = "")]
+        [TestCase("12aBC d123aD#$%sd^", ExpectedResult = "12Abc D123Ad#$%Sd^")]
+        [TestCase("this is a TITLE", ExpectedResult = "This Is A Title")]
+        [TestCase("2-way street", ExpectedResult = "2-Way Street")]
+        [TestCase("76BudGet", ExpectedResult = "76Budget")]
+        [TestCase("my name is francois botha", ExpectedResult = "My Name Is Francois Botha")]
+        [TestCase("\ud83a\udd32", ExpectedResult = "\ud83a\udd32")] // U+1E932 has uppercase variant, but nothing changes, because PROPER uses code units
+        public string Proper_upper_cases_first_letter_and_lower_cases_next_letters(string text)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Proper("""")");
-            Assert.AreEqual("", actual);
-        }
-
-        [Test]
-        public void Proper_Value()
-        {
-            Object actual = XLWorkbook.EvaluateExpr(@"Proper(""my name is francois botha"")");
-            Assert.AreEqual("My Name Is Francois Botha", actual);
+            return XLWorkbook.EvaluateExpr($"""PROPER("{text}")""").GetText();
         }
 
         [Test]

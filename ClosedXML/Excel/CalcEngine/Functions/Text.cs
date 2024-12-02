@@ -55,7 +55,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("MID", 3, 3, Adapt(Mid), FunctionFlags.Scalar); // Returns a specific number of characters from a text string starting at the position you specify
             ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
-            ce.RegisterFunction("PROPER", 1, Proper); // Capitalizes the first letter in each word of a text value
+            ce.RegisterFunction("PROPER", 1, 1, Adapt(Proper), FunctionFlags.Scalar); // Capitalizes the first letter in each word of a text value
             ce.RegisterFunction("REPLACE", 4, Replace); // Replaces characters within text
             ce.RegisterFunction("REPT", 2, 2, Adapt(Rept), FunctionFlags.Scalar); // Repeats text a given number of times
             ce.RegisterFunction("RIGHT", 1, 2, AdaptLastOptional(Right, 1), FunctionFlags.Scalar); // Returns the rightmost characters from a text value
@@ -321,22 +321,24 @@ namespace ClosedXML.Excel.CalcEngine
             return text.Substring(start, length);
         }
 
-        private static string MatchHandler(Match m)
+        private static ScalarValue Proper(CalcContext ctx, string text)
         {
-            return m.Groups[1].Value.ToUpper() + m.Groups[2].Value;
-        }
+            if (text.Length == 0)
+                return string.Empty;
 
-        private static object Proper(List<Expression> p)
-        {
-            var s = (string)p[0];
-            if (s.Length == 0) return "";
+            var culture = ctx.Culture;
+            var sb = new StringBuilder(text.Length);
+            var prevWasLetter = false;
+            foreach (var c in text)
+            {
+                var casedChar = prevWasLetter
+                    ? char.ToLower(c, culture)
+                    : char.ToUpper(c, culture);
+                sb.Append(casedChar);
+                prevWasLetter = char.IsLetter(c);
+            }
 
-            MatchEvaluator evaluator = new MatchEvaluator(MatchHandler);
-            StringBuilder sb = new StringBuilder();
-
-            string pattern = "\\b(\\w)(\\w+)?\\b";
-            Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
-            return regex.Replace(s.ToLower(), evaluator);
+            return sb.ToString();
         }
 
         private static object Replace(List<Expression> p)
