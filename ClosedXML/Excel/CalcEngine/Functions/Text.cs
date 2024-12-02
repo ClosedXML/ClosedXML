@@ -58,7 +58,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("PROPER", 1, Proper); // Capitalizes the first letter in each word of a text value
             ce.RegisterFunction("REPLACE", 4, Replace); // Replaces characters within text
             ce.RegisterFunction("REPT", 2, Rept); // Repeats text a given number of times
-            ce.RegisterFunction("RIGHT", 1, 2, Right); // Returns the rightmost characters from a text value
+            ce.RegisterFunction("RIGHT", 1, 2, AdaptLastOptional(Right, 1), FunctionFlags.Scalar); // Returns the rightmost characters from a text value
             ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
@@ -246,10 +246,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue Left(CalcContext ctx, string text, double numChars)
         {
-            numChars = Math.Truncate(numChars);
             if (numChars < 0)
                 return XLError.IncompatibleValue;
 
+            numChars = Math.Truncate(numChars);
             if (numChars >= text.Length)
                 return text;
 
@@ -370,18 +370,24 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Right(List<Expression> p)
+        private static ScalarValue Right(CalcContext ctx, string text, double numChars)
         {
-            var str = (string)p[0];
-            var n = 1;
-            if (p.Count > 1)
+            // Unlike MID, RIGHT uses codepoint semantic
+            if (numChars < 0)
+                return XLError.IncompatibleValue;
+
+            numChars = Math.Truncate(numChars);
+            if (numChars >= text.Length)
+                return text;
+
+            var i = text.Length;
+            while (numChars > 0 && i > 0)
             {
-                n = (int)p[1];
+                i -= i > 1 && char.IsSurrogatePair(text[i - 2], text[i - 1]) ? 2 : 1;
+                numChars--;
             }
 
-            if (n >= str.Length) return str;
-
-            return str.Substring(str.Length - n);
+            return text[i..];
         }
 
         private static AnyValue Search(CalcContext ctx, String findText, String withinText, OneOf<double, Blank> startNum)

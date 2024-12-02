@@ -690,32 +690,46 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual("", actual);
         }
 
-        [Test]
-        public void Right_Bigger_Than_Length()
+        [TestCase(5)]
+        [TestCase(3)]
+        public void Right_returns_whole_text_when_requested_length_is_greater_than_text_length(int length)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 5)");
+            var actual = XLWorkbook.EvaluateExpr($"""RIGHT("ABC",{length})""");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
-        public void Right_Default()
+        public void Right_takes_one_character_by_default()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"")");
+            var actual = XLWorkbook.EvaluateExpr("""RIGHT("ABC")""");
             Assert.AreEqual("C", actual);
         }
 
         [Test]
-        public void Right_Empty_Input_String()
+        public void Right_returns_error_on_negative_number_of_chars()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right("""")");
-            Assert.AreEqual("", actual);
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""RIGHT("ABC",-1)"""));
         }
 
         [Test]
-        public void Right_Value()
+        public void Right_returns_empty_string_on_empty_input()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 2)");
-            Assert.AreEqual("BC", actual);
+            var actual = XLWorkbook.EvaluateExpr("""RIGHT("")""");
+            Assert.AreEqual("", actual);
+        }
+
+        [TestCase("ABC", 0, ExpectedResult = "")]
+        [TestCase("ABC", 1, ExpectedResult = "C")]
+        [TestCase("ABC", 2, ExpectedResult = "BC")]
+        [TestCase("ABC", 3, ExpectedResult = "ABC")]
+        [TestCase("ABC", 4, ExpectedResult = "ABC")]
+        [TestCase("ABC", 2.9, ExpectedResult = "BC")]
+        [TestCase("Z\uD83D\uDC69", 1, ExpectedResult = "\uD83D\uDC69")] // Smiley emoji
+        [TestCase("\uD83D\uDC69Z", 2, ExpectedResult = "\uD83D\uDC69Z")]
+        [TestCase("\uD83D\uDC69Z", 3, ExpectedResult = "\uD83D\uDC69Z")]
+        public string Right_takes_specified_number_of_characters(string text, double numChars)
+        {
+            return XLWorkbook.EvaluateExpr($"""RIGHT("{text}",{numChars})""").GetText();
         }
 
         [Test]
