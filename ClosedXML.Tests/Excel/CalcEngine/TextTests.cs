@@ -665,29 +665,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Rept_Empty_Input_Strings()
+        public void Rept_returns_empty_string_when_text_is_empty_string()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Rept("""", 3)");
+            var actual = XLWorkbook.EvaluateExpr("""REPT("",3)""");
             Assert.AreEqual("", actual);
         }
 
-        [Test]
-        public void Rept_Start_Is_Negative()
+        [TestCase(-1)]
+        [TestCase(-0.1)]
+        [TestCase(2147483648)]
+        public void Rept_returns_error_when_count_is_negative_or_greater_than_max_int(double count)
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Rept(""Francois"", -1)"), Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"""REPT("",{count})"""));
         }
 
         [Test]
-        public void Rept_Value()
+        public void Rept_limits_output_text_length_to_32767()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Rept(""Francois Botha,"", 3)");
-            Assert.AreEqual("Francois Botha,Francois Botha,Francois Botha,", actual);
+            Assert.AreEqual(new string('A', 32767), XLWorkbook.EvaluateExpr("""REPT("A",32767)"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPT("A",32768)"""));
+        }
 
-            actual = XLWorkbook.EvaluateExpr(@"Rept(""123"", 5/2)");
-            Assert.AreEqual("123123", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Rept(""Francois"", 0)");
-            Assert.AreEqual("", actual);
+        [TestCase("ABC", 3, ExpectedResult = @"ABCABCABC")]
+        [TestCase("123", 2.5, ExpectedResult = "123123")]
+        [TestCase("Francois", 0, ExpectedResult = "")]
+        [TestCase("Francois Botha,", 3, ExpectedResult = "Francois Botha,Francois Botha,Francois Botha,")]
+        public string Rept_Value(string text, double count)
+        {
+            return XLWorkbook.EvaluateExpr($"""REPT("{text}",{count})""").GetText();
         }
 
         [TestCase(5)]

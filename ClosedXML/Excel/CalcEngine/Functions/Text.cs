@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
             ce.RegisterFunction("PROPER", 1, Proper); // Capitalizes the first letter in each word of a text value
             ce.RegisterFunction("REPLACE", 4, Replace); // Replaces characters within text
-            ce.RegisterFunction("REPT", 2, Rept); // Repeats text a given number of times
+            ce.RegisterFunction("REPT", 2, 2, Adapt(Rept), FunctionFlags.Scalar); // Repeats text a given number of times
             ce.RegisterFunction("RIGHT", 1, 2, AdaptLastOptional(Right, 1), FunctionFlags.Scalar); // Returns the rightmost characters from a text value
             ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
@@ -357,16 +357,24 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Rept(List<Expression> p)
+        private static ScalarValue Rept(string text, double replicationCount)
         {
-            var sb = new StringBuilder();
-            var s = (string)p[0];
-            var repeats = (int)p[1];
-            if (repeats < 0) throw new IndexOutOfRangeException("repeats");
-            for (int i = 0; i < repeats; i++)
-            {
-                sb.Append(s);
-            }
+            if (replicationCount is < 0 or >= int.MaxValue + 1d)
+                return XLError.IncompatibleValue;
+
+            // If text is empty, loop could run too many times
+            if (text.Length == 0)
+                return string.Empty;
+
+            var count = checked((int)replicationCount);
+            var resultLength = text.Length * count;
+            if (resultLength > XLHelper.CellTextLimit)
+                return XLError.IncompatibleValue;
+
+            var sb = new StringBuilder(resultLength);
+            for (var i = 0; i < count; ++i)
+                sb.Append(text);
+
             return sb.ToString();
         }
 
