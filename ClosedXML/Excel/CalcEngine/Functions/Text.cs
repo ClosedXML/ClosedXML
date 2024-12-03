@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 255, Adapt(TextJoin), FunctionFlags.Range | FunctionFlags.Future, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, 1, Adapt(Trim), FunctionFlags.Scalar); // Removes spaces from text
-            ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
+            ce.RegisterFunction("UPPER", 1, 1, Adapt(Upper), FunctionFlags.Scalar); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, 1, Adapt(Value), FunctionFlags.Scalar); // Converts a text argument to a number
         }
 
@@ -580,9 +580,9 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static object Upper(List<Expression> p)
+        private static ScalarValue Upper(CalcContext ctx, string text)
         {
-            return ((string)p[0]).ToUpper();
+            return text.ToUpper(ctx.Culture);
         }
 
         private static AnyValue Value(CalcContext ctx, ScalarValue arg)

@@ -1088,17 +1088,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Upper_Empty_Input_String()
+        public void Upper_empty_string_returns_empty_string()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Upper("""")");
-            Assert.AreEqual("", actual);
+            Assert.AreEqual("", XLWorkbook.EvaluateExpr("""UPPER("")"""));
         }
 
         [Test]
-        public void Upper_Value()
+        public void Upper_converts_text_to_upper_case()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Upper(""AbCdEfG"")");
-            Assert.AreEqual("ABCDEFG", actual);
+            var actual = XLWorkbook.EvaluateExpr("""UPPER("AbCdEfG")""");
+            Assert.AreEqual(@"ABCDEFG", actual);
+        }
+
+        [SetCulture("tr-TR")]
+        [Test]
+        public void Upper_uses_workbook_culture()
+        {
+            // Türkiye converts i to İ, not I.
+            using var wb = new XLWorkbook();
+            Assert.AreEqual("İNTELLİGENCE 2.0!", wb.Evaluate("""UPPER("intelligence 2.0!")"""));
         }
 
         [Test]
