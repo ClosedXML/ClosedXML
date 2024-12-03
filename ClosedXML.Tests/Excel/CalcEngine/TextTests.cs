@@ -648,18 +648,52 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return XLWorkbook.EvaluateExpr($"""PROPER("{text}")""").GetText();
         }
 
-        [Test]
-        public void Replace_Empty_Input_String()
+        [TestCase(1, 1)]
+        [TestCase(1, 0)]
+        [TestCase(1, 10)]
+        [TestCase(10, 1)]
+        [TestCase(10, 10)]
+        public void Replace_beyond_limit_appends_replacement(int startPos, int length)
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Replace("""", 1, 1, ""newtext"")");
-            Assert.AreEqual("newtext", actual);
+            var actual = XLWorkbook.EvaluateExpr($"""REPLACE("",{startPos},{length},"new text")""");
+            Assert.AreEqual("new text", actual);
+        }
+
+        [TestCase("Here is some obsolete text to replace.", 14, 13, "new text", ExpectedResult = "Here is some new text to replace.")]
+        [TestCase("ABC", 1, 2, "D", ExpectedResult = "DC")]
+        [TestCase("ABC", 3, 1, "D", ExpectedResult = "ABD")]
+        [TestCase("ABC", 3, 0, "D", ExpectedResult = @"ABDC")]
+        [TestCase("ABC", 4, 1, "D", ExpectedResult = @"ABCD")]
+        [TestCase("ABC", 4, 0, "D", ExpectedResult = @"ABCD")]
+        [TestCase("ABC", 1, 3, "D", ExpectedResult = "D")]
+        [TestCase("ABC", 2, 2, "D", ExpectedResult = "AD")]
+        [TestCase("ABC", 2, 0, "D", ExpectedResult = @"ADBC")]
+        [TestCase("ABC", 2, 3, "D", ExpectedResult = "AD")]
+        [TestCase(@"abcdefghijk", 3, 4, "XY", ExpectedResult = @"abXYghijk")]
+        [TestCase(@"abcdefghijk", 3, 1, "12345", ExpectedResult = @"ab12345defghijk")]
+        [TestCase(@"abcdefghijk", 15, 4, "XY", ExpectedResult = @"abcdefghijkXY")]
+        public string Replace_replaces_value(string text, double startPos, int length, string replacement)
+        {
+            return XLWorkbook.EvaluateExpr($"""REPLACE("{text}",{startPos},{length},"{replacement}")""").GetText();
         }
 
         [Test]
-        public void Replace_Value()
+        public void Replace_start_position_must_be_from_1_to_32767()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Replace(""Here is some obsolete text to replace."", 14, 13, ""new text"")");
-            Assert.AreEqual("Here is some new text to replace.", actual);
+            Assert.AreEqual(@"DABC", XLWorkbook.EvaluateExpr("""REPLACE("ABC",1,0,"D")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE("ABC",0.9,0,"D")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE("ABC",-1,0,"D")"""));
+            Assert.AreEqual("D", XLWorkbook.EvaluateExpr("""REPLACE("ABC",1,32767.9,"D")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE("ABC",1,32768,"D")"""));
+        }
+
+        [Test]
+        public void Replace_length_must_be_from_0_to_32767()
+        {
+            Assert.AreEqual("ABC", XLWorkbook.EvaluateExpr("""REPLACE("ABC",1,0,"")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE("ABC",1,-0.1,"D")"""));
+            Assert.AreEqual("D", XLWorkbook.EvaluateExpr("""REPLACE("ABC",1, 32767.9,"D")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE("ABC",1, 32768,"D")"""));
         }
 
         [Test]
