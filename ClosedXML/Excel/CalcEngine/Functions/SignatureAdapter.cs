@@ -267,6 +267,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, string, bool, List<AnyValue>, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToText(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1Converted = CoerceToLogical(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var remainingArgs = new List<AnyValue>();
+                foreach (var arg in args[2..])
+                    remainingArgs.Add(arg);
+
+                return f(ctx, arg0, arg1, remainingArgs).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction AdaptLastOptional(Func<ScalarValue, AnyValue, AnyValue, AnyValue> f, AnyValue lastDefault)
         {
             return (ctx, args) =>
@@ -748,6 +768,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!ToScalarValue(in value, ctx).TryPickT0(out var scalar, out var scalarError))
                 return scalarError;
 
+            // LibreOffice does accept text, tries to parse it as a number and coerces the number
+            // to bool. Excel does not accept number in text argument.
             if (!scalar.TryCoerceLogicalOrBlankOrNumberOrText(out var logical, out var coercionError))
                 return coercionError;
 

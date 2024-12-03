@@ -254,6 +254,29 @@ namespace ClosedXML.Excel.CalcEngine
             return GetNonBlankValues(reference);
         }
 
+        internal IEnumerable<ScalarValue> GetAllValues(AnyValue value)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return new ScalarArray(scalar, 1, 1);
+
+            if (collection.TryPickT0(out var array, out var reference))
+                return array;
+
+            return GetAllCellValues(reference);
+        }
+
+        internal IEnumerable<ScalarValue> GetAllCellValues(Reference reference)
+        {
+            foreach (var area in reference.Areas)
+            {
+                var sheet = area.Worksheet;
+                foreach (var point in XLSheetRange.FromRangeAddress(area))
+                {
+                    yield return GetCellValue(sheet, point.Row, point.Column);
+                }
+            }
+        }
+
         private class FunctionVisitor : CollectVisitor<FunctionVisitor>
         {
             public FunctionVisitor(string function)

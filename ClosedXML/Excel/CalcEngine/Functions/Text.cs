@@ -63,7 +63,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, 1, Adapt(T), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
-            ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin, AllowRange.Except, 0, 1); // Joins text via delimiter
+            ce.RegisterFunction("TEXTJOIN", 3, 255, Adapt(TextJoin), FunctionFlags.Range | FunctionFlags.Future, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, 1, Adapt(Trim), FunctionFlags.Scalar); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, 1, Adapt(Value), FunctionFlags.Scalar); // Converts a text argument to a number
@@ -182,6 +182,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 foreach (var scalar in array)
                 {
+                    ctx.ThrowIfCancelled();
                     if (!scalar.ToText(ctx.Culture).TryPickT0(out var text, out var error))
                         return error;
 
@@ -516,62 +517,41 @@ namespace ClosedXML.Excel.CalcEngine
                 return nf.Format(number, CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// A function to Join text https://support.office.com/en-us/article/textjoin-function-357b449a-ec91-49d0-80c3-0e8fc845691c
-        /// </summary>
-        /// <param name="p">Parameters</param>
-        /// <returns> string </returns>
-        /// <exception cref="ApplicationException">
-        /// Delimiter in first param must be a string
-        /// or
-        /// Second param must be a boolean (TRUE/FALSE)
-        /// </exception>
-        private static object TextJoin(List<Expression> p)
+        private static ScalarValue TextJoin(CalcContext ctx, string delimiter, bool ignoreEmpty, List<AnyValue> texts)
         {
-            var values = new List<string>();
-            string delimiter;
-            bool ignoreEmptyStrings;
-            try
+            var first = true;
+            var sb = new StringBuilder();
+            foreach (var textValue in texts)
             {
-                delimiter = (string)p[0];
-                ignoreEmptyStrings = (bool)p[1];
-            }
-            catch (Exception)
-            {
-                return XLError.IncompatibleValue;
-            }
-
-            foreach (var param in p.Skip(2))
-            {
-                if (param is XObjectExpression tableArray)
+                // Optimization for large areas, e.g. column ranges
+                var textElements = ignoreEmpty
+                    ? ctx.GetNonBlankValues(textValue)
+                    : ctx.GetAllValues(textValue);
+                foreach (var scalar in textElements)
                 {
-                    if (!(tableArray.Value is CellRangeReference rangeReference))
-                        return XLError.NoValueAvailable;
+                    ctx.ThrowIfCancelled();
+                    if (!scalar.ToText(ctx.Culture).TryPickT0(out var text, out var error))
+                        return error;
 
-                    var range = rangeReference.Range;
-                    IEnumerable<string> cellValues;
-                    if (ignoreEmptyStrings)
-                        cellValues = range.CellsUsed()
-                            .Select(c => c.GetString())
-                            .Where(s => !string.IsNullOrEmpty(s));
+                    if (ignoreEmpty && text.Length == 0)
+                        continue;
+
+                    if (first)
+                    {
+                        sb.Append(text);
+                        first = false;
+                    }
                     else
-                        cellValues = rangeReference.CellValues()
-                            .Select(o => o.ToString(CultureInfo.CurrentCulture));
+                    {
+                        sb.Append(delimiter).Append(text);
+                    }
 
-                    values.AddRange(cellValues);
-                }
-                else
-                {
-                    values.Add((string)param);
+                    if (sb.Length > XLHelper.CellTextLimit)
+                        return XLError.IncompatibleValue;
                 }
             }
 
-            var retVal = string.Join(delimiter, values);
-
-            if (retVal.Length > 32767)
-                return XLError.IncompatibleValue;
-
-            return retVal;
+            return sb.ToString();
         }
 
         private static ScalarValue Trim(CalcContext ctx, string text)
