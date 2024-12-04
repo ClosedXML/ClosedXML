@@ -888,25 +888,64 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Substitute_Value()
+        public void Substitute_replaces_n_th_occurence()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday."", ""Tuesday"", ""Monday"")");
+            var actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""This is a Tuesday."", ""Tuesday"", ""Monday"")");
             Assert.AreEqual("This is a Monday.", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", ""Monday"", 1)");
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", ""Monday"", 1)");
             Assert.AreEqual("This is a Monday. Next week also has a Tuesday.", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", ""Monday"", 2)");
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", ""Monday"", 2)");
             Assert.AreEqual("This is a Tuesday. Next week also has a Monday.", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Substitute("""", """", ""Monday"")");
-            Assert.AreEqual("", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday. Next week also has a Tuesday."", """", ""Monday"")");
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""This is a Tuesday. Next week also has a Tuesday."", """", ""Monday"")");
             Assert.AreEqual("This is a Tuesday. Next week also has a Tuesday.", actual);
 
-            actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", """")");
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", """")");
             Assert.AreEqual("This is a . Next week also has a .", actual);
+        }
+
+        [Test]
+        public void Substitute_on_empty_string_returns_empty_string()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE("""","""",""Monday"")");
+            Assert.AreEqual("", actual);
+        }
+
+        [Test]
+        public void Substitute_is_case_sensitive()
+        {
+            var actual = XLWorkbook.EvaluateExpr("""SUBSTITUTE("A","a","Z")""");
+            Assert.AreEqual("A", actual);
+        }
+
+        [Test]
+        public void Substitute_returns_original_string_when_occurrence_is_not_found()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""ABCABC"",""A"",""Z"",3)");
+            Assert.AreEqual(@"ABCABC", actual);
+        }
+
+        [Test]
+        public void Substitute_searches_for_every_occurence()
+        {
+            // AA is matches at every character, it doesn't skip
+            var actual = XLWorkbook.EvaluateExpr("""SUBSTITUTE("AAAAAAAA","AA","ZZ",3)""");
+            Assert.AreEqual(@"AAZZAAAA", actual);
+        }
+
+        [Test]
+        public void Substitute_occurence_must_be_between_one_and_max_int()
+        {
+            var actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""ABC"",""B"",""ZZ"",0.9)");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""ABC"",""B"",""ZZ"", 2147483646.9)");
+            Assert.AreEqual("ABC", actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"SUBSTITUTE(""ABC"",""B"",""ZZ"", 2147483647)");
+            Assert.AreEqual(XLError.IncompatibleValue, actual);
         }
 
         [Test]

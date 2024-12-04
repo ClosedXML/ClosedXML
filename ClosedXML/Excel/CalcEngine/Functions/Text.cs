@@ -60,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("REPT", 2, 2, Adapt(Rept), FunctionFlags.Scalar); // Repeats text a given number of times
             ce.RegisterFunction("RIGHT", 1, 2, AdaptLastOptional(Right, 1), FunctionFlags.Scalar); // Returns the rightmost characters from a text value
             ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
-            ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
+            ce.RegisterFunction("SUBSTITUTE", 3, 4, AdaptSubstitute(Substitute), FunctionFlags.Scalar); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, 1, Adapt(T), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 255, Adapt(TextJoin), FunctionFlags.Range | FunctionFlags.Future, AllowRange.Except, 0, 1); // Joins text via delimiter
@@ -428,37 +428,34 @@ namespace ClosedXML.Excel.CalcEngine
             return firstIdx + startIndex + 1;
         }
 
-        private static object Substitute(List<Expression> p)
+        private static ScalarValue Substitute(CalcContext ctx, string text, string oldText, string newText, double? occurrenceOrMissing)
         {
-            // get parameters
-            var text = (string)p[0];
-            var oldText = (string)p[1];
-            var newText = (string)p[2];
+            // Replace is case sensitive
+            if (occurrenceOrMissing is < 1 or >= 2147483647)
+                return XLError.IncompatibleValue;
 
-            if (text.Length == 0) return "";
-            if (oldText.Length == 0) return text;
+            if (text.Length == 0 || oldText.Length == 0)
+                return text;
 
-            // if index not supplied, replace all
-            if (p.Count == 3)
-            {
+            if (occurrenceOrMissing is null)
                 return text.Replace(oldText, newText);
+
+            // There must be at least one loop (>=1), so `pos` will be set to an index or returned as not found
+            var pos = -1;
+            var occurrence = (int)occurrenceOrMissing.Value;
+            for (var i = 0; i < occurrence; ++i)
+            {
+                pos = text.IndexOf(oldText, pos + 1, StringComparison.Ordinal);
+                if (pos < 0)
+                    return text;
             }
 
-            // replace specific instance
-            int index = (int)p[3];
-            if (index < 1)
-            {
-                throw new ArgumentException("Invalid index in Substitute.");
-            }
-            int pos = text.IndexOf(oldText);
-            while (pos > -1 && index > 1)
-            {
-                pos = text.IndexOf(oldText, pos + 1);
-                index--;
-            }
-            return pos > -1
-                ? text.Substring(0, pos) + newText + text.Substring(pos + oldText.Length)
-                : text;
+            var textSpan = text.AsSpan();
+            var sb = new StringBuilder(text.Length - oldText.Length + newText.Length);
+            sb.Append(textSpan[..pos]);
+            sb.Append(newText);
+            sb.Append(textSpan[(pos + oldText.Length)..]);
+            return sb.ToString();
         }
 
         private static AnyValue T(CalcContext ctx, AnyValue value)

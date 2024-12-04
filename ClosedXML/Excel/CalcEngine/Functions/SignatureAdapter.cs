@@ -571,6 +571,37 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptSubstitute(Func<CalcContext, string, string, string, double?, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToText(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1Converted = ToText(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var arg2Converted = ToText(args[2], ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                double? arg3 = null;
+                if (args.Length > 3)
+                {
+                    // Excel doesn't accept logical, be more permissive.
+                    var arg3Converted = ToNumber(args[3], ctx);
+                    if (!arg3Converted.TryPickT0(out var arg3Number, out var err3))
+                        return err3;
+
+                    arg3 = arg3Number;
+                }
+
+                return f(ctx, arg0, arg1, arg2, arg3).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction AdaptMultinomial(Func<CalcContext, List<IEnumerable<ScalarValue>>, ScalarValue> f)
         {
             return (ctx, args) =>
