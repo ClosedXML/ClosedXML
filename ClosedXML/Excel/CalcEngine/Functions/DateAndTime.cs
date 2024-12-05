@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("HOUR", 1, Hour); // Converts a serial number to an hour
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
-            ce.RegisterFunction("MONTH", 1, Month); // Converts a serial number to a month
+            ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, Second); // Converts a serial number to a second
@@ -147,22 +147,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (int)Math.Floor(DateTime.Parse(date).ToOADate());
         }
 
-        private static ScalarValue Day(CalcContext ctx, double date)
+        private static ScalarValue Day(CalcContext ctx, double serialDate)
         {
-            if (date < 0 || date >= ctx.DateSystemUpperLimit)
-                return XLError.NumberInvalid;
-
-            var serialDate = (int)Math.Truncate(date);
-            if (ctx.Use1904DateSystem)
-                return DateTime.FromOADate(serialDate + 1462).Day;
-
-            // Everyone loves 29th Feb 1900
-            return serialDate switch
-            {
-                < 32 => serialDate, // January 1900
-                <= 60 => serialDate - 31, // February 1900
-                _ => DateTime.FromOADate(serialDate).Day
-            };
+            return GetDateComponent(ctx, serialDate, static d => d.Day, 0, 29);
         }
 
         private static object Days(List<Expression> p)
@@ -279,11 +266,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return date.Minute;
         }
 
-        private static object Month(List<Expression> p)
+        private static ScalarValue Month(CalcContext ctx, double serialDate)
         {
-            var date = (DateTime)p[0];
-
-            return date.Month;
+            return GetDateComponent(ctx, serialDate, static d => d.Month, 1, 2);
         }
 
         private static ScalarValue NetWorkDays(CalcContext ctx, ScalarValue startDate, ScalarValue endDate, AnyValue holidays)
@@ -578,6 +563,36 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             serialDate = (int)Math.Truncate(serialDateTime);
             error = default;
             return true;
+        }
+
+        private static ScalarValue GetDateComponent(CalcContext ctx, double serialDate, Func<DateTime, double> component, double epoch1900, double feb29)
+        {
+            if (serialDate < 0 || serialDate >= ctx.DateSystemUpperLimit)
+                return XLError.NumberInvalid;
+
+            var date = (int)Math.Truncate(serialDate);
+            if (ctx.Use1904DateSystem)
+            {
+                var date1904 = DateTime.FromOADate(date + 1462);
+                return component(date1904);
+            }
+
+            // Return value for 1900-01-00
+            if (date == 0)
+                return epoch1900;
+
+            // January and February 1900
+            if (date < 60)
+            {
+                var offByOneDate = DateTime.FromOADate(date + 1);
+                return component(offByOneDate);
+            }
+
+            // Everyone loves 29th Feb 1900
+            if (date == 60)
+                return feb29;
+
+            return component(DateTime.FromOADate(date));
         }
     }
 }

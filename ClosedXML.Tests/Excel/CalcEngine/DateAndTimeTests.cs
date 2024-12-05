@@ -1,8 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
-using System.Globalization;
-using System.Threading;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -248,11 +246,31 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(30, actual);
         }
 
-        [Test]
-        public void Month()
+        [SetCulture("eu-ES")]
+        [TestCase(0, ExpectedResult = 1)] // 1900-01-00
+        [TestCase(31, ExpectedResult = 1)] // 1900-01-31
+        [TestCase(32, ExpectedResult = 2)] // 1900-02-01
+        [TestCase(59, ExpectedResult = 2)] // 1900-02-28
+        [TestCase(60, ExpectedResult = 2)] // 1900-02-29
+        [TestCase(61, ExpectedResult = 3)] // 1900-02-29
+        [TestCase("DATE(2006,1,2)", ExpectedResult = 1)]
+        [TestCase("DATE(2006,0,2)", ExpectedResult = 12)]
+        [TestCase("\"2006/1/2 10:45 AM\"", ExpectedResult = 1)]
+        [TestCase("30000", ExpectedResult = 2)]
+        [TestCase("45596", ExpectedResult = 10)]
+        [TestCase("45596.9", ExpectedResult = 10)]
+        [TestCase("45597", ExpectedResult = 11)]
+        public double Month_returns_month_of_serial_date(object argument)
         {
-            var actual = XLWorkbook.EvaluateExpr("Month(\"8/22/2008\")");
-            Assert.AreEqual(8, actual);
+            return XLWorkbook.EvaluateExprCurrent($"MONTH({argument})").GetNumber();
+        }
+
+        [Test]
+        public void Month_serial_date_must_be_between_zero_and_upper_limit_of_date_system()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("MONTH(-0.1)"));
+            Assert.AreEqual(12, XLWorkbook.EvaluateExpr("MONTH(DATE(9999,12,31) + 0.9)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("MONTH(DATE(9999,12,31) + 1)"));
         }
 
         [Test]
