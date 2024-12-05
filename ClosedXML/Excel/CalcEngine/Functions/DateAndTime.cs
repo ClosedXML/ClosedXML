@@ -504,18 +504,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
         }
 
-        private static ScalarValue Year(double serialDateTime)
+        private static ScalarValue Year(CalcContext ctx, double serialDate)
         {
-            serialDateTime = Math.Truncate(serialDateTime);
-            if (serialDateTime < 0)
-                return XLError.NumberInvalid;
-
-            // Serial date time values from [0, 1) are from 1899-12-31,
-            // but Excel represents them as 1900-01-00.
-            if (serialDateTime < 1)
-                return 1900;
-
-            return serialDateTime.ToSerialDateTime().Year;
+            return GetDateComponent(ctx, serialDate, static d => d.Year, 1900, 1900);
         }
 
         private static object Yearfrac(List<Expression> p)

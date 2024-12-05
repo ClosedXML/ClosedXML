@@ -688,8 +688,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("0", 1900)]
         [TestCase("0.5", 1900)]
         [TestCase("1", 1900)]
+        [TestCase("59", 1900)]
+        [TestCase("60", 1900)]
         [TestCase("366", 1900)]
         [TestCase("367", 1901)]
+        [TestCase("DATE(9999,12,31)+0.9", 9999)]
+        [TestCase("DATE(9999,12,31)+1", XLError.NumberInvalid)]
         [TestCase("-1", XLError.NumberInvalid)]
         [TestCase("\"test\"", XLError.IncompatibleValue)]
         [TestCase("IF(TRUE,)", 1900)] // Blank
@@ -708,7 +712,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Cell("A1").Value = Blank.Value;
-            ws.Cell("A2").FormulaA1 = @"=YEAR(A1)";
+            ws.Cell("A2").FormulaA1 = "YEAR(A1)";
             var valueA2 = ws.Cell("A2").Value;
             Assert.AreEqual(1900, valueA2);
         }
