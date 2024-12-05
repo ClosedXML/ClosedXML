@@ -7,14 +7,9 @@ using System.Threading;
 namespace ClosedXML.Tests.Excel.DataValidations
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class DateAndTimeTests
     {
-        [SetUp]
-        public void SetCultureInfo()
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-        }
-
         [Test]
         public void Date()
         {
