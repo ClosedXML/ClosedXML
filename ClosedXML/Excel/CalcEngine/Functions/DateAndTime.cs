@@ -1,8 +1,5 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
@@ -18,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
+            ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, Day); // Converts a serial number to a day of the month
@@ -74,32 +71,48 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return workDays;
         }
 
-        private static object Date(List<Expression> p)
+        private static ScalarValue Date(CalcContext ctx, double year, double month, double day)
         {
-            var year = (int)p[0];
-            var month = (int)p[1];
-            var day = (int)p[2];
+            // Unlike most functions, values are floored - not truncated.
+            year = Math.Floor(year);
+            month = Math.Floor(month);
+            day = Math.Floor(day);
 
-            // Excel allows months and days outside the normal range, and adjusts the date accordingly
-            if (month > 12 || month < 1)
-            {
-                year += (int)Math.Floor((double)(month - 1d) / 12.0);
-                month -= (int)Math.Floor((double)(month - 1d) / 12.0) * 12;
-            }
+            if (month is < -short.MaxValue or >= short.MaxValue)
+                return XLError.NumberInvalid;
 
-            int daysAdjustment = 0;
-            if (day > DateTime.DaysInMonth(year, month))
-            {
-                daysAdjustment = day - DateTime.DaysInMonth(year, month);
-                day = DateTime.DaysInMonth(year, month);
-            }
-            else if (day < 1)
-            {
-                daysAdjustment = day - 1;
-                day = 1;
-            }
+            // Excel behaves out of spec. Spec says 0-99 are interpreted as year + 1900,
+            // but reality is that anything below 1900 is interpreted as year + 1900.
+            // That seems to be true for both 1900 and 1904 date systems.
+            if (year < 1900)
+                year += 1900;
 
-            return (int)Math.Floor(new DateTime(year, month, day).AddDays(daysAdjustment).ToOADate());
+            // Excel buggy implementation :) Should probably return error,
+            // but silently changes the result instead.
+            day = Math.Min(day, short.MaxValue);
+            if (day < short.MinValue)
+                day = short.MaxValue;
+
+            if (year > 10000)
+                year = 10000;
+
+            // Excel allows months and days outside the normal range, and adjusts the date
+            // accordingly.
+            var yearAdjustment = Math.Floor((month - 1d) / 12.0);
+            year += yearAdjustment;
+            month -= yearAdjustment * 12;
+
+            // Year 1 is earliest allowable in both date system. Also avoid the double
+            // to int conversion problems when double is too small.
+            if (year < 1)
+                return XLError.NumberInvalid;
+
+            var startOfMonth = new DateTime((int)year, (int)month, 1).ToSerialDateTime();
+            var serialDate = startOfMonth + day - 1;
+            if (serialDate < 0 || serialDate >= ctx.DateSystemUpperLimit)
+                return XLError.NumberInvalid;
+
+            return serialDate;
         }
 
         private static object Datedif(List<Expression> p)

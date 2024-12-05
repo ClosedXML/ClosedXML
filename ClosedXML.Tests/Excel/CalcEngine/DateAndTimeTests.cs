@@ -4,34 +4,71 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace ClosedXML.Tests.Excel.DataValidations
+namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
     [SetCulture("en-US")]
     public class DateAndTimeTests
     {
-        [Test]
-        public void Date()
+        [TestCase(2008, 1, 1, ExpectedResult = 39448)]
+        [TestCase(2008, 15, 1, ExpectedResult = 39873)]
+        [TestCase(2008, -50, 1, ExpectedResult = 37895)]
+        [TestCase(2008, 5, 63, ExpectedResult = 39631)]
+        [TestCase(2008, 13, 63, ExpectedResult = 39876)]
+        [TestCase(2008, 15, -120, ExpectedResult = 39752)]
+        [TestCase(1900, 2, 29, ExpectedResult = 60)] // Loveable 29th feb 1900
+        [TestCase(1900, 2, 28, ExpectedResult = 59)]
+        [TestCase(1900, 1, 1, ExpectedResult = 1)]
+        [TestCase(1900, 1, 0, ExpectedResult = 0)] // Excel formats it as 1900-01-00, but more like 1899-12-31
+        [TestCase(1899, 1, 1, ExpectedResult = 693598)] // If year < 1900, add 1900 to it
+        public double Date_returns_serial_date(int year, int month, int day)
         {
-            XLCellValue actual;
+            return XLWorkbook.EvaluateExpr($"DATE({year},{month},{day})").GetNumber();
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Date(2008, 1, 1)");
-            Assert.AreEqual(39448, actual);
+        [TestCase(1900, 1, -1)] // Serial date -1, below 0
+        [TestCase(9999, 12, 32)]
+        public void Date_returns_error_when_result_outside_base_date_to_max_date_of_calendar_system(int year, int month, int day)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"DATE({year},{month},{day})");
+            Assert.AreEqual(XLError.NumberInvalid, actual);
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Date(2008, 15, 1)");
-            Assert.AreEqual(39873, actual);
+        [TestCase(-1, 32000, 1, ExpectedResult = 973586)]  // Year -1.1 behaves as -2
+        [TestCase(-1.1, 32000, 1, ExpectedResult = 973221)]
+        [TestCase(-2, 32000, 1, ExpectedResult = 973221)]
+        [TestCase(2000, -5, 1, ExpectedResult = 36342)] // Month -5.1 behaves as -6
+        [TestCase(2000, -5.1, 1, ExpectedResult = 36312)]
+        [TestCase(2000, -6, 1, ExpectedResult = 36312)]
+        [TestCase(2000, 2, -10, ExpectedResult = 36546)] // Day -10.1 behaves as -11
+        [TestCase(2000, 2, -10.1, ExpectedResult = 36545)]
+        [TestCase(2000, 2, -11, ExpectedResult = 36545)]
+        public double Date_floors_arguments(double year, double month, double day)
+        {
+            return XLWorkbook.EvaluateExpr($"DATE({year},{month},{day})").GetNumber();
+        }
 
-            actual = XLWorkbook.EvaluateExpr("Date(2008, -50, 1)");
-            Assert.AreEqual(37895, actual);
+        [TestCase(10000, -32767, 3, "7269-05-03")] // Month can be [-32767..32767)
+        [TestCase(10000, -32767.1, 3, XLError.NumberInvalid)]
+        [TestCase(2000, 32766.9, 1, "4730-06-01")]
+        [TestCase(2000, 32767, 1, XLError.NumberInvalid)]
+        [TestCase(2000, 1, 32767.9, "2089-09-16")] // Day is clamped to at most 32767
+        [TestCase(2000, 1, 32768, "2089-09-16")]
+        [TestCase(2000, 1, 1E+100, "2089-09-16")]
+        [TestCase(2000, 1, -32768, "1910-04-14")] // When day is < -32768, day uses 32767 value instead
+        [TestCase(2000, 1, -32768.1, "2089-09-16")]
+        [TestCase(2000, 1, -1E+100, "2089-09-16")]
+        [TestCase(10000, -32000, 1, "7333-04-01")] // Year is clamped to 10000
+        [TestCase(10001, -32000, 1, "7333-04-01")]
+        [TestCase(1E+100, -32000, 1, "7333-04-01")]
+        [TestCase(-1E+100, 1, 1, XLError.NumberInvalid)] // Even if year is less than int.MinValue, there is no error
+        public void Date_matches_excel_behavior_for_out_of_range_arguments(double year, double month, double day, object expectedResult)
+        {
+            if (expectedResult is string iso8601)
+                expectedResult = DateTime.Parse(iso8601).ToSerialDateTime();
 
-            actual = XLWorkbook.EvaluateExpr("Date(2008, 5, 63)");
-            Assert.AreEqual(39631, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Date(2008, 13, 63)");
-            Assert.AreEqual(39876, actual);
-
-            actual = XLWorkbook.EvaluateExpr("Date(2008, 15, -120)");
-            Assert.AreEqual(39752, actual);
+            var actual = XLWorkbook.EvaluateExpr($"DATE({year},{month},{day})");
+            Assert.AreEqual(expectedResult, actual);
         }
 
         [TestCase("1/1/2006", "12/12/2010", "Y", ExpectedResult = 4)]

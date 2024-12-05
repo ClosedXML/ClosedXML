@@ -75,6 +75,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
 
+        /// <summary>
+        /// What date system should be used in calculation. Either 1900 or 1904.
+        /// </summary>
+        internal bool Use1904DateSystem { get; init; } = false;
+
+        /// <summary>
+        /// An upper limit (exclusive) of used calendar system.
+        /// </summary>
+        internal double DateSystemUpperLimit => Use1904DateSystem ? XLHelper.Calendar1904UpperLimit : XLHelper.Calendar1900UpperLimit;
+
         internal CancellationToken CancellationToken { get; init; } = CancellationToken.None;
 
         /// <summary>
