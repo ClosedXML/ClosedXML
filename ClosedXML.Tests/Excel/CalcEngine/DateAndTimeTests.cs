@@ -116,11 +116,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(39682, actual);
         }
 
-        [Test]
-        public void Day()
+        [TestCase(0, ExpectedResult = 0)]
+        [TestCase(1, ExpectedResult = 1)]
+        [TestCase(31, ExpectedResult = 31)]
+        [TestCase(32, ExpectedResult = 1)]
+        [TestCase(59, ExpectedResult = 28)]
+        [TestCase(60, ExpectedResult = 29)]
+        [TestCase(61, ExpectedResult = 1)]
+        [TestCase(30000, ExpectedResult = 18)]
+        [TestCase(45718, ExpectedResult = 2)]
+        public double Day_returns_day_of_a_month_for_serial_culture(double serialDate)
         {
-            var actual = XLWorkbook.EvaluateExpr("Day(\"8/22/2008\")");
-            Assert.AreEqual(22, actual);
+            return XLWorkbook.EvaluateExpr($"DAY({serialDate})").GetNumber();
+        }
+
+        [Test]
+        public void Day_only_accepts_serial_date_from_0_to_upper_limit_of_calendar_system()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAY(-0.1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAY(DATE(9999,12,31)+1)"));
+        }
+
+        [SetCulture("eu-ES")]
+        [TestCase("\"2006/1/2 10:45 AM\"", ExpectedResult = 2)]
+        [TestCase("DATE(2006,1,2)", ExpectedResult = 2)]
+        [TestCase("DATE(2006,0,2)", ExpectedResult = 2)]
+        [TestCase("DATE(2013,9,0)", ExpectedResult = 31)]
+        public double Day_examples(string date)
+        {
+            return XLWorkbook.EvaluateExprCurrent($"DAY({date})").GetNumber();
         }
 
         [Test]
@@ -131,16 +155,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr("DAYS(\"2016-10-1\",\"1992-2-29\")");
             Assert.AreEqual(8981, actual);
-        }
-
-        [Test]
-        public void DayWithDifferentCulture()
-        {
-            CultureInfo ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
-            ci.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
-            Thread.CurrentThread.CurrentCulture = ci;
-            var actual = XLWorkbook.EvaluateExpr("Day(\"1/6/2008\")");
-            Assert.AreEqual(1, actual);
         }
 
         [Test]

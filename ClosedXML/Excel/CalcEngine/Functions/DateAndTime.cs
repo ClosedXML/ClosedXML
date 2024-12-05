@@ -18,7 +18,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
-            ce.RegisterFunction("DAY", 1, Day); // Converts a serial number to a day of the month
+            ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, Days360); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
@@ -147,11 +147,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (int)Math.Floor(DateTime.Parse(date).ToOADate());
         }
 
-        private static object Day(List<Expression> p)
+        private static ScalarValue Day(CalcContext ctx, double date)
         {
-            var date = (DateTime)p[0];
+            if (date < 0 || date >= ctx.DateSystemUpperLimit)
+                return XLError.NumberInvalid;
 
-            return date.Day;
+            var serialDate = (int)Math.Truncate(date);
+            if (ctx.Use1904DateSystem)
+                return DateTime.FromOADate(serialDate + 1462).Day;
+
+            // Everyone loves 29th Feb 1900
+            return serialDate switch
+            {
+                < 32 => serialDate, // January 1900
+                <= 60 => serialDate - 31, // February 1900
+                _ => DateTime.FromOADate(serialDate).Day
+            };
         }
 
         private static object Days(List<Expression> p)

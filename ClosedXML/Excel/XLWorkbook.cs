@@ -976,6 +976,14 @@ namespace ClosedXML.Excel
             return CalcEngineExpr.EvaluateFormula(expression).ToCellValue();
         }
 
+        /// <summary>
+        /// Evaluate a formula and return a value. Use current culture.
+        /// </summary>
+        internal static XLCellValue EvaluateExprCurrent(String expression)
+        {
+            return new XLCalcEngine(CultureInfo.CurrentCulture).EvaluateFormula(expression).ToCellValue();
+        }
+
         public String Author { get; set; }
 
         public Boolean LockStructure
