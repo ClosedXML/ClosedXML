@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
-            ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
+            ce.RegisterFunction("MINUTE", 1, 1, Adapt(Minute), FunctionFlags.Scalar); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
@@ -231,10 +231,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static ScalarValue Hour(CalcContext ctx, double serialTime)
         {
-            if (serialTime < 0 || serialTime >= ctx.DateSystemUpperLimit)
-                return XLError.NumberInvalid;
-
-            return DateTime.FromOADate(serialTime).Hour;
+            return GetTimeComponent(ctx, serialTime, static d => d.Hour);
         }
 
         // http://stackoverflow.com/questions/11154673/get-the-correct-week-number-of-a-given-date
@@ -260,11 +257,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return WeekdayCalc(date) is 1 or 7;
         }
 
-        private static object Minute(List<Expression> p)
+        private static ScalarValue Minute(CalcContext ctx, double serialTime)
         {
-            var date = (DateTime)p[0];
-
-            return date.Minute;
+            return GetTimeComponent(ctx, serialTime, static d => d.Minute);
         }
 
         private static ScalarValue Month(CalcContext ctx, double serialDate)
@@ -585,6 +580,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return feb29;
 
             return component(DateTime.FromOADate(date));
+        }
+
+        private static ScalarValue GetTimeComponent(CalcContext ctx, double serialTime, Func<DateTime, int> component)
+        {
+            if (serialTime < 0 || serialTime >= ctx.DateSystemUpperLimit)
+                return XLError.NumberInvalid;
+
+            return component(DateTime.FromOADate(serialTime));
         }
     }
 }

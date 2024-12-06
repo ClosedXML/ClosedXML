@@ -264,11 +264,27 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("HOUR(DATE(9999,12,31)+1)"));
         }
 
-        [Test]
-        public void Minute()
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("0.5", ExpectedResult = 0)]
+        [TestCase("0.68", ExpectedResult = 19)]
+        [TestCase("0.69", ExpectedResult = 33)]
+        [TestCase("0.85", ExpectedResult = 24)]
+        [TestCase("10.85", ExpectedResult = 24)]
+        [TestCase("\"14:47:20\"", ExpectedResult = 47)]
+        [TestCase("\"8/22/2008 3:30 AM\"", ExpectedResult = 30)]
+        public double Minute_returns_minute_of_serial_date(string dateArg)
         {
-            var actual = XLWorkbook.EvaluateExpr("Minute(\"8/22/2008 3:30:45 AM\")");
-            Assert.AreEqual(30, actual);
+            return XLWorkbook.EvaluateExprCurrent($"MINUTE({dateArg})").GetNumber();
+        }
+
+        [Test]
+        public void Minute_accepts_only_serial_time_between_zero_and_upper_limit_of_date_system()
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExprCurrent("MINUTE(0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("MINUTE(-0.1)"));
+
+            Assert.AreEqual(36, XLWorkbook.EvaluateExprCurrent("MINUTE(DATE(9999,12,31)+0.9)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("MINUTE(DATE(9999,12,31)+1)"));
         }
 
         [SetCulture("eu-ES")]
