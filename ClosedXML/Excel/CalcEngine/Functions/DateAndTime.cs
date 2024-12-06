@@ -29,7 +29,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
-            ce.RegisterFunction("SECOND", 1, Second); // Converts a serial number to a second
+            ce.RegisterFunction("SECOND", 1, 1, Adapt(Second), FunctionFlags.Scalar); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, Time); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
@@ -293,11 +293,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return DateTime.Now;
         }
 
-        private static object Second(List<Expression> p)
+        private static ScalarValue Second(CalcContext ctx, double serialDate)
         {
-            var date = (DateTime)p[0];
-
-            return date.Second;
+            return GetTimeComponent(ctx, serialDate, static d => d.Second);
         }
 
         private static object Time(List<Expression> p)

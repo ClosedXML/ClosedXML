@@ -431,11 +431,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, ws.Evaluate("NETWORKDAYS(1, 10, A6)"));
         }
 
-        [Test]
-        public void Second()
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("\"3:30:45\"", ExpectedResult = 45)]
+        public double Second_returns_minute_of_serial_date(string dateArg)
         {
-            var actual = XLWorkbook.EvaluateExpr("Second(\"8/22/2008 3:30:45 AM\")");
-            Assert.AreEqual(45, actual);
+            return XLWorkbook.EvaluateExprCurrent($"SECOND({dateArg})").GetNumber();
+        }
+
+        [Test]
+        public void Second_accepts_only_serial_time_between_zero_and_upper_limit_of_date_system()
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExprCurrent("SECOND(0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("SECOND(-0.1)"));
+
+            Assert.AreEqual(51, XLWorkbook.EvaluateExprCurrent("SECOND(DATE(9999,12,31)+0.9999)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("SECOND(DATE(9999,12,31)+1)"));
         }
 
         [Test]
