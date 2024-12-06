@@ -28,7 +28,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("MINUTE", 1, 1, Adapt(Minute), FunctionFlags.Scalar); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
-            ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
+            ce.RegisterFunction("NOW", 0, 0, Adapt(Now), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, 1, Adapt(Second), FunctionFlags.Scalar); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, 3, Adapt(Time), FunctionFlags.Scalar); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
@@ -288,9 +288,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return BusinessDaysUntil(startSerialDate, endSerialDate, allHolidays);
         }
 
-        private static object Now(List<Expression> p)
+        private static ScalarValue Now()
         {
-            return DateTime.Now;
+            return DateTime.Now.ToSerialDateTime();
         }
 
         private static ScalarValue Second(CalcContext ctx, double serialDate)
