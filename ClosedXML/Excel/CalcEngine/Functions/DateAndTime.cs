@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
             ce.RegisterFunction("NOW", 0, Now); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, 1, Adapt(Second), FunctionFlags.Scalar); // Converts a serial number to a second
-            ce.RegisterFunction("TIME", 3, Time); // Returns the serial number of a particular time
+            ce.RegisterFunction("TIME", 3, 3, Adapt(Time), FunctionFlags.Scalar); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
@@ -298,13 +298,32 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return GetTimeComponent(ctx, serialDate, static d => d.Second);
         }
 
-        private static object Time(List<Expression> p)
+        private static ScalarValue Time(CalcContext ctx, double hour, double minute, double second)
         {
-            var hour = (int)p[0];
-            var minute = (int)p[1];
-            var second = (int)p[2];
+            if (!TryGetComponent(hour, out var hourFloored))
+                return XLError.NumberInvalid;
 
-            return new TimeSpan(0, hour, minute, second);
+            if (!TryGetComponent(minute, out var minuteFloored))
+                return XLError.NumberInvalid;
+
+            if (!TryGetComponent(second, out var secondFloored))
+                return XLError.NumberInvalid;
+
+            var serialDate = new TimeSpan(hourFloored, minuteFloored, secondFloored).ToSerialDateTime();
+            return serialDate % 1.0;
+
+            static bool TryGetComponent(double value, out int truncated)
+            {
+                value = Math.Floor(value);
+                if (value is < 0 or > 32767)
+                {
+                    truncated = default;
+                    return false;
+                }
+
+                truncated = checked((int)value);
+                return true;
+            }
         }
 
         private static object Timevalue(List<Expression> p)

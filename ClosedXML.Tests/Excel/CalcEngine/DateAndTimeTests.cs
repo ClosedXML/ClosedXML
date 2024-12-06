@@ -448,11 +448,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("SECOND(DATE(9999,12,31)+1)"));
         }
 
-        [Test]
-        public void Time()
+        [TestCase(0, 0, 0, ExpectedResult = 0)]
+        [TestCase(0, 0, 1, ExpectedResult = 0.0000115740740741)]
+        [TestCase(0, 0, 2, ExpectedResult = 0.0000231481481481)]
+        [TestCase(0, 0, 20, ExpectedResult = 0.0002314814814815)]
+        [TestCase(2, 3, 20, ExpectedResult = 0.0856481481481481)]
+        [TestCase(12, 0, 0, ExpectedResult = 0.5000000000000000)]
+        [TestCase(23, 59, 59, ExpectedResult = 0.9999884259259260)]
+        [TestCase(26, 120, 240, ExpectedResult = 0.1694444444444450)]
+        [TestCase(1, 2, 3, ExpectedResult = 0.043090277777778)]
+        [TestCase(1.9, 2.9, 3.9, ExpectedResult = 0.043090277777778)]
+        [TestCase(24, 0, 0, ExpectedResult = 0)]
+        [TestCase(0, 42*60, 0, ExpectedResult = 0.75)]
+        [TestCase(0, 0, 60 * 60 * 3, ExpectedResult = 0.125)]
+        [TestCase(120, 240, 347, ExpectedResult = 0.170682870370)]
+        [DefaultFloatingPointTolerance(XLHelper.Epsilon)]
+        public double Time_returns_serial_date_time(double hour, double minute, double second)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("Time(1,2,3)");
-            Assert.AreEqual(0.043090277777778, actual, XLHelper.Epsilon);
+            return (double)XLWorkbook.EvaluateExpr($"TIME({hour},{minute},{second})");
+        }
+
+        [TestCase(-0.1, 0, 0)]
+        [TestCase(32768, 0, 0)]
+        [TestCase(0, -0.1, 0)]
+        [TestCase(0, 32768, 0)]
+        [TestCase(0, 0, -0.1)]
+        [TestCase(0, 0, 32768)]
+        public void Time_components_must_be_in_zero_to_32767_interval(double hour, double minute, double second)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"TIME({hour},{minute},{second})"));
         }
 
         [Test]
