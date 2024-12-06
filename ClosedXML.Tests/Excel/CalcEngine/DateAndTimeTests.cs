@@ -252,7 +252,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(32, ExpectedResult = 2)] // 1900-02-01
         [TestCase(59, ExpectedResult = 2)] // 1900-02-28
         [TestCase(60, ExpectedResult = 2)] // 1900-02-29
-        [TestCase(61, ExpectedResult = 3)] // 1900-02-29
+        [TestCase(61, ExpectedResult = 3)] // 1900-03-01
         [TestCase("DATE(2006,1,2)", ExpectedResult = 1)]
         [TestCase("DATE(2006,0,2)", ExpectedResult = 12)]
         [TestCase("\"2006/1/2 10:45 AM\"", ExpectedResult = 1)]
