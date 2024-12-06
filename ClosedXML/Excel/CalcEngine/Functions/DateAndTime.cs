@@ -23,7 +23,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DAYS360", 2, 3, Days360); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
-            ce.RegisterFunction("HOUR", 1, Hour); // Converts a serial number to an hour
+            ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
@@ -229,11 +229,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return daysInYears.Average();
         }
 
-        private static object Hour(List<Expression> p)
+        private static ScalarValue Hour(CalcContext ctx, double serialTime)
         {
-            var date = (DateTime)p[0];
+            if (serialTime < 0 || serialTime >= ctx.DateSystemUpperLimit)
+                return XLError.NumberInvalid;
 
-            return date.Hour;
+            return DateTime.FromOADate(serialTime).Hour;
         }
 
         // http://stackoverflow.com/questions/11154673/get-the-correct-week-number-of-a-given-date

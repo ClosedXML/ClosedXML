@@ -232,11 +232,36 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(new DateTime(2008, 4, 30).ToSerialDateTime(), actual);
         }
 
-        [Test]
-        public void Hour()
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("0.25", ExpectedResult = 6)]
+        [TestCase("0.5", ExpectedResult = 12)]
+        [TestCase("0.75", ExpectedResult = 18)]
+        [TestCase("1", ExpectedResult = 0)]
+        [TestCase("1.75", ExpectedResult = 18)]
+        [TestCase("\"7/18/2011 7:45\"", ExpectedResult = 7)]
+        [TestCase("\"4/21/2012\"", ExpectedResult = 0)]
+        [TestCase("\"12:00:00\"", ExpectedResult = 12)]
+        [TestCase("\"8/22/2008 3:30:45 PM\"", ExpectedResult = 15, Ignore = "We don't parse seconds")]
+        [TestCase("\"8/22/2008 3:30 PM\"", ExpectedResult = 15)]
+        [TestCase("DATE(2006,2,26)+TIME(2,10,20)", ExpectedResult = 2)]
+        [TestCase("TIME(22,56,34)", ExpectedResult = 22)]
+        [TestCase("\"22-Oct-2001 10:53:12\"", ExpectedResult = 10, Ignore = "We don't parse seconds plus culture is wrong")]
+        [TestCase("\"October 22, 2001 10:53\"", ExpectedResult = 10)]
+        [TestCase("\"10:53:12 pm\"", ExpectedResult = 22)]
+        [TestCase("\"22:53:12\"", ExpectedResult = 22)]
+        public double Hour_returns_hour_of_serial_date(string dateArg)
         {
-            var actual = XLWorkbook.EvaluateExpr("Hour(\"8/22/2008 3:30:45 PM\")");
-            Assert.AreEqual(15, actual);
+            return XLWorkbook.EvaluateExprCurrent($"HOUR({dateArg})").GetNumber();
+        }
+
+        [Test]
+        public void Hour_accepts_only_serial_time_between_zero_and_upper_limit_of_date_system()
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExprCurrent("HOUR(0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("HOUR(-0.1)"));
+
+            Assert.AreEqual(21, XLWorkbook.EvaluateExprCurrent("HOUR(DATE(9999,12,31)+0.9)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExprCurrent("HOUR(DATE(9999,12,31)+1)"));
         }
 
         [Test]
