@@ -496,8 +496,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Today()
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("Today()");
-            Assert.AreEqual(DateTime.Now.Date.ToSerialDateTime(), actual);
+            var actual = (double)XLWorkbook.EvaluateExpr("TODAY()");
+            Assert.AreEqual(DateTime.Today.ToSerialDateTime(), actual);
         }
 
         [TestCase("\"2/14/2008\"", 1, 5)]

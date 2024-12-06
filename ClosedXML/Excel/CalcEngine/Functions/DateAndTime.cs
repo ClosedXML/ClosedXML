@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("SECOND", 1, 1, Adapt(Second), FunctionFlags.Scalar); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, 3, Adapt(Time), FunctionFlags.Scalar); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
-            ce.RegisterFunction("TODAY", 0, Today); // Returns the serial number of today's date
+            ce.RegisterFunction("TODAY", 0, 0, Adapt(Today), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, AdaptLastOptional(Workday), FunctionFlags.Range, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
@@ -333,9 +333,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (DateTime.MinValue + date.TimeOfDay).ToOADate();
         }
 
-        private static object Today(List<Expression> p)
+        private static ScalarValue Today()
         {
-            return DateTime.Today;
+            return DateTime.Today.ToSerialDateTime();
         }
 
         private static ScalarValue Weekday(CalcContext ctx, ScalarValue date, ScalarValue flag)
