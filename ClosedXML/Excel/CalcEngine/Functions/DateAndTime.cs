@@ -159,7 +159,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Day(CalcContext ctx, int serialDate)
         {
-            return GetDateComponent(ctx, serialDate, static d => d.Day, 0, 29);
+            return GetDateParts(ctx, serialDate).Day;
         }
 
         private static object Days(List<Expression> p)
@@ -194,8 +194,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Days360(CalcContext ctx, int startSerialDate, int endSerialDate, bool isEuropean)
         {
-            var (startYear, startMonth, startDay) = GetDateComponent(ctx, startSerialDate);
-            var (endYear, endMonth, endDay) = GetDateComponent(ctx, endSerialDate);
+            var (startYear, startMonth, startDay) = GetDateParts(ctx, startSerialDate);
+            var (endYear, endMonth, endDay) = GetDateParts(ctx, endSerialDate);
 
             if (isEuropean)
             {
@@ -311,7 +311,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Month(CalcContext ctx, int serialDate)
         {
-            return GetDateComponent(ctx, serialDate, static d => d.Month, 1, 2);
+            return GetDateParts(ctx, serialDate).Month;
         }
 
         private static ScalarValue NetWorkDays(CalcContext ctx, ScalarValue startDate, ScalarValue endDate, AnyValue holidays)
@@ -574,7 +574,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Year(CalcContext ctx, int serialDate)
         {
-            return GetDateComponent(ctx, serialDate, static d => d.Year, 1900, 1900);
+            return GetDateParts(ctx, serialDate).Year;
         }
 
         private static object Yearfrac(List<Expression> p)
@@ -636,38 +636,30 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return true;
         }
 
-        private static DateParts GetDateComponent(CalcContext ctx, int serialDate)
-        {
-            var year = Year(ctx, serialDate);
-            var month = Month(ctx, serialDate);
-            var day = Day(ctx, serialDate);
-            return new DateParts(year, month, day);
-        }
-
-        private static int GetDateComponent(CalcContext ctx, int serialDate, Func<DateTime, int> component, int epoch1900, int feb29)
+        private static DateParts GetDateParts(CalcContext ctx, int serialDate)
         {
             if (ctx.Use1904DateSystem)
             {
                 var date1904 = DateTime.FromOADate(serialDate + 1462);
-                return component(date1904);
+                return DateParts.From(date1904);
             }
 
             // Return value for 1900-01-00
             if (serialDate == 0)
-                return epoch1900;
+                return DateParts.Epoch1900;
 
             // January and February 1900
             if (serialDate < 60)
             {
                 var offByOneDate = DateTime.FromOADate(serialDate + 1);
-                return component(offByOneDate);
+                return DateParts.From(offByOneDate);
             }
 
             // Everyone loves 29th Feb 1900
             if (serialDate == 60)
-                return feb29;
+                return DateParts.Feb29;
 
-            return component(DateTime.FromOADate(serialDate));
+            return DateParts.From(DateTime.FromOADate(serialDate));
         }
 
         private static ScalarValue GetTimeComponent(CalcContext ctx, double serialTime, Func<DateTime, int> component)
@@ -697,6 +689,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return date.Day == DateTime.DaysInMonth(date.Year, date.Month);
         }
 
-        private readonly record struct DateParts(int Year, int Month, int Day);
+        /// <summary>
+        /// A date type unconstrained by DateTime limitations (1900-01-00 or 1900-02-29).
+        /// </summary>
+        private readonly record struct DateParts(int Year, int Month, int Day)
+        {
+            internal static readonly DateParts Epoch1900 = new(1900, 1, 0);
+
+            internal static readonly DateParts Feb29 = new(1900, 2, 29);
+
+            internal static DateParts From(DateTime date)
+            {
+                return new DateParts(date.Year, date.Month, date.Day);
+            }
+        }
     }
 }
