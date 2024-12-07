@@ -841,9 +841,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(3, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.495890411)]
         [TestCase(4, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.5)]
         [TestCase(1, 2004, 3, 1, 2006, 3, 1, ExpectedResult = 1.9981751825)]
-        public double Yearfrac_calculates_fraction_of_a_year(double basis, double startYear, double startMonth, double startDay, double endYear, double endMonth, double endDay)
+        public double YearFrac_calculates_fraction_of_a_year(double basis, double startYear, double startMonth, double startDay, double endYear, double endMonth, double endDay)
         {
             return (double)XLWorkbook.EvaluateExpr($"YEARFRAC(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),{basis})");
+        }
+
+        [Test]
+        public void YearFrac_dates_must_fit_in_date_system_range()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(-0.1,10)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(0,-0.1)"));
+        }
+        [Test]
+        public void YearFrac_basis_must_be_between_0_and_4()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(0,10,-0.1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(0,10,5)"));
         }
     }
 }
