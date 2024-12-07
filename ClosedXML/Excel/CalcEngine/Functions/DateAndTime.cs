@@ -13,6 +13,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// </summary>
         private const int Year10K = 2958465;
 
+        private const int Year1900Feb29 = 60;
+
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
@@ -20,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
-            ce.RegisterFunction("DAYS360", 2, 3, Days360); // Calculates the number of days between two dates based on a 360-day year
+            ce.RegisterFunction("DAYS360", 2, 3, AdaptLastOptional(Days360, false), FunctionFlags.Scalar); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
@@ -179,13 +181,42 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return end_date - start_date;
         }
 
-        private static object Days360(List<Expression> p)
+        private static ScalarValue Days360(CalcContext ctx, double startDateTime, double endDateTime, bool isEuropean)
         {
-            var date1 = (DateTime)p[0];
-            var date2 = (DateTime)p[1];
-            var isEuropean = p.Count == 3 ? p[2] : false;
+            if (!TryGetDate(ctx, startDateTime, out var startDate))
+                return XLError.NumberInvalid;
 
-            return Days360(date1, date2, isEuropean);
+            if (!TryGetDate(ctx, endDateTime, out var endDate))
+                return XLError.NumberInvalid;
+
+            return Days360(ctx, startDate, endDate, isEuropean);
+        }
+
+        private static int Days360(CalcContext ctx, int startSerialDate, int endSerialDate, bool isEuropean)
+        {
+            var (startYear, startMonth, startDay) = GetDateComponent(ctx, startSerialDate);
+            var (endYear, endMonth, endDay) = GetDateComponent(ctx, endSerialDate);
+
+            if (isEuropean)
+            {
+                if (startDay == 31)
+                    startDay = 30;
+
+                if (endDay == 31)
+                    endDay = 30;
+            }
+            else
+            {
+                // There are several descriptions of the US algorithm: spec, wikipedia, function help,
+                // ODF. Out of these, only ODF is correct (rest is incomplete/has different results).
+                if (IsLastDayOfMonth(startSerialDate))
+                    startDay = 30;
+
+                if (endDay == 31 && startDay == 30)
+                    endDay = 30;
+            }
+
+            return 360 * (endYear - startYear) + 30 * (endMonth - startMonth) + (endDay - startDay);
         }
 
         private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
@@ -605,6 +636,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return true;
         }
 
+        private static DateParts GetDateComponent(CalcContext ctx, int serialDate)
+        {
+            var year = Year(ctx, serialDate);
+            var month = Month(ctx, serialDate);
+            var day = Day(ctx, serialDate);
+            return new DateParts(year, month, day);
+        }
+
         private static int GetDateComponent(CalcContext ctx, int serialDate, Func<DateTime, int> component, int epoch1900, int feb29)
         {
             if (ctx.Use1904DateSystem)
@@ -638,5 +677,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             return component(DateTime.FromOADate(serialTime));
         }
+
+        private static bool IsLastDayOfMonth(int serialDate)
+        {
+            // 1900-02-29 is last day of a month per Excel, thus we have:
+            // * return true for that date
+            if (serialDate == Year1900Feb29)
+                return true;
+
+            // * can't return true for real end of month
+            if (serialDate == Year1900Feb29 - 1)
+                return false;
+
+            // * shift all date before it
+            if (serialDate < Year1900Feb29)
+                serialDate++;
+
+            var date = DateTime.FromOADate(serialDate);
+            return date.Day == DateTime.DaysInMonth(date.Year, date.Month);
+        }
+
+        private readonly record struct DateParts(int Year, int Month, int Day);
     }
 }

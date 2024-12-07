@@ -156,10 +156,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Days360_Default()
+        public void Days360_uses_US_method_by_default()
         {
-            var actual = XLWorkbook.EvaluateExpr("Days360(\"1/30/2008\", \"2/1/2008\")");
-            Assert.AreEqual(1, actual);
+            var actual = XLWorkbook.EvaluateExpr("DAYS360(DATE(2002,2,3),DATE(2005,5,31))");
+            Assert.AreEqual(1198, actual);
         }
 
         [Test]
@@ -176,18 +176,40 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(-89, actual);
         }
 
-        [Test]
-        public void Days360_US1()
+        [TestCase(2002, 2, 3, 2005, 5, 31, ExpectedResult = 1198)]
+        [TestCase(2005, 5, 31, 2002, 2, 3, ExpectedResult = -1197)]
+        [TestCase(2008, 1, 1, 2008, 3, 31, ExpectedResult = 90)]
+        [TestCase(2008, 3, 31, 2008, 1, 1, ExpectedResult = -89)]
+        [TestCase(2020, 2, 29, 2021, 2, 28, ExpectedResult = 358)]
+        [TestCase(2020, 5, 29, 2020, 4, 1, ExpectedResult = -58)]
+        [TestCase(2020, 5, 29, 2020, 3, 31, ExpectedResult = -58)]
+        [TestCase(2020, 5, 30, 2020, 4, 1, ExpectedResult = -59)]
+        [TestCase(2020, 5, 30, 2020, 3, 31, ExpectedResult = -60)]
+        [TestCase(2020, 5, 30, 2020, 3, 30, ExpectedResult = -60)]
+        public double Days360_US_method(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay)
         {
-            var actual = XLWorkbook.EvaluateExpr("DAYS360(\"1/1/2008\", \"3/31/2008\",FALSE)");
-            Assert.AreEqual(90, actual);
+            return (double)XLWorkbook.EvaluateExpr($"DAYS360(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),FALSE)");
         }
 
-        [Test]
-        public void Days360_US2()
+        [TestCase(1900, 2, 27, 1900, 2, 27, ExpectedResult = 0)]
+        [TestCase(1900, 2, 27, 1900, 2, 28, ExpectedResult = 1)]
+        [TestCase(1900, 2, 27, 1900, 2, 29, ExpectedResult = 2)]
+        [TestCase(1900, 2, 27, 1900, 3, 1, ExpectedResult = 4)]
+        [TestCase(1900, 2, 28, 1900, 2, 27, ExpectedResult = -1)]
+        [TestCase(1900, 2, 28, 1900, 2, 28, ExpectedResult = 0)]
+        [TestCase(1900, 2, 28, 1900, 2, 29, ExpectedResult = 1)]
+        [TestCase(1900, 2, 28, 1900, 3, 1, ExpectedResult = 3)]
+        [TestCase(1900, 2, 29, 1900, 2, 27, ExpectedResult = -3)]
+        [TestCase(1900, 2, 29, 1900, 2, 28, ExpectedResult = -2)]
+        [TestCase(1900, 2, 29, 1900, 2, 29, ExpectedResult = -1)]
+        [TestCase(1900, 2, 29, 1900, 3, 1, ExpectedResult = 1)]
+        [TestCase(1900, 3, 1, 1900, 2, 27, ExpectedResult = -4)]
+        [TestCase(1900, 3, 1, 1900, 2, 28, ExpectedResult = -3)]
+        [TestCase(1900, 3, 1, 1900, 2, 29, ExpectedResult = -2)]
+        [TestCase(1900, 3, 1, 1900, 3, 1, ExpectedResult = 0)]
+        public double Days360_US_method_for_feb_29_1900(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay)
         {
-            var actual = XLWorkbook.EvaluateExpr("DAYS360(\"3/31/2008\", \"1/1/2008\",FALSE)");
-            Assert.AreEqual(-89, actual);
+            return (double)XLWorkbook.EvaluateExpr($"DAYS360(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),FALSE)");
         }
 
         [Test]
