@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SEARCH", 2, 3, AdaptLastOptional(Search), FunctionFlags.Scalar); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, AdaptSubstitute(Substitute), FunctionFlags.Scalar); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, 1, Adapt(T), FunctionFlags.Range | FunctionFlags.ReturnsArray, AllowRange.All); // Converts its arguments to text
-            ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
+            ce.RegisterFunction("TEXT", 2, 2, Adapt(_Text), FunctionFlags.Scalar); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 255, Adapt(TextJoin), FunctionFlags.Range | FunctionFlags.Future, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, 1, Adapt(Trim), FunctionFlags.Scalar); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, 1, Adapt(Upper), FunctionFlags.Scalar); // Converts text to uppercase
@@ -503,23 +503,35 @@ namespace ClosedXML.Excel.CalcEngine
             return cellValue.IsText ? cellValue.GetText() : string.Empty;
         }
 
-        private static object _Text(List<Expression> p)
+        private static ScalarValue _Text(CalcContext ctx, ScalarValue value, string format)
         {
-            var value = p[0].Evaluate();
+            // Non-convertible values are turned to string
+            if (!value.ToNumber(ctx.Culture).TryPickT0(out var number, out _) || value.IsLogical)
+            {
+                return value
+                    .ToText(ctx.Culture)
+                    .Match<ScalarValue>(static x => x, static x => x);
+            }
 
-            // Input values of type string don't get any formatting applied.
-            if (value is string) return value;
-
-            var number = (double)p[0];
-            var format = (string)p[1];
-            if (string.IsNullOrEmpty(format.Trim())) return "";
+            // Library doesn't format whitespace formats
+            if (string.IsNullOrWhiteSpace(format))
+                return format;
 
             var nf = new NumberFormat(format);
 
-            if (nf.IsDateTimeFormat)
-                return nf.Format(DateTime.FromOADate(number), CultureInfo.InvariantCulture);
-            else
-                return nf.Format(number, CultureInfo.InvariantCulture);
+            // Values formated as date/time must be in the limit for dates
+            var isDateFormat = nf.IsDateTimeFormat || nf.IsTimeSpanFormat;
+            if (isDateFormat && number < 0 || number >= ctx.DateSystemUpperLimit)
+                return XLError.IncompatibleValue;
+
+            try
+            {
+                return nf.Format(number, ctx.Culture);
+            }
+            catch
+            {
+                return XLError.IncompatibleValue;
+            }
         }
 
         private static ScalarValue TextJoin(CalcContext ctx, string delimiter, bool ignoreEmpty, List<AnyValue> texts)

@@ -1013,43 +1013,51 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Text_Empty_Input_String()
+        public void Text_returns_empty_string_on_empty_string()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Text(1913415.93, """")");
-            Assert.AreEqual("", actual);
+            var actual = XLWorkbook.EvaluateExpr(@"TEXT(1913415.93,"""")");
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestCase("DATE(2010, 1, 1)", "yyyy-MM-dd", ExpectedResult = "2010-01-01")]
+        [TestCase("1469.07", "0,000,000.00", ExpectedResult = "0,001,469.07")]
+        [TestCase("1913415.93", "#,000.00", ExpectedResult = "1,913,415.93")]
+        [TestCase("2800", "$0.00", ExpectedResult = "$2800.00")]
+        [TestCase("0.4", "0%", ExpectedResult = "40%")]
+        [TestCase("DATE(2010, 1, 1)", "MMMM yyyy", ExpectedResult = "January 2010")]
+        [TestCase("DATE(2010, 1, 1)", "M/d/y", ExpectedResult = "1/1/10")]
+        [TestCase("1234.567", "$0.00", ExpectedResult = "$1234.57")]
+        [TestCase(".125", "$0.0%", ExpectedResult = "$12.5%")]
+        [TestCase("1234.567", "YYYY-MM-DD HH:MM:SS", ExpectedResult = "1903-05-18 13:36:28")] // Excel is one second off (29), but that is in the library
+        [TestCase("\"0.0245\"", "00%", ExpectedResult = "02%")]
+        public string Text_formats_number(string numberArg, string format)
+        {
+            return XLWorkbook.EvaluateExpr($"TEXT({numberArg},\"{format}\")").GetText();
+        }
+
+        [TestCase("\"211x\"", ExpectedResult = "211x")]
+        [TestCase("true", ExpectedResult = "TRUE")]
+        public string Text_returns_string_representation_of_non_numbers(string valueArg)
+        {
+            return XLWorkbook.EvaluateExpr($@"TEXT({valueArg},""#00"")").GetText();
+        }
+
+        [TestCase(2020, 11, 1, 9, 23, 11, "m/d/yyyy h:mm:ss", "11/1/2020 9:23:11")]
+        [TestCase(2023, 7, 14, 2, 12, 3, "m/d/yyyy h:mm:ss", "7/14/2023 2:12:03")]
+        [TestCase(2025, 10, 14, 2, 48, 55, "m/d/yyyy h:mm:ss", "10/14/2025 2:48:55")]
+        [TestCase(2023, 2, 19, 22, 1, 38, "m/d/yyyy h:mm:ss", "2/19/2023 22:01:38")]
+        [TestCase(2025, 12, 19, 19, 43, 58, "m/d/yyyy h:mm:ss", "12/19/2025 19:43:58")]
+        [TestCase(2034, 11, 16, 1, 48, 9, "m/d/yyyy h:mm:ss", "11/16/2034 1:48:09")]
+        [TestCase(2018, 12, 10, 11, 22, 42, "m/d/yyyy h:mm:ss", "12/10/2018 11:22:42")]
+        public void Text_formats_serial_dates(int year, int months, int days, int hour, int minutes, int seconds, string format, string expected)
+        {
+            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr($@"TEXT(DATE({year},{months},{days}) + TIME({hour},{minutes},{seconds}),""{format}"")"));
         }
 
         [Test]
-        public void Text_Value()
+        public void Text_propagates_errors()
         {
-            Object actual;
-            actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""yyyy-MM-dd"")");
-            Assert.AreEqual("2010-01-01", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(1469.07, ""0,000,000.00"")");
-            Assert.AreEqual("0,001,469.07", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(1913415.93, ""#,000.00"")");
-            Assert.AreEqual("1,913,415.93", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(2800, ""$0.00"")");
-            Assert.AreEqual("$2800.00", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(0.4, ""0%"")");
-            Assert.AreEqual("40%", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""MMMM yyyy"")");
-            Assert.AreEqual("January 2010", actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""M/d/y"")");
-            Assert.AreEqual("1/1/10", actual);
-        }
-
-        [Test]
-        public void Text_String_Input()
-        {
-            Object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
-            Assert.AreEqual("211x", actual);
+            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr(@"TEXT(#REF!,""#00"")"));
         }
 
         [TestCase("TEXTJOIN(\",\",TRUE,A1:B2)", "A,B,D")]
@@ -1099,18 +1107,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void TextJoin_coercion(string formula)
         {
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(formula));
-        }
-
-        [TestCase(2020, 11, 1, 9, 23, 11, "m/d/yyyy h:mm:ss", "11/1/2020 9:23:11")]
-        [TestCase(2023, 7, 14, 2, 12, 3, "m/d/yyyy h:mm:ss", "7/14/2023 2:12:03")]
-        [TestCase(2025, 10, 14, 2, 48, 55, "m/d/yyyy h:mm:ss", "10/14/2025 2:48:55")]
-        [TestCase(2023, 2, 19, 22, 1, 38, "m/d/yyyy h:mm:ss", "2/19/2023 22:01:38")]
-        [TestCase(2025, 12, 19, 19, 43, 58, "m/d/yyyy h:mm:ss", "12/19/2025 19:43:58")]
-        [TestCase(2034, 11, 16, 1, 48, 9, "m/d/yyyy h:mm:ss", "11/16/2034 1:48:09")]
-        [TestCase(2018, 12, 10, 11, 22, 42, "m/d/yyyy h:mm:ss", "12/10/2018 11:22:42")]
-        public void Text_DateFormats(int year, int months, int days, int hour, int minutes, int seconds, string format, string expected)
-        {
-            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr($@"TEXT(DATE({year}, {months}, {days}) + TIME({hour}, {minutes}, {seconds}), ""{format}"")"));
         }
 
         [TestCase("", ExpectedResult = "")]
