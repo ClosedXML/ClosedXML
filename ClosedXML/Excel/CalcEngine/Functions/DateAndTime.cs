@@ -147,7 +147,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (int)Math.Floor(DateTime.Parse(date).ToOADate());
         }
 
-        private static ScalarValue Day(CalcContext ctx, double serialDate)
+        private static ScalarValue Day(CalcContext ctx, double serialDateTime)
+        {
+            if (!TryGetDate(ctx, serialDateTime, out var serialDate))
+                return XLError.NumberInvalid;
+
+            return Day(ctx, serialDate);
+        }
+
+        private static int Day(CalcContext ctx, int serialDate)
         {
             return GetDateComponent(ctx, serialDate, static d => d.Day, 0, 29);
         }
@@ -262,7 +270,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return GetTimeComponent(ctx, serialTime, static d => d.Minute);
         }
 
-        private static ScalarValue Month(CalcContext ctx, double serialDate)
+        private static ScalarValue Month(CalcContext ctx, double serialDateTime)
+        {
+            if (!TryGetDate(ctx, serialDateTime, out var serialDate))
+                return XLError.NumberInvalid;
+
+            return Month(ctx, serialDate);
+        }
+
+        private static int Month(CalcContext ctx, int serialDate)
         {
             return GetDateComponent(ctx, serialDate, static d => d.Month, 1, 2);
         }
@@ -517,7 +533,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
         }
 
-        private static ScalarValue Year(CalcContext ctx, double serialDate)
+        private static ScalarValue Year(CalcContext ctx, double serialDateTime)
+        {
+            if (!TryGetDate(ctx, serialDateTime, out var serialDate))
+                return XLError.NumberInvalid;
+
+            return Year(ctx, serialDate);
+        }
+
+        private static int Year(CalcContext ctx, int serialDate)
         {
             return GetDateComponent(ctx, serialDate, static d => d.Year, 1900, 1900);
         }
@@ -569,34 +593,42 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return true;
         }
 
-        private static ScalarValue GetDateComponent(CalcContext ctx, double serialDate, Func<DateTime, double> component, double epoch1900, double feb29)
+        private static bool TryGetDate(CalcContext ctx, double serialDateTime, out int serialDate)
         {
-            if (serialDate < 0 || serialDate >= ctx.DateSystemUpperLimit)
-                return XLError.NumberInvalid;
+            if (serialDateTime < 0 || serialDateTime >= ctx.DateSystemUpperLimit)
+            {
+                serialDate = default;
+                return false;
+            }
 
-            var date = (int)Math.Truncate(serialDate);
+            serialDate = checked((int)Math.Truncate(serialDateTime));
+            return true;
+        }
+
+        private static int GetDateComponent(CalcContext ctx, int serialDate, Func<DateTime, int> component, int epoch1900, int feb29)
+        {
             if (ctx.Use1904DateSystem)
             {
-                var date1904 = DateTime.FromOADate(date + 1462);
+                var date1904 = DateTime.FromOADate(serialDate + 1462);
                 return component(date1904);
             }
 
             // Return value for 1900-01-00
-            if (date == 0)
+            if (serialDate == 0)
                 return epoch1900;
 
             // January and February 1900
-            if (date < 60)
+            if (serialDate < 60)
             {
-                var offByOneDate = DateTime.FromOADate(date + 1);
+                var offByOneDate = DateTime.FromOADate(serialDate + 1);
                 return component(offByOneDate);
             }
 
             // Everyone loves 29th Feb 1900
-            if (date == 60)
+            if (serialDate == 60)
                 return feb29;
 
-            return component(DateTime.FromOADate(date));
+            return component(DateTime.FromOADate(serialDate));
         }
 
         private static ScalarValue GetTimeComponent(CalcContext ctx, double serialTime, Func<DateTime, int> component)
