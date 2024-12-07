@@ -486,7 +486,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1, 2, 3, ExpectedResult = 0.043090277777778)]
         [TestCase(1.9, 2.9, 3.9, ExpectedResult = 0.043090277777778)]
         [TestCase(24, 0, 0, ExpectedResult = 0)]
-        [TestCase(0, 42*60, 0, ExpectedResult = 0.75)]
+        [TestCase(0, 42 * 60, 0, ExpectedResult = 0.75)]
         [TestCase(0, 0, 60 * 60 * 3, ExpectedResult = 0.125)]
         [TestCase(120, 240, 347, ExpectedResult = 0.170682870370)]
         [DefaultFloatingPointTolerance(XLHelper.Epsilon)]
@@ -819,74 +819,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1900, valueA2);
         }
 
-        [Test]
-        public void Yearfrac_1_base0()
+        [DefaultFloatingPointTolerance(XLHelper.Epsilon)]
+        [TestCase(0, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.25)]
+        [TestCase(0, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.25)]
+        [TestCase(1, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24590163934426229)]
+        [TestCase(1, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24452554744526)]
+        [TestCase(2, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.25)]
+        [TestCase(2, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.32222222222222)]
+        [TestCase(3, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24657534246575341)]
+        [TestCase(3, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24931506849315)]
+        [TestCase(4, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24722222222222223)]
+        [TestCase(4, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24722222222222)]
+        public double Yearfrac_calculates_fraction_of_a_year(double basis, double startYear, double startMonth, double startDay, double endYear, double endMonth, double endDay)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",0)");
-            Assert.IsTrue(XLHelper.AreEqual(0.25, actual));
-        }
-
-        [Test]
-        public void Yearfrac_1_base1()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",1)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24590163934426229, actual));
-        }
-
-        [Test]
-        public void Yearfrac_1_base2()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",2)");
-            Assert.IsTrue(XLHelper.AreEqual(0.25, actual));
-        }
-
-        [Test]
-        public void Yearfrac_1_base3()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",3)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24657534246575341, actual));
-        }
-
-        [Test]
-        public void Yearfrac_1_base4()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",4)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24722222222222223, actual));
-        }
-
-        [Test]
-        public void Yearfrac_2_base0()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",0)");
-            Assert.IsTrue(XLHelper.AreEqual(5.25, actual));
-        }
-
-        [Test]
-        public void Yearfrac_2_base1()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",1)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24452554744526, actual));
-        }
-
-        [Test]
-        public void Yearfrac_2_base2()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",2)");
-            Assert.IsTrue(XLHelper.AreEqual(5.32222222222222, actual));
-        }
-
-        [Test]
-        public void Yearfrac_2_base3()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",3)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24931506849315, actual));
-        }
-
-        [Test]
-        public void Yearfrac_2_base4()
-        {
-            var actual = (double)XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",4)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24722222222222, actual));
+            return (double)XLWorkbook.EvaluateExpr($"YEARFRAC(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),{basis})");
         }
     }
 }
