@@ -13,8 +13,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// </summary>
         private const int Year10K = 2958465;
 
-        private const int Year1900Feb29 = 60;
-
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
@@ -154,11 +152,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!TryGetDate(ctx, serialDateTime, out var serialDate))
                 return XLError.NumberInvalid;
 
-            return Day(ctx, serialDate);
-        }
-
-        private static int Day(CalcContext ctx, int serialDate)
-        {
             return DateParts.From(ctx, serialDate).Day;
         }
 
@@ -307,11 +300,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!TryGetDate(ctx, serialDateTime, out var serialDate))
                 return XLError.NumberInvalid;
 
-            return Month(ctx, serialDate);
-        }
-
-        private static int Month(CalcContext ctx, int serialDate)
-        {
             return DateParts.From(ctx, serialDate).Month;
         }
 
@@ -570,11 +558,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!TryGetDate(ctx, serialDateTime, out var serialDate))
                 return XLError.NumberInvalid;
 
-            return Year(ctx, serialDate);
-        }
-
-        private static int Year(CalcContext ctx, int serialDate)
-        {
             return DateParts.From(ctx, serialDate).Year;
         }
 
