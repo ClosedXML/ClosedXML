@@ -649,16 +649,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (serialDate == 0)
                     return Epoch1900;
 
-                // January and February 1900
-                if (serialDate < 60)
-                {
-                    var offByOneDate = DateTime.FromOADate(serialDate + 1);
-                    return From(offByOneDate);
-                }
-
                 // Everyone loves 29th Feb 1900
                 if (serialDate == 60)
                     return Feb29;
+
+                // January and February 1900. Because of non-existent feb29, adjust by one day
+                if (serialDate < 60)
+                    serialDate++;
 
                 return From(DateTime.FromOADate(serialDate));
             }
