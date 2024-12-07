@@ -159,7 +159,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Day(CalcContext ctx, int serialDate)
         {
-            return GetDateParts(ctx, serialDate).Day;
+            return DateParts.From(ctx, serialDate).Day;
         }
 
         private static object Days(List<Expression> p)
@@ -194,8 +194,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Days360(CalcContext ctx, int startSerialDate, int endSerialDate, bool isEuropean)
         {
-            var (startYear, startMonth, startDay) = GetDateParts(ctx, startSerialDate);
-            var (endYear, endMonth, endDay) = GetDateParts(ctx, endSerialDate);
+            var (startYear, startMonth, startDay) = DateParts.From(ctx, startSerialDate);
+            var (endYear, endMonth, endDay) = DateParts.From(ctx, endSerialDate);
 
             if (isEuropean)
             {
@@ -311,7 +311,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Month(CalcContext ctx, int serialDate)
         {
-            return GetDateParts(ctx, serialDate).Month;
+            return DateParts.From(ctx, serialDate).Month;
         }
 
         private static ScalarValue NetWorkDays(CalcContext ctx, ScalarValue startDate, ScalarValue endDate, AnyValue holidays)
@@ -574,7 +574,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Year(CalcContext ctx, int serialDate)
         {
-            return GetDateParts(ctx, serialDate).Year;
+            return DateParts.From(ctx, serialDate).Year;
         }
 
         private static object Yearfrac(List<Expression> p)
@@ -636,32 +636,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return true;
         }
 
-        private static DateParts GetDateParts(CalcContext ctx, int serialDate)
-        {
-            if (ctx.Use1904DateSystem)
-            {
-                var date1904 = DateTime.FromOADate(serialDate + 1462);
-                return DateParts.From(date1904);
-            }
-
-            // Return value for 1900-01-00
-            if (serialDate == 0)
-                return DateParts.Epoch1900;
-
-            // January and February 1900
-            if (serialDate < 60)
-            {
-                var offByOneDate = DateTime.FromOADate(serialDate + 1);
-                return DateParts.From(offByOneDate);
-            }
-
-            // Everyone loves 29th Feb 1900
-            if (serialDate == 60)
-                return DateParts.Feb29;
-
-            return DateParts.From(DateTime.FromOADate(serialDate));
-        }
-
         private static ScalarValue GetTimeComponent(CalcContext ctx, double serialTime, Func<DateTime, int> component)
         {
             if (serialTime < 0 || serialTime >= ctx.DateSystemUpperLimit)
@@ -694,11 +668,37 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// </summary>
         private readonly record struct DateParts(int Year, int Month, int Day)
         {
-            internal static readonly DateParts Epoch1900 = new(1900, 1, 0);
+            private static readonly DateParts Epoch1900 = new(1900, 1, 0);
 
-            internal static readonly DateParts Feb29 = new(1900, 2, 29);
+            private static readonly DateParts Feb29 = new(1900, 2, 29);
 
-            internal static DateParts From(DateTime date)
+            internal static DateParts From(CalcContext ctx, int serialDate)
+            {
+                if (ctx.Use1904DateSystem)
+                {
+                    var date1904 = DateTime.FromOADate(serialDate + 1462);
+                    return From(date1904);
+                }
+
+                // Return value for 1900-01-00
+                if (serialDate == 0)
+                    return Epoch1900;
+
+                // January and February 1900
+                if (serialDate < 60)
+                {
+                    var offByOneDate = DateTime.FromOADate(serialDate + 1);
+                    return From(offByOneDate);
+                }
+
+                // Everyone loves 29th Feb 1900
+                if (serialDate == 60)
+                    return Feb29;
+
+                return From(DateTime.FromOADate(serialDate));
+            }
+
+            private static DateParts From(DateTime date)
             {
                 return new DateParts(date.Year, date.Month, date.Day);
             }
