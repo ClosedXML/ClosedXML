@@ -158,8 +158,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Days360_uses_US_method_by_default()
         {
-            var actual = XLWorkbook.EvaluateExpr("DAYS360(DATE(2002,2,3),DATE(2005,5,31))");
-            Assert.AreEqual(1198, actual);
+            const string formulaFormat = "DAYS360(DATE(2002,2,3),DATE(2005,5,31){0})";
+            var defaultResult = XLWorkbook.EvaluateExpr(string.Format(formulaFormat, string.Empty));
+            var usResult = XLWorkbook.EvaluateExpr(string.Format(formulaFormat, ",FALSE"));
+            var euResult = XLWorkbook.EvaluateExpr(string.Format(formulaFormat, ",TRUE"));
+            Assert.AreEqual(1198, defaultResult);
+            Assert.AreEqual(usResult, defaultResult);
+            Assert.AreNotEqual(euResult, defaultResult);
         }
 
         [Test]
