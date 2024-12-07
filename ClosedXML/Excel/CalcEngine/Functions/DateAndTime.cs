@@ -37,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, AdaptLastOptional(Workday), FunctionFlags.Range, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
-            ce.RegisterFunction("YEARFRAC", 2, 3, Yearfrac); // Returns the year fraction representing the number of whole days between start_date and end_date
+            ce.RegisterFunction("YEARFRAC", 2, 3, AdaptLastOptional(YearFrac, 0), FunctionFlags.Scalar); // Returns the year fraction representing the number of whole days between start_date and end_date
         }
 
         private static int BusinessDaysUntil(int firstDay, int lastDay, ICollection<int> distinctHolidays)
@@ -213,29 +213,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return 360 * (endYear - startYear) + 30 * (endMonth - startMonth) + (endDay - startDay);
         }
 
-        private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
-        {
-            var d1 = date1.Day;
-            var m1 = date1.Month;
-            var y1 = date1.Year;
-            var d2 = date2.Day;
-            var m2 = date2.Month;
-            var y2 = date2.Year;
-
-            if (isEuropean)
-            {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31) d2 = 30;
-            }
-            else
-            {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31 && d1 == 30) d2 = 30;
-            }
-
-            return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
-        }
-
         private static object Edate(List<Expression> p)
         {
             var date = (DateTime)p[0];
@@ -252,14 +229,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             var retDate = start_date.AddMonths(months);
             return new DateTime(retDate.Year, retDate.Month, DateTime.DaysInMonth(retDate.Year, retDate.Month));
-        }
-
-        private static Double GetYearAverage(DateTime date1, DateTime date2)
-        {
-            var daysInYears = new List<Int32>();
-            for (int year = date1.Year; year <= date2.Year; year++)
-                daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
-            return daysInYears.Average();
         }
 
         private static ScalarValue Hour(CalcContext ctx, double serialTime)
@@ -561,22 +530,42 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return DateParts.From(ctx, serialDate).Year;
         }
 
-        private static object Yearfrac(List<Expression> p)
+        private static ScalarValue YearFrac(CalcContext ctx, double startDateTime, double endDateTime, double basis = 0)
         {
-            var date1 = (DateTime)p[0];
-            var date2 = (DateTime)p[1];
-            var option = p.Count == 3 ? (int)p[2] : 0;
+            if (!TryGetDate(ctx, startDateTime, out var startDate))
+                return XLError.NumberInvalid;
 
-            if (option == 0)
-                return Days360(date1, date2, false) / 360.0;
-            if (option == 1)
-                return Math.Floor((date2 - date1).TotalDays) / GetYearAverage(date1, date2);
-            if (option == 2)
-                return Math.Floor((date2 - date1).TotalDays) / 360.0;
-            if (option == 3)
-                return Math.Floor((date2 - date1).TotalDays) / 365.0;
+            if (!TryGetDate(ctx, endDateTime, out var endDate))
+                return XLError.NumberInvalid;
 
-            return Days360(date1, date2, true) / 360.0;
+            if (basis is < 0 or >= 5)
+                return XLError.NumberInvalid;
+
+            var option = checked((int)Math.Truncate(basis));
+            var yearFrac = option switch
+            {
+                0 => Days360(ctx, startDate, endDate, false) / 360.0,                 // US 30/360
+                1 => (endDate - startDate) / GetYearAverage(ctx, startDate, endDate), // Actual/Actual
+                2 => (endDate - startDate) / 360.0,                                   // Actual/360
+                3 => (endDate - startDate) / 365.0,                                   // Actual/365
+                _ => Days360(ctx, startDate, endDate, true) / 360.0,                  // EU 30/360
+            };
+
+            return yearFrac;
+
+            static double GetYearAverage(CalcContext ctx, int startDate, int endDate)
+            {
+                var startYear = DateParts.From(ctx, startDate).Year;
+                var endYear = DateParts.From(ctx, endDate).Year;
+                var totalDays = 0;
+                for (var year = startYear; year <= endYear; year++)
+                {
+                    var isLeapYear = year == 1900 || DateTime.IsLeapYear(year);
+                    totalDays += isLeapYear ? 366 : 365;
+                }
+
+                return totalDays / (double)(endYear - startYear + 1);
+            }
         }
 
         private static bool TryGetDate(CalcContext ctx, ScalarValue value, out int serialDate, out XLError error, bool acceptLogical = false)
