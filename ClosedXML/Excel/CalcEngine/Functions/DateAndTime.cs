@@ -194,7 +194,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static int Days360(CalcContext ctx, int startSerialDate, int endSerialDate, bool isEuropean)
         {
-            var (startYear, startMonth, startDay) = DateParts.From(ctx, startSerialDate);
+            var startDate = DateParts.From(ctx, startSerialDate);
+            var (startYear, startMonth, startDay) = startDate;
             var (endYear, endMonth, endDay) = DateParts.From(ctx, endSerialDate);
 
             if (isEuropean)
@@ -209,7 +210,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 // There are several descriptions of the US algorithm: spec, wikipedia, function help,
                 // ODF. Out of these, only ODF is correct (rest is incomplete/has different results).
-                if (IsLastDayOfMonth(startSerialDate))
+                if (startDate.IsLastDayOfMonth())
                     startDay = 30;
 
                 if (endDay == 31 && startDay == 30)
@@ -644,25 +645,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return component(DateTime.FromOADate(serialTime));
         }
 
-        private static bool IsLastDayOfMonth(int serialDate)
-        {
-            // 1900-02-29 is last day of a month per Excel, thus we have:
-            // * return true for that date
-            if (serialDate == Year1900Feb29)
-                return true;
-
-            // * can't return true for real end of month
-            if (serialDate == Year1900Feb29 - 1)
-                return false;
-
-            // * shift all date before it
-            if (serialDate < Year1900Feb29)
-                serialDate++;
-
-            var date = DateTime.FromOADate(serialDate);
-            return date.Day == DateTime.DaysInMonth(date.Year, date.Month);
-        }
-
         /// <summary>
         /// A date type unconstrained by DateTime limitations (1900-01-00 or 1900-02-29).
         /// </summary>
@@ -701,6 +683,20 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             private static DateParts From(DateTime date)
             {
                 return new DateParts(date.Year, date.Month, date.Day);
+            }
+
+            internal bool IsLastDayOfMonth()
+            {
+                // 1900-02-29 is last day of a month per Excel, thus we have:
+                // * return true for that date
+                if (this == Feb29)
+                    return true;
+
+                // * can't return true for real end of month
+                if (Year == 1900 && Month == 2 && Day == 28)
+                    return false;
+
+                return Day == DateTime.DaysInMonth(Year, Month);
             }
         }
     }
