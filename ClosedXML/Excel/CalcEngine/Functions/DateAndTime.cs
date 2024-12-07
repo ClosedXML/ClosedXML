@@ -551,7 +551,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 _ => Days360(ctx, startDate, endDate, true) / 360.0,                  // EU 30/360
             };
 
-            return yearFrac;
+            return Math.Abs(yearFrac);
 
             static double GetYearAverage(CalcContext ctx, int startDate, int endDate)
             {
@@ -560,8 +560,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var totalDays = 0;
                 for (var year = startYear; year <= endYear; year++)
                 {
-                    var isLeapYear = year == 1900 || DateTime.IsLeapYear(year);
-                    totalDays += isLeapYear ? 366 : 365;
+                    // For purposes of average year, 1900 is not counted as a leap year
+                    totalDays += DateTime.IsLeapYear(year) ? 366 : 365;
                 }
 
                 return totalDays / (double)(endYear - startYear + 1);

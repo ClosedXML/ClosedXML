@@ -824,12 +824,23 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(0, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.25)]
         [TestCase(1, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24590163934426229)]
         [TestCase(1, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24452554744526)]
+        [TestCase(1, 1900, 1, 10, 2024, 2, 29, ExpectedResult = 124.137572279657)]
+        [TestCase(1, 1924, 6, 25, 2025, 2, 28, ExpectedResult = 100.67763581705)]
         [TestCase(2, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.25)]
         [TestCase(2, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.32222222222222)]
         [TestCase(3, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24657534246575341)]
         [TestCase(3, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24931506849315)]
         [TestCase(4, 2008, 1, 1, 2008, 3, 31, ExpectedResult = 0.24722222222222223)]
         [TestCase(4, 2008, 1, 1, 2013, 3, 31, ExpectedResult = 5.24722222222222)]
+        [TestCase(0, 2006, 1, 1, 2006, 3, 26, ExpectedResult = 0.23611111111)]
+        [TestCase(0, 2006, 3, 26, 2006, 1, 1, ExpectedResult = 0.23611111111)]
+        [TestCase(0, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.5)]
+        [TestCase(0, 2006, 1, 1, 2007, 9, 1, ExpectedResult = 1.6666666666)]
+        [TestCase(1, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.495890411)]
+        [TestCase(2, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.5027777778)]
+        [TestCase(3, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.495890411)]
+        [TestCase(4, 2006, 1, 1, 2006, 7, 1, ExpectedResult = 0.5)]
+        [TestCase(1, 2004, 3, 1, 2006, 3, 1, ExpectedResult = 1.9981751825)]
         public double Yearfrac_calculates_fraction_of_a_year(double basis, double startYear, double startMonth, double startDay, double endYear, double endMonth, double endDay)
         {
             return (double)XLWorkbook.EvaluateExpr($"YEARFRAC(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),{basis})");
