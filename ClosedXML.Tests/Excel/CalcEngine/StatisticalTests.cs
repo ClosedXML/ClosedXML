@@ -576,8 +576,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"FISHER({sourceValue})");
         }
 
-        // TODO : the string case will be treated correctly when Coercion is implemented better
-        //[TestCase("asdf", ExpectedResult = XLError.IncompatibleValue)]
+        [TestCase("\"asdf\"", ExpectedResult = XLError.IncompatibleValue)]
         [TestCase("5", ExpectedResult = XLError.NumberInvalid)]
         [TestCase("-1", ExpectedResult = XLError.NumberInvalid)]
         [TestCase("1", ExpectedResult = XLError.NumberInvalid)]

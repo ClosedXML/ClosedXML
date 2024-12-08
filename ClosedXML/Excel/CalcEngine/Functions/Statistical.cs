@@ -34,7 +34,7 @@ namespace ClosedXML.Excel.CalcEngine
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
-            ce.RegisterFunction("FISHER", 1, Fisher); // Returns the Fisher transformation
+            ce.RegisterFunction("FISHER", 1, 1, Adapt(Fisher), FunctionFlags.Scalar); // Returns the Fisher transformation
             //FISHERINV	Returns the inverse of the Fisher transformation
             //FORECAST	Returns a value along a linear trend
             //FREQUENCY	Returns a frequency distribution as a vertical array
@@ -265,10 +265,10 @@ namespace ClosedXML.Excel.CalcEngine
             return squareDiff.Sum;
         }
 
-        private static object Fisher(List<Expression> p)
+        private static ScalarValue Fisher(CalcContext ctx, double x)
         {
-            var x = (double)p[0];
-            if (x <= -1 || x >= 1) return XLError.NumberInvalid;
+            if (x is <= -1 or >= 1)
+                return XLError.NumberInvalid;
 
             return 0.5 * Math.Log((1 + x) / (1 - x));
         }
