@@ -588,124 +588,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("WEEKDAY(5, #N/A)"));
         }
 
-        [Test]
-        public void Weeknum_1()
+        [TestCase(1, 2000, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2004, 3, 9, ExpectedResult = 11)]
+        [TestCase(1, 2005, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2005, 3, 9, ExpectedResult = 11)]
+        [TestCase(1, 2006, 3, 9, ExpectedResult = 10)]
+        [TestCase(2, 2006, 3, 9, ExpectedResult = 11)]
+        [TestCase(1, 2007, 3, 9, ExpectedResult = 10)]
+        [TestCase(2, 2007, 3, 9, ExpectedResult = 10)]
+        [TestCase(1, 2008, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2008, 3, 9, ExpectedResult = 10)]
+        [TestCase(1, 2009, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2000, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2009, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2001, 3, 9, ExpectedResult = 10)]
+        [TestCase(2, 2001, 3, 9, ExpectedResult = 10)]
+        [TestCase(1, 2002, 3, 9, ExpectedResult = 10)]
+        [TestCase(2, 2002, 3, 9, ExpectedResult = 10)]
+        [TestCase(1, 2003, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 2003, 3, 9, ExpectedResult = 10)]
+        [TestCase(1, 2004, 3, 9, ExpectedResult = 11)]
+        public double Weeknum_returns_week_number_for_date(double weekStartFlag, double year, double month, double day)
         {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2000\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_10()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2004\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_11()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2005\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_12()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2005\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_13()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2006\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_14()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2006\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_15()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2007\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_16()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2007\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_17()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_18()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_19()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2009\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_2()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2000\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_20()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2009\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_3()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2001\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_4()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2001\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_5()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2002\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_6()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2002\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_7()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2003\", 1)"));
-        }
-
-        [Test]
-        public void Weeknum_8()
-        {
-            Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2003\", 2)"));
-        }
-
-        [Test]
-        public void Weeknum_9()
-        {
-            Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2004\", 1)"));
+            return XLWorkbook.EvaluateExpr($"WEEKNUM(DATE({year},{month},{day}),{weekStartFlag})").GetNumber();
         }
 
         [Test]
