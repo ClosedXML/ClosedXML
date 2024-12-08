@@ -588,6 +588,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("WEEKDAY(5, #N/A)"));
         }
 
+        [TestCase(1, 1986, 12, 27, ExpectedResult = 52)]
+        [TestCase(1, 1986, 12, 28, ExpectedResult = 53)]
+        [TestCase(1, 1986, 12, 31, ExpectedResult = 53)]
+        [TestCase(1, 1987, 1, 1, ExpectedResult = 1)]
+        [TestCase(1, 1987, 1, 3, ExpectedResult = 1)]
+        [TestCase(1, 1987, 1, 4, ExpectedResult = 2)]
         [TestCase(1, 2000, 3, 9, ExpectedResult = 11)]
         [TestCase(1, 2002, 3, 9, ExpectedResult = 10)]
         [TestCase(1, 2003, 3, 9, ExpectedResult = 11)]
@@ -597,6 +603,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1, 2007, 3, 9, ExpectedResult = 10)]
         [TestCase(1, 2008, 3, 9, ExpectedResult = 11)]
         [TestCase(1, 2009, 3, 9, ExpectedResult = 11)]
+        [TestCase(2, 1988, 12, 25, ExpectedResult = 52)]
+        [TestCase(2, 1988, 12, 26, ExpectedResult = 53)]
+        [TestCase(2, 1988, 12, 31, ExpectedResult = 53)]
+        [TestCase(2, 1989, 1, 1, ExpectedResult = 1)]
+        [TestCase(2, 1989, 1, 2, ExpectedResult = 2)]
         [TestCase(2, 2000, 3, 9, ExpectedResult = 11)]
         [TestCase(2, 2001, 3, 9, ExpectedResult = 10)]
         [TestCase(2, 2002, 3, 9, ExpectedResult = 10)]
@@ -607,16 +618,106 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(2, 2007, 3, 9, ExpectedResult = 10)]
         [TestCase(2, 2008, 3, 9, ExpectedResult = 10)]
         [TestCase(2, 2009, 3, 9, ExpectedResult = 11)]
+        [TestCase(11, 1990, 12, 23, ExpectedResult = 51)]
+        [TestCase(11, 1990, 12, 24, ExpectedResult = 52)]
+        [TestCase(11, 1990, 12, 30, ExpectedResult = 52)]
+        [TestCase(11, 1990, 12, 31, ExpectedResult = 53)]
+        [TestCase(11, 1991, 1, 1, ExpectedResult = 1)]
+        [TestCase(11, 1991, 1, 6, ExpectedResult = 1)]
+        [TestCase(11, 1991, 1, 7, ExpectedResult = 2)]
+        [TestCase(12, 1992, 12, 28, ExpectedResult = 52)]
+        [TestCase(12, 1992, 12, 29, ExpectedResult = 53)]
+        [TestCase(12, 1992, 12, 31, ExpectedResult = 53)]
+        [TestCase(12, 1993, 1, 1, ExpectedResult = 1)]
+        [TestCase(12, 1993, 1, 4, ExpectedResult = 1)]
+        [TestCase(12, 1993, 1, 5, ExpectedResult = 2)]
+        [TestCase(13, 1994, 12, 27, ExpectedResult = 52)]
+        [TestCase(13, 1994, 12, 28, ExpectedResult = 53)]
+        [TestCase(13, 1994, 12, 31, ExpectedResult = 53)]
+        [TestCase(13, 1995, 1, 1, ExpectedResult = 1)]
+        [TestCase(13, 1995, 1, 3, ExpectedResult = 1)]
+        [TestCase(13, 1995, 1, 4, ExpectedResult = 2)]
+        [TestCase(14, 1999, 12, 29, ExpectedResult = 52)]
+        [TestCase(14, 1999, 12, 30, ExpectedResult = 53)]
+        [TestCase(14, 1999, 12, 31, ExpectedResult = 53)]
+        [TestCase(14, 2000, 1, 1, ExpectedResult = 1)]
+        [TestCase(14, 2000, 1, 5, ExpectedResult = 1)]
+        [TestCase(14, 2000, 1, 6, ExpectedResult = 2)]
+        [TestCase(15, 2004, 12, 24, ExpectedResult = 53)]
+        [TestCase(15, 2004, 12, 30, ExpectedResult = 53)]
+        [TestCase(15, 2004, 12, 31, ExpectedResult = 54)]
+        [TestCase(15, 2005, 1, 1, ExpectedResult = 1)]
+        [TestCase(15, 2005, 1, 6, ExpectedResult = 1)]
+        [TestCase(15, 2005, 1, 7, ExpectedResult = 2)]
+        [TestCase(16, 2008, 12, 26, ExpectedResult = 52)]
+        [TestCase(16, 2008, 12, 27, ExpectedResult = 53)]
+        [TestCase(16, 2008, 12, 31, ExpectedResult = 53)]
+        [TestCase(16, 2009, 1, 1, ExpectedResult = 1)]
+        [TestCase(16, 2009, 1, 2, ExpectedResult = 1)]
+        [TestCase(16, 2009, 1, 3, ExpectedResult = 2)]
+        [TestCase(16, 2009, 1, 9, ExpectedResult = 2)]
+        [TestCase(17, 1929, 12, 21, ExpectedResult = 51)]
+        [TestCase(17, 1929, 12, 22, ExpectedResult = 52)]
+        [TestCase(17, 1929, 12, 28, ExpectedResult = 52)]
+        [TestCase(17, 1929, 12, 29, ExpectedResult = 53)]
+        [TestCase(17, 1929, 12, 31, ExpectedResult = 53)]
+        [TestCase(17, 1930, 1, 1, ExpectedResult = 1)]
+        [TestCase(17, 1930, 1, 4, ExpectedResult = 1)]
+        [TestCase(17, 1930, 1, 5, ExpectedResult = 2)]
+        [TestCase(17, 1930, 1, 11, ExpectedResult = 2)]
+        [TestCase(21, 1964, 12, 27, ExpectedResult = 52)]
+        [TestCase(21, 1964, 12, 28, ExpectedResult = 53)]
+        [TestCase(21, 1964, 12, 31, ExpectedResult = 53)]
+        [TestCase(21, 1965, 1, 1, ExpectedResult = 53)]
+        [TestCase(21, 1965, 1, 3, ExpectedResult = 53)]
+        [TestCase(21, 1965, 1, 4, ExpectedResult = 1)]
+        [TestCase(21, 1968, 12, 29, ExpectedResult = 52)]
+        [TestCase(21, 1968, 12, 30, ExpectedResult = 1)]
+        [TestCase(21, 1968, 12, 31, ExpectedResult = 1)]
+        [TestCase(21, 1969, 1, 1, ExpectedResult = 1)]
+        [TestCase(21, 1969, 1, 5, ExpectedResult = 1)]
+        [TestCase(21, 1969, 1, 6, ExpectedResult = 2)]
         public double Weeknum_returns_week_number_for_date(double weekStartFlag, double year, double month, double day)
         {
             return XLWorkbook.EvaluateExpr($"WEEKNUM(DATE({year},{month},{day}),{weekStartFlag})").GetNumber();
         }
 
         [Test]
-        public void Weeknum_Default()
+        public void Weeknum_default_week_starts_on_sunday()
         {
-            var actual = XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\")");
-            Assert.AreEqual(11, actual);
+            for (var day = 14; day <= 20; day++)
+            {
+                var defaultValue = XLWorkbook.EvaluateExpr($"WEEKNUM(DATE(1967,5,{day}))");
+                var sundayValue = XLWorkbook.EvaluateExpr($"WEEKNUM(DATE(1967,5,{day}),1)");
+                Assert.AreEqual(sundayValue, defaultValue);
+            }
+        }
+
+        [TestCase]
+        public void Weeknum_match_excel_behavior_and_returns_zero_for_serial_date_zero_when_week_starts_on_sunday()
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr("WEEKNUM(0,1)"));
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr("WEEKNUM(0,17)"));
+        }
+
+        [TestCase]
+        public void Weeknum_returns_number_invalid_error_on_non_serial_dates()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKNUM(-0.1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("WEEKNUM(DATE(9999,12,31)+1)"));
+        }
+
+        [TestCase(-5)]
+        [TestCase(0)]
+        [TestCase(3)]
+        [TestCase(10)]
+        [TestCase(18)]
+        [TestCase(20)]
+        [TestCase(22)]
+        [TestCase(100)]
+        public void Weeknum_returns_number_invalid_error_on_non_specified_flags(double flag)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"WEEKNUM(DATE(200,1,1),{flag})"));
         }
 
         [Test]
