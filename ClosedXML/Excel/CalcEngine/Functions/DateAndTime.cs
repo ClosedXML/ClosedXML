@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, 0, Adapt(Today), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
-            ce.RegisterFunction("WEEKNUM", 1, 2, Weeknum); // Converts a serial number to a number representing where the week falls numerically with a year
+            ce.RegisterFunction("WEEKNUM", 1, 2, AdaptLastOptional(WeekNum, 1), FunctionFlags.Scalar); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, AdaptLastOptional(Workday), FunctionFlags.Range, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
             ce.RegisterFunction("YEARFRAC", 2, 3, AdaptLastOptional(YearFrac, 0), FunctionFlags.Scalar); // Returns the year fraction representing the number of whole days between start_date and end_date
@@ -402,16 +402,77 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (serialDate + 6 + weekStartOffset) % 7 + numberOffset;
         }
 
-        private static object Weeknum(List<Expression> p)
+        private static ScalarValue WeekNum(CalcContext ctx, double serialDateTime, double weekStartFlag = 1)
         {
-            var date = (DateTime)p[0];
-            var retType = p.Count == 2 ? (int)p[1] : 1;
+            if (!TryGetDate(ctx, serialDateTime, out var serialDate))
+                return XLError.NumberInvalid;
 
-            DayOfWeek dayOfWeek = retType == 1 ? DayOfWeek.Sunday : DayOfWeek.Monday;
-            var cal = new GregorianCalendar(GregorianCalendarTypes.Localized);
-            var val = cal.GetWeekOfYear(date, CalendarWeekRule.FirstDay, dayOfWeek);
+            var flag = (int)weekStartFlag;
+            var firstDayOfWeek = flag switch
+            {
+                1 => DayOfWeek.Sunday,
+                2 => DayOfWeek.Monday,
+                11 => DayOfWeek.Monday,
+                12 => DayOfWeek.Tuesday,
+                13 => DayOfWeek.Wednesday,
+                14 => DayOfWeek.Thursday,
+                15 => DayOfWeek.Friday,
+                16 => DayOfWeek.Saturday,
+                17 => DayOfWeek.Sunday,
+                21 => DayOfWeek.Monday,
+                _ => (DayOfWeek)(-1),
+            };
 
-            return val;
+            if (firstDayOfWeek < 0)
+                return XLError.NumberInvalid;
+
+            // When checking all values against Excel, there were two cases when week is 0
+            if (serialDate == 0 && firstDayOfWeek == DayOfWeek.Sunday)
+                return 0;
+
+            // Reduce ISO problem to: Find week number of thursday when week starts on monday.
+            if (flag == 21)
+                serialDate = GetThursdayOfWeek(serialDate);
+
+            var date = DateParts.From(ctx, serialDate);
+            var startOfYearDate = (int)(new DateTime(date.Year, 1, 1).ToSerialDateTime());
+            var startOfYearDayOfWeek = (DayOfWeek)((startOfYearDate + 6) % 7);
+            var startOfWeekAdjust = firstDayOfWeek - startOfYearDayOfWeek;
+
+            // In 1-17 flags, the start of a week must be at Jan 1st or in few last days of
+            // previous year. Otherwise some first days of this year wouldn't belong to first
+            // week, but last week of previous year (that is how ISO behaves).
+            if (startOfWeekAdjust > 0)
+                startOfWeekAdjust -= 7;
+
+            // Thursday happened in last year, so move us one week ahead. Matches Excel, don't question it.
+            if (flag == 21 && startOfWeekAdjust < -3)
+                startOfWeekAdjust += 7;
+
+            var firstWeekStartDate = startOfYearDate + startOfWeekAdjust;
+            var weekNum = (serialDate - firstWeekStartDate) / 7;
+            return weekNum + 1;
+
+            // In ISO, week starts at money and you need to find thursday for the serialDate. Week
+            // number is then week number of the Thursday. That means sometimes end of the year
+            // dates (e.g. 1907-12-30) can return week number from next year (e.g. 1), despite
+            // being at the end of the year. The benefit is that all weeks are 7 days long.
+            static int GetThursdayOfWeek(int serialDate)
+            {
+                var dayOfWeek = (DayOfWeek)((serialDate + 6) % 7);
+                var daysToThursday = dayOfWeek switch
+                {
+                    DayOfWeek.Sunday => -3,
+                    DayOfWeek.Monday => 3,
+                    DayOfWeek.Tuesday => 2,
+                    DayOfWeek.Wednesday => 1,
+                    DayOfWeek.Thursday => 0,
+                    DayOfWeek.Friday => -1,
+                    DayOfWeek.Saturday => -2,
+                    _ => throw new UnreachableException()
+                };
+                return serialDate + daysToThursday;
+            }
         }
 
         private static ScalarValue Workday(CalcContext ctx, ScalarValue startDateScalar, ScalarValue dayOffsetValue, AnyValue holidays)
