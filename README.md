@@ -94,3 +94,7 @@ Please read the [full developer guidelines](CONTRIBUTING.md).
 * Former maintainer and lead developer: [Francois Botha](https://github.com/igitur)
 * Master of Computing Patterns: [Aleksei Pankratev](https://github.com/Pankraty)
 * Logo design by [@Tobaloidee](https://github.com/Tobaloidee)
+
+Thanks to JetBrains for providing development tools through their [Open Source Program](https://www.jetbrains.com/community/opensource/)
+
+[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains logo." height="40px">](https://www.jetbrains.com/)
