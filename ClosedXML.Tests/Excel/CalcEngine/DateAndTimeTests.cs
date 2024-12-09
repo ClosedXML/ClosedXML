@@ -252,46 +252,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"DAYS360(DATE({startYear},{startMonth},{startDay}),DATE({endYear},{endMonth},{endDay}),FALSE)");
         }
 
-        [Test]
-        public void EDate_Negative1()
+        [TestCase("2008-03-01", -1, "2008-02-01")]
+        [TestCase("2008-03-31", -1, "2008-02-29")]
+        [TestCase("2008-03-01", 1, "2008-04-01")]
+        [TestCase("2008-03-31", 1, "2008-04-30")]
+        [TestCase("2008-03-01", -1, "2008-02-01")]
+        [TestCase("2008-03-31", 1, "2008-04-30")]
+        [TestCase("1900-01-31", 1, "1900-02-28")] // Uses correct FEB28
+        [TestCase("1900-01-31", 2, "1900-03-31")]
+        [TestCase("1983-07-31", -77, "1977-02-28")]
+        [TestCase("2021-05-14", 35, "2024-04-14")]
+        public void EDate_returns_end_date_from_start_date_and_month_offset(string startDate, double monthOffset, string expectedEndDate)
         {
-            var actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 1).ToSerialDateTime(), actual);
+            var actual = XLWorkbook.EvaluateExpr($"EDATE(\"{startDate}\",{monthOffset})");
+            Assert.AreEqual(DateTime.Parse(expectedEndDate).ToSerialDateTime(), actual);
         }
 
         [Test]
-        public void EDate_Negative2()
+        public void EDate_returns_number_error_for_non_date_values()
         {
-            var actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 29).ToSerialDateTime(), actual);
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("EDATE(-0.1,0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("EDATE(2958466,0)"));
         }
 
-        [Test]
-        public void EDate_Positive1()
+        [TestCase("1900-01-01", -1)]
+        [TestCase("9999-07-10", 1E+100)]
+        public void EDate_returns_number_error_when_end_date_is_out_of_date_system(string startDate, double monthOffset)
         {
-            var actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 1).ToSerialDateTime(), actual);
-        }
-
-        [Test]
-        public void EDate_Positive2()
-        {
-            var actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 30).ToSerialDateTime(), actual);
-        }
-
-        [Test]
-        public void EOMonth_Negative()
-        {
-            var actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/1/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 29).ToSerialDateTime(), actual);
-        }
-
-        [Test]
-        public void EOMonth_Positive()
-        {
-            var actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/31/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 30).ToSerialDateTime(), actual);
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"EDATE(\"{startDate}\",{monthOffset})"));
         }
 
         [TestCase("0", ExpectedResult = 0)]
@@ -892,6 +880,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(-0.1,10)"));
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("YEARFRAC(0,-0.1)"));
         }
+
         [Test]
         public void YearFrac_basis_must_be_between_0_and_4()
         {

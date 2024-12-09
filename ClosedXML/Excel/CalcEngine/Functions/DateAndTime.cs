@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, 2, Adapt(Days), FunctionFlags.Scalar | FunctionFlags.Future); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, AdaptLastOptional(Days360, false), FunctionFlags.Scalar); // Calculates the number of days between two dates based on a 360-day year
-            ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
+            ce.RegisterFunction("EDATE", 2, 2, Adapt(EDate), FunctionFlags.Scalar); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
@@ -256,13 +256,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return 360 * (endYear - startYear) + 30 * (endMonth - startMonth) + (endDay - startDay);
         }
 
-        private static object Edate(List<Expression> p)
+        private static ScalarValue EDate(CalcContext ctx, double startSerialDate, double monthOffset)
         {
-            var date = (DateTime)p[0];
-            var mod = (int)p[1];
+            if (!TryGetDate(ctx, startSerialDate, out var startSerial))
+                return XLError.NumberInvalid;
 
-            var retDate = date.AddMonths(mod);
-            return retDate;
+            if (monthOffset is < -9999 * 12 or > 9999 * 12)
+                return XLError.NumberInvalid;
+
+            var startDate = DateParts.From(ctx, startSerial);
+            var endDate = startDate.AddMonths((int)monthOffset);
+            var endSerialDate = endDate.SerialDate;
+
+            if (!TryGetDate(ctx, endSerialDate, out _))
+                return XLError.NumberInvalid;
+
+            return endSerialDate;
         }
 
         private static object Eomonth(List<Expression> p)
@@ -772,6 +781,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     return false;
 
                 return Day == DateTime.DaysInMonth(Year, Month);
+            }
+
+            public DateParts AddMonths(int months)
+            {
+                var shiftedMonth = Month + months - 1;
+                var adjustYear = (int)Math.Floor(shiftedMonth / 12.0);
+                var year = Year + adjustYear;
+                var month = shiftedMonth - adjustYear * 12 + 1;
+                var day = Math.Min(Day, DateTime.DaysInMonth(year, month)); // Uses real Feb28
+                return new DateParts(year, month, day);
             }
         }
     }
