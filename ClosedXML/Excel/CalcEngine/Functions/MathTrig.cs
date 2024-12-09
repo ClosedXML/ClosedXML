@@ -258,7 +258,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Atan(number);
         }
 
-        private static ScalarValue Atan2(double x, double y)
+        private static ScalarValue Atan2(CalcContext ctx, double x, double y)
         {
             if (x == 0 && y == 0)
                 return XLError.DivisionByZero;
@@ -297,7 +297,7 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString().PadLeft((int)minLength, '0');
         }
 
-        private static ScalarValue Ceiling(double number, double significance)
+        private static ScalarValue Ceiling(CalcContext ctx, double number, double significance)
         {
             if (significance == 0)
                 return 0;
@@ -327,7 +327,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Ceiling(number / significance) * significance;
         }
 
-        private static ScalarValue Combin(double number, double numberChosen)
+        private static ScalarValue Combin(CalcContext ctx, double number, double numberChosen)
         {
             var combinationsResult = XLMath.CombinChecked(number, numberChosen);
             if (!combinationsResult.TryPickT0(out var combinations, out var error))
@@ -336,7 +336,7 @@ namespace ClosedXML.Excel.CalcEngine
             return combinations;
         }
 
-        private static ScalarValue CombinA(double number, double chosen)
+        private static ScalarValue CombinA(CalcContext ctx, double number, double chosen)
         {
             number = Math.Truncate(number); // casting truncates towards 0 as specified
             chosen = Math.Truncate(chosen);
@@ -487,7 +487,7 @@ namespace ClosedXML.Excel.CalcEngine
             return fact;
         }
 
-        private static ScalarValue Floor(double number, double significance)
+        private static ScalarValue Floor(CalcContext ctx, double number, double significance)
         {
             // Rounding down, to zero. If we are at the zero, there is nowhere to go.
             if (number == 0)
@@ -697,7 +697,7 @@ namespace ClosedXML.Excel.CalcEngine
             return new NumberArray(matrixC);
         }
 
-        private static ScalarValue Mod(double number, double divisor)
+        private static ScalarValue Mod(CalcContext ctx, double number, double divisor)
         {
             if (divisor == 0)
                 return XLError.DivisionByZero;
@@ -705,7 +705,7 @@ namespace ClosedXML.Excel.CalcEngine
             return number - Math.Floor(number / divisor) * divisor;
         }
 
-        private static ScalarValue MRound(double number, double multiple)
+        private static ScalarValue MRound(CalcContext ctx, double number, double multiple)
         {
             if (multiple == 0)
                 return 0;
@@ -761,7 +761,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.PI;
         }
 
-        private static ScalarValue Power(double x, double y)
+        private static ScalarValue Power(CalcContext ctx, double x, double y)
         {
             // The value of x is negative and y is not a whole number, #NUM! is returned.
             var isPowerFraction = y % 1 != 0;
@@ -795,7 +795,7 @@ namespace ClosedXML.Excel.CalcEngine
             return state.HasValues ? state.Product : 0;
         }
 
-        private static ScalarValue Quotient(double dividend, double divisor)
+        private static ScalarValue Quotient(CalcContext ctx, double dividend, double divisor)
         {
             if (divisor == 0)
                 return XLError.DivisionByZero;
@@ -813,7 +813,7 @@ namespace ClosedXML.Excel.CalcEngine
             return _rnd.NextDouble();
         }
 
-        private static ScalarValue RandBetween(double lowerBound, double upperBound)
+        private static ScalarValue RandBetween(CalcContext ctx, double lowerBound, double upperBound)
         {
             if (lowerBound > upperBound)
                 return XLError.NumberInvalid;
@@ -853,18 +853,18 @@ namespace ClosedXML.Excel.CalcEngine
             return result.ToString();
         }
 
-        private static ScalarValue Round(double value, double digits)
+        private static ScalarValue Round(CalcContext ctx, double value, double digits)
         {
             return XLMath.Round(value, digits);
         }
 
-        private static ScalarValue RoundDown(double value, double digits)
+        private static ScalarValue RoundDown(CalcContext ctx, double value, double digits)
         {
             var coef = Math.Pow(10, Math.Truncate(digits));
             return Math.Truncate(value * coef) / coef;
         }
 
-        private static ScalarValue RoundUp(double value, double digits)
+        private static ScalarValue RoundUp(CalcContext ctx, double value, double digits)
         {
             var coef = Math.Pow(10, Math.Truncate(digits));
             if (value >= 0)
