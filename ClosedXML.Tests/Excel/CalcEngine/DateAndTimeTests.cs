@@ -79,32 +79,47 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(38718, 40524, "M", ExpectedResult = 59)]
         [TestCase(38718, 40524, "D", ExpectedResult = 1806)]
         [TestCase(38718, 40524, "MD", ExpectedResult = 11)]
+        [TestCase("2020-01-31", "2024-03-01", "MD", ExpectedResult = -1)] // Pathological case. Start is shifted to 2024-02-31, thus 2024-03-02 is one day before the end
+        [TestCase("1990-01-20", "2002-12-15", "YM", ExpectedResult = 10)] // YM across many years
         [TestCase(38718, 40524, "YM", ExpectedResult = 11)]
         [TestCase(38718, 40524, "YD", ExpectedResult = 345)]
-        [TestCase("2001-12-31", "2002-4-15", "YM", ExpectedResult = 3)]
-        [TestCase("2001-12-10", "2002-4-15", "YM", ExpectedResult = 4)]
-        [TestCase("2001-12-15", "2002-4-15", "YM", ExpectedResult = 4)]
-        [TestCase("2001-12-31", "2002-4-15", "YD", ExpectedResult = 105)]
-        [TestCase("2001-12-31", "2003-4-15", "YD", ExpectedResult = 105)]
+        [TestCase("2001-12-31", "2002-4-15", "YM", ExpectedResult = 3)] // YM counts only full months - the last month is not full
+        [TestCase("2001-12-10", "2002-4-15", "YM", ExpectedResult = 4)] // YM counts only full months - the last month is full
+        [TestCase("2001-12-15", "2002-4-15", "YM", ExpectedResult = 4)] // YM counts only full months - the last month exactly full
+        [TestCase("1900-01-12", "1901-03-04", "YD", ExpectedResult = 51)] // YD has plus +1 error with start dates in jan/feb 1900 and end in march of subsequent years
+        [TestCase("2001-12-31", "2002-4-15", "YD", ExpectedResult = 105)] // YD ignores year, baseline
+        [TestCase("2001-12-31", "2003-4-15", "YD", ExpectedResult = 105)] // YD ignores year, different year
+        [TestCase("2000-02-20", "2100-02-10", "YD", ExpectedResult = 356)] // YD uses start year, not end year. Start has feb29, baseline
+        [TestCase("2001-02-20", "2100-02-10", "YD", ExpectedResult = 355)] // YD uses start year, not end year. Start doesn't have feb29 => it's one less than the baseline
         [TestCase("2002-01-31", "2002-4-15", "YD", ExpectedResult = 74)]
         [TestCase("2001-12-02", "2001-12-15", "Y", ExpectedResult = 0)]
         [TestCase("2001-12-02", "2002-12-02", "Y", ExpectedResult = 1)]
         [TestCase("2006-01-15", "2006-03-14", "M", ExpectedResult = 1)]
         [TestCase("2020-11-22", "2020-11-23 9:00", "D", ExpectedResult = 1)]
-        public double Datedif(object startDate, object endDate, string unit)
+        public double DateDif(object startDate, object endDate, string unit)
         {
             if (startDate is string s1) startDate = $"\"{s1}\"";
             if (endDate is string s2) endDate = $"\"{s2}\"";
-            return (double)XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")");
+            return (double)XLWorkbook.EvaluateExpr($"DATEDIF({startDate},{endDate},\"{unit}\")");
         }
 
-        [TestCase("\"1/1/2010\"", "\"12/12/2006\"", "Y")]
-        [TestCase(40524, 38718, "Y")]
-        [TestCase("\"1/1/2006\"", "\"12/12/2010\"", "N")]
-        [TestCase(38718, 40524, "N")]
-        public void DatedifExceptions(object startDate, object endDate, string unit)
+        [TestCase("N")]
+        public void DateDif_returns_number_error_on_unexpected_unit(string unit)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DATEDIF(10,100,\"{unit}\")"));
+        }
+
+        [Test]
+        public void DateDif_end_date_cant_be_after_start_date()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DATEDIF(40524,38718,\"D\")"));
+        }
+
+        [TestCase(-0.1, 100)]
+        [TestCase(1, 2958466)]
+        public void DateDif_returns_number_error_on_date_out_of_date_system(decimal startDate, decimal endDate)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DATEDIF({startDate},{endDate},\"D\")"));
         }
 
         [Test]

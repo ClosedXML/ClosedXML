@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
-            ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
+            ce.RegisterFunction("DATEDIF", 3, 3, Adapt(DateDif), FunctionFlags.Scalar); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
@@ -115,29 +115,80 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return serialDate;
         }
 
-        private static object Datedif(List<Expression> p)
+        private static ScalarValue DateDif(CalcContext ctx, double startDateTime, double endDateTime, string unit)
         {
-            DateTime startDate = p[0];
-            DateTime endDate = p[1];
-            string unit = p[2];
-
-            if (startDate > endDate)
+            if (!TryGetDate(ctx, startDateTime, out var startSerialDate))
                 return XLError.NumberInvalid;
 
-            return (unit.ToUpper()) switch
+            if (!TryGetDate(ctx, endDateTime, out var endSerialDate))
+                return XLError.NumberInvalid;
+
+            if (startSerialDate > endSerialDate)
+                return XLError.NumberInvalid;
+
+            var startDate = DateParts.From(ctx, startSerialDate);
+            var endDate = DateParts.From(ctx, endSerialDate);
+            unit = unit.ToUpperInvariant();
+
+            if (unit == "Y")
             {
-                "Y" => endDate.Year - startDate.Year - (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0),
-                "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),
-                "D" => Math.Truncate(endDate.Date.Subtract(startDate.Date).TotalDays),
+                // Calculate number of complete years the end date is from the start date
+                var isLastYearComplete = endDate.Month > startDate.Month ||
+                                         (endDate.Month == startDate.Month && endDate.Day >= startDate.Day);
+                return endDate.Year - startDate.Year - (isLastYearComplete ? 0 : 1);
+            }
 
-                // Microsoft discourages the use of the MD parameter
-                // https://support.microsoft.com/en-us/office/datedif-function-25dba1a4-2812-480b-84dd-8b32a451b35c
-                "MD" => (endDate.Day - startDate.Day + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % DateTime.DaysInMonth(startDate.Year, startDate.Month),
+            if (unit == "M")
+            {
+                // Calculate number of complete months the end date is from start date
+                var isLastMonthComplete = endDate.Day >= startDate.Day;
+                return (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month - (isLastMonthComplete ? 0 : 1);
+            }
 
-                "YM" => (endDate.Month - startDate.Month + 12) % 12 - (endDate.Day < startDate.Day ? 1 : 0),
-                "YD" => Math.Truncate(new DateTime(startDate.Year + (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0), endDate.Month, endDate.Day).Subtract(startDate).TotalDays),
-                _ => XLError.NumberInvalid,
-            };
+            if (unit == "D")
+            {
+                return endSerialDate - startSerialDate;
+            }
+
+            if (unit == "MD")
+            {
+                // The difference between the days in startDate and endDate, ignore year and month
+                // of startDate, only days are used
+                if (endDate.Day >= startDate.Day)
+                    return endDate.Day - startDate.Day;
+
+                var adjacentStartDate = startDate with
+                {
+                    Month = (endDate.Month - 2 + 12) % 12 + 1,
+                    Year = endDate.Month > 1 ? endDate.Year : endDate.Year - 1
+                };
+                return endSerialDate - adjacentStartDate.SerialDate;
+            }
+
+            if (unit == "YM")
+            {
+                // The difference between the months in start-date and end-date. Add 12 and then
+                // modulo, so result is always positive
+                var isLastMonthComplete = endDate.Day >= startDate.Day;
+                return (endDate.Month + 12 - startDate.Month - (isLastMonthComplete ? 0 : 1)) % 12;
+            }
+
+            if (unit == "YD")
+            {
+                var endFollowsStart = endDate.Month > startDate.Month || (endDate.Month == startDate.Month && endDate.Day >= startDate.Day);
+                var newEndYear = startDate.Year + (endFollowsStart ? 0 : 1);
+                var newEndDate = endDate with { Year = newEndYear };
+                var daysDiff = newEndDate.SerialDate - startSerialDate;
+
+                // If start date is in 1900 jan/feb, there are sometimes errors. I couldn't decipher actual logic,
+                // only condition when it happens. Based on the Excel vs ClosedXML comparisons, it seems to work.
+                if (startSerialDate <= 60 && endDate is { Year: > 1900, Month: 3 } && endDate.Day < startDate.Day)
+                    daysDiff--;
+
+                return daysDiff;
+            }
+
+            return XLError.NumberInvalid;
         }
 
         private static object Datevalue(List<Expression> p)
@@ -686,6 +737,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             private static readonly DateParts Epoch1900 = new(1900, 1, 0);
 
             private static readonly DateParts Feb29 = new(1900, 2, 29);
+
+            internal int SerialDate => (int)(new DateTime(Year, Month, 1).ToSerialDateTime()) + Day - 1;
 
             internal static DateParts From(CalcContext ctx, int serialDate)
             {

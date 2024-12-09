@@ -92,6 +92,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction Adapt(Func<CalcContext, double, double, string, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToNumber(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var arg1Converted = ToNumber(args[1], ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var arg2Converted = ToText(args[2], ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                return f(ctx, arg0, arg1, arg2).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction Adapt(Func<double, double, double, bool, AnyValue> f)
         {
             return (ctx, args) =>
