@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DATEDIF", 3, 3, Adapt(DateDif), FunctionFlags.Scalar); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
-            ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
+            ce.RegisterFunction("DAYS", 2, 2, Adapt(Days), FunctionFlags.Scalar | FunctionFlags.Future); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, AdaptLastOptional(Days360, false), FunctionFlags.Scalar); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
@@ -206,23 +206,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return DateParts.From(ctx, serialDate).Day;
         }
 
-        private static object Days(List<Expression> p)
+        private static ScalarValue Days(CalcContext ctx, double endSerialDate, double startSerialDate)
         {
-            int end_date;
-            var endDateValue = p[0].Evaluate();
-            if (endDateValue is string)
-                end_date = (int)Datevalue(new List<Expression>() { p[0] });
-            else
-                end_date = (int)p[0];
+            if (!TryGetDate(ctx, startSerialDate, out var startDate))
+                return XLError.NumberInvalid;
 
-            int start_date;
-            var startDateValue = p[1].Evaluate();
-            if (startDateValue is string)
-                start_date = (int)Datevalue(new List<Expression>() { p[1] });
-            else
-                start_date = (int)p[1];
+            if (!TryGetDate(ctx, endSerialDate, out var endDate))
+                return XLError.NumberInvalid;
 
-            return end_date - start_date;
+            return endDate - startDate;
         }
 
         private static ScalarValue Days360(CalcContext ctx, double startDateTime, double endDateTime, bool isEuropean)

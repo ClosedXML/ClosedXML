@@ -160,14 +160,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return XLWorkbook.EvaluateExprCurrent($"DAY({date})").GetNumber();
         }
 
-        [Test]
-        public void Days()
+        [TestCase(2016, 10, 1, 1992, 2, 29, ExpectedResult = 8981)]
+        [TestCase(1901, 3, 10, 1900, 1, 26, ExpectedResult = 409)]
+        public double Days_calculate_difference_between_two_dates(double endYear, double endMonth, double endDay, double startYear, double startMonth, double startDay)
         {
-            var actual = XLWorkbook.EvaluateExpr("DAYS(DATE(2016,10,1),DATE(1992,2,29))");
-            Assert.AreEqual(8981, actual);
+            return (double)XLWorkbook.EvaluateExpr($"DAYS(DATE({endYear},{endMonth},{endDay}),DATE({startYear},{startMonth},{startDay}))");
+        }
 
-            actual = XLWorkbook.EvaluateExpr("DAYS(\"2016-10-1\",\"1992-2-29\")");
-            Assert.AreEqual(8981, actual);
+        [TestCase("2016-10-01", "1992-02-29", ExpectedResult = 8981)]
+        [TestCase("1901-03-10", "1900-01-26", ExpectedResult = 409)]
+        [TestCase("1900-01-26", "1901-03-10", ExpectedResult = -409)]
+        public double Days_coerces_dates_to_number(string endDate, string startDate)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"DAYS(\"{endDate}\",\"{startDate}\")");
+        }
+
+        [Test]
+        public void Days_truncates_passed_arguments()
+        {
+            Assert.AreEqual(9, XLWorkbook.EvaluateExpr("DAYS(10.6,1.9)"));
+        }
+
+        [Test]
+        public void Days_arguments_must_be_in_date_range()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAYS(-0.1,1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAYS(2958466,1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAYS(1,-0.1)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("DAYS(1,2958466)"));
         }
 
         [Test]
