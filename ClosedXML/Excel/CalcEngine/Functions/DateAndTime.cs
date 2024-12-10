@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DAYS", 2, 2, Adapt(Days), FunctionFlags.Scalar | FunctionFlags.Future); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, AdaptLastOptional(Days360, false), FunctionFlags.Scalar); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, 2, Adapt(EDate), FunctionFlags.Scalar); // Returns the serial number of the date that is the indicated number of months before or after the start date
-            ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
+            ce.RegisterFunction("EOMONTH", 2, 2, Adapt(Eomonth), FunctionFlags.Scalar); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
             ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, 1, Adapt(Minute), FunctionFlags.Scalar); // Converts a serial number to a minute
@@ -261,26 +261,28 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (!TryGetDate(ctx, startSerialDate, out var startSerial))
                 return XLError.NumberInvalid;
 
-            if (monthOffset is < -9999 * 12 or > 9999 * 12)
+            if (!TryGetMonthsOffset(monthOffset, out var months))
                 return XLError.NumberInvalid;
 
             var startDate = DateParts.From(ctx, startSerial);
-            var endDate = startDate.AddMonths((int)monthOffset);
-            var endSerialDate = endDate.SerialDate;
-
-            if (!TryGetDate(ctx, endSerialDate, out _))
-                return XLError.NumberInvalid;
-
-            return endSerialDate;
+            var endDate = startDate.AddMonths(months);
+            return endDate.ToSerialDate()
+                .Match<ScalarValue>(d => d, e => e);
         }
 
-        private static object Eomonth(List<Expression> p)
+        private static ScalarValue Eomonth(CalcContext ctx, double startSerialDate, double monthOffset)
         {
-            var start_date = (DateTime)p[0];
-            var months = (int)p[1];
+            if (!TryGetDate(ctx, startSerialDate, out var startSerial))
+                return XLError.NumberInvalid;
 
-            var retDate = start_date.AddMonths(months);
-            return new DateTime(retDate.Year, retDate.Month, DateTime.DaysInMonth(retDate.Year, retDate.Month));
+            if (!TryGetMonthsOffset(monthOffset, out var months))
+                return XLError.NumberInvalid;
+
+            var startDate = DateParts.From(ctx, startSerial);
+            var endDate = startDate.AddMonths(months);
+            var endOfMonth = endDate.EndOfMonth();
+            return endOfMonth.ToSerialDate()
+                .Match<ScalarValue>(d => d, e => e);
         }
 
         private static ScalarValue Hour(CalcContext ctx, double serialTime)
@@ -710,6 +712,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return true;
         }
 
+        private static bool TryGetMonthsOffset(double monthsOffset, out int months)
+        {
+            // Limit enough so integer math won't overflow when added to a date
+            if (monthsOffset is < -9999 * 12 or > 9999 * 12)
+            {
+                months = default;
+                return false;
+            }
+
+            months = checked((int)monthsOffset);
+            return true;
+        }
+
         private static bool TryGetDate(CalcContext ctx, double serialDateTime, out int serialDate)
         {
             if (serialDateTime < 0 || serialDateTime >= ctx.DateSystemUpperLimit)
@@ -732,9 +747,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         /// <summary>
         /// A date type unconstrained by DateTime limitations (1900-01-00 or 1900-02-29).
+        /// Has some similar methods as DateTime, but without limit checks.
         /// </summary>
         private readonly record struct DateParts(int Year, int Month, int Day)
         {
+            private static readonly int[] DaysToMonth365 = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+
+            private static readonly int[] DaysToMonth366 = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
+
             private static readonly DateParts Epoch1900 = new(1900, 1, 0);
 
             private static readonly DateParts Feb29 = new(1900, 2, 29);
@@ -764,6 +784,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return From(DateTime.FromOADate(serialDate));
             }
 
+            private static int DaysInMonth(int year, int month)
+            {
+                Debug.Assert(month is >= 1 and <= 12);
+                var daysToMonth = IsLeapYear(year) ? DaysToMonth366 : DaysToMonth365;
+                return daysToMonth[month] - daysToMonth[month - 1];
+            }
+
+            private static bool IsLeapYear(int year)
+            {
+                return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+            }
+
             private static DateParts From(DateTime date)
             {
                 return new DateParts(date.Year, date.Month, date.Day);
@@ -783,14 +815,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return Day == DateTime.DaysInMonth(Year, Month);
             }
 
-            public DateParts AddMonths(int months)
+            internal DateParts AddMonths(int months)
             {
                 var shiftedMonth = Month + months - 1;
                 var adjustYear = (int)Math.Floor(shiftedMonth / 12.0);
                 var year = Year + adjustYear;
                 var month = shiftedMonth - adjustYear * 12 + 1;
-                var day = Math.Min(Day, DateTime.DaysInMonth(year, month)); // Uses real Feb28
+                var day = Math.Min(Day, DaysInMonth(year, month)); // Uses real Feb28
                 return new DateParts(year, month, day);
+            }
+
+            internal DateParts EndOfMonth()
+            {
+                return this with { Day = DaysInMonth(Year, Month) };
+            }
+
+            internal OneOf<int, XLError> ToSerialDate()
+            {
+                if (Year is > 9999 or < 1900)
+                    return XLError.NumberInvalid;
+
+                return SerialDate;
             }
         }
     }

@@ -276,10 +276,49 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("1900-01-01", -1)]
+        [TestCase("9999-07-10", 6)]
         [TestCase("9999-07-10", 1E+100)]
         public void EDate_returns_number_error_when_end_date_is_out_of_date_system(string startDate, double monthOffset)
         {
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"EDATE(\"{startDate}\",{monthOffset})"));
+        }
+
+        [TestCase(1900, 1, 0, 0, ExpectedResult = 31)]
+        [TestCase(1900, 1, 1, 0, ExpectedResult = 31)]
+        [TestCase(1900, 1, 31, 0, ExpectedResult = 31)]
+        [TestCase(1900, 2, 20, 0, ExpectedResult = 59)]
+        [TestCase(1900, 2, 29, 0, ExpectedResult = 59)]
+        [TestCase(1900, 2, 29, 1, ExpectedResult = 91)]
+        [TestCase(1900, 2, 29, 1, ExpectedResult = 91)]
+        [TestCase(1900, 3, 1, -1, ExpectedResult = 59)]
+        [TestCase(1985, 4, 15, 9, ExpectedResult = 31443)]
+        [TestCase(2006, 1, 31, 5, ExpectedResult = 38898)] // Spec examples
+        [TestCase(2004, 2, 29, 12, ExpectedResult = 38411)]
+        [TestCase(2004, 2, 28, 12, ExpectedResult = 38411)]
+        [TestCase(2004, 1, 15, -23, ExpectedResult = 37315)]
+        public double Eomonth_returns_end_of_month_from_start_date_plus_month_offset(int year, int month, int day, int months)
+        {
+            return (double)XLWorkbook.EvaluateExpr($"EOMONTH(DATE({year},{month},{day}),{months})");
+        }
+
+        [Test]
+        public void Eomonth_truncates_arguments()
+        {
+            Assert.AreEqual(59, XLWorkbook.EvaluateExpr("EOMONTH(60.1,0.9)"));
+        }
+
+        [Test]
+        public void Eomonth_start_date_must_be_in_date_values()
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("EOMONTH(-0.1,0)"));
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("EOMONTH(DATE(9999,12,31)+1,0)"));
+        }
+
+        [TestCase("1900-01-01", -1)]
+        [TestCase("9999-12-10", 1)]
+        public void Eomonth_returns_number_error_when_end_date_is_out_of_date_system(string startDate, double monthOffset)
+        {
+            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"EOMONTH(\"{startDate}\",{monthOffset})"));
         }
 
         [TestCase("0", ExpectedResult = 0)]
