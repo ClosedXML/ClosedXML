@@ -50,8 +50,8 @@ namespace ClosedXML.Excel.CalcEngine
                 var longDatePatterns = shortDatePatterns
                     .SelectMany(datePattern => timePatterns.Select(timePattern => FormattableString.Invariant($"{datePattern} {timePattern}")));
 
-                // ISO8601 should be parseable in all cultures, not sure if Excel does.
-                return shortDatePatterns.Concat(longDatePatterns).Concat(new[] { "yyyy-MM-dd" }).Distinct().ToArray();
+                // ISO8601 should be parseable in all cultures, not sure if Excel does. Be more forgiving, M,d instead MM,dd.
+                return shortDatePatterns.Concat(longDatePatterns).Concat(new[] { "yyyy-M-d" }).Distinct().ToArray();
             });
 
             return DateTime.TryParseExact(s, datePatterns, culture, Style, out date);
