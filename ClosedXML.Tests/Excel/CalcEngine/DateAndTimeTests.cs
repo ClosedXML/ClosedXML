@@ -122,11 +122,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"DATEDIF({startDate},{endDate},\"D\")"));
         }
 
-        [Test]
-        public void Datevalue()
+        [TestCase("8/22/2008", ExpectedResult = 39682)]
+        [TestCase("2/1/2006", ExpectedResult = 38749)]
+        [TestCase("2006-2-1", ExpectedResult = 38749)]
+        [TestCase("February 1, 2006 17:45", ExpectedResult = 38749)]
+        public double DateValue_returns_truncated_serial_date_extracted_from_text(string date)
         {
-            var actual = XLWorkbook.EvaluateExpr("DateValue(\"8/22/2008\")");
-            Assert.AreEqual(39682, actual);
+            return (double)XLWorkbook.EvaluateExprCurrent($"DATEVALUE(\"{date}\")");
+        }
+
+        [TestCase("\"100\"")]
+        [TestCase("\"0\"")]
+        public void DateValue_doesnt_coerce_number_in_a_text_to_a_date(string arg)
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExprCurrent($"DATEVALUE({arg})"));
+        }
+
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        [TestCase("1000")]
+        [TestCase("DATE(2006,1,5)")]
+        public void DateValue_returns_coercion_error_on_non_text(string arg)
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExprCurrent($"DATEVALUE({arg})"));
+        }
+
+        [Test]
+        public void DateValue_propagates_error()
+        {
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExprCurrent("DATEVALUE(#DIV/0!)"));
         }
 
         [TestCase(0, ExpectedResult = 0)]

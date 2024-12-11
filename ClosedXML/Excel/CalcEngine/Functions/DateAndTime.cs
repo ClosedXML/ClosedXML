@@ -15,9 +15,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static void Register(FunctionRegistry ce)
         {
+            var dateValue = DateValue;
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, 3, Adapt(DateDif), FunctionFlags.Scalar); // Calculates the number of days, months, or years between two dates
-            ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
+            ce.RegisterFunction("DATEVALUE", 1, 1, Adapt(dateValue), FunctionFlags.Scalar); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, 1, Adapt(Day), FunctionFlags.Scalar); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, 2, Adapt(Days), FunctionFlags.Scalar | FunctionFlags.Future); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, AdaptLastOptional(Days360, false), FunctionFlags.Scalar); // Calculates the number of days between two dates based on a 360-day year
@@ -191,11 +192,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return XLError.NumberInvalid;
         }
 
-        private static object Datevalue(List<Expression> p)
+        private static ScalarValue DateValue(CalcContext ctx, ScalarValue value)
         {
-            var date = (string)p[0];
+            if (!value.TryPickText(out var text, out var error))
+                return error;
 
-            return (int)Math.Floor(DateTime.Parse(date).ToOADate());
+            if (!ScalarValue.ToSerialDateTime(text, ctx.Culture, out var serialDateTime))
+                return XLError.IncompatibleValue;
+
+            return Math.Truncate(serialDateTime);
         }
 
         private static ScalarValue Day(CalcContext ctx, double serialDateTime)
