@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine.Functions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
@@ -53,7 +52,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LEN", 1, 1, Adapt(Len), FunctionFlags.Scalar); //, Returns the number of characters in a text string
             ce.RegisterFunction("LOWER", 1, 1, Adapt(Lower), FunctionFlags.Scalar); //	Converts text to lowercase
             ce.RegisterFunction("MID", 3, 3, Adapt(Mid), FunctionFlags.Scalar); // Returns a specific number of characters from a text string starting at the position you specify
-            ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
+            ce.RegisterFunction("NUMBERVALUE", 1, 3, AdaptNumberValue(NumberValue), FunctionFlags.Scalar | FunctionFlags.Future); // Converts a text argument to a number
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
             ce.RegisterFunction("PROPER", 1, 1, Adapt(Proper), FunctionFlags.Scalar); // Capitalizes the first letter in each word of a text value
             ce.RegisterFunction("REPLACE", 4, 4, Adapt(Replace), FunctionFlags.Scalar); // Replaces characters within text
@@ -638,43 +637,85 @@ namespace ClosedXML.Excel.CalcEngine
             return XLError.IncompatibleValue;
         }
 
-        private static object NumberValue(List<Expression> p)
+        private static ScalarValue NumberValue(CalcContext ctx, string text, string decimalSeparator, string groupSeparator)
         {
-            var numberFormatInfo = new NumberFormatInfo();
-
-            numberFormatInfo.NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
-            numberFormatInfo.CurrencyDecimalSeparator = numberFormatInfo.NumberDecimalSeparator;
-
-            numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
-            numberFormatInfo.CurrencyGroupSeparator = numberFormatInfo.NumberGroupSeparator;
-
-            if (numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
-            {
+            if (decimalSeparator.Length == 0)
                 return XLError.IncompatibleValue;
-            }
 
-            //Remove all whitespace characters
-            var input = Regex.Replace(p[0], @"\s+", "", RegexOptions.Compiled);
-            if (string.IsNullOrEmpty(input))
+            if (groupSeparator.Length == 0)
+                return XLError.IncompatibleValue;
+
+            if (text.Length == 0)
+                return 0;
+
+            var decimalSep = decimalSeparator[0];
+            var groupSep = groupSeparator[0];
+            if (decimalSep == groupSep)
+                return XLError.IncompatibleValue;
+
+            // Protect against taking up too much stack in stackalloc
+            if (text.Length >= 256)
+                return XLError.IncompatibleValue;
+
+            // Process by ODF specification. Add one character for optional 0 before decimal.
+            Span<char> textSpan = stackalloc char[text.Length + 1];
+            var newLength = 0;
+            var decimalSeen = false;
+            foreach (var c in text)
             {
-                return 0d;
+                if (c == decimalSep)
+                {
+                    // Only first decimal separator should be replaced by '.'
+                    textSpan[newLength++] = !decimalSeen ? '.' : c;
+                    decimalSeen = true;
+                }
+                else if (c == groupSep && !decimalSeen)
+                {
+                    // Do nothing. Skip all group separators before first encounter of decimal one
+                }
+                else if (!char.IsWhiteSpace(c))
+                {
+                    textSpan[newLength++] = c;
+                }
             }
 
-            if (double.TryParse(input, NumberStyles.Any, numberFormatInfo, out var result))
+            if (textSpan.Length > 0 && textSpan[0] == '.')
             {
-                if (result <= -1e308 || result >= 1e308)
-                    return XLError.IncompatibleValue;
-
-                if (result >= -1e-309 && result <= 1e-309 && result != 0)
-                    return XLError.IncompatibleValue;
-
-                if (result >= -1e-308 && result <= 1e-308)
-                    result = 0d;
-
-                return result;
+                textSpan[..newLength].CopyTo(textSpan[1..]);
+                textSpan[0] = '0';
+                newLength++;
             }
 
-            return XLError.IncompatibleValue;
+            textSpan = textSpan[..newLength];
+
+            // Count percent signs at the end
+            var percentCount = 0;
+            while (textSpan.Length > 0 && textSpan[^1] == '%')
+            {
+                textSpan = textSpan[..^1];
+                percentCount++;
+            }
+
+            if (!double.TryParse(textSpan.ToString(), NumberStyles.Float | NumberStyles.AllowParentheses, CultureInfo.InvariantCulture, out var number))
+                return XLError.IncompatibleValue;
+
+            // Too large exponent can return infinity
+            if (double.IsInfinity(number))
+                return XLError.NumberInvalid;
+
+            for (var i = 0; i < percentCount; ++i)
+                number /= 100.0;
+
+            if (number is <= -1e308 or >= 1e308)
+                return XLError.IncompatibleValue;
+
+            if (number is >= -1e-309 and <= 1e-309 && number != 0)
+                return XLError.IncompatibleValue;
+
+            if (number is >= -1e-308 and <= 1e-308)
+                number = 0d;
+
+            return number;
         }
 
         private static ScalarValue Dollar(CalcContext ctx, double number, double decimals)

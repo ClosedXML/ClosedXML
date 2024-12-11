@@ -691,6 +691,28 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
+        public static CalcEngineFunction AdaptNumberValue(Func<CalcContext, string, string, string, ScalarValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0Converted = ToText(args[0], ctx);
+                if (!arg0Converted.TryPickT0(out var arg0, out var err0))
+                    return err0;
+
+                var decimalSeparator = ctx.Culture.NumberFormat.NumberDecimalSeparator;
+                var arg1Converted = ToText(args.Length > 1 ? args[1] : decimalSeparator, ctx);
+                if (!arg1Converted.TryPickT0(out var arg1, out var err1))
+                    return err1;
+
+                var groupSeparator = ctx.Culture.NumberFormat.NumberGroupSeparator;
+                var arg2Converted = ToText(args.Length > 2 ? args[2] : groupSeparator, ctx);
+                if (!arg2Converted.TryPickT0(out var arg2, out var err2))
+                    return err2;
+
+                return f(ctx, arg0, arg1, arg2).ToAnyValue();
+            };
+        }
+
         public static CalcEngineFunction AdaptSubstitute(Func<CalcContext, string, string, string, double?, ScalarValue> f)
         {
             return (ctx, args) =>

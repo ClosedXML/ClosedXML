@@ -598,28 +598,49 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(3, XLWorkbook.EvaluateExpr("""LEN(MID("😊😊😊",1,3))"""));
         }
 
-        [TestCase("NUMBERVALUE(\"\")", 0d)]
-        [TestCase("NUMBERVALUE(\"1,234.56\", \".\", \",\")", 1234.56d)]
-        [TestCase("NUMBERVALUE(\"1.234,56\", \",\", \".\")", 1234.56d)]
-        [TestCase("NUMBERVALUE(\"+ 1\")", 1d)]
-        [TestCase("NUMBERVALUE(\"+1\")", 1d)]
-        [TestCase("NUMBERVALUE(\"+1.23\")", 1.23)]
-        [TestCase("NUMBERVALUE(\"- 1.23\")", -1.23)]
-        [TestCase("NUMBERVALUE(\" - 0 1 2 . 3 4 \")", -12.34)]
-        [TestCase("NUMBERVALUE(\" - 0 \t1\t2\r .\n3 4 \")", -12.34)]
-        [TestCase("NUMBERVALUE(\".1\")", 0.1)]
-        [TestCase("NUMBERVALUE(\"-.1\")", -0.1)]
-        [TestCase("NUMBERVALUE(\"1.234567890E+307\")", 1.234567890E+307)]
-        [TestCase("NUMBERVALUE(\"1.234567890E-307\")", 1.234567890E-307d)]
-        [TestCase("NUMBERVALUE(\"1.234567890E-309\")", 0d)]
-        [TestCase("NUMBERVALUE(\"-1.234567890E-307\")", -1.234567890E-307d)]
-        [TestCase("NUMBERVALUE(\".99999999999999\")", 0.99999999999999)]
-        [TestCase("NUMBERVALUE(\"1,23,4\")", 1234)]
-        [TestCase("NUMBERVALUE(\"1,234,56\")", 123456)]
-        public void NumberValue_Correct(string expression, double expectedResult)
+        [TestCase("", 0d)]
+        [TestCase("+ 1", 1d)]
+        [TestCase("+1", 1d)]
+        [TestCase("+1.23", 1.23)]
+        [TestCase("- 1.23", -1.23)]
+        [TestCase(" - 0 1 2 . 3 4 ", -12.34)]
+        [TestCase(" - 0 \t1\t2\r .\n3 4 ", -12.34)]
+        [TestCase(".1", 0.1)]
+        [TestCase("-.1", -0.1)]
+        [TestCase("1.234567890E+307", 1.234567890E+307)]
+        [TestCase("1.234567890E-307", 1.234567890E-307d)]
+        [TestCase("1.234567890E-309", 0d)]
+        [TestCase("-1.234567890E-307", -1.234567890E-307d)]
+        [TestCase(".99999999999999", 0.99999999999999)]
+        [TestCase("1,23,4", 1234)]
+        [TestCase("1,234,56", 123456)]
+        [TestCase("1e-308", 0)]
+        [TestCase("-1e-308", 0)]
+        [TestCase("75825%", 758.25)]
+        [TestCase("75825%%", 7.5825)]
+        [TestCase("(56.4)", -56.4)]
+        [TestCase("(128)%", -1.28)]
+        public void NumberValue_converts_text_to_number(string text, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(expression);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            var actual = (double)XLWorkbook.EvaluateExprCurrent($"NUMBERVALUE(\"{text}\")");
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [Test]
+        [SetCulture("de-DE")]
+        public void NumberValue_takes_separators_from_current_culture()
+        {
+            var actual = (double)XLWorkbook.EvaluateExprCurrent("NUMBERVALUE(\"10.0.00.0,25\")");
+            Assert.AreEqual(100000.25, actual);
+        }
+
+        [TestCase("1,234.56", ".", ",", 1234.56d)]
+        [TestCase("1.234,56", ",", ".", 1234.56d)]
+        [TestCase("1.234,56", ",ABC", ".DEF", 1234.56d)] // Only first char of separators is used
+        public void NumberValue_optional_parameters_can_set_decimal_and_group_separators(string text, string @decimal, string group, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr($"NUMBERVALUE(\"{text}\",\"{@decimal}\",\"{group}\")");
+            Assert.AreEqual(expectedResult, actual);
         }
 
         [TestCase("NUMBERVALUE(\"123.45\", \".\", \".\")")] // Group separator same as decimal separator
@@ -631,7 +652,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("NUMBERVALUE(\"-1.234567890E+308\")")] // Too large (negative)
         [TestCase("NUMBERVALUE(\"1.234567890E-310\")")] // Too tiny
         [TestCase("NUMBERVALUE(\"-1.234567890E-310\")")] // Too tiny (negative)
-        public void NumberValue_Invalid(string expression)
+        [TestCase("NUMBERVALUE(\"1\",\".\",\"\")")] // Empty group separator
+        [TestCase("NUMBERVALUE(\"1\",\"\",\",\")")] // Empty decimal separators
+        public void NumberValue_returns_error_on_unparsable_texts_out_of_range(string expression)
         {
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr(expression));
         }
