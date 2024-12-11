@@ -592,18 +592,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"TIME({hour},{minute},{second})"));
         }
 
-        [Test]
-        public void TimeValue1()
+        [TestCase("2:24 AM", ExpectedResult = 0.1)]
+        [TestCase("August 22, 2008 6:35 AM", ExpectedResult = 0.27430555555555558)]
+        [DefaultFloatingPointTolerance(XLHelper.Epsilon)]
+        public double TimeValue_returns_time_component_of_serial_date_extracted_from_text(string time)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("TimeValue(\"2:24 AM\")");
-            Assert.IsTrue(XLHelper.AreEqual(0.1, actual));
+            return (double)XLWorkbook.EvaluateExprCurrent($"TIMEVALUE(\"{time}\")");
+        }
+
+        [TestCase("\"10.5\"")]
+        [TestCase("\"0\"")]
+        public void TimeValue_doesnt_coerce_number_in_a_text_to_a_time(string numberText)
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExprCurrent($"TIMEVALUE({numberText})"));
+        }
+
+        [TestCase("TRUE")]
+        [TestCase("FALSE")]
+        [TestCase("0.25")]
+        [TestCase("TIME(18,25,48)")]
+        public void TimeValue_returns_coercion_error_on_non_text(string nonText)
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExprCurrent($"TIMEVALUE({nonText})"));
         }
 
         [Test]
-        public void TimeValue2()
+        public void TimeValue_propagates_error()
         {
-            var actual = (double)XLWorkbook.EvaluateExpr("TimeValue(\"22-Aug-2008 6:35 AM\")");
-            Assert.IsTrue(XLHelper.AreEqual(0.27430555555555558, actual));
+            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExprCurrent("TIMEVALUE(#DIV/0!)"));
         }
 
         [Test]

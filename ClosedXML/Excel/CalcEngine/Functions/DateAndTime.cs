@@ -16,6 +16,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(FunctionRegistry ce)
         {
             var dateValue = DateValue;
+            var timeValue = TimeValue;
             ce.RegisterFunction("DATE", 3, 3, Adapt(Date), FunctionFlags.Scalar); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, 3, Adapt(DateDif), FunctionFlags.Scalar); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, 1, Adapt(dateValue), FunctionFlags.Scalar); // Converts a date in the form of text to a serial number
@@ -32,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("NOW", 0, 0, Adapt(Now), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of the current date and time
             ce.RegisterFunction("SECOND", 1, 1, Adapt(Second), FunctionFlags.Scalar); // Converts a serial number to a second
             ce.RegisterFunction("TIME", 3, 3, Adapt(Time), FunctionFlags.Scalar); // Returns the serial number of a particular time
-            ce.RegisterFunction("TIMEVALUE", 1, Timevalue); // Converts a time in the form of text to a serial number
+            ce.RegisterFunction("TIMEVALUE", 1, 1, Adapt(timeValue), FunctionFlags.Scalar); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, 0, Adapt(Today), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of today's date
             ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, AdaptLastOptional(WeekNum, 1), FunctionFlags.Scalar); // Converts a serial number to a number representing where the week falls numerically with a year
@@ -390,11 +391,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
         }
 
-        private static object Timevalue(List<Expression> p)
+        private static ScalarValue TimeValue(CalcContext ctx, ScalarValue value)
         {
-            var date = (DateTime)p[0];
+            if (!value.TryPickText(out var text, out var error))
+                return error;
 
-            return (DateTime.MinValue + date.TimeOfDay).ToOADate();
+            if (!ScalarValue.ToSerialDateTime(text, ctx.Culture, out var serialDateTime))
+                return XLError.IncompatibleValue;
+
+            return serialDateTime % 1.0;
         }
 
         private static ScalarValue Today()
