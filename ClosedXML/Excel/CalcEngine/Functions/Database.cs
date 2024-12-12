@@ -1,7 +1,3 @@
-#nullable disable
-
-using System.Collections.Generic;
-
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Database
@@ -20,16 +16,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("DSUM", 1, Dsum); // Adds the numbers in the field column of records in the database that match the criteria
             //ce.RegisterFunction("DVAR", 1, Dvar); // Estimates variance based on a sample from selected database entries
             //ce.RegisterFunction("DVARP", 1, Dvarp); // Calculates variance based on the entire population of selected database entries
-        }
-
-        private static object Daverage(List<Expression> p)
-        {
-            var b = true;
-            foreach (var v in p)
-            {
-                b = b && (bool)v;
-            }
-            return b;
         }
     }
 }

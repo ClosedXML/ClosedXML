@@ -978,8 +978,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (value.TryPickScalar(out var scalar, out var collection))
                 return scalar.ToNumber(ctx.Culture);
 
-            if (collection.TryPickT0(out _, out var reference))
-                throw new NotImplementedException("Array formulas not implemented.");
+            // When user specifies array as an argument in an array formula for a scalar function, use [0,0]
+            if (collection.TryPickT0(out var array, out var reference))
+                return array[0, 0].ToNumber(ctx.Culture);
 
             if (reference.TryGetSingleCellValue(out var scalarValue, ctx))
                 return scalarValue.ToNumber(ctx.Culture);

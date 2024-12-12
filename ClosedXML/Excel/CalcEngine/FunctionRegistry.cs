@@ -45,16 +45,6 @@ namespace ClosedXML.Excel.CalcEngine
             _func.Add(functionName, new FunctionDefinition(minParams, maxParams, fn, flags, allowRanges, markedParams));
         }
 
-        public void RegisterFunction(string functionName, int paramCount, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
-        {
-            RegisterFunction(functionName, paramCount, paramCount, fn, allowRanges, markedParams);
-        }
-
-        public void RegisterFunction(string functionName, int minParams, int maxParams, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
-        {
-            _func.Add(functionName, new FunctionDefinition(minParams, maxParams, fn, allowRanges, markedParams));
-        }
-
         public bool TryGetFunc(string name, out int paramMin, out int paramMax)
         {
             if (_func.TryGetValue(name, out var func))

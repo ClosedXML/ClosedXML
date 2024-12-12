@@ -1,6 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Exceptions;
@@ -36,18 +35,13 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Parses a string into an <see cref="Expression"/>.
+        /// Parses a string into an <see cref="Formula"/>.
         /// </summary>
         /// <param name="expression">String to parse.</param>
-        /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
+        /// <returns>An formula that can be evaluated.</returns>
         public Formula Parse(string expression)
         {
             return _parser.GetAst(expression, isA1: true);
-        }
-
-        public Formula ParseR1C1(string expression)
-        {
-            return _parser.GetAst(expression, isA1: false);
         }
 
         /// <summary>
@@ -395,12 +389,4 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue> arg);
-
-    /// <summary>
-    /// Delegate that represents CalcEngine functions.
-    /// </summary>
-    /// <param name="parms">List of <see cref="Expression"/> objects that represent the
-    /// parameters to be used in the function call.</param>
-    /// <returns>The function result.</returns>
-    internal delegate object LegacyCalcEngineFunction(List<Expression> parms);
 }
