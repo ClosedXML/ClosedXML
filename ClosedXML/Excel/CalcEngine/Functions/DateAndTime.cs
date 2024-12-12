@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -26,7 +25,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("EDATE", 2, 2, Adapt(EDate), FunctionFlags.Scalar); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, 2, Adapt(Eomonth), FunctionFlags.Scalar); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, 1, Adapt(Hour), FunctionFlags.Scalar); // Converts a serial number to an hour
-            ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
+            ce.RegisterFunction("ISOWEEKNUM", 1, 1, Adapt(IsoWeekNum), FunctionFlags.Scalar | FunctionFlags.Future); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, 1, Adapt(Minute), FunctionFlags.Scalar); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, 1, Adapt(Month), FunctionFlags.Scalar); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, AdaptLastOptional(NetWorkDays), FunctionFlags.Range, AllowRange.Only, 2); // Returns the number of whole workdays between two dates
@@ -35,7 +34,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TIME", 3, 3, Adapt(Time), FunctionFlags.Scalar); // Returns the serial number of a particular time
             ce.RegisterFunction("TIMEVALUE", 1, 1, Adapt(timeValue), FunctionFlags.Scalar); // Converts a time in the form of text to a serial number
             ce.RegisterFunction("TODAY", 0, 0, Adapt(Today), FunctionFlags.Scalar | FunctionFlags.Volatile); // Returns the serial number of today's date
-            ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar, AllowRange.None); // Converts a serial number to a day of the week
+            ce.RegisterFunction("WEEKDAY", 1, 2, AdaptLastOptional(Weekday), FunctionFlags.Scalar); // Converts a serial number to a day of the week
             ce.RegisterFunction("WEEKNUM", 1, 2, AdaptLastOptional(WeekNum, 1), FunctionFlags.Scalar); // Converts a serial number to a number representing where the week falls numerically with a year
             ce.RegisterFunction("WORKDAY", 2, 3, AdaptLastOptional(Workday), FunctionFlags.Range, AllowRange.Only, 2); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, 1, Adapt(Year), FunctionFlags.Scalar); // Converts a serial number to a year
@@ -296,22 +295,44 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return GetTimeComponent(ctx, serialTime, static d => d.Hour);
         }
 
-        // http://stackoverflow.com/questions/11154673/get-the-correct-week-number-of-a-given-date
-        private static object IsoWeekNum(List<Expression> p)
+        private static ScalarValue IsoWeekNum(CalcContext ctx, double serialDateTime)
         {
-            var date = (DateTime)p[0];
+            // Uses ISO week algorithm from Wikipedia
+            if (!TryGetDate(ctx, serialDateTime, out var serialDate))
+                return XLError.NumberInvalid;
 
-            // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll
-            // be the same week# as whatever Thursday, Friday or Saturday are,
-            // and we always get those right
-            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
-            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            var date = DateParts.From(ctx, serialDate);
+
+            // Normalized to Monday = 1, Sunday = 7
+            var dayOfWeek = ((int)date.DayOfWeek + 6) % 7 + 1;
+            var week = (10 + date.DayOfYear - dayOfWeek) / 7;
+
+            if (week < 1)
+                return Weeks(date.Year - 1);
+
+            if (week > Weeks(date.Year))
+                return 1;
+
+            return week;
+
+            // Returns day of a week on the last day of a year - Dec 31
+            static int DayOfWeekDec31(int year)
             {
-                date = date.AddDays(3);
+                return (year + year / 4 - year / 100 + year / 400) % 7;
             }
 
-            // Return the week of our adjusted day
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            static int Weeks(int year)
+            {
+                // Year ends on Thursday
+                if (DayOfWeekDec31(year) == 4)
+                    return 53;
+
+                // Previous year ends on Wednesday
+                if (DayOfWeekDec31(year - 1) == 3)
+                    return 53;
+
+                return 52;
+            }
         }
 
         private static bool IsWeekend(int date)
@@ -490,13 +511,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (firstDayOfWeek < 0)
                 return XLError.NumberInvalid;
 
+            // Use existing function
+            if (flag == 21)
+                return IsoWeekNum(ctx, serialDateTime);
+
             // When checking all values against Excel, there were two cases when week is 0
             if (serialDate == 0 && firstDayOfWeek == DayOfWeek.Sunday)
                 return 0;
-
-            // Reduce ISO problem to: Find week number of thursday when week starts on monday.
-            if (flag == 21)
-                serialDate = GetThursdayOfWeek(serialDate);
 
             var date = DateParts.From(ctx, serialDate);
             var startOfYearDate = (int)(new DateTime(date.Year, 1, 1).ToSerialDateTime());
@@ -509,34 +530,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (startOfWeekAdjust > 0)
                 startOfWeekAdjust -= 7;
 
-            // Thursday happened in last year, so move us one week ahead. Matches Excel, don't question it.
-            if (flag == 21 && startOfWeekAdjust < -3)
-                startOfWeekAdjust += 7;
-
             var firstWeekStartDate = startOfYearDate + startOfWeekAdjust;
             var weekNum = (serialDate - firstWeekStartDate) / 7;
             return weekNum + 1;
-
-            // In ISO, week starts at money and you need to find thursday for the serialDate. Week
-            // number is then week number of the Thursday. That means sometimes end of the year
-            // dates (e.g. 1907-12-30) can return week number from next year (e.g. 1), despite
-            // being at the end of the year. The benefit is that all weeks are 7 days long.
-            static int GetThursdayOfWeek(int serialDate)
-            {
-                var dayOfWeek = (DayOfWeek)((serialDate + 6) % 7);
-                var daysToThursday = dayOfWeek switch
-                {
-                    DayOfWeek.Sunday => -3,
-                    DayOfWeek.Monday => 3,
-                    DayOfWeek.Tuesday => 2,
-                    DayOfWeek.Wednesday => 1,
-                    DayOfWeek.Thursday => 0,
-                    DayOfWeek.Friday => -1,
-                    DayOfWeek.Saturday => -2,
-                    _ => throw new UnreachableException()
-                };
-                return serialDate + daysToThursday;
-            }
         }
 
         private static ScalarValue Workday(CalcContext ctx, ScalarValue startDateScalar, ScalarValue dayOffsetValue, AnyValue holidays)
@@ -770,6 +766,20 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             private static readonly DateParts Feb29 = new(1900, 2, 29);
 
             internal int SerialDate => (int)(new DateTime(Year, Month, 1).ToSerialDateTime()) + Day - 1;
+
+            public DayOfWeek DayOfWeek => (DayOfWeek)((WeekdayCalc(SerialDate) + 7 - 1) % 7);
+
+            /// <summary>
+            /// Return day of year, starting from 1 to 365/366. Counts 1900 as 366 leap year.
+            /// </summary>
+            public int DayOfYear
+            {
+                get
+                {
+                    var startOfYear = new DateParts(Year, 1, 1);
+                    return SerialDate - startOfYear.SerialDate + 1;
+                }
+            }
 
             internal static DateParts From(CalcContext ctx, int serialDate)
             {

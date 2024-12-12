@@ -427,14 +427,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("MONTH(DATE(9999,12,31) + 1)"));
         }
 
-        [Test]
-        public void IsoWeekNum()
+        [TestCase(1900, 1, 0, ExpectedResult = 52)]
+        [TestCase(1900, 1, 1, ExpectedResult = 52)]
+        [TestCase(1900, 1, 2, ExpectedResult = 1)]
+        [TestCase(1900, 2, 28, ExpectedResult = 9)]
+        [TestCase(1900, 2, 29, ExpectedResult = 9)]
+        [TestCase(1900, 3, 1, ExpectedResult = 9)]
+        [TestCase(2012, 1, 2, ExpectedResult = 1)]
+        [TestCase(2012, 12, 31, ExpectedResult = 1)]
+        [TestCase(2012, 3, 9, ExpectedResult = 10)]
+        [TestCase(2014, 12, 12, ExpectedResult = 50)]
+        [TestCase(9999, 12, 31, ExpectedResult = 52)]
+        public double IsoWeekNum(int year, int month, int day)
         {
-            var actual = XLWorkbook.EvaluateExpr("ISOWEEKNUM(DATEVALUE(\"2012-3-9\"))");
-            Assert.AreEqual(10, actual);
-
-            actual = XLWorkbook.EvaluateExpr("ISOWEEKNUM(DATE(2012,12,31))");
-            Assert.AreEqual(1, actual);
+            return (double)XLWorkbook.EvaluateExpr($"ISOWEEKNUM(DATE({year},{month},{day}))");
         }
 
         [Test]
