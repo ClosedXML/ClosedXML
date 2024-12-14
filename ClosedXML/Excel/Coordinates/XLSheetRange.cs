@@ -101,19 +101,41 @@ namespace ClosedXML.Excel
         /// <exception cref="FormatException">If the input doesn't match expected grammar.</exception>
         public static XLSheetRange Parse(ReadOnlySpan<char> input)
         {
+            if (!TryParse(input, out var area))
+                throw new FormatException($"Area reference doesn't have correct format: '{input.ToString()}'.");
+
+            return area;
+        }
+
+        /// <summary>
+        /// Try to parse area. Doesn't accept any extra whitespace anywhere in the input. Letters
+        /// must be upper case. Area can specify one corner (<c>A1</c>) or both corners (<c>A1:B3</c>).
+        /// </summary>
+        public static bool TryParse(ReadOnlySpan<char> input, out XLSheetRange area)
+        {
+            area = default;
             var separatorIndex = input.IndexOf(':');
             if (separatorIndex == -1)
             {
-                var sheetPoint = XLSheetPoint.Parse(input);
-                return new XLSheetRange(sheetPoint, sheetPoint);
+                if (!XLSheetPoint.TryParse(input, out var sheetPoint))
+                {
+                    return false;
+                }
+
+                area = new XLSheetRange(sheetPoint, sheetPoint);
+                return true;
             }
 
-            var first = XLSheetPoint.Parse(input.Slice(0, separatorIndex));
-            var second = XLSheetPoint.Parse(input.Slice(separatorIndex + 1, input.Length - separatorIndex - 1));
-            if (first.Column > second.Column || first.Row > second.Row)
-                throw new FormatException($"First reference must have smaller column and row ('{input.ToString()}')");
+            if (!XLSheetPoint.TryParse(input[..separatorIndex], out var first) ||
+                !XLSheetPoint.TryParse(input[(separatorIndex + 1)..], out var second) ||
+                first.Column > second.Column || first.Row > second.Row)
+            {
+                area = default;
+                return false;
+            }
 
-            return new XLSheetRange(first, second);
+            area = new XLSheetRange(first, second);
+            return true;
         }
 
         /// <summary>
