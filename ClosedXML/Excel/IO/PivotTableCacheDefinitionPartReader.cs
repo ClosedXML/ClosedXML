@@ -53,10 +53,7 @@ namespace ClosedXML.Excel.IO
                         }
                     }
 
-                    if (cacheDefinition.SaveData?.Value is { } saveSourceData)
-                    {
-                        pivotCache.SaveSourceData = saveSourceData;
-                    }
+                    pivotCache.SaveSourceData = cacheDefinition.SaveData?.Value ?? true;
                 }
             }
         }
