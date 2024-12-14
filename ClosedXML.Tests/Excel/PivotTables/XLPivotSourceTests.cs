@@ -18,10 +18,11 @@ internal class XLPivotSourceTests
         // PivotTable-AllSources-external-data.xlsx. The connection uses an absolute path, so it
         // needs to be updated according to real directory. Doesn't affect CI, because connection
         // is not actually used to get data.
+        // Scenario doesn't throw on refresh, but it incomplete. The cache source is correct though.
         //
         // Open the workbook and click Pivot Table Analyze - Refresh - Refresh All. It shouldn't
         // report an error.
-        // TODO:Test file currently doesn't contain consolidate and scenario cache source. Will be added in subsequent PR
+        // TODO:Test file currently doesn't contain consolidate cache source. Will be added in subsequent PR
         TestHelper.LoadSaveAndCompare(
             @"Other\PivotTable\Sources\PivotTable-AllSources-input.xlsx",
             @"Other\PivotTable\Sources\PivotTable-AllSources-output.xlsx");

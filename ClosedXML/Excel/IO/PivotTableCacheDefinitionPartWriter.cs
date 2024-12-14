@@ -93,6 +93,10 @@ namespace ClosedXML.Excel.IO
                 cacheSource.Type = SourceValues.External;
                 cacheSource.ConnectionId = connectionSource.ConnectionId;
             }
+            else if (pivotCache.Source is XLPivotSourceScenario)
+            {
+                cacheSource.Type = SourceValues.Scenario;
+            }
             else
             {
                 throw new UnreachableException();

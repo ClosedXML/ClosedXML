@@ -114,7 +114,7 @@ namespace ClosedXML.Excel.IO
 
             if (sourceType.Equals(SourceValues.Scenario))
             {
-                throw new NotImplementedException();
+                return new XLPivotSourceScenario();
             }
 
             throw PartStructureException.InvalidAttributeValue(sourceType.Value);
