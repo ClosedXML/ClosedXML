@@ -5,7 +5,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
@@ -70,31 +70,44 @@ namespace ClosedXML.Excel.IO
 
             // Begin CacheSource
             var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
-            var worksheetSource = new WorksheetSource();
 
-            var xlCacheSource = (XLPivotSourceReference)pivotCache.Source;
-            switch (xlCacheSource.SourceType)
+            if (pivotCache.Source is XLPivotSourceReference localSource)
             {
-                case XLPivotTableSourceType.Area:
-                    var bookArea = xlCacheSource.Area!.Value;
-                    worksheetSource.Name = null;
-                    worksheetSource.Reference = bookArea.Area.ToString();
+                var worksheetSource = new WorksheetSource();
+                switch (localSource.SourceType)
+                {
+                    case XLPivotTableSourceType.Area:
+                        var bookArea = localSource.Area!.Value;
+                        worksheetSource.Name = null;
+                        worksheetSource.Reference = bookArea.Area.ToString();
 
-                    // Do not quote worksheet name with whitespace here - issue #955
-                    worksheetSource.Sheet = bookArea.Name;
-                    break;
+                        // Do not quote worksheet name with whitespace here - issue #955
+                        worksheetSource.Sheet = bookArea.Name;
+                        break;
 
-                case XLPivotTableSourceType.Named:
-                    worksheetSource.Name = xlCacheSource.Name!;
-                    worksheetSource.Reference = null;
-                    worksheetSource.Sheet = null;
-                    break;
+                    case XLPivotTableSourceType.Named:
+                        worksheetSource.Name = localSource.Name!;
+                        worksheetSource.Reference = null;
+                        worksheetSource.Sheet = null;
+                        break;
 
-                default:
-                    throw new NotSupportedException($"Pivot table source type {xlCacheSource.SourceType} is not supported.");
+                    default:
+                        throw new NotSupportedException($"Pivot table source type {localSource.SourceType} is not supported.");
+                }
+                cacheSource.AppendChild(worksheetSource);
+            }
+            else if (pivotCache.Source is XLPivotSourceExternalWorkbook externalSource)
+            {
+                var worksheetSource = externalSource.UsesName
+                    ? new WorksheetSource { Id = externalSource.RelId, Name = externalSource.TableOrName }
+                    : new WorksheetSource { Id = externalSource.RelId, Sheet = externalSource.Area.Value.Name, Reference = externalSource.Area.Value.Area.ToString() };
+                cacheSource.AppendChild(worksheetSource);
+            }
+            else
+            {
+                throw new UnreachableException();
             }
 
-            cacheSource.AppendChild(worksheetSource);
             pivotCacheDefinition.CacheSource = cacheSource;
 
             // End CacheSource

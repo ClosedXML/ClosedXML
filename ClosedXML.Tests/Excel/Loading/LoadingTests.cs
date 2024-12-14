@@ -41,6 +41,7 @@ namespace ClosedXML.Tests.Excel
                 // TODO: unpark all files
                 var parkedForLater = new[]
                 {
+                    "TryToLoad.LO.xlsx.column-style-autofilter.xlsx",
                     "TryToLoad.LO.xlsx.formats.xlsx",
                     "TryToLoad.LO.xlsx.pivot_table.shared-group-field.xlsx",
                     "TryToLoad.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",

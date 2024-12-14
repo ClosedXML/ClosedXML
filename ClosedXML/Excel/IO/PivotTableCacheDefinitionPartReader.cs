@@ -18,46 +18,39 @@ namespace ClosedXML.Excel.IO
                 if (cacheDefinition.CacheSource is not { } cacheSource)
                     throw PartStructureException.RequiredElementIsMissing("cacheSource");
 
-                if (cacheSource.WorksheetSource is not null)
+                var pivotSourceReference = ParsePivotSourceReference(cacheSource);
+                var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
+
+                // If WorkbookCacheRelId already has a value, it means the pivot source is being reused
+                if (string.IsNullOrWhiteSpace(pivotCache.WorkbookCacheRelId))
                 {
-                    var pivotSourceReference = ParsePivotSourceReference(cacheSource);
-                    if (pivotSourceReference is null)
-                        // We don't support external sources
-                        continue;
-
-                    var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
-
-                    // If WorkbookCacheRelId already has a value, it means the pivot source is being reused
-                    if (string.IsNullOrWhiteSpace(pivotCache.WorkbookCacheRelId))
-                    {
-                        pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
-                    }
-
-                    if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
-                    {
-                        pivotCache.ItemsToRetainPerField = missingItemsLimit switch
-                        {
-                            0 => XLItemsToRetain.None,
-                            XLHelper.MaxRowNumber => XLItemsToRetain.Max,
-                            _ => XLItemsToRetain.Automatic,
-                        };
-                    }
-
-                    if (cacheDefinition.CacheFields is { } cacheFields)
-                    {
-                        ReadCacheFields(cacheFields, pivotCache);
-                        if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
-                        {
-                            ReadRecords(recordsPart, pivotCache);
-                        }
-                    }
-
-                    pivotCache.SaveSourceData = cacheDefinition.SaveData?.Value ?? true;
+                    pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
                 }
+
+                if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
+                {
+                    pivotCache.ItemsToRetainPerField = missingItemsLimit switch
+                    {
+                        0 => XLItemsToRetain.None,
+                        XLHelper.MaxRowNumber => XLItemsToRetain.Max,
+                        _ => XLItemsToRetain.Automatic,
+                    };
+                }
+
+                if (cacheDefinition.CacheFields is { } cacheFields)
+                {
+                    ReadCacheFields(cacheFields, pivotCache);
+                    if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
+                    {
+                        ReadRecords(recordsPart, pivotCache);
+                    }
+                }
+
+                pivotCache.SaveSourceData = cacheDefinition.SaveData?.Value ?? true;
             }
         }
 
-        internal static IXLPivotSource? ParsePivotSourceReference(CacheSource cacheSource)
+        internal static IXLPivotSource ParsePivotSourceReference(CacheSource cacheSource)
         {
             // Cache source has several types. Each has a specific required format. Do not use different
             // combinations, Excel will crash or at least try to repair
@@ -86,7 +79,7 @@ namespace ClosedXML.Excel.IO
                 if (sheetSource.Name?.Value is { } tableOrName)
                 {
                     if (sheetSource.Id?.Value is { } externalWorkbookRelId)
-                        return null;
+                        return new XLPivotSourceExternalWorkbook(externalWorkbookRelId, tableOrName);
 
                     return new XLPivotSourceReference(tableOrName);
                 }
@@ -97,7 +90,7 @@ namespace ClosedXML.Excel.IO
                 {
                     var area = new XLBookArea(sheetName, sheetArea);
                     if (sheetSource.Id?.Value is { } externalWorkbookRelId)
-                        return null;
+                        return new XLPivotSourceExternalWorkbook(externalWorkbookRelId, area);
 
                     // area is in this workbook
                     return new XLPivotSourceReference(area);
@@ -111,12 +104,12 @@ namespace ClosedXML.Excel.IO
                 throw new NotImplementedException();
             }
 
-            if (sourceType.Equals(SourceValues.External))
+            if (sourceType.Equals(SourceValues.Consolidation))
             {
                 throw new NotImplementedException();
             }
 
-            if (sourceType.Equals(SourceValues.External))
+            if (sourceType.Equals(SourceValues.Scenario))
             {
                 throw new NotImplementedException();
             }
