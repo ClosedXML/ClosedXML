@@ -101,7 +101,10 @@ namespace ClosedXML.Excel.IO
 
             if (sourceType.Equals(SourceValues.External))
             {
-                throw new NotImplementedException();
+                if (cacheSource.ConnectionId?.Value is not { } connectionId)
+                    throw PartStructureException.MissingAttribute("connectionId");
+
+                return new XLPivotSourceConnection(connectionId);
             }
 
             if (sourceType.Equals(SourceValues.Consolidation))

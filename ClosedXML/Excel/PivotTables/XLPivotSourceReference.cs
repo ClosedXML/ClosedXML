@@ -4,8 +4,8 @@ using System.Diagnostics;
 namespace ClosedXML.Excel
 {
     /// <summary>
-    /// A reference to the pivot source. The source might exist or not, that
-    /// is evaluated during pivot cache record refresh.
+    /// A reference to the source data of <see cref="XLPivotCache"/>. The source might exist
+    /// or not, that is evaluated during pivot cache record refresh.
     /// </summary>
     internal sealed class XLPivotSourceReference : IXLPivotSource
     {

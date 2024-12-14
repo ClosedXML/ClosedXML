@@ -11,9 +11,16 @@ internal class XLPivotSourceTests
     [Test]
     public void Can_load_and_save_all_source_types()
     {
-        // Teh test files contains all possible pivot cache sources. The output is mangled, but
+        // The test files contains all possible pivot cache sources. The output is mangled, but
         // Excel can open it and use refresh on each pivot table. External workbook is in the same
-        // directory: PivotTable-AllSources-external-data.xlsx
+        // directory: PivotTable-AllSources-external-data.xlsx.
+        // The pivot table that uses connection has a connection to the external workbook
+        // PivotTable-AllSources-external-data.xlsx. The connection uses an absolute path, so it
+        // needs to be updated according to real directory. Doesn't affect CI, because connection
+        // is not actually used to get data.
+        //
+        // Open the workbook and click Pivot Table Analyze - Refresh - Refresh All. It shouldn't
+        // report an error.
         // TODO:Test file currently doesn't contain consolidate and scenario cache source. Will be added in subsequent PR
         TestHelper.LoadSaveAndCompare(
             @"Other\PivotTable\Sources\PivotTable-AllSources-input.xlsx",

@@ -103,6 +103,11 @@ namespace ClosedXML.Excel.IO
                     : new WorksheetSource { Id = externalSource.RelId, Sheet = externalSource.Area.Value.Name, Reference = externalSource.Area.Value.Area.ToString() };
                 cacheSource.AppendChild(worksheetSource);
             }
+            else if (pivotCache.Source is XLPivotSourceConnection connectionSource)
+            {
+                cacheSource.Type = SourceValues.External;
+                cacheSource.ConnectionId = connectionSource.ConnectionId;
+            }
             else
             {
                 throw new UnreachableException();

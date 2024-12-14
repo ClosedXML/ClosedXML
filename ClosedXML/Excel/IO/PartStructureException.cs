@@ -36,6 +36,11 @@ namespace ClosedXML.Excel.IO
             return new PartStructureException("XML doesn't contain a required attribute.");
         }
 
+        internal static Exception MissingAttribute(string attributeName)
+        {
+            return new PartStructureException($"XML doesn't contain a required attribute '{attributeName}'.");
+        }
+
         internal static Exception IncorrectAttributeFormat()
         {
             return new PartStructureException("The attribute has a value in an incorrect format.");
