@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             return new XLSheetRange(point);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is XLSheetPoint point && Equals(point);
         }
@@ -75,14 +75,28 @@ namespace ClosedXML.Excel
         /// <exception cref="FormatException">If the input doesn't match expected grammar.</exception>
         public static XLSheetPoint Parse(ReadOnlySpan<char> input)
         {
+            if (!TryParse(input, out var point))
+                throw new FormatException($"Sheet point doesn't have correct format: '{input.ToString()}'.");
+
+            return point;
+        }
+
+        /// <summary>
+        /// Try to parse sheet point. Doesn't accept any extra whitespace anywhere in the input.
+        /// Letters must be upper case.
+        /// </summary>
+        public static bool TryParse(ReadOnlySpan<char> input, out XLSheetPoint point)
+        {
+            point = default;
+
             // Don't reuse inefficient logic from XLAddress
             if (input.Length < 2)
-                throw new FormatException($"Length is less than two ('{input.ToString()}').");
+                return false;
 
             var i = 0;
             var c = input[i++];
             if (!IsLetter(c))
-                throw new FormatException($"Doesn't start with a letter ('{input.ToString()}').");
+                return false;
 
             var columnIndex = c - 'A' + 1;
             while (i < input.Length && IsLetter(c = input[i]))
@@ -92,17 +106,17 @@ namespace ClosedXML.Excel
             }
 
             if (i > 3)
-                throw new FormatException($"Input contains more than three letters ('{input.ToString()}').");
+                return false;
 
             if (i == input.Length)
-                throw new FormatException($"Input doesn't contain row number ('{input.ToString()}').");
+                return false;
 
             // Everything else must be digits
             c = input[i++];
 
             // First letter can't be 0
             if (c is < '1' or > '9')
-                throw new FormatException($"Row must start with a non-zero digit ('{input.ToString()}').");
+                return false;
 
             var rowIndex = c - '0';
             while (i < input.Length && IsDigit(c = input[i]))
@@ -112,12 +126,13 @@ namespace ClosedXML.Excel
             }
 
             if (i != input.Length)
-                throw new FormatException($"Input contains unexpected characters ('{input.ToString()}').");
+                return false;
 
             if (rowIndex > XLHelper.MaxRowNumber || columnIndex > XLHelper.MaxColumnNumber)
-                throw new FormatException($"Address out of bounds ('{input.ToString()}').");
+                return false;
 
-            return new XLSheetPoint(rowIndex, columnIndex);
+            point = new XLSheetPoint(rowIndex, columnIndex);
+            return true;
 
             static bool IsLetter(char c) => c is >= 'A' and <= 'Z';
             static bool IsDigit(char c) => c is >= '0' and <= '9';
