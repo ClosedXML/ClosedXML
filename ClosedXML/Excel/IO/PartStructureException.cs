@@ -41,9 +41,19 @@ namespace ClosedXML.Excel.IO
             return new PartStructureException("The attribute has a value in an incorrect format.");
         }
 
+        public static Exception IncorrectElementFormat(string elementName)
+        {
+            return new PartStructureException("The element doesn't have or misses child elements/attributes that are required by constrains of the workbook.");
+        }
+
         internal static Exception IncorrectAttributeValue()
         {
             return new PartStructureException("The value of attribute doesn't make sense with the rest of data of a workbook (e.g. reference that doesn't exist).");
+        }
+
+        internal static Exception InvalidAttributeValue(string attributeValue)
+        {
+            return new PartStructureException($"The value of attribute '{attributeValue}' is not valid value for the attribute.");
         }
 
         public static Exception RequiredElementIsMissing(string elementName)

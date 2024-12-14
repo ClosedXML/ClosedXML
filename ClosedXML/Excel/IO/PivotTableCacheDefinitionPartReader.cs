@@ -1,9 +1,8 @@
-﻿#nullable disable
-
 using System;
 using System.Linq;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -16,13 +15,13 @@ namespace ClosedXML.Excel.IO
             foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
             {
                 var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
-                if (cacheDefinition?.CacheSource is not { } cacheSource)
+                if (cacheDefinition.CacheSource is not { } cacheSource)
                     throw PartStructureException.RequiredElementIsMissing("cacheSource");
 
                 if (cacheSource.WorksheetSource is not null)
                 {
-                    var pivotSourceReference = ParsePivotSourceReference(pivotTableCacheDefinitionPart);
-                    if (pivotSourceReference == null)
+                    var pivotSourceReference = ParsePivotSourceReference(cacheSource);
+                    if (pivotSourceReference is null)
                         // We don't support external sources
                         continue;
 
@@ -58,36 +57,71 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        internal static IXLPivotSource ParsePivotSourceReference(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart)
+        internal static IXLPivotSource? ParsePivotSourceReference(CacheSource cacheSource)
         {
-            // TODO: Implement other sources besides worksheetSource
-            // But for now assume names and references point directly to a range
-            var wss = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource;
+            // Cache source has several types. Each has a specific required format. Do not use different
+            // combinations, Excel will crash or at least try to repair
+            // [worksheet] uses a worksheet source:
+            //   * An unnamed range in a sheet: Uses `sheet` and `ref`.
+            //   * An table: Uses `name` that contains a name of the table.
+            // [external]
+            //   * `connectionId` link to external relationships.
+            // [consolidation]
+            //  * uses consolidation tag and a list of range sets plus optionally
+            //    page fields to add a custom report fields that allow user to select
+            //    ranges from rangeSet to calculate values.
+            // [scenario]
+            //  * only type attribute tag is specified, no other value. Likely linked
+            //    through cacheField names (e.g. <cacheField name="$A$1 by">).
 
-            if (!String.IsNullOrEmpty(wss.Id))
+            // Not all sources are supported, but at least pipe the data through so the load/save works
+            IEnumValue sourceType = cacheSource.Type?.Value ?? throw PartStructureException.MissingAttribute();
+            if (sourceType.Equals(SourceValues.Worksheet))
             {
-                var externalRelationship = pivotTableCacheDefinitionPart.ExternalRelationships.FirstOrDefault(er => er.Id.Equals(wss.Id));
-                if (externalRelationship?.IsExternal ?? false)
+                var sheetSource = cacheSource.WorksheetSource;
+                if (sheetSource is null)
+                    throw PartStructureException.ExpectedElementNotFound("'worksheetSource' element is required for type 'worksheet'.");
+
+                // If the source is a defined name, it must be a single area reference
+                if (sheetSource.Name?.Value is { } tableOrName)
                 {
-                    // We don't support external sources
-                    return null;
+                    if (sheetSource.Id?.Value is { } externalWorkbookRelId)
+                        return null;
+
+                    return new XLPivotSourceReference(tableOrName);
                 }
+
+                if (sheetSource.Sheet?.Value is { } sheetName &&
+                    sheetSource.Reference?.Value is { } areaRef &&
+                    XLSheetRange.TryParse(areaRef.AsSpan(), out var sheetArea))
+                {
+                    var area = new XLBookArea(sheetName, sheetArea);
+                    if (sheetSource.Id?.Value is { } externalWorkbookRelId)
+                        return null;
+
+                    // area is in this workbook
+                    return new XLPivotSourceReference(area);
+                }
+
+                throw PartStructureException.IncorrectElementFormat("worksheetSource");
             }
 
-            // Source data of pivot cache are from a table or a named range.
-            if (wss.Name is not null)
+            if (sourceType.Equals(SourceValues.External))
             {
-                return new XLPivotSourceReference(wss.Name);
+                throw new NotImplementedException();
             }
 
-            // Source data of pivot cache are from an area of a workbook.
-            if (wss.Reference is not null && wss.Sheet is not null)
+            if (sourceType.Equals(SourceValues.External))
             {
-                var bookArea = new XLBookArea(wss.Sheet, XLSheetRange.Parse(wss.Reference));
-                return new XLPivotSourceReference(bookArea);
+                throw new NotImplementedException();
             }
 
-            throw PartStructureException.MissingAttribute();
+            if (sourceType.Equals(SourceValues.External))
+            {
+                throw new NotImplementedException();
+            }
+
+            throw PartStructureException.InvalidAttributeValue(sourceType.Value);
         }
 
         private static void ReadCacheFields(CacheFields cacheFields, XLPivotCache pivotCache)

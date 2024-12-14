@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -31,8 +30,8 @@ internal class PivotTableDefinitionPartReader
         {
             // If it's missing, find a 'similar' pivot cache, i.e. one that's based on the same source range/table
             pivotSource = workbook.PivotCachesInternal
-                .FirstOrDefault<XLPivotCache>(ps =>
-                    ps.Source.Equals(PivotTableCacheDefinitionPartReader.ParsePivotSourceReference(cache)));
+                .FirstOrDefault<XLPivotCache>(ps => cache.PivotCacheDefinition?.CacheSource is { } cacheSource &&
+                    ps.Source.Equals(PivotTableCacheDefinitionPartReader.ParsePivotSourceReference(cacheSource)));
         }
 
         var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
