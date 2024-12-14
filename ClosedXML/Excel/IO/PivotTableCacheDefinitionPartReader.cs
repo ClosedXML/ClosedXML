@@ -58,7 +58,7 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        internal static XLPivotSourceReference ParsePivotSourceReference(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart)
+        internal static IXLPivotSource ParsePivotSourceReference(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart)
         {
             // TODO: Implement other sources besides worksheetSource
             // But for now assume names and references point directly to a range

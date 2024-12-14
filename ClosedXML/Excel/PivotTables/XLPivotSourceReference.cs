@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     /// A reference to the pivot source. The source might exist or not, that
     /// is evaluated during pivot cache record refresh.
     /// </summary>
-    internal sealed class XLPivotSourceReference : IEquatable<XLPivotSourceReference>
+    internal sealed class XLPivotSourceReference : IXLPivotSource
     {
         internal XLPivotSourceReference(XLBookArea area)
         {
@@ -36,8 +36,12 @@ namespace ClosedXML.Excel
         /// </summary>
         internal string? Name { get; }
 
-        public bool Equals(XLPivotSourceReference other)
+        public bool Equals(IXLPivotSource otherSource)
         {
+            var other = otherSource as XLPivotSourceReference;
+            if (other is null)
+                return false;
+
             if (ReferenceEquals(this, other))
                 return true;
 
@@ -46,7 +50,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object? obj)
         {
-            return obj is XLPivotSourceReference other && Equals(other);
+            return obj is IXLPivotSource other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -61,7 +65,7 @@ namespace ClosedXML.Excel
         /// Try to determine actual area of the source reference in the
         /// workbook. Source reference might not be valid in the workbook.
         /// </summary>
-        internal bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
+        public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
         {
             if (Name is not null)
             {

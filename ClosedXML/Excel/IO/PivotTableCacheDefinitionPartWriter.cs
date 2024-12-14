@@ -72,10 +72,11 @@ namespace ClosedXML.Excel.IO
             var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
             var worksheetSource = new WorksheetSource();
 
-            switch (pivotCache.PivotSourceReference.SourceType)
+            var xlCacheSource = (XLPivotSourceReference)pivotCache.Source;
+            switch (xlCacheSource.SourceType)
             {
                 case XLPivotTableSourceType.Area:
-                    var bookArea = pivotCache.PivotSourceReference.Area!.Value;
+                    var bookArea = xlCacheSource.Area!.Value;
                     worksheetSource.Name = null;
                     worksheetSource.Reference = bookArea.Area.ToString();
 
@@ -84,13 +85,13 @@ namespace ClosedXML.Excel.IO
                     break;
 
                 case XLPivotTableSourceType.Named:
-                    worksheetSource.Name = pivotCache.PivotSourceReference.Name!;
+                    worksheetSource.Name = xlCacheSource.Name!;
                     worksheetSource.Reference = null;
                     worksheetSource.Sheet = null;
                     break;
 
                 default:
-                    throw new NotSupportedException($"Pivot table source type {pivotCache.PivotSourceReference.SourceType} is not supported.");
+                    throw new NotSupportedException($"Pivot table source type {xlCacheSource.SourceType} is not supported.");
             }
 
             cacheSource.AppendChild(worksheetSource);

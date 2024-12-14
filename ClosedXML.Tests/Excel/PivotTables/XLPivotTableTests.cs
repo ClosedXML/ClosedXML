@@ -814,9 +814,9 @@ namespace ClosedXML.Tests
 
             var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), matchingRange);
 
-            var pivotCache = (XLPivotCache)tablePivot1.PivotCache;
-            Assert.AreEqual(XLPivotTableSourceType.Named, pivotCache.PivotSourceReference.SourceType);
-            Assert.AreEqual("Test table", pivotCache.PivotSourceReference.Name);
+            var cacheSource = (XLPivotSourceReference)((XLPivotCache)tablePivot1.PivotCache).Source;
+            Assert.AreEqual(XLPivotTableSourceType.Named, cacheSource.SourceType);
+            Assert.AreEqual("Test table", cacheSource.Name);
         }
 
         [Test]

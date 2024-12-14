@@ -25,19 +25,19 @@ namespace ClosedXML.Excel
 
         internal XLPivotCache Add(XLBookArea area)
         {
-            var sourceReference = _workbook.TryGetTable(area, out var table)
+            var source = _workbook.TryGetTable(area, out var table)
                 ? new XLPivotSourceReference(table.Name)
                 : new XLPivotSourceReference(area);
 
-            var newPivotCache = new XLPivotCache(sourceReference, _workbook);
+            var newPivotCache = new XLPivotCache(source, _workbook);
             newPivotCache.Refresh();
             _caches.Add(newPivotCache);
             return newPivotCache;
         }
 
-        internal XLPivotCache Add(XLPivotSourceReference pivotSourceReference)
+        internal XLPivotCache Add(IXLPivotSource source)
         {
-            var newPivotCache = new XLPivotCache(pivotSourceReference, _workbook);
+            var newPivotCache = new XLPivotCache(source, _workbook);
             _caches.Add(newPivotCache);
             return newPivotCache;
         }
@@ -54,18 +54,19 @@ namespace ClosedXML.Excel
             if (_workbook.TryGetTable(area, out var table))
             {
                 // Table exists, so try to find it and match with the source reference.
+                var tableSource = new XLPivotSourceReference(table.Name);
                 foreach (var cache in _caches)
                 {
-                    if (XLHelper.NameComparer.Equals(cache.PivotSourceReference.Name, table.Name))
+                    if (cache.Source.Equals(tableSource))
                         return cache;
                 }
             }
 
             // Try to find a cache with area source.
+            var areaSource = new XLPivotSourceReference(area);
             foreach (var cache in _caches)
             {
-                var cacheArea = cache.PivotSourceReference.Area;
-                if (cacheArea is not null && cacheArea.Value == area)
+                if (cache.Source.Equals(areaSource))
                     return cache;
             }
 

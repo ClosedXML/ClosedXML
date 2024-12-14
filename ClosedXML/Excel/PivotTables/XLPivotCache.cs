@@ -17,12 +17,12 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly List<XLPivotCacheValues> _values = new();
 
-        internal XLPivotCache(XLPivotSourceReference reference, XLWorkbook workbook)
+        internal XLPivotCache(IXLPivotSource source, XLWorkbook workbook)
         {
             _workbook = workbook;
             Guid = Guid.NewGuid();
             SetExcelDefaults();
-            PivotSourceReference = reference;
+            Source = source;
         }
 
         #region IXLPivotCache members
@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
         public IXLPivotCache Refresh()
         {
             // Refresh can only happen if the reference is valid.
-            if (!PivotSourceReference.TryGetSource(_workbook, out var sheet, out var foundArea))
+            if (!Source.TryGetSource(_workbook, out var sheet, out var foundArea))
                 throw new InvalidReferenceException();
 
             Debug.Assert(sheet is not null && foundArea is not null);
@@ -100,7 +100,11 @@ namespace ClosedXML.Excel
 
         internal Guid Guid { get; }
 
-        internal XLPivotSourceReference PivotSourceReference { get; set; }
+        /// <summary>
+        /// A source of the in the cache. Can be used to refresh the cache. May not always be
+        /// available (e.g. external source)
+        /// </summary>
+        internal IXLPivotSource Source { get; set; }
 
         internal String? WorkbookCacheRelId { get; set; }
 
