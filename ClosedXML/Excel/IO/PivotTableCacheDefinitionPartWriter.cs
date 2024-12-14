@@ -73,27 +73,10 @@ namespace ClosedXML.Excel.IO
 
             if (pivotCache.Source is XLPivotSourceReference localSource)
             {
-                var worksheetSource = new WorksheetSource();
-                switch (localSource.SourceType)
-                {
-                    case XLPivotTableSourceType.Area:
-                        var bookArea = localSource.Area!.Value;
-                        worksheetSource.Name = null;
-                        worksheetSource.Reference = bookArea.Area.ToString();
-
-                        // Do not quote worksheet name with whitespace here - issue #955
-                        worksheetSource.Sheet = bookArea.Name;
-                        break;
-
-                    case XLPivotTableSourceType.Named:
-                        worksheetSource.Name = localSource.Name!;
-                        worksheetSource.Reference = null;
-                        worksheetSource.Sheet = null;
-                        break;
-
-                    default:
-                        throw new NotSupportedException($"Pivot table source type {localSource.SourceType} is not supported.");
-                }
+                // Do not quote worksheet name with whitespace here - issue #955
+                var worksheetSource = localSource.UsesName
+                    ? new WorksheetSource { Name = localSource.Name }
+                    : new WorksheetSource { Reference = localSource.Area.Value.Area.ToString(), Sheet = localSource.Area.Value.Name };
                 cacheSource.AppendChild(worksheetSource);
             }
             else if (pivotCache.Source is XLPivotSourceExternalWorkbook externalSource)

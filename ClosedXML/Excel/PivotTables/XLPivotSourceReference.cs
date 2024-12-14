@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel
 {
@@ -13,17 +14,20 @@ namespace ClosedXML.Excel
         {
             Area = area;
             Name = null;
-            SourceType = XLPivotTableSourceType.Area;
         }
 
         internal XLPivotSourceReference(string namedRangeOrTable)
         {
             Area = null;
             Name = namedRangeOrTable;
-            SourceType = XLPivotTableSourceType.Named;
         }
 
-        internal XLPivotTableSourceType SourceType { get; }
+        /// <summary>
+        /// Are source data in external workbook defined by a <see cref="Name"/> or by <see cref="Area">cell area</see>.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(Name))]
+        [MemberNotNullWhen(false, nameof(Area))]
+        internal bool UsesName => Name is not null;
 
         /// <summary>
         /// Book area with the source data. Either this or <see cref="Name"/> is set.

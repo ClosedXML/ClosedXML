@@ -144,17 +144,4 @@
         PivotStyleMedium8,
         PivotStyleMedium9
     }
-
-    internal enum XLPivotTableSourceType
-    {
-        /// <summary>
-        /// A range in a sheet of the workbook.
-        /// </summary>
-        Area,
-
-        /// <summary>
-        /// Book-scoped named range or a table.
-        /// </summary>
-        Named
-    }
 }
