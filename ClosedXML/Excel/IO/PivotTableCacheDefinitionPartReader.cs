@@ -15,7 +15,11 @@ namespace ClosedXML.Excel.IO
         {
             foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
             {
-                if (pivotTableCacheDefinitionPart?.PivotCacheDefinition?.CacheSource?.WorksheetSource != null)
+                var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
+                if (cacheDefinition?.CacheSource is not { } cacheSource)
+                    throw PartStructureException.RequiredElementIsMissing("cacheSource");
+
+                if (cacheSource.WorksheetSource is not null)
                 {
                     var pivotSourceReference = ParsePivotSourceReference(pivotTableCacheDefinitionPart);
                     if (pivotSourceReference == null)
@@ -30,20 +34,19 @@ namespace ClosedXML.Excel.IO
                         pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
                     }
 
-                    var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
-                    if (cacheDefinition.MissingItemsLimit is not null)
+                    if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
                     {
-                        if (cacheDefinition.MissingItemsLimit == 0U)
+                        if (missingItemsLimit == 0U)
                         {
                             pivotCache.ItemsToRetainPerField = XLItemsToRetain.None;
                         }
-                        else if (cacheDefinition.MissingItemsLimit == XLHelper.MaxRowNumber)
+                        else if (missingItemsLimit == XLHelper.MaxRowNumber)
                         {
                             pivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
                         }
                     }
 
-                    if (pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields is { } cacheFields)
+                    if (cacheDefinition.CacheFields is { } cacheFields)
                     {
                         ReadCacheFields(cacheFields, pivotCache);
                         if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
@@ -52,9 +55,9 @@ namespace ClosedXML.Excel.IO
                         }
                     }
 
-                    if (pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData != null)
+                    if (cacheDefinition.SaveData?.Value is { } saveSourceData)
                     {
-                        pivotCache.SaveSourceData = pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData.Value;
+                        pivotCache.SaveSourceData = saveSourceData;
                     }
                 }
             }

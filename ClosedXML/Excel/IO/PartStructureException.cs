@@ -45,5 +45,10 @@ namespace ClosedXML.Excel.IO
         {
             return new PartStructureException("The value of attribute doesn't make sense with the rest of data of a workbook (e.g. reference that doesn't exist).");
         }
+
+        public static Exception RequiredElementIsMissing(string elementName)
+        {
+            return new PartStructureException($"The XML schema requires an element '{elementName}', but is is not present.");
+        }
     }
 }
