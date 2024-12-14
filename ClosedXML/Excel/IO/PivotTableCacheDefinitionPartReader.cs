@@ -36,14 +36,12 @@ namespace ClosedXML.Excel.IO
 
                     if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
                     {
-                        if (missingItemsLimit == 0U)
+                        pivotCache.ItemsToRetainPerField = missingItemsLimit switch
                         {
-                            pivotCache.ItemsToRetainPerField = XLItemsToRetain.None;
-                        }
-                        else if (missingItemsLimit == XLHelper.MaxRowNumber)
-                        {
-                            pivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
-                        }
+                            0 => XLItemsToRetain.None,
+                            XLHelper.MaxRowNumber => XLItemsToRetain.Max,
+                            _ => XLItemsToRetain.Automatic,
+                        };
                     }
 
                     if (cacheDefinition.CacheFields is { } cacheFields)
