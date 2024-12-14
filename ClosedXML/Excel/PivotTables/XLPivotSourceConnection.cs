@@ -27,6 +27,16 @@ internal sealed class XLPivotSourceConnection : IXLPivotSource
         return ConnectionId == other.ConnectionId;
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLPivotSource other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(ConnectionId).GetHashCode();
+    }
+
     public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
     {
         throw new NotImplementedException("Pivot cache source using a connection is not supported.");

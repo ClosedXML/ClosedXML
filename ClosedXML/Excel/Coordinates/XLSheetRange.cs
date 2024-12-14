@@ -113,12 +113,12 @@ namespace ClosedXML.Excel
         /// </summary>
         public static bool TryParse(ReadOnlySpan<char> input, out XLSheetRange area)
         {
-            area = default;
             var separatorIndex = input.IndexOf(':');
             if (separatorIndex == -1)
             {
                 if (!XLSheetPoint.TryParse(input, out var sheetPoint))
                 {
+                    area = default;
                     return false;
                 }
 

@@ -48,7 +48,7 @@ namespace ClosedXML.Excel.IO
 
         public static Exception IncorrectElementFormat(string elementName)
         {
-            return new PartStructureException("The element doesn't have or misses child elements/attributes that are required by constrains of the workbook.");
+            return new PartStructureException($"The element '{elementName}' doesn't have or misses child elements/attributes that are required by constrains of the workbook.");
         }
 
         internal static Exception IncorrectAttributeValue()
