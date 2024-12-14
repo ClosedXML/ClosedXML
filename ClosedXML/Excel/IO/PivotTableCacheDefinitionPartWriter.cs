@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.IO
                 pivotCacheDefinition.MissingItemsLimit = XLHelper.MaxRowNumber;
 
             // Begin CacheSource
-            var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
+            var cacheSource = new CacheSource();
 
             if (pivotCache.Source is XLPivotSourceReference localSource)
             {
@@ -77,14 +77,16 @@ namespace ClosedXML.Excel.IO
                 var worksheetSource = localSource.UsesName
                     ? new WorksheetSource { Name = localSource.Name }
                     : new WorksheetSource { Reference = localSource.Area.Value.Area.ToString(), Sheet = localSource.Area.Value.Name };
-                cacheSource.AppendChild(worksheetSource);
+                cacheSource.Type = SourceValues.Worksheet;
+                cacheSource.AddChild(worksheetSource);
             }
             else if (pivotCache.Source is XLPivotSourceExternalWorkbook externalSource)
             {
                 var worksheetSource = externalSource.UsesName
                     ? new WorksheetSource { Id = externalSource.RelId, Name = externalSource.TableOrName }
                     : new WorksheetSource { Id = externalSource.RelId, Sheet = externalSource.Area.Value.Name, Reference = externalSource.Area.Value.Area.ToString() };
-                cacheSource.AppendChild(worksheetSource);
+                cacheSource.Type = SourceValues.Worksheet;
+                cacheSource.AddChild(worksheetSource);
             }
             else if (pivotCache.Source is XLPivotSourceConnection connectionSource)
             {
