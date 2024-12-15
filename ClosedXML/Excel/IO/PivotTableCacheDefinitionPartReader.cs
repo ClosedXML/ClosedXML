@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
@@ -16,7 +17,7 @@ namespace ClosedXML.Excel.IO
             {
                 var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
                 if (cacheDefinition.CacheSource is not { } cacheSource)
-                    throw PartStructureException.RequiredElementIsMissing("cacheSource");
+                    throw PartStructureException.RequiredElementIsMissing();
 
                 var pivotSourceReference = ParsePivotSourceReference(cacheSource);
                 var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
@@ -109,7 +110,43 @@ namespace ClosedXML.Excel.IO
 
             if (sourceType.Equals(SourceValues.Consolidation))
             {
-                throw new NotImplementedException();
+                if (cacheSource.Consolidation is not { } consolidation)
+                    throw PartStructureException.ExpectedElementNotFound("consolidation");
+
+                var autoPage = consolidation.AutoPage?.Value ?? true;
+                var xlPages = new List<XLPivotCacheSourceConsolidationPage>();
+                if (consolidation.Pages is { } pages)
+                {
+                    // There is 1..4 pages
+                    foreach (var page in pages.Cast<Page>())
+                    {
+                        var xlPageItems = new List<string>();
+                        foreach (var pageItem in page.Cast<PageItem>())
+                        {
+                            var pageItemName = pageItem.Name?.Value ?? throw PartStructureException.MissingAttribute();
+                            xlPageItems.Add(pageItemName);
+                        }
+
+                        xlPages.Add(new XLPivotCacheSourceConsolidationPage(xlPageItems));
+                    }
+                }
+
+                if (consolidation.RangeSets is not { } rangeSets)
+                    throw PartStructureException.RequiredElementIsMissing();
+
+                var xlRangeSets = new List<XLPivotCacheSourceConsolidationRangeSet>();
+                foreach (var rangeSet in rangeSets.Cast<RangeSet>())
+                    xlRangeSets.Add(GetRangeSet(rangeSet, xlPages));
+
+                if (xlRangeSets.Count < 1)
+                    throw PartStructureException.IncorrectElementsCount();
+
+                return new XLPivotSourceConsolidation
+                {
+                    AutoPage = autoPage,
+                    Pages = xlPages,
+                    RangeSets = xlRangeSets
+                };
             }
 
             if (sourceType.Equals(SourceValues.Scenario))
@@ -118,6 +155,60 @@ namespace ClosedXML.Excel.IO
             }
 
             throw PartStructureException.InvalidAttributeValue(sourceType.Value);
+
+            static XLPivotCacheSourceConsolidationRangeSet GetRangeSet(RangeSet rangeSet, List<XLPivotCacheSourceConsolidationPage> xlPages)
+            {
+                var pageIndexes = new[]
+                {
+                    rangeSet.FieldItemIndexPage1?.Value,
+                    rangeSet.FieldItemIndexPage2?.Value,
+                    rangeSet.FieldItemIndexPage3?.Value,
+                    rangeSet.FieldItemIndexPage4?.Value,
+                };
+
+                // Validate that supplied indexes reference existing page and page items
+                for (var i = 0; i < pageIndexes.Length; ++i)
+                {
+                    var pageIndex = pageIndexes[i];
+
+                    // If there is a page and rangeSet doesn't define index to the page, it is displayed as blank
+                    if (pageIndex is null)
+                        continue;
+
+                    // Range set points to a non-existent page filter
+                    if (i >= xlPages.Count)
+                        throw PartStructureException.IncorrectAttributeValue();
+
+                    // Range set points to a non-existent item in a page filter
+                    var pageFilter = xlPages[i];
+                    if (pageIndex.Value >= pageFilter.PageItems.Count)
+                        throw PartStructureException.IncorrectAttributeValue();
+                }
+
+                if (rangeSet.Name?.Value is { } tableOrName)
+                {
+                    return new XLPivotCacheSourceConsolidationRangeSet
+                    {
+                        Indexes = pageIndexes,
+                        RelId = rangeSet.Id?.Value,
+                        TableOrName = tableOrName,
+                    };
+                }
+
+                if (rangeSet.Sheet?.Value is { } sheet &&
+                    rangeSet.Reference?.Value is { } reference &&
+                    XLSheetRange.TryParse(reference.AsSpan(), out var area))
+                {
+                    return new XLPivotCacheSourceConsolidationRangeSet
+                    {
+                        Indexes = pageIndexes,
+                        RelId = rangeSet.Id?.Value,
+                        Area = new XLBookArea(sheet, area)
+                    };
+                }
+
+                throw PartStructureException.IncorrectElementFormat("rangeSet");
+            }
         }
 
         private static void ReadCacheFields(CacheFields cacheFields, XLPivotCache pivotCache)

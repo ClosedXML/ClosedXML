@@ -61,9 +61,9 @@ namespace ClosedXML.Excel.IO
             return new PartStructureException($"The value of attribute '{attributeValue}' is not valid value for the attribute.");
         }
 
-        public static Exception RequiredElementIsMissing(string elementName)
+        public static Exception RequiredElementIsMissing()
         {
-            return new PartStructureException($"The XML schema requires an element '{elementName}', but is is not present.");
+            return new PartStructureException($"The XML schema requires an element, but is is not present.");
         }
     }
 }

@@ -93,6 +93,64 @@ namespace ClosedXML.Excel.IO
                 cacheSource.Type = SourceValues.External;
                 cacheSource.ConnectionId = connectionSource.ConnectionId;
             }
+            else if (pivotCache.Source is XLPivotSourceConsolidation consolidationSource)
+            {
+                cacheSource.Type = SourceValues.Consolidation;
+                var consolidation = new Consolidation
+                {
+                    AutoPage = consolidationSource.AutoPage
+                };
+
+                // OpenXML SDK has few bugs here. Use AppendChild to add more children, AddChild keeps only one child. 
+                if (consolidationSource.Pages.Count > 0)
+                {
+                    var pages = new Pages();
+                    foreach (var xlPageFilter in consolidationSource.Pages)
+                    {
+                        var page = new Page();
+                        foreach (var xlPageItem in xlPageFilter.PageItems)
+                            page.AppendChild(new PageItem { Name = xlPageItem });
+
+                        pages.AppendChild(page);
+                    }
+
+                    consolidation.AddChild(pages);
+                }
+
+                var rangeSets = new RangeSets();
+                foreach (var xlRangeSet in consolidationSource.RangeSets)
+                {
+                    var indexes = xlRangeSet.Indexes;
+                    var rangeSet = new RangeSet
+                    {
+                        FieldItemIndexPage1 = indexes.Count > 0 ? indexes[0] : null,
+                        FieldItemIndexPage2 = indexes.Count > 1 ? indexes[1] : null,
+                        FieldItemIndexPage3 = indexes.Count > 2 ? indexes[2] : null,
+                        FieldItemIndexPage4 = indexes.Count > 3 ? indexes[3] : null,
+                    };
+
+                    // Properties can't be set to null and be skipped, OpenXML SDK would
+                    // write out empty string. Don't touch them unless setting a value.
+                    if (xlRangeSet.RelId is not null)
+                        rangeSet.Id = xlRangeSet.RelId;
+
+                    if (xlRangeSet.UsesName)
+                    {
+                        rangeSet.Name = xlRangeSet.TableOrName;
+                    }
+                    else
+                    {
+                        var rangeArea = xlRangeSet.Area.Value;
+                        rangeSet.Sheet = rangeArea.Name;
+                        rangeSet.Reference = rangeArea.Area.ToString();
+                    }
+
+                    rangeSets.AppendChild(rangeSet);
+                }
+
+                consolidation.AddChild(rangeSets);
+                cacheSource.AddChild(consolidation);
+            }
             else if (pivotCache.Source is XLPivotSourceScenario)
             {
                 cacheSource.Type = SourceValues.Scenario;

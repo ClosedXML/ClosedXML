@@ -22,7 +22,6 @@ internal class XLPivotSourceTests
         //
         // Open the workbook and click Pivot Table Analyze - Refresh - Refresh All. It shouldn't
         // report an error.
-        // TODO:Test file currently doesn't contain consolidate cache source. Will be added in subsequent PR
         TestHelper.LoadSaveAndCompare(
             @"Other\PivotTable\Sources\PivotTable-AllSources-input.xlsx",
             @"Other\PivotTable\Sources\PivotTable-AllSources-output.xlsx");
