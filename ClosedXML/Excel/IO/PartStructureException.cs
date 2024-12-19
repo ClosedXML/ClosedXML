@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 
 namespace ClosedXML.Excel.IO
 {
@@ -59,6 +60,17 @@ namespace ClosedXML.Excel.IO
         internal static Exception InvalidAttributeValue(string attributeValue)
         {
             return new PartStructureException($"The value of attribute '{attributeValue}' is not valid value for the attribute.");
+        }
+
+        public static Exception RequiredAttributeIsMissing(string attributeName, XmlReader? reader)
+        {
+            var message = $"The XML schema requires an attribute '{attributeName}', but is is not present.";
+            if (reader is IXmlLineInfo lineInfo && lineInfo.HasLineInfo())
+            {
+                message += $" Line:{lineInfo.LineNumber}, Position:{lineInfo.LinePosition}.";
+            }
+
+            return new PartStructureException(message);
         }
 
         public static Exception RequiredElementIsMissing()
