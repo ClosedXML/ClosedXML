@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ClosedXML.Excel.IO;
 
 /// <summary>
-/// A universal mapper of string representation of an enum value in the OOXML to ClosedXML enum.
+/// A universal two-way mapper of string representation of an enum value in the OOXML to ClosedXML enum.
 /// </summary>
 internal static class XmlToEnumMapper
 {
@@ -24,7 +24,36 @@ internal static class XmlToEnumMapper
     private static Dictionary<Type, object> CreateMaps()
     {
         var enumMaps = new Dictionary<Type, object>();
-        
+
+        // ST_FontScheme
+        var xlFontScheme = new Dictionary<string, XLFontScheme>
+        {
+            { "none", XLFontScheme.None },
+            { "major", XLFontScheme.Major },
+            { "minor", XLFontScheme.Minor },
+        };
+        enumMaps.Add(typeof(XLFontScheme), xlFontScheme);
+
+        // ST_UnderlineValues
+        var xlFontUnderline = new Dictionary<string, XLFontUnderlineValues>
+        {
+            { "double", XLFontUnderlineValues.Double },
+            { "doubleAccounting", XLFontUnderlineValues.DoubleAccounting },
+            { "none", XLFontUnderlineValues.None },
+            { "single", XLFontUnderlineValues.Single },
+            { "singleAccounting", XLFontUnderlineValues.SingleAccounting },
+        };
+        enumMaps.Add(typeof(XLFontUnderlineValues), xlFontUnderline);
+
+        // ST_VerticalAlignRun
+        var xlFontVerticalTextAlignmentValues = new Dictionary<string, XLFontVerticalTextAlignmentValues>
+        {
+            {"baseline",XLFontVerticalTextAlignmentValues.Baseline},
+            {"subscript",XLFontVerticalTextAlignmentValues.Subscript },
+            {"superscript",XLFontVerticalTextAlignmentValues.Superscript },
+        };
+        enumMaps.Add(typeof(XLFontVerticalTextAlignmentValues), xlFontVerticalTextAlignmentValues);
+
         return enumMaps;
     }
 }

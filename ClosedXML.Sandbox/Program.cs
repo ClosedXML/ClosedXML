@@ -1,4 +1,8 @@
 using System;
+using System.IO;
+using System.Xml;
+using ClosedXML.Excel;
+using ClosedXML.Excel.IO;
 
 namespace ClosedXML.Sandbox
 {
@@ -6,22 +10,12 @@ namespace ClosedXML.Sandbox
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Running {0}", nameof(PerformanceRunner.OpenTestFile));
-            PerformanceRunner.TimeAction(PerformanceRunner.OpenTestFile);
-            Console.WriteLine();
+            using var stream = File.Open(@"d:\temp\styles.xml", FileMode.Open, FileAccess.Read);
+            using var xmlReader = XmlReader.Create(stream);
+            xmlReader.MoveToContent();
+            var reader = new XmlTreeReader(xmlReader);
 
-            // Disable this block by default - I don't use it often
-#if false
-
-            Console.WriteLine("Running {0}", nameof(PerformanceRunner.RunInsertTable));
-            PerformanceRunner.TimeAction(PerformanceRunner.RunInsertTable);
-            Console.WriteLine();
-
-            Console.WriteLine("Running {0}", nameof(PerformanceRunner.PerformHeavyCalculation));
-            PerformanceRunner.TimeAction(PerformanceRunner.PerformHeavyCalculation);
-            Console.WriteLine();
-#endif
-
+            new StyleSheetReader().Load(reader);
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
         }
