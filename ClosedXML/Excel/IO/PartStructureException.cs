@@ -77,5 +77,10 @@ namespace ClosedXML.Excel.IO
         {
             return new PartStructureException($"The XML schema requires an element, but is is not present.");
         }
+
+        public static Exception UnexpectedElementFound(string elementName)
+        {
+            return new PartStructureException($"At this point, there shouldn't be element '{elementName}', but it is present.");
+        }
     }
 }

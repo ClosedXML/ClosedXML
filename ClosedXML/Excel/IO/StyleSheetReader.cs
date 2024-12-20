@@ -1,107 +1,111 @@
-﻿using static ClosedXML.Excel.IO.OpenXmlConst;
-namespace ClosedXML.Excel.IO;
+﻿namespace ClosedXML.Excel.IO;
 
 /// <summary>
 /// Reader of style part.
 /// </summary>
 public class StyleSheetReader // TODO: Make internal, public so I can execute form sandbox
 {
+    private string _mainNs = OpenXmlConst.Main2006SsNs;
+
     public void Load(XmlTreeReader xml)
     {
-        xml.Open("styleSheet", Main2006SsNs);
+        if (!xml.TryOpen("styleSheet", _mainNs))
+        {
+            // Try OOXML strict namespace
+            _mainNs = "http://purl.oclc.org/ooxml/spreadsheetml/main";
+            xml.Open("styleSheet", _mainNs);
+        }
 
-        if (xml.TryOpen("numFmts", Main2006SsNs))
+        if (xml.TryOpen("numFmts", _mainNs))
             ParseNumFmts(xml);
 
-        if (xml.TryOpen("fonts", Main2006SsNs))
+        if (xml.TryOpen("fonts", _mainNs))
             ParseFonts(xml);
 
-        if (xml.TryOpen("fills", Main2006SsNs))
+        if (xml.TryOpen("fills", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("borders", Main2006SsNs))
+        if (xml.TryOpen("borders", _mainNs))
+            xml.Skip();
+        
+        if (xml.TryOpen("cellStyleXfs", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("cellStyleXfs", Main2006SsNs))
+        if (xml.TryOpen("cellXfs", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("cellXfs", Main2006SsNs))
+        if (xml.TryOpen("cellStyles", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("cellStyles", Main2006SsNs))
-            xml.Skip();
-
-        if (xml.TryOpen(@"dxfs", Main2006SsNs))
+        if (xml.TryOpen(@"dxfs", _mainNs))
             ParseDxfs(xml);
 
-        if (xml.TryOpen("tableStyles", Main2006SsNs))
+        if (xml.TryOpen("tableStyles", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("colors", Main2006SsNs))
+        if (xml.TryOpen("colors", _mainNs))
             xml.Skip();
 
-        if (xml.TryOpen("extLst", Main2006SsNs))
+        if (xml.TryOpen("extLst", _mainNs))
             xml.Skip();
 
-        xml.Close("styleSheet", Main2006SsNs);
+        xml.Close("styleSheet", _mainNs);
     }
 
     private void ParseNumFmts(XmlTreeReader xml)
     {
         _ = xml.GetOptionalUint("count");
-        while (xml.TryOpen("numFmt", Main2006SsNs))
+        while (xml.TryOpen("numFmt", _mainNs))
             ParseNumFmt(xml);
 
-        xml.Close("numFmts", Main2006SsNs);
+        xml.Close("numFmts", _mainNs);
     }
 
     private void ParseFonts(XmlTreeReader xml)
     {
         _ = xml.GetOptionalUint("count");
-        while (xml.TryOpen("font", Main2006SsNs))
+        while (xml.TryOpen("font", _mainNs))
             ParseFont(xml);
 
-        xml.Close("fonts", Main2006SsNs);
+        xml.Close("fonts", _mainNs);
     }
 
     private void ParseDxfs(XmlTreeReader xml)
     {
         _ = xml.GetOptionalUint("count");
-        while (xml.TryOpen("dxf", Main2006SsNs))
-        {
+        while (xml.TryOpen("dxf", _mainNs))
             ParseDxf(xml);
-        }
 
         // Element
         // Here we are, the end element should be 
-        xml.Close("dxfs", Main2006SsNs);
+        xml.Close("dxfs", _mainNs);
     }
 
     private void ParseDxf(XmlTreeReader xml)
     {
         // I am at the opening element of dfx
-        if (xml.TryOpen("font", Main2006SsNs))
+        if (xml.TryOpen("font", _mainNs))
             ParseFont(xml);
 
-        if (xml.TryOpen("numFmt", Main2006SsNs))
+        if (xml.TryOpen("numFmt", _mainNs))
             ParseNumFmt(xml);
 
-        if (xml.TryOpen("fill", Main2006SsNs))
+        if (xml.TryOpen("fill", _mainNs))
             ParseFill(xml);
 
-        if (xml.TryOpen("alignment", Main2006SsNs))
+        if (xml.TryOpen("alignment", _mainNs))
             ParseCellAlignment(xml);
 
-        if (xml.TryOpen("border", Main2006SsNs))
+        if (xml.TryOpen("border", _mainNs))
             ParseBorder(xml);
 
-        if (xml.TryOpen("protection", Main2006SsNs))
+        if (xml.TryOpen("protection", _mainNs))
             ParseCellProtection(xml);
 
-        if (xml.TryOpen("extLst", Main2006SsNs))
+        if (xml.TryOpen("extLst", _mainNs))
             xml.Skip();
 
-        xml.Close("dxf", Main2006SsNs);
+        xml.Close("dxf", _mainNs);
     }
 
     private void ParseFont(XmlTreeReader xml)
@@ -127,77 +131,83 @@ public class StyleSheetReader // TODO: Make internal, public so I can execute fo
         //              condense, extend, outline, shadow, u, vertAlign, sz, color, name, family,
         //              charset, scheme.
         // Official schema doesn't though, it even allows repetition of same element.
-        while (!xml.TryClose("font", Main2006SsNs))
+        while (!xml.TryClose("font", _mainNs))
         {
-            if (xml.TryReadBoolElement("b", out var boldValue))
+            if (xml.TryReadBoolElement("b", _mainNs, out var boldValue))
             {
                 bold = boldValue;
             }
-            else if (xml.TryReadBoolElement("i", out var italicValue))
+            else if (xml.TryReadBoolElement("i", _mainNs, out var italicValue))
             {
                 italic = italicValue;
             }
-            else if (xml.TryReadBoolElement("strike", out var strikethroughValue))
+            else if (xml.TryReadBoolElement("strike", _mainNs, out var strikethroughValue))
             {
                 strikethrough = strikethroughValue;
             }
-            else if (xml.TryReadBoolElement("condense", out var condenseValue))
+            else if (xml.TryReadBoolElement("condense", _mainNs, out var condenseValue))
             {
                 condense = condenseValue;
             }
-            else if (xml.TryReadBoolElement("extend", out var extendValue))
+            else if (xml.TryReadBoolElement("extend", _mainNs, out var extendValue))
             {
                 extend = extendValue;
             }
-            else if (xml.TryReadBoolElement("outline", out var outlineValue))
+            else if (xml.TryReadBoolElement("outline", _mainNs, out var outlineValue))
             {
                 outline = outlineValue;
             }
-            else if (xml.TryReadBoolElement("shadow", out var shadowValue))
+            else if (xml.TryReadBoolElement("shadow", _mainNs, out var shadowValue))
             {
                 shadow = shadowValue;
             }
-            else if (xml.TryOpen("u", Main2006SsNs))
+            else if (xml.TryOpen("u", _mainNs))
             {
                 underline = xml.GetOptionalEnum("val", XLFontUnderlineValues.Single);
-                xml.Close("u", Main2006SsNs);
+                xml.Close("u", _mainNs);
             }
-            else if (xml.TryOpen("vertAlign", Main2006SsNs))
+            else if (xml.TryOpen("vertAlign", _mainNs))
             {
                 vertAlign = xml.GetEnum<XLFontVerticalTextAlignmentValues>("val");
-                xml.Close("vertAlign", Main2006SsNs);
+                xml.Close("vertAlign", _mainNs);
             }
-            else if (xml.TryOpen("sz", Main2006SsNs))
+            else if (xml.TryOpen("sz", _mainNs))
             {
                 size = xml.GetDouble("val");
-                xml.Close("sz", Main2006SsNs);
+                xml.Close("sz", _mainNs);
             }
-            else if (xml.TryParseColor("color", Main2006SsNs, out var color))
+            else if (xml.TryParseColor("color", _mainNs, out var color))
             {
                 fontColor = color.Key;
             }
-            else if (xml.TryOpen("name", Main2006SsNs))
+            else if (xml.TryOpen("name", _mainNs))
             {
                 name = xml.GetAsXString("val");
-                xml.Close("name", Main2006SsNs);
+                xml.Close("name", _mainNs);
             }
-            else if (xml.TryOpen("family", Main2006SsNs))
+            else if (xml.TryOpen("family", _mainNs))
             {
                 family = (XLFontFamilyNumberingValues)xml.GetUint("val");
-                xml.Close("family", Main2006SsNs);
+                xml.Close("family", _mainNs);
             }
-            else if (xml.TryOpen("charset", Main2006SsNs))
+            else if (xml.TryOpen("charset", _mainNs))
             {
                 charSet = (XLFontCharSet)xml.GetInt("val");
-                xml.Close("charset", Main2006SsNs);
+                xml.Close("charset", _mainNs);
             }
-            else if (xml.TryOpen("scheme", Main2006SsNs))
+            else if (xml.TryOpen("scheme", _mainNs))
             {
                 scheme = xml.GetEnum<XLFontScheme>("val");
-                xml.Close("scheme", Main2006SsNs);
+                xml.Close("scheme", _mainNs);
+            }
+            else if (xml.TryOpen("scheme", _mainNs))
+            {
+                scheme = xml.GetEnum<XLFontScheme>("val");
+                xml.Close("scheme", _mainNs);
             }
             else
             {
+                // TODO: Add option to skip unknown elements. Basically lax parsing. Most XML is well behaved, then... there are screwups. 
                 throw PartStructureException.ExpectedElementNotFound(xml.ElementName);
             }
         }
@@ -206,33 +216,24 @@ public class StyleSheetReader // TODO: Make internal, public so I can execute fo
     private void ParseNumFmt(XmlTreeReader xml)
     {
         xml.Skip();
-        //        xml.Close("numFmt", Main2006SsNs);
-        //        throw new NotImplementedException();
     }
+
     private void ParseFill(XmlTreeReader xml)
     {
         xml.Skip();
-        //        xml.Close("fill", Main2006SsNs);
-        //        throw new NotImplementedException();
     }
     private void ParseCellAlignment(XmlTreeReader xml)
     {
         xml.Skip();
-        //        xml.Close("alignment", Main2006SsNs);
-        //        throw new NotImplementedException();
     }
 
     private void ParseBorder(XmlTreeReader xml)
     {
         xml.Skip();
-        //        xml.Close("border", Main2006SsNs);
-        //        throw new NotImplementedException();
     }
 
     private void ParseCellProtection(XmlTreeReader xml)
     {
         xml.Skip();
-        //        xml.Close("protection", Main2006SsNs);
-        //        throw new NotImplementedException();
     }
 }

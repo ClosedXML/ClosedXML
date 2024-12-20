@@ -4,12 +4,13 @@ using ClosedXML.Utils;
 namespace ClosedXML.Excel.IO;
 
 /// <summary>
-/// A helper methods for patterns and types commonly found in OOXML. Reading concrete types is not something for <see cref="XmlTreeReader"/>.
+/// A helper methods for patterns and types commonly found in OOXML. Reading concrete types is not
+/// something for <see cref="XmlTreeReader"/>.
 /// </summary>
 internal static class XmlTreeReaderExtensions
 {
     /// <summary>
-    /// Try to parse <c>CT_Color</c>
+    /// Read <c>CT_Color</c>.
     /// </summary>
     public static bool TryParseColor(this XmlTreeReader reader, string element, string ns, out XLColor color)
     {
@@ -41,14 +42,21 @@ internal static class XmlTreeReaderExtensions
         }
 
         var indexed = reader.GetOptionalUint("indexed");
-        if (indexed <= 64)
+        if (indexed is not null)
         {
-            color = XLColor.FromIndex(indexed.Value);
+            color = indexed <= 64 ? XLColor.FromIndex(indexed.Value) : XLColor.NoColor;
             reader.Close(element, ns);
             return true;
         }
 
-        _ = reader.GetOptionalBool("auto"); // IGNORE: auto attribute.
+        var auto = reader.GetOptionalBool("auto");
+        if (auto is not null)
+        {
+            // TODO: I have no idea what to do with auto
+            color = XLColor.NoColor;
+            reader.Close(element, ns);
+            return true;
+        }
 
         throw PartStructureException.IncorrectElementFormat(element);
     }
@@ -56,16 +64,35 @@ internal static class XmlTreeReaderExtensions
     /// <summary>
     /// Read <c>CT_BooleanProperty</c>.
     /// </summary>
-    public static bool TryReadBoolElement(this XmlTreeReader reader, string elementName, out bool value)
+    public static bool TryReadBoolElement(this XmlTreeReader reader, string elementName, string ns, out bool value)
     {
-        if (!reader.TryOpen(elementName, OpenXmlConst.Main2006SsNs))
+        if (!reader.TryOpen(elementName, ns))
         {
             value = default;
             return false;
         }
 
-        value = reader.GetOptionalBool("val") ?? true;
-        reader.Close(elementName, OpenXmlConst.Main2006SsNs);
+        var readValue = reader.GetOptionalBool("val");
+        if (readValue is null)
+        {
+            // Some producers make <b>true</b>, i.e. invalid XML
+            // Excel reads and interprets it...
+            var text = reader.GetContent();
+
+            // XML is auto-trimmed
+            if (text.Length == 0)
+                readValue = null;
+            else if (text == "0" || StringComparer.OrdinalIgnoreCase.Equals(text, "true"))
+                readValue = false;
+            else if (text == "1" || StringComparer.OrdinalIgnoreCase.Equals(text, "false"))
+                readValue = true;
+            else
+                throw PartStructureException.IncorrectAttributeFormat();
+        }
+
+        value = readValue ?? true;
+
+        reader.Close(elementName, ns);
         return true;
     }
 }

@@ -70,7 +70,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     }
 
     /// <summary>
-    /// Get name of current element (lookup/processing).
+    /// Get name of current element (lookup/processing). It includes an alias for ns.
     /// </summary>
     internal string ElementName => _reader.Name;
 
@@ -83,7 +83,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
         AssertReaderOnElement();
         SwitchToLookup();
 
-        if (_isStart && _reader.Name == element && _reader.NamespaceURI == ns)
+        if (_isStart && _reader.LocalName == element && _reader.NamespaceURI == ns)
         {
             // Element has been opened, so it should be processed.
             SwitchToProcessing();
@@ -99,7 +99,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
         AssertReaderOnElement();
         SwitchToLookup();
 
-        if (_isStart || _reader.Name != element || _reader.NamespaceURI != ns)
+        if (_isStart || _reader.LocalName != element || _reader.NamespaceURI != ns)
             return false;
 
         // Element has been closed, so it should be processed. Though closing elements are not
@@ -128,7 +128,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     public void Close(string element, string ns)
     {
         if (!TryClose(element, ns))
-            throw PartStructureException.ExpectedElementNotFound();
+            throw PartStructureException.ExpectedElementNotFound($"Expected {element}, got {_reader.Name}");
     }
 
     private void SwitchToProcessing()
@@ -176,11 +176,37 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
         AssertReaderOnElement();
         Debug.Assert(!_inLookup);
 
+        if (!_isStart)
+            throw new Exception("Should be called on start element");
+
+        if (_reader.IsEmptyElement)
+        {
+            _isStart = false;
+            SwitchToLookup();
+            return;
+        }
+
         // Skip everything under current element, including end element.
         _reader.Skip();
 
-        // We have likely ended up on whitespace, move to element
-        SwitchToLookup();
+        // Next element is empty element
+        if (_reader.IsEmptyElement)
+        {
+            _isStart = true;
+        }
+        else
+        {
+            // After read, we might end with whitespace
+            _reader.MoveToContent();
+            _isStart = _reader.NodeType switch
+            {
+                XmlNodeType.Element => true,
+                XmlNodeType.EndElement => false,
+                _ => throw PartStructureException.ExpectedElementNotFound($"Parser expected an element, instead found node '{_reader.NodeType}'."),
+            };
+        }
+
+        _inLookup = true;
     }
 
     public bool? GetBool(string attributeName)
@@ -196,9 +222,61 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     public bool? GetOptionalBool(string attributeName)
     {
         Debug.Assert(!_inLookup);
-        bool? result = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsBoolean() : null;
+        bool? result;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            result = _reader.ReadContentAsBoolean();
+        }
+        else
+        {
+            // Some producers put bool as <b>true</b>, i.e. invalid XML
+            result = null;
+        }
+
         _reader.MoveToElement();
         return result;
+    }
+
+    public string GetContent()
+    {
+        Debug.Assert(!_inLookup);
+        Debug.Assert(_isStart);
+
+        if (_reader.IsEmptyElement)
+        {
+            _inLookup = true;
+            _isStart = false;
+            return string.Empty;
+        }
+
+        // ReadElementContentAsString reads beyond closing element. Make your own reader.
+        var value = string.Empty;
+        while (_reader.Read() && _reader.NodeType != XmlNodeType.EndElement)
+        {
+            // All unspecified nodes should be skipped. It is either comments, processing
+            // instructions or something that shouldn't ever happen (e.g. attribute).
+            switch (_reader.NodeType)
+            {
+                case XmlNodeType.Text:
+                case XmlNodeType.Whitespace:
+                case XmlNodeType.SignificantWhitespace:
+                case XmlNodeType.CDATA:
+                    if (value.Length == 0)
+                        value = _reader.Value;
+                    else
+                        value += _reader.Value;
+                    break;
+                case XmlNodeType.EntityReference:
+                    value += _reader.Name; // Does it even work? I have no idea how to get this node.
+                    break;
+                case XmlNodeType.Element:
+                    throw PartStructureException.UnexpectedElementFound(_reader.LocalName); // No child elements allowed
+            }
+        }
+
+        _inLookup = true;
+        _isStart = false;
+        return value;
     }
 
     public int GetInt(string attributeName)
