@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.IO;
 /// <summary>
 /// <para>
 /// Reader that expects that XML document consists of elements in a tree-like fashion. XML
-/// shouldn't be mixed, text should be in the leaves (e.g. <c>&lt;f&gt;ABS(A1)*A2&lt;/f&gt;</c>).
+/// shouldn't be mixed, text should be only in the leaves (e.g. <c>&lt;f&gt;ABS(A1)*A2&lt;/f&gt;</c>).
 /// </para>
 /// <para>
 /// The schema of XML should be mostly by elements, with choices and sequences.
@@ -19,7 +19,55 @@ namespace ClosedXML.Excel.IO;
 /// <para>
 /// All <c>Get*</c> methods read values from attributes of current element.
 /// </para>
+/// <para>
+/// The reader is always at either start element or end element. Any API that moves the reader will
+/// end on either start or end element. The empty elements (e.g. &lt;br/&gt;) behave same way as
+/// non-empty elements (that is different from <see cref="XmlReader"/> that checks
+/// <see cref="XmlReader.IsEmptyElement"/>).
+/// The reader element is used for one of two purposes:
+/// <list type="bullet">
+/// <item>
+/// Element is being processed, i.e. parser logic has correctly identified the element (by
+/// name) and will use parser logic to extract data from element (mostly by reading attributes,
+/// potentially content if it is a leaf).
+/// </item>
+/// <item>
+/// Element is used as a lookahead. The parsing logic is using it to determine how to parse the rest
+/// of document. Example:
+/// <example>Stylesheet parser has processed element <![CDATA[<name/>]]> from <![CDATA[<font><name val="Arial"/></font>]]>).
+/// It reads next element <![CDATA[</font>]]> as a lookahead. The parsing logic now has to
+/// determine what to do. Font could have additional properties (e.g. <![CDATA[<b/>]]>) or the
+/// schema could end. Parser will use <c>reader.TryOpen("b")</c> to check if there is a bold
+/// element. If there isn't, it uses <c>reader.TryClose("font")</c> to check that <c>font</c>
+/// should close. If neither is true, XML doesn't match expected schema and parser will likely
+/// throw an exception.
+/// </example>
+/// </item>
+/// </list>
+/// </para>
 /// </summary>
+/// <remarks>
+/// <para>
+/// When adding API, use <em>tell, don't ask principle</em>. Asking generally inherently requires
+/// allocation of a new string, but passing a string to a method doesn't.
+/// </para>
+/// <para>Example:
+/// <example>
+/// <c>reader.IsStartElement("font")</c> vs <c>reader.LocalName == "font"</c>. The former methods
+/// re-uses interned string. If reader is optimized, it can check everything on stack, without any
+/// new allocations. The second comparison basically requires a new string allocation for the
+/// <see cref="XmlReader.LocalName"/> getter.
+/// </example>
+/// </para>
+/// <para>
+/// Granted, current <see cref="XmlReader"/> implementatins don't do that, but new versions could
+/// do it (dotnet team optimizes all the time) or we could use a different implementation.
+/// </para>
+/// <para>
+/// Another example would be <see cref="XmlReader.ReadContentAsBoolean"/> instead of getting string
+/// and parsing it ourselves. Allocations do matter when parsing hundreds of MBs.
+/// </para>
+/// </remarks>
 public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody is removed.
 {
     /// <summary>
