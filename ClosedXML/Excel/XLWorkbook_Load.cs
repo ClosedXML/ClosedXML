@@ -854,7 +854,7 @@ namespace ClosedXML.Excel
             {
                 if (unit.EndsWith(unitName) && Double.TryParse(unit[..^unitName.Length], NumberStyles.Float, CultureInfo.InvariantCulture, out var unitValue))
                 {
-                    return conversion(unitValue, dpi);
+                    return conversion(unitValue * XLHelper.EmuPerInch, dpi) / XLHelper.EmuPerInch;
                 }
             }
 
