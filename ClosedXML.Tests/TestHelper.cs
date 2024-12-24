@@ -185,10 +185,10 @@ namespace ClosedXML.Tests
         /// <summary>
         /// A testing method to load a workbook from resource and assert the state of the loaded workbook.
         /// </summary>
-        public static void LoadAndAssert(Action<XLWorkbook> assertWorkbook, string loadResourcePath)
+        public static void LoadAndAssert(Action<XLWorkbook> assertWorkbook, string loadResourcePath, LoadOptions options = null)
         {
             using var stream = GetStreamFromResource(GetResourcePath(loadResourcePath));
-            using var wb = new XLWorkbook(stream);
+            using var wb = new XLWorkbook(stream, options ?? new LoadOptions());
 
             assertWorkbook(wb);
         }
@@ -197,13 +197,13 @@ namespace ClosedXML.Tests
         /// A testing method to load a workbook with a single worksheet from resource and assert
         /// the state of the loaded workbook.
         /// </summary>
-        public static void LoadAndAssert(Action<XLWorkbook, IXLWorksheet> assertWorksheet, string loadResourcePath)
+        public static void LoadAndAssert(Action<XLWorkbook, IXLWorksheet> assertWorksheet, string loadResourcePath, LoadOptions options = null)
         {
             LoadAndAssert(wb =>
             {
                 var ws = wb.Worksheets.Single();
                 assertWorksheet(wb, ws);
-            }, loadResourcePath);
+            }, loadResourcePath, options);
         }
 
         public static string GetResourcePath(string filePartName)

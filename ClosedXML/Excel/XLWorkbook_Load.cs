@@ -815,19 +815,51 @@ namespace ClosedXML.Excel
         private void LoadTextBoxInset<T>(IXLDrawing<T> xlDrawing, XAttribute attInset)
         {
             var split = attInset.Value.Split(',');
-            xlDrawing.Style.Margins.Left = GetInsetValue(split[0]);
-            xlDrawing.Style.Margins.Top = GetInsetValue(split[1]);
-            xlDrawing.Style.Margins.Right = GetInsetValue(split[2]);
-            xlDrawing.Style.Margins.Bottom = GetInsetValue(split[3]);
+            xlDrawing.Style.Margins.Left = GetInsetValue(split[0], DpiX);
+            xlDrawing.Style.Margins.Top = GetInsetValue(split[1], DpiY);
+            xlDrawing.Style.Margins.Right = GetInsetValue(split[2], DpiX);
+            xlDrawing.Style.Margins.Bottom = GetInsetValue(split[3], DpiY);
         }
 
-        private double GetInsetValue(string value)
+        /// <summary>
+        /// List of all VML length units and their conversion. Key is a name, value is a conversion
+        /// function to inches. See <a href="https://learn.microsoft.com/en-us/windows/win32/vml/msdn-online-vml-units">documentation</a>.
+        /// </summary>
+        /// <remarks>
+        /// OI-29500 says <em>Office also uses EMUs throughout VML as a valid unit system</em>.
+        /// Relative units conversions are guesstimated by how Excel 2022 behaves for inset
+        /// attribute of <c>TextBox</c> element of a note/comment. Generally speaking, Excel
+        /// converts relative values to physical length (e.g. <c>px</c> to <c>pt</c>) and saves
+        /// them as such. The <c>ex</c>/<c>em</c> units are not interpreted as described in the
+        /// doc, but as 1/90th or an inch. The <c>%</c> seems to be always 0.
+        /// </remarks>
+        private static readonly Dictionary<string, Func<double, double, double>> VmlLengthUnits = new()
         {
-            String v = value.Trim();
-            if (v.EndsWith("pt"))
-                return Double.Parse(v.Substring(0, v.Length - 2), CultureInfo.InvariantCulture) / 72.0;
-            else
-                return Double.Parse(v.Substring(0, v.Length - 2), CultureInfo.InvariantCulture);
+            {"in", (value, _) => value },
+            {"cm", (value, _) => value / 2.54 },
+            {"mm", (value, _) => value / 25.4 },
+            {"pt", (value, _) => value / 72.0 },
+            {"pc", (value, _) => value / 6.0 }, // 1 pica = 12 pt
+            {"emu", (value, _) => value / 914400.0 }, // English metric unit
+            {"px", (value, dpi) => value / dpi },
+            {"em", (value, _) => value / 90.0 },
+            {"ex", (value, _) => value / 90.0 },
+            {"%", (_, _) => 0 },
+        };
+
+        private static double GetInsetValue(string value, double dpi)
+        {
+            var unit = value.Trim();
+            foreach (var (unitName, conversion) in VmlLengthUnits)
+            {
+                if (unit.EndsWith(unitName) && Double.TryParse(unit[..^unitName.Length], NumberStyles.Float, CultureInfo.InvariantCulture, out var unitValue))
+                {
+                    return conversion(unitValue, dpi);
+                }
+            }
+
+            // Excel treats no/unexpected unit as 0
+            return 0;
         }
 
         private static void LoadTextBoxStyle<T>(IXLDrawing<T> xlDrawing, XAttribute attStyle)
