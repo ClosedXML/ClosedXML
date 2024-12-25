@@ -42,11 +42,6 @@ namespace ClosedXML.Excel
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
         /// <summary>
-        /// How many English metric units are in one inch.
-        /// </summary>
-        internal const int EmuPerInch = 914400;
-
-        /// <summary>
         /// Comparer used to compare sheet names.
         /// </summary>
         internal static readonly StringComparer SheetComparer = StringComparer.OrdinalIgnoreCase;

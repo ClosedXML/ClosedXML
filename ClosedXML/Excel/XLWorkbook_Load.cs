@@ -806,19 +806,19 @@ namespace ClosedXML.Excel
         private void LoadTextBox<T>(IXLDrawing<T> xlDrawing, XElement textBox)
         {
             var attStyle = textBox.Attribute("style");
-            if (attStyle != null) LoadTextBoxStyle<T>(xlDrawing, attStyle);
+            if (attStyle != null) LoadTextBoxStyle(xlDrawing, attStyle);
 
             var attInset = textBox.Attribute("inset");
-            if (attInset != null) LoadTextBoxInset<T>(xlDrawing, attInset);
+            if (attInset != null) LoadTextBoxInset(xlDrawing, attInset);
         }
 
         private void LoadTextBoxInset<T>(IXLDrawing<T> xlDrawing, XAttribute attInset)
         {
             var split = attInset.Value.Split(',');
-            xlDrawing.Style.Margins.Left = GetInsetValue(split[0], DpiX);
-            xlDrawing.Style.Margins.Top = GetInsetValue(split[1], DpiY);
-            xlDrawing.Style.Margins.Right = GetInsetValue(split[2], DpiX);
-            xlDrawing.Style.Margins.Bottom = GetInsetValue(split[3], DpiY);
+            xlDrawing.Style.Margins.Left = GetInsetInInches(split[0], DpiX);
+            xlDrawing.Style.Margins.Top = GetInsetInInches(split[1], DpiY);
+            xlDrawing.Style.Margins.Right = GetInsetInInches(split[2], DpiX);
+            xlDrawing.Style.Margins.Bottom = GetInsetInInches(split[3], DpiY);
         }
 
         /// <summary>
@@ -833,28 +833,29 @@ namespace ClosedXML.Excel
         /// them as such. The <c>ex</c>/<c>em</c> units are not interpreted as described in the
         /// doc, but as 1/90th or an inch. The <c>%</c> seems to be always 0.
         /// </remarks>
-        private static readonly Dictionary<string, Func<double, double, double>> VmlLengthUnits = new()
+        private static readonly Dictionary<string, Func<double, double, Emu?>> VmlLengthUnits = new()
         {
-            {"in", (value, _) => value },
-            {"cm", (value, _) => value / 2.54 },
-            {"mm", (value, _) => value / 25.4 },
-            {"pt", (value, _) => value / 72.0 },
-            {"pc", (value, _) => value / 6.0 }, // 1 pica = 12 pt
-            {"emu", (value, _) => value / 914400.0 }, // English metric unit
-            {"px", (value, dpi) => value / dpi },
-            {"em", (value, _) => value / 90.0 },
-            {"ex", (value, _) => value / 90.0 },
-            {"%", (_, _) => 0 },
+            {"in", (value, _) => Emu.From(value, AbsLengthUnit.Inch) },
+            {"cm", (value, _) => Emu.From(value, AbsLengthUnit.Centimeter) },
+            {"mm", (value, _) => Emu.From(value, AbsLengthUnit.Millimeter) },
+            {"pt", (value, _) => Emu.From(value, AbsLengthUnit.Point) },
+            {"pc", (value, _) => Emu.From(value, AbsLengthUnit.Pica) },
+            {"emu", (value, _) => Emu.From(value , AbsLengthUnit.Emu) },
+            {"px", (value, dpi) => Emu.From(value / dpi, AbsLengthUnit.Inch) },
+            {"em", (value, _) => Emu.From(value * 72.0 / 90.0, AbsLengthUnit.Point) },
+            {"ex", (value, _) => Emu.From(value * 72.0 / 90.0, AbsLengthUnit.Point) },
+            {"%", (_, _) => Emu.ZeroPt },
         };
 
-        private static double GetInsetValue(string value, double dpi)
+        private static double GetInsetInInches(string value, double dpi)
         {
             var unit = value.Trim();
             foreach (var (unitName, conversion) in VmlLengthUnits)
             {
                 if (unit.EndsWith(unitName) && Double.TryParse(unit[..^unitName.Length], NumberStyles.Float, CultureInfo.InvariantCulture, out var unitValue))
                 {
-                    return conversion(unitValue * XLHelper.EmuPerInch, dpi) / XLHelper.EmuPerInch;
+                    var insetEmu = conversion(unitValue, dpi) ?? Emu.ZeroPt;
+                    return insetEmu.To(AbsLengthUnit.Inch);
                 }
             }
 
