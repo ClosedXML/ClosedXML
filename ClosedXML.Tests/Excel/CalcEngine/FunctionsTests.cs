@@ -205,5 +205,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(expectedResult, actual);
         }
+
+        [Test]
+        public void Cell_function_is_evaluated_to_reference_error()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").FormulaA1 = "$B$4(5)";
+
+            Assert.AreEqual(XLError.CellReference, ws.Cell("A1").Value);
+        }
     }
 }
