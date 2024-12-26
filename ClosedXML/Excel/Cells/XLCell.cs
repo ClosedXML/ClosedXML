@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Graphics;
 using ClosedXML.Parser;
+using ClosedXML.Excel.CalcEngine.Visitors;
 
 namespace ClosedXML.Excel
 {
@@ -736,10 +737,17 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
-                value = value?.TrimFormulaEqual();
-                Formula = !String.IsNullOrWhiteSpace(value)
-                    ? XLCellFormula.NormalA1(value)
-                    : null;
+                var formula = value?.TrimFormulaEqual();
+                if (!String.IsNullOrWhiteSpace(formula))
+                {
+                    var fixedFunctionsFormula = FormulaTransformation.FixFutureFunctions(formula, Worksheet.Name, SheetPoint);
+                    Formula = XLCellFormula.NormalA1(fixedFunctionsFormula);
+                }
+                else
+                {
+                    Formula = null;
+                }
+
                 InvalidateFormula();
             }
         }
@@ -753,10 +761,18 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
-                value = value?.TrimFormulaEqual();
-                Formula = !String.IsNullOrWhiteSpace(value)
-                    ? XLCellFormula.NormalA1(FormulaConverter.ToA1(value, _rowNumber, _columnNumber))
-                    : null;
+                var formula = value?.TrimFormulaEqual();
+                if (!String.IsNullOrWhiteSpace(formula))
+                {
+                    var formulaA1 = FormulaConverter.ToA1(formula, _rowNumber, _columnNumber);
+                    var fixedFunctionsFormulaA1 = FormulaTransformation.FixFutureFunctions(formulaA1, Worksheet.Name, SheetPoint);
+                    Formula = XLCellFormula.NormalA1(fixedFunctionsFormulaA1);
+                }
+                else
+                {
+                    Formula = null;
+                }
+
                 InvalidateFormula();
             }
         }

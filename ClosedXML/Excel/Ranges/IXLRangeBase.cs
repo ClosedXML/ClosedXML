@@ -28,19 +28,33 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Sets the cells' formula with A1 references.
         /// </summary>
+        /// <remarks>
+        /// Setter trims the formula and if formula starts with an <c>=</c>, it is removed. If the
+        /// formula contains unprefixed future function (e.g. <c>CONCAT</c>), it will be correctly
+        /// prefixed (e.g. <c>_xlfn.CONCAT</c>).
+        /// </remarks>
         /// <value>The formula with A1 references.</value>
         String FormulaA1 { set; }
 
         /// <summary>
         /// Create an array formula for all cells in the range.
         /// </summary>
-        /// <remarks>Setter trims the formula and if formula starts with an <c>=</c>, it is removed.</remarks>
+        /// <remarks>
+        /// Setter trims the formula and if formula starts with an <c>=</c>, it is removed. If the
+        /// formula contains unprefixed future function (e.g. <c>CONCAT</c>), it will be correctly
+        /// prefixed (e.g. <c>_xlfn.CONCAT</c>).
+        /// </remarks>
         /// <exception cref="InvalidOperationException">When the range overlaps with a table, pivot table, merged cells or partially overlaps another array formula.</exception>
         String FormulaArrayA1 { set; }
 
         /// <summary>
         ///   Sets the cells' formula with R1C1 references.
         /// </summary>
+        /// <remarks>
+        /// Setter trims the formula and if formula starts with an <c>=</c>, it is removed. If the
+        /// formula contains unprefixed future function (e.g. <c>CONCAT</c>), it will be correctly
+        /// prefixed (e.g. <c>_xlfn.CONCAT</c>).
+        /// </remarks>
         /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { set; }
 

@@ -54,3 +54,9 @@ interpreted as unicode codepoints).
 `DOLLAR` now uses culture of a workbook, not ambient culture from
 `CultureInfo.CurrentCulture`. Reminder: `XLWorkbook.EvaluateExpr` uses
 invariant culture, not ambient culture.
+
+The formula setters (```IXLCell.FormulaA1```, ```IXLCell.FormulaR1C1```,
+```IXLRangeBase.FormulaA1```, ```IXLRangeBase.FormulaR1C1```,
+```IXLRangeBase.ArrayFormulaA1```) now automatically add prefix for future
+functions (e.g. ```CONCAT``` is turned to ```_xlfn.CONCAT```). The Excel
+requires use of prefixed name in formulas, though they are hidden from users.

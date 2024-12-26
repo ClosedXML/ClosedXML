@@ -554,5 +554,17 @@ namespace ClosedXML.Tests
             Assert.AreEqual("A4*B4 & \"(Cake)\"", ws.Cell("C4").FormulaA1);
             Assert.AreEqual("A5*B5 & \"(Pie)\"", ws.Cell("C5").FormulaA1);
         }
+
+        [TestCase("PY(4)", "_xlfn._xlws.PY(4)")]
+        [TestCase("2 + CHISQ.INV(0.6,2)", "2 + _xlfn.CHISQ.INV(0.6,2)")]
+        [TestCase("2 + _xlfn.CHISQ.INV(0.6,2)", "2 + _xlfn.CHISQ.INV(0.6,2)")]
+        public void FormulaArrayA1_adds_prefix_to_future_functions(string formula, string expected)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Range("A1:B2").FormulaArrayA1 = formula;
+            var masterCellFormula = ws.Cell("A1").FormulaA1;
+            Assert.AreEqual(expected, masterCellFormula);
+        }
     }
 }

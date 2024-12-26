@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel.CalcEngine.Visitors;
 
 namespace ClosedXML.Excel
 {
@@ -118,7 +119,6 @@ namespace ClosedXML.Excel
         {
             set
             {
-                value = value?.TrimFormulaEqual();
                 var range = XLSheetRange.FromRangeAddress(RangeAddress);
                 if (Worksheet.MergedRanges.Any(mr => mr.Intersects(this)))
                     throw new InvalidOperationException("Can't create array function over a merged range.");
@@ -129,7 +129,9 @@ namespace ClosedXML.Excel
                 if (Cells(false).Any<XLCell>(c => c.HasArrayFormula && !RangeAddress.ContainsWhole(c.FormulaReference)))
                     throw new InvalidOperationException("Can't create array function that partially covers another array function.");
 
-                var arrayFormula = XLCellFormula.Array(value, range, false);
+                var formula = value.TrimFormulaEqual();
+                var fixedFunctionsFormula = FormulaTransformation.FixFutureFunctions(formula, Worksheet.Name, SheetRange.FirstPoint);
+                var arrayFormula = XLCellFormula.Array(fixedFunctionsFormula, range, false);
 
                 var formulaSlice = Worksheet.Internals.CellsCollection.FormulaSlice;
                 formulaSlice.SetArray(range, arrayFormula);

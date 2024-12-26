@@ -1057,5 +1057,46 @@ namespace ClosedXML.Tests
             ws.Cell("B2").Active = true;
             Assert.AreEqual(ws.Cell("B2"), ws.ActiveCell);
         }
+
+        [TestCase("PY(4)", "_xlfn._xlws.PY(4)")]
+        [TestCase("5 + py(abs(4) )", "5 + _xlfn._xlws.PY(abs(4) )")]
+        [TestCase("COT(COTH(A5 + 2 * SIN(B7)))", "_xlfn.COT(_xlfn.COTH(A5 + 2 * SIN(B7)))")]
+        [TestCase("_xlfn.COT(_xlfn.COTH(A5 + 2 * SIN(B7)))", "_xlfn.COT(_xlfn.COTH(A5 + 2 * SIN(B7)))")]
+        public void FormulaA1_adds_prefix_to_future_functions(string formula, string expected)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell("A1");
+            cell.FormulaA1 = formula;
+
+            Assert.AreEqual(expected, cell.FormulaA1);
+        }
+
+        [TestCase("PY(4)", "_xlfn._xlws.PY(4)")]
+        [TestCase("5 + py(abs(4) )", "5 + _xlfn._xlws.PY(abs(4) )")]
+        [TestCase("COT(COTH(R[3]C[5] + 2 * SIN(R[7]C[2])))", "_xlfn.COT(_xlfn.COTH(R[3]C[5] + 2 * SIN(R[7]C[2])))")]
+        [TestCase("_xlfn.COT(_xlfn.COTH(R[3]C[5] + 2 * SIN(R[7]C[2])))", "_xlfn.COT(_xlfn.COTH(R[3]C[5] + 2 * SIN(R[7]C[2])))")]
+        public void FormulaR1C1_adds_prefix_to_future_functions(string formula, string expected)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell("A1");
+            cell.FormulaR1C1 = formula;
+
+            Assert.AreEqual(expected, cell.FormulaR1C1);
+        }
+
+        [Test]
+        public void FormulaA1_adds_prefix_to_all_future_functions()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cell = ws.Cell("A1");
+            foreach (var (simpleName, prefixedName) in XLConstants.FutureFunctionMap.Value)
+            {
+                cell.FormulaA1 = simpleName + "()";
+                Assert.AreEqual(prefixedName + "()", cell.FormulaA1);
+            }
+        }
     }
 }

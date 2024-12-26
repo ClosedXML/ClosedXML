@@ -5,14 +5,26 @@ Functions
 ClosedXML can evaluate formula functions. 
 
 .. note::
-   Excel has a a list of functions that are defined in ECMA-376 and a newer
-   ones that are added in some subsequent version (future functions).
+   Excel has a a list of functions that are defined in ISO-29500 and newer
+   ones that were added in some subsequent version (future functions).
    The future functions generally have a prefix ``_xlfn``. The prefix is hidden
    in the GUI, but is present in the file (e.g. ``_xlfn.CONCAT(A1:A2)`` is
    displayed as a ``=CONCAT(A1:B1)`` in the Excel).
    
    The cell formula that uses a future functions that were added in later
    version of Excel must use a correct name of a function, including the prefix.
+
+   Version 0.105 and newer automatically translates future function names in
+   formulas:
+
+   .. code-block:: csharp
+
+      // Formula setters automatically translate future functions
+      // to correct prefixed names from version 0.105 onward.
+      ws.Cell(1,1).FormulaA1 = "CONCAT(A1:A2)";
+      Assert.AreEqual("_xlfn.CONCAT(A1:A2)", ws.Cell(1,1).FormulaA1);
+
+   For pre-0.105 versions, user must use correct name in formulas:
 
    .. code-block:: csharp
 
