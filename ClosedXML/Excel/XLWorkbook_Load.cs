@@ -823,7 +823,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// List of all VML length units and their conversion. Key is a name, value is a conversion
-        /// function to inches. See <a href="https://learn.microsoft.com/en-us/windows/win32/vml/msdn-online-vml-units">documentation</a>.
+        /// function to EMU. See <a href="https://learn.microsoft.com/en-us/windows/win32/vml/msdn-online-vml-units">documentation</a>.
         /// </summary>
         /// <remarks>
         /// OI-29500 says <em>Office also uses EMUs throughout VML as a valid unit system</em>.

@@ -179,6 +179,8 @@ namespace ClosedXML.Tests.Excel.Comments
             // should have same final dimension at left and top margin (easily visible in the
             // sheet). Tested units: in, cm, mm, pt, pc, emu, px, em, ex. Pixels are converted
             // through supplied DPI.
+            // The last comment in vmlDrawing1 also has invalid units and number. These are
+            // converted to 0, so we don't crash on load (Excel also ignores invalid values).
             var commentCells = new[] { "A1", "A7", "A16", "A22", "A28" };
             TestHelper.LoadAndAssert((_, ws) =>
             {
@@ -187,10 +189,13 @@ namespace ClosedXML.Tests.Excel.Comments
                     var cell = ws.Cell(commentCell);
                     Assert.True(cell.HasComment);
                     var margins = cell.GetComment().Style.Margins;
+
                     Assert.AreEqual(0.5, margins.Left);
                     Assert.AreEqual(0.75, margins.Top);
-                }
 
+                    Assert.AreEqual(0, margins.Right);
+                    Assert.AreEqual(0, margins.Bottom);
+                }
             }, @"Other\Comments\InsetsUnitConversion.xlsx", new LoadOptions { Dpi = new Point(120, 120) });
         }
     }
