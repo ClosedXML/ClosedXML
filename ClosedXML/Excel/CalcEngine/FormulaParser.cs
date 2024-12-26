@@ -123,6 +123,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return new ReferenceNode(prefixNode, area, _isA1);
             }
 
+            public ValueNode BangReference(List<FormulaFlags> context, SymbolRange range, ReferenceArea reference)
+            {
+                return new NotSupportedNode("Bang reference");
+            }
+
             public ValueNode Reference3D(List<FormulaFlags> context, SymbolRange range, string firstSheet, string lastSheet,
                 ReferenceArea area)
             {
@@ -208,6 +213,11 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var prefixNode = new PrefixNode(null, sheet, null, null);
                 return new NameNode(prefixNode, name);
+            }
+
+            public ValueNode BangName(List<FormulaFlags> context, SymbolRange range, string name)
+            {
+                return new NotSupportedNode("Bang name");
             }
 
             public ValueNode ExternalName(List<FormulaFlags> context, SymbolRange range, int workbookIndex, string name)

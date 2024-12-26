@@ -66,6 +66,11 @@ internal abstract class CollectVisitor<TContext> : IAstFactory<object?, object?,
         return default;
     }
 
+    public virtual object? BangReference(TContext context, SymbolRange range, ReferenceArea reference)
+    {
+        return default;
+    }
+
     public virtual object? Reference3D(TContext context, SymbolRange range, string firstSheet, string lastSheet, ReferenceArea reference)
     {
         return default;
@@ -134,6 +139,11 @@ internal abstract class CollectVisitor<TContext> : IAstFactory<object?, object?,
     }
 
     public virtual object? SheetName(TContext context, SymbolRange range, string sheet, string name)
+    {
+        return default;
+    }
+
+    public virtual object? BangName(TContext context, SymbolRange range, string name)
     {
         return default;
     }

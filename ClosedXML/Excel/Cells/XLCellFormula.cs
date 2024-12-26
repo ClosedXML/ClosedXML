@@ -303,7 +303,7 @@ namespace ClosedXML.Excel
         public void RenameSheet(XLSheetPoint origin, string oldSheetName, string newSheetName)
         {
             var a1 = A1;
-            var res = FormulaConverter.ModifyA1(a1, origin.Row, origin.Column, new RenameRefModVisitor
+            var res = FormulaConverter.ModifyA1(a1, newSheetName, origin.Row, origin.Column, new RenameRefModVisitor
             {
                 Sheets = new Dictionary<string, string?> { { oldSheetName, newSheetName } }
             });
