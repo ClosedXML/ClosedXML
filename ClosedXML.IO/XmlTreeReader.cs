@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.IO;
 /// and parsing it ourselves. Allocations do matter when parsing hundreds of MBs.
 /// </para>
 /// </remarks>
-public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody is removed.
+public sealed class XmlTreeReader : IDisposable
 {
     /// <summary>
     /// The XmlReader that holds current element. The current node should always be either
@@ -127,15 +127,15 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     internal string ElementName => _reader.Name;
 
     /// <summary>
-    /// Read next element. Check lookup element is <paramref name="element"/>. If it is, open the
+    /// Read next element. Check lookup element is <paramref name="localName"/>. If it is, open the
     /// element and return true. Otherwise, return false (element doesn't change).
     /// </summary>
-    public bool TryOpen(string element, string ns)
+    public bool TryOpen(string localName, string namespaceUri)
     {
         AssertReaderOnElement();
         SwitchToLookup();
 
-        if (_isStart && _reader.LocalName == element && _reader.NamespaceURI == ns)
+        if (_isStart && _reader.LocalName == localName && _reader.NamespaceURI == namespaceUri)
         {
             // Element has been opened, so it should be processed.
             SwitchToProcessing();
@@ -146,12 +146,12 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     }
 
     // Throws when it is on closing elements of incorrect type
-    public bool TryClose(string element, string ns)
+    public bool TryClose(string localName, string namespaceUri)
     {
         AssertReaderOnElement();
         SwitchToLookup();
 
-        if (_isStart || _reader.LocalName != element || _reader.NamespaceURI != ns)
+        if (_isStart || _reader.LocalName != localName || _reader.NamespaceURI != namespaceUri)
             return false;
 
         // Element has been closed, so it should be processed. Though closing elements are not
@@ -163,24 +163,22 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     }
 
     /// <summary>
-    /// Assert that we are at the element with <paramref name="elementName"/>. Doesn't move anywhere.
+    /// Assert that we are at the element with <paramref name="localName"/>. Doesn't move anywhere.
     /// </summary>
-    /// <param name="elementName"></param>
-    /// <param name="ns"></param>
-    public void Open(string elementName, string ns)
+    public void Open(string localName, string namespaceUri)
     {
-        if (!TryOpen(elementName, ns))
-            throw PartStructureException.ExpectedElementNotFound($"Expected closing element '{elementName}', but got reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.");
+        if (!TryOpen(localName, namespaceUri))
+            throw PartStructureException.ExpectedElementNotFound($"Expected opening element '{localName}', but got reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.");
     }
 
     /// <summary>
-    /// Close the next unprocessed node. If the node doesn't match the <paramref name="element"/>,
+    /// Close the next unprocessed node. If the node doesn't match the <paramref name="localName"/>,
     /// throw an exception.
     /// </summary>
-    public void Close(string element, string ns)
+    public void Close(string localName, string namespaceUri)
     {
-        if (!TryClose(element, ns))
-            throw PartStructureException.ExpectedElementNotFound($"Expected {element}, got {_reader.Name}");
+        if (!TryClose(localName, namespaceUri))
+            throw PartStructureException.ExpectedElementNotFound($"Expected closing element '{localName}', but got reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.");
     }
 
     private void SwitchToProcessing()
@@ -424,5 +422,10 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
             throw PartStructureException.InvalidAttributeValue(enumString);
 
         return enumValue;
+    }
+
+    public void Dispose()
+    {
+        _reader.Dispose();
     }
 }
