@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClosedXML.IO;
+using System;
 using System.Diagnostics;
 using System.Xml;
 
@@ -76,6 +77,8 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     /// </summary>
     private readonly XmlReader _reader;
 
+    private readonly IEnumMapper _enumMapper;
+
     /// <summary>
     /// <para>
     /// An abstraction to deal with empty elements. If current element is an empty element
@@ -112,9 +115,10 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
     // If current element is empty element, this pro has a meaning.
     // if true, it was already opened.
     //private bool emptyIsOpened = false;
-    public XmlTreeReader(XmlReader reader)
+    public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper)
     {
         _reader = reader;
+        _enumMapper = enumMapper;
     }
 
     /// <summary>
@@ -400,7 +404,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
         var enumString = _reader.ReadContentAsString();
         _reader.MoveToElement();
 
-        if (!XmlToEnumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
+        if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
             throw PartStructureException.InvalidAttributeValue(enumString);
 
         return enumValue;
@@ -416,7 +420,7 @@ public sealed class XmlTreeReader //: IDisposable TODO: Add disposable when Fody
         if (enumString is null)
             return defaultValue;
 
-        if (!XmlToEnumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
+        if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
             throw PartStructureException.InvalidAttributeValue(enumString);
 
         return enumValue;

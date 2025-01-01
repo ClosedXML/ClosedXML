@@ -1,4 +1,7 @@
-﻿namespace ClosedXML.Excel.IO;
+﻿using System.IO;
+using System.Xml;
+
+namespace ClosedXML.Excel.IO;
 
 /// <summary>
 /// Reader of style part.
@@ -7,8 +10,12 @@ public class StyleSheetReader // TODO: Make internal, public so I can execute fo
 {
     private string _mainNs = OpenXmlConst.Main2006SsNs;
 
-    public void Load(XmlTreeReader xml)
+    public void Load(Stream stream)
     {
+        using var xmlReader = XmlReader.Create(stream);
+        xmlReader.MoveToContent();
+        var xml = new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance);
+
         if (!xml.TryOpen("styleSheet", _mainNs))
         {
             // Try OOXML strict namespace
@@ -208,7 +215,7 @@ public class StyleSheetReader // TODO: Make internal, public so I can execute fo
             else
             {
                 // TODO: Add option to skip unknown elements. Basically lax parsing. Most XML is well behaved, then... there are screwups. 
-                throw PartStructureException.ExpectedElementNotFound(xml.ElementName);
+                throw PartStructureException.ExpectedElementNotFound(xml);
             }
         }
     }

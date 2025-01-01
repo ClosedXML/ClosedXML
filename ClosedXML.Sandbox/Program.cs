@@ -64,12 +64,8 @@ namespace ClosedXML.Sandbox
                 len += styles.Length;
                 try
                 {
-                    using var xmlReader = XmlReader.Create(styleStream);
-                    xmlReader.MoveToContent();
-                    var reader = new XmlTreeReader(xmlReader);
-
                     sw.Start();
-                    new StyleSheetReader().Load(reader);
+                    new StyleSheetReader().Load(styleStream);
                 }
                 catch (Exception ex)
                 {
