@@ -189,6 +189,8 @@ public sealed class XmlTreeReader : IDisposable
 
     private void SwitchToLookup()
     {
+        AssertReaderOnElement();
+
         // When switching to lookup, current node and all its attributes should have already been processed.
         if (_inLookup)
             return;
@@ -206,18 +208,11 @@ public sealed class XmlTreeReader : IDisposable
         _inLookup = true;
     }
 
-    private void AssertReaderOnElement()
-    {
-        // Use Debug.Assert, so the release version eliminates whole call.
-        Debug.Assert(_reader.NodeType is XmlNodeType.Element or XmlNodeType.EndElement);
-    }
-
     /// <summary>
     /// Move from current opening/closing element to next opening/closing element.
     /// </summary>
     private void MoveToNextElement()
     {
-        AssertReaderOnElement();
         if (_isStart && _reader.IsEmptyElement)
         {
             _isStart = false;
@@ -257,12 +252,7 @@ public sealed class XmlTreeReader : IDisposable
     /// <exception cref="InvalidOperationException">Reader isn't on opening element.</exception>
     public void Skip()
     {
-        AssertReaderOnElement();
-        Debug.Assert(!_inLookup);
-
-        if (!_isStart)
-            throw new InvalidOperationException("Skip can only be called on a start element.");
-
+        ThrowOnNonStartElement();
         var startDepth = _reader.Depth;
         do
         {
@@ -274,8 +264,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public bool? GetBool(string attributeName)
     {
-        Debug.Assert(!_inLookup);
-
+        ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
         var result = _reader.ReadContentAsBoolean();
         _reader.MoveToElement();
@@ -284,7 +273,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public bool? GetOptionalBool(string attributeName)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         bool? result;
         if (_reader.MoveToAttribute(attributeName))
         {
@@ -302,9 +291,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public string GetContent()
     {
-        Debug.Assert(!_inLookup);
-        Debug.Assert(_isStart);
-
+        ThrowOnNonStartElement();
         if (_reader.IsEmptyElement)
         {
             _inLookup = true;
@@ -344,7 +331,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public int GetInt(string attributeName)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
         var number = _reader.ReadContentAsInt();
         _reader.MoveToElement();
@@ -353,7 +340,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public int? GetOptionalUint(string attributeName)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         int? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsInt() : null;
         if (number < 0)
             throw PartStructureException.InvalidAttributeValue(_reader.ReadContentAsString());
@@ -364,6 +351,7 @@ public sealed class XmlTreeReader : IDisposable
 
     public int GetUint(string attributeName)
     {
+        ThrowOnNonStartElement();
         var value = GetOptionalUint(attributeName);
         if (value is null)
             throw PartStructureException.RequiredElementIsMissing(attributeName);
@@ -373,14 +361,14 @@ public sealed class XmlTreeReader : IDisposable
 
     public double? GetOptionalDouble(string attributeName, double? defaultValue)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         var number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsDouble() : defaultValue;
         _reader.MoveToElement();
         return number;
     }
     public double GetDouble(string attributeName)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
         var number = _reader.ReadContentAsDouble();
         _reader.MoveToElement();
@@ -390,7 +378,7 @@ public sealed class XmlTreeReader : IDisposable
     public string GetAsXString(string attributeName)
     {
         // TODO: Decode XString
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         if (!_reader.MoveToAttribute(attributeName))
             throw PartStructureException.RequiredAttributeIsMissing(attributeName, _reader);
 
@@ -401,14 +389,14 @@ public sealed class XmlTreeReader : IDisposable
 
     public string? GetOptionalString(string attributeName)
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         return _reader.GetAttribute(attributeName);
     }
 
     public TEnum GetEnum<TEnum>(string attributeName)
         where TEnum : struct, Enum
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         if (!_reader.MoveToAttribute(attributeName))
             throw PartStructureException.RequiredAttributeIsMissing(attributeName, _reader);
 
@@ -424,7 +412,7 @@ public sealed class XmlTreeReader : IDisposable
     public TEnum GetOptionalEnum<TEnum>(string attributeName, TEnum defaultValue)
         where TEnum : struct, Enum
     {
-        Debug.Assert(!_inLookup);
+        ThrowOnNonStartElement();
         var enumString = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsString() : null;
         _reader.MoveToElement();
 
@@ -440,5 +428,17 @@ public sealed class XmlTreeReader : IDisposable
     public void Dispose()
     {
         _reader.Dispose();
+    }
+
+    private void AssertReaderOnElement()
+    {
+        // Use Debug.Assert, so the release version eliminates whole call.
+        Debug.Assert(_reader.NodeType is XmlNodeType.Element or XmlNodeType.EndElement);
+    }
+
+    private void ThrowOnNonStartElement()
+    {
+        if (_reader.NodeType != XmlNodeType.Element || !_isStart || _inLookup)
+            throw new InvalidOperationException("To read content/attribute, the reader must be on start element and in processing state.");
     }
 }
