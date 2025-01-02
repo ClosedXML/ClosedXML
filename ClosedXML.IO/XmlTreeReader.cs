@@ -202,22 +202,52 @@ public sealed class XmlTreeReader : IDisposable
         }
 
         // Read next element.
-        _reader.Read();
-        _reader.MoveToContent();
-
+        MoveToNextElement();
         _inLookup = true;
-        _isStart = _reader.NodeType switch
-        {
-            XmlNodeType.Element => true,
-            XmlNodeType.EndElement => false,
-            _ => throw PartStructureException.ExpectedElementNotFound($"Parser expected an element, instead found node '{_reader.NodeType}'."),
-        };
     }
 
     private void AssertReaderOnElement()
     {
         // Use Debug.Assert, so the release version eliminates whole call.
         Debug.Assert(_reader.NodeType is XmlNodeType.Element or XmlNodeType.EndElement);
+    }
+
+    /// <summary>
+    /// Move from current opening/closing element to next opening/closing element.
+    /// </summary>
+    private void MoveToNextElement()
+    {
+        AssertReaderOnElement();
+        if (_isStart && _reader.IsEmptyElement)
+        {
+            _isStart = false;
+            return;
+        }
+
+        while (_reader.Read())
+        {
+            // The only allowed All other types should either be skipped (e.g. text)
+            // or are errors;
+            if (_reader.NodeType is XmlNodeType.Element)
+            {
+                _isStart = true;
+                return;
+            }
+
+            if (_reader.NodeType is XmlNodeType.EndElement)
+            {
+                _isStart = false;
+                return;
+            }
+
+            // All other nodes should be skipped:
+            // * The possible nodes (Text, Comment, CDATA, SignificantWhitespace,
+            //   ProcessingInstruction) should be skipped, because they are not elements. Excel
+            //   also skips text that is between nodes where it is not valid, without error.
+            // * Other node types are disallowed by usage semantic (Document, None, XmlDeclaration)
+            //   or XmlReader setting (DTD).
+            // * Attribute should never be encountered because it is after element.
+        }
     }
 
     // Reader should be on opening node of an element. Skip to the closing and after
