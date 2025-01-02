@@ -26,10 +26,8 @@ internal static class XmlTreeReaderExtensions
         var theme = reader.GetOptionalUint("theme");
         if (theme is not null)
         {
-            var tint = reader.GetOptionalDouble("theme", 0);
-            color = tint is not null
-                ? XLColor.FromTheme((XLThemeColor)theme.Value, tint.Value)
-                : XLColor.FromTheme((XLThemeColor)theme.Value);
+            var tint = reader.GetOptionalDouble("theme") ?? 0;
+            color = XLColor.FromTheme((XLThemeColor)theme.Value, tint);
             reader.Close(element, ns);
             return true;
         }
@@ -42,7 +40,7 @@ internal static class XmlTreeReaderExtensions
             return true;
         }
 
-        var indexed = reader.GetOptionalUint("indexed");
+        var indexed = reader.GetOptionalUintAsInt("indexed");
         if (indexed is not null)
         {
             color = indexed <= 64 ? XLColor.FromIndex(indexed.Value) : XLColor.NoColor;

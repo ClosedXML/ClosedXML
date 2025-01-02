@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 
 namespace ClosedXML.IO;
@@ -197,33 +198,6 @@ public sealed class XmlTreeReader : IDisposable
         _inLookup = false;
     }
 
-    public bool GetBool(string attributeName)
-    {
-        ThrowOnNonStartElement();
-        _reader.MoveToAttribute(attributeName);
-        var result = _reader.ReadContentAsBoolean();
-        _reader.MoveToElement();
-        return result;
-    }
-
-    public bool? GetOptionalBool(string attributeName)
-    {
-        ThrowOnNonStartElement();
-        bool? result;
-        if (_reader.MoveToAttribute(attributeName))
-        {
-            result = _reader.ReadContentAsBoolean();
-        }
-        else
-        {
-            // Some producers put bool as <b>true</b>, i.e. invalid XML
-            result = null;
-        }
-
-        _reader.MoveToElement();
-        return result;
-    }
-
     /// <summary>
     /// Read the content of current element. Ends in a lookup state on the end element.
     /// </summary>
@@ -268,48 +242,38 @@ public sealed class XmlTreeReader : IDisposable
         return value;
     }
 
-    public int GetInt(string attributeName)
+    public bool? GetOptionalBool(string attributeName)
+    {
+        ThrowOnNonStartElement();
+        bool? result = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsBoolean() : null;
+        _reader.MoveToElement();
+        return result;
+    }
+
+    public int? GetOptionalInt(string attributeName)
     {
         ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
-        var number = _reader.ReadContentAsInt();
+        int? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsInt() : null;
         _reader.MoveToElement();
         return number;
     }
 
-    public int? GetOptionalUint(string attributeName)
+    public uint? GetOptionalUint(string attributeName)
     {
         ThrowOnNonStartElement();
-        int? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsInt() : null;
-        if (number < 0)
+        long? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsLong() : null;
+        if (number is < 0 or > uint.MaxValue)
             throw PartStructureException.InvalidAttributeValue(_reader.ReadContentAsString());
 
         _reader.MoveToElement();
-        return number;
+        return number is not null ? (uint)number : null;
     }
 
-    public int GetUint(string attributeName)
+    public double? GetOptionalDouble(string attributeName)
     {
         ThrowOnNonStartElement();
-        var value = GetOptionalUint(attributeName);
-        if (value is null)
-            throw PartStructureException.RequiredElementIsMissing(attributeName);
-
-        return value.Value;
-    }
-
-    public double? GetOptionalDouble(string attributeName, double? defaultValue)
-    {
-        ThrowOnNonStartElement();
-        var number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsDouble() : defaultValue;
-        _reader.MoveToElement();
-        return number;
-    }
-    public double GetDouble(string attributeName)
-    {
-        ThrowOnNonStartElement();
-        _reader.MoveToAttribute(attributeName);
-        var number = _reader.ReadContentAsDouble();
+        double? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsDouble() : null;
         _reader.MoveToElement();
         return number;
     }
@@ -319,7 +283,7 @@ public sealed class XmlTreeReader : IDisposable
         // TODO: Decode XString
         ThrowOnNonStartElement();
         if (!_reader.MoveToAttribute(attributeName))
-            throw PartStructureException.RequiredAttributeIsMissing(attributeName, _reader);
+            throw PartStructureException.RequiredAttributeIsMissing(attributeName, this);
 
         var text = _reader.ReadContentAsString();
         _reader.MoveToElement();
@@ -332,23 +296,7 @@ public sealed class XmlTreeReader : IDisposable
         return _reader.GetAttribute(attributeName);
     }
 
-    public TEnum GetEnum<TEnum>(string attributeName)
-        where TEnum : struct, Enum
-    {
-        ThrowOnNonStartElement();
-        if (!_reader.MoveToAttribute(attributeName))
-            throw PartStructureException.RequiredAttributeIsMissing(attributeName, _reader);
-
-        var enumString = _reader.ReadContentAsString();
-        _reader.MoveToElement();
-
-        if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
-            throw PartStructureException.InvalidAttributeValue(enumString);
-
-        return enumValue;
-    }
-
-    public TEnum GetOptionalEnum<TEnum>(string attributeName, TEnum defaultValue)
+    public TEnum? GetOptionalEnum<TEnum>(string attributeName)
         where TEnum : struct, Enum
     {
         ThrowOnNonStartElement();
@@ -356,7 +304,7 @@ public sealed class XmlTreeReader : IDisposable
         _reader.MoveToElement();
 
         if (enumString is null)
-            return defaultValue;
+            return null;
 
         if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
             throw PartStructureException.InvalidAttributeValue(enumString);
@@ -367,6 +315,18 @@ public sealed class XmlTreeReader : IDisposable
     public void Dispose()
     {
         _reader.Dispose();
+    }
+
+    internal bool TryGetLineInfo([NotNullWhen(true)] out IXmlLineInfo? lineInfo)
+    {
+        if (_reader is IXmlLineInfo readerInfo && readerInfo.HasLineInfo())
+        {
+            lineInfo = readerInfo;
+            return true;
+        }
+
+        lineInfo = null;
+        return false;
     }
 
     private void SwitchToProcessing()

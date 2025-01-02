@@ -67,10 +67,10 @@ namespace ClosedXML.IO
             return new PartStructureException($"The value of attribute '{attributeValue}' is not valid value for the attribute.");
         }
 
-        public static Exception RequiredAttributeIsMissing(string attributeName, XmlReader? reader)
+        public static Exception RequiredAttributeIsMissing(string attributeName, XmlTreeReader reader)
         {
             var message = $"The XML schema requires an attribute '{attributeName}', but is is not present.";
-            if (reader is IXmlLineInfo lineInfo && lineInfo.HasLineInfo())
+            if (reader.TryGetLineInfo(out var lineInfo))
             {
                 message += $" Line:{lineInfo.LineNumber}, Position:{lineInfo.LinePosition}.";
             }
