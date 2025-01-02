@@ -181,62 +181,6 @@ public sealed class XmlTreeReader : IDisposable
             throw PartStructureException.ExpectedElementNotFound($"Expected closing element '{localName}', but got reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.");
     }
 
-    private void SwitchToProcessing()
-    {
-        if (_inLookup)
-            _inLookup = false;
-    }
-
-    private void SwitchToLookup()
-    {
-        AssertReaderOnElement();
-
-        // When switching to lookup, current node and all its attributes should have already been processed.
-        if (_inLookup)
-            return;
-
-        // Read next element.
-        MoveToNextElement();
-        _inLookup = true;
-    }
-
-    /// <summary>
-    /// Move from current opening/closing element to next opening/closing element.
-    /// </summary>
-    private void MoveToNextElement()
-    {
-        if (_isStart && _reader.IsEmptyElement)
-        {
-            _isStart = false;
-            return;
-        }
-
-        while (_reader.Read())
-        {
-            // The only allowed All other types should either be skipped (e.g. text)
-            // or are errors;
-            if (_reader.NodeType is XmlNodeType.Element)
-            {
-                _isStart = true;
-                return;
-            }
-
-            if (_reader.NodeType is XmlNodeType.EndElement)
-            {
-                _isStart = false;
-                return;
-            }
-
-            // All other nodes should be skipped:
-            // * The possible nodes (Text, Comment, CDATA, SignificantWhitespace,
-            //   ProcessingInstruction) should be skipped, because they are not elements. Excel
-            //   also skips text that is between nodes where it is not valid, without error.
-            // * Other node types are disallowed by usage semantic (Document, None, XmlDeclaration)
-            //   or XmlReader setting (DTD).
-            // * Attribute should never be encountered because it is after element.
-        }
-    }
-
     /// <summary>
     /// Skip subtree that start on the current element. After subtree is read, the reader is
     /// on an ending element of a subtree in a processed state.
@@ -420,6 +364,62 @@ public sealed class XmlTreeReader : IDisposable
     public void Dispose()
     {
         _reader.Dispose();
+    }
+
+    private void SwitchToProcessing()
+    {
+        if (_inLookup)
+            _inLookup = false;
+    }
+
+    private void SwitchToLookup()
+    {
+        AssertReaderOnElement();
+
+        // When switching to lookup, current node and all its attributes should have already been processed.
+        if (_inLookup)
+            return;
+
+        // Read next element.
+        MoveToNextElement();
+        _inLookup = true;
+    }
+
+    /// <summary>
+    /// Move from current opening/closing element to next opening/closing element.
+    /// </summary>
+    private void MoveToNextElement()
+    {
+        if (_isStart && _reader.IsEmptyElement)
+        {
+            _isStart = false;
+            return;
+        }
+
+        while (_reader.Read())
+        {
+            // The only allowed All other types should either be skipped (e.g. text)
+            // or are errors;
+            if (_reader.NodeType is XmlNodeType.Element)
+            {
+                _isStart = true;
+                return;
+            }
+
+            if (_reader.NodeType is XmlNodeType.EndElement)
+            {
+                _isStart = false;
+                return;
+            }
+
+            // All other nodes should be skipped:
+            // * The possible nodes (Text, Comment, CDATA, SignificantWhitespace,
+            //   ProcessingInstruction) should be skipped, because they are not elements. Excel
+            //   also skips text that is between nodes where it is not valid, without error.
+            // * Other node types are disallowed by usage semantic (Document, None, XmlDeclaration)
+            //   or XmlReader setting (DTD).
+            // * Attribute should never be encountered because it is after element.
+        }
     }
 
     private void AssertReaderOnElement()
