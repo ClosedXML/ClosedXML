@@ -250,43 +250,26 @@ public sealed class XmlTreeReader : IDisposable
         }
     }
 
-    // Reader should be on opening node of an element. Skip to the closing and after
+    /// <summary>
+    /// Skip subtree that start on the current element. After subtree is read, the reader is
+    /// on an ending element of a subtree in a processed state.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Reader isn't on opening element.</exception>
     public void Skip()
     {
         AssertReaderOnElement();
         Debug.Assert(!_inLookup);
 
         if (!_isStart)
-            throw new Exception("Should be called on start element");
+            throw new InvalidOperationException("Skip can only be called on a start element.");
 
-        if (_reader.IsEmptyElement)
+        var startDepth = _reader.Depth;
+        do
         {
-            _isStart = false;
-            SwitchToLookup();
-            return;
-        }
+            MoveToNextElement();
+        } while (_isStart || _reader.Depth > startDepth);
 
-        // Skip everything under current element, including end element.
-        _reader.Skip();
-
-        // Next element is empty element
-        if (_reader.IsEmptyElement)
-        {
-            _isStart = true;
-        }
-        else
-        {
-            // After read, we might end with whitespace
-            _reader.MoveToContent();
-            _isStart = _reader.NodeType switch
-            {
-                XmlNodeType.Element => true,
-                XmlNodeType.EndElement => false,
-                _ => throw PartStructureException.ExpectedElementNotFound($"Parser expected an element, instead found node '{_reader.NodeType}'."),
-            };
-        }
-
-        _inLookup = true;
+        _inLookup = false;
     }
 
     public bool? GetBool(string attributeName)
