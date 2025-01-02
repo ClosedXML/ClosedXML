@@ -1,4 +1,5 @@
 ﻿using System;
+using ClosedXML.IO;
 using ClosedXML.Utils;
 
 namespace ClosedXML.Excel.IO;

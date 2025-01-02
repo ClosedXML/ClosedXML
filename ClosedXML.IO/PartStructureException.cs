@@ -1,7 +1,7 @@
 using System;
 using System.Xml;
 
-namespace ClosedXML.Excel.IO
+namespace ClosedXML.IO
 {
     /// <summary>
     /// An exception thrown from parser when there is a problem with data in XML.

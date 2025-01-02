@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using ClosedXML.Excel.IO;
+using ClosedXML.IO;
 using ClosedXML.Parser;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Formula = DocumentFormat.OpenXml.Spreadsheet.Formula;

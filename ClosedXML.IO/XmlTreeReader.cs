@@ -1,9 +1,8 @@
-﻿using ClosedXML.IO;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Xml;
 
-namespace ClosedXML.Excel.IO;
+namespace ClosedXML.IO;
 
 /// <summary>
 /// <para>
