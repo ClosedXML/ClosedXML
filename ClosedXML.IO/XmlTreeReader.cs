@@ -198,7 +198,7 @@ public sealed class XmlTreeReader : IDisposable
         _inLookup = false;
     }
 
-    public bool? GetBool(string attributeName)
+    public bool GetBool(string attributeName)
     {
         ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
@@ -225,6 +225,10 @@ public sealed class XmlTreeReader : IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Read the content of current element. Ends in a lookup state on the end element.
+    /// </summary>
+    /// <exception cref="PartStructureException">The content contains elements.</exception>
     public string GetContent()
     {
         ThrowOnNonStartElement();
@@ -237,11 +241,11 @@ public sealed class XmlTreeReader : IDisposable
 
         // ReadElementContentAsString reads beyond closing element. Make your own reader.
         var value = string.Empty;
-        while (_reader.Read() && _reader.NodeType != XmlNodeType.EndElement)
+        while (ReadNode() is { } nodeType && nodeType != XmlNodeType.EndElement)
         {
             // All unspecified nodes should be skipped. It is either comments, processing
             // instructions or something that shouldn't ever happen (e.g. attribute).
-            switch (_reader.NodeType)
+            switch (nodeType)
             {
                 case XmlNodeType.Text:
                 case XmlNodeType.Whitespace:
@@ -396,17 +400,17 @@ public sealed class XmlTreeReader : IDisposable
             return;
         }
 
-        while (_reader.Read())
+        while (ReadNode() is { } nodeType)
         {
             // The only allowed All other types should either be skipped (e.g. text)
             // or are errors;
-            if (_reader.NodeType is XmlNodeType.Element)
+            if (nodeType is XmlNodeType.Element)
             {
                 _isStart = true;
                 return;
             }
 
-            if (_reader.NodeType is XmlNodeType.EndElement)
+            if (nodeType is XmlNodeType.EndElement)
             {
                 _isStart = false;
                 return;
@@ -420,6 +424,11 @@ public sealed class XmlTreeReader : IDisposable
             //   or XmlReader setting (DTD).
             // * Attribute should never be encountered because it is after element.
         }
+    }
+
+    private XmlNodeType? ReadNode()
+    {
+        return _reader.Read() ? _reader.NodeType : null;
     }
 
     private void AssertReaderOnElement()
