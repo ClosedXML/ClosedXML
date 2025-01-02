@@ -208,15 +208,9 @@ public class StyleSheetReader // TODO: Make internal, public so I can execute fo
                 scheme = xml.GetEnum<XLFontScheme>("val");
                 xml.Close("scheme", _mainNs);
             }
-            else if (xml.TryOpen("scheme", _mainNs))
-            {
-                scheme = xml.GetEnum<XLFontScheme>("val");
-                xml.Close("scheme", _mainNs);
-            }
             else
             {
-                // TODO: Add option to skip unknown elements. Basically lax parsing. Most XML is well behaved, then... there are screwups. 
-                throw PartStructureException.ExpectedElementNotFound(xml);
+                throw PartStructureException.ExpectedChoiceElementNotFound(xml);
             }
         }
     }

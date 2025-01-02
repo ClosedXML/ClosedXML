@@ -26,9 +26,9 @@ public class PartStructureException : Exception
         return new PartStructureException("The structure of XML expected a certain kind of element, but it isn't there.", missingElementDesc);
     }
 
-    public static Exception ExpectedElementNotFound(XmlTreeReader xml)
+    public static Exception ExpectedChoiceElementNotFound(XmlTreeReader reader)
     {
-        return ExpectedElementNotFound(xml.ElementName);
+        return new PartStructureException($"The structure of XML expected an element from choice of several, but found {reader.ElementName} instead.");
     }
 
     public static Exception IncorrectElementsCount()
