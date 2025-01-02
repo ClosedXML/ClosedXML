@@ -195,14 +195,6 @@ public sealed class XmlTreeReader : IDisposable
         if (_inLookup)
             return;
 
-        if (_reader.IsEmptyElement && _isStart)
-        {
-            // Keep element, but interpret it as the ending element.
-            _inLookup = true;
-            _isStart = false;
-            return;
-        }
-
         // Read next element.
         MoveToNextElement();
         _inLookup = true;
