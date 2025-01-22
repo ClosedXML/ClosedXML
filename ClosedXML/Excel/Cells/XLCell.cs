@@ -1350,7 +1350,7 @@ namespace ClosedXML.Excel
             FormulaR1C1 = source.FormulaR1C1;
             SliceComment = source.SliceComment == null ? null : new XLComment(this, source.SliceComment, source.Style.Font, source.SliceComment.Style);
 
-            if (Worksheet.Hyperlinks.TryGet(source.SheetPoint, out var sourceHyperlink))
+            if (source.Worksheet.Hyperlinks.TryGet(source.SheetPoint, out var sourceHyperlink))
             {
                 SetCellHyperlink(new XLHyperlink(sourceHyperlink));
             }

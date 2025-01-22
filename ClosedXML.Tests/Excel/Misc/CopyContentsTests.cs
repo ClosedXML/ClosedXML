@@ -1,3 +1,4 @@
+using System;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Linq;
@@ -126,6 +127,26 @@ namespace ClosedXML.Tests.Excel.Misc
                 Assert.AreEqual("Sheet1", ws1.FirstCell().Address.Worksheet.Name);
                 Assert.AreEqual("Sheet2", ws2.FirstCell().Address.Worksheet.Name);
             }
+        }
+
+        [Test]
+        public void CopyHyperlinksAmongSheets()
+        {
+            using var wb = new XLWorkbook();
+            var source = wb.AddWorksheet();
+            var target = wb.AddWorksheet();
+            source.Cell("A1")
+                .SetValue("link")
+                .CreateHyperlink()
+                .SetValues("https://example.com", "Test tooltip");
+
+            source.Cell("A1").AsRange().CopyTo(target.Cell("B7"));
+
+            var cell = target.Cell("B7");
+            Assert.True(cell.HasHyperlink);
+            Assert.True(cell.GetHyperlink().IsExternal);
+            Assert.AreEqual(new Uri("https://example.com"), cell.GetHyperlink().ExternalAddress);
+            Assert.AreEqual("Test tooltip", cell.GetHyperlink().Tooltip);
         }
     }
 }
