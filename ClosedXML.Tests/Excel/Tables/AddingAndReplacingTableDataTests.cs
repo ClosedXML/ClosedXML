@@ -568,16 +568,21 @@ namespace ClosedXML.Tests.Excel.Tables
             }
         }
 
-        [Test]
-        public void CanReplaceWhenWorksheetHasDefinedNamesWithoutSheetReferences()
+        [TestCase("ListOfPeople[Age]")] // Defined name formula without a A1 reference
+        [TestCase("ListOfPeople!A1")] // Defined name formula with an A1 reference
+        public void CanReplaceTableDataWhenWorksheetHasDefinedNames(string nameFormula)
         {
+            // When table data are replaced, the size of a table is modified. That
+            // means rows below it are shifted up/down and defined names should be
+            // adjusted.
+            // TODO: add assert for name shift when formulas are properly shifted. Originally, it threw even on defined name with A1 reference
             using (var ms = new MemoryStream())
             {
                 using (var wb = PrepareWorkbook())
                 {
                     var ws = wb.Worksheets.First();
 
-                    ws.DefinedNames.Add("ListOfPeople_Age", "ListOfPeople[Age]");
+                    ws.DefinedNames.Add("ListOfPeople_Age", nameFormula);
 
                     var table = ws.Tables.First();
 
@@ -585,39 +590,6 @@ namespace ClosedXML.Tests.Excel.Tables
                     var replacedRange = table.ReplaceData(personEnumerable);
 
                     Assert.AreEqual("B3:G4", replacedRange.RangeAddress.ToString());
-                    ws.Columns().AdjustToContents();
-
-                    wb.SaveAs(ms);
-                }
-
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var table = wb.Worksheets.SelectMany(ws => ws.Tables).First();
-
-                    Assert.AreEqual(2, table.DataRange.RowCount());
-                    Assert.AreEqual(6, table.DataRange.ColumnCount());
-                }
-            }
-        }
-
-        [Test]
-        public void CanReplaceWhenWorksheetHasDefinedNamesWithSheetReferences()
-        {
-            using (var ms = new MemoryStream())
-            {
-                using (var wb = PrepareWorkbook())
-                {
-                    var ws = wb.Worksheets.First();
-
-                    ws.DefinedNames.Add("ListOfPeople_Age", "ListOfPeople!A1");
-
-                    var table = ws.Tables.First();
-
-                    IEnumerable<Person> personEnumerable = NewData;
-                    var replacedRange = table.ReplaceData(personEnumerable);
-
-                    Assert.AreEqual("B3:G4", replacedRange.RangeAddress.ToString());
-                    ws.Columns().AdjustToContents();
 
                     wb.SaveAs(ms);
                 }
