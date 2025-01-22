@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.105.0-preview1</Version>
+    <Version>0.105.0-rc</Version>
   </PropertyGroup>
 
   <!-- Set common properties regarding assembly information and nuget packages -->
