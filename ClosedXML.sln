@@ -24,6 +24,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{073C
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Performance", "Performance", "{E40AF109-DDB9-4E91-9562-3FE1CE699F6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML.Performance.BaseLine", "Performance\ClosedXML.Performance.BaseLine\ClosedXML.Performance.BaseLine.csproj", "{2BBE8106-5B8A-4AAB-9305-D49448AFAF94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML.Performance.Current", "Performance\ClosedXML.Performance.Current\ClosedXML.Performance.Current.csproj", "{143654F3-EB5C-42D2-8346-DA50B6050676}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML.Performance.Tests", "Performance\ClosedXML.Performance.Tests\ClosedXML.Performance.Tests.csproj", "{655931BF-64FC-4176-9D56-86FEEBE84143}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML.Performance.Common", "Performance\ClosedXML.Performance.Common\ClosedXML.Performance.Common.csproj", "{A3FF4CD2-5629-412B-89CB-D46E554432D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,9 +56,31 @@ Global
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BBE8106-5B8A-4AAB-9305-D49448AFAF94}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBE8106-5B8A-4AAB-9305-D49448AFAF94}.Release.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBE8106-5B8A-4AAB-9305-D49448AFAF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBE8106-5B8A-4AAB-9305-D49448AFAF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{143654F3-EB5C-42D2-8346-DA50B6050676}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{143654F3-EB5C-42D2-8346-DA50B6050676}.Release.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{143654F3-EB5C-42D2-8346-DA50B6050676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{143654F3-EB5C-42D2-8346-DA50B6050676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{655931BF-64FC-4176-9D56-86FEEBE84143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{655931BF-64FC-4176-9D56-86FEEBE84143}.Release.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{655931BF-64FC-4176-9D56-86FEEBE84143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{655931BF-64FC-4176-9D56-86FEEBE84143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3FF4CD2-5629-412B-89CB-D46E554432D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3FF4CD2-5629-412B-89CB-D46E554432D4}.Release.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{A3FF4CD2-5629-412B-89CB-D46E554432D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3FF4CD2-5629-412B-89CB-D46E554432D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2BBE8106-5B8A-4AAB-9305-D49448AFAF94} = {E40AF109-DDB9-4E91-9562-3FE1CE699F6F}
+		{143654F3-EB5C-42D2-8346-DA50B6050676} = {E40AF109-DDB9-4E91-9562-3FE1CE699F6F}
+		{655931BF-64FC-4176-9D56-86FEEBE84143} = {E40AF109-DDB9-4E91-9562-3FE1CE699F6F}
+		{A3FF4CD2-5629-412B-89CB-D46E554432D4} = {E40AF109-DDB9-4E91-9562-3FE1CE699F6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E35B7D8-9690-408F-B52A-F4FC485A6B09}

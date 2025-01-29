@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ClosedXML.Performance.BaseLine\OneRow.cs" Link="OneRow.cs" />
+    <Compile Include="..\ClosedXML.Performance.BaseLine\PerformanceRunner.cs" Link="PerformanceRunner.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClosedXML.Performance.Common\ClosedXML.Performance.Common.csproj" />
+    <ProjectReference Include="..\..\ClosedXML\ClosedXML.csproj" />
+  </ItemGroup>
+
+</Project>
