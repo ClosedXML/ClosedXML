@@ -20,6 +20,9 @@ namespace ClosedXML.Tests.Excel
 
             // https://github.com/ClosedXML/ClosedXML/issues/1154
             Assert.AreEqual("_Xceed_Something", XmlEncoder.DecodeString("_Xceed_Something"));
+
+            // https://github.com/ClosedXML/ClosedXML/issues/2610
+            Assert.AreEqual("DE_XAB500161_seo_title", XmlEncoder.DecodeString("DE_XAB500161_seo_title"));
         }
 
         [Test]
