@@ -303,7 +303,8 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenContains(String value)
         {
-            Values.Initialize(new XLFormula { Value = value });
+            // Formula's are not support currently. They are only supported in the newer Excel 2010+ extended xml.
+            Values.Initialize(new XLFormula { Value = value, IsFormula = false });
             ConditionalFormatType = XLConditionalFormatType.ContainsText;
             Operator = XLCFOperator.Contains;
             return Style;
@@ -311,7 +312,8 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenNotContains(String value)
         {
-            Values.Initialize(new XLFormula { Value = value });
+            // Formula's are not support currently. They are only supported in the newer Excel 2010+ extended xml.
+            Values.Initialize(new XLFormula { Value = value, IsFormula = false });
             ConditionalFormatType = XLConditionalFormatType.NotContainsText;
             Operator = XLCFOperator.NotContains;
             return Style;
@@ -319,7 +321,8 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenStartsWith(String value)
         {
-            Values.Initialize(new XLFormula { Value = value });
+            // Formula's are not support currently. They are only supported in the newer Excel 2010+ extended xml.
+            Values.Initialize(new XLFormula { Value = value, IsFormula = false });
             ConditionalFormatType = XLConditionalFormatType.StartsWith;
             Operator = XLCFOperator.StartsWith;
             return Style;
@@ -327,7 +330,8 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenEndsWith(String value)
         {
-            Values.Initialize(new XLFormula { Value = value });
+            // Formula's are not support currently. They are only supported in the newer Excel 2010+ extended xml.
+            Values.Initialize(new XLFormula { Value = value, IsFormula = false });
             ConditionalFormatType = XLConditionalFormatType.EndsWith;
             Operator = XLCFOperator.EndsWith;
             return Style;
