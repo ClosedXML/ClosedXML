@@ -1497,6 +1497,9 @@ namespace ClosedXML.Excel.IO
 
             foreach (var (columnNumber, xlFilterColumn) in xlAutoFilter.Columns)
             {
+                if (xlFilterColumn.FilterType == XLFilterType.None)
+                    continue;
+
                 var filterColumn = new FilterColumn { ColumnId = (UInt32)columnNumber - 1 };
 
                 switch (xlFilterColumn.FilterType)
