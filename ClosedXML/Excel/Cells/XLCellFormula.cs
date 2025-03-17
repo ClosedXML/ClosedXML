@@ -136,17 +136,24 @@ namespace ClosedXML.Excel
             if (formula.StartsWith('='))
                 formula = formula[1..];
 
-            var converted = conversionType switch
+            try
             {
-                FormulaConversionType.A1ToR1C1 => FormulaConverter.ToR1C1(formula, cellAddress.Row, cellAddress.Column),
-                FormulaConversionType.R1C1ToA1 => FormulaConverter.ToA1(formula, cellAddress.Row, cellAddress.Column),
-                _ => throw new NotSupportedException()
-            };
+                var converted = conversionType switch
+                {
+                    FormulaConversionType.A1ToR1C1 => FormulaConverter.ToR1C1(formula, cellAddress.Row, cellAddress.Column),
+                    FormulaConversionType.R1C1ToA1 => FormulaConverter.ToA1(formula, cellAddress.Row, cellAddress.Column),
+                    _ => throw new NotSupportedException()
+                };
 
-            if (formula.Length != strValue.Length)
-                converted = strValue[..^formula.Length] + converted;
+                if (formula.Length != strValue.Length)
+                    converted = strValue[..^formula.Length] + converted;
 
-            return converted;
+                return converted;
+            }
+            catch (ParsingException)
+            {
+                return formula;
+            }
         }
 
         /// <summary>
