@@ -100,7 +100,7 @@ namespace ClosedXML.Excel
             private protected set => _cellsCollection.StyleSlice.Set(_rowNumber, _columnNumber, value);
         }
 
-        internal int SharedStringId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
+        internal int MemorySstId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
 
         internal XLImmutableRichText RichText => SliceRichText;
 
