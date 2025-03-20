@@ -74,7 +74,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
 
             _hyperlinks.Remove(hyperlinkArea, out var hyperlink);
             if (newHlArea is not null)
-                _hyperlinks.Add(newHlArea.Value, hyperlink);
+                _hyperlinks[newHlArea.Value] = hyperlink;
         }
     }
 
