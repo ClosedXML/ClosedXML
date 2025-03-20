@@ -36,8 +36,8 @@ namespace ClosedXML.Tests.Excel
                 using (var wb = new XLWorkbook(ms))
                 {
                     var ws = wb.Worksheets.First();
-                    var cell = ws.FirstCell().CellRight() as XLCell;
-                    Assert.AreEqual(1, cell.SharedStringId);
+                    var cell = (XLCell)ws.Cell("B1");
+                    Assert.AreEqual(1, cell.MemorySstId);
 
                     Assert.IsTrue(cell.IsEmpty());
                     Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));

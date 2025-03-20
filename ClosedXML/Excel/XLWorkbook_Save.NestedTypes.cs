@@ -3,6 +3,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -52,7 +53,20 @@ namespace ClosedXML.Excel
             /// </summary>
             public List<int> SstMap { get; set; }
 
-            #nullable enable
+#nullable enable
+            internal int GetSharedStringId(XLCell xlCell, string text)
+            {
+                var sharedStringId = SstMap[xlCell.MemorySstId];
+                if (sharedStringId < 0)
+                {
+                    throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
+                                                   "That likely means reference counting is broken. As a stop-gap, try to set the " +
+                                                   "text value to an unused cell to increase number of references for the text.");
+                }
+
+                return sharedStringId;
+            }
+
             internal int? GetNumberFormat(XLNumberFormatValue? numberFormat)
             {
                 if (numberFormat is null)

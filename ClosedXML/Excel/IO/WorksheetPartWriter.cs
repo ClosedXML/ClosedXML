@@ -1411,14 +1411,7 @@ namespace ClosedXML.Excel.IO
                 {
                     if (xlCell.ShareString)
                     {
-                        var sharedStringId = context.SstMap[xlCell.SharedStringId];
-                        if (sharedStringId < 0)
-                        {
-                            throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
-                                                           "That likely means reference counting is broken. As a stop-gap, try to set the " +
-                                                           "text value to an unused cell to increase number of references for the text.");
-                        }
-
+                        var sharedStringId = context.GetSharedStringId(xlCell, text);
                         w.WriteStartElement("v", Main2006SsNs);
                         w.WriteValue(sharedStringId);
                         w.WriteEndElement();
@@ -2294,17 +2287,19 @@ namespace ClosedXML.Excel.IO
                 else if (tableTotalCells.Contains(xlCell.Address))
                 {
                     var table = xlCell.Worksheet.Tables.First<XLTable>(t => t.AsRange().Contains(xlCell));
-                    var field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+                    var field = (XLTableField)table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber);
 
                     // If this is a cell in the totals row that contains a label (xor with function), write label
                     // Only label can be written. Total functions are basically formulas that use structured
                     // references and SR are not yet supported, so not yet possible to calculate total values.
                     if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                     {
+                        // Excel requires that table totals row label attribute in tableColumn must match the cell
+                        // string from SST. If they don't match, Excel will consider it a corrupt workbook.
+                        var sharedStringId = context.GetSharedStringId(xlCell, field.TotalsRowLabel);
                         WriteStartCell(xml, xlCell, cellRef, cellRefLen, "s", styleId);
-
                         xml.WriteStartElement("v", Main2006SsNs);
-                        xml.WriteValue(xlCell.SharedStringId);
+                        xml.WriteValue(sharedStringId);
                         xml.WriteEndElement();
                     }
                     xml.WriteEndElement(); // cell
