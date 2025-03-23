@@ -542,7 +542,7 @@ internal class PivotTableDefinitionPartReader
                 // Axis can contain 'data' field.
                 var fieldIndex = field.Index?.Value ?? throw PartStructureException.MissingAttribute();
                 if (fieldIndex >= xlPivotTable.PivotFields.Count || (fieldIndex < 0 && fieldIndex != ValuesFieldIndex))
-                    throw PartStructureException.IncorrectAttributeValue();
+                    throw PartStructureException.InvalidAttributeValue();
 
                 axis.AddField(fieldIndex);
             }

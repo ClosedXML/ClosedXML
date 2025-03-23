@@ -13,9 +13,9 @@ internal static class XmlTreeReaderExtensions
     /// <summary>
     /// Read <c>CT_Color</c>.
     /// </summary>
-    public static bool TryParseColor(this XmlTreeReader reader, string element, string ns, out XLColor color)
+    public static bool TryParseColor(this XmlTreeReader reader, string colorElementName, string ns, out XLColor color)
     {
-        if (!reader.TryOpen(element, ns))
+        if (!reader.TryOpen(colorElementName, ns))
         {
             color = XLColor.NoColor;
             return false;
@@ -28,7 +28,7 @@ internal static class XmlTreeReaderExtensions
         {
             var tint = reader.GetOptionalDouble("theme") ?? 0;
             color = XLColor.FromTheme((XLThemeColor)theme.Value, tint);
-            reader.Close(element, ns);
+            reader.Close(colorElementName, ns);
             return true;
         }
 
@@ -36,7 +36,7 @@ internal static class XmlTreeReaderExtensions
         if (rgb is not null)
         {
             color = XLColor.FromColor(ColorStringParser.ParseFromArgb(rgb.AsSpan()));
-            reader.Close(element, ns);
+            reader.Close(colorElementName, ns);
             return true;
         }
 
@@ -44,7 +44,7 @@ internal static class XmlTreeReaderExtensions
         if (indexed is not null)
         {
             color = indexed <= 64 ? XLColor.FromIndex(indexed.Value) : XLColor.NoColor;
-            reader.Close(element, ns);
+            reader.Close(colorElementName, ns);
             return true;
         }
 
@@ -53,45 +53,27 @@ internal static class XmlTreeReaderExtensions
         {
             // TODO: I have no idea what to do with auto
             color = XLColor.NoColor;
-            reader.Close(element, ns);
+            reader.Close(colorElementName, ns);
             return true;
         }
 
-        throw PartStructureException.IncorrectElementFormat(element);
+        throw PartStructureException.IncorrectElementFormat(colorElementName);
     }
 
     /// <summary>
     /// Read <c>CT_BooleanProperty</c>.
     /// </summary>
-    public static bool TryReadBoolElement(this XmlTreeReader reader, string elementName, string ns, out bool value)
+    public static bool TryReadBoolElement(this XmlTreeReader reader, string boolElementName, string ns, out bool value)
     {
-        if (!reader.TryOpen(elementName, ns))
+        if (!reader.TryOpen(boolElementName, ns))
         {
             value = default;
             return false;
         }
 
-        var readValue = reader.GetOptionalBool("val");
-        if (readValue is null)
-        {
-            // Some producers make <b>true</b>, i.e. invalid XML
-            // Excel reads and interprets it...
-            var text = reader.GetContent();
+        value = reader.GetOptionalBool("val") ?? true;
 
-            // XML is auto-trimmed
-            if (text.Length == 0)
-                readValue = null;
-            else if (text == "0" || StringComparer.OrdinalIgnoreCase.Equals(text, "true"))
-                readValue = false;
-            else if (text == "1" || StringComparer.OrdinalIgnoreCase.Equals(text, "false"))
-                readValue = true;
-            else
-                throw PartStructureException.IncorrectAttributeFormat();
-        }
-
-        value = readValue ?? true;
-
-        reader.Close(elementName, ns);
+        reader.Close(boolElementName, ns);
         return true;
     }
 }

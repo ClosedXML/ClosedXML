@@ -9,17 +9,17 @@ public static class XmlTreeReaderExtensions
 {
     public static bool GetBool(this XmlTreeReader reader, string attributeName)
     {
-        return reader.GetOptionalBool(attributeName) ?? throw PartStructureException.RequiredAttributeIsMissing(attributeName, reader);
+        return reader.GetOptionalBool(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static int GetInt(this XmlTreeReader reader, string attributeName)
     {
-        return reader.GetOptionalInt(attributeName) ?? throw PartStructureException.RequiredAttributeIsMissing(attributeName, reader);
+        return reader.GetOptionalInt(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static uint GetUint(this XmlTreeReader reader, string attributeName)
     {
-        return reader.GetOptionalUint(attributeName) ?? throw PartStructureException.RequiredAttributeIsMissing(attributeName, reader);
+        return reader.GetOptionalUint(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static int? GetOptionalUintAsInt(this XmlTreeReader reader, string attributeName)
@@ -29,13 +29,13 @@ public static class XmlTreeReaderExtensions
 
     public static double GetDouble(this XmlTreeReader reader, string attributeName)
     {
-        return reader.GetOptionalDouble(attributeName) ?? throw PartStructureException.RequiredAttributeIsMissing(attributeName, reader);
+        return reader.GetOptionalDouble(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static TEnum GetEnum<TEnum>(this XmlTreeReader reader, string attributeName)
         where TEnum : struct, Enum
     {
-        return reader.GetOptionalEnum<TEnum>(attributeName) ?? throw PartStructureException.RequiredAttributeIsMissing(attributeName, reader);
+        return reader.GetOptionalEnum<TEnum>(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static TEnum GetOptionalEnum<TEnum>(this XmlTreeReader reader, string attributeName, TEnum defaultValue)

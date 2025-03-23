@@ -51,9 +51,9 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         // ST_VerticalAlignRun
         var xlFontVerticalTextAlignmentValues = new Dictionary<string, XLFontVerticalTextAlignmentValues>
         {
-            {"baseline",XLFontVerticalTextAlignmentValues.Baseline},
-            {"subscript",XLFontVerticalTextAlignmentValues.Subscript },
-            {"superscript",XLFontVerticalTextAlignmentValues.Superscript },
+            { "baseline", XLFontVerticalTextAlignmentValues.Baseline },
+            { "subscript", XLFontVerticalTextAlignmentValues.Subscript },
+            { "superscript", XLFontVerticalTextAlignmentValues.Superscript },
         };
         enumMaps.Add(typeof(XLFontVerticalTextAlignmentValues), xlFontVerticalTextAlignmentValues);
 

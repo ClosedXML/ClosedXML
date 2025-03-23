@@ -304,7 +304,7 @@ namespace ClosedXML.Excel.IO
                             throw PartStructureException.MissingAttribute();
 
                         if (!XLErrorParser.TryParseError(errorText, out var error))
-                            throw PartStructureException.IncorrectAttributeFormat();
+                            throw PartStructureException.InvalidAttributeFormat();
 
                         sharedItems.AddError(error);
                         break;
@@ -379,7 +379,7 @@ namespace ClosedXML.Excel.IO
                                 throw PartStructureException.MissingAttribute();
 
                             if (!XLErrorParser.TryParseError(errorText, out var error))
-                                throw PartStructureException.IncorrectAttributeFormat();
+                                throw PartStructureException.InvalidAttributeFormat();
 
                             fieldValues.AddError(error);
                             break;
@@ -403,7 +403,7 @@ namespace ClosedXML.Excel.IO
                                 throw PartStructureException.MissingAttribute();
 
                             if (index >= fieldValues.SharedCount)
-                                throw PartStructureException.IncorrectAttributeValue();
+                                throw PartStructureException.InvalidAttributeValue();
 
                             fieldValues.AddIndex(index);
                             break;

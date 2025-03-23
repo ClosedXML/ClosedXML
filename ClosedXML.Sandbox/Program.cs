@@ -1,10 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Xml;
-using ClosedXML.Excel.IO;
 
 namespace ClosedXML.Sandbox
 {
@@ -12,83 +6,22 @@ namespace ClosedXML.Sandbox
     {
         private static void Main(string[] args)
         {
-            long len = 0;
-            var sw = new Stopwatch();
-            var commonCrawlDir = @"d:\temp\cc";
-            var files = Directory.EnumerateFiles(commonCrawlDir, "*.zip").ToList();//.Where(x => x.Contains("136c58acbbc5fc46031f2d7d370fb6934d44c28019ef8fd7aebd9c0817dc81c9"));
-            var count = 0;
-            var errorCount = 0;
-            var zipErrorCount = 0;
-            var styleLessCount = 0;
-            foreach (var filePath in files.Take(100000))
-            {
-                count++;
-                if (count % 100 == 0)
-                    Console.Write('.');
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.OpenTestFile));
+            PerformanceRunner.TimeAction(PerformanceRunner.OpenTestFile);
+            Console.WriteLine();
 
-                if (count % 5000 == 0)
-                {
-                    Console.WriteLine("\n{0:N} ms", sw.ElapsedMilliseconds);
-                    Console.WriteLine("Total len {0:N}", len);
-                }
+            // Disable this block by default - I don't use it often
+#if false
 
-                using var f = File.OpenRead(filePath);
-                ZipArchive archive;
-                try
-                {
-                    archive = new ZipArchive(f, ZipArchiveMode.Read);
-                }
-                catch
-                {
-                    zipErrorCount++;
-                    continue;
-                }
-                
-                ZipArchiveEntry styles;
-                try
-                {
-                    styles = archive.GetEntry("xl/styles.xml");
-                    if (styles is null)
-                    {
-                        styleLessCount++;
-                        continue;
-                    }
-                }
-                catch
-                {
-                    zipErrorCount++;
-                    continue;
-                }
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.RunInsertTable));
+            PerformanceRunner.TimeAction(PerformanceRunner.RunInsertTable);
+            Console.WriteLine();
 
-                using var styleStream = styles.Open();
-                len += styles.Length;
-                try
-                {
-                    sw.Start();
-                    new StyleSheetReader().Load(styleStream);
-                }
-                catch (Exception ex)
-                {
-                    errorCount++;
-                    Console.WriteLine($"\n{Path.GetFileName(filePath)} ERROR: " + ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                }
-                finally
-                {
-                    sw.Stop();
-                }
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.PerformHeavyCalculation));
+            PerformanceRunner.TimeAction(PerformanceRunner.PerformHeavyCalculation);
+            Console.WriteLine();
+#endif
 
-                archive.Dispose();
-                
-            }
-
-
-            Console.WriteLine("Total: {0}", count);
-            Console.WriteLine("Errors: {0}", errorCount);
-            Console.WriteLine("ZipErrors: {0}", zipErrorCount);
-            Console.WriteLine("StyleLessCount: {0}", styleLessCount);
-            Console.WriteLine("{0:N} ms", sw.ElapsedMilliseconds);
-            Console.WriteLine("Total len {0:N}", len);
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
         }
