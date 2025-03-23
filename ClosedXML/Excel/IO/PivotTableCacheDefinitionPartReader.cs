@@ -18,7 +18,7 @@ namespace ClosedXML.Excel.IO
             {
                 var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
                 if (cacheDefinition.CacheSource is not { } cacheSource)
-                    throw PartStructureException.RequiredElementIsMissing();
+                    throw PartStructureException.RequiredElementIsMissing("cacheSource");
 
                 var pivotSourceReference = ParsePivotSourceReference(cacheSource);
                 var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.IO
                 }
 
                 if (consolidation.RangeSets is not { } rangeSets)
-                    throw PartStructureException.RequiredElementIsMissing();
+                    throw PartStructureException.RequiredElementIsMissing("rangeSets");
 
                 var xlRangeSets = new List<XLPivotCacheSourceConsolidationRangeSet>();
                 foreach (var rangeSet in rangeSets.Cast<RangeSet>())
@@ -178,12 +178,12 @@ namespace ClosedXML.Excel.IO
 
                     // Range set points to a non-existent page filter
                     if (i >= xlPages.Count)
-                        throw PartStructureException.IncorrectAttributeValue();
+                        throw PartStructureException.InvalidAttributeValue();
 
                     // Range set points to a non-existent item in a page filter
                     var pageFilter = xlPages[i];
                     if (pageIndex.Value >= pageFilter.PageItems.Count)
-                        throw PartStructureException.IncorrectAttributeValue();
+                        throw PartStructureException.InvalidAttributeValue();
                 }
 
                 if (rangeSet.Name?.Value is { } tableOrName)
