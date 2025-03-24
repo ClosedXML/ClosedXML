@@ -71,16 +71,14 @@ namespace ClosedXML.Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("Hellos")
-                .CellBelow().SetValue("Hell")
-                .CellBelow().SetValue("Holl");
+            ws.FirstCell().SetValue("Number 5")
+                .CellBelow().SetValue("The Number 5")
+                .CellBelow().SetValue("Number 50")
+                .CellBelow().SetValue("Number 4")
+                .CellBelow().SetValue("Nomber 5");
 
-            ws.RangeUsed().AddConditionalFormat().WhenStartsWith("Hell")
-                .Fill.SetBackgroundColor(XLColor.Red)
-                .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
-                .Border.SetOutsideBorderColor(XLColor.Blue)
-                .Font.SetBold();
+            ws.RangeUsed().AddConditionalFormat().WhenStartsWith("Number 5")
+                 .Fill.SetBackgroundColor(XLColor.Yellow);
 
             workbook.SaveAs(filePath);
         }
@@ -93,13 +91,14 @@ namespace ClosedXML.Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("Hellos")
-                .CellBelow().SetValue("Hell")
-                .CellBelow().SetValue("Holl");
+            ws.FirstCell().SetValue("Number 5")
+                .CellBelow().SetValue("The Number 5")
+                .CellBelow().SetValue("Number 50")
+                .CellBelow().SetValue("Number 4")
+                .CellBelow().SetValue("Nomber 5");
 
-            ws.RangeUsed().AddConditionalFormat().WhenEndsWith("ll")
-                .Fill.SetBackgroundColor(XLColor.Red);
+            ws.RangeUsed().AddConditionalFormat().WhenEndsWith("Number 5")
+                .Fill.SetBackgroundColor(XLColor.Yellow);
 
             workbook.SaveAs(filePath);
         }
@@ -188,13 +187,14 @@ namespace ClosedXML.Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("Hellos")
-                .CellBelow().SetValue("Hell")
-                .CellBelow().SetValue("Holl");
+            ws.FirstCell().SetValue("Number 5")
+                .CellBelow().SetValue("The Number 5")
+                .CellBelow().SetValue("Number 50")
+                .CellBelow().SetValue("Number 4")
+                .CellBelow().SetValue("Nomber 5");
 
-            ws.RangeUsed().AddConditionalFormat().WhenContains("Hell")
-                .Fill.SetBackgroundColor(XLColor.Red);
+            ws.RangeUsed().AddConditionalFormat().WhenContains("Number 5")
+                .Fill.SetBackgroundColor(XLColor.Yellow);
 
             workbook.SaveAs(filePath);
         }
@@ -207,13 +207,14 @@ namespace ClosedXML.Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.FirstCell().SetValue("Hello")
-                .CellBelow().SetValue("Hellos")
-                .CellBelow().SetValue("Hell")
-                .CellBelow().SetValue("Holl");
+            ws.FirstCell().SetValue("Number 5")
+                .CellBelow().SetValue("The Number 5")
+                .CellBelow().SetValue("Number 50")
+                .CellBelow().SetValue("Number 4")
+                .CellBelow().SetValue("Nomber 5");
 
-            ws.RangeUsed().AddConditionalFormat().WhenNotContains("Hell")
-                .Fill.SetBackgroundColor(XLColor.Red);
+            ws.RangeUsed().AddConditionalFormat().WhenNotContains("Number 5")
+                .Fill.SetBackgroundColor(XLColor.Yellow);
 
             workbook.SaveAs(filePath);
         }
@@ -729,7 +730,7 @@ namespace ClosedXML.Examples
 
             ws.Cell("A1").Value = "Automatic";
             ws.Range("A2:A6").AddConditionalFormat().DataBar(XLColor.Amber);
-            
+
             ws.Cell("B1").Value = "Lowest/Highest";
             ws.Range("B2:B6").AddConditionalFormat().DataBar(XLColor.BallBlue)
                 .LowestValue()
@@ -754,7 +755,7 @@ namespace ClosedXML.Examples
             ws.Range("F2:F6").AddConditionalFormat().DataBar(XLColor.Fandango)
                 .Minimum(XLCFContentType.Percentile, 30)
                 .Maximum(XLCFContentType.Percentile, 70);
-            
+
             workbook.SaveAs(filePath);
         }
     }

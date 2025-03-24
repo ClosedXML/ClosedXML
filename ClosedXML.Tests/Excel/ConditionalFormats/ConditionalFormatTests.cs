@@ -159,5 +159,36 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 CollectionAssert.AreEqual(expectedFormula, cf.Values[1].Value);
             }
         }
+
+        [TestCase("Number 5")]
+        [TestCase("Number")]
+        [TestCase("5")]
+        [TestCase("$A$1")]
+        [TestCase("=$A$1")]
+        [TestCase("=SUM(A1:A5)")]
+        public void FormulaMarkedAsNotFormulaForTypesThatDoNotSupportIt(string value)
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+
+            IXLCell cell = ws.FirstCell().SetValue("Number 5");
+            IXLConditionalFormat conditionalFormat = cell.AddConditionalFormat();
+
+            // Contains
+            conditionalFormat.WhenContains(value);
+            Assert.IsFalse(conditionalFormat.Values[1].IsFormula, "Contains text should not be a formula");
+
+            // NotContains
+            conditionalFormat.WhenNotContains(value);
+            Assert.IsFalse(conditionalFormat.Values[1].IsFormula, "NotContains text should not be a formula");
+
+            // StartsWith
+            conditionalFormat.WhenStartsWith(value);
+            Assert.IsFalse(conditionalFormat.Values[1].IsFormula, "StartsWith text should not be a formula");
+
+            // EndsWith
+            conditionalFormat.WhenEndsWith(value);
+            Assert.IsFalse(conditionalFormat.Values[1].IsFormula, "EndsWith text should not be a formula");
+        }
     }
 }

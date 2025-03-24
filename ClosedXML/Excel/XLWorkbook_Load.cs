@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
             var sheetId = 1u;
             foreach (var ws in WorksheetsInternal)
             {
-                // Ensure unique sheetId for each sheet. 
+                // Ensure unique sheetId for each sheet.
                 ws.SheetId = sheetId++;
                 ws.RelId = null;
 
@@ -1750,9 +1750,11 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.Equal:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, true, connector);
                                 break;
+
                             case XLFilterOperator.NotEqual:
                                 xlFilter = XLFilter.CreateCustomPatternFilter(filterValue, false, connector);
                                 break;
+
                             default:
                                 // OOXML allows only string, so do your best to convert back to a properly typed
                                 // variable. It's not perfect, but let's mimic Excel.
@@ -2033,8 +2035,19 @@ namespace ClosedXML.Excel
                     conditionalFormat.Values.Add(GetFormula(formula.Text));
                 }
 
-                if (!String.IsNullOrWhiteSpace(fr.Text))
-                    conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
+                // Only these types support the Text attribute
+                if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.ContainsText ||
+                    conditionalFormat.ConditionalFormatType == XLConditionalFormatType.NotContainsText ||
+                    conditionalFormat.ConditionalFormatType == XLConditionalFormatType.StartsWith ||
+                    conditionalFormat.ConditionalFormatType == XLConditionalFormatType.EndsWith)
+                {
+                    if (!String.IsNullOrWhiteSpace(fr.Text))
+                    {
+                        XLFormula formula = GetFormula(fr.Text.Value);
+                        formula.IsFormula = false; // Formula's are not support currently. They are only supported in the newer Excel 2010+ extended xml.
+                        conditionalFormat.Values.Add(formula);
+                    }
+                }
 
                 if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
                 {
