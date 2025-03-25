@@ -1322,7 +1322,7 @@ namespace ClosedXML.Excel
                 {
                     for (var row = arrayArea.FirstPoint.Row; row <= arrayArea.LastPoint.Row; ++row)
                     {
-                        valueSlice.SetShareString(cellAddress, false);
+                        valueSlice.SetShareString(new XLSheetPoint(row, col), false);
                     }
                 }
             }
