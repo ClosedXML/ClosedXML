@@ -338,7 +338,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(ConditionalFormatting))
                             LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
                         else if (reader.ElementType == typeof(Hyperlinks))
-                            LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
+                            WorksheetPartReader.LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                         else if (reader.ElementType == typeof(PrintOptions))
                             LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageMargins))
@@ -2312,31 +2312,6 @@ namespace ClosedXML.Excel
             foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor());
-            }
-        }
-
-        private static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)
-        {
-            var hyperlinkDictionary = new Dictionary<String, Uri>();
-            if (worksheetPart.HyperlinkRelationships != null)
-                hyperlinkDictionary = worksheetPart.HyperlinkRelationships.ToDictionary(hr => hr.Id, hr => hr.Uri);
-
-            if (hyperlinks == null) return;
-
-            foreach (Hyperlink hl in hyperlinks.Elements<Hyperlink>())
-            {
-                if (hl.Reference.Value.Equals("#REF")) continue;
-                String tooltip = hl.Tooltip != null ? hl.Tooltip.Value : String.Empty;
-                var xlRange = ws.Range(hl.Reference.Value);
-                foreach (XLCell xlCell in xlRange.Cells())
-                {
-                    if (hl.Id != null)
-                        xlCell.SetCellHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
-                    else if (hl.Location != null)
-                        xlCell.SetCellHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
-                    else
-                        xlCell.SetCellHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
-                }
             }
         }
 

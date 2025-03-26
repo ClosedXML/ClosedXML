@@ -94,4 +94,29 @@ internal static class WorksheetPartReader
         if (XLHelper.IsValidA1Address(sheetView.TopLeftCell))
             ws.SheetView.TopLeftCellAddress = ws.Cell(sheetView.TopLeftCell.Value).Address;
     }
+
+    public static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)
+    {
+        var hyperlinkDictionary = new Dictionary<String, Uri>();
+        if (worksheetPart.HyperlinkRelationships != null)
+            hyperlinkDictionary = worksheetPart.HyperlinkRelationships.ToDictionary(hr => hr.Id, hr => hr.Uri);
+
+        if (hyperlinks == null) return;
+
+        foreach (Hyperlink hl in hyperlinks.Elements<Hyperlink>())
+        {
+            if (hl.Reference.Value.Equals("#REF")) continue;
+            String tooltip = hl.Tooltip != null ? hl.Tooltip.Value : String.Empty;
+            var xlRange = ws.Range(hl.Reference.Value);
+            foreach (XLCell xlCell in xlRange.Cells())
+            {
+                if (hl.Id != null)
+                    xlCell.SetCellHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
+                else if (hl.Location != null)
+                    xlCell.SetCellHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
+                else
+                    xlCell.SetCellHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
+            }
+        }
+    }
 }
