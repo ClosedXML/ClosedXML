@@ -350,7 +350,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(SheetProperties))
                             WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                         else if (reader.ElementType == typeof(RowBreaks))
-                            LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
+                            WorksheetPartReader.LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(WorksheetExtensionList))
@@ -2323,14 +2323,6 @@ namespace ClosedXML.Excel
             {
                 ws.PageSetup.ColumnBreaks.Add(Int32.Parse(columnBreak.Id.InnerText));
             }
-        }
-
-        private static void LoadRowBreaks(RowBreaks rowBreaks, XLWorksheet ws)
-        {
-            if (rowBreaks == null) return;
-
-            foreach (Break rowBreak in rowBreaks.Elements<Break>())
-                ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
         }
 
         private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)

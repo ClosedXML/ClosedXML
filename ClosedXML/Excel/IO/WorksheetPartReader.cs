@@ -119,4 +119,12 @@ internal static class WorksheetPartReader
             }
         }
     }
+
+    public static void LoadRowBreaks(RowBreaks rowBreaks, XLWorksheet ws)
+    {
+        if (rowBreaks == null) return;
+
+        foreach (Break rowBreak in rowBreaks.Elements<Break>())
+            ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
+    }
 }
