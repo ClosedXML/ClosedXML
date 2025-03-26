@@ -346,13 +346,13 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(PageSetup))
                             LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                         else if (reader.ElementType == typeof(HeaderFooter))
-                            LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
+                            WorksheetPartReader.LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(SheetProperties))
                             WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                         else if (reader.ElementType == typeof(RowBreaks))
                             WorksheetPartReader.LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
-                            LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                            WorksheetPartReader.LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(WorksheetExtensionList))
                             LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
@@ -2313,57 +2313,6 @@ namespace ClosedXML.Excel
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor());
             }
-        }
-
-        private static void LoadColumnBreaks(ColumnBreaks columnBreaks, XLWorksheet ws)
-        {
-            if (columnBreaks == null) return;
-
-            foreach (Break columnBreak in columnBreaks.Elements<Break>().Where(columnBreak => columnBreak.Id != null))
-            {
-                ws.PageSetup.ColumnBreaks.Add(Int32.Parse(columnBreak.Id.InnerText));
-            }
-        }
-
-        private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
-        {
-            if (headerFooter == null) return;
-
-            if (headerFooter.AlignWithMargins != null)
-                ws.PageSetup.AlignHFWithMargins = headerFooter.AlignWithMargins;
-            if (headerFooter.ScaleWithDoc != null)
-                ws.PageSetup.ScaleHFWithDocument = headerFooter.ScaleWithDoc;
-
-            if (headerFooter.DifferentFirst != null)
-                ws.PageSetup.DifferentFirstPageOnHF = headerFooter.DifferentFirst;
-            if (headerFooter.DifferentOddEven != null)
-                ws.PageSetup.DifferentOddEvenPagesOnHF = headerFooter.DifferentOddEven;
-
-            // Footers
-            var xlFooter = (XLHeaderFooter)ws.PageSetup.Footer;
-            var evenFooter = headerFooter.EvenFooter;
-            if (evenFooter != null)
-                xlFooter.SetInnerText(XLHFOccurrence.EvenPages, evenFooter.Text);
-            var oddFooter = headerFooter.OddFooter;
-            if (oddFooter != null)
-                xlFooter.SetInnerText(XLHFOccurrence.OddPages, oddFooter.Text);
-            var firstFooter = headerFooter.FirstFooter;
-            if (firstFooter != null)
-                xlFooter.SetInnerText(XLHFOccurrence.FirstPage, firstFooter.Text);
-            // Headers
-            var xlHeader = (XLHeaderFooter)ws.PageSetup.Header;
-            var evenHeader = headerFooter.EvenHeader;
-            if (evenHeader != null)
-                xlHeader.SetInnerText(XLHFOccurrence.EvenPages, evenHeader.Text);
-            var oddHeader = headerFooter.OddHeader;
-            if (oddHeader != null)
-                xlHeader.SetInnerText(XLHFOccurrence.OddPages, oddHeader.Text);
-            var firstHeader = headerFooter.FirstHeader;
-            if (firstHeader != null)
-                xlHeader.SetInnerText(XLHFOccurrence.FirstPage, firstHeader.Text);
-
-            ((XLHeaderFooter)ws.PageSetup.Header).SetAsInitial();
-            ((XLHeaderFooter)ws.PageSetup.Footer).SetAsInitial();
         }
 
         private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
