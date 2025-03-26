@@ -274,92 +274,7 @@ namespace ClosedXML.Excel
                     continue;
                 }
 
-                ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
-
-                var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
-                PageSetupProperties pageSetupProperties = null;
-
-                lastRow = 0;
-
-                using (var reader = new OpenXmlPartReader(worksheetPart))
-                {
-                    Type[] ignoredElements = new Type[]
-                    {
-                        typeof(CustomSheetViews) // Custom sheet views contain its own auto filter data, and more, which should be ignored for now
-                    };
-
-                    while (reader.Read())
-                    {
-                        while (ignoredElements.Contains(reader.ElementType))
-                            reader.ReadNextSibling();
-
-                        if (reader.ElementType == typeof(SheetFormatProperties))
-                        {
-                            var sheetFormatProperties = (SheetFormatProperties)reader.LoadCurrentElement();
-                            if (sheetFormatProperties != null)
-                            {
-                                if (sheetFormatProperties.DefaultRowHeight != null)
-                                    ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
-
-                                ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null &&
-                                                       sheetFormatProperties.CustomHeight.Value);
-
-                                if (sheetFormatProperties.DefaultColumnWidth != null)
-                                    ws.ColumnWidth = XLHelper.ConvertWidthToNoC(sheetFormatProperties.DefaultColumnWidth.Value, ws.Style.Font, this);
-                                else if (sheetFormatProperties.BaseColumnWidth != null)
-                                    ws.ColumnWidth = CalculateColumnWidth(sheetFormatProperties.BaseColumnWidth.Value, ws.Style.Font, this);
-                            }
-                        }
-                        else if (reader.ElementType == typeof(SheetViews))
-                            WorksheetPartReader.LoadSheetViews((SheetViews)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(MergeCells))
-                        {
-                            var mergedCells = (MergeCells)reader.LoadCurrentElement();
-                            if (mergedCells != null)
-                            {
-                                foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
-                                    ws.Range(mergeCell.Reference).Merge(false);
-                            }
-                        }
-                        else if (reader.ElementType == typeof(Columns))
-                            LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
-                                        (Columns)reader.LoadCurrentElement());
-                        else if (reader.ElementType == typeof(Row))
-                        {
-                            LoadRow(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
-                                     styleList, reader);
-                        }
-                        else if (reader.ElementType == typeof(AutoFilter))
-                            WorksheetPartReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(SheetProtection))
-                            WorksheetPartReader.LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(DataValidations))
-                            WorksheetPartReader.LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(ConditionalFormatting))
-                            WorksheetPartReader.LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
-                        else if (reader.ElementType == typeof(Hyperlinks))
-                            WorksheetPartReader.LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
-                        else if (reader.ElementType == typeof(PrintOptions))
-                            WorksheetPartReader.LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(PageMargins))
-                            WorksheetPartReader.LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(PageSetup))
-                            WorksheetPartReader.LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
-                        else if (reader.ElementType == typeof(HeaderFooter))
-                            WorksheetPartReader.LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(SheetProperties))
-                            WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
-                        else if (reader.ElementType == typeof(RowBreaks))
-                            WorksheetPartReader.LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(ColumnBreaks))
-                            WorksheetPartReader.LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(WorksheetExtensionList))
-                            WorksheetPartReader.LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
-                        else if (reader.ElementType == typeof(LegacyDrawing))
-                            ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
-                    }
-                    reader.Close();
-                }
+                LoadWorksheet(ws, s, fills, borders, fonts, numberingFormats, worksheetPart, sharedStrings, sharedFormulasR1C1, differentialFormats, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 
@@ -562,6 +477,96 @@ namespace ClosedXML.Excel
                         PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws, context);
                     }
                 }
+            }
+        }
+
+        private void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
+        {
+            ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
+
+            var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
+            PageSetupProperties pageSetupProperties = null;
+
+            lastRow = 0;
+
+            using (var reader = new OpenXmlPartReader(worksheetPart))
+            {
+                Type[] ignoredElements = new Type[]
+                {
+                    typeof(CustomSheetViews) // Custom sheet views contain its own auto filter data, and more, which should be ignored for now
+                };
+
+                while (reader.Read())
+                {
+                    while (ignoredElements.Contains(reader.ElementType))
+                        reader.ReadNextSibling();
+
+                    if (reader.ElementType == typeof(SheetFormatProperties))
+                    {
+                        var sheetFormatProperties = (SheetFormatProperties)reader.LoadCurrentElement();
+                        if (sheetFormatProperties != null)
+                        {
+                            if (sheetFormatProperties.DefaultRowHeight != null)
+                                ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
+
+                            ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null &&
+                                                   sheetFormatProperties.CustomHeight.Value);
+
+                            if (sheetFormatProperties.DefaultColumnWidth != null)
+                                ws.ColumnWidth = XLHelper.ConvertWidthToNoC(sheetFormatProperties.DefaultColumnWidth.Value, ws.Style.Font, this);
+                            else if (sheetFormatProperties.BaseColumnWidth != null)
+                                ws.ColumnWidth = CalculateColumnWidth(sheetFormatProperties.BaseColumnWidth.Value, ws.Style.Font, this);
+                        }
+                    }
+                    else if (reader.ElementType == typeof(SheetViews))
+                        WorksheetPartReader.LoadSheetViews((SheetViews)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(MergeCells))
+                    {
+                        var mergedCells = (MergeCells)reader.LoadCurrentElement();
+                        if (mergedCells != null)
+                        {
+                            foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
+                                ws.Range(mergeCell.Reference).Merge(false);
+                        }
+                    }
+                    else if (reader.ElementType == typeof(Columns))
+                        LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
+                            (Columns)reader.LoadCurrentElement());
+                    else if (reader.ElementType == typeof(Row))
+                    {
+                        LoadRow(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
+                            styleList, reader);
+                    }
+                    else if (reader.ElementType == typeof(AutoFilter))
+                        WorksheetPartReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(SheetProtection))
+                        WorksheetPartReader.LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(DataValidations))
+                        WorksheetPartReader.LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(ConditionalFormatting))
+                        WorksheetPartReader.LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
+                    else if (reader.ElementType == typeof(Hyperlinks))
+                        WorksheetPartReader.LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
+                    else if (reader.ElementType == typeof(PrintOptions))
+                        WorksheetPartReader.LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(PageMargins))
+                        WorksheetPartReader.LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(PageSetup))
+                        WorksheetPartReader.LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
+                    else if (reader.ElementType == typeof(HeaderFooter))
+                        WorksheetPartReader.LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(SheetProperties))
+                        WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
+                    else if (reader.ElementType == typeof(RowBreaks))
+                        WorksheetPartReader.LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(ColumnBreaks))
+                        WorksheetPartReader.LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(WorksheetExtensionList))
+                        WorksheetPartReader.LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
+                    else if (reader.ElementType == typeof(LegacyDrawing))
+                        ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
+                }
+                reader.Close();
             }
         }
 
@@ -1828,7 +1833,7 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
+        internal static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
             Fonts fonts, NumberingFormats numberingFormats)
         {
             var xlStyleKey = XLStyle.Default.Key;
@@ -1845,7 +1850,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
+        internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
                                 Fonts fonts, NumberingFormats numberingFormats)
         {
             if (s == null || s.CellFormats is null) return; //No Stylesheet, no Styles
