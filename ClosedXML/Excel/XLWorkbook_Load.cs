@@ -344,7 +344,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(PageMargins))
                             LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageSetup))
-                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
+                            WorksheetPartReader.LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                         else if (reader.ElementType == typeof(HeaderFooter))
                             WorksheetPartReader.LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(SheetProperties))
@@ -2313,44 +2313,6 @@ namespace ClosedXML.Excel
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor());
             }
-        }
-
-        private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
-        {
-            if (pageSetup == null) return;
-
-            if (pageSetup.PaperSize != null)
-                ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
-            if (pageSetup.Scale != null)
-                ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
-            if (pageSetupProperties != null && pageSetupProperties.FitToPage != null && pageSetupProperties.FitToPage.Value)
-            {
-                if (pageSetup.FitToWidth == null)
-                    ws.PageSetup.PagesWide = 1;
-                else
-                    ws.PageSetup.PagesWide = Int32.Parse(pageSetup.FitToWidth.InnerText);
-
-                if (pageSetup.FitToHeight == null)
-                    ws.PageSetup.PagesTall = 1;
-                else
-                    ws.PageSetup.PagesTall = Int32.Parse(pageSetup.FitToHeight.InnerText);
-            }
-            if (pageSetup.PageOrder != null)
-                ws.PageSetup.PageOrder = pageSetup.PageOrder.Value.ToClosedXml();
-            if (pageSetup.Orientation != null)
-                ws.PageSetup.PageOrientation = pageSetup.Orientation.Value.ToClosedXml();
-            if (pageSetup.BlackAndWhite != null)
-                ws.PageSetup.BlackAndWhite = pageSetup.BlackAndWhite;
-            if (pageSetup.Draft != null)
-                ws.PageSetup.DraftQuality = pageSetup.Draft;
-            if (pageSetup.CellComments != null)
-                ws.PageSetup.ShowComments = pageSetup.CellComments.Value.ToClosedXml();
-            if (pageSetup.Errors != null)
-                ws.PageSetup.PrintErrorValue = pageSetup.Errors.Value.ToClosedXml();
-            if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = (Int32)pageSetup.HorizontalDpi.Value;
-            if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = (Int32)pageSetup.VerticalDpi.Value;
-            if (pageSetup.FirstPageNumber?.HasValue ?? false)
-                ws.PageSetup.FirstPageNumber = (int)pageSetup.FirstPageNumber.Value;
         }
 
         private static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
