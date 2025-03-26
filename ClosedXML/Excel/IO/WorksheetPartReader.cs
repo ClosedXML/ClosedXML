@@ -120,6 +120,24 @@ internal static class WorksheetPartReader
         }
     }
 
+    public static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
+    {
+        if (pageMargins == null) return;
+
+        if (pageMargins.Bottom != null)
+            ws.PageSetup.Margins.Bottom = pageMargins.Bottom;
+        if (pageMargins.Footer != null)
+            ws.PageSetup.Margins.Footer = pageMargins.Footer;
+        if (pageMargins.Header != null)
+            ws.PageSetup.Margins.Header = pageMargins.Header;
+        if (pageMargins.Left != null)
+            ws.PageSetup.Margins.Left = pageMargins.Left;
+        if (pageMargins.Right != null)
+            ws.PageSetup.Margins.Right = pageMargins.Right;
+        if (pageMargins.Top != null)
+            ws.PageSetup.Margins.Top = pageMargins.Top;
+    }
+
     public static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
     {
         if (pageSetup == null) return;

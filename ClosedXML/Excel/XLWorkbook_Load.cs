@@ -342,7 +342,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(PrintOptions))
                             LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageMargins))
-                            LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
+                            WorksheetPartReader.LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageSetup))
                             WorksheetPartReader.LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                         else if (reader.ElementType == typeof(HeaderFooter))
@@ -2313,24 +2313,6 @@ namespace ClosedXML.Excel
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor());
             }
-        }
-
-        private static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
-        {
-            if (pageMargins == null) return;
-
-            if (pageMargins.Bottom != null)
-                ws.PageSetup.Margins.Bottom = pageMargins.Bottom;
-            if (pageMargins.Footer != null)
-                ws.PageSetup.Margins.Footer = pageMargins.Footer;
-            if (pageMargins.Header != null)
-                ws.PageSetup.Margins.Header = pageMargins.Header;
-            if (pageMargins.Left != null)
-                ws.PageSetup.Margins.Left = pageMargins.Left;
-            if (pageMargins.Right != null)
-                ws.PageSetup.Margins.Right = pageMargins.Right;
-            if (pageMargins.Top != null)
-                ws.PageSetup.Margins.Top = pageMargins.Top;
         }
 
         private static void LoadPrintOptions(PrintOptions printOptions, XLWorksheet ws)
