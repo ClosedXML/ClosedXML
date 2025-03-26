@@ -348,7 +348,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(HeaderFooter))
                             LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(SheetProperties))
-                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
+                            WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                         else if (reader.ElementType == typeof(RowBreaks))
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
@@ -2356,35 +2356,6 @@ namespace ClosedXML.Excel
 
             foreach (Break rowBreak in rowBreaks.Elements<Break>())
                 ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
-        }
-
-        private void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
-        {
-            pageSetupProperties = null;
-            if (sheetProperty == null) return;
-
-            if (sheetProperty.TabColor != null)
-                ws.TabColor = sheetProperty.TabColor.ToClosedXMLColor();
-
-            if (sheetProperty.OutlineProperties != null)
-            {
-                if (sheetProperty.OutlineProperties.SummaryBelow != null)
-                {
-                    ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
-                                                      ? XLOutlineSummaryVLocation.Bottom
-                                                      : XLOutlineSummaryVLocation.Top;
-                }
-
-                if (sheetProperty.OutlineProperties.SummaryRight != null)
-                {
-                    ws.Outline.SummaryHLocation = sheetProperty.OutlineProperties.SummaryRight
-                                                      ? XLOutlineSummaryHLocation.Right
-                                                      : XLOutlineSummaryHLocation.Left;
-                }
-            }
-
-            if (sheetProperty.PageSetupProperties != null)
-                pageSetupProperties = sheetProperty.PageSetupProperties;
         }
 
         private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
