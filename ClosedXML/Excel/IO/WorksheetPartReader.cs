@@ -95,6 +95,174 @@ internal static class WorksheetPartReader
             ws.SheetView.TopLeftCellAddress = ws.Cell(sheetView.TopLeftCell.Value).Address;
     }
 
+    /// <summary>
+    /// Loads the conditional formatting.
+    /// </summary>
+    // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
+    public static void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
+        Dictionary<Int32, DifferentialFormat> differentialFormats, LoadContext context)
+    {
+        if (conditionalFormatting == null) return;
+
+        foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
+        {
+            var ranges = conditionalFormatting.SequenceOfReferences.Items
+                .Select(sor => ws.Range(sor.Value));
+            var conditionalFormat = new XLConditionalFormat(ranges);
+
+            conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+
+            if (fr.FormatId != null)
+            {
+                OpenXmlHelper.LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                OpenXmlHelper.LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
+                    differentialFillFormat: true);
+                OpenXmlHelper.LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
+                OpenXmlHelper.LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat,
+                    conditionalFormat.Style.NumberFormat);
+            }
+
+            // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
+            if (fr.Type == null) continue;
+            conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+            conditionalFormat.Priority = fr.Priority?.Value ?? Int32.MaxValue;
+
+            // Although formulas are directly used only by CellIs and Expression type, other
+            // format types also write them for evaluation to the workbook, e.g. rule to
+            // IsBlank writes `LEN(TRIM(A2))=0` or ContainsText writes `NOT(ISERROR(SEARCH("hello",A2)))`.
+            if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs)
+            {
+                conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
+
+                // The XML schema allows up to three <formula> tags, but at most two are used.
+                // Some producers emit empty <formula> tags that should be ignored and extra
+                // non-empty formulas should also be ignored (Excel behavior).
+                var nonEmptyFormulas = fr.Elements<Formula>()
+                    .Where(static f => !String.IsNullOrEmpty(f.Text))
+                    .Select<Formula, XLFormula>(f => GetFormula(f.Text))
+                    .ToList();
+                if (conditionalFormat.Operator is XLCFOperator.Between or XLCFOperator.NotBetween)
+                {
+                    var formulas = nonEmptyFormulas.Take(2).ToList();
+                    if (formulas.Count != 2)
+                        throw PartStructureException.IncorrectElementsCount();
+
+                    conditionalFormat.Values.Add(formulas[0]);
+                    conditionalFormat.Values.Add(formulas[1]);
+                }
+                else
+                {
+                    // Other XLCFOperators expect one argument.
+                    var operatorArg = nonEmptyFormulas.FirstOrDefault();
+                    if (operatorArg is null)
+                        throw PartStructureException.IncorrectElementsCount();
+
+                    conditionalFormat.Values.Add(operatorArg);
+                }
+            }
+            else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Expression)
+            {
+                var formula = fr.Elements<Formula>()
+                    .Where(static f => !String.IsNullOrEmpty(f.Text))
+                    .FirstOrDefault();
+
+                if (formula is null)
+                    throw PartStructureException.IncorrectElementsCount();
+
+                conditionalFormat.Values.Add(GetFormula(formula.Text));
+            }
+
+            if (!String.IsNullOrWhiteSpace(fr.Text))
+                conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
+
+            if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
+            {
+                if (fr.Percent != null)
+                    conditionalFormat.Percent = fr.Percent.Value;
+                if (fr.Bottom != null)
+                    conditionalFormat.Bottom = fr.Bottom.Value;
+                if (fr.Rank != null)
+                    conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+            }
+            else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.TimePeriod)
+            {
+                if (fr.TimePeriod != null)
+                    conditionalFormat.TimePeriod = fr.TimePeriod.Value.ToClosedXml();
+                else
+                    conditionalFormat.TimePeriod = XLTimePeriod.Yesterday;
+            }
+
+            if (fr.Elements<ColorScale>().Any())
+            {
+                var colorScale = fr.Elements<ColorScale>().First();
+                ExtractConditionalFormatValueObjects(conditionalFormat, colorScale);
+            }
+            else if (fr.Elements<DataBar>().Any())
+            {
+                var dataBar = fr.Elements<DataBar>().First();
+                if (dataBar.ShowValue != null)
+                    conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+
+                var id = fr.Descendants<X14.Id>().FirstOrDefault();
+                if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
+                    conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
+
+                ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
+            }
+            else if (fr.Elements<IconSet>().Any())
+            {
+                var iconSet = fr.Elements<IconSet>().First();
+                if (iconSet.ShowValue != null)
+                    conditionalFormat.ShowIconOnly = !iconSet.ShowValue.Value;
+                if (iconSet.Reverse != null)
+                    conditionalFormat.ReverseIconOrder = iconSet.Reverse.Value;
+
+                if (iconSet.IconSetValue != null)
+                    conditionalFormat.IconSetStyle = iconSet.IconSetValue.Value.ToClosedXml();
+                else
+                    conditionalFormat.IconSetStyle = XLIconSetStyle.ThreeTrafficLights1;
+
+                ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
+            }
+
+            var isPivotTableFormatting = conditionalFormatting.Pivot?.Value ?? false;
+            if (isPivotTableFormatting)
+                context.AddPivotTableCf(ws.Name, conditionalFormat);
+            else
+                ws.ConditionalFormats.Add(conditionalFormat);
+        }
+    }
+
+    private static XLFormula GetFormula(String value)
+    {
+        var formula = new XLFormula();
+        formula._value = value;
+        formula.IsFormula = !(value[0] == '"' && value.EndsWith("\""));
+        return formula;
+    }
+
+    private static void ExtractConditionalFormatValueObjects(XLConditionalFormat conditionalFormat, OpenXmlElement element)
+    {
+        foreach (var c in element.Elements<ConditionalFormatValueObject>())
+        {
+            if (c.Type != null)
+                conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml());
+            if (c.Val != null)
+                conditionalFormat.Values.Add(new XLFormula { Value = c.Val.Value });
+            else
+                conditionalFormat.Values.Add(null);
+
+            if (c.GreaterThanOrEqual != null)
+                conditionalFormat.IconSetOperators.Add(c.GreaterThanOrEqual.Value ? XLCFIconSetOperator.EqualOrGreaterThan : XLCFIconSetOperator.GreaterThan);
+            else
+                conditionalFormat.IconSetOperators.Add(XLCFIconSetOperator.EqualOrGreaterThan);
+        }
+        foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
+        {
+            conditionalFormat.Colors.Add(c.ToClosedXMLColor());
+        }
+    }
+
     public static void LoadDataValidations(DataValidations dataValidations, XLWorksheet ws)
     {
         if (dataValidations == null) return;
