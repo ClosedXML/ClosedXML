@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(Hyperlinks))
                             WorksheetPartReader.LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                         else if (reader.ElementType == typeof(PrintOptions))
-                            LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
+                            WorksheetPartReader.LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageMargins))
                             WorksheetPartReader.LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageSetup))
@@ -2313,20 +2313,6 @@ namespace ClosedXML.Excel
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor());
             }
-        }
-
-        private static void LoadPrintOptions(PrintOptions printOptions, XLWorksheet ws)
-        {
-            if (printOptions == null) return;
-
-            if (printOptions.GridLines != null)
-                ws.PageSetup.ShowGridlines = printOptions.GridLines;
-            if (printOptions.HorizontalCentered != null)
-                ws.PageSetup.CenterHorizontally = printOptions.HorizontalCentered;
-            if (printOptions.VerticalCentered != null)
-                ws.PageSetup.CenterVertically = printOptions.VerticalCentered;
-            if (printOptions.Headings != null)
-                ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
         }
 
         private void SetProperties(SpreadsheetDocument dSpreadsheet)

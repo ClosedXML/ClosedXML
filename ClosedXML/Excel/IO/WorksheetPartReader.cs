@@ -120,6 +120,20 @@ internal static class WorksheetPartReader
         }
     }
 
+    public static void LoadPrintOptions(PrintOptions printOptions, XLWorksheet ws)
+    {
+        if (printOptions == null) return;
+
+        if (printOptions.GridLines != null)
+            ws.PageSetup.ShowGridlines = printOptions.GridLines;
+        if (printOptions.HorizontalCentered != null)
+            ws.PageSetup.CenterHorizontally = printOptions.HorizontalCentered;
+        if (printOptions.VerticalCentered != null)
+            ws.PageSetup.CenterVertically = printOptions.VerticalCentered;
+        if (printOptions.Headings != null)
+            ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
+    }
+
     public static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
     {
         if (pageMargins == null) return;
