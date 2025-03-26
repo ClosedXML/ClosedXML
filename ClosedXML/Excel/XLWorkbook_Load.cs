@@ -530,7 +530,7 @@ namespace ClosedXML.Excel
                         }
                     }
                     else if (reader.ElementType == typeof(Columns))
-                        LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
+                        WorksheetPartReader.LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
                             (Columns)reader.LoadCurrentElement());
                     else if (reader.ElementType == typeof(Row))
                     {
@@ -1590,61 +1590,6 @@ namespace ClosedXML.Excel
                 reader.Skip();
         }
 
-        private void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,
-                                 Fonts fonts, XLWorksheet ws, Columns columns)
-        {
-            if (columns == null) return;
-
-            var wsDefaultColumn =
-                columns.Elements<Column>().FirstOrDefault(c => c.Max == XLHelper.MaxColumnNumber);
-
-            if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
-                ws.ColumnWidth = wsDefaultColumn.Width - XLConstants.ColumnWidthOffset;
-
-            Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
-                                          ? Int32.Parse(wsDefaultColumn.Style.InnerText)
-                                          : -1;
-            if (styleIndexDefault >= 0)
-                ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
-
-            foreach (Column col in columns.Elements<Column>())
-            {
-                //IXLStylized toApply;
-                if (col.Max == XLHelper.MaxColumnNumber) continue;
-
-                var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
-                if (col.Width != null)
-                {
-                    Double width = col.Width - XLConstants.ColumnWidthOffset;
-                    //if (width < 0) width = 0;
-                    xlColumns.Width = width;
-                }
-                else
-                    xlColumns.Width = ws.ColumnWidth;
-
-                if (col.Hidden != null && col.Hidden)
-                    xlColumns.Hide();
-
-                if (col.Collapsed != null && col.Collapsed)
-                    xlColumns.CollapseOnly();
-
-                if (col.OutlineLevel != null)
-                {
-                    var outlineLevel = col.OutlineLevel;
-                    xlColumns.ForEach(c => c.OutlineLevel = outlineLevel);
-                }
-
-                Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
-                if (styleIndex >= 0)
-                {
-                    ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
-                }
-                else
-                {
-                    xlColumns.Style = ws.Style;
-                }
-            }
-        }
 
         private static XLDataType GetNumberDataType(XLNumberFormatValue numberFormat)
         {
