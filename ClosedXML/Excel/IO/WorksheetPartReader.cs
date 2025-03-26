@@ -483,4 +483,100 @@ internal static class WorksheetPartReader
             ws.PageSetup.ColumnBreaks.Add(Int32.Parse(columnBreak.Id.InnerText));
         }
     }
+
+    public static void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
+    {
+        if (extensions == null)
+        {
+            return;
+        }
+
+        foreach (var dvs in extensions
+                     .Descendants<X14.DataValidations>()
+                     .SelectMany(dataValidations => dataValidations.Descendants<X14.DataValidation>()))
+        {
+            String txt = dvs.ReferenceSequence.InnerText;
+            if (String.IsNullOrWhiteSpace(txt)) continue;
+            foreach (var rangeAddress in txt.Split(' '))
+            {
+                var dvt = new XLDataValidation(ws.Range(rangeAddress));
+                ws.DataValidations.Add(dvt, skipIntersectionsCheck: true);
+                if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
+                if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
+                if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
+                if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
+                if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
+                if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
+                if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
+                if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
+                if (dvs.ErrorStyle != null) dvt.ErrorStyle = dvs.ErrorStyle.Value.ToClosedXml();
+                if (dvs.Type != null) dvt.AllowedValues = dvs.Type.Value.ToClosedXml();
+                if (dvs.Operator != null) dvt.Operator = dvs.Operator.Value.ToClosedXml();
+                if (dvs.DataValidationForumla1 != null) dvt.MinValue = dvs.DataValidationForumla1.InnerText;
+                if (dvs.DataValidationForumla2 != null) dvt.MaxValue = dvs.DataValidationForumla2.InnerText;
+            }
+        }
+
+        foreach (var conditionalFormattingRule in extensions
+                     .Descendants<X14.ConditionalFormattingRule>()
+                     .Where(cf =>
+                         cf.Type != null
+                         && cf.Type.HasValue
+                         && cf.Type.Value == ConditionalFormatValues.DataBar))
+        {
+            var xlConditionalFormat = ws.ConditionalFormats
+                .Cast<XLConditionalFormat>()
+                .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+            if (xlConditionalFormat != null)
+            {
+                var negativeFillColor = conditionalFormattingRule.Descendants<X14.NegativeFillColor>().SingleOrDefault();
+                xlConditionalFormat.Colors.Add(negativeFillColor.ToClosedXMLColor());
+            }
+        }
+
+        foreach (var slg in extensions
+                     .Descendants<X14.SparklineGroups>()
+                     .SelectMany(sparklineGroups => sparklineGroups.Descendants<X14.SparklineGroup>()))
+        {
+            var xlSparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
+
+            if (slg.Formula != null)
+                xlSparklineGroup.DateRange = Range(slg.Formula.Text);
+
+            var xlSparklineStyle = xlSparklineGroup.Style;
+            if (slg.FirstMarkerColor != null) xlSparklineStyle.FirstMarkerColor = slg.FirstMarkerColor.ToClosedXMLColor();
+            if (slg.LastMarkerColor != null) xlSparklineStyle.LastMarkerColor = slg.LastMarkerColor.ToClosedXMLColor();
+            if (slg.HighMarkerColor != null) xlSparklineStyle.HighMarkerColor = slg.HighMarkerColor.ToClosedXMLColor();
+            if (slg.LowMarkerColor != null) xlSparklineStyle.LowMarkerColor = slg.LowMarkerColor.ToClosedXMLColor();
+            if (slg.SeriesColor != null) xlSparklineStyle.SeriesColor = slg.SeriesColor.ToClosedXMLColor();
+            if (slg.NegativeColor != null) xlSparklineStyle.NegativeColor = slg.NegativeColor.ToClosedXMLColor();
+            if (slg.MarkersColor != null) xlSparklineStyle.MarkersColor = slg.MarkersColor.ToClosedXMLColor();
+            xlSparklineGroup.Style = xlSparklineStyle;
+
+            if (slg.DisplayHidden != null) xlSparklineGroup.DisplayHidden = slg.DisplayHidden;
+            if (slg.LineWeight != null) xlSparklineGroup.LineWeight = slg.LineWeight;
+            if (slg.Type != null) xlSparklineGroup.Type = slg.Type.Value.ToClosedXml();
+            if (slg.DisplayEmptyCellsAs != null) xlSparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.Value.ToClosedXml();
+
+            xlSparklineGroup.ShowMarkers = XLSparklineMarkers.None;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.Markers, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.Markers;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.High, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.HighPoint;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.Low, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.LowPoint;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.First, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.FirstPoint;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
+            if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
+
+            if (slg.AxisColor != null) xlSparklineGroup.HorizontalAxis.Color = XLColor.FromHtml(slg.AxisColor.Rgb.Value);
+            if (slg.DisplayXAxis != null) xlSparklineGroup.HorizontalAxis.IsVisible = slg.DisplayXAxis;
+            if (slg.RightToLeft != null) xlSparklineGroup.HorizontalAxis.RightToLeft = slg.RightToLeft;
+
+            if (slg.ManualMax != null) xlSparklineGroup.VerticalAxis.ManualMax = slg.ManualMax;
+            if (slg.ManualMin != null) xlSparklineGroup.VerticalAxis.ManualMin = slg.ManualMin;
+            if (slg.MinAxisType != null) xlSparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
+            if (slg.MaxAxisType != null) xlSparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
+
+            slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
+                .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+        }
+    }
 }
