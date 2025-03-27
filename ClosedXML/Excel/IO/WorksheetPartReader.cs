@@ -58,7 +58,7 @@ internal class WorksheetPartReader
                     }
                 }
                 else if (reader.ElementType == typeof(SheetViews))
-                    WorksheetPartReader.LoadSheetViews((SheetViews)reader.LoadCurrentElement(), ws);
+                    LoadSheetViews((SheetViews)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(MergeCells))
                 {
                     var mergedCells = (MergeCells)reader.LoadCurrentElement();
@@ -69,7 +69,7 @@ internal class WorksheetPartReader
                     }
                 }
                 else if (reader.ElementType == typeof(Columns))
-                    WorksheetPartReader.LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
+                    LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
                         (Columns)reader.LoadCurrentElement());
                 else if (reader.ElementType == typeof(Row))
                 {
@@ -77,31 +77,31 @@ internal class WorksheetPartReader
                         styleList, reader);
                 }
                 else if (reader.ElementType == typeof(AutoFilter))
-                    WorksheetPartReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
+                    LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(SheetProtection))
-                    WorksheetPartReader.LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
+                    LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(DataValidations))
-                    WorksheetPartReader.LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
+                    LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(ConditionalFormatting))
-                    WorksheetPartReader.LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
+                    LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
                 else if (reader.ElementType == typeof(Hyperlinks))
-                    WorksheetPartReader.LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
+                    LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                 else if (reader.ElementType == typeof(PrintOptions))
-                    WorksheetPartReader.LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
+                    LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(PageMargins))
-                    WorksheetPartReader.LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
+                    LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(PageSetup))
-                    WorksheetPartReader.LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
+                    LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                 else if (reader.ElementType == typeof(HeaderFooter))
-                    WorksheetPartReader.LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
+                    LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(SheetProperties))
-                    WorksheetPartReader.LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
+                    LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                 else if (reader.ElementType == typeof(RowBreaks))
-                    WorksheetPartReader.LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
+                    LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(ColumnBreaks))
-                    WorksheetPartReader.LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                    LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(WorksheetExtensionList))
-                    WorksheetPartReader.LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
+                    LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(LegacyDrawing))
                     ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
             }
@@ -110,7 +110,7 @@ internal class WorksheetPartReader
     }
 
 
-    public static void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
+    private static void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
     {
         pageSetupProperties = null;
         if (sheetProperty == null) return;
@@ -139,7 +139,7 @@ internal class WorksheetPartReader
             pageSetupProperties = sheetProperty.PageSetupProperties;
     }
 
-    internal static void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,
+    private static void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,
                              Fonts fonts, XLWorksheet ws, Columns columns)
     {
         if (columns == null) return;
@@ -705,7 +705,7 @@ internal class WorksheetPartReader
         return null;
     }
 
-    public static void LoadSheetViews(SheetViews sheetViews, XLWorksheet ws)
+    private static void LoadSheetViews(SheetViews sheetViews, XLWorksheet ws)
     {
         if (sheetViews == null) return;
 
@@ -756,7 +756,7 @@ internal class WorksheetPartReader
             ws.SheetView.TopLeftCellAddress = ws.Cell(sheetView.TopLeftCell.Value).Address;
     }
 
-    public static void LoadSheetProtection(SheetProtection sp, XLWorksheet ws)
+    private static void LoadSheetProtection(SheetProtection sp, XLWorksheet ws)
     {
         if (sp == null) return;
 
@@ -794,7 +794,7 @@ internal class WorksheetPartReader
         ws.Protection.AllowElement(XLSheetProtectionElements.SelectUnlockedCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.SelectUnlockedCells, false));
     }
 
-    public static void LoadAutoFilter(AutoFilter af, XLWorksheet ws)
+    private static void LoadAutoFilter(AutoFilter af, XLWorksheet ws)
     {
         if (af != null)
         {
@@ -805,7 +805,7 @@ internal class WorksheetPartReader
         }
     }
 
-    public static void LoadAutoFilterColumns(AutoFilter af, XLAutoFilter autoFilter)
+    internal static void LoadAutoFilterColumns(AutoFilter af, XLAutoFilter autoFilter)
     {
         foreach (var filterColumn in af.Elements<FilterColumn>())
         {
@@ -971,7 +971,7 @@ internal class WorksheetPartReader
     /// Loads the conditional formatting.
     /// </summary>
     // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
-    public static void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
+    private static void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
         Dictionary<Int32, DifferentialFormat> differentialFormats, LoadContext context)
     {
         if (conditionalFormatting == null) return;
@@ -1129,13 +1129,13 @@ internal class WorksheetPartReader
             else
                 conditionalFormat.IconSetOperators.Add(XLCFIconSetOperator.EqualOrGreaterThan);
         }
-        foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
+        foreach (var c in element.Elements<Color>())
         {
             conditionalFormat.Colors.Add(c.ToClosedXMLColor());
         }
     }
 
-    public static void LoadDataValidations(DataValidations dataValidations, XLWorksheet ws)
+    private static void LoadDataValidations(DataValidations dataValidations, XLWorksheet ws)
     {
         if (dataValidations == null) return;
 
@@ -1164,7 +1164,7 @@ internal class WorksheetPartReader
         }
     }
 
-    public static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)
+    private static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)
     {
         var hyperlinkDictionary = new Dictionary<String, Uri>();
         if (worksheetPart.HyperlinkRelationships != null)
@@ -1189,7 +1189,7 @@ internal class WorksheetPartReader
         }
     }
 
-    public static void LoadPrintOptions(PrintOptions printOptions, XLWorksheet ws)
+    private static void LoadPrintOptions(PrintOptions printOptions, XLWorksheet ws)
     {
         if (printOptions == null) return;
 
@@ -1203,7 +1203,7 @@ internal class WorksheetPartReader
             ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
     }
 
-    public static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
+    private static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)
     {
         if (pageMargins == null) return;
 
@@ -1221,7 +1221,7 @@ internal class WorksheetPartReader
             ws.PageSetup.Margins.Top = pageMargins.Top;
     }
 
-    public static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
+    private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
     {
         if (pageSetup == null) return;
 
@@ -1259,7 +1259,7 @@ internal class WorksheetPartReader
             ws.PageSetup.FirstPageNumber = (int)pageSetup.FirstPageNumber.Value;
     }
 
-    public static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
+    private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
     {
         if (headerFooter == null) return;
 
@@ -1300,7 +1300,7 @@ internal class WorksheetPartReader
         ((XLHeaderFooter)ws.PageSetup.Footer).SetAsInitial();
     }
 
-    public static void LoadRowBreaks(RowBreaks rowBreaks, XLWorksheet ws)
+    private static void LoadRowBreaks(RowBreaks rowBreaks, XLWorksheet ws)
     {
         if (rowBreaks == null) return;
 
@@ -1308,7 +1308,7 @@ internal class WorksheetPartReader
             ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
     }
 
-    public static void LoadColumnBreaks(ColumnBreaks columnBreaks, XLWorksheet ws)
+    private static void LoadColumnBreaks(ColumnBreaks columnBreaks, XLWorksheet ws)
     {
         if (columnBreaks == null) return;
 
@@ -1318,7 +1318,7 @@ internal class WorksheetPartReader
         }
     }
 
-    public static void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
+    private static void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
     {
         if (extensions == null)
         {
