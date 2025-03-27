@@ -489,5 +489,25 @@ namespace ClosedXML.Excel
         /// Convert degrees to radians.
         /// </summary>
         internal static double DegToRad(double angle) => Math.PI * angle / 180.0;
+
+        /// <summary>
+        /// Calculate expected column width as a number displayed in the column in Excel from
+        /// number of characters that should fit into the width and a font.
+        /// </summary>
+        internal static double CalculateColumnWidth(double charWidth, IXLFont font, XLWorkbook workbook)
+        {
+            // Convert width as a number of characters and translate it into a given number of pixels.
+            int mdw = workbook.GraphicEngine.GetMaxDigitWidth(font, workbook.DpiX).RoundToInt();
+            int defaultColWidthPx = NoCToPixels(charWidth, mdw).RoundToInt();
+
+            // Excel then rounds this number up to the nearest multiple of 8 pixels, so that
+            // scrolling across columns and rows is faster.
+            int roundUpToMultiple = defaultColWidthPx + (8 - defaultColWidthPx % 8);
+
+            // and last convert the width in pixels to width displayed in Excel. Shouldn't round the number, because
+            // it causes inconsistency with conversion to other units, but other places in ClosedXML do = keep for now.
+            double defaultColumnWidth = PixelToNoC(roundUpToMultiple, mdw).Round(2);
+            return defaultColumnWidth;
+        }
     }
 }
