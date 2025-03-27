@@ -483,12 +483,12 @@ internal class WorksheetPartReader
         {
             var is2D = attributes.GetBoolAttribute("dt2D", false);
             var input1Deleted = attributes.GetBoolAttribute("del1", false);
-            var input1 = attributes.GetCellRefAttribute("r1") ?? throw MissingRequiredAttr("r1");
+            var input1 = attributes.GetCellRefAttribute("r1") ?? throw PartStructureException.MissingAttribute("r1");
             if (is2D)
             {
                 // Input 2 is only used for 2D tables
                 var input2Deleted = attributes.GetBoolAttribute("del2", false);
-                var input2 = attributes.GetCellRefAttribute("r2") ?? throw MissingRequiredAttr("r2");
+                var input2 = attributes.GetCellRefAttribute("r2") ?? throw PartStructureException.MissingAttribute("r2");
                 formula = XLCellFormula.DataTable2D(dataTableArea, input1, input1Deleted, input2, input2Deleted);
                 formulaSlice.Set(cellAddress, formula);
             }
@@ -1412,10 +1412,5 @@ internal class WorksheetPartReader
             slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
                 .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
         }
-    }
-
-    private static Exception MissingRequiredAttr(string attributeName)
-    {
-        throw new InvalidOperationException($"XML doesn't contain required attribute '{attributeName}'.");
     }
 }
