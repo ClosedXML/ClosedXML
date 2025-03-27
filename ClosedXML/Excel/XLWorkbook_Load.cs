@@ -612,15 +612,17 @@ namespace ClosedXML.Excel
 
         private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)
         {
-            var strokeColor = shape.Attribute("strokecolor");
-            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromVmlColor(strokeColor.Value);
+            var strokeColor = shape.Attribute(@"strokecolor");
+            if (strokeColor is not null)
+                drawing.Style.ColorsAndLines.LineColor = XLColor.FromVmlColor(strokeColor.Value);
 
-            var strokeWeight = shape.Attribute("strokeweight");
+            var strokeWeight = shape.Attribute(@"strokeweight");
             if (strokeWeight != null && TryGetPtValue(strokeWeight.Value, out var lineWeight))
                 drawing.Style.ColorsAndLines.LineWeight = lineWeight;
 
-            var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null) drawing.Style.ColorsAndLines.FillColor = XLColor.FromVmlColor(fillColor.Value);
+            var fillColor = shape.Attribute(@"fillcolor");
+            if (fillColor is not null)
+                drawing.Style.ColorsAndLines.FillColor = XLColor.FromVmlColor(fillColor.Value);
 
             var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)

@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         /// entry, but we have no way to get them. Win10 doesn't even have a tool, use Classic Color Panel. We will use the default
         /// values that are default on Windows.
         /// </summary>
-        private static readonly Lazy<Dictionary<String, XLColor>> _paletteEntries = new(() => new Dictionary<String, XLColor>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Lazy<Dictionary<String, XLColor>> VmlPaletteColors = new(() => new Dictionary<String, XLColor>(StringComparer.OrdinalIgnoreCase)
         {
             { "ButtonFace", FromRgb(0xF0F0F0) },
             { "WindowText", FromRgb(0x000000) },
@@ -45,6 +45,29 @@ namespace ClosedXML.Excel
             { "ThreeDFace", FromRgb(0xF0F0F0) },
             { "ThreeDShadow", FromRgb(0xA0A0A0) },
             { "ThreeDHighlight", FromRgb(0xFFFFFF) }
+        });
+
+        /// <summary>
+        /// Named colors for VML ST_ColorType from ISO-29500:4.
+        /// </summary>
+        private static readonly Lazy<Dictionary<string, XLColor>> VmlNamedColors = new(() => new Dictionary<string, XLColor>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Black", Black },
+            { "Silver", Silver },
+            { "Gray", Gray },
+            { "White", White },
+            { "Maroon", Maroon },
+            { "Red", Red },
+            { "Purple", Purple },
+            { "Fuchsia", Fuchsia },
+            { "Green", Green  },
+            { "Lime", Lime },
+            { "Olive", Olive },
+            { "Yellow", Yellow },
+            { "Navy", Navy },
+            { "Blue", Blue },
+            { "Teal", Teal },
+            { "Aqua", Aqua },
         });
 
         internal static XLColor FromKey(ref XLColorKey key)
@@ -148,21 +171,35 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Parse VML ST_ColorType type from ECMA-376, Part 4 §20.1.2.3.
         /// </summary>
-        internal static XLColor FromVmlColor(String colorType)
+        internal static XLColor FromVmlColor(String vmlColor)
         {
-            // ST_ColorType can have an *optional* index to a palette (*system* palette, not indexed colors),
-            // but it only brings trouble because VML is used pretty much only for unusual features like notes,
-            // form controls ect. Ignore the palette entry completely, it is a legacy feature from times of 256 colors.
-            var paletteIndexStart = colorType.IndexOf("[", StringComparison.Ordinal);
-            var hasPaletteEntry = paletteIndexStart >= 0;
-            colorType = hasPaletteEntry ? colorType.Substring(0, paletteIndexStart).Trim() : colorType;
-            if (colorType.StartsWith("#", StringComparison.Ordinal))
-                return FromHtml(colorType);
+            // Check if VML color is a hexadecimal RGB color.
+            var rgbColorText = vmlColor.AsSpan().Trim();
+            if (rgbColorText.StartsWith("#".AsSpan()) && ColorStringParser.TryParseRgb6(rgbColorText[1..], out var rgbColor))
+            {
+                return FromColor(rgbColor);
+            }
 
-            if (_paletteEntries.Value.TryGetValue(colorType, out var xlColor))
-                return xlColor;
+            // Check if VML color is a VML named color.
+            var namedColorText = vmlColor.Trim();
+            if (VmlNamedColors.Value.TryGetValue(namedColorText, out var namedColor))
+            {
+                return namedColor;
+            }
 
-            return FromName(colorType);
+            // Check if VML color is a palette color. ST_ColorType palette entry can have an *optional* index to
+            // a palette (that is a *system* palette, not indexed colors). The palette index only brings trouble
+            // because VML is used pretty much only for unusual features like notes, form controls ect. Strip the
+            // palette index if found, it is a legacy feature from times of 256 colors. E.g., "Menu [80]" => "Menu"
+            var paletteColorName = vmlColor.Split('[')[0].Trim();
+            if (VmlPaletteColors.Value.TryGetValue(paletteColorName, out var paletteColor))
+            {
+                return paletteColor;
+            }
+
+            // Don't crash on unparsable colors, e.g. None or malformed #RED should still be represented, even
+            // though we don't actually know how to map them.
+            return FromName(vmlColor);
         }
 
         private static Dictionary<Int32, XLColor>? _indexedColors;
