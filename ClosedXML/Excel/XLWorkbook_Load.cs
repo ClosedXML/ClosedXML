@@ -326,7 +326,7 @@ namespace ClosedXML.Excel
                     if (dTable.AutoFilter != null)
                     {
                         xlTable.ShowAutoFilter = true;
-                        WorksheetPartReader.LoadAutoFilterColumns(dTable.AutoFilter, xlTable.AutoFilter);
+                        AutoFilterReader.LoadAutoFilterColumns(dTable.AutoFilter, xlTable.AutoFilter);
                     }
                     else
                         xlTable.ShowAutoFilter = false;
