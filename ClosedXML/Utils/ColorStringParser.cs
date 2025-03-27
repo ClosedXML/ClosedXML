@@ -77,31 +77,58 @@ namespace ClosedXML.Utils
         /// <summary>
         /// Parse RRGGBB color.
         /// </summary>
-        internal static Color ParseFromRgb(string rgbColor)
+        internal static Color ParseFromRgb6(string rgbColor)
+        {
+            if (!TryParseRgb6(rgbColor.AsSpan(), out var color))
+                throw new FormatException($"Unable to parse {rgbColor}.");
+
+            return color;
+        }
+
+        internal static bool TryParseRgb6(ReadOnlySpan<char> rgbColor, out Color color)
         {
             if (rgbColor.Length != 6)
-                throw new FormatException("Color should have 6 chars.");
+            {
+                color = default;
+                return false;
+            }
 
-            ReadOnlySpan<char> rgbSpan = rgbColor.AsSpan();
+            if (!TryReadHex(rgbColor, 0, 2, out var red) ||
+                !TryReadHex(rgbColor, 2, 2, out var green) ||
+                !TryReadHex(rgbColor, 4, 2, out var blue))
+            {
+                color = default;
+                return false;
+            }
 
-            return Color.FromArgb(
-                ReadHex(rgbSpan, 0, 2),
-                ReadHex(rgbSpan, 2, 2),
-                ReadHex(rgbSpan, 4, 2));
+            color = Color.FromArgb(red, green, blue);
+            return true;
         }
 
         private static int ReadHex(ReadOnlySpan<char> text, int start, int length)
+        {
+            if (!TryReadHex(text, start, length, out var hexValue))
+                throw new FormatException($"Unable to parse {text.ToString()}.");
+
+            return hexValue;
+        }
+
+        private static bool TryReadHex(ReadOnlySpan<char> text, int start, int length, out int result)
         {
             var value = 0;
             for (var i = start; i < start + length; ++i)
             {
                 if (!TryGetHex(text[i], out var hexDigit))
-                    throw new FormatException($"Unable to parse {text.ToString()}.");
+                {
+                    result = 0;
+                    return false;
+                }
 
                 value = value * 16 + (int)hexDigit;
             }
 
-            return value;
+            result = value;
+            return true;
         }
 
         private static bool TryGetHex(char c, out uint hexDigit)

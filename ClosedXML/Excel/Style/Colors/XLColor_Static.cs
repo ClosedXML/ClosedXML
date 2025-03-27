@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
         /// <returns>Parsed color with full opacity.</returns>
         internal static XLColor FromHexRgb(String hexColorRgb)
         {
-            return FromColor(ColorStringParser.ParseFromRgb(hexColorRgb));
+            return FromColor(ColorStringParser.ParseFromRgb6(hexColorRgb));
         }
 
         public static XLColor FromName(String name)
