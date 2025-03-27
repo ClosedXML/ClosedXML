@@ -19,6 +19,15 @@ namespace ClosedXML.Excel.IO;
 
 internal class WorksheetPartReader
 {
+    private static readonly string[] DateCellFormats =
+    {
+        "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff", // Format accepted by OpenXML SDK
+        "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
+    };
+
+    private Int32 lastRow;
+    private Int32 lastColumnNumber;
+
     internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
         ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
@@ -196,8 +205,6 @@ internal class WorksheetPartReader
     }
 
 
-    private Int32 lastRow;
-
     private void LoadRow(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders, Fonts fonts,
                           XLWorksheet ws, SharedStringItem[] sharedStrings,
                           Dictionary<uint, string> sharedFormulasR1C1, Dictionary<Int32, IXLStyle> styleList,
@@ -275,9 +282,6 @@ internal class WorksheetPartReader
         while (reader.IsStartElement("extLst"))
             reader.Skip();
     }
-
-
-    private Int32 lastColumnNumber;
 
     private void LoadCell(SharedStringItem[] sharedStrings, Stylesheet s, NumberingFormats numberingFormats,
                           Fills fills, Borders borders, Fonts fonts, Dictionary<uint, string> sharedFormulasR1C1,
@@ -569,12 +573,6 @@ internal class WorksheetPartReader
             }
         }
     }
-
-    private static readonly string[] DateCellFormats =
-    {
-            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff", // Format accepted by OpenXML SDK
-            "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
-        };
 
     /// <summary>
     /// Parses the cell value for normal or rich text
