@@ -21,7 +21,7 @@ internal class WorksheetPartReader
 {
     internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
-        XLWorkbook.ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
+        ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
 
         var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
@@ -154,7 +154,7 @@ internal class WorksheetPartReader
                                       ? Int32.Parse(wsDefaultColumn.Style.InnerText)
                                       : -1;
         if (styleIndexDefault >= 0)
-            XLWorkbook.ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
+            ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
 
         foreach (Column col in columns.Elements<Column>())
         {
@@ -186,7 +186,7 @@ internal class WorksheetPartReader
             Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
             if (styleIndex >= 0)
             {
-                XLWorkbook.ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
+                ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
             }
             else
             {
@@ -249,7 +249,7 @@ internal class WorksheetPartReader
             var styleIndex = attributes.GetIntAttribute("s");
             if (styleIndex is not null)
             {
-                XLWorkbook.ApplyStyle(xlRow, styleIndex.Value, s, fills, borders, fonts, numberingFormats);
+                ApplyStyle(xlRow, styleIndex.Value, s, fills, borders, fonts, numberingFormats);
             }
             else
             {
@@ -313,7 +313,7 @@ internal class WorksheetPartReader
         }
         else
         {
-            XLWorkbook.ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
+            ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
         }
 
         var showPhonetic = attributes.GetBoolAttribute("ph", false);
@@ -1411,6 +1411,23 @@ internal class WorksheetPartReader
 
             slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
                 .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+        }
+    }
+
+    private static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
+        Fonts fonts, NumberingFormats numberingFormats)
+    {
+        var xlStyleKey = XLStyle.Default.Key;
+        XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, s, fills, borders, fonts, numberingFormats);
+
+        // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
+        if (xlStylized is IXLColumns columns)
+        {
+            columns.Cast<XLColumn>().ForEach(col => col.InnerStyle = new XLStyle(col, xlStyleKey));
+        }
+        else
+        {
+            xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyleKey);
         }
     }
 }

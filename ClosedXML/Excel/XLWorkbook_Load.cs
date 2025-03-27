@@ -1154,23 +1154,6 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        internal static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
-            Fonts fonts, NumberingFormats numberingFormats)
-        {
-            var xlStyleKey = XLStyle.Default.Key;
-            LoadStyle(ref xlStyleKey, styleIndex, s, fills, borders, fonts, numberingFormats);
-
-            // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
-            if (xlStylized is IXLColumns columns)
-            {
-                columns.Cast<XLColumn>().ForEach(col => col.InnerStyle = new XLStyle(col, xlStyleKey));
-            }
-            else
-            {
-                xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyleKey);
-            }
-        }
-
         internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
                                 Fonts fonts, NumberingFormats numberingFormats)
         {
