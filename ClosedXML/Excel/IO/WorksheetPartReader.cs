@@ -25,8 +25,8 @@ internal class WorksheetPartReader
         "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
     };
 
-    private Int32 lastRow;
-    private Int32 lastColumnNumber;
+    private Int32 _lastRow;
+    private Int32 _lastColumnNumber;
 
     internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
@@ -35,7 +35,7 @@ internal class WorksheetPartReader
         var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
 
-        lastRow = 0;
+        _lastRow = 0;
 
         using (var reader = new OpenXmlPartReader(worksheetPart))
         {
@@ -214,7 +214,7 @@ internal class WorksheetPartReader
 
         var attributes = reader.Attributes;
         var rowIndexAttr = attributes.GetAttribute("r");
-        var rowIndex = string.IsNullOrEmpty(rowIndexAttr) ? ++lastRow : int.Parse(rowIndexAttr);
+        var rowIndex = string.IsNullOrEmpty(rowIndexAttr) ? ++_lastRow : int.Parse(rowIndexAttr);
 
         var xlRow = ws.Row(rowIndex, false);
 
@@ -264,7 +264,7 @@ internal class WorksheetPartReader
             }
         }
 
-        lastColumnNumber = 0;
+        _lastColumnNumber = 0;
 
         // Move from the start element of 'row' forward. We can get cell, extList or end of row.
         reader.MoveAhead();
@@ -293,8 +293,8 @@ internal class WorksheetPartReader
 
         var styleIndex = attributes.GetIntAttribute("s") ?? 0;
 
-        var cellAddress = attributes.GetCellRefAttribute("r") ?? new XLSheetPoint(rowIndex, lastColumnNumber + 1);
-        lastColumnNumber = cellAddress.Column;
+        var cellAddress = attributes.GetCellRefAttribute("r") ?? new XLSheetPoint(rowIndex, _lastColumnNumber + 1);
+        _lastColumnNumber = cellAddress.Column;
 
         var dataType = attributes.GetAttribute("t") switch
         {
