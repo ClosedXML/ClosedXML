@@ -260,7 +260,6 @@ namespace ClosedXML.Excel
                     continue;
                 }
 
-                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
                 if (!WorksheetsInternal.TryGetWorksheet(sheetName, out var ws))
                 {
                     // This shouldn't be possible, as all worksheets should have already been added in the loop before this loop
@@ -268,7 +267,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, s, fills, borders, fonts, numberingFormats, worksheetPart, sharedStrings, sharedFormulasR1C1, differentialFormats, context);
+                worksheetPartReader.LoadWorksheet(ws, s, fills, borders, fonts, numberingFormats, worksheetPart, sharedStrings, differentialFormats, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 

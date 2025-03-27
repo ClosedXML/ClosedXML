@@ -25,10 +25,11 @@ internal class WorksheetPartReader
         "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
     };
 
+    private readonly Dictionary<UInt32, String> _sharedFormulasR1C1 = new();
     private Int32 _lastRow;
     private Int32 _lastColumnNumber;
 
-    internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
+    internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
         ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
 
@@ -82,8 +83,7 @@ internal class WorksheetPartReader
                         (Columns)reader.LoadCurrentElement());
                 else if (reader.ElementType == typeof(Row))
                 {
-                    LoadRow(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
-                        styleList, reader);
+                    LoadRow(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, styleList, reader);
                 }
                 else if (reader.ElementType == typeof(AutoFilter))
                     AutoFilterReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
@@ -117,7 +117,6 @@ internal class WorksheetPartReader
             reader.Close();
         }
     }
-
 
     private static void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
     {
@@ -207,7 +206,7 @@ internal class WorksheetPartReader
 
     private void LoadRow(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders, Fonts fonts,
                           XLWorksheet ws, SharedStringItem[] sharedStrings,
-                          Dictionary<uint, string> sharedFormulasR1C1, Dictionary<Int32, IXLStyle> styleList,
+                          Dictionary<Int32, IXLStyle> styleList,
                           OpenXmlPartReader reader)
     {
         Debug.Assert(reader.LocalName == "row");
@@ -271,7 +270,7 @@ internal class WorksheetPartReader
 
         while (reader.IsStartElement("c"))
         {
-            LoadCell(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList,
+            LoadCell(sharedStrings, s, numberingFormats, fills, borders, fonts, ws, styleList,
                 reader, rowIndex);
 
             // Move from end element of 'cell' either to next cell, extList start or end of row.
@@ -284,7 +283,7 @@ internal class WorksheetPartReader
     }
 
     private void LoadCell(SharedStringItem[] sharedStrings, Stylesheet s, NumberingFormats numberingFormats,
-                          Fills fills, Borders borders, Fonts fonts, Dictionary<uint, string> sharedFormulasR1C1,
+                          Fills fills, Borders borders, Fonts fonts,
                           XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, OpenXmlPartReader reader, Int32 rowIndex)
     {
         Debug.Assert(reader.LocalName == "c" && reader.IsStartElement);
@@ -339,7 +338,7 @@ internal class WorksheetPartReader
         XLCellFormula formula = null;
         if (cellHasFormula)
         {
-            formula = SetCellFormula(ws, cellAddress, reader, sharedFormulasR1C1);
+            formula = SetCellFormula(ws, cellAddress, reader);
 
             // Move from end of 'f' element.
             reader.MoveAhead();
@@ -411,7 +410,7 @@ internal class WorksheetPartReader
             styleList.Add(styleIndex, xlCell.Style);
     }
 
-    private static XLCellFormula SetCellFormula(XLWorksheet ws, XLSheetPoint cellAddress, OpenXmlPartReader reader, Dictionary<uint, string> sharedFormulasR1C1)
+    private XLCellFormula SetCellFormula(XLWorksheet ws, XLSheetPoint cellAddress, OpenXmlPartReader reader)
     {
         var attributes = reader.Attributes;
         var formulaSlice = ws.Internals.CellsCollection.FormulaSlice;
@@ -461,7 +460,7 @@ internal class WorksheetPartReader
             // https://stackoverflow.com/questions/54654993. Therefore we accept them,
             // but don't output them. Shared formula is created, when user in Excel
             // takes a supported formula and drags it to more cells.
-            if (!sharedFormulasR1C1.TryGetValue(sharedIndex, out var sharedR1C1Formula))
+            if (!_sharedFormulasR1C1.TryGetValue(sharedIndex, out var sharedR1C1Formula))
             {
                 // Spec: The first formula in a group of shared formulas is saved
                 // in the f element. This is considered the 'master' formula cell.
@@ -470,7 +469,7 @@ internal class WorksheetPartReader
 
                 // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
                 var formulaR1C1 = FormulaConverter.ToR1C1(formulaText, cellAddress.Row, cellAddress.Column);
-                sharedFormulasR1C1.Add(sharedIndex, formulaR1C1);
+                _sharedFormulasR1C1.Add(sharedIndex, formulaR1C1);
             }
             else
             {
