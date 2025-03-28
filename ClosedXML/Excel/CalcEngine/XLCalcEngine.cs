@@ -17,7 +17,6 @@ namespace ClosedXML.Excel.CalcEngine
     internal class XLCalcEngine : ISheetListener, IWorkbookListener
     {
         private readonly CultureInfo _culture;
-        private readonly ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
         private readonly CalculationVisitor _visitor;
         private DependencyTree? _dependencyTree;
@@ -26,7 +25,6 @@ namespace ClosedXML.Excel.CalcEngine
         public XLCalcEngine(CultureInfo culture)
         {
             _culture = culture;
-            _cache = new ExpressionCache(this);
             var funcRegistry = GetFunctionTable();
             _parser = new FormulaParser(funcRegistry);
             _visitor = new CalculationVisitor(funcRegistry);
@@ -324,9 +322,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private AnyValue EvaluateFormula(string expression, CalcContext ctx)
         {
-            var x = _cache[expression];
-
-            var result = x.AstRoot.Accept(ctx, _visitor);
+            var formula = Parse(expression);
+            var result = formula.AstRoot.Accept(ctx, _visitor);
             return result;
         }
 
