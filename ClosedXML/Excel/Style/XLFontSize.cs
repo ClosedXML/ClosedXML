@@ -19,4 +19,9 @@ internal readonly record struct XLFontSize(short Twips)
         var twips = Math.Round(sizeInPoints.Value * 20, MidpointRounding.AwayFromZero);
         return new XLFontSize(checked((short)twips));
     }
+
+    /// <summary>
+    /// Font size converted to points. Can have rounding issues, so use only when necessary.
+    /// </summary>
+    public double Points => Twips / 20.0;
 }

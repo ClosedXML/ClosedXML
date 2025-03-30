@@ -186,7 +186,6 @@ namespace ClosedXML.Excel
             context.LoadNumberFormats(numberingFormats);
             Fills fills = s?.Fills;
             Borders borders = s?.Borders;
-            Fonts fonts = s?.Fonts;
             Int32 dfCount = 0;
             Dictionary<Int32, DifferentialFormat> differentialFormats;
             if (s != null && s.DifferentialFormats != null)
@@ -199,7 +198,7 @@ namespace ClosedXML.Excel
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
-                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, fills, borders, fonts, numberingFormats);
+                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, fills, borders, numberingFormats, Styles);
                 Style = new XLStyle(null, normalStyleKey);
                 ColumnWidth = XLHelper.CalculateColumnWidth(8, Style.Font, this);
             }
@@ -272,7 +271,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, s, fills, borders, fonts, numberingFormats, worksheetPart, sharedStrings, differentialFormats, context);
+                worksheetPartReader.LoadWorksheet(ws, s, fills, borders, numberingFormats, worksheetPart, sharedStrings, differentialFormats, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 
@@ -1161,7 +1160,7 @@ namespace ClosedXML.Excel
         }
 
         internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
-                                Fonts fonts, NumberingFormats numberingFormats)
+                                NumberingFormats numberingFormats, XLWorkbookStyles styles)
         {
             if (s == null || s.CellFormats is null) return; //No Stylesheet, no Styles
 
@@ -1209,15 +1208,11 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (UInt32HasValue(cellFormat.FontId))
+            if (cellFormat.FontId?.Value is { } fontId && fontId < styles.FontFormats.Count)
             {
-                var fontId = cellFormat.FontId;
-                var font = (DocumentFormat.OpenXml.Spreadsheet.Font)fonts.ElementAt((Int32)fontId.Value);
-                if (font is not null)
-                {
-                    var xlFont = OpenXmlHelper.FontToClosedXml(font, xlStyle.Font);
-                    xlStyle = xlStyle with { Font = xlFont };
-                }
+                var xlFontFormat = styles.FontFormats[(int)fontId];
+                var xlFont = xlFontFormat.ApplyTo(xlStyle.Font);
+                xlStyle = xlStyle with { Font = xlFont };
             }
 
             if (UInt32HasValue(cellFormat.NumberFormatId))

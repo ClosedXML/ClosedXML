@@ -34,4 +34,46 @@ internal readonly record struct XLFontFormat
     public required XLFontVerticalTextAlignmentValues? VerticalAlignment { get; init; }
 
     public required XLFontScheme? Scheme { get; init; }
+
+    public XLFontKey ApplyTo(XLFontKey nf)
+    {
+        // No Outline, Condense or Extend
+        if (Name is not null)
+            nf = nf with { FontName = Name.Value.Text };
+
+        if (Charset is not null)
+            nf = nf with { FontCharSet = Charset.Value };
+
+        if (Family is not null)
+            nf = nf with { FontFamilyNumbering = Family.Value };
+
+        if (Bold is not null)
+            nf = nf with { Bold = Bold.Value };
+
+        if (Italic is not null)
+            nf = nf with { Italic = Italic.Value };
+
+        if (Strikethrough is not null)
+            nf = nf with { Strikethrough = Strikethrough.Value };
+
+        if (Shadow is not null)
+            nf = nf with { Shadow = Shadow.Value };
+
+        if (Color is not null)
+            nf = nf with { FontColor = Color.Key };
+
+        if (Size is not null)
+            nf = nf with { FontSize = Size.Value.Points };
+
+        if (Underline is not null)
+            nf = nf with { Underline = Underline.Value };
+
+        if (VerticalAlignment is not null)
+            nf = nf with { VerticalAlignment = VerticalAlignment.Value };
+
+        if (Scheme is not null)
+            nf = nf with { FontScheme = Scheme.Value };
+
+        return nf;
+    }
 }
