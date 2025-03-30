@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
@@ -129,6 +130,8 @@ namespace ClosedXML.Excel
         internal XLPivotCaches PivotCachesInternal { get; }
 
         internal SharedStringTable SharedStringTable { get; } = new();
+
+        internal XLWorkbookStyles Styles { get; set; } = new(new List<XLCellFormat>(), new List<XLFontFormat>());
 
         #region Nested Type : XLLoadSource
 

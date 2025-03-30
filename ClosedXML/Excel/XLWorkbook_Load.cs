@@ -177,6 +177,11 @@ namespace ClosedXML.Excel
             }
 
             Stylesheet s = workbookPart.WorkbookStylesPart?.Stylesheet;
+            if (s is not null)
+            {
+                Styles = StylesPartReader.Load(s);
+            }
+
             NumberingFormats numberingFormats = s?.NumberingFormats;
             context.LoadNumberFormats(numberingFormats);
             Fills fills = s?.Fills;
