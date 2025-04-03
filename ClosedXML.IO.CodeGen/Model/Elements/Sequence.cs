@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace ClosedXML.IO.CodeGen.Model;
+namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
 /// A representation of a <c><![CDATA[<xsd:sequence>]]></c> element.
 /// </summary>
-public class SequenceElement : IElementGroup
+public class Sequence : IElementGroup
 {
     public required List<IElementGroup> Children { get; init; } = [];
 

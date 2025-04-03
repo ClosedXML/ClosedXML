@@ -1,13 +1,13 @@
 ﻿using ClosedXML.IO.CodeGen.Model.TopLevel;
 using System.Collections.Generic;
 
-namespace ClosedXML.IO.CodeGen.Model;
+namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
 /// An element whose content will be a <see cref="ComplexTypeSequence"/>.
 /// <code><![CDATA[<xsd:element name="field" maxOccurs="unbounded" type="CT_Field"/>]]></code>
 /// </summary>
-public class ComplexTypeElement : IElementGroup
+public class ElementType : IElementGroup
 {
     public List<IElementGroup> Children { get; } = [];
 

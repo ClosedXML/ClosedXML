@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClosedXML.IO.CodeGen.Model;
+namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
 /// A node in a complex type element tree.

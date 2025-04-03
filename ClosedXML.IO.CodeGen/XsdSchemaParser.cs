@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model;
+using ClosedXML.IO.CodeGen.Model.Elements;
+using ClosedXML.IO.CodeGen.Model.SimpleTypes;
 using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen;
@@ -20,6 +22,7 @@ public class XsdSchemaParser
 
         reader.Open("schema", XsdNs);
 
+        // Read imports
         while (reader.TryOpen("import", XsdNs))
         {
             var ns = reader.GetString("namespace");
@@ -41,8 +44,75 @@ public class XsdSchemaParser
             }
             else if (reader.TryOpen("simpleType", XsdNs))
             {
-                // TODO: Read simple types, at least to differentiate between int/text
-                reader.Skip();
+                var simpleTypeName = reader.GetString("name");
+                if (reader.TryOpen("restriction", XsdNs))
+                {
+                    var baseType = reader.GetString("base");
+                    int? length = null;
+                    int? minInclusive = null;
+                    int? maxInclusive = null;
+                    var values = new List<string>();
+                    while (!reader.TryClose("restriction", XsdNs))
+                    {
+                        if (reader.TryOpen("enumeration", XsdNs))
+                        {
+                            var value = reader.GetString("value");
+                            values.Add(value);
+                            reader.Close("enumeration", XsdNs);
+                        }
+                        else if (reader.TryOpen("length", XsdNs))
+                        {
+                            length = reader.GetInt("value");
+                            reader.Close("length", XsdNs);
+                        }
+                        else if (reader.TryOpen("minInclusive", XsdNs))
+                        {
+                            minInclusive = reader.GetInt("value");
+                            reader.Close("minInclusive", XsdNs);
+                        }
+                        else if (reader.TryOpen("maxInclusive", XsdNs))
+                        {
+                            maxInclusive = reader.GetInt("value");
+                            reader.Close("maxInclusive", XsdNs);
+                        }
+                        else
+                        {
+                            throw PartStructureException.ExpectedChoiceElementNotFound(reader);
+                        }
+                    }
+
+                    file.Entries.Add(new SimpleTypeEnum
+                    {
+                        Name = simpleTypeName,
+                        BaseTypeName = baseType,
+                        Values = values,
+                        Length = length,
+                        MinInclusive = minInclusive,
+                        MaxInclusive = maxInclusive
+                    });
+                }
+                else if (reader.TryOpen("list", XsdNs))
+                {
+                    var itemType = reader.GetString("itemType");
+                    reader.Close("list", XsdNs);
+
+                    file.Entries.Add(new SimpleTypeList
+                    {
+                        Name = simpleTypeName,
+                        ItemType = itemType
+                    });
+                }
+                else if (reader.TryOpen("union", XsdNs))
+                {
+                    // TODO: Implement, but it's a minor use
+                    reader.Skip();
+                }
+                else
+                {
+                    throw PartStructureException.ExpectedChoiceElementNotFound(reader);
+                }
+
+                reader.Close("simpleType", XsdNs);
             }
             else if (reader.TryOpen("element", XsdNs))
             {
@@ -57,7 +127,14 @@ public class XsdSchemaParser
             }
             else if (reader.TryOpen("group", XsdNs))
             {
-                reader.Skip(); // TODO
+                var name = reader.GetString("name");
+                var elementGroup = ParseElementsGroup(reader);
+                reader.Close("group", XsdNs);
+                file.Entries.Add(new GroupDefinition
+                {
+                    Name = name,
+                    Content = elementGroup
+                });
             }
             else if (reader.TryOpen("attributeGroup", XsdNs))
             {
@@ -191,7 +268,7 @@ public class XsdSchemaParser
             }
             else if (reader.TryOpen("attributeGroup", XsdNs))
             {
-                var refName = reader.GetString("ref");
+                _ = reader.GetString("ref");
                 reader.Close("attributeGroup", XsdNs);
                 // TODO return XsdAttributeGroupReference, currently ignored
             }
@@ -234,7 +311,7 @@ public class XsdSchemaParser
                 sequence.Add(element);
             } while (!reader.TryClose("sequence", XsdNs));
 
-            return new SequenceElement
+            return new Sequence
             {
                 Children = sequence,
                 Occurrences = occurs
@@ -251,7 +328,7 @@ public class XsdSchemaParser
                 choiceElements.Add(choice);
             } while (!reader.TryClose("choice", XsdNs));
 
-            return new ChoiceElement
+            return new Choice
             {
                 Children = choiceElements,
                 Occurrences = occurs
@@ -264,7 +341,7 @@ public class XsdSchemaParser
             var refAttr = reader.GetOptionalString("ref");
             if (refAttr is not null)
             {
-                var refElement = new ElementReferenceElement
+                var refElement = new ElementReference
                 {
                     RefName = refAttr,
                     Occurrences = GetOccursAttributes(reader)
@@ -274,7 +351,7 @@ public class XsdSchemaParser
             }
 
             // name, type, min/maxOccurs
-            var typeElement = new ComplexTypeElement
+            var typeElement = new ElementType
             {
                 Name = reader.GetString("name"),
                 TypeName = reader.GetString("type"),
@@ -293,7 +370,7 @@ public class XsdSchemaParser
             if (refAttr is not null)
             {
                 reader.Close("group", XsdNs);
-                return new ElementGroupReference
+                return new GroupReference
                 {
                     RefName = refAttr,
                     Occurrences = occurs
@@ -307,7 +384,7 @@ public class XsdSchemaParser
         {
             var processContents = reader.GetOptionalEnum<ProcessContents>("processContents") ?? ProcessContents.Strict;
             reader.Close("any", XsdNs);
-            return new AnyElement
+            return new Any
             {
                 ProcessContent = processContents
             };
