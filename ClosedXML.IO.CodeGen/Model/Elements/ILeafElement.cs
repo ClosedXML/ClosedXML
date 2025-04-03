@@ -3,6 +3,4 @@
 /// <summary>
 /// A marker interface for a leaf node.
 /// </summary>
-public interface ILeafElement : IElementGroup
-{
-}
+public interface ILeafElement : IElementGroup;

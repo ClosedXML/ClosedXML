@@ -1,5 +1,4 @@
-﻿using ClosedXML.IO.CodeGen.Model.TopLevel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model;
 
@@ -11,10 +10,10 @@ public class Schema
     /// <summary>
     /// Imports in the file.
     /// </summary>
-    public List<ImportElement> Imports = [];
+    public List<ImportElement> Imports { get; } = [];
 
     /// <summary>
-    /// One of <see cref="AttributeGroupDefinition"/>, <see cref="ComplexType"/>, <see cref="ElementDefinition"/>.
+    /// One of <c>xsd:attributeGroup</c>, <c>xsd:complexType</c>, <c>xsd:element</c> or <c>simpleType</c>.
     /// </summary>
-    public List<object> Entries = [];
+    public List<object> Entries { get; } = [];
 }

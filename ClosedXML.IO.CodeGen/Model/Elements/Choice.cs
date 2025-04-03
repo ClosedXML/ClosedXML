@@ -3,7 +3,7 @@
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
-/// A representation of a <c><![CDATA[<xsd:choice>]]></c> element.
+/// <c><![CDATA[<xsd:choice>]]></c> inside <c><![CDATA[<xsd:complexType>]]></c>.
 /// </summary>
 public class Choice : IElementGroup
 {

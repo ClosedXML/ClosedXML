@@ -9,15 +9,15 @@ The data loading part might need to do custom logic that has to be incorporated 
 Generator must
 * Be able to generate parsing logic for XSD that extracts data
 * Must be able to combine extracted data from generated parser and custom logic/validation
-* Must be able to be regenerate parsing code without loss of validation/translation logic
+* Must be able to be regenerate parsing code without loss of hand-coded validation/translation logic
 * Must be configurable, some parts might be completely generated, some might use hand-coded parser
 * Use forward only XML parser `XmlTreeParser`
 * Avoid a separate intermediate structure creation
-* Must support XSD features in OOXML schema, nothing extra needed
+* Must support only XSD features found in OOXML schema, nothing extra needed
 
 ## Rationale
 
-Current OpenXML SDK is an intermediate representation that loads each part into memory. That has several problems, the major one is performance, both for reading and memory consumption. OpenXML SDK loads whole part into memory and ClosedXML then reads it and sets internal structures and then the whole parsed XML tree is disposed of. That is slow and memory intensive.
+Current OpenXML SDK is an intermediate representation that loads each part into memory. That has several problems, the major one is performance, both cpu and memory consumption. OpenXML SDK loads whole part into memory and ClosedXML then reads it and sets internal structures and then the whole parsed XML tree is disposed of. That is slow and memory intensive.
 
 To solve it, we will use our custom parser that is
 * forward only

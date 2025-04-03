@@ -3,8 +3,12 @@
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
-/// A definition of the element in the root. The element might be referenced in complex types.
-/// <code><![CDATA[<xsd:element name="calcChain" type="CT_CalcChain"/>]]></code>
+/// <c><![CDATA[<xsd:element/>]]></c> inside <c><![CDATA[<xsd:schema/>]]></c>.
+/// <example>
+/// <code><![CDATA[
+///   <xsd:element name="calcChain" type="CT_CalcChain"/>
+/// ]]></code>
+/// </example>
 /// </summary>
 public class ElementDefinition : IReferencable
 {

@@ -4,8 +4,13 @@ using System.Collections.Generic;
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
-/// An element whose content will be a <see cref="ComplexTypeSequence"/>.
-/// <code><![CDATA[<xsd:element name="field" maxOccurs="unbounded" type="CT_Field"/>]]></code>
+/// <c><![CDATA[<xsd:element ref="some:element">]]></c> inside <c><![CDATA[<xsd:complexType>]]></c>
+/// (either <c><![CDATA[<xsd:sequence>]]></c> or <c><![CDATA[<xsd:choice>]]></c>).
+/// <example>
+/// <code><![CDATA[
+///   <xsd:element name="field" maxOccurs="unbounded" type="CT_Field"/>
+/// ]]></code>
+/// </example>
 /// </summary>
 public class ElementType : IElementGroup
 {
@@ -17,7 +22,7 @@ public class ElementType : IElementGroup
     public required string Name { get; init; }
 
     /// <summary>
-    /// A reference to a <see cref="ComplexTypeSequence"/>.
+    /// A reference to a <see cref="ComplexType"/>.
     /// </summary>
     public required string TypeName { get; init; }
 

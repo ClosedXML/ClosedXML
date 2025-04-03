@@ -3,7 +3,8 @@
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
-/// A complex type that is based on a simple type, e.g.,
+/// <c><![CDATA[<xsd:complexType/>]]></c> that has <c><![CDATA[<xsd:simpleContent>]]></c> as an element.
+/// The type is inside <c><![CDATA[<xsd:schema/>]]></c>.
 /// <![CDATA[
 /// <xsd:complexType name="CT_CellFormula">
 ///   <xsd:simpleContent>

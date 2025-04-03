@@ -3,7 +3,8 @@
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
-/// Attribute group definition. It is a child of <c>schema</c>.
+/// <c><![CDATA[<xsd:attributeGroup/>]]></c> inside <c><![CDATA[<xsd:schema/>]]></c>.
+/// <example>
 /// <code><![CDATA[
 ///  <xsd:attributeGroup name="AG_RevData">
 ///    <xsd:attribute name="rId" type="xsd:unsignedInt" use="required"/>
@@ -11,6 +12,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 ///    <xsd:attribute name = "ra" type="xsd:boolean" use="optional" default="false"/>
 ///  </xsd:attributeGroup>
 /// ]]></code>
+/// </example>
 /// </summary>
 public class AttributeGroupDefinition : IReferencable
 {

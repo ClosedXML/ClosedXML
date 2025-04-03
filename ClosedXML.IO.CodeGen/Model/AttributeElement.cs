@@ -1,10 +1,12 @@
 ﻿namespace ClosedXML.IO.CodeGen.Model;
 
 /// <summary>
-/// A representation of a <c>attribute</c> element in <c>xsd</c> file.
+/// <![CDATA[<xsd:attribute>]]> inside <![CDATA[<xsd:complexType>]]> or <![CDATA[<xsd:attributeGroup>]]>
+/// <example>
 /// <code><![CDATA[
 /// <xsd:attribute name="level" type="xsd:unsignedInt" use="optional" default="0"/>
 /// ]]></code>
+/// </example>
 /// </summary>
 public class AttributeElement
 {

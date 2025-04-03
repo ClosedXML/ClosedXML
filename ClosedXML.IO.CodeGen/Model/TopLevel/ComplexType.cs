@@ -3,7 +3,8 @@
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
-/// A base class for <c><![CDATA[<xsd:complexType/>]]></c>. It doesn't have any elements.
+/// <c><![CDATA[<xsd:complexType/>]]></c> inside <c><![CDATA[<xsd:schema/>]]></c>. It doesn't have
+/// any elements, only attributes.
 /// </summary>
 public class ComplexType : IReferencable
 {

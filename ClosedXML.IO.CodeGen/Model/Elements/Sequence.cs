@@ -3,7 +3,7 @@
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
-/// A representation of a <c><![CDATA[<xsd:sequence>]]></c> element.
+/// <c><![CDATA[<xsd:sequence>]]></c> inside <c><![CDATA[<xsd:complexType>]]></c>.
 /// </summary>
 public class Sequence : IElementGroup
 {

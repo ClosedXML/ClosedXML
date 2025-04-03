@@ -4,7 +4,7 @@ using ClosedXML.IO.CodeGen.Model.TopLevel;
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
-/// A reference to a defined element group (<see cref="GroupDefinition"/>).
+/// <c><![CDATA[<xsd:group ref="some:group">]]></c> inside <c><![CDATA[<xsd:complexType>]]></c>.
 /// </summary>
 public class GroupReference : ILeafElement
 {
