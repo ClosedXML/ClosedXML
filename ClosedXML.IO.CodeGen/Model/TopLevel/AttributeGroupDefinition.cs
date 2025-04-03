@@ -1,4 +1,6 @@
-﻿namespace ClosedXML.IO.CodeGen.Model;
+﻿using System.Collections.Generic;
+
+namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
 /// Attribute group definition. It is a child of <c>schema</c>.
@@ -10,4 +12,12 @@
 ///  </xsd:attributeGroup>
 /// ]]></code>
 /// </summary>
-public class AttributeGroupDefinition : ComplexTypeBase;
+public class AttributeGroupDefinition : IReferencable
+{
+    /// <summary>
+    /// Name of the the attribute group type.
+    /// </summary>
+    public required string Name { get; init; }
+
+    public required List<AttributeElement> Attributes { get; init; } = [];
+}

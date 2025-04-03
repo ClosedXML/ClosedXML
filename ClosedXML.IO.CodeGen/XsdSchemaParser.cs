@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model;
+using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen;
 
@@ -67,6 +68,7 @@ public class XsdSchemaParser
                     var attribute = ParseAttribute(reader);
                     attributes.Add(attribute);
                 }
+
                 reader.Close("attributeGroup", XsdNs);
                 file.Entries.Add(new AttributeGroupDefinition
                 {
@@ -86,7 +88,7 @@ public class XsdSchemaParser
     /// <summary>
     /// Parses <c>xds:complexType</c>.
     /// </summary>
-    public static ComplexTypeBase ParseComplexType(XmlTreeReader reader)
+    public static ComplexType ParseComplexType(XmlTreeReader reader)
     {
         var name = reader.GetString("name");
         if (reader.TryOpen("sequence", XsdNs))
@@ -99,11 +101,11 @@ public class XsdSchemaParser
             } while (!reader.TryClose("sequence", XsdNs));
 
             var attributes = ParseComplexTypeAttributes(reader);
-            return new ComplexType
+            return new ComplexTypeSequence
             {
                 Name = name,
                 Attributes = attributes,
-                ElementGroups = groups
+                Elements = groups
             };
         }
 
@@ -117,24 +119,11 @@ public class XsdSchemaParser
             } while (!reader.TryClose("choice", XsdNs));
 
             var attributes = ParseComplexTypeAttributes(reader);
-            return new ComplexType
+            return new ComplexTypeChoice
             {
                 Name = name,
                 Attributes = attributes,
-                ElementGroups = groups
-            };
-        }
-
-        if (reader.TryOpen("attributeGroup", XsdNs))
-        {
-            // reference to attribute group
-            reader.Skip(); // TODO
-            var attributes = ParseComplexTypeAttributes(reader);
-            return new AttributeGroupDefinition()
-            {
-                Name = name,
-                Attributes = attributes
-                // TODO
+                Choices = groups
             };
         }
 
@@ -142,7 +131,7 @@ public class XsdSchemaParser
         {
             var (baseTypeName, extensionAttributes) = ParseSimpleContent(reader);
             var attributes = ParseComplexTypeAttributes(reader);
-            return new SimpleContentComplexType
+            return new ComplexTypeSimpleContent
             {
                 Name = name,
                 Attributes = attributes,
@@ -151,13 +140,12 @@ public class XsdSchemaParser
             };
         }
 
-        // Only attribute only
+        // Only attribute only complex type
         var attr = ParseComplexTypeAttributes(reader);
         return new ComplexType
         {
             Name = name,
-            Attributes = attr,
-            ElementGroups = []
+            Attributes = attr
         };
     }
 
@@ -300,7 +288,7 @@ public class XsdSchemaParser
         {
             var refAttr = reader.GetOptionalString("ref");
             var occurs = GetOccursAttributes(reader);
-            
+
             // Element group reference
             if (refAttr is not null)
             {

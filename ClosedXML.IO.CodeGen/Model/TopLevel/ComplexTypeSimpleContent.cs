@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClosedXML.IO.CodeGen.Model;
+namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
 /// A complex type that is based on a simple type, e.g.,
@@ -14,7 +14,7 @@ namespace ClosedXML.IO.CodeGen.Model;
 ///   <xsd:simpleContent>
 /// ]]>
 /// </summary>
-public class SimpleContentComplexType : ComplexTypeBase
+public class ComplexTypeSimpleContent : ComplexType
 {
     public required string BaseTypeName { get; init; }
 

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ClosedXML.IO.CodeGen.Model.TopLevel;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model;
 
 /// <summary>
-/// An element whose content will be a <see cref="ComplexType"/>.
+/// An element whose content will be a <see cref="ComplexTypeSequence"/>.
 /// <code><![CDATA[<xsd:element name="field" maxOccurs="unbounded" type="CT_Field"/>]]></code>
 /// </summary>
 public class ComplexTypeElement : IElementGroup
@@ -16,7 +17,7 @@ public class ComplexTypeElement : IElementGroup
     public required string Name { get; init; }
 
     /// <summary>
-    /// A reference to a <see cref="ComplexType"/>.
+    /// A reference to a <see cref="ComplexTypeSequence"/>.
     /// </summary>
     public required string TypeName { get; init; }
 

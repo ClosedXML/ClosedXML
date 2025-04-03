@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace ClosedXML.IO.CodeGen.Model;
+namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
-/// A base class for various types of a <c><![CDATA[<xsd:complexType/>]]></c>.
+/// A base class for <c><![CDATA[<xsd:complexType/>]]></c>. It doesn't have any elements.
 /// </summary>
-public class ComplexTypeBase
+public class ComplexType : IReferencable
 {
     /// <summary>
     /// Name of the complex type.
