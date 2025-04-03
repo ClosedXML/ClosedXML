@@ -18,7 +18,7 @@ public class AttributeElement
     /// </summary>
     public required string? Name { get; set; }
 
-    public required string? Ref { get; set; }
+    public required string? RefName { get; set; }
 
     public required string? Type { get; set; }
 

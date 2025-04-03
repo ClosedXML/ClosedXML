@@ -29,12 +29,13 @@ public class XsdSchemaParser
         {
             var ns = reader.GetString("namespace");
             var schemaLocation = reader.GetString("schemaLocation");
+            reader.Close("import", XsdNs);
+
             file.Imports.Add(new ImportElement
             {
                 Namespace = ns,
                 SchemaLocation = schemaLocation
             });
-            reader.Close("import", XsdNs);
         }
 
         while (!reader.TryClose("schema", XsdNs))
@@ -54,6 +55,7 @@ public class XsdSchemaParser
                 var name = reader.GetString("name");
                 var typeName = reader.GetString("type");
                 reader.Close("element", XsdNs);
+
                 file.Entries.Add(new ElementDefinition
                 {
                     Name = name,
@@ -65,6 +67,7 @@ public class XsdSchemaParser
                 var name = reader.GetString("name");
                 var elementGroup = ParseElementsGroup(reader);
                 reader.Close("group", XsdNs);
+
                 file.Entries.Add(new GroupDefinition
                 {
                     Name = name,
@@ -93,8 +96,8 @@ public class XsdSchemaParser
             var elements = new List<IElementGroup>();
             do
             {
-                var elementGroup = ParseElementsGroup(reader);
-                elements.Add(elementGroup);
+                var element = ParseElementsGroup(reader);
+                elements.Add(element);
             } while (!reader.TryClose("sequence", XsdNs));
 
             var attributes = ParseComplexTypeAttributes(reader);
@@ -206,7 +209,6 @@ public class XsdSchemaParser
         if (reader.TryOpen("list", XsdNs))
         {
             var itemType = reader.GetString("itemType");
-
             reader.Close("list", XsdNs);
             reader.Close("simpleType", XsdNs);
 
@@ -265,16 +267,16 @@ public class XsdSchemaParser
             var type = reader.GetString("type");
             var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Optional;
             var defaultValue = reader.GetOptionalString("default");
+            reader.Close("attribute", XsdNs);
             var attribute = new AttributeElement
             {
                 Name = name,
                 Type = type,
                 Use = use,
                 DefaultValue = defaultValue,
-                Ref = null
+                RefName = null
             };
             extensionAttributes.Add(attribute);
-            reader.Close("attribute", XsdNs);
         }
 
         reader.Close("simpleContent", XsdNs);
@@ -284,14 +286,14 @@ public class XsdSchemaParser
 
     private static List<AttributeElement> ParseComplexTypeAttributes(XmlTreeReader reader)
     {
-        var xsdAttributes = new List<AttributeElement>();
+        var attributes = new List<AttributeElement>();
 
         while (!reader.TryClose("complexType", XsdNs))
         {
             if (reader.TryOpen("attribute", XsdNs))
             {
                 var attribute = ParseAttribute(reader);
-                xsdAttributes.Add(attribute);
+                attributes.Add(attribute);
             }
             else if (reader.TryOpen("attributeGroup", XsdNs))
             {
@@ -305,24 +307,25 @@ public class XsdSchemaParser
             }
         }
 
-        return xsdAttributes;
+        return attributes;
     }
 
     private static AttributeElement ParseAttribute(XmlTreeReader reader)
     {
-        var attrName = reader.GetOptionalString("name");
-        var attrType = reader.GetOptionalString("type");
-        var attrRef = reader.GetOptionalString("ref");
-        var attrDefault = reader.GetOptionalString("default");
-        var attrUse = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Optional;
+        var name = reader.GetOptionalString("name");
+        var type = reader.GetOptionalString("type");
+        var refName = reader.GetOptionalString("ref");
+        var defaultValue = reader.GetOptionalString("default");
+        var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Optional;
         reader.Close("attribute", XsdNs);
+
         return new AttributeElement
         {
-            Name = attrName,
-            Ref = attrRef,
-            Type = attrType,
-            Use = attrUse,
-            DefaultValue = attrDefault
+            Name = name,
+            RefName = refName,
+            Type = type,
+            Use = use,
+            DefaultValue = defaultValue
         };
     }
 
@@ -331,16 +334,16 @@ public class XsdSchemaParser
         if (reader.TryOpen("sequence", XsdNs))
         {
             var occurs = GetOccursAttributes(reader);
-            var sequence = new List<IElementGroup>();
+            var elements = new List<IElementGroup>();
             do
             {
                 var element = ParseElementsGroup(reader);
-                sequence.Add(element);
+                elements.Add(element);
             } while (!reader.TryClose("sequence", XsdNs));
 
             return new Sequence
             {
-                Children = sequence,
+                Children = elements,
                 Occurrences = occurs
             };
         }
@@ -348,59 +351,62 @@ public class XsdSchemaParser
         if (reader.TryOpen("choice", XsdNs))
         {
             var occurs = GetOccursAttributes(reader);
-            var choiceElements = new List<IElementGroup>();
+            var choices = new List<IElementGroup>();
             do
             {
                 var choice = ParseElementsGroup(reader);
-                choiceElements.Add(choice);
+                choices.Add(choice);
             } while (!reader.TryClose("choice", XsdNs));
 
             return new Choice
             {
-                Children = choiceElements,
+                Children = choices,
                 Occurrences = occurs
             };
         }
 
         if (reader.TryOpen("element", XsdNs))
         {
-            // ref, min/maxOccurs
-            var refAttr = reader.GetOptionalString("ref");
-            if (refAttr is not null)
+            var occurrences = GetOccursAttributes(reader);
+
+            var refName = reader.GetOptionalString("ref");
+            if (refName is not null)
             {
-                var refElement = new ElementReference
-                {
-                    RefName = refAttr,
-                    Occurrences = GetOccursAttributes(reader)
-                };
                 reader.Close("element", XsdNs);
-                return refElement;
+
+                return new ElementReference
+                {
+                    RefName = refName,
+                    Occurrences = occurrences
+                };
             }
 
             // name, type, min/maxOccurs
-            var typeElement = new ElementType
-            {
-                Name = reader.GetString("name"),
-                TypeName = reader.GetString("type"),
-                Occurrences = GetOccursAttributes(reader)
-            };
+            var name = reader.GetString("name");
+            var type = reader.GetString("type");
             reader.Close("element", XsdNs);
-            return typeElement;
+
+            return new ElementType
+            {
+                Name = name,
+                TypeName = type,
+                Occurrences = occurrences
+            };
         }
 
         if (reader.TryOpen("group", XsdNs))
         {
-            var refAttr = reader.GetOptionalString("ref");
-            var occurs = GetOccursAttributes(reader);
+            var refName = reader.GetOptionalString("ref");
+            var occurrences = GetOccursAttributes(reader);
 
             // Element group reference
-            if (refAttr is not null)
+            if (refName is not null)
             {
                 reader.Close("group", XsdNs);
                 return new GroupReference
                 {
-                    RefName = refAttr,
-                    Occurrences = occurs
+                    RefName = refName,
+                    Occurrences = occurrences
                 };
             }
 
@@ -411,6 +417,7 @@ public class XsdSchemaParser
         {
             var processContents = reader.GetOptionalEnum<ProcessContents>("processContents") ?? ProcessContents.Strict;
             reader.Close("any", XsdNs);
+
             return new Any
             {
                 ProcessContent = processContents
