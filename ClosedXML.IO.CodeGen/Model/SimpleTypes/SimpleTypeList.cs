@@ -11,7 +11,7 @@
 /// ]]></code>
 /// </example>
 /// </summary>
-public class SimpleTypeList
+public class SimpleTypeList : ISimpleType
 {
     public required string Name { get; init; }
 

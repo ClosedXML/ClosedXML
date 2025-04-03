@@ -15,7 +15,7 @@ namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class SimpleTypeEnum
+public class SimpleTypeEnum : ISimpleType
 {
     public required string Name { get; init; }
 
