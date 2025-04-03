@@ -32,6 +32,11 @@ public static class XmlTreeReaderExtensions
         return reader.GetOptionalDouble(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
+    public static string GetString(this XmlTreeReader reader, string attributeName)
+    {
+        return reader.GetOptionalString(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
+    }
+
     public static TEnum GetEnum<TEnum>(this XmlTreeReader reader, string attributeName)
         where TEnum : struct, Enum
     {

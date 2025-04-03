@@ -124,6 +124,7 @@ public sealed class XmlTreeReader : IDisposable
     /// </summary>
     public bool TryOpen(string localName, string namespaceUri)
     {
+        MoveToStart();
         ThrowWhenReaderNotOnElement();
         SwitchToLookup();
 
@@ -170,7 +171,7 @@ public sealed class XmlTreeReader : IDisposable
     public void Close(string localName, string namespaceUri)
     {
         if (!TryClose(localName, namespaceUri))
-            throw PartStructureException.ExpectedElementNotFound($"Expected closing element '{localName}', but reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.");
+            throw PartStructureException.ExpectedElementNotFound($"Expected closing element '{localName}', but reader is currently on {(_isStart ? "opening" : "closing")} '{_reader.Name}'.", this);
     }
 
     /// <summary>
@@ -368,6 +369,14 @@ public sealed class XmlTreeReader : IDisposable
     private XmlNodeType? ReadNode()
     {
         return _reader.Read() ? _reader.NodeType : null;
+    }
+
+    private void MoveToStart()
+    {
+        if (_reader.NodeType == XmlNodeType.None)
+        {
+            _reader.MoveToContent();
+        }
     }
 
     private void ThrowWhenReaderNotOnElement()

@@ -11,8 +11,8 @@ namespace ClosedXML.IO;
 /// </summary>
 public class PartStructureException : Exception
 {
-    private PartStructureException(string message)
-        : base(message)
+    private PartStructureException(string message, XmlTreeReader? reader = null)
+        : base(BuildMessage(message, reader))
     {
     }
 
@@ -30,9 +30,10 @@ public class PartStructureException : Exception
     /// is missing.
     /// </summary>
     /// <param name="missingElementDesc">optional info about what element is missing.</param>
-    public static Exception ExpectedElementNotFound(string missingElementDesc)
+    /// <param name="reader">XML reader at the position of the error.</param>
+    public static Exception ExpectedElementNotFound(string missingElementDesc, XmlTreeReader? reader = null)
     {
-        return new PartStructureException($"The structure of XML expected a certain kind of element, but it isn't there ({missingElementDesc}).");
+        return new PartStructureException($"The structure of XML expected a certain kind of element, but it isn't there ({missingElementDesc}).", reader);
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ public class PartStructureException : Exception
     /// </summary>
     public static Exception ExpectedChoiceElementNotFound(XmlTreeReader reader)
     {
-        return new PartStructureException($"The structure of XML expected an element from choice of several, but found {reader.ElementName} instead.");
+        return new PartStructureException($"The structure of XML expected an element from choice of several, but found {reader.ElementName} instead.", reader);
     }
 
     /// <summary>
@@ -104,12 +105,7 @@ public class PartStructureException : Exception
     public static Exception MissingAttribute(string attributeName, XmlTreeReader reader)
     {
         var message = $"The XML schema requires an attribute '{attributeName}', but is is not present.";
-        if (reader.TryGetLineInfo(out var lineInfo))
-        {
-            message += $" Line:{lineInfo.LineNumber}, Position:{lineInfo.LinePosition}.";
-        }
-
-        return new PartStructureException(message);
+        return new PartStructureException(message, reader);
     }
 
     /// <inheritdoc cref="InvalidAttributeFormat(string)"/>
@@ -143,5 +139,16 @@ public class PartStructureException : Exception
     public static Exception InvalidAttributeValue(string attributeValue)
     {
         return new PartStructureException($"The value of attribute '{attributeValue}' is not valid value for the attribute.");
+    }
+
+
+    private static string BuildMessage(string message, XmlTreeReader? reader)
+    {
+        if (reader is not null && reader.TryGetLineInfo(out var lineInfo))
+        {
+            message += $" Line:{lineInfo.LineNumber}, Position:{lineInfo.LinePosition}.";
+        }
+
+        return message;
     }
 }
