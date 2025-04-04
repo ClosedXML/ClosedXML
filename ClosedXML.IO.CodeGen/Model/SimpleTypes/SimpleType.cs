@@ -3,7 +3,8 @@
 namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 
 /// <summary>
-/// <c><![CDATA[<xsd:simpleType>]]></c> inside <c><![CDATA[<xsd:schema>]]></c>.
+/// <c><![CDATA[<xsd:simpleType>]]></c> inside <c><![CDATA[<xsd:schema>]]></c>. The allowed values
+/// are restricted by <see cref="Restrictions"/>.
 /// <example>
 /// <code><![CDATA[
 /// <xsd:simpleType name="ST_Something">
@@ -15,20 +16,14 @@ namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class SimpleTypeEnum : ISimpleType
+public class SimpleType : ISimpleType
 {
     public required string Name { get; init; }
 
     public required string BaseTypeName { get; init; }
 
     /// <summary>
-    /// List of enum values.
+    /// Conditions the value must satisfy.
     /// </summary>
-    public required List<string> Values { get; init; }
-
-    public required int? Length { get; init; }
-
-    public required int? MinInclusive { get; init; }
-
-    public required int? MaxInclusive { get; init; }
+    public required List<IValueRestriction> Restrictions { get; init; }
 }

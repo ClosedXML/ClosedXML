@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using ClosedXML.IO.CodeGen.Model;
 using ClosedXML.IO.CodeGen.Model.Elements;
 using ClosedXML.IO.CodeGen.Model.SimpleTypes;
@@ -157,52 +155,14 @@ public class XsdSchemaParser
         var simpleTypeName = reader.GetString("name");
         if (reader.TryOpen("restriction", XsdNs))
         {
-            var baseType = reader.GetString("base");
-
-            int? length = null;
-            int? minInclusive = null;
-            int? maxInclusive = null;
-            var values = new List<string>();
-
-            while (!reader.TryClose("restriction", XsdNs))
-            {
-                if (reader.TryOpen("enumeration", XsdNs))
-                {
-                    var value = reader.GetString("value");
-                    values.Add(value);
-                    reader.Close("enumeration", XsdNs);
-                }
-                else if (reader.TryOpen("length", XsdNs))
-                {
-                    length = reader.GetInt("value");
-                    reader.Close("length", XsdNs);
-                }
-                else if (reader.TryOpen("minInclusive", XsdNs))
-                {
-                    minInclusive = reader.GetInt("value");
-                    reader.Close("minInclusive", XsdNs);
-                }
-                else if (reader.TryOpen("maxInclusive", XsdNs))
-                {
-                    maxInclusive = reader.GetInt("value");
-                    reader.Close("maxInclusive", XsdNs);
-                }
-                else
-                {
-                    throw PartStructureException.ExpectedChoiceElementNotFound(reader);
-                }
-            }
-
+            var restriction = ParseRestriction(reader);
             reader.Close("simpleType", XsdNs);
 
-            return new SimpleTypeEnum
+            return new SimpleType
             {
                 Name = simpleTypeName,
-                BaseTypeName = baseType,
-                Values = values,
-                Length = length,
-                MinInclusive = minInclusive,
-                MaxInclusive = maxInclusive
+                BaseTypeName = restriction.BaseTypeName,
+                Restrictions = restriction.ValueRestrictions,
             };
         }
 
@@ -221,17 +181,71 @@ public class XsdSchemaParser
 
         if (reader.TryOpen("union", XsdNs))
         {
-            // TODO: Implement, but it's a minor use
-            reader.Skip();
+            var unionRestrictions = new List<Restriction>();
+            while (reader.TryOpen("simpleType", XsdNs))
+            {
+                reader.Open("restriction", XsdNs);
+                var restriction = ParseRestriction(reader);
+                reader.Close("simpleType", XsdNs);
+
+                unionRestrictions.Add(restriction);
+            }
+
+            reader.Close("union", XsdNs);
             reader.Close("simpleType", XsdNs);
 
             return new SimpleTypeUnion
             {
-                Name = simpleTypeName
+                Name = simpleTypeName,
+                RestrictionsUnion = unionRestrictions
             };
         }
 
         throw PartStructureException.ExpectedChoiceElementNotFound(reader);
+    }
+
+    private static Restriction ParseRestriction(XmlTreeReader reader)
+    {
+        var baseType = reader.GetString("base");
+        var valueRestrictions = new List<IValueRestriction>();
+
+        while (!reader.TryClose("restriction", XsdNs))
+        {
+            if (reader.TryOpen("enumeration", XsdNs))
+            {
+                var value = reader.GetString("value");
+                valueRestrictions.Add(new RestrictEnumeration(value));
+                reader.Close("enumeration", XsdNs);
+            }
+            else if (reader.TryOpen("length", XsdNs))
+            {
+                var length = reader.GetInt("value");
+                valueRestrictions.Add(new RestrictLength(length));
+                reader.Close("length", XsdNs);
+            }
+            else if (reader.TryOpen("minInclusive", XsdNs))
+            {
+                var minInclusive = reader.GetInt("value");
+                valueRestrictions.Add(new RestrictMinInclusive(minInclusive));
+                reader.Close("minInclusive", XsdNs);
+            }
+            else if (reader.TryOpen("maxInclusive", XsdNs))
+            {
+                var maxInclusive = reader.GetInt("value");
+                valueRestrictions.Add(new RestrictMaxInclusive(maxInclusive));
+                reader.Close("maxInclusive", XsdNs);
+            }
+            else
+            {
+                throw PartStructureException.ExpectedChoiceElementNotFound(reader);
+            }
+        }
+
+        return new Restriction
+        {
+            BaseTypeName = baseType,
+            ValueRestrictions = valueRestrictions
+        };
     }
 
     private static AttributeGroupDefinition ParseAttributeGroupDefinition(XmlTreeReader reader)

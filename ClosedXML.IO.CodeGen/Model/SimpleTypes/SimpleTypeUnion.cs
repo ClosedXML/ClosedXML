@@ -1,7 +1,10 @@
-﻿namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
+﻿using System.Collections.Generic;
 
-// TODO: Implement
+namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
+
 public class SimpleTypeUnion : ISimpleType
 {
     public required string Name { get; init; }
+
+    public required List<Restriction> RestrictionsUnion { get; init; } = [];
 }
