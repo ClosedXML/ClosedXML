@@ -298,9 +298,9 @@ public class XsdSchemaParser
         return (baseTypeName, extensionAttributes);
     }
 
-    private static List<AttributeElement> ParseComplexTypeAttributes(XmlTreeReader reader)
+    private static List<OneOf<AttributeElement, AttributeGroupReference>> ParseComplexTypeAttributes(XmlTreeReader reader)
     {
-        var attributes = new List<AttributeElement>();
+        var attributes = new List<OneOf<AttributeElement, AttributeGroupReference>>();
 
         while (!reader.TryClose("complexType", XsdNs))
         {
@@ -311,9 +311,12 @@ public class XsdSchemaParser
             }
             else if (reader.TryOpen("attributeGroup", XsdNs))
             {
-                _ = reader.GetString("ref");
+                var refName = reader.GetString("ref");
                 reader.Close("attributeGroup", XsdNs);
-                // TODO return XsdAttributeGroupReference, currently ignored
+                attributes.Add(new AttributeGroupReference
+                {
+                    RefName = refName
+                });
             }
             else
             {
