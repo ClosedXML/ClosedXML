@@ -27,4 +27,9 @@ public class ElementType : IElementGroup
     public required string TypeName { get; init; }
 
     public required Occurrences Occurrences { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

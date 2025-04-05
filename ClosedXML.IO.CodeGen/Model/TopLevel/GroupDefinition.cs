@@ -14,9 +14,14 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class GroupDefinition : IReferencable
+public class GroupDefinition : IReferencable, INode
 {
     public required string Name { get; init; }
 
     public required IElementGroup Content { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

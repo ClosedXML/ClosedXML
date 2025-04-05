@@ -3,7 +3,7 @@
 /// <summary>
 /// A marker interface for types inside <c><![CDATA[<xsd:simpleType>]]></c>.
 /// </summary>
-public interface ISimpleType
+public interface ISimpleType : INode
 {
     string Name { get; }
 }

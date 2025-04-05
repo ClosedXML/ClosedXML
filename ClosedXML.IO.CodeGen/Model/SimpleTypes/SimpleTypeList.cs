@@ -16,4 +16,9 @@ public class SimpleTypeList : ISimpleType
     public required string Name { get; init; }
 
     public required string ItemType { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

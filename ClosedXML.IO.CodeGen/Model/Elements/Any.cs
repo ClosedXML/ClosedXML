@@ -14,4 +14,9 @@ public class Any : IElementGroup
     public List<IElementGroup> Children { get; } = [];
 
     public required ProcessContents ProcessContent { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

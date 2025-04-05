@@ -143,7 +143,7 @@ public class XsdSchemaParser
 
         // Complex type that consists only from attributes
         var attr = ParseComplexTypeAttributes(reader);
-        return new ComplexType
+        return new ComplexTypeElement
         {
             Name = name,
             Attributes = attr

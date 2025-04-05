@@ -15,9 +15,14 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 ///   <xsd:simpleContent>
 /// ]]>
 /// </summary>
-public class ComplexTypeSimpleContent : ComplexType
+public class ComplexTypeSimpleContent : ComplexType, INode
 {
     public required string BaseTypeName { get; init; }
 
     public required List<AttributeElement> ExtensionAttributes { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

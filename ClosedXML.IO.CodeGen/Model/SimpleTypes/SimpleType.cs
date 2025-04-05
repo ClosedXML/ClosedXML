@@ -26,4 +26,9 @@ public class SimpleType : ISimpleType
     /// Conditions the value must satisfy.
     /// </summary>
     public required List<IValueRestriction> Restrictions { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

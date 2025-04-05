@@ -10,4 +10,9 @@ public class Choice : IElementGroup
     public required List<IElementGroup> Children { get; init; } = [];
 
     public required Occurrences Occurrences { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

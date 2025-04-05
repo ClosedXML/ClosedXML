@@ -18,7 +18,12 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ComplexTypeSequence : ComplexType
+public class ComplexTypeSequence : ComplexType, INode
 {
     public required List<IElementGroup> Elements { get; init; } = [];
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

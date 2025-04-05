@@ -10,7 +10,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ElementDefinition : IReferencable
+public class ElementDefinition : IReferencable, INode
 {
     /// <summary>
     /// Name of the element. Referenced by <see cref="ElementReference.RefName"/>.
@@ -21,4 +21,9 @@ public class ElementDefinition : IReferencable
     /// The type name of the element.
     /// </summary>
     public required string TypeName { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

@@ -5,7 +5,7 @@ namespace ClosedXML.IO.CodeGen.Model.Elements;
 /// <summary>
 /// A node in a complex type element tree.
 /// </summary>
-public interface IElementGroup
+public interface IElementGroup: INode
 {
     /// <summary>
     /// Children elements.

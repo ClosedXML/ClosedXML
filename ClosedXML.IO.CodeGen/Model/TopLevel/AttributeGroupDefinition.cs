@@ -14,7 +14,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class AttributeGroupDefinition : IReferencable
+public class AttributeGroupDefinition : IReferencable, INode
 {
     /// <summary>
     /// Name of the the attribute group type.
@@ -22,4 +22,9 @@ public class AttributeGroupDefinition : IReferencable
     public required string Name { get; init; }
 
     public required List<AttributeElement> Attributes { get; init; } = [];
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

@@ -16,4 +16,9 @@ public class GroupReference : ILeafElement
     public required string RefName { get; init; }
 
     public required Occurrences Occurrences { get; init; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }

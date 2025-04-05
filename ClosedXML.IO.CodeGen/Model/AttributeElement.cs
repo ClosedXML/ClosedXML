@@ -8,7 +8,7 @@
 /// ]]></code>
 /// </example>
 /// </summary>
-public class AttributeElement
+public class AttributeElement : INode
 {
     /// <summary>
     /// Name is technically optional in ref attribute:
@@ -25,4 +25,9 @@ public class AttributeElement
     public AttributeUseType Use { get; set; } = AttributeUseType.Optional;
 
     public string? DefaultValue { get; set; }
+
+    public T Accept<T>(IXsdVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 }
