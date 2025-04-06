@@ -6,6 +6,11 @@
 public enum ProcessContents
 {
     /// <summary>
+    /// Default value, has same meaning as <see cref="Strict"/>.
+    /// </summary>
+    Default,
+
+    /// <summary>
     /// All elements should be validated against schema. This should be used when content
     /// should only contain known schema.
     /// </summary>

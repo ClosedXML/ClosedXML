@@ -447,7 +447,7 @@ public class XsdSchemaParser
 
         if (reader.TryOpen("any", XsdNs))
         {
-            var processContents = reader.GetOptionalEnum<ProcessContents>("processContents") ?? ProcessContents.Strict;
+            var processContents = reader.GetOptionalEnum<ProcessContents>("processContents") ?? ProcessContents.Default;
             reader.Close("any", XsdNs);
 
             return new Any
