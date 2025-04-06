@@ -115,6 +115,7 @@ public class XsdSchemaParser
 
         if (reader.TryOpen("choice", XsdNs))
         {
+            var occurrences = GetOccursAttributes(reader);
             var choices = new List<IElementGroup>();
             do
             {
@@ -128,7 +129,11 @@ public class XsdSchemaParser
             {
                 Name = name,
                 Attributes = attributes,
-                Choices = choices
+                Choice = new Choice
+                {
+                    Children = choices,
+                    Occurrences = occurrences
+                }
             };
         }
 

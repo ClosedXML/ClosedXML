@@ -20,7 +20,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// </summary>
 public class ComplexTypeChoice : ComplexType, INode
 {
-    public required List<IElementGroup> Choices { get; init; } = [];
+    public required Choice Choice { get; init; }
 
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
