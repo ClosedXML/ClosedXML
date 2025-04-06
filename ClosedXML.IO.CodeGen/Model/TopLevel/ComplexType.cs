@@ -11,4 +11,10 @@ public abstract class ComplexType : IReferencable
     public required string Name { get; set; }
 
     public List<OneOf<AttributeElement, AttributeGroupReference>> Attributes { get; set; } = [];
+
+    /// <summary>
+    /// Can text be freely interspersed with elements? Only used when <c>complexType</c> contains
+    /// <c>any</c>.
+    /// </summary>
+    public required bool? Mixed { get; init; }
 }

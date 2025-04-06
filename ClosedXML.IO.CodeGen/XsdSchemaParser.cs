@@ -89,6 +89,7 @@ public class XsdSchemaParser
     private static ComplexType ParseComplexType(XmlTreeReader reader)
     {
         var name = reader.GetString("name");
+        var mixed = reader.GetOptionalBool("mixed");
         if (reader.TryOpen("sequence", XsdNs))
         {
             var occurrences = GetOccursAttributes(reader);
@@ -105,6 +106,7 @@ public class XsdSchemaParser
             {
                 Name = name,
                 Attributes = attributes,
+                Mixed = mixed,
                 Sequence = new Sequence
                 {
                     Children = elements,
@@ -129,6 +131,7 @@ public class XsdSchemaParser
             {
                 Name = name,
                 Attributes = attributes,
+                Mixed = mixed,
                 Choice = new Choice
                 {
                     Children = choices,
@@ -146,6 +149,7 @@ public class XsdSchemaParser
             {
                 Name = name,
                 Attributes = attributes,
+                Mixed = mixed,
                 BaseTypeName = baseTypeName,
                 ExtensionAttributes = extensionAttributes
             };
@@ -156,7 +160,8 @@ public class XsdSchemaParser
         return new ComplexTypeElement
         {
             Name = name,
-            Attributes = attr
+            Attributes = attr,
+            Mixed = mixed,
         };
     }
 
