@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace ClosedXML.IO.CodeGen;
 
@@ -22,12 +20,12 @@ public readonly record struct OneOf<T1, T2>
     public bool TryPickT1([NotNullWhen(true)] out T1? t1)
     {
         t1 = _t1!;
-        return EqualityComparer<T1?>.Default.Equals(_t1, default);
+        return !EqualityComparer<T1?>.Default.Equals(_t1, default);
     }
 
     internal bool TryPickT2([NotNullWhen(true)] out T2? t2)
     {
         t2 = _t2!;
-        return EqualityComparer<T2?>.Default.Equals(_t2, default);
+        return !EqualityComparer<T2?>.Default.Equals(_t2, default);
     }
 }
