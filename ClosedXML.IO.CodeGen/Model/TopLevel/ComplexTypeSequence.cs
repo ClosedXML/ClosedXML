@@ -20,7 +20,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// </summary>
 public class ComplexTypeSequence : ComplexType, INode
 {
-    public required List<IElementGroup> Elements { get; init; } = [];
+    public required Sequence Sequence { get; init; }
 
     public T Accept<T>(IXsdVisitor<T> visitor)
     {

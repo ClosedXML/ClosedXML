@@ -91,6 +91,7 @@ public class XsdSchemaParser
         var name = reader.GetString("name");
         if (reader.TryOpen("sequence", XsdNs))
         {
+            var occurrences = GetOccursAttributes(reader);
             var elements = new List<IElementGroup>();
             do
             {
@@ -104,7 +105,11 @@ public class XsdSchemaParser
             {
                 Name = name,
                 Attributes = attributes,
-                Elements = elements
+                Sequence = new Sequence
+                {
+                    Children = elements,
+                    Occurrences = occurrences
+                }
             };
         }
 
