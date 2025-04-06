@@ -5,6 +5,10 @@
 /// </summary>
 public enum AttributeUseType
 {
+    /// <summary>
+    /// Default is <see cref="Optional"/>.
+    /// </summary>
+    Default,
     Optional,
     Required
 }

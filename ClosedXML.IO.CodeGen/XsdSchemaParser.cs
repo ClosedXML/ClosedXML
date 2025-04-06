@@ -294,7 +294,7 @@ public class XsdSchemaParser
             reader.Open("attribute", XsdNs);
             var name = reader.GetString("name");
             var type = reader.GetString("type");
-            var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Optional;
+            var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Default;
             var defaultValue = reader.GetOptionalString("default");
             reader.Close("attribute", XsdNs);
             var attribute = new AttributeElement
@@ -348,7 +348,7 @@ public class XsdSchemaParser
         var type = reader.GetOptionalString("type");
         var refName = reader.GetOptionalString("ref");
         var defaultValue = reader.GetOptionalString("default");
-        var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Optional;
+        var use = reader.GetOptionalEnum<AttributeUseType>("use") ?? AttributeUseType.Default;
         reader.Close("attribute", XsdNs);
 
         return new AttributeElement

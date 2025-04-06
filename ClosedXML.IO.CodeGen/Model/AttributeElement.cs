@@ -22,7 +22,7 @@ public class AttributeElement : INode
 
     public required string? Type { get; set; }
 
-    public AttributeUseType Use { get; set; } = AttributeUseType.Optional;
+    public AttributeUseType Use { get; set; }
 
     public string? DefaultValue { get; set; }
 
