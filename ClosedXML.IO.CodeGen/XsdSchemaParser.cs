@@ -461,8 +461,8 @@ public class XsdSchemaParser
 
     private static Occurrences GetOccursAttributes(XmlTreeReader reader)
     {
-        var minOccurs = reader.GetOptionalInt("minOccurs") ?? 1;
-        var maxOccurs = reader.GetOptionalString("maxOccurs") == "unbounded" ? int.MaxValue : reader.GetOptionalInt("maxOccurs") ?? 1;
+        var minOccurs = reader.GetOptionalInt("minOccurs") ?? null;
+        var maxOccurs = reader.GetOptionalString("maxOccurs") == "unbounded" ? int.MaxValue : reader.GetOptionalInt("maxOccurs") ?? null;
         return new Occurrences(minOccurs, maxOccurs);
     }
 }
