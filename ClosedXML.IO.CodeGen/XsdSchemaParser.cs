@@ -142,16 +142,16 @@ public class XsdSchemaParser
 
         if (reader.TryOpen("simpleContent", XsdNs))
         {
+            // simpleContent can't have attributes like complexType. It has them only in <extension> tag.
             var (baseTypeName, extensionAttributes) = ParseSimpleContent(reader);
-            var attributes = ParseComplexTypeAttributes(reader);
+            reader.Close("complexType", XsdNs);
 
             return new ComplexTypeSimpleContent
             {
                 Name = name,
-                Attributes = attributes,
+                Attributes = extensionAttributes,
                 Mixed = mixed,
-                BaseTypeName = baseTypeName,
-                ExtensionAttributes = extensionAttributes
+                BaseTypeName = baseTypeName
             };
         }
 
@@ -283,11 +283,11 @@ public class XsdSchemaParser
         };
     }
 
-    private static (string Base, List<AttributeElement> Attributes) ParseSimpleContent(XmlTreeReader reader)
+    private static (string Base, List<OneOf<AttributeElement, AttributeGroupReference>> Attributes) ParseSimpleContent(XmlTreeReader reader)
     {
         reader.Open("extension", XsdNs);
         var baseTypeName = reader.GetString("base");
-        var extensionAttributes = new List<AttributeElement>();
+        var extensionAttributes = new List<OneOf<AttributeElement, AttributeGroupReference>>();
 
         while (!reader.TryClose("extension", XsdNs))
         {

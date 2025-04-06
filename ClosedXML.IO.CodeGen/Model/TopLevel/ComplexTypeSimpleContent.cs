@@ -19,8 +19,6 @@ public class ComplexTypeSimpleContent : ComplexType, INode
 {
     public required string BaseTypeName { get; init; }
 
-    public required List<AttributeElement> ExtensionAttributes { get; init; }
-
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);

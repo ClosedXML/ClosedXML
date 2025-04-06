@@ -6,12 +6,24 @@ using ClosedXML.IO.CodeGen.Model.TopLevel;
 namespace ClosedXML.IO.CodeGen;
 
 /// <summary>
-/// A visitor for visitor pattern.
+/// A visitor for visiting <see cref="INode">nodes</see> and running a code for each type of a node.
 /// </summary>
 /// <typeparam name="TResult">Type of returned value.</typeparam>
 public interface IXsdVisitor<out TResult>
 {
     TResult Visit(Schema schema);
+
+    TResult Visit(SimpleType simpleType);
+
+    TResult Visit(SimpleTypeList simpleType);
+
+    TResult Visit(SimpleTypeUnion simpleType);
+
+    TResult Visit(ElementDefinition elementDefinition);
+
+    TResult Visit(GroupDefinition groupDefinition);
+
+    TResult Visit(AttributeGroupDefinition attributeGroupDefinition);
 
     TResult Visit(ComplexTypeSequence complexType);
 
@@ -21,31 +33,19 @@ public interface IXsdVisitor<out TResult>
 
     TResult Visit(ComplexTypeElement complexType);
 
-    TResult Visit(ElementDefinition elementDefinition);
-
-    TResult Visit(GroupDefinition groupDefinition);
-
-    TResult Visit(AttributeGroupDefinition attributeGroupDefinition);
-
     TResult Visit(AttributeElement attributeElement);
 
     TResult Visit(AttributeGroupReference attributeGroupReference);
 
-    TResult Visit(SimpleType simpleType);
-
-    TResult Visit(SimpleTypeList simpleTypeList);
-
-    TResult Visit(SimpleTypeUnion simpleTypeUnion);
-
-    TResult Visit(GroupReference groupReference);
-
-    TResult Visit(Any any);
+    TResult Visit(Sequence sequence);
 
     TResult Visit(Choice choice);
 
     TResult Visit(ElementType elementType);
 
-    TResult Visit(Sequence sequence);
-
     TResult Visit(ElementReference elementReference);
+
+    TResult Visit(GroupReference groupReference);
+
+    TResult Visit(Any any);
 }

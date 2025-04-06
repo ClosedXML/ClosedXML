@@ -1,7 +1,7 @@
 ﻿namespace ClosedXML.IO.CodeGen;
 
 /// <summary>
-/// A visitor pattern node, used by a <see cref="IXsdVisitor{T}"/>.
+/// A node visited by a <see cref="IXsdVisitor{TResult}"/>.
 /// </summary>
 public interface INode
 {

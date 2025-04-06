@@ -3,6 +3,9 @@ using ClosedXML.IO.CodeGen.Model.Elements;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
+/// <summary>
+/// Base class for nodes representing a <c><![CDATA[<xsd:compleType>]]></c>.
+/// </summary>
 public abstract class ComplexType : IReferencable
 {
     /// <summary>

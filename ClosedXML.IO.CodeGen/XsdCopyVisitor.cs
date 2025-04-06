@@ -75,7 +75,6 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
         }
 
         AppendElement("</xsd:schema>");
-
         return Unit.Value;
     }
 
@@ -88,10 +87,8 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
         element += ">";
         AppendElement(element);
         complexType.Sequence.Accept(this);
-
         WriteAttributes(complexType);
         AppendElement("</xsd:complexType>");
-
         return Unit.Value;
     }
 
@@ -100,7 +97,6 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
         AppendElement($"<xsd:complexType name=\"{complexType.Name}\">");
         complexType.Choice.Accept(this);
         WriteAttributes(complexType);
-
         AppendElement("</xsd:complexType>");
         return Unit.Value;
     }
@@ -110,19 +106,10 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
         AppendElement($"<xsd:complexType name=\"{complexType.Name}\">");
         AppendElement("<xsd:simpleContent>");
         AppendElement($"<xsd:extension base=\"{complexType.BaseTypeName}\">");
-
-        foreach (var choice in complexType.ExtensionAttributes)
-        {
-            choice.Accept(this);
-        }
+        WriteAttributes(complexType);
         AppendElement("</xsd:extension>");
         AppendElement("</xsd:simpleContent>");
-
-        // TODO: Is this even necessary? SimpleContent
-        WriteAttributes(complexType);
-
         AppendElement("</xsd:complexType>");
-
         return Unit.Value;
     }
 
@@ -131,7 +118,6 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
         AppendElement($"<xsd:complexType name=\"{complexType.Name}\">");
         WriteAttributes(complexType);
         AppendElement("</xsd:complexType>");
-
         return Unit.Value;
     }
 
@@ -226,7 +212,6 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
             element.Accept(this);
         }
         AppendElement("</xsd:choice>");
-
         return Unit.Value;
     }
 
@@ -247,7 +232,6 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
             element.Accept(this);
         }
         AppendElement("</xsd:sequence>");
-
         return Unit.Value;
     }
 
