@@ -12,44 +12,41 @@ namespace ClosedXML.Excel.IO
 {
     internal class PivotTableCacheDefinitionPartReader
     {
-        internal static void Load(WorkbookPart workbookPart, XLWorkbook workbook)
+        internal static void Load(WorkbookPart workbookPart, PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, XLWorkbook workbook)
         {
-            foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
+            var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
+            if (cacheDefinition.CacheSource is not { } cacheSource)
+                throw PartStructureException.RequiredElementIsMissing("cacheSource");
+
+            var pivotSourceReference = ParsePivotSourceReference(cacheSource);
+            var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
+
+            // If WorkbookCacheRelId already has a value, it means the pivot source is being reused
+            if (string.IsNullOrWhiteSpace(pivotCache.WorkbookCacheRelId))
             {
-                var cacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
-                if (cacheDefinition.CacheSource is not { } cacheSource)
-                    throw PartStructureException.RequiredElementIsMissing("cacheSource");
-
-                var pivotSourceReference = ParsePivotSourceReference(cacheSource);
-                var pivotCache = workbook.PivotCachesInternal.Add(pivotSourceReference);
-
-                // If WorkbookCacheRelId already has a value, it means the pivot source is being reused
-                if (string.IsNullOrWhiteSpace(pivotCache.WorkbookCacheRelId))
-                {
-                    pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
-                }
-
-                if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
-                {
-                    pivotCache.ItemsToRetainPerField = missingItemsLimit switch
-                    {
-                        0 => XLItemsToRetain.None,
-                        XLHelper.MaxRowNumber => XLItemsToRetain.Max,
-                        _ => XLItemsToRetain.Automatic,
-                    };
-                }
-
-                if (cacheDefinition.CacheFields is { } cacheFields)
-                {
-                    ReadCacheFields(cacheFields, pivotCache);
-                    if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
-                    {
-                        ReadRecords(recordsPart, pivotCache);
-                    }
-                }
-
-                pivotCache.SaveSourceData = cacheDefinition.SaveData?.Value ?? true;
+                pivotCache.WorkbookCacheRelId = workbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
             }
+
+            if (cacheDefinition.MissingItemsLimit?.Value is { } missingItemsLimit)
+            {
+                pivotCache.ItemsToRetainPerField = missingItemsLimit switch
+                {
+                    0 => XLItemsToRetain.None,
+                    XLHelper.MaxRowNumber => XLItemsToRetain.Max,
+                    _ => XLItemsToRetain.Automatic,
+                };
+            }
+
+            if (cacheDefinition.CacheFields is { } cacheFields)
+            {
+                ReadCacheFields(cacheFields, pivotCache);
+                if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
+                {
+                    ReadRecords(recordsPart, pivotCache);
+                }
+            }
+
+            pivotCache.SaveSourceData = cacheDefinition.SaveData?.Value ?? true;
         }
 
         internal static IXLPivotSource ParsePivotSourceReference(CacheSource cacheSource)

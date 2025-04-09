@@ -451,7 +451,11 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
 
-            PivotTableCacheDefinitionPartReader.Load(workbookPart, this);
+            // Read cache definition before table definition
+            foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
+            {
+                PivotTableCacheDefinitionPartReader.Load(workbookPart, pivotTableCacheDefinitionPart, this);
+            }
 
             // Delay loading of pivot tables until all sheets have been loaded
             foreach (var dSheet in sheets.OfType<Sheet>())
