@@ -79,10 +79,7 @@ public class ReaderConfig
     private readonly Schema _schema;
     private readonly string _readerName;
     private readonly List<string> _parseMethods = new();
-    private readonly StringBuilder _sb = new();
-
-    private int _indentLevel = 0;
-    private bool _methodWritten = false;
+    private readonly CodeBuilder _code = new(new StringBuilder());
 
     public ReaderConfig(Schema schema, string readerName, string nsVariable)
     {
@@ -102,54 +99,19 @@ public class ReaderConfig
         return this;
     }
 
-    public StringBuilder Generate()
+    public String Generate()
     {
-        AddLine($"public partial class {_readerName}");
-        OpenBrace();
+        _code.AddLine($"public partial class {_readerName}");
+        _code.OpenBrace();
 
         foreach (var parseMethod in _parseMethods)
         {
             GenerateParseMethod(parseMethod);
         }
 
-        CloseBrace();
-        return _sb;
+        _code.CloseBrace();
+        return _code.ToString();
     }
-
-    private void AddLine(string s)
-    {
-        AppendIndent();
-        _sb.AppendLine(s);
-    }
-
-    private void OpenBrace()
-    {
-        AppendIndent();
-        _sb.AppendLine("{");
-        _indentLevel++;
-    }
-
-    private void CloseBrace()
-    {
-        _indentLevel--;
-        AppendIndent();
-        _sb.AppendLine("}");
-    }
-
-    private void AppendIndent()
-    {
-        for (var i = 0; i < _indentLevel; i++)
-            _sb.Append("    ");
-    }
-    private void StartMethod(string s)
-    {
-        if (_methodWritten)
-            _sb.AppendLine();
-
-        AddLine(s);
-        _methodWritten = true;
-    }
-
 
     private void GenerateParseMethod(string complexTypeName)
     {
@@ -175,8 +137,8 @@ public class ReaderConfig
         var choice = complexType.Choice;
         var min = choice.Occurrences.Min ?? 1;
         var max = choice.Occurrences.Max ?? 1;
-        StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        OpenBrace();
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
 
         var isFirst = true;
         foreach (var child in choice.Children)
@@ -185,18 +147,17 @@ public class ReaderConfig
             var a = isFirst ? string.Empty : "else ";
             isFirst = false;
 
-            AddLine($"{a}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
-            OpenBrace();
-            AddLine($"Parse{element.TypeName[3..]}(\"{element.Name}\");");
-            CloseBrace();
+            _code.AddLine($"{a}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
+            _code.OpenBrace();
+            _code.AddLine($"Parse{element.TypeName[3..]}(\"{element.Name}\");");
+            _code.CloseBrace();
         }
 
-        AddLine("else");
-        OpenBrace();
-        AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
-        CloseBrace();
-
-        CloseBrace();
+        _code.AddLine("else");
+        _code.OpenBrace();
+        _code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
+        _code.CloseBrace();
+        _code.CloseBrace();
     }
 
     private void GenerateParseMethod(ComplexTypeSequence complexType)
@@ -204,8 +165,8 @@ public class ReaderConfig
         var sequence = complexType.Sequence;
         var min = sequence.Occurrences.Min ?? 1;
         var max = sequence.Occurrences.Max ?? 1;
-        StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        OpenBrace();
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
         if (min == 1 && max == 1)
         {
             foreach (var oneOfAttribute in complexType.Attributes)
@@ -238,8 +199,8 @@ public class ReaderConfig
             throw new NotImplementedException();
         }
 
-        AddLine($"reader.Close(elementName, {_namespaceField});");
-        CloseBrace();
+        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
+        _code.CloseBrace();
     }
 
     private void GenerateReadElement(ElementType elementType)
@@ -249,31 +210,31 @@ public class ReaderConfig
 
         if (min == 0 && max == int.MaxValue)
         {
-            AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
-            OpenBrace();
-            AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            CloseBrace();
+            _code.AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
+            _code.OpenBrace();
+            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
+            _code.CloseBrace();
         }
         else if (min == 1 && max == int.MaxValue)
         {
-            AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField});");
-            AddLine("do");
-            OpenBrace();
-            AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            CloseBrace();
-            AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}));");
+            _code.AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField});");
+            _code.AddLine("do");
+            _code.OpenBrace();
+            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
+            _code.CloseBrace();
+            _code.AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}));");
         }
         else if (min == 1 && max == 1)
         {
-            AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField}))");
-            AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
+            _code.AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField}))");
+            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
         }
         else if (min == 0 && max == 1)
         {
-            AddLine($"if (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
-            OpenBrace();
-            AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            CloseBrace();
+            _code.AddLine($"if (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
+            _code.OpenBrace();
+            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
+            _code.CloseBrace();
         }
         else
         {
@@ -286,8 +247,8 @@ public class ReaderConfig
     public void GenerateParseMethod(ComplexTypeElement complexType)
     {
         Debug.Assert(complexType.Name.StartsWith(prefix));
-        StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        OpenBrace();
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
         foreach (var oneOfAttribute in complexType.Attributes)
         {
             if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
@@ -299,8 +260,8 @@ public class ReaderConfig
                 throw new NotImplementedException();
             }
         }
-        AddLine($"reader.Close(elementName, {_namespaceField});");
-        CloseBrace();
+        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
+        _code.CloseBrace();
     }
 
     private void GenerateReadAttribute(AttributeElement attribute)
@@ -314,7 +275,7 @@ public class ReaderConfig
             if (_optionalSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
             {
                 var b = "var " + EscapeVariableName(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name, attribute.DefaultValue ?? "null") + ";";
-                AddLine(b);
+                _code.AddLine(b);
                 return;
             }
             throw new NotImplementedException($"Optional {attribute.Type}");
@@ -324,7 +285,7 @@ public class ReaderConfig
             if (_requiredSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
             {
                 var b = "var " + EscapeVariableName(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name) + ";";
-                AddLine(b);
+                _code.AddLine(b);
                 return;
             }
             throw new NotImplementedException($"Required {attribute.Type}");
