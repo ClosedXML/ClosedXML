@@ -50,12 +50,7 @@ public class XStringConvert
 
                 // Get hex digits from from _xABCD_ patterns. Polyfill doesn't have allocation-free
                 // API, so just decode the hex number.
-                var codepoint = 0;
-                for (var hexIndex = i + 2; hexIndex < i + 6; ++hexIndex)
-                {
-                    var hexDigit = GetHex(textSpan[hexIndex]);
-                    codepoint = (codepoint * 16) + hexDigit;
-                }
+                var codepoint = GetHexValue(textSpan.Slice(i + 2, 4));
 
                 sb.Append((char)codepoint);
 
@@ -87,23 +82,39 @@ public class XStringConvert
                    IsHex(input[i + 5]);
         }
 
-        static bool IsHex(char c)
+    }
+
+    private static uint GetHexValue(ReadOnlySpan<char> text)
+    {
+        if (text.Length > 8)
+            throw new ArgumentException();
+
+        var codepoint = 0u;
+        foreach (var c in text)
         {
-            return c is >= '0' and <= '9' ||
-                   c is >= 'A' and <= 'F' ||
-                   c is >= 'a' and <= 'f';
+            var hexDigit = (uint)GetHex(c);
+            codepoint = (codepoint * 16) + hexDigit;
         }
 
-        // We already know that c passed the IsHex method.
-        static int GetHex(char c)
+        return codepoint;
+    }
+
+    private static bool IsHex(char c)
+    {
+        return c is >= '0' and <= '9' ||
+               c is >= 'A' and <= 'F' ||
+               c is >= 'a' and <= 'f';
+    }
+
+    // We already know that c passed the IsHex method.
+    private static int GetHex(char c)
+    {
+        return c switch
         {
-            return c switch
-            {
-                >= 'A' and <= 'F' => c - 'A' + 10,
-                >= 'a' and <= 'f' => c - 'a' + 10,
-                >= '0' and <= '9' => c - '0',
-                _ => throw new UnreachableException()
-            };
-        }
+            >= 'A' and <= 'F' => c - 'A' + 10,
+            >= 'a' and <= 'f' => c - 'a' + 10,
+            >= '0' and <= '9' => c - '0',
+            _ => throw new UnreachableException()
+        };
     }
 }
