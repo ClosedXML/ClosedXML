@@ -13,50 +13,70 @@ internal sealed class XmlToEnumMapper : IEnumMapper
     /// A collection of all maps. The key is enum type, the value is Dictionary&lt;string,SomeEnum&gt;
     /// Value can't be typed due to generic limitations (no common ancestor).
     /// </summary>
-    private readonly Lazy<Dictionary<Type, object>> _textToEnumMaps = new(CreateMaps);
+    private readonly Dictionary<Type, object> _textToEnumMaps;
 
-    internal static readonly XmlToEnumMapper Instance = new();
+    private static readonly Lazy<XmlToEnumMapper> LazyInstance = new(CreateSpreadsheetMapper);
+
+    internal static XmlToEnumMapper Instance => LazyInstance.Value;
+
+    private XmlToEnumMapper(Dictionary<Type, object> maps)
+    {
+        _textToEnumMaps = maps;
+    }
 
     public bool TryGetEnum<TEnum>(string text, out TEnum enumValue)
         where TEnum : struct, Enum
     {
-        var enumMap = (Dictionary<string, TEnum>)_textToEnumMaps.Value[typeof(TEnum)];
+        var enumMap = (Dictionary<string, TEnum>)_textToEnumMaps[typeof(TEnum)];
         return enumMap.TryGetValue(text, out enumValue);
     }
 
-    private static Dictionary<Type, object> CreateMaps()
+    private static XmlToEnumMapper CreateSpreadsheetMapper()
     {
-        var enumMaps = new Dictionary<Type, object>();
+        var builder = new Builder();
 
         // ST_FontScheme
-        var xlFontScheme = new Dictionary<string, XLFontScheme>
+        builder.Add(new Dictionary<string, XLFontScheme>
         {
             { "none", XLFontScheme.None },
             { "major", XLFontScheme.Major },
             { "minor", XLFontScheme.Minor },
-        };
-        enumMaps.Add(typeof(XLFontScheme), xlFontScheme);
+        });
 
         // ST_UnderlineValues
-        var xlFontUnderline = new Dictionary<string, XLFontUnderlineValues>
+        builder.Add(new Dictionary<string, XLFontUnderlineValues>
         {
             { "double", XLFontUnderlineValues.Double },
             { "doubleAccounting", XLFontUnderlineValues.DoubleAccounting },
             { "none", XLFontUnderlineValues.None },
             { "single", XLFontUnderlineValues.Single },
             { "singleAccounting", XLFontUnderlineValues.SingleAccounting },
-        };
-        enumMaps.Add(typeof(XLFontUnderlineValues), xlFontUnderline);
+        });
 
         // ST_VerticalAlignRun
-        var xlFontVerticalTextAlignmentValues = new Dictionary<string, XLFontVerticalTextAlignmentValues>
+        builder.Add(new Dictionary<string, XLFontVerticalTextAlignmentValues>
         {
             { "baseline", XLFontVerticalTextAlignmentValues.Baseline },
             { "subscript", XLFontVerticalTextAlignmentValues.Subscript },
             { "superscript", XLFontVerticalTextAlignmentValues.Superscript },
-        };
-        enumMaps.Add(typeof(XLFontVerticalTextAlignmentValues), xlFontVerticalTextAlignmentValues);
+        });
 
-        return enumMaps;
+        return builder.Build();
+    }
+
+    internal class Builder
+    {
+        private readonly Dictionary<Type, object> _maps = new();
+
+        public Builder Add<T>(Dictionary<string, T> map)
+        {
+            _maps.Add(typeof(T), map);
+            return this;
+        }
+
+        public XmlToEnumMapper Build()
+        {
+            return new XmlToEnumMapper(_maps);
+        }
     }
 }
