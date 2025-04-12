@@ -31,6 +31,10 @@ public class ReaderConfig
         _namespaceField = nsVariable;
     }
 
+    /// <summary>
+    /// Generate <c>Parse*</c> method for a complex type.
+    /// </summary>
+    /// <param name="complexTypeName">Name of a complex type.</param>
     public ReaderConfig AddParseMethod(string complexTypeName)
     {
         _parseMethods.Add(complexTypeName);
