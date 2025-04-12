@@ -14,7 +14,7 @@ public class ReaderConfig
     /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
     /// </summary>
     private readonly HashSet<string> _keywords = ["in", "out", "ref"];
-    private readonly string _namespaceField = "_ns";
+    private readonly string _namespaceField;
     private readonly Schema _schema;
     private readonly string _readerName;
     private readonly List<string> _parseMethods = new();

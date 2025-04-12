@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.IO.CodeGen;
 
-internal readonly record struct OneOf<T1, T2>
+public readonly record struct OneOf<T1, T2>
 {
     private readonly T1? _t1;
     private readonly T2? _t2;
