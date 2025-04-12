@@ -41,12 +41,11 @@ public class ReaderConfig
         return this;
     }
 
-    public ReaderConfig SkipType(string complexType)
-    {
-        return this;
-    }
-
-    public String Generate()
+    /// <summary>
+    /// Generate code from the configuration and a XML schema.
+    /// </summary>
+    /// <returns>Generated source code.</returns>
+    public string Generate()
     {
         _code.AddLine($"public partial class {_readerName}");
         _code.OpenBrace();
