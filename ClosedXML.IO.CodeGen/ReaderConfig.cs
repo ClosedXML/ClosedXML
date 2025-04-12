@@ -16,17 +16,17 @@ public class ReaderConfig
     private readonly HashSet<string> _keywords = ["in", "out", "ref"];
     private readonly string _namespaceField;
     private readonly Schema _schema;
-    private readonly string _readerName;
+    private readonly string _readerField;
     private readonly List<string> _parseMethods = new();
     private readonly CodeBuilder _code = new(new StringBuilder());
     const string prefix = "CT_";
     private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
     private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
-    public ReaderConfig(Schema schema, string readerName, string nsVariable)
+    public ReaderConfig(Schema schema, string readerField, string nsVariable)
     {
         _schema = schema;
-        _readerName = readerName;
+        _readerField = readerField;
         _namespaceField = nsVariable;
     }
 
@@ -58,7 +58,7 @@ public class ReaderConfig
     /// <returns>Generated source code.</returns>
     public string Generate()
     {
-        _code.AddLine($"public partial class {_readerName}");
+        _code.AddLine($"public partial class {_readerField}");
         _code.OpenBrace();
 
         foreach (var parseMethod in _parseMethods)
