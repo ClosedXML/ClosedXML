@@ -298,9 +298,32 @@ public sealed class XmlTreeReader : IDisposable
     public uint? GetOptionalUint(string attributeName)
     {
         ThrowOnNonStartElement();
-        long? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsLong() : null;
+        long? number = null;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            try
+            {
+                number = _reader.ReadContentAsLong();
+            }
+            catch (OverflowException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+            catch (XmlException e) when (e.InnerException is FormatException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+        }
+
         if (number is < 0 or > uint.MaxValue)
-            throw PartStructureException.InvalidAttributeFormat(_reader.ReadContentAsString());
+        {
+            if (!_suppressFormatErrors)
+                throw PartStructureException.InvalidAttributeFormat(_reader.ReadContentAsString());
+
+            number = null;
+        }
 
         _reader.MoveToElement();
         return number is not null ? (uint)number : null;
