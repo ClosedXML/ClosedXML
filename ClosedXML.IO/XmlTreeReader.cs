@@ -380,7 +380,12 @@ public sealed class XmlTreeReader : IDisposable
             return null;
 
         if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
-            throw PartStructureException.InvalidAttributeFormat(enumString);
+        {
+            if (!_suppressFormatErrors)
+                throw PartStructureException.InvalidAttributeFormat(enumString);
+
+            return null;
+        }
 
         return enumValue;
     }

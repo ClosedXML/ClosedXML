@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using ClosedXML.Excel.IO;
 using ClosedXML.IO;
@@ -92,6 +94,26 @@ internal class XmlTreeReaderAttributesTests
         var readValue = reader.GetOptionalString(AttributeName);
 
         Assert.That(readValue, Is.EqualTo(@"Dear <user_name> _x0009_ - _x0057_elcome"));
+    }
+
+    [TestCase("def", BindingFlags.Default)]
+    [TestCase("ci", BindingFlags.IgnoreCase)]
+    [TestCase("CI", null)] // Enums names are case sensitive
+    [TestCase("Default", null)] // name is not matched, only configured string
+    [TestCase("", null)]
+    [TestCase("NonExpectedValue", null)]
+    public void GetOptionalEnum_returns_enum_parsed_by_enum_mapper(string xmlText, BindingFlags? enumValue)
+    {
+        var mapper = new XmlToEnumMapper.Builder().Add(new Dictionary<string, BindingFlags>
+        {
+            { "def", BindingFlags.Default },
+            { "ci", BindingFlags.IgnoreCase },
+        }).Build();
+
+        using var reader = CreateReader(xmlText, mapper);
+        var readValue = reader.GetOptionalEnum<BindingFlags>(AttributeName);
+
+        Assert.That(readValue, Is.EqualTo(enumValue));
     }
 
     private static XmlTreeReader CreateReader(string attributeValue, XmlToEnumMapper mapper = null)
