@@ -107,10 +107,22 @@ public sealed class XmlTreeReader : IDisposable
     /// </summary>
     private bool _inLookup = true;
 
+    /// <summary>
+    /// Should unparseable attributes be treated as errors and throw exception are just return null?
+    /// Excel generally ignores unparseable attributes.
+    /// </summary>
+    private readonly bool _suppressFormatErrors;
+
     public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper)
+        : this(reader, enumMapper, false)
+    {
+    }
+
+    public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper, bool suppressFormatErrors)
     {
         _reader = reader;
         _enumMapper = enumMapper;
+        _suppressFormatErrors = suppressFormatErrors;
     }
 
     /// <summary>
@@ -238,7 +250,20 @@ public sealed class XmlTreeReader : IDisposable
     public bool? GetOptionalBool(string attributeName)
     {
         ThrowOnNonStartElement();
-        bool? result = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsBoolean() : null;
+        bool? result = null;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            try
+            {
+                result = _reader.ReadContentAsBoolean();
+            }
+            catch (XmlException e) when (e.InnerException is FormatException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+        }
+
         _reader.MoveToElement();
         return result;
     }
