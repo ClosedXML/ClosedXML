@@ -81,6 +81,19 @@ internal class XmlTreeReaderAttributesTests
         Assert.That(readValue, Is.EqualTo(expectedValue));
     }
 
+    [Test]
+    public void GetOptionalString_returns_stored_string_without_XString_decoding()
+    {
+        // 0x9 (tab) is invalid character per XML 1.0.
+        // 0x57 (W) is a valid character per XML 1.0.
+        const string value = @"Dear &lt;user_name&gt; _x0009_ - _x0057_elcome";
+
+        using var reader = CreateReader(value);
+        var readValue = reader.GetOptionalString(AttributeName);
+
+        Assert.That(readValue, Is.EqualTo(@"Dear <user_name> _x0009_ - _x0057_elcome"));
+    }
+
     private static XmlTreeReader CreateReader(string attributeValue, XmlToEnumMapper mapper = null)
     {
         var xmlContext = $"<element {AttributeName}=\"{attributeValue}\"/>";
