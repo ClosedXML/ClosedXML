@@ -20,6 +20,9 @@ public class ReaderConfig
     private readonly string _readerName;
     private readonly List<string> _parseMethods = new();
     private readonly CodeBuilder _code = new(new StringBuilder());
+    const string prefix = "CT_";
+    private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
+    private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
     public ReaderConfig(Schema schema, string readerName, string nsVariable)
     {
@@ -184,8 +187,6 @@ public class ReaderConfig
         }
     }
 
-    const string prefix = "CT_";
-
     public void GenerateParseMethod(ComplexTypeElement complexType)
     {
         Debug.Assert(complexType.Name.StartsWith(prefix));
@@ -233,9 +234,6 @@ public class ReaderConfig
             throw new NotImplementedException($"Required {attribute.Type}");
         }
     }
-
-    private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
-    private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
     public ReaderConfig AddSimpleTypeRequired(string typeName, string methodTemplate)
     {
