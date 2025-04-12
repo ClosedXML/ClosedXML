@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using ClosedXML.IO.CodeGen.Model;
 using ClosedXML.IO.CodeGen.Model.Elements;
@@ -41,6 +40,18 @@ public class ReaderConfig
         return this;
     }
 
+    public ReaderConfig AddSimpleTypeRequired(string typeName, string methodTemplate)
+    {
+        _requiredSimpleTypeTemplate.Add(typeName, methodTemplate);
+        return this;
+    }
+
+    public ReaderConfig AddSimpleTypeOptional(string typeName, string methodTemplate)
+    {
+        _optionalSimpleTypeTemplate.Add(typeName, methodTemplate);
+        return this;
+    }
+
     /// <summary>
     /// Generate code from the configuration and a XML schema.
     /// </summary>
@@ -76,7 +87,7 @@ public class ReaderConfig
                 GenerateParseMethod(ctChoice);
                 break;
             default:
-                throw new NotImplementedException();
+                throw new NotSupportedException();
         }
     }
 
@@ -236,18 +247,6 @@ public class ReaderConfig
             }
             throw new NotImplementedException($"Required {attribute.Type}");
         }
-    }
-
-    public ReaderConfig AddSimpleTypeRequired(string typeName, string methodTemplate)
-    {
-        _requiredSimpleTypeTemplate.Add(typeName, methodTemplate);
-        return this;
-    }
-
-    public ReaderConfig AddSimpleTypeOptional(string typeName, string methodTemplate)
-    {
-        _optionalSimpleTypeTemplate.Add(typeName, methodTemplate);
-        return this;
     }
 
     private string EscapeVar(string name)
