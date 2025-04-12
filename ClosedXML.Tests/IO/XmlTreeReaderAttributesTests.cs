@@ -64,6 +64,23 @@ internal class XmlTreeReaderAttributesTests
         Assert.That(readValue, Is.EqualTo(expectedValue));
     }
 
+    [TestCase("0", 0)]
+    [TestCase("1.75", 1.75)]
+    [TestCase("-1.75e+10", -1.75e+10)]
+    [TestCase("+1.75E+10", 1.75e+10)]
+    [TestCase("2E+308", null)]
+    [TestCase("-2E+308", null)]
+    [TestCase("number", null)]
+    public void GetOptionalDouble_reads_xsd_compliant_double_values(string xmlText, double? expectedValue)
+    {
+        // Generally speaking, uint is stored as int in the internal representation, because nearly
+        // all API expects int and it is just so much easier to work with.
+        using var reader = CreateReader(xmlText);
+        var readValue = reader.GetOptionalDouble(AttributeName);
+
+        Assert.That(readValue, Is.EqualTo(expectedValue));
+    }
+
     private static XmlTreeReader CreateReader(string attributeValue, XmlToEnumMapper mapper = null)
     {
         var xmlContext = $"<element {AttributeName}=\"{attributeValue}\"/>";

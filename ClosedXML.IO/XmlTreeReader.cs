@@ -332,7 +332,33 @@ public sealed class XmlTreeReader : IDisposable
     public double? GetOptionalDouble(string attributeName)
     {
         ThrowOnNonStartElement();
-        double? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsDouble() : null;
+        double? number = null;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            try
+            {
+                number = _reader.ReadContentAsDouble();
+            }
+            catch (OverflowException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+            catch (XmlException e) when (e.InnerException is FormatException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+        }
+
+        if (number is not null && (double.IsNaN(number.Value) || double.IsInfinity(number.Value)))
+        {
+            if (!_suppressFormatErrors)
+                throw PartStructureException.InvalidAttributeFormat(_reader.ReadContentAsString());
+
+            number = null;
+        }
+
         _reader.MoveToElement();
         return number;
     }
