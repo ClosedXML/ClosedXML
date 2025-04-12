@@ -11,6 +11,10 @@ namespace ClosedXML.IO.CodeGen;
 
 public class ReaderConfig
 {
+    /// <summary>
+    /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
+    /// </summary>
+    private readonly HashSet<string> _keywords = ["in", "out", "ref"];
     private readonly string _namespaceField = "_ns";
     private readonly Schema _schema;
     private readonly string _readerName;
@@ -212,7 +216,7 @@ public class ReaderConfig
         {
             if (_optionalSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
             {
-                var b = "var " + EscapeVariableName(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name, attribute.DefaultValue ?? "null") + ";";
+                var b = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name, attribute.DefaultValue ?? "null") + ";";
                 _code.AddLine(b);
                 return;
             }
@@ -222,7 +226,7 @@ public class ReaderConfig
         {
             if (_requiredSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
             {
-                var b = "var " + EscapeVariableName(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name) + ";";
+                var b = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name) + ";";
                 _code.AddLine(b);
                 return;
             }
@@ -245,9 +249,8 @@ public class ReaderConfig
         return this;
     }
 
-    private string EscapeVariableName(string name)
+    private string EscapeVar(string name)
     {
-        if (name == "in") return "@in";
-        return name;
+        return _keywords.Contains(name) ? '@' + name : name;
     }
 }
