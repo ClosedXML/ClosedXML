@@ -36,7 +36,7 @@ public class Program
 
         Console.WriteLine($"Wrote copy to {args[1]}");
 
-        var cacheRecords = new ReaderConfig(schema, "PivotCacheRecordsReader", "_ns")
+        var cacheRecords = new ParserGenerator(schema, "PivotCacheRecordsReader", "_ns")
             .AddSimpleTypeRequired("xsd:unsignedInt", "reader.GetBool(\"{0}\")")
             .AddSimpleTypeOptional("xsd:int", "reader.GetOptionalInt(\"{0}\") ?? {1}")
             .AddSimpleTypeRequired("xsd:boolean", "reader.GetBool(\"{0}\")")

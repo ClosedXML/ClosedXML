@@ -8,7 +8,7 @@ using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen;
 
-public class ReaderConfig
+public class ParserGenerator
 {
     /// <summary>
     /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
@@ -23,7 +23,7 @@ public class ReaderConfig
     private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
     private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
-    public ReaderConfig(Schema schema, string readerField, string nsVariable)
+    public ParserGenerator(Schema schema, string readerField, string nsVariable)
     {
         _schema = schema;
         _readerField = readerField;
@@ -34,19 +34,19 @@ public class ReaderConfig
     /// Generate <c>Parse*</c> method for a complex type.
     /// </summary>
     /// <param name="complexTypeName">Name of a complex type.</param>
-    public ReaderConfig AddParseMethod(string complexTypeName)
+    public ParserGenerator AddParseMethod(string complexTypeName)
     {
         _parseMethods.Add(complexTypeName);
         return this;
     }
 
-    public ReaderConfig AddSimpleTypeRequired(string typeName, string methodTemplate)
+    public ParserGenerator AddSimpleTypeRequired(string typeName, string methodTemplate)
     {
         _requiredSimpleTypeTemplate.Add(typeName, methodTemplate);
         return this;
     }
 
-    public ReaderConfig AddSimpleTypeOptional(string typeName, string methodTemplate)
+    public ParserGenerator AddSimpleTypeOptional(string typeName, string methodTemplate)
     {
         _optionalSimpleTypeTemplate.Add(typeName, methodTemplate);
         return this;
