@@ -84,6 +84,21 @@ public class XStringConvert
 
     }
 
+    internal static bool TryGetHexValue(ReadOnlySpan<char> text, out uint value)
+    {
+        foreach (var c in text)
+        {
+            if (!IsHex(c))
+            {
+                value = 0;
+                return false;
+            }
+        }
+
+        value = GetHexValue(text);
+        return true;
+    }
+
     private static uint GetHexValue(ReadOnlySpan<char> text)
     {
         if (text.Length > 8)

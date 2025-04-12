@@ -48,4 +48,26 @@ public static class XmlTreeReaderExtensions
     {
         return reader.GetOptionalEnum<TEnum>(attributeName) ?? defaultValue;
     }
+
+    /// <summary>
+    /// Get an attribute with <c>ST_UnsignedIntHex</c> content.
+    /// </summary>
+    public static uint? GetOptionalUIntHex(this XmlTreeReader reader, string attributeName)
+    {
+        // XmlReader has ReadContentAsBinHex, but it also requires allocation, so we can just do it
+        // as extension method without polluting reader.
+        var hexString = reader.GetOptionalString(attributeName);
+        if (hexString is null)
+            return null;
+
+        if (hexString.Length != 8 || !XStringConvert.TryGetHexValue(hexString.AsSpan(), out var number))
+        {
+            if (!reader.SuppressFormatErrors)
+                throw PartStructureException.InvalidAttributeFormat(hexString);
+
+            return null;
+        }
+
+        return number;
+    }
 }
