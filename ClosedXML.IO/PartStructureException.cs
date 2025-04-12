@@ -104,7 +104,7 @@ public class PartStructureException : Exception
     /// <param name="reader">Reader to provide info about place where error happened.</param>
     public static Exception MissingAttribute(string attributeName, XmlTreeReader reader)
     {
-        var message = $"The XML schema requires an attribute '{attributeName}', but is is not present.";
+        var message = $"XML doesn't contain a required attribute '{attributeName}'.";
         return new PartStructureException(message, reader);
     }
 

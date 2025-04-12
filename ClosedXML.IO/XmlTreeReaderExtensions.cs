@@ -49,6 +49,17 @@ public static class XmlTreeReaderExtensions
         return reader.GetOptionalEnum<TEnum>(attributeName) ?? defaultValue;
     }
 
+    public static string GetXString(this XmlTreeReader reader, string attributeName)
+    {
+        return GetOptionalXString(reader, attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
+    }
+
+    public static string? GetOptionalXString(this XmlTreeReader reader, string attributeName)
+    {
+        var text = reader.GetOptionalString(attributeName);
+        return XStringConvert.Decode(text);
+    }
+
     /// <summary>
     /// Get an attribute with <c>ST_UnsignedIntHex</c> content.
     /// </summary>
