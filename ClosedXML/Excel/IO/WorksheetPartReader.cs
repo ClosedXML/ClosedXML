@@ -603,7 +603,7 @@ internal class WorksheetPartReader
         }
 
         if (!hasRuns)
-            xlCell.SetOnlyValue(XmlEncoder.DecodeString(element.Text?.InnerText));
+            xlCell.SetOnlyValue(XStringConvert.Decode(element.Text?.InnerText) ?? string.Empty);
 
         // Load phonetic properties
         var phoneticProperties = element.Elements<PhoneticProperties>();

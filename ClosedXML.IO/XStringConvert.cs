@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
 
 namespace ClosedXML.IO;
 
@@ -14,10 +16,21 @@ public class XStringConvert
     /// <summary>
     /// Decode an XString to normal string.
     /// </summary>
+    /// <remarks>
+    /// There is a similar method in dotnet <see cref="XmlConvert.DecodeName"/>. That one however
+    /// also accepts uppercase X (<c>_X????_</c>) which shouldn't be decoded. Hexadecimal digits are
+    /// case insensitive, the <c>x</c> marker is not (<a href="https://github.com/ClosedXML/ClosedXML/issues/1154">#1154</a>).
+    /// Another issue is that <see cref="XmlConvert.DecodeName"/> accepts 8 hex digits (e.g.,
+    /// <c>_xD83DDE43_</c>). That is also not valid for XString.
+    /// </remarks>
     /// <param name="text">Test that might contain XString encoded characters.</param>
     /// <returns>Decoded string.</returns>
-    public static string Decode(string text)
+    [return: NotNullIfNotNull(nameof(text))]
+    public static string? Decode(string? text)
     {
+        if (string.IsNullOrWhiteSpace(text))
+            return text;
+
         // This method is on a hotpath and shouldn't allocate unless necessary.
         // Do lazy initialization, there might not be any pattern at all.
         StringBuilder? sb = null;
