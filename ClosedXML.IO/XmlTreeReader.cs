@@ -363,6 +363,32 @@ public sealed class XmlTreeReader : IDisposable
         return number;
     }
 
+    /// <summary>
+    /// Try to read <c>xsd:dateTime</c> from an attribute of current element.
+    /// </summary>
+    /// <param name="attributeName">Name of the attribute.</param>
+    /// <returns>Read datetime or null if attribute is not present.</returns>
+    public DateTime? GetOptionalDateTime(string attributeName)
+    {
+        ThrowOnNonStartElement();
+        DateTime? dateTime = null;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            try
+            {
+                dateTime = _reader.ReadContentAsDateTime();
+            }
+            catch (XmlException e) when (e.InnerException is FormatException)
+            {
+                if (!SuppressFormatErrors)
+                    throw;
+            }
+        }
+
+        _reader.MoveToElement();
+        return dateTime;
+    }
+
     public string? GetOptionalString(string attributeName)
     {
         ThrowOnNonStartElement();

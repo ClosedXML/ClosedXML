@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -81,6 +82,18 @@ internal class XmlTreeReaderAttributesTests
         var readValue = reader.GetOptionalDouble(AttributeName);
 
         Assert.That(readValue, Is.EqualTo(expectedValue));
+    }
+
+    [TestCase("2025-10-25", "2025-10-25T00:00:00")]
+    [TestCase("2004-04-12T13:20:00Z", "2004-04-12T13:20:00Z")]
+    [TestCase("today", null)]
+    public void GetOptionalDateTime_reads_xsd_compliant_dateTime_values(string xmlText, string expectedString)
+    {
+        DateTimeOffset? expectedValue = expectedString is not null ? DateTimeOffset.Parse(expectedString) : null;
+        using var reader = CreateReader(xmlText);
+        var readValue = reader.GetOptionalDateTime(AttributeName);
+
+        Assert.That(readValue, Is.EqualTo(expectedValue?.DateTime));
     }
 
     [Test]

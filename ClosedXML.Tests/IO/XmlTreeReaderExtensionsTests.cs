@@ -11,6 +11,15 @@ internal class XmlTreeReaderExtensionsTests
     private const string AttributeName = "test";
 
     [Test]
+    public void GetDateTime_throws_when_attribute_is_not_present()
+    {
+        using var reader = CreateReader("dummy");
+
+        var ex = Assert.Throws<PartStructureException>(() => reader.GetDateTime("nonexistent"));
+        Assert.That(ex, Has.Message.Contain("XML doesn't contain a required attribute 'nonexistent'."));
+    }
+
+    [Test]
     public void GetXString_throws_when_attribute_is_not_present()
     {
         using var reader = CreateReader("dummy");
@@ -18,7 +27,6 @@ internal class XmlTreeReaderExtensionsTests
         var ex = Assert.Throws<PartStructureException>(() => reader.GetXString("nonexistent"));
         Assert.That(ex, Has.Message.Contain("XML doesn't contain a required attribute 'nonexistent'."));
     }
-
 
     [TestCase("&amp;", "&")]
     [TestCase("_x0009_", "\t")]

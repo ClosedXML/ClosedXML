@@ -81,4 +81,12 @@ public static class XmlTreeReaderExtensions
 
         return number;
     }
+
+    /// <summary>
+    /// Read <c>xsd:dateTime</c> attribute.
+    /// </summary>
+    public static DateTime GetDateTime(this XmlTreeReader reader, string attributeName)
+    {
+        return reader.GetOptionalDateTime(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
+    }
 }
