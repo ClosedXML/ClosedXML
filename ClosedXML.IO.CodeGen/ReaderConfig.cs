@@ -51,7 +51,9 @@ public class ReaderConfig
 
     private void GenerateParseMethod(string complexTypeName)
     {
-        var complexType = _schema.Entries.OfType<ComplexType>().SingleOrDefault(x => x.Name == complexTypeName);
+        if (!_schema.TryGetComplexType(complexTypeName, out var complexType))
+            throw new InvalidOperationException($"Complex type '{complexTypeName}' not found.");
+
         switch (complexType)
         {
             case ComplexTypeElement ctElement:

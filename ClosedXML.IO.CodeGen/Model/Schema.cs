@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen.Model;
 
@@ -20,5 +23,11 @@ public class Schema : INode
     T INode.Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    internal bool TryGetComplexType(string complexTypeName, [NotNullWhen(true)] out ComplexType? complexType)
+    {
+        complexType = Entries.OfType<ComplexType>().SingleOrDefault(x => x.Name == complexTypeName);
+        return complexType is not null;
     }
 }
