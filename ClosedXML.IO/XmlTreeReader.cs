@@ -272,7 +272,25 @@ public sealed class XmlTreeReader : IDisposable
     {
         ThrowOnNonStartElement();
         _reader.MoveToAttribute(attributeName);
-        int? number = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsInt() : null;
+        int? number = null;
+        if (_reader.MoveToAttribute(attributeName))
+        {
+            try
+            {
+                number = _reader.ReadContentAsInt();
+            }
+            catch (OverflowException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+            catch (XmlException e) when (e.InnerException is FormatException)
+            {
+                if (!_suppressFormatErrors)
+                    throw;
+            }
+        }
+
         _reader.MoveToElement();
         return number;
     }
