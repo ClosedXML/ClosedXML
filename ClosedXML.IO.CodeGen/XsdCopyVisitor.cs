@@ -287,17 +287,13 @@ internal class XsdCopyVisitor : IXsdVisitor<Unit>
     {
         foreach (var attr in complexType.Attributes)
         {
-            if (attr.TryPickT1(out var attribute))
+            if (attr.TryPickT1(out var attribute, out var attributeGroup))
             {
                 attribute.Accept(this);
             }
-            else if (attr.TryPickT2(out var attributeGroup))
-            {
-                attributeGroup.Accept(this);
-            }
             else
             {
-                throw new InvalidOperationException();
+                attributeGroup.Accept(this);
             }
         }
     }
