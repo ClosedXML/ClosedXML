@@ -23,7 +23,7 @@ internal static class XmlTreeReaderExtensions
 
         // OI-29500: Office prioritizes the attributes as auto < indexed < rgb < theme, and only
         // round trips the type with the highest priority if two or more are specified.
-        var theme = reader.GetOptionalUint("theme");
+        var theme = reader.GetOptionalUInt("theme");
         if (theme is not null)
         {
             var tint = reader.GetOptionalDouble("theme") ?? 0;

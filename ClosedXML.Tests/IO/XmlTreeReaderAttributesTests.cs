@@ -62,7 +62,7 @@ internal class XmlTreeReaderAttributesTests
     public void GetOptionalUint_reads_xsd_compliant_unsignedInt_values(string xmlText, uint? expectedValue)
     {
         using var reader = CreateReader(xmlText);
-        var readValue = reader.GetOptionalUint(AttributeName);
+        var readValue = reader.GetOptionalUInt(AttributeName);
 
         Assert.That(readValue, Is.EqualTo(expectedValue));
     }

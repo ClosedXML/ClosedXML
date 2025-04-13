@@ -13,7 +13,7 @@ public class ParserGenerator
     /// <summary>
     /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
     /// </summary>
-    private readonly HashSet<string> _keywords = ["in", "out", "ref"];
+    private static readonly HashSet<string> Keywords = ["in", "out", "ref"];
     private readonly string _namespaceField;
     private readonly Schema _schema;
     private readonly string _readerField;
@@ -239,31 +239,19 @@ public class ParserGenerator
         Debug.Assert(attribute.Name is not null);
         Debug.Assert(attribute.Type is not null);
         var isOptional = attribute.Use != AttributeUseType.Required;
+        var templates = isOptional ? _optionalSimpleTypeTemplate : _requiredSimpleTypeTemplate;
+        if (!templates.TryGetValue(attribute.Type, out var methodTemplate))
+            throw new InvalidOperationException($"Simple type {attribute.Type} ({attribute.Use}) doesn't have defined template.");
 
-        if (isOptional)
-        {
-            if (_optionalSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
-            {
-                var b = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name, attribute.DefaultValue ?? "null") + ";";
-                _code.AddLine(b);
-                return;
-            }
-            throw new NotImplementedException($"Optional {attribute.Type}");
-        }
-        else
-        {
-            if (_requiredSimpleTypeTemplate.TryGetValue(attribute.Type, out var methodTemplate))
-            {
-                var b = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name) + ";";
-                _code.AddLine(b);
-                return;
-            }
-            throw new NotImplementedException($"Required {attribute.Type}");
-        }
+        var readAttrExpression = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name);
+        var readAttrCode = attribute.DefaultValue is null
+            ? readAttrExpression + ";"
+            : readAttrExpression + " ?? " + attribute.DefaultValue + ";";
+        _code.AddLine(readAttrCode);
     }
 
-    private string EscapeVar(string name)
+    private static string EscapeVar(string name)
     {
-        return _keywords.Contains(name) ? '@' + name : name;
+        return Keywords.Contains(name) ? '@' + name : name;
     }
 }

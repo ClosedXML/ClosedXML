@@ -295,7 +295,7 @@ public sealed class XmlTreeReader : IDisposable
         return number;
     }
 
-    public uint? GetOptionalUint(string attributeName)
+    public uint? GetOptionalUInt(string attributeName)
     {
         ThrowOnNonStartElement();
         long? number = null;

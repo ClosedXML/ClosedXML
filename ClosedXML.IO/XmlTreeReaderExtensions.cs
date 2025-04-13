@@ -17,14 +17,14 @@ public static class XmlTreeReaderExtensions
         return reader.GetOptionalInt(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
-    public static uint GetUint(this XmlTreeReader reader, string attributeName)
+    public static uint GetUInt(this XmlTreeReader reader, string attributeName)
     {
-        return reader.GetOptionalUint(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
+        return reader.GetOptionalUInt(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
 
     public static int? GetOptionalUintAsInt(this XmlTreeReader reader, string attributeName)
     {
-        return checked((int?)reader.GetOptionalUint(attributeName));
+        return checked((int?)reader.GetOptionalUInt(attributeName));
     }
 
     public static double GetDouble(this XmlTreeReader reader, string attributeName)
