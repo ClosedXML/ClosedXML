@@ -197,40 +197,43 @@ public class ParserGenerator
 
     private void GenerateReadElement(ElementType elementType)
     {
+        var typeName = NormalizeCT(elementType.TypeName);
+        var elementParseCall = $"Parse{typeName}(\"{elementType.Name}\");";
+        var openArgs = $"\"{elementType.Name}\", {_namespaceField}";
         var min = elementType.Occurrences.Min ?? 1;
         var max = elementType.Occurrences.Max ?? 1;
 
-        if (min == 0 && max == int.MaxValue)
+        if (min == 1 && max == 1)
         {
-            _code.AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
-            _code.OpenBrace();
-            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            _code.CloseBrace();
-        }
-        else if (min == 1 && max == int.MaxValue)
-        {
-            _code.AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField});");
-            _code.AddLine("do");
-            _code.OpenBrace();
-            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            _code.CloseBrace();
-            _code.AddLine($"while (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}));");
-        }
-        else if (min == 1 && max == 1)
-        {
-            _code.AddLine($"reader.Open(\"{elementType.Name}\", {_namespaceField}))");
-            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
+            _code.AddLine($"reader.Open({openArgs}))")
+                 .AddLine(elementParseCall);
         }
         else if (min == 0 && max == 1)
         {
-            _code.AddLine($"if (reader.TryOpen(\"{elementType.Name}\", {_namespaceField}))");
-            _code.OpenBrace();
-            _code.AddLine($"Parse{elementType.TypeName[3..]}(\"{elementType.Name}\");");
-            _code.CloseBrace();
+            _code.AddLine($"if (reader.TryOpen({openArgs}))")
+                 .OpenBrace()
+                 .AddLine(elementParseCall)
+                 .CloseBrace();
+        }
+        else if (min == 0 && max == int.MaxValue)
+        {
+            _code.AddLine($"while (reader.TryOpen({openArgs}))")
+                .OpenBrace()
+                .AddLine(elementParseCall)
+                .CloseBrace();
+        }
+        else if (min == 1 && max == int.MaxValue)
+        {
+            _code.AddLine($"reader.Open({openArgs});")
+                 .AddLine("do")
+                 .OpenBrace()
+                 .AddLine(elementParseCall)
+                 .CloseBrace()
+                 .AddLine($"while (reader.TryOpen({openArgs}));");
         }
         else
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
         }
     }
 
@@ -253,5 +256,11 @@ public class ParserGenerator
     private static string EscapeVar(string name)
     {
         return Keywords.Contains(name) ? '@' + name : name;
+    }
+
+    private static string NormalizeCT(string type)
+    {
+        Debug.Assert(type.StartsWith(prefix));
+        return type[prefix.Length..];
     }
 }

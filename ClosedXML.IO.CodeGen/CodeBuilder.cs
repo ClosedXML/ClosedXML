@@ -13,21 +13,24 @@ internal class CodeBuilder
         _sb = sb;
     }
 
-    internal void AddLine(string s)
+    internal CodeBuilder AddLine(string s)
     {
         AddIndentedLine(s);
+        return this;
     }
 
-    internal void OpenBrace()
+    internal CodeBuilder OpenBrace()
     {
         AddIndentedLine("{");
         _indentLevel++;
+        return this;
     }
 
-    internal void CloseBrace()
+    internal CodeBuilder CloseBrace()
     {
         _indentLevel--;
         AddIndentedLine("}");
+        return this;
     }
 
     internal void StartMethod(string signature)
