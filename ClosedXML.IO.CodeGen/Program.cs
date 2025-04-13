@@ -37,7 +37,7 @@ public class Program
         Console.WriteLine($"Wrote copy to {args[1]}");
 
         var cacheRecords = new ParserGenerator(schema, "PivotCacheRecordsReader", "_ns")
-            .AddSimpleTypeRequired("xsd:unsignedInt", "reader.GetBool(\"{0}\")")
+            .AddSimpleTypeRequired("xsd:unsignedInt", "reader.GetUint(\"{0}\")")
             .AddSimpleTypeOptional("xsd:int", "reader.GetOptionalInt(\"{0}\") ?? {1}")
             .AddSimpleTypeRequired("xsd:boolean", "reader.GetBool(\"{0}\")")
             .AddSimpleTypeOptional("xsd:boolean", "reader.GetOptionalBool(\"{0}\") ?? {1}")
@@ -45,7 +45,7 @@ public class Program
             .AddSimpleTypeRequired("s:ST_Xstring", "reader.GetXString(\"{0}\")")
             .AddSimpleTypeOptional("xsd:unsignedInt", "reader.GetOptionalUint(\"{0}\") ?? {1}")
             .AddSimpleTypeRequired("xsd:dateTime", "reader.GetDateTime(\"{0}\")")
-            .AddSimpleTypeOptional("ST_UnsignedIntHex", "reader.GetOptionalUintHex(\"{0}\") ?? {1}")
+            .AddSimpleTypeOptional("ST_UnsignedIntHex", "reader.GetOptionalUIntHex(\"{0}\") ?? {1}")
             .AddSimpleTypeRequired("xsd:double", "reader.GetDouble(\"{0}\")")
 
             .AddParseMethod("CT_PivotCacheRecords")
