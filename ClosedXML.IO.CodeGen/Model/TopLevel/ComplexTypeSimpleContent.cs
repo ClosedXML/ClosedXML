@@ -23,4 +23,9 @@ public class ComplexTypeSimpleContent : ComplexType, INode
     {
         return visitor.Visit(this);
     }
+
+    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    {
+        throw new System.NotImplementedException();
+    }
 }

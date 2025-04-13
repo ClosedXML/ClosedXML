@@ -8,6 +8,8 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// </summary>
 public abstract class ComplexType : IReferencable
 {
+    internal const string Prefix = "CT_";
+
     /// <summary>
     /// Name of the complex type.
     /// </summary>
@@ -20,4 +22,6 @@ public abstract class ComplexType : IReferencable
     /// <c>any</c>.
     /// </summary>
     public required bool? Mixed { get; init; }
+
+    internal abstract void GenerateParseMethod(CodeBuilder code, string namespaceField);
 }

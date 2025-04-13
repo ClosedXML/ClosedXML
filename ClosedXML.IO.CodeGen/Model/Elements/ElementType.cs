@@ -1,4 +1,5 @@
-﻿using ClosedXML.IO.CodeGen.Model.TopLevel;
+﻿using System;
+using ClosedXML.IO.CodeGen.Model.TopLevel;
 using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;
@@ -31,5 +32,47 @@ public class ElementType : IElementGroup
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    internal void Generate(CodeBuilder code, string namespaceField)
+    {
+        var typeName = code.NormalizeCt(TypeName);
+        var elementParseCall = $"Parse{typeName}(\"{Name}\");";
+        var openArgs = $"\"{Name}\", {namespaceField}";
+        var min = Occurrences.Min ?? 1;
+        var max = Occurrences.Max ?? 1;
+
+        if (min == 1 && max == 1)
+        {
+            code.AddLine($"reader.Open({openArgs}))")
+                .AddLine(elementParseCall);
+        }
+        else if (min == 0 && max == 1)
+        {
+            code.AddLine($"if (reader.TryOpen({openArgs}))")
+                .OpenBrace()
+                .AddLine(elementParseCall)
+                .CloseBrace();
+        }
+        else if (min == 0 && max == int.MaxValue)
+        {
+            code.AddLine($"while (reader.TryOpen({openArgs}))")
+                .OpenBrace()
+                .AddLine(elementParseCall)
+                .CloseBrace();
+        }
+        else if (min == 1 && max == int.MaxValue)
+        {
+            code.AddLine($"reader.Open({openArgs});")
+                .AddLine("do")
+                .OpenBrace()
+                .AddLine(elementParseCall)
+                .CloseBrace()
+                .AddLine($"while (reader.TryOpen({openArgs}));");
+        }
+        else
+        {
+            throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
+        }
     }
 }

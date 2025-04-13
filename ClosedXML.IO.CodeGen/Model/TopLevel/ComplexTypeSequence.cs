@@ -1,5 +1,5 @@
 ﻿using ClosedXML.IO.CodeGen.Model.Elements;
-using System.Collections.Generic;
+using System;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -25,5 +25,46 @@ public class ComplexTypeSequence : ComplexType, INode
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    {
+        code.StartMethod($"void Parse{Name[Prefix.Length..]}(string elementName)");
+        code.OpenBrace();
+        foreach (var oneOfAttribute in Attributes)
+        {
+            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
+            {
+                attribute.Generate(code);
+            }
+            else
+            {
+                throw new NotImplementedException($"Attribute group ({attributeGroup.RefName}) not yet implemented.");
+            }
+        }
+
+        var min = Sequence.Occurrences.Min ?? 1;
+        var max = Sequence.Occurrences.Max ?? 1;
+        if (min == 1 && max == 1)
+        {
+            foreach (var element in Sequence.Children)
+            {
+                if (element is ElementType elementType)
+                {
+                    elementType.Generate(code, namespaceField);
+                }
+                else
+                {
+                    throw new NotImplementedException("Only element type is implemented for a sequence.");
+                }
+            }
+        }
+        else
+        {
+            throw new NotImplementedException("Only simple sequence is implemented.");
+        }
+
+        code.AddLine($"reader.Close(elementName, {namespaceField});");
+        code.CloseBrace();
     }
 }

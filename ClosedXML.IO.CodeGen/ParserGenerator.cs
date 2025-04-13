@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using ClosedXML.IO.CodeGen.Model;
-using ClosedXML.IO.CodeGen.Model.Elements;
-using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen;
 
 public class ParserGenerator
 {
-    /// <summary>
-    /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
-    /// </summary>
-    private static readonly HashSet<string> Keywords = ["in", "out", "ref"];
     private readonly string _namespaceField;
     private readonly Schema _schema;
     private readonly string _readerField;
     private readonly List<string> _parseMethods = new();
     private readonly CodeBuilder _code = new(new StringBuilder());
-    const string prefix = "CT_";
-    private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
-    private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
     public ParserGenerator(Schema schema, string readerField, string nsVariable)
     {
@@ -42,13 +32,13 @@ public class ParserGenerator
 
     public ParserGenerator AddSimpleTypeRequired(string typeName, string methodTemplate)
     {
-        _requiredSimpleTypeTemplate.Add(typeName, methodTemplate);
+        _code.AddSimpleTypeTemplate(typeName, true, methodTemplate);
         return this;
     }
 
     public ParserGenerator AddSimpleTypeOptional(string typeName, string methodTemplate)
     {
-        _optionalSimpleTypeTemplate.Add(typeName, methodTemplate);
+        _code.AddSimpleTypeTemplate(typeName, false, methodTemplate);
         return this;
     }
 
@@ -75,194 +65,6 @@ public class ParserGenerator
         if (!_schema.TryGetComplexType(complexTypeName, out var complexType))
             throw new InvalidOperationException($"Complex type '{complexTypeName}' not found.");
 
-        switch (complexType)
-        {
-            case ComplexTypeElement ctElement:
-                GenerateParseMethod(ctElement);
-                break;
-            case ComplexTypeSequence ctSequence:
-                GenerateParseMethod(ctSequence);
-                break;
-            case ComplexTypeChoice ctChoice:
-                GenerateParseMethod(ctChoice);
-                break;
-            default:
-                throw new NotSupportedException();
-        }
-    }
-
-    private void GenerateParseMethod(ComplexTypeSequence complexType)
-    {
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
-        foreach (var oneOfAttribute in complexType.Attributes)
-        {
-            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-            {
-                GenerateReadAttribute(attribute);
-            }
-            else
-            {
-                throw new NotImplementedException("Attribute group not yet implemented.");
-            }
-        }
-
-        var sequence = complexType.Sequence;
-        var min = sequence.Occurrences.Min ?? 1;
-        var max = sequence.Occurrences.Max ?? 1;
-        if (min == 1 && max == 1)
-        {
-            foreach (var element in sequence.Children)
-            {
-                if (element is ElementType elementType)
-                {
-                    GenerateReadElement(elementType);
-                }
-                else
-                {
-                    throw new NotImplementedException("Only element type is implemented for a sequence.");
-                }
-            }
-        }
-        else
-        {
-            throw new NotImplementedException("Only simple sequence is implemented.");
-        }
-
-        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
-        _code.CloseBrace();
-    }
-
-    private void GenerateParseMethod(ComplexTypeChoice complexType)
-    {
-        _code.StartMethod($"void Parse{NormalizeCt(complexType.Name)}(string elementName)");
-        _code.OpenBrace();
-        GenerateParseMethod(complexType.Choice);
-        _code.CloseBrace();
-    }
-
-    private void GenerateParseMethod(Choice choice)
-    {
-        var min = choice.Occurrences.Min ?? 1;
-        var max = choice.Occurrences.Max ?? 1;
-
-        if (min == 1 && max == int.MaxValue)
-        {
-            _code.AddLine("do");
-            _code.OpenBrace();
-            var isFirst = true;
-            foreach (var child in choice.Children)
-            {
-                var element = (ElementType)child;
-                var joiner = isFirst ? string.Empty : "else ";
-                isFirst = false;
-
-                _code.AddLine($"{joiner}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
-                _code.OpenBrace();
-                _code.AddLine($"Parse{NormalizeCt(element.TypeName)}(\"{element.Name}\");");
-                _code.CloseBrace();
-            }
-
-            _code.AddLine("else");
-            _code.OpenBrace();
-            _code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
-            _code.CloseBrace();
-            _code.CloseBrace();
-            _code.AddLine($"while (!reader.TryClose(elementName, {_namespaceField}));");
-        }
-        else
-        {
-            throw new NotImplementedException($"{min}-{max} choice is not implemented.");
-        }
-    }
-
-    public void GenerateParseMethod(ComplexTypeElement complexType)
-    {
-        Debug.Assert(complexType.Name.StartsWith(prefix));
-        var typeName = NormalizeCt(complexType.Name);
-        _code.StartMethod($"void Parse{typeName}(string elementName)")
-             .OpenBrace();
-        foreach (var oneOfAttribute in complexType.Attributes)
-        {
-            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-            {
-                GenerateReadAttribute(attribute);
-            }
-            else
-            {
-                throw new NotImplementedException($"Attribute group '{attributeGroup}' read not implemented.");
-            }
-        }
-        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
-        _code.CloseBrace();
-    }
-
-    private void GenerateReadElement(ElementType elementType)
-    {
-        var typeName = NormalizeCt(elementType.TypeName);
-        var elementParseCall = $"Parse{typeName}(\"{elementType.Name}\");";
-        var openArgs = $"\"{elementType.Name}\", {_namespaceField}";
-        var min = elementType.Occurrences.Min ?? 1;
-        var max = elementType.Occurrences.Max ?? 1;
-
-        if (min == 1 && max == 1)
-        {
-            _code.AddLine($"reader.Open({openArgs}))")
-                 .AddLine(elementParseCall);
-        }
-        else if (min == 0 && max == 1)
-        {
-            _code.AddLine($"if (reader.TryOpen({openArgs}))")
-                 .OpenBrace()
-                 .AddLine(elementParseCall)
-                 .CloseBrace();
-        }
-        else if (min == 0 && max == int.MaxValue)
-        {
-            _code.AddLine($"while (reader.TryOpen({openArgs}))")
-                .OpenBrace()
-                .AddLine(elementParseCall)
-                .CloseBrace();
-        }
-        else if (min == 1 && max == int.MaxValue)
-        {
-            _code.AddLine($"reader.Open({openArgs});")
-                 .AddLine("do")
-                 .OpenBrace()
-                 .AddLine(elementParseCall)
-                 .CloseBrace()
-                 .AddLine($"while (reader.TryOpen({openArgs}));");
-        }
-        else
-        {
-            throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
-        }
-    }
-
-    private void GenerateReadAttribute(AttributeElement attribute)
-    {
-        Debug.Assert(attribute.Name is not null);
-        Debug.Assert(attribute.Type is not null);
-        var isOptional = attribute.Use != AttributeUseType.Required;
-        var templates = isOptional ? _optionalSimpleTypeTemplate : _requiredSimpleTypeTemplate;
-        if (!templates.TryGetValue(attribute.Type, out var methodTemplate))
-            throw new InvalidOperationException($"Simple type {attribute.Type} ({attribute.Use}) doesn't have defined template.");
-
-        var readAttrExpression = "var " + EscapeVar(attribute.Name) + " = " + string.Format(methodTemplate, attribute.Name);
-        var readAttrCode = attribute.DefaultValue is null
-            ? readAttrExpression + ";"
-            : readAttrExpression + " ?? " + attribute.DefaultValue + ";";
-        _code.AddLine(readAttrCode);
-    }
-
-    private static string EscapeVar(string name)
-    {
-        return Keywords.Contains(name) ? '@' + name : name;
-    }
-
-    private static string NormalizeCt(string type)
-    {
-        Debug.Assert(type.StartsWith(prefix));
-        return type[prefix.Length..];
+        complexType.GenerateParseMethod(_code, _namespaceField);
     }
 }
