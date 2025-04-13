@@ -33,13 +33,14 @@ internal class CodeBuilder
         return this;
     }
 
-    internal void StartMethod(string signature)
+    internal CodeBuilder StartMethod(string signature)
     {
         if (_methodWritten)
             _sb.AppendLine();
 
         AddLine(signature);
         _methodWritten = true;
+        return this;
     }
 
     private void AddIndentedLine(string text)

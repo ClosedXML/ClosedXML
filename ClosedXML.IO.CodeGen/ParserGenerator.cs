@@ -178,8 +178,9 @@ public class ParserGenerator
     public void GenerateParseMethod(ComplexTypeElement complexType)
     {
         Debug.Assert(complexType.Name.StartsWith(prefix));
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
+        var typeName = NormalizeCt(complexType.Name);
+        _code.StartMethod($"void Parse{typeName}(string elementName)")
+             .OpenBrace();
         foreach (var oneOfAttribute in complexType.Attributes)
         {
             if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
@@ -188,7 +189,7 @@ public class ParserGenerator
             }
             else
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException($"Attribute group '{attributeGroup}' read not implemented.");
             }
         }
         _code.AddLine($"reader.Close(elementName, {_namespaceField});");
@@ -197,7 +198,7 @@ public class ParserGenerator
 
     private void GenerateReadElement(ElementType elementType)
     {
-        var typeName = NormalizeCT(elementType.TypeName);
+        var typeName = NormalizeCt(elementType.TypeName);
         var elementParseCall = $"Parse{typeName}(\"{elementType.Name}\");";
         var openArgs = $"\"{elementType.Name}\", {_namespaceField}";
         var min = elementType.Occurrences.Min ?? 1;
@@ -258,7 +259,7 @@ public class ParserGenerator
         return Keywords.Contains(name) ? '@' + name : name;
     }
 
-    private static string NormalizeCT(string type)
+    private static string NormalizeCt(string type)
     {
         Debug.Assert(type.StartsWith(prefix));
         return type[prefix.Length..];
