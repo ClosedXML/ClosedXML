@@ -91,47 +91,6 @@ public class ParserGenerator
         }
     }
 
-    private void GenerateParseMethod(ComplexTypeChoice complexType)
-    {
-        var choice = complexType.Choice;
-        var min = choice.Occurrences.Min ?? 1;
-        var max = choice.Occurrences.Max ?? 1;
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
-
-
-        if (min == 1 && max == int.MaxValue)
-        {
-            _code.AddLine("do");
-            _code.OpenBrace();
-            var isFirst = true;
-            foreach (var child in choice.Children)
-            {
-                var element = (ElementType)child;
-                var a = isFirst ? string.Empty : "else ";
-                isFirst = false;
-
-                _code.AddLine($"{a}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
-                _code.OpenBrace();
-                _code.AddLine($"Parse{element.TypeName[3..]}(\"{element.Name}\");");
-                _code.CloseBrace();
-            }
-
-            _code.AddLine("else");
-            _code.OpenBrace();
-            _code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
-            _code.CloseBrace();
-            _code.CloseBrace();
-            _code.AddLine($"while (!reader.TryClose(elementName, {_namespaceField}));");
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-
-        _code.CloseBrace();
-    }
-
     private void GenerateParseMethod(ComplexTypeSequence complexType)
     {
         var sequence = complexType.Sequence;
@@ -175,6 +134,67 @@ public class ParserGenerator
         _code.CloseBrace();
     }
 
+    private void GenerateParseMethod(ComplexTypeChoice complexType)
+    {
+        var choice = complexType.Choice;
+        var min = choice.Occurrences.Min ?? 1;
+        var max = choice.Occurrences.Max ?? 1;
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
+
+
+        if (min == 1 && max == int.MaxValue)
+        {
+            _code.AddLine("do");
+            _code.OpenBrace();
+            var isFirst = true;
+            foreach (var child in choice.Children)
+            {
+                var element = (ElementType)child;
+                var a = isFirst ? string.Empty : "else ";
+                isFirst = false;
+
+                _code.AddLine($"{a}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
+                _code.OpenBrace();
+                _code.AddLine($"Parse{element.TypeName[3..]}(\"{element.Name}\");");
+                _code.CloseBrace();
+            }
+
+            _code.AddLine("else");
+            _code.OpenBrace();
+            _code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
+            _code.CloseBrace();
+            _code.CloseBrace();
+            _code.AddLine($"while (!reader.TryClose(elementName, {_namespaceField}));");
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+
+        _code.CloseBrace();
+    }
+
+    public void GenerateParseMethod(ComplexTypeElement complexType)
+    {
+        Debug.Assert(complexType.Name.StartsWith(prefix));
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
+        foreach (var oneOfAttribute in complexType.Attributes)
+        {
+            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
+            {
+                GenerateReadAttribute(attribute);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
+        _code.CloseBrace();
+    }
+
     private void GenerateReadElement(ElementType elementType)
     {
         var min = elementType.Occurrences.Min ?? 1;
@@ -212,26 +232,6 @@ public class ParserGenerator
         {
             throw new NotImplementedException();
         }
-    }
-
-    public void GenerateParseMethod(ComplexTypeElement complexType)
-    {
-        Debug.Assert(complexType.Name.StartsWith(prefix));
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
-        foreach (var oneOfAttribute in complexType.Attributes)
-        {
-            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-            {
-                GenerateReadAttribute(attribute);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-        _code.AddLine($"reader.Close(elementName, {_namespaceField});");
-        _code.CloseBrace();
     }
 
     private void GenerateReadAttribute(AttributeElement attribute)
