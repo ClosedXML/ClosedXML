@@ -93,25 +93,25 @@ public class ParserGenerator
 
     private void GenerateParseMethod(ComplexTypeSequence complexType)
     {
+        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
+        _code.OpenBrace();
+        foreach (var oneOfAttribute in complexType.Attributes)
+        {
+            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
+            {
+                GenerateReadAttribute(attribute);
+            }
+            else
+            {
+                throw new NotImplementedException("Attribute group not yet implemented.");
+            }
+        }
+
         var sequence = complexType.Sequence;
         var min = sequence.Occurrences.Min ?? 1;
         var max = sequence.Occurrences.Max ?? 1;
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
         if (min == 1 && max == 1)
         {
-            foreach (var oneOfAttribute in complexType.Attributes)
-            {
-                if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-                {
-                    GenerateReadAttribute(attribute);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
             foreach (var element in sequence.Children)
             {
                 if (element is ElementType elementType)
@@ -120,14 +120,13 @@ public class ParserGenerator
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    throw new NotImplementedException("Only element type is implemented for a sequence.");
                 }
             }
-
         }
         else
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Only simple sequence is implemented.");
         }
 
         _code.AddLine($"reader.Close(elementName, {_namespaceField});");
@@ -136,12 +135,16 @@ public class ParserGenerator
 
     private void GenerateParseMethod(ComplexTypeChoice complexType)
     {
-        var choice = complexType.Choice;
+        _code.StartMethod($"void Parse{NormalizeCt(complexType.Name)}(string elementName)");
+        _code.OpenBrace();
+        GenerateParseMethod(complexType.Choice);
+        _code.CloseBrace();
+    }
+
+    private void GenerateParseMethod(Choice choice)
+    {
         var min = choice.Occurrences.Min ?? 1;
         var max = choice.Occurrences.Max ?? 1;
-        _code.StartMethod($"void Parse{complexType.Name[prefix.Length..]}(string elementName)");
-        _code.OpenBrace();
-
 
         if (min == 1 && max == int.MaxValue)
         {
@@ -151,12 +154,12 @@ public class ParserGenerator
             foreach (var child in choice.Children)
             {
                 var element = (ElementType)child;
-                var a = isFirst ? string.Empty : "else ";
+                var joiner = isFirst ? string.Empty : "else ";
                 isFirst = false;
 
-                _code.AddLine($"{a}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
+                _code.AddLine($"{joiner}if (reader.TryOpen(\"{element.Name}\", {_namespaceField}))");
                 _code.OpenBrace();
-                _code.AddLine($"Parse{element.TypeName[3..]}(\"{element.Name}\");");
+                _code.AddLine($"Parse{NormalizeCt(element.TypeName)}(\"{element.Name}\");");
                 _code.CloseBrace();
             }
 
@@ -169,10 +172,8 @@ public class ParserGenerator
         }
         else
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException($"{min}-{max} choice is not implemented.");
         }
-
-        _code.CloseBrace();
     }
 
     public void GenerateParseMethod(ComplexTypeElement complexType)
