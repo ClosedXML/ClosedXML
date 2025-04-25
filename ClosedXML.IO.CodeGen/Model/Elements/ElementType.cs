@@ -44,31 +44,31 @@ public class ElementType : IElementGroup
 
         if (min == 1 && max == 1)
         {
-            code.AddLine($"reader.Open({openArgs}))")
+            code.AddLine($"_reader.Open({openArgs}))")
                 .AddLine(elementParseCall);
         }
         else if (min == 0 && max == 1)
         {
-            code.AddLine($"if (reader.TryOpen({openArgs}))")
+            code.AddLine($"if (_reader.TryOpen({openArgs}))")
                 .OpenBrace()
                 .AddLine(elementParseCall)
                 .CloseBrace();
         }
         else if (min == 0 && max == int.MaxValue)
         {
-            code.AddLine($"while (reader.TryOpen({openArgs}))")
+            code.AddLine($"while (_reader.TryOpen({openArgs}))")
                 .OpenBrace()
                 .AddLine(elementParseCall)
                 .CloseBrace();
         }
         else if (min == 1 && max == int.MaxValue)
         {
-            code.AddLine($"reader.Open({openArgs});")
+            code.AddLine($"_reader.Open({openArgs});")
                 .AddLine("do")
                 .OpenBrace()
                 .AddLine(elementParseCall)
                 .CloseBrace()
-                .AddLine($"while (reader.TryOpen({openArgs}));");
+                .AddLine($"while (_reader.TryOpen({openArgs}));");
         }
         else
         {

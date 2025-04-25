@@ -15,8 +15,7 @@ public class ComplexTypeElement : ComplexType, INode
 
     internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
-        var typeName = code.NormalizeCt(Name);
-        code.StartMethod($"void Parse{typeName}(string elementName)")
+        code.StartMethod("void Parse{0}(string elementName)", Name)
             .OpenBrace();
 
         foreach (var oneOfAttribute in Attributes)
@@ -30,7 +29,7 @@ public class ComplexTypeElement : ComplexType, INode
                 throw new NotImplementedException($"Attribute group '{attributeGroup}' read not implemented.");
             }
         }
-        code.AddLine($"reader.Close(elementName, {namespaceField});");
+        code.AddLine($"_reader.Close(elementName, {namespaceField});");
         code.CloseBrace();
     }
 }

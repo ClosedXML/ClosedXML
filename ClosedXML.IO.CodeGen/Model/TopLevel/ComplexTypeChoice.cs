@@ -30,7 +30,7 @@ public class ComplexTypeChoice : ComplexType, INode
 
     internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
-        code.StartMethod($"void Parse{code.NormalizeCt(Name)}(string elementName)");
+        code.StartMethod("void Parse{0}(string elementName)", Name);
         code.OpenBrace();
 
         // TODO: Attributes
@@ -54,7 +54,7 @@ public class ComplexTypeChoice : ComplexType, INode
                 var joiner = isFirst ? string.Empty : "else ";
                 isFirst = false;
 
-                code.AddLine($"{joiner}if (reader.TryOpen(\"{element.Name}\", {namespaceField}))");
+                code.AddLine($"{joiner}if (_reader.TryOpen(\"{element.Name}\", {namespaceField}))");
                 code.OpenBrace();
                 code.AddLine($"Parse{code.NormalizeCt(element.TypeName)}(\"{element.Name}\");");
                 code.CloseBrace();
@@ -65,12 +65,11 @@ public class ComplexTypeChoice : ComplexType, INode
             code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
             code.CloseBrace();
             code.CloseBrace();
-            code.AddLine($"while (!reader.TryClose(elementName, {namespaceField}));");
+            code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
         }
         else
         {
             throw new NotImplementedException($"{min}-{max} choice is not implemented.");
         }
     }
-
 }

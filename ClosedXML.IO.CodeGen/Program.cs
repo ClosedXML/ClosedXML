@@ -36,17 +36,18 @@ public class Program
 
         Console.WriteLine($"Wrote copy to {args[1]}");
 
-        var cacheRecords = new ParserGenerator(schema, "PivotCacheRecordsReader", "_ns")
-            .AddSimpleTypeRequired("xsd:unsignedInt", "reader.GetUInt(\"{0}\")")
-            .AddSimpleTypeOptional("xsd:int", "reader.GetOptionalInt(\"{0}\")")
-            .AddSimpleTypeRequired("xsd:boolean", "reader.GetBool(\"{0}\")")
-            .AddSimpleTypeOptional("xsd:boolean", "reader.GetOptionalBool(\"{0}\")")
-            .AddSimpleTypeOptional("s:ST_Xstring", "reader.GetOptionalXString(\"{0}\")")
-            .AddSimpleTypeRequired("s:ST_Xstring", "reader.GetXString(\"{0}\")")
-            .AddSimpleTypeOptional("xsd:unsignedInt", "reader.GetOptionalUInt(\"{0}\")")
-            .AddSimpleTypeRequired("xsd:dateTime", "reader.GetDateTime(\"{0}\")")
-            .AddSimpleTypeOptional("ST_UnsignedIntHex", "reader.GetOptionalUIntHex(\"{0}\")")
-            .AddSimpleTypeRequired("xsd:double", "reader.GetDouble(\"{0}\")")
+        var cacheRecordsGenerator = new ParserGenerator(schema, "PivotCacheRecordsReader", "_ns")
+            .WithNamespace("ClosedXML.Excel.IO")
+            .AddSimpleTypeRequired<uint>("xsd:unsignedInt", "_reader.GetUInt(\"{0}\")")
+            .AddSimpleTypeOptional<int?>("xsd:int", "_reader.GetOptionalInt(\"{0}\")")
+            .AddSimpleTypeRequired<bool>("xsd:boolean", "_reader.GetBool(\"{0}\")")
+            .AddSimpleTypeOptional<bool?>("xsd:boolean", "_reader.GetOptionalBool(\"{0}\")")
+            .AddSimpleTypeOptional<string?>("s:ST_Xstring", "_reader.GetOptionalXString(\"{0}\")")
+            .AddSimpleTypeRequired<string>("s:ST_Xstring", "_reader.GetXString(\"{0}\")")
+            .AddSimpleTypeOptional<uint?>("xsd:unsignedInt", "_reader.GetOptionalUInt(\"{0}\")")
+            .AddSimpleTypeRequired<DateTime>("xsd:dateTime", "_reader.GetDateTime(\"{0}\")")
+            .AddSimpleTypeOptional<uint?>("ST_UnsignedIntHex", "_reader.GetOptionalUIntHex(\"{0}\")")
+            .AddSimpleTypeRequired<double>("xsd:double", "_reader.GetDouble(\"{0}\")")
 
             .AddParseMethod("CT_PivotCacheRecords")
             .AddParseMethod("CT_Record")
@@ -62,7 +63,7 @@ public class Program
             .AddParseMethod("CT_Tuple")
             ;
 
-        var cacheRecordsSource = cacheRecords.Generate();
+        var cacheRecordsSource = cacheRecordsGenerator.Generate();
         Console.WriteLine(cacheRecordsSource);
         Console.ReadKey();
     }

@@ -29,7 +29,7 @@ public class ComplexTypeSequence : ComplexType, INode
 
     internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
-        code.StartMethod($"void Parse{Name[Prefix.Length..]}(string elementName)");
+        code.StartMethod("void Parse{0}(string elementName)", Name);
         code.OpenBrace();
         foreach (var oneOfAttribute in Attributes)
         {
@@ -64,7 +64,57 @@ public class ComplexTypeSequence : ComplexType, INode
             throw new NotImplementedException("Only simple sequence is implemented.");
         }
 
-        code.AddLine($"reader.Close(elementName, {namespaceField});");
+        code.AddLine($"_reader.Close(elementName, {namespaceField});");
+        CallListener(code);
         code.CloseBrace();
+
+        AddPartialMethodSignature(code, Name);
+    }
+
+    private void CallListener(CodeBuilder code)
+    {
+        code.WriteIndent().Append("On").AppendComplexType(Name).Append("Parsed(");
+        var isFirst = true;
+        foreach (var oneOfAttribute in Attributes)
+        {
+            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
+            {
+                if (!isFirst)
+                    code.Append(", ");
+                code.AppendVariable(attribute.Name!);
+                isFirst = false;
+            }
+            else
+            {
+                throw new NotImplementedException($"Attribute group ({attributeGroup.RefName}) not yet implemented.");
+            }
+        }
+
+        code.Append(");").EndLine();
+    }
+
+    private void AddPartialMethodSignature(CodeBuilder code, string typeName)
+    {
+        code.EndLine();
+        code.WriteIndent().Append($"partial void On").AppendComplexType(typeName).Append("Parsed(");
+
+        var isFirst = true;
+        foreach (var oneOfAttribute in Attributes)
+        {
+            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
+            {
+                if (!isFirst)
+                    code.Append(", ");
+
+                code.AppendSimpleType(attribute).Append(" ").AppendVariable(attribute.Name!);
+                isFirst = false;
+            }
+            else
+            {
+                throw new NotImplementedException($"Attribute group ({attributeGroup.RefName}) not yet implemented.");
+            }
+        }
+
+        code.Append(");").EndLine();
     }
 }

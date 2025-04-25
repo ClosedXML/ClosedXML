@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System;
-using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model;
 
@@ -14,11 +12,6 @@ namespace ClosedXML.IO.CodeGen.Model;
 /// </summary>
 public class AttributeElement : INode
 {
-    /// <summary>
-    /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be <c>@in</c>.
-    /// </summary>
-    private static readonly HashSet<string> Keywords = ["in", "out", "ref"];
-
     /// <summary>
     /// Name is technically optional in ref attribute:
     /// <code>
@@ -46,15 +39,10 @@ public class AttributeElement : INode
         Debug.Assert(Type is not null);
         var isOptional = Use != AttributeUseType.Required;
         var methodTemplate = code.GetSimpleTypeTemplate(Type, isOptional);
-        var readAttrExpression = "var " + EscapeVar(Name) + " = " + string.Format(methodTemplate, Name);
-        var readAttrCode = DefaultValue is null
-            ? readAttrExpression + ";"
-            : readAttrExpression + " ?? " + DefaultValue + ";";
-        code.AddLine(readAttrCode);
-    }
 
-    private static string EscapeVar(string name)
-    {
-        return Keywords.Contains(name) ? '@' + name : name;
+        code.WriteIndent().Append("var ").AppendVariable(Name).Append(" = ").Append(string.Format(methodTemplate, Name));
+        if (DefaultValue is not null)
+            code.Append(" ?? ").Append(DefaultValue);
+        code.Append(";").EndLine();
     }
 }
