@@ -11,7 +11,7 @@ public class ParserGenerator
     private readonly Schema _schema;
     private readonly string _readerField;
     private readonly List<string> _parseMethods = new();
-    private readonly CodeBuilder _code = new(new StringBuilder());
+    private readonly SchemeTypeMap _typeMap = new();
     private string _targetNamespace = "ClosedXML.Excel.IO";
 
     public ParserGenerator(Schema schema, string readerField, string nsVariable)
@@ -39,13 +39,13 @@ public class ParserGenerator
 
     public ParserGenerator AddSimpleTypeRequired<CSharpType>(string typeName, string methodTemplate)
     {
-        _code.AddSimpleTypeTemplate<CSharpType>(typeName, true, methodTemplate);
+        _typeMap.AddSimpleTypeTemplate<CSharpType>(typeName, true, methodTemplate);
         return this;
     }
 
     public ParserGenerator AddSimpleTypeOptional<CSharpType>(string typeName, string methodTemplate)
     {
-        _code.AddSimpleTypeTemplate<CSharpType>(typeName, false, methodTemplate);
+        _typeMap.AddSimpleTypeTemplate<CSharpType>(typeName, false, methodTemplate);
         return this;
     }
 
@@ -55,25 +55,31 @@ public class ParserGenerator
     /// <returns>Generated source code.</returns>
     public string Generate()
     {
-        _code.AddLine($"namespace {_targetNamespace};");
-        _code.EndLine();
-        _code.AddLine($"internal partial class {_readerField}");
-        _code.OpenBrace();
+        var code = new CodeBuilder(new StringBuilder(), _typeMap);
+        code.AddLine($"namespace {_targetNamespace};");
+        code.EndLine();
+        code.AddLine($"internal partial class {_readerField}");
+        code.OpenBrace();
 
+        var isFirstMethod = true;
         foreach (var parseMethod in _parseMethods)
         {
-            GenerateParseMethod(parseMethod);
+            if (!isFirstMethod)
+                code.EndLine();
+
+            GenerateParseMethod(code, parseMethod);
+            isFirstMethod = false;
         }
 
-        _code.CloseBrace();
-        return _code.ToString();
+        code.CloseBrace();
+        return code.ToString();
     }
 
-    private void GenerateParseMethod(string complexTypeName)
+    private void GenerateParseMethod(CodeBuilder code, string complexTypeName)
     {
         if (!_schema.TryGetComplexType(complexTypeName, out var complexType))
             throw new InvalidOperationException($"Complex type '{complexTypeName}' not found.");
 
-        complexType.GenerateParseMethod(_code, _namespaceField);
+        complexType.GenerateParseMethod(code, _namespaceField);
     }
 }
