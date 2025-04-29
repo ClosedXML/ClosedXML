@@ -80,6 +80,6 @@ public class ParserGenerator
         if (!_schema.TryGetComplexType(complexTypeName, out var complexType))
             throw new InvalidOperationException($"Complex type '{complexTypeName}' not found.");
 
-        complexType.GenerateParseMethod(code, _namespaceField);
+        complexType.Generate(code, _namespaceField);
     }
 }

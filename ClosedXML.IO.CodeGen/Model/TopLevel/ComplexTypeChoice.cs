@@ -1,6 +1,5 @@
 ﻿using ClosedXML.IO.CodeGen.Model.Elements;
 using System;
-using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -30,25 +29,15 @@ public class ComplexTypeChoice : ComplexType, INode
 
     internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
-        code.StartMethod("void Parse{0}(string elementName)", Name);
-        code.OpenBrace();
-
-        // TODO: Attributes
-        GenerateParseMethod(code, namespaceField, Choice);
-        code.CloseBrace();
-    }
-
-    private void GenerateParseMethod(CodeBuilder code, string namespaceField, Choice choice)
-    {
-        var min = choice.Occurrences.Min ?? 1;
-        var max = choice.Occurrences.Max ?? 1;
+        var min = Choice.Occurrences.Min ?? 1;
+        var max = Choice.Occurrences.Max ?? 1;
 
         if (min == 1 && max == int.MaxValue)
         {
             code.AddLine("do");
             code.OpenBrace();
             var isFirst = true;
-            foreach (var child in choice.Children)
+            foreach (var child in Choice.Children)
             {
                 var element = (ElementType)child;
                 var joiner = isFirst ? string.Empty : "else ";

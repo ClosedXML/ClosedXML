@@ -37,7 +37,6 @@ public class AttributeElement : INode
     {
         Debug.Assert(Name is not null);
         Debug.Assert(Type is not null);
-        var isOptional = Use != AttributeUseType.Required;
         code.WriteIndent().Append("var ").AppendVariable(Name).Append(" = ").AppendSimpleTypeMethod(this);
         if (DefaultValue is not null)
             code.Append(" ?? ").Append(DefaultValue);

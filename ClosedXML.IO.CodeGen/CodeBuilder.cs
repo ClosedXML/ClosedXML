@@ -55,7 +55,7 @@ internal class CodeBuilder
 
     internal CodeBuilder EndLine()
     {
-        _sb.Append('\n');
+        _sb.AppendLine();
         return this;
     }
 
@@ -106,8 +106,7 @@ internal class CodeBuilder
 
         var isOptional = attribute.Use is AttributeUseType.Default or AttributeUseType.Optional;
         var nullable = isOptional && attribute.DefaultValue is null;
-        var cSharpType = _typeMap.GetSimpleType(attribute.Type!);
-        if (nullable && cSharpType.IsValueType)
+        if (nullable)
             _sb.Append('?');
 
         return this;
@@ -115,7 +114,7 @@ internal class CodeBuilder
 
     private CodeBuilder AppendSimpleType(string typeName)
     {
-        string? cSharpTypeName = _typeMap.GetSimpleTypeName(typeName);
+        var cSharpTypeName = _typeMap.GetSimpleTypeName(typeName);
         _sb.Append(cSharpTypeName);
 
         return this;
