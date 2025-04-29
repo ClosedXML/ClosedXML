@@ -7,9 +7,9 @@ namespace ClosedXML.IO.CodeGen;
 
 public class ParserGenerator
 {
-    private readonly string _namespaceField;
     private readonly Schema _schema;
-    private readonly string _readerField;
+    private readonly string _readerName;
+    private readonly string _namespaceField;
     private readonly List<string> _parseMethods = new();
     private readonly SchemeTypeMap _typeMap = new();
     private string _targetNamespace = "ClosedXML.Excel.IO";
@@ -17,7 +17,7 @@ public class ParserGenerator
     public ParserGenerator(Schema schema, string readerField, string nsVariable)
     {
         _schema = schema;
-        _readerField = readerField;
+        _readerName = readerField;
         _namespaceField = nsVariable;
     }
 
@@ -58,17 +58,19 @@ public class ParserGenerator
         var code = new CodeBuilder(new StringBuilder(), _typeMap);
         code.AddLine($"namespace {_targetNamespace};");
         code.EndLine();
-        code.AddLine($"internal partial class {_readerField}");
+        code.AddLine($"internal partial class {_readerName}");
         code.OpenBrace();
 
         var isFirstMethod = true;
         foreach (var parseMethod in _parseMethods)
         {
             if (!isFirstMethod)
+            {
                 code.EndLine();
+                isFirstMethod = false;
+            }
 
             GenerateParseMethod(code, parseMethod);
-            isFirstMethod = false;
         }
 
         code.CloseBrace();

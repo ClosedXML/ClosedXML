@@ -26,7 +26,6 @@ internal class SchemeTypeMap
     /// </summary>
     private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
-
     internal void AddSimpleTypeTemplate<CSharpType>(string typeName, bool isRequired, string methodTemplate)
     {
         RegisterTypeMapping<CSharpType>(typeName, isRequired);
