@@ -408,11 +408,13 @@ namespace ClosedXML.Excel
                         {
                             LoadShapeProperties(xlComment, shape);
 
-                            var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
-                            LoadClientData(xlComment, clientData);
+                            var clientData = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "ClientData");
+                            if (clientData != null)
+                                LoadClientData(xlComment, clientData);
 
-                            var textBox = shape.Elements().First(e => e.Name.LocalName == "textbox");
-                            LoadTextBox(xlComment, textBox);
+                            var textBox = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "textbox");
+                            if (textBox != null)
+                                LoadTextBox(xlComment, textBox);
 
                             var alt = shape.Attribute("alt");
                             if (alt != null) xlComment.Style.Web.SetAlternateText(alt.Value);
