@@ -17,6 +17,10 @@
 
   <PropertyGroup>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>Quadrum$(AssemblyName)</PackageId>
+    <Title>Quadrum $(AssemblyName)</Title>
+    <Version>0.111.1-preview1</Version>
   </PropertyGroup>
 
   <ItemGroup>
