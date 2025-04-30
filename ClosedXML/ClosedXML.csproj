@@ -20,7 +20,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Quadrum$(AssemblyName)</PackageId>
     <Title>Quadrum $(AssemblyName)</Title>
-    <Version>0.111.1-preview1</Version>
+    <Version>0.111.2-preview1</Version>
   </PropertyGroup>
 
   <ItemGroup>
