@@ -457,7 +457,7 @@ namespace ClosedXML.Excel
                 var pivotCache = PivotTableCacheDefinitionPartReader.Load(workbookPart, pivotTableCacheDefinitionPart, this);
                 if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
                 {
-                    PivotTableCacheRecordsPartReader.ReadRecords(recordsPart, pivotCache);
+                    PivotCacheRecordsReader.ReadRecords(recordsPart, pivotCache);
                 }
             }
 

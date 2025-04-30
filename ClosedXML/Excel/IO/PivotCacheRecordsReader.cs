@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel.IO;
 
-internal class PivotTableCacheRecordsPartReader
+internal class PivotCacheRecordsReader
 {
     internal static void ReadRecords(PivotCacheRecords recordsPart, XLPivotCache pivotCache)
     {
