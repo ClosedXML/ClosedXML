@@ -516,7 +516,7 @@ namespace ClosedXML.Excel
                     ? pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Single()
                     : pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
 
-                PivotTableCacheRecordsPartWriter.WriteContent(pivotTableCacheRecordsPart, xlPivotCache);
+                PivotCacheRecordsWriter.WriteContent(pivotTableCacheRecordsPart, xlPivotCache);
             }
         }
 

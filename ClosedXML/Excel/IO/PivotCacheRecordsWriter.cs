@@ -7,7 +7,7 @@ using static ClosedXML.Excel.IO.OpenXmlConst;
 
 namespace ClosedXML.Excel.IO
 {
-    internal class PivotTableCacheRecordsPartWriter
+    internal class PivotCacheRecordsWriter
     {
         internal static void WriteContent(PivotTableCacheRecordsPart recordsPart, XLPivotCache pivotCache)
         {
