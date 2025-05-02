@@ -1,10 +1,8 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Linq;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {

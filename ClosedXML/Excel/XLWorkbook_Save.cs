@@ -1,7 +1,6 @@
 #nullable disable
 
 using ClosedXML.Extensions;
-using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;

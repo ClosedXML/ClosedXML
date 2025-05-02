@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
-using ClosedXML.Utils;
 using NUnit.Framework;
 using System;
 using System.Drawing;

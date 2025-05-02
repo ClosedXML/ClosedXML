@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using System;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Examples.Misc
 {

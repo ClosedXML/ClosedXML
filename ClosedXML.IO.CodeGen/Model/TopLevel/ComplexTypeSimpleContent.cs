@@ -1,5 +1,3 @@
-﻿using System.Collections.Generic;
-
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>

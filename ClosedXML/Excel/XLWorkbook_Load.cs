@@ -24,7 +24,6 @@ namespace ClosedXML.Excel
     using Drawings;
     using Op;
     using System.Drawing;
-    using System.Xml;
 
     public partial class XLWorkbook
     {

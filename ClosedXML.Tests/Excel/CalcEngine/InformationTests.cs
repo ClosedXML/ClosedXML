@@ -1,7 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
-using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {

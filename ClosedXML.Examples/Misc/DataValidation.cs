@@ -1,7 +1,5 @@
 using System;
 using ClosedXML.Excel;
-using System.Globalization;
-using System.Threading;
 
 
 namespace ClosedXML.Examples.Misc

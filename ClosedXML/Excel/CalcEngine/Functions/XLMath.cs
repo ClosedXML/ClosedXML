@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {

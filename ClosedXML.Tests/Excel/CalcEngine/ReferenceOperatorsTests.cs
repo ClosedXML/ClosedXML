@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine

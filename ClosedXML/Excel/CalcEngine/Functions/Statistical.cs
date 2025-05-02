@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Functions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
