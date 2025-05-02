@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
-        public static OpenXmlElement GetAnchorFromImageId(DrawingsPart drawingsPart, string relId)
+        internal static OpenXmlElement GetAnchorFromImageId(DrawingsPart drawingsPart, string relId)
         {
             var matchingAnchor = drawingsPart.WorksheetDrawing
                 .Where(wsdr => wsdr.Descendants<Xdr.BlipFill>()
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
             return matchingAnchor.FirstOrDefault();
         }
 
-        public static NonVisualDrawingProperties GetPropertiesFromAnchor(OpenXmlElement anchor)
+        internal static NonVisualDrawingProperties GetPropertiesFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
                 return null;
@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
                 .FirstOrDefault();
         }
 
-        public static String GetImageRelIdFromAnchor(OpenXmlElement anchor)
+        internal static String GetImageRelIdFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
                 return null;
