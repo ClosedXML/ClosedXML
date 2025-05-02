@@ -1,93 +1,112 @@
 ﻿using ClosedXML.Extensions;
 using ClosedXML.IO;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System.Linq;
+using System;
 
 namespace ClosedXML.Excel.IO;
 
-internal class PivotCacheRecordsReader
+internal partial class PivotCacheRecordsReader
 {
-    internal static void ReadRecords(PivotCacheRecords recordsPart, XLPivotCache pivotCache)
+    private readonly string _ns = OpenXmlConst.Main2006SsNs;
+    private readonly XmlTreeReader _reader;
+    private readonly XLPivotCache _pivotCache;
+
+    /// <summary>
+    /// Index of current field that is read from the <c>r</c> element.
+    /// </summary>
+    private int _fieldIdx;
+
+    public PivotCacheRecordsReader(XmlTreeReader reader, XLPivotCache pivotCache)
     {
-        // Number of records can be rather large, preallocate capacity to avoid reallocation.
-        var recordCount = recordsPart.Count?.Value is not null
-            ? checked((int)recordsPart.Count.Value)
-            : 0;
-        pivotCache.AllocateRecordCapacity(recordCount);
+        _reader = reader;
+        _pivotCache = pivotCache;
+    }
 
-        var fieldsCount = pivotCache.FieldCount;
-        foreach (var record in recordsPart.Elements<PivotCacheRecord>())
+    internal void ReadRecordsToCache()
+    {
+        // Don't add values to the shared items of a cache when record value is added, because we want 1:1
+        // read/write. Read them from definition. Whatever is in shared items now should be written out,
+        // unless there is a cache refresh. Basically trust the author of the workbook that it is valid.
+        _reader.Open("pivotCacheRecords", _ns);
+        var recordCount = _reader.GetCount();
+        _pivotCache.AllocateRecordCapacity(recordCount);
+
+        while (_reader.TryOpen("r", _ns))
         {
-            var recordColumns = record.ChildElements.Count;
-            if (recordColumns != fieldsCount)
-                throw PartStructureException.IncorrectElementsCount();
-
-            for (var fieldIdx = 0; fieldIdx < fieldsCount; ++fieldIdx)
-            {
-                var fieldValues = pivotCache.GetFieldValues(fieldIdx);
-                var recordItem = record.ElementAt(fieldIdx);
-
-                // Don't add values to the shared items of a cache when record value is added, because we want 1:1
-                // read/write. Read them from definition. Whatever is in shared items now should be written out,
-                // unless there is a cache refresh. Basically trust the author of the workbook that it is valid.
-                switch (recordItem)
-                {
-                    case MissingItem:
-                        fieldValues.AddMissing();
-                        break;
-
-                    case NumberItem numberItem:
-                        if (numberItem.Val?.Value is not { } number)
-                            throw PartStructureException.MissingAttribute();
-
-                        fieldValues.AddNumber(number);
-                        break;
-
-                    case BooleanItem booleanItem:
-                        if (booleanItem.Val?.Value is not { } boolean)
-                            throw PartStructureException.MissingAttribute();
-
-                        fieldValues.AddBoolean(boolean);
-                        break;
-
-                    case ErrorItem errorItem:
-                        if (errorItem.Val?.Value is not { } errorText)
-                            throw PartStructureException.MissingAttribute();
-
-                        if (!XLErrorParser.TryParseError(errorText, out var error))
-                            throw PartStructureException.InvalidAttributeFormat();
-
-                        fieldValues.AddError(error);
-                        break;
-
-                    case StringItem stringItem:
-                        if (stringItem.Val?.Value is not { } text)
-                            throw PartStructureException.MissingAttribute();
-
-                        fieldValues.AddString(text);
-                        break;
-
-                    case DateTimeItem dateTimeItem:
-                        if (dateTimeItem.Val?.Value is not { } dateTime)
-                            throw PartStructureException.MissingAttribute();
-
-                        fieldValues.AddDateTime(dateTime);
-                        break;
-
-                    case FieldItem indexItem:
-                        if (indexItem.Val?.Value is not { } index)
-                            throw PartStructureException.MissingAttribute();
-
-                        if (index >= fieldValues.SharedCount)
-                            throw PartStructureException.InvalidAttributeValue();
-
-                        fieldValues.AddIndex(index);
-                        break;
-
-                    default:
-                        throw PartStructureException.ExpectedElementNotFound();
-                }
-            }
+            ParseRecord("r");
         }
+
+        if (_reader.TryOpen("extLst", _ns))
+        {
+            _reader.Skip();
+        }
+
+        _reader.Close("pivotCacheRecords", _ns);
+    }
+
+    partial void OnRecordParsed()
+    {
+        // Each record should have element for each field
+        var fieldsCount = _pivotCache.FieldCount;
+        if (_fieldIdx != fieldsCount)
+            throw PartStructureException.IncorrectElementsCount();
+
+        // Record was read, reset field index for next record.
+        _fieldIdx = 0;
+    }
+
+    partial void OnMissingParsed(bool? u, bool? f, string? c, uint? cp, uint? @in, uint? bc, uint? fc, bool i, bool un, bool st, bool b)
+    {
+        var fieldValues = GetFieldValues();
+        fieldValues.AddMissing();
+    }
+
+    partial void OnNumberParsed(double v, bool? u, bool? f, string? c, uint? cp, uint? @in, uint? bc, uint? fc, bool i, bool un, bool st, bool b)
+    {
+        var fieldValues = GetFieldValues();
+        fieldValues.AddNumber(v);
+    }
+
+    partial void OnBooleanParsed(bool v, bool? u, bool? f, string? c, uint? cp)
+    {
+        var fieldValues = GetFieldValues();
+        fieldValues.AddBoolean(v);
+    }
+
+    partial void OnErrorParsed(string v, bool? u, bool? f, string? c, uint? cp, uint? @in, uint? bc, uint? fc, bool i, bool un, bool st, bool b)
+    {
+        var fieldValues = GetFieldValues();
+        if (!XLErrorParser.TryParseError(v, out var error))
+            throw PartStructureException.InvalidAttributeFormat();
+
+        fieldValues.AddError(error);
+    }
+
+    partial void OnStringParsed(string v, bool? u, bool? f, string? c, uint? cp, uint? @in, uint? bc, uint? fc, bool i, bool un, bool st, bool b)
+    {
+        var fieldValues = GetFieldValues();
+        fieldValues.AddString(v);
+    }
+
+    partial void OnDateTimeParsed(DateTime v, bool? u, bool? f, string? c, uint? cp)
+    {
+        var fieldValues = GetFieldValues();
+        fieldValues.AddDateTime(v);
+    }
+
+    partial void OnIndexParsed(uint v)
+    {
+        var fieldValues = GetFieldValues();
+        if (v >= fieldValues.SharedCount)
+            throw PartStructureException.InvalidAttributeValue();
+
+        fieldValues.AddIndex(v);
+    }
+
+    private XLPivotCacheValues GetFieldValues()
+    {
+        if (_fieldIdx >= _pivotCache.FieldCount)
+            throw PartStructureException.IncorrectElementsCount();
+
+        return _pivotCache.GetFieldValues(_fieldIdx++);
     }
 }

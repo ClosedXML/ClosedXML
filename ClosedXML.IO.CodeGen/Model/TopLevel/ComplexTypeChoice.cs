@@ -51,7 +51,7 @@ public class ComplexTypeChoice : ComplexType, INode
 
             code.AddLine("else");
             code.OpenBrace();
-            code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(reader);");
+            code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(_reader);");
             code.CloseBrace();
             code.CloseBrace();
             code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");

@@ -56,20 +56,21 @@ public class ParserGenerator
     public string Generate()
     {
         var code = new CodeBuilder(new StringBuilder(), _typeMap);
+        code.AddLine("#nullable enable");
+        code.EndLine();
+        code.AddLine("using ClosedXML.IO;");
+        code.EndLine();
         code.AddLine($"namespace {_targetNamespace};");
         code.EndLine();
         code.AddLine($"internal partial class {_readerName}");
         code.OpenBrace();
 
-        var isFirstMethod = true;
-        foreach (var parseMethod in _parseMethods)
-        {
-            if (!isFirstMethod)
-            {
-                code.EndLine();
-                isFirstMethod = false;
-            }
+        if (_parseMethods.Count > 0)
+            GenerateParseMethod(code, _parseMethods[0]);
 
+        foreach (var parseMethod in _parseMethods[1..])
+        {
+            code.EndLine();
             GenerateParseMethod(code, parseMethod);
         }
 

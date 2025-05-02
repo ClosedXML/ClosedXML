@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Xml;
 
 namespace ClosedXML.IO;
@@ -66,6 +67,15 @@ namespace ClosedXML.IO;
 /// </remarks>
 public sealed class XmlTreeReader : IDisposable
 {
+    private static readonly XmlReaderSettings Settings = new()
+    {
+        IgnoreComments = true,
+        Async = false,
+        DtdProcessing = DtdProcessing.Prohibit,
+        IgnoreWhitespace = true,
+        CloseInput = true
+    };
+
     /// <summary>
     /// The XmlReader that holds current element. The current node should always be either
     /// <see cref="XmlNodeType.Element"/> or <see cref="XmlNodeType.EndElement"/>.
@@ -107,9 +117,11 @@ public sealed class XmlTreeReader : IDisposable
     /// </summary>
     private bool _inLookup = true;
 
-    public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper)
-        : this(reader, enumMapper, false)
+    public XmlTreeReader(Stream stream, IEnumMapper enumMapper, bool suppressFormatErrors)
     {
+        _reader = XmlReader.Create(stream, Settings);
+        _enumMapper = enumMapper;
+        SuppressFormatErrors = suppressFormatErrors;
     }
 
     public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper, bool suppressFormatErrors)

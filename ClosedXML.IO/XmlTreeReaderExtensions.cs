@@ -89,4 +89,13 @@ public static class XmlTreeReaderExtensions
     {
         return reader.GetOptionalDateTime(attributeName) ?? throw PartStructureException.MissingAttribute(attributeName, reader);
     }
+
+    /// <summary>
+    /// Get count for various collections in parts.
+    /// </summary>
+    public static int GetCount(this XmlTreeReader reader)
+    {
+        var count = reader.GetOptionalUInt("count") ?? 1;
+        return checked((int)count);
+    }
 }

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Xml;
 using ClosedXML.IO.CodeGen.XsdParser;
 
 namespace ClosedXML.IO.CodeGen;
@@ -20,8 +19,7 @@ public class Program
         }
 
         using var fileStream = File.OpenRead(args[0]);
-        using var xmlReader = XmlReader.Create(fileStream);
-        using var reader = new XmlTreeReader(xmlReader, new XsdEnumMapper());
+        using var reader = new XmlTreeReader(fileStream, new XsdEnumMapper(), false);
         var parser = new XsdSchemaParser();
 
         var schema = parser.ParseSchema(reader);
@@ -49,7 +47,7 @@ public class Program
             .AddSimpleTypeOptional<uint?>("ST_UnsignedIntHex", "_reader.GetOptionalUIntHex(\"{0}\")")
             .AddSimpleTypeRequired<double>("xsd:double", "_reader.GetDouble(\"{0}\")")
 
-            .AddParseMethod("CT_PivotCacheRecords")
+            // CT_PivotCacheRecords - hand-coded
             .AddParseMethod("CT_Record")
             .AddParseMethod("CT_Missing")
             .AddParseMethod("CT_Number")

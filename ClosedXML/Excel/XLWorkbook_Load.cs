@@ -20,9 +20,11 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 namespace ClosedXML.Excel
 {
     using Ap;
+    using ClosedXML.IO;
     using Drawings;
     using Op;
     using System.Drawing;
+    using System.Xml;
 
     public partial class XLWorkbook
     {
@@ -455,9 +457,11 @@ namespace ClosedXML.Excel
             foreach (var pivotTableCacheDefinitionPart in workbookPart.GetPartsOfType<PivotTableCacheDefinitionPart>())
             {
                 var pivotCache = PivotTableCacheDefinitionPartReader.Load(workbookPart, pivotTableCacheDefinitionPart, this);
-                if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart?.PivotCacheRecords is { } recordsPart)
+                if (pivotTableCacheDefinitionPart.PivotTableCacheRecordsPart is { } recordsPart)
                 {
-                    PivotCacheRecordsReader.ReadRecords(recordsPart, pivotCache);
+                    using var reader = CreateTreeReader(recordsPart);
+                    var recordsReader = new PivotCacheRecordsReader(reader, pivotCache);
+                    recordsReader.ReadRecordsToCache();
                 }
             }
 
@@ -1254,6 +1258,12 @@ namespace ClosedXML.Excel
         private static Boolean UInt32HasValue(UInt32Value value)
         {
             return value != null && value.HasValue;
+        }
+
+        private static XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)
+        {
+            var stream = openXmlPart.GetStream(FileMode.Open);
+            return new XmlTreeReader(stream, XmlToEnumMapper.Instance, false);
         }
     }
 }
