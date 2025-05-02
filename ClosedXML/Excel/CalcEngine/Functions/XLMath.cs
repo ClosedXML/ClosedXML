@@ -2,7 +2,7 @@ using System;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
-    public static class XLMath
+    internal static class XLMath
     {
         public static double Asinh(double x)
         {
