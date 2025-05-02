@@ -1,4 +1,4 @@
-﻿using ClosedXML.IO.CodeGen.Model;
+using ClosedXML.IO.CodeGen.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +16,8 @@ internal class CodeBuilder
     /// <summary>
     /// Prefix of complex types in XML schema.
     /// </summary>
-    private readonly string CtPrefix = "CT_";
+    private const string CtPrefix = "CT_";
+
     private readonly SchemeTypeMap _typeMap;
     private readonly StringBuilder _sb;
     private int _indentLevel;
@@ -112,12 +113,10 @@ internal class CodeBuilder
         return this;
     }
 
-    private CodeBuilder AppendSimpleType(string typeName)
+    private void AppendSimpleType(string typeName)
     {
         var cSharpTypeName = _typeMap.GetSimpleTypeName(typeName);
         _sb.Append(cSharpTypeName);
-
-        return this;
     }
 
     private void AddIndentedLine(string text)

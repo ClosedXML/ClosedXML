@@ -16,14 +16,13 @@ using System.Xml;
 using System.Xml.Linq;
 using Path = System.IO.Path;
 using ClosedXML.Excel.IO;
-using Boolean = System.Boolean;
 using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
-        private Boolean Validate(SpreadsheetDocument package)
+        private void Validate(SpreadsheetDocument package)
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -44,7 +43,6 @@ namespace ClosedXML.Excel
                 var message = string.Join("\r\n", errors.Select(e => string.Format("Part {0}, Path {1}: {2}", e.Part.Uri, e.Path.XPath, e.Description)).ToArray());
                 throw new ApplicationException(message);
             }
-            return true;
         }
 
         private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
