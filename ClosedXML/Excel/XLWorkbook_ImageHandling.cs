@@ -21,17 +21,6 @@ namespace ClosedXML.Excel
             return matchingAnchor.FirstOrDefault();
         }
 
-        public static OpenXmlElement GetAnchorFromImageIndex(WorksheetPart worksheetPart, Int32 index)
-        {
-            var drawingsPart = worksheetPart.DrawingsPart;
-            var matchingAnchor = drawingsPart.WorksheetDrawing
-                .Where(wsdr => wsdr.Descendants<Xdr.NonVisualDrawingProperties>()
-                    .Any(x => x.Id.Value.Equals(Convert.ToUInt32(index + 1)))
-                );
-
-            return matchingAnchor.FirstOrDefault();
-        }
-
         public static NonVisualDrawingProperties GetPropertiesFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
