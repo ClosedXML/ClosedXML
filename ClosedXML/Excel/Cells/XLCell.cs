@@ -1201,27 +1201,20 @@ namespace ClosedXML.Excel
                         & ~XLCellCopyOptions.DataValidations); //Conditional formats and data validation are copied separately
             }
 
-            var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
-                .Where(mr => asRange.Contains(mr))
-                .Select(mr =>
-                {
-                    var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
-                    var firstColumn = _columnNumber + (mr.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
-                    return (IXLRange)Worksheet.Range
-                    (
-                        firstRow,
-                        firstColumn,
-                        firstRow + mr.RowCount() - 1,
-                        firstColumn + mr.ColumnCount() - 1
-                    );
-                })
-                .ToList();
+            foreach (var mergedRange in asRange.Worksheet.Internals.MergedRanges)
+            {
+                if (!asRange.Contains(mergedRange))
+                    continue;
 
-            rangesToMerge.ForEach(r => r.Merge(false));
+                var firstRow = _rowNumber + (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                var firstColumn = _columnNumber + (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+
+                Worksheet.Range(firstRow, firstColumn, firstRow + mergedRange.RowCount() - 1, firstColumn + mergedRange.ColumnCount() - 1)
+                    .Merge(false);
+            }
 
             var dataValidations = asRange.Worksheet.DataValidations
-                .GetAllInRange(asRange.RangeAddress)
-                .ToList();
+                .GetAllInRange(asRange.RangeAddress);
 
             foreach (var dataValidation in dataValidations)
             {
@@ -1250,7 +1243,7 @@ namespace ClosedXML.Excel
                 .Worksheet
                 .ConditionalFormats
                 .Where(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
-                .ToList();
+                .ToArray();
 
             foreach (var cf in conditionalFormats)
             {
@@ -1289,12 +1282,12 @@ namespace ClosedXML.Excel
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
             var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
 
-            foreach (var cf in formats.ToList())
+            foreach (var cf in formats.ToArray())
             {
                 var fmtRanges = cf.Ranges
                     .GetIntersectedRanges(fromRange.RangeAddress)
                     .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
-                    .ToList();
+                    .ToArray();
 
                 var c = new XLConditionalFormat(fmtRanges, true);
                 c.CopyFrom(cf);
@@ -1304,26 +1297,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        private bool SetDataTable(object o)
-        {
-            if (o is DataTable dataTable)
-                return InsertData(dataTable) != null;
-            else
-                return false;
-        }
-
-        private bool SetEnumerable(object collectionObject)
-        {
-            // IXLRichText implements IEnumerable, but we don't want to handle this here.
-            if (collectionObject is IXLRichText) return false;
-
-            var asEnumerable = collectionObject as IEnumerable;
-            return InsertData(asEnumerable) != null;
-        }
-
         private void ClearMerged()
         {
-            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
+            var mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToArray();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }

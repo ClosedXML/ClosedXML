@@ -1,9 +1,10 @@
 #nullable disable
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
@@ -38,6 +39,7 @@ namespace ClosedXML.Excel
             get { return new XLStyle(this, StyleValue.Key); }
             set { SetStyle(value, false); }
         }
+
 
         /// <summary>
         /// Get a collection of stylized entities which current entity's style changes should be propagated to.
@@ -85,39 +87,68 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
+        private static readonly ReferenceEqualityComparer<XLStyleValue> _comparer = new();
 
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {
-            var children = GetChildrenRecursively(this)
-                .GroupBy(child => child.StyleValue, _comparer);
+            var children = CollectChildrenRecursively(this);
 
-            foreach (var group in children)
+            var groups = new Dictionary<XLStyleValue, List<XLStylizedBase>>(_comparer);
+            foreach (var child in children)
             {
-                var styleKey = modification(group.Key.Key);
-                var styleValue = XLStyleValue.FromKey(ref styleKey);
-                foreach (var child in group)
+                if (!groups.TryGetValue(child.StyleValue, out var list))
+                    groups[child.StyleValue] = list = new List<XLStylizedBase>();
+
+                list.Add(child);
+            }
+
+            // Apply style modification
+            foreach (var kvp in groups)
+            {
+                var originalStyleValue = kvp.Key;
+                var modifiedKey = modification(originalStyleValue.Key);
+                var modifiedStyleValue = XLStyleValue.FromKey(ref modifiedKey);
+
+                foreach (var child in kvp.Value)
                 {
-                    child.StyleValue = styleValue;
+                    child.StyleValue = modifiedStyleValue;
                 }
             }
         }
 
-        private static HashSet<XLStylizedBase> GetChildrenRecursively(XLStylizedBase parent)
+        private static XLStylizedBase[] CollectChildrenRecursively(XLStylizedBase parent)
         {
-            void Collect(XLStylizedBase root, HashSet<XLStylizedBase> collector)
+            var stack = CollectionPools.StackPool<XLStylizedBase>.Shared.Rent();
+            stack.Push(parent);
+
+            var result = ArrayPool<XLStylizedBase>.Shared.Rent(4096); // initial guess
+            var count = 0;
+
+            while (stack.Count > 0)
             {
-                collector.Add(root);
-                foreach (var child in root.Children)
-                {
-                    Collect(child, collector);
-                }
+                var current = stack.Pop();
+
+                if (count == result.Length)
+                    Array.Resize(ref result, result.Length * 2);
+
+                result[count++] = current;
+
+                foreach (var child in current.Children)
+                    stack.Push(child);
             }
 
-            var results = new HashSet<XLStylizedBase>();
-            Collect(parent, results);
+            CollectionPools.StackPool<XLStylizedBase>.Shared.Return(stack);
 
-            return results;
+            // If count < result.Length → trim (optional if needed)
+            if (count < result.Length)
+            {
+                var trimmed = new XLStylizedBase[count];
+                Array.Copy(result, trimmed, count);
+                ArrayPool<XLStylizedBase>.Shared.Return(result);
+                return trimmed;
+            }
+
+            return result;
         }
 
         #endregion Private methods
