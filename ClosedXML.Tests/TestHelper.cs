@@ -53,6 +53,8 @@ namespace ClosedXML.Tests
             }
         }
 
+        private static readonly char[] separator = { '\\' };
+
         public static void RunTestExample<T>(string filePartName, bool evaluateFormulae = false)
                 where T : IXLExample, new()
         {
@@ -60,7 +62,7 @@ namespace ClosedXML.Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            string[] pathParts = filePartName.Split(new char[] { '\\' });
+            string[] pathParts = filePartName.Split(separator);
             string filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
@@ -73,7 +75,7 @@ namespace ClosedXML.Tests
             filePath1 = Path.Combine(directory, "z" + fileName);
             var filePath2 = Path.Combine(directory, fileName);
 
-            //Run test
+            // Run test
             example.Create(filePath1);
             using (var wb = new XLWorkbook(filePath1))
                 wb.SaveAs(filePath2, validate: true, evaluateFormulae);
@@ -86,18 +88,14 @@ namespace ClosedXML.Tests
 
             if (CompareWithResources)
             {
-                string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
-                using (var streamActual = File.OpenRead(filePath2))
-                {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
+                var resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
+                using var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath);
+                using var streamActual = File.OpenRead(filePath2);
+                var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out var message);
+                var formattedMessage =
+                    $"Actual file '{filePath2}' is different than the expected file '{resourcePath}'. The difference is: '{message}'";
 
-                    Assert.IsTrue(success, formattedMessage);
-                }
+                Assert.IsTrue(success, formattedMessage);
             }
         }
 

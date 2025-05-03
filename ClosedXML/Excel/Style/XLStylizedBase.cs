@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
         /// Apply specified style to the container.
         /// </summary>
         /// <param name="value">Style to apply.</param>
-        /// <param name="propagate">Whether or not propagate the style to inner ranges.</param>
+        /// <param name="propagate">Whether to propagate the style to inner ranges.</param>
         private void SetStyle(XLStyleValue value, bool propagate = false)
         {
             StyleValue = value;
