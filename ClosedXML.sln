@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML.IO", "ClosedXML.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML.IO.CodeGen", "ClosedXML.IO.CodeGen\ClosedXML.IO.CodeGen.csproj", "{CDF9B5AA-7471-4654-AAEC-2186D3287C2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML.Tests.Performance", "ClosedXML.Tests.Performance\ClosedXML.Tests.Performance.csproj", "{1517A289-E2E3-437B-BFC9-E6BA50E88D15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{CDF9B5AA-7471-4654-AAEC-2186D3287C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDF9B5AA-7471-4654-AAEC-2186D3287C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDF9B5AA-7471-4654-AAEC-2186D3287C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1517A289-E2E3-437B-BFC9-E6BA50E88D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1517A289-E2E3-437B-BFC9-E6BA50E88D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1517A289-E2E3-437B-BFC9-E6BA50E88D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1517A289-E2E3-437B-BFC9-E6BA50E88D15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
