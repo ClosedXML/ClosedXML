@@ -9,8 +9,8 @@ namespace ClosedXML.Tests.Excel.Protection
         [Test]
         public void TestEmptyPassword()
         {
-            Assert.IsEmpty(CryptographicAlgorithms.GetPasswordHash(Algorithm.SHA512, string.Empty));
-            Assert.IsEmpty(CryptographicAlgorithms.GetPasswordHash(Algorithm.SimpleHash, string.Empty));
+            Assert.That(CryptographicAlgorithms.GetPasswordHash(Algorithm.SHA512, string.Empty), Is.Empty);
+            Assert.That(CryptographicAlgorithms.GetPasswordHash(Algorithm.SimpleHash, string.Empty), Is.Empty);
         }
 
         [Test]

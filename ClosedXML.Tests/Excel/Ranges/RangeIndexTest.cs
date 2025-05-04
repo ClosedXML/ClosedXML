@@ -213,7 +213,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             });
 
             var level9 = level8.Children.First();
-            Assert.NotNull(level9.Ranges);
+            Assert.That(level9.Ranges, Is.Not.Null);
             Assert.That(level9.Ranges.Single(), Is.EqualTo(range));
         }
 

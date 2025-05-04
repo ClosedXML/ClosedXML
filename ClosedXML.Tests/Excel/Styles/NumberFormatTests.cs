@@ -97,7 +97,7 @@ namespace ClosedXML.Tests.Excel
             var numberFormatKey1 = XLNumberFormatKey.ForFormat("MM");
             var numberFormatKey2 = XLNumberFormatKey.ForFormat("mm");
 
-            Assert.That(numberFormatKey1.Equals(numberFormatKey2), Is.False);
+            Assert.That(numberFormatKey1, Is.Not.EqualTo(numberFormatKey2));
         }
 
         [Test]

@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Extensions
             Assert.That(tokenArea.ToSheetRange(anchor), Is.EqualTo(expectedRange));
         }
 
-        public static IEnumerable<object[]> A1TestCases()
+        private static IEnumerable<object[]> A1TestCases()
         {
             // C5
             yield return new object[]
@@ -91,7 +91,7 @@ namespace ClosedXML.Tests.Extensions
             };
         }
 
-        public static IEnumerable<object[]> R1C1TestCases()
+        private static IEnumerable<object[]> R1C1TestCases()
         {
             // R2C4
             yield return new object[]

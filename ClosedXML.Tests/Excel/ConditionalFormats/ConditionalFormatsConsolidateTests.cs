@@ -166,7 +166,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 Assert.That(ws.ConditionalFormats.ElementAt(0).Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A1:A1"));
             });
             Assert.That(ws.ConditionalFormats.ElementAt(1).Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A2:A3"));
-            Assert.AreEqual("A2:A8", ws.ConditionalFormats.ElementAt(2).Ranges.Single().RangeAddress.ToString());
+            Assert.That(ws.ConditionalFormats.ElementAt(2).Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A2:A8"));
         }
 
         [Test]

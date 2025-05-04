@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var ptSheet = wb.AddWorksheet();
             var pt = ptSheet.PivotTables.Add("pt", ptSheet.Cell("A1"), range);
             var internalPt = (XLPivotTable)pt;
-            Assert.IsEmpty(internalPt.PivotFields[0].Items);
+            Assert.That(internalPt.PivotFields[0].Items, Is.Empty);
 
             var idField = pt.RowLabels.Add("ID", "Item ID").AddSubtotal(XLSubtotalFunction.Automatic);
 
@@ -108,15 +108,15 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             pt.RowLabels.Clear();
 
-            Assert.IsEmpty(pt.RowLabels);
+            Assert.That(pt.RowLabels, Is.Empty);
 
             // Clear should also remove custom names and axis, otherwise there are problems loading
             // file with such remains in Excel.
             var internalPt = (XLPivotTable)pt;
-            Assert.Null(internalPt.PivotFields[0].Name);
-            Assert.Null(internalPt.PivotFields[0].Axis);
-            Assert.Null(internalPt.PivotFields[1].Name);
-            Assert.Null(internalPt.PivotFields[1].Axis);
+            Assert.That(internalPt.PivotFields[0].Name, Is.Null);
+            Assert.That(internalPt.PivotFields[0].Axis, Is.Null);
+            Assert.That(internalPt.PivotFields[1].Name, Is.Null);
+            Assert.That(internalPt.PivotFields[1].Axis, Is.Null);
         }
 
         #endregion
@@ -244,7 +244,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             pt.RowLabels.Remove("id");
             pt.RowLabels.Remove("ID"); // Doesnt throw on already removed.
 
-            Assert.IsEmpty(pt.RowLabels);
+            Assert.That(pt.RowLabels, Is.Empty);
         }
 
         #endregion

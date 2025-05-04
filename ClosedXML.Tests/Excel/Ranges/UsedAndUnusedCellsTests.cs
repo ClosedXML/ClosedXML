@@ -282,8 +282,11 @@ namespace ClosedXML.Tests.Excel.Ranges
             var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
             Assert.That(usedCells, Has.Count.EqualTo(11));
-            Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
-            Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
+                Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
+            });
         }
 
         [Test]
@@ -296,8 +299,11 @@ namespace ClosedXML.Tests.Excel.Ranges
             var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
             Assert.That(usedCells, Has.Count.EqualTo(11));
-            Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
-            Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
+                Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
+            });
         }
 
         [Test]

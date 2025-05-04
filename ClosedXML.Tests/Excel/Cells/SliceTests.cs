@@ -79,7 +79,7 @@ namespace ClosedXML.Tests.Excel.Cells
         public void Keeps_Track_Of_Used_Rows()
         {
             var slice = new Slice<int>();
-            Assert.IsEmpty(slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.Empty);
 
             slice.Set(new XLSheetPoint(1, 1), 1);
             Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1 }));
@@ -103,14 +103,14 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 70 }));
 
             slice.Set(new XLSheetPoint(70, 1), 0);
-            Assert.IsEmpty(slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.Empty);
         }
 
         [Test]
         public void Keeps_Track_Of_Used_Columns()
         {
             var slice = new Slice<int>();
-            Assert.IsEmpty(slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.Empty);
 
             slice.Set(new XLSheetPoint(1, 5), 1);
             Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5 }));
@@ -134,7 +134,7 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 90 }));
 
             slice.Set(new XLSheetPoint(1, 90), 0);
-            Assert.IsEmpty(slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.Empty);
         }
 
         [Test]

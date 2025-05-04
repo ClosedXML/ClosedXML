@@ -30,8 +30,8 @@ namespace ClosedXML.Tests.Excel.Styles
 
             Assert.Multiple(() =>
             {
-                Assert.That(fontKey1.Equals(fontKey2), Is.False);
-                Assert.That(fontKey2.Equals(fontKey3), Is.True);
+                Assert.That(fontKey1, Is.Not.EqualTo(fontKey2));
+                Assert.That(fontKey2, Is.EqualTo(fontKey3));
             });
         }
     }

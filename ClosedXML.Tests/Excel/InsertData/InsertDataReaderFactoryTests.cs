@@ -15,8 +15,11 @@ namespace ClosedXML.Tests.Excel.InsertData
         {
             var factory = InsertDataReaderFactory.Instance;
 
-            Assert.IsNotNull(factory);
-            Assert.That(InsertDataReaderFactory.Instance, Is.SameAs(factory));
+            Assert.Multiple(() =>
+            {
+                Assert.That(factory, Is.Not.Null);
+                Assert.That(InsertDataReaderFactory.Instance, Is.SameAs(factory));
+            });
         }
 
         [TestCaseSource(nameof(SimpleSources))]
@@ -24,7 +27,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.IsInstanceOf<SimpleTypeReader>(reader);
+            Assert.That(reader, Is.InstanceOf<SimpleTypeReader>());
         }
 
         private static IEnumerable<object> SimpleSources
@@ -44,7 +47,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.IsInstanceOf<SimpleNullableTypeReader>(reader);
+            Assert.That(reader, Is.InstanceOf<SimpleNullableTypeReader>());
         }
 
         private static IEnumerable<object> SimpleNullableSources
@@ -63,7 +66,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.IsInstanceOf<ArrayReader>(reader);
+            Assert.That(reader, Is.InstanceOf<ArrayReader>());
         }
 
         private static IEnumerable<object> ArraySources
@@ -99,7 +102,7 @@ namespace ClosedXML.Tests.Excel.InsertData
             };
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.IsInstanceOf<ArrayReader>(reader);
+            Assert.That(reader, Is.InstanceOf<ArrayReader>());
         }
 
         [Test]
@@ -112,7 +115,7 @@ namespace ClosedXML.Tests.Excel.InsertData
             };
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.IsInstanceOf<SimpleTypeReader>(reader);
+            Assert.That(reader, Is.InstanceOf<SimpleTypeReader>());
         }
 
         [Test]
@@ -121,31 +124,31 @@ namespace ClosedXML.Tests.Excel.InsertData
             var dt = new DataTable();
             var reader = InsertDataReaderFactory.Instance.CreateReader(dt);
 
-            Assert.IsInstanceOf<ClosedXML.Excel.InsertData.DataTableReader>(reader);
+            Assert.That(reader, Is.InstanceOf<ClosedXML.Excel.InsertData.DataTableReader>());
         }
 
         [Test]
         public void CanCreateDataRecordReader()
         {
-            var dataRecords = new IDataRecord[0];
+            var dataRecords = Array.Empty<IDataRecord>();
             var reader = InsertDataReaderFactory.Instance.CreateReader(dataRecords);
-            Assert.IsInstanceOf<DataRecordReader>(reader);
+            Assert.That(reader, Is.InstanceOf<DataRecordReader>());
         }
 
         [Test]
         public void CanCreateObjectReader()
         {
-            var entities = new TestEntity[0];
+            var entities = Array.Empty<TestEntity>();
             var reader = InsertDataReaderFactory.Instance.CreateReader(entities);
-            Assert.IsInstanceOf<ObjectReader>(reader);
+            Assert.That(reader, Is.InstanceOf<ObjectReader>());
         }
 
         [Test]
         public void CanCreateObjectReaderForStruct()
         {
-            var entities = new TestStruct[0];
+            var entities = Array.Empty<TestStruct>();
             var reader = InsertDataReaderFactory.Instance.CreateReader(entities);
-            Assert.IsInstanceOf<ObjectReader>(reader);
+            Assert.That(reader, Is.InstanceOf<ObjectReader>());
         }
 
         [Test]
@@ -157,7 +160,7 @@ namespace ClosedXML.Tests.Excel.InsertData
                 "123",
             });
             var reader = InsertDataReaderFactory.Instance.CreateReader(entities);
-            Assert.IsInstanceOf<UntypedObjectReader>(reader);
+            Assert.That(reader, Is.InstanceOf<UntypedObjectReader>());
         }
 
         private class TestEntity { }

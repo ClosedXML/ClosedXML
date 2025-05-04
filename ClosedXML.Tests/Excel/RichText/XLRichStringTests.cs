@@ -45,7 +45,7 @@ namespace ClosedXML.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(text, Is.EqualTo(cell.GetText()));
-                Assert.That(true, Is.EqualTo(cell.GetRichText().First().Bold));
+                Assert.That(cell.GetRichText().First().Bold, Is.EqualTo(true));
                 Assert.That(XLColor.Red, Is.EqualTo(cell.GetRichText().First().FontColor));
 
                 Assert.That(richString, Has.Count.EqualTo(1));
@@ -71,7 +71,7 @@ namespace ClosedXML.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(text, Is.EqualTo(cell.GetRichText().ToString()));
-                Assert.That(true, Is.EqualTo(cell.GetRichText().First().Bold));
+                Assert.That(cell.GetRichText().First().Bold, Is.EqualTo(true));
                 Assert.That(XLColor.Red, Is.EqualTo(cell.GetRichText().First().FontColor));
 
                 Assert.That(cell.GetRichText(), Has.Count.EqualTo(1));
@@ -97,7 +97,7 @@ namespace ClosedXML.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(text, Is.EqualTo(cell.GetRichText().ToString()));
-                Assert.That(true, Is.EqualTo(cell.GetRichText().First().Bold));
+                Assert.That(cell.GetRichText().First().Bold, Is.EqualTo(true));
                 Assert.That(XLColor.Red, Is.EqualTo(cell.GetRichText().First().FontColor));
 
                 Assert.That(cell.GetRichText(), Has.Count.EqualTo(1));
@@ -845,7 +845,7 @@ namespace ClosedXML.Tests
         {
             static void AssertRichText(IXLRichText richText)
             {
-                Assert.IsNotNull(richText);
+                Assert.That(richText, Is.Not.Null);
                 Assert.Multiple(() =>
                 {
                     Assert.That(richText.Any(), Is.True);
@@ -923,17 +923,17 @@ namespace ClosedXML.Tests
             Assert.That(richText.Text, Is.EqualTo(cell.Value));
 
             richText.AddText("Hello");
-            Assert.That("Hello", Is.EqualTo(cell.Value));
+            Assert.That(cell.Value, Is.EqualTo("Hello"));
 
             var world = richText.AddText(" World");
-            Assert.That("Hello World", Is.EqualTo(cell.Value));
+            Assert.That(cell.Value, Is.EqualTo("Hello World"));
 
             world.Text = " World!";
-            Assert.That("Hello World!", Is.EqualTo(cell.Value));
-            Assert.That("Hello World!", Is.EqualTo(cell.GetRichText().Text));
+            Assert.That(cell.Value, Is.EqualTo("Hello World!"));
+            Assert.That(cell.GetRichText().Text, Is.EqualTo("Hello World!"));
 
             richText.ClearText();
-            Assert.That(string.Empty, Is.EqualTo(cell.Value));
+            Assert.That(cell.Value, Is.EqualTo(string.Empty));
         }
 
         [Test]

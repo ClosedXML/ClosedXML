@@ -22,7 +22,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Column(2).InsertColumnsAfter(2);
             var cf = ws.ConditionalFormats.ToArray();
 
-            Assert.That(cf.Length, Is.EqualTo(5));
+            Assert.That(cf, Has.Length.EqualTo(5));
             Assert.Multiple(() =>
             {
                 Assert.That(cf[0].Range.RangeAddress.ToString(), Is.EqualTo("A1:A1"));
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Row(2).InsertRowsBelow(2);
             var cf = ws.ConditionalFormats.ToArray();
 
-            Assert.That(cf.Length, Is.EqualTo(5));
+            Assert.That(cf, Has.Length.EqualTo(5));
             Assert.Multiple(() =>
             {
                 Assert.That(cf[0].Range.RangeAddress.ToString(), Is.EqualTo("A1:A1"));
@@ -74,7 +74,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Column(2).Delete();
             var cf = ws.ConditionalFormats.ToArray();
 
-            Assert.That(cf.Length, Is.EqualTo(4));
+            Assert.That(cf, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(cf[0].Range.RangeAddress.ToString(), Is.EqualTo("A1:A1"));
@@ -99,7 +99,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Row(2).Delete();
             var cf = ws.ConditionalFormats.ToArray();
 
-            Assert.That(cf.Length, Is.EqualTo(4));
+            Assert.That(cf, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(cf[0].Range.RangeAddress.ToString(), Is.EqualTo("A1:A1"));

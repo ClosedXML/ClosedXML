@@ -100,18 +100,17 @@ namespace ClosedXML.Tests.Excel
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
                 .Border.SetOutsideBorderColor(XLColor.Blue);
 
-            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.BottomBorder));
-            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.TopBorder));
-            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.LeftBorder));
             Assert.Multiple(() =>
             {
-                Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.RightBorder));
-
+                Assert.That(style.Border.BottomBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(style.Border.TopBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.Thick));
                 Assert.That(XLColor.Blue, Is.EqualTo(style.Border.BottomBorderColor));
+                Assert.That(XLColor.Blue, Is.EqualTo(style.Border.TopBorderColor));
+                Assert.That(XLColor.Blue, Is.EqualTo(style.Border.LeftBorderColor));
+                Assert.That(XLColor.Blue, Is.EqualTo(style.Border.RightBorderColor));
             });
-            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.TopBorderColor));
-            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.LeftBorderColor));
-            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.RightBorderColor));
         }
 
         [Test]

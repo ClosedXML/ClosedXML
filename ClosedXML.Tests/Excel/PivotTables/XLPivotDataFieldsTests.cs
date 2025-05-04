@@ -28,8 +28,8 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => pt.Values.Add("Wrong field name"));
 
-            Assert.NotNull(ex);
-            StringAssert.StartsWith("Field 'Wrong field name' is not in the fields of a pivot cache. Should be one of 'Name','Price'.", ex.Message);
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Does.StartWith("Field 'Wrong field name' is not in the fields of a pivot cache. Should be one of 'Name','Price'."));
         }
 
         #endregion

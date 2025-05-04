@@ -54,7 +54,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             insertAction(ws);
             Assert.That(sparklineGroup.SingleOrDefault()?.Location.Address.ToString(), Is.EqualTo(expectedAddress));
             if (expectedAddress is null)
-                Assert.IsEmpty(sparklineGroup);
+                Assert.That(sparklineGroup, Is.Empty);
         }
     }
 }

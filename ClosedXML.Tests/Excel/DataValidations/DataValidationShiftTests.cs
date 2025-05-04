@@ -22,7 +22,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
             ws.Column(2).InsertColumnsAfter(2);
             var dv = ws.DataValidations.ToArray();
 
-            Assert.That(dv.Length, Is.EqualTo(5));
+            Assert.That(dv, Has.Length.EqualTo(5));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A1:A1"));
             Assert.That(dv[1].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A2:D2"));
             Assert.That(dv[2].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A3:E3"));
@@ -45,7 +45,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
             ws.Row(2).InsertRowsBelow(2);
             var dv = ws.DataValidations.ToArray();
 
-            Assert.That(dv.Length, Is.EqualTo(5));
+            Assert.That(dv, Has.Length.EqualTo(5));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A1:A1"));
             Assert.That(dv[1].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("B1:B4"));
             Assert.That(dv[2].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("C1:C5"));
@@ -68,7 +68,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
             ws.Column(2).Delete();
             var dv = ws.DataValidations.ToArray();
 
-            Assert.That(dv.Length, Is.EqualTo(4));
+            Assert.That(dv, Has.Length.EqualTo(4));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A1:A1"));
             Assert.That(dv[1].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A2:A2"));
             Assert.That(dv[2].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A3:B3"));
@@ -90,7 +90,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
             ws.Row(2).Delete();
             var dv = ws.DataValidations.ToArray();
 
-            Assert.That(dv.Length, Is.EqualTo(4));
+            Assert.That(dv, Has.Length.EqualTo(4));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("A1:A1"));
             Assert.That(dv[1].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("B1:B1"));
             Assert.That(dv[2].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("C1:C2"));

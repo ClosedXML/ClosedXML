@@ -120,7 +120,7 @@ namespace ClosedXML.Tests.Excel.Cells
             {
                 // Check that type is a empty string, just like in Excel.
                 Assert.That(ws.Evaluate("TYPE(B2)"), Is.EqualTo(2));
-                Assert.IsEmpty(ws.Cell("B2").GetText());
+                Assert.That(ws.Cell("B2").GetText(), Is.Empty);
             }, @"Other\Cells\EmptySi.xlsx");
         }
 

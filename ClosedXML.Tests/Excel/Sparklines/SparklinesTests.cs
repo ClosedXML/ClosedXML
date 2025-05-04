@@ -89,12 +89,14 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
                 Assert.That(ws.SparklineGroups.Single().ElementAt(0).Location.Address.ToString(), Is.EqualTo("A1"));
             });
-            Assert.That(ws.SparklineGroups.Single().ElementAt(1).Location.Address.ToString(), Is.EqualTo("A2"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(2).Location.Address.ToString(), Is.EqualTo("A3"));
-
-            Assert.That(ws.SparklineGroups.Single().ElementAt(0).SourceData.RangeAddress.ToString(), Is.EqualTo("B1:E1"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(1).SourceData.RangeAddress.ToString(), Is.EqualTo("B2:E2"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(2).SourceData.RangeAddress.ToString(), Is.EqualTo("B3:E3"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.SparklineGroups.Single().ElementAt(1).Location.Address.ToString(), Is.EqualTo("A2"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(2).Location.Address.ToString(), Is.EqualTo("A3"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(0).SourceData.RangeAddress.ToString(), Is.EqualTo("B1:E1"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(1).SourceData.RangeAddress.ToString(), Is.EqualTo("B2:E2"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(2).SourceData.RangeAddress.ToString(), Is.EqualTo("B3:E3"));
+            });
         }
 
         [Test]
@@ -107,15 +109,14 @@ namespace ClosedXML.Tests.Excel.Sparklines
             Assert.Multiple(() =>
             {
                 Assert.That(ws.SparklineGroups.Count(), Is.EqualTo(1));
-
                 Assert.That(ws.SparklineGroups.Single().ElementAt(0).Location.Address.ToString(), Is.EqualTo("A1"));
-            });
-            Assert.That(ws.SparklineGroups.Single().ElementAt(1).Location.Address.ToString(), Is.EqualTo("B1"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(2).Location.Address.ToString(), Is.EqualTo("C1"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(1).Location.Address.ToString(), Is.EqualTo("B1"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(2).Location.Address.ToString(), Is.EqualTo("C1"));
 
-            Assert.That(ws.SparklineGroups.Single().ElementAt(0).SourceData.RangeAddress.ToString(), Is.EqualTo("A2:A4"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(1).SourceData.RangeAddress.ToString(), Is.EqualTo("B2:B4"));
-            Assert.That(ws.SparklineGroups.Single().ElementAt(2).SourceData.RangeAddress.ToString(), Is.EqualTo("C2:C4"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(0).SourceData.RangeAddress.ToString(), Is.EqualTo("A2:A4"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(1).SourceData.RangeAddress.ToString(), Is.EqualTo("B2:B4"));
+                Assert.That(ws.SparklineGroups.Single().ElementAt(2).SourceData.RangeAddress.ToString(), Is.EqualTo("C2:C4"));
+            });
         }
 
         [Test]
@@ -278,7 +279,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
 
             var sp = ws.SparklineGroups.GetSparkline(ws.Cell(cellAddress));
-            Assert.IsNotNull(sp);
+            Assert.That(sp, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(sp.Location.Address.ToString(), Is.EqualTo(cellAddress));
@@ -324,10 +325,10 @@ namespace ClosedXML.Tests.Excel.Sparklines
                 Assert.That(sparklines5.Count(), Is.EqualTo(25));
 
                 Assert.That(sparklines1.First().Location.Address.ToString(), Is.EqualTo("A2"));
+                Assert.That(sparklines1.Last().Location.Address.ToString(), Is.EqualTo("B1"));
+                Assert.That(sparklines1.First().SourceData.RangeAddress.ToString(), Is.EqualTo("B2:Z2"));
+                Assert.That(sparklines1.Last().SourceData.RangeAddress.ToString(), Is.EqualTo("B2:B100"));
             });
-            Assert.That(sparklines1.Last().Location.Address.ToString(), Is.EqualTo("B1"));
-            Assert.That(sparklines1.First().SourceData.RangeAddress.ToString(), Is.EqualTo("B2:Z2"));
-            Assert.That(sparklines1.Last().SourceData.RangeAddress.ToString(), Is.EqualTo("B2:B100"));
         }
 
         #endregion Get sparklines
@@ -485,11 +486,11 @@ namespace ClosedXML.Tests.Excel.Sparklines
             {
                 Assert.That(ws.SparklineGroups.Count(), Is.EqualTo(1));
                 Assert.That(ws.SparklineGroups.Single().Count(), Is.EqualTo(2));
+                Assert.That(ws.SparklineGroups.Single().Last().Location.Address.ToString(), Is.EqualTo("A2"));
+                Assert.That(ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString(), Is.EqualTo("B1:Z1"));
+                Assert.That(ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:D50"));
                 Assert.That(ws.SparklineGroups.Single().First().Location.Address.ToString(), Is.EqualTo("A1"));
             });
-            Assert.That(ws.SparklineGroups.Single().Last().Location.Address.ToString(), Is.EqualTo("A2"));
-            Assert.That(ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString(), Is.EqualTo("B1:Z1"));
-            Assert.That(ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:D50"));
         }
 
         [Test]
@@ -616,12 +617,15 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             ws.Columns(3, 5).Delete();
 
-            Assert.That(group1.First().Location.Address.ToString(), Is.EqualTo("B2"));
-            Assert.That(group1.First().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:F4"));
-            Assert.That(group2.First().Location.Address.ToString(), Is.EqualTo("C3"));
-            Assert.That(group2.First().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:D8"));
-            Assert.That(group3.First().Location.Address.ToString(), Is.EqualTo("D4"));
-            Assert.That(group3.First().SourceData.RangeAddress.ToString(), Is.EqualTo("A4:E4"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(group1.First().Location.Address.ToString(), Is.EqualTo("B2"));
+                Assert.That(group1.First().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:F4"));
+                Assert.That(group2.First().Location.Address.ToString(), Is.EqualTo("C3"));
+                Assert.That(group2.First().SourceData.RangeAddress.ToString(), Is.EqualTo("D4:D8"));
+                Assert.That(group3.First().Location.Address.ToString(), Is.EqualTo("D4"));
+                Assert.That(group3.First().SourceData.RangeAddress.ToString(), Is.EqualTo("A4:E4"));
+            });
         }
 
         [Test]

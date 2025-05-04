@@ -251,23 +251,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveToCurrent(b1);
-            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, b1, a1 }).AsCollection);
-            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
+            Assert.Multiple(() =>
+            {
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, b1, a1 }).AsCollection);
+                Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
+            });
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveToCurrent(a1);
-            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
-            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 2, 2 }).AsCollection);
-            Assert.That(chain.IsCurrentInCycle, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+                Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 2, 2 }).AsCollection);
+                Assert.That(chain.IsCurrentInCycle, Is.True);
+            });
 
             chain.MoveAhead();
-            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
-            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
+            Assert.Multiple(() =>
+            {
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+                Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
+            });
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveAhead();
-            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
-            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 0 }).AsCollection);
+            Assert.Multiple(() =>
+            {
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+                Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 0 }).AsCollection);
+            });
         }
 
         [Test]

@@ -135,7 +135,7 @@ namespace ClosedXML.Tests.Excel.Caching
 
             // Assert
             Assert.That(storedEntries, Has.Count.EqualTo(countUnique));
-            Assert.NotNull(entities); // To protect them from GC
+            Assert.That(entities, Is.Not.Null); // To protect them from GC
         }
 
         [Test]

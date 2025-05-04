@@ -223,7 +223,7 @@ namespace ClosedXML.Tests.Excel.Saving
 
             // Assert
             Assert.That(File.Exists(existing.Path), Is.True);
-            Assert.Greater(new FileInfo(existing.Path).Length, 0);
+            Assert.That(new FileInfo(existing.Path).Length, Is.GreaterThan(0));
         }
 
         [Test]
@@ -540,7 +540,7 @@ namespace ClosedXML.Tests.Excel.Saving
                 var cf = sheet.ConditionalFormats
                     .OrderBy(x => x.Range.RangeAddress.FirstAddress.ColumnNumber)
                     .ToArray();
-                Assert.That(cf.Length, Is.EqualTo(2));
+                Assert.That(cf, Has.Length.EqualTo(2));
                 Assert.Multiple(() =>
                 {
                     Assert.That(cf[0].ConditionalFormatType, Is.EqualTo(XLConditionalFormatType.ColorScale));
@@ -698,14 +698,14 @@ namespace ClosedXML.Tests.Excel.Saving
 
             ws.Row(1).InsertRowsAbove(1);
             var dv = ws.DataValidations.ToArray();
-            Assert.That(dv.Length, Is.EqualTo(1));
+            Assert.That(dv, Has.Length.EqualTo(1));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("B5:B5"));
 
             Assert.DoesNotThrow(() => wb.SaveAs(ms));
 
             ws.Column(1).InsertColumnsBefore(1);
             dv = ws.DataValidations.ToArray();
-            Assert.That(dv.Length, Is.EqualTo(1));
+            Assert.That(dv, Has.Length.EqualTo(1));
             Assert.That(dv[0].Ranges.Single().RangeAddress.ToString(), Is.EqualTo("C5:C5"));
 
             Assert.DoesNotThrow(() => wb.SaveAs(ms));

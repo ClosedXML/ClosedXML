@@ -214,7 +214,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
 
             Assert.False(success);
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [TestCase("B5:B8", "A1:C3", "B2:B5")] // Deleted area fully above (with a row space) with overlapping width
@@ -252,7 +252,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
 
             Assert.False(success);
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
     }
 }

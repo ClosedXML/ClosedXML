@@ -111,11 +111,11 @@ namespace ClosedXML.Tests.Excel
 
             ws.Cell("A2").FormulaA1 = @"=IF(A1 = """", ""A"", ""B"")";
             var actual = ws.Cell("A2").Value;
-            Assert.That("B", Is.EqualTo(actual));
+            Assert.That(actual, Is.EqualTo("B"));
 
             ws.Cell("A3").FormulaA1 = @"=IF("""" = A1, ""A"", ""B"")";
             actual = ws.Cell("A3").Value;
-            Assert.That("B", Is.EqualTo(actual));
+            Assert.That(actual, Is.EqualTo("B"));
         }
 
         [Test]

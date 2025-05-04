@@ -185,13 +185,16 @@ namespace ClosedXML.Tests
             ws.Range("D2:E2").Merge();
 
             Assert.That(ws.MergedRanges, Has.Count.EqualTo(2));
-            Assert.That(ws.MergedRanges.First().RangeAddress.ToStringRelative(), Is.EqualTo("A1:B2"));
-            Assert.That(ws.MergedRanges.Last().RangeAddress.ToStringRelative(), Is.EqualTo("D2:E2"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.MergedRanges.First().RangeAddress.ToStringRelative(), Is.EqualTo("A1:B2"));
+                Assert.That(ws.MergedRanges.Last().RangeAddress.ToStringRelative(), Is.EqualTo("D2:E2"));
 
-            Assert.That(ws.Cell("A2").MergedRange().RangeAddress.ToStringRelative(), Is.EqualTo("A1:B2"));
-            Assert.That(ws.Cell("D2").MergedRange().RangeAddress.ToStringRelative(), Is.EqualTo("D2:E2"));
+                Assert.That(ws.Cell("A2").MergedRange().RangeAddress.ToStringRelative(), Is.EqualTo("A1:B2"));
+                Assert.That(ws.Cell("D2").MergedRange().RangeAddress.ToStringRelative(), Is.EqualTo("D2:E2"));
 
-            Assert.That(ws.Cell("Z10").MergedRange(), Is.Null);
+                Assert.That(ws.Cell("Z10").MergedRange(), Is.Null);
+            });
         }
 
         [Test]
@@ -533,14 +536,14 @@ namespace ClosedXML.Tests
             {
                 var nr1 = ws1.DefinedNames.ElementAt(i);
                 var nr2 = ws2.DefinedNames.ElementAt(i);
-
-                
-                Assert.That((int)nr2.Scope, Is.EqualTo((int)XLScope.Worksheet));
-
-                Assert.That(nr2.Ranges.ToString(), Is.EqualTo(nr1.Ranges.ToString()));
-                Assert.That(nr2.Name, Is.EqualTo(nr1.Name));
-                Assert.That(nr2.Visible, Is.EqualTo(nr1.Visible));
-                Assert.That(nr2.Comment, Is.EqualTo(nr1.Comment));
+                Assert.Multiple(() =>
+                {
+                    Assert.That((int)nr2.Scope, Is.EqualTo((int)XLScope.Worksheet));
+                    Assert.That(nr2.Ranges.ToString(), Is.EqualTo(nr1.Ranges.ToString()));
+                    Assert.That(nr2.Name, Is.EqualTo(nr1.Name));
+                    Assert.That(nr2.Visible, Is.EqualTo(nr1.Visible));
+                    Assert.That(nr2.Comment, Is.EqualTo(nr1.Comment));
+                });
             }
         }
         [Test]
@@ -757,7 +760,7 @@ namespace ClosedXML.Tests
 
             void AssertPicturesAreEqual(IXLWorksheet ws1, IXLWorksheet ws2)
             {
-                Assert.That(ws2.Pictures, Has.Count.EqualTo(ws1.Pictures.Count()));
+                Assert.That(ws2.Pictures, Has.Count.EqualTo(ws1.Pictures.Count));
 
                 for (var i = 0; i < ws1.Pictures.Count; i++)
                 {
@@ -1317,7 +1320,7 @@ namespace ClosedXML.Tests
             });
 
             // Formulas in test sheet were recalculated - they are affected by recalculation of a sut sheet.
-            Assert.False(sut.Cell("A1").NeedsRecalculation);
+            Assert.That(sut.Cell("A1").NeedsRecalculation, Is.False);
             Assert.That(sut.Cell("A1").CachedValue, Is.EqualTo(15.0));
 
             Assert.False(sut.Cell("A2").NeedsRecalculation);

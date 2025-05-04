@@ -100,13 +100,13 @@ namespace ClosedXML.Tests.Excel.Tables
             IEnumerable<Person> personEnumerable = null;
             Assert.That(table.AppendData(personEnumerable), Is.Null);
 
-            personEnumerable = new Person[] { };
+            personEnumerable = Array.Empty<Person>();
             Assert.That(table.AppendData(personEnumerable), Is.Null);
 
             IEnumerable enumerable = null;
             Assert.That(table.AppendData(enumerable), Is.Null);
 
-            enumerable = new Person[] { };
+            enumerable = Array.Empty<Person>();
             Assert.That(table.AppendData(enumerable), Is.Null);
         }
 
@@ -121,13 +121,13 @@ namespace ClosedXML.Tests.Excel.Tables
             IEnumerable<Person> personEnumerable = null;
             Assert.Throws<InvalidOperationException>(() => table.ReplaceData(personEnumerable));
 
-            personEnumerable = new Person[] { };
+            personEnumerable = Array.Empty<Person>();
             Assert.Throws<InvalidOperationException>(() => table.ReplaceData(personEnumerable));
 
             IEnumerable enumerable = null;
             Assert.Throws<InvalidOperationException>(() => table.ReplaceData(enumerable));
 
-            enumerable = new Person[] { };
+            enumerable = Array.Empty<Person>();
             Assert.Throws<InvalidOperationException>(() => table.ReplaceData(enumerable));
         }
 

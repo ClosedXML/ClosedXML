@@ -198,8 +198,8 @@ namespace ClosedXML.Tests.Excel.Comments
                     Assert.That(margins.Left, Is.EqualTo(0.5));
                     Assert.That(margins.Top, Is.EqualTo(0.75));
 
-                    Assert.AreEqual(0, margins.Right);
-                    Assert.AreEqual(0, margins.Bottom);
+                    Assert.That(margins.Right, Is.EqualTo(0));
+                    Assert.That(margins.Bottom, Is.EqualTo(0));
                 }
             }, @"Other\Comments\InsetsUnitConversion.xlsx", new LoadOptions { Dpi = new Point(120, 120) });
         }

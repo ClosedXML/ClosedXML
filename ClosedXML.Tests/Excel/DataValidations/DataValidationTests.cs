@@ -293,7 +293,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var values = string.Join(",", Enumerable.Range(1, 20)
                 .Select(i => Guid.NewGuid().ToString("N")));
 
-            Assert.That(values.Length, Is.GreaterThan(255));
+            Assert.That(values, Has.Length.GreaterThan(255));
 
             using var wb = new XLWorkbook();
             var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).GetDataValidation();
@@ -385,7 +385,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
 
             dv.ClearRanges();
 
-            Assert.IsEmpty(dv.Ranges);
+            Assert.That(dv.Ranges, Is.Empty);
         }
 
         [Test]

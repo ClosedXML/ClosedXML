@@ -950,7 +950,7 @@ namespace ClosedXML.Tests.Excel
             ws.Cell("D1").Value = "Normal";
 
             var table = ws.RangeUsed().CreateTable();
-            Assert.IsNotNull(table);
+            Assert.That(table, Is.Not.Null);
 
             table.ShowTotalsRow = true;
             table.Field(0).TotalsRowFunction = XLTotalsRowFunction.Count;
@@ -1131,7 +1131,7 @@ namespace ClosedXML.Tests.Excel
                 var ws = wb.Worksheets.Add("Sheet2");
                 var original = wb.Worksheets.First().Tables.First();
 
-                Assert.IsNotNull((original as XLTable).RelId);
+                Assert.That((original as XLTable).RelId, Is.Not.Null);
 
                 var copy = original.CopyTo(ws);
 

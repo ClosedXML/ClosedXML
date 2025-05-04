@@ -40,19 +40,19 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(streamIn, null))
             {
-                throw new ArgumentNullException("streamIn");
+                throw new ArgumentNullException(nameof(streamIn));
             }
             if (ReferenceEquals(streamToWrite, null))
             {
-                throw new ArgumentNullException("streamToWrite");
+                throw new ArgumentNullException(nameof(streamToWrite));
             }
             if (!streamIn.CanRead)
             {
-                throw new ArgumentException("Can't read from stream", "streamIn");
+                throw new ArgumentException("Can't read from stream", nameof(streamIn));
             }
             if (!streamToWrite.CanWrite)
             {
-                throw new ArgumentException("Can't write to stream", "streamToWrite");
+                throw new ArgumentException("Can't write to stream", nameof(streamToWrite));
             }
 
             #endregion Check params

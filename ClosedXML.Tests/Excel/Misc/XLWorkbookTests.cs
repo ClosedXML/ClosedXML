@@ -24,7 +24,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLCell cell = wb.Cell("Sheet1!Result");
-            Assert.IsNotNull(cell);
+            Assert.That(cell, Is.Not.Null);
             Assert.That(cell.Value, Is.EqualTo(1));
         }
 
@@ -35,7 +35,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLCell cell = wb.Cell("Sheet1!Result");
-            Assert.IsNotNull(cell);
+            Assert.That(cell, Is.Not.Null);
             Assert.That(cell.Value, Is.EqualTo(1));
         }
 
@@ -44,7 +44,7 @@ namespace ClosedXML.Tests.Excel
         {
             var wb = new XLWorkbook();
             IXLCells cells = wb.Cells("ABC");
-            Assert.IsNotNull(cells);
+            Assert.That(cells, Is.Not.Null);
             Assert.That(cells.Count(), Is.EqualTo(0));
         }
 
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
-            Assert.IsNotNull(cells);
+            Assert.That(cells, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(cells.Count(), Is.EqualTo(1));
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
-            Assert.IsNotNull(cells);
+            Assert.That(cells, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(cells.Count(), Is.EqualTo(1));
@@ -95,8 +95,11 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(c1_full, Is.EqualTo(c1));
                 Assert.That(c2_full, Is.EqualTo(c2));
             });
-            Assert.NotNull(c1_full);
-            Assert.NotNull(c2_full);
+            Assert.Multiple(() =>
+            {
+                Assert.That(c1_full, Is.Not.Null);
+                Assert.That(c2_full, Is.Not.Null);
+            });
         }
 
         [TestCase("Sheet1")]
@@ -125,7 +128,7 @@ namespace ClosedXML.Tests.Excel
             var r2 = wb.Range("Sheet1!C123:D125");
 
             Assert.That(r2, Is.SameAs(r1));
-            Assert.NotNull(r2);
+            Assert.That(r2, Is.Not.Null);
         }
 
         [TestCase("Sheet2!C1:D2")]
@@ -166,7 +169,7 @@ namespace ClosedXML.Tests.Excel
 
             var r = wb.Ranges(rangesAddress);
 
-            Assert.NotNull(r);
+            Assert.That(r, Is.Not.Null);
             Assert.False(r.Any());
         }
 
@@ -185,7 +188,7 @@ namespace ClosedXML.Tests.Excel
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             var definedName = wb.DefinedName("Sheet1!Result");
-            Assert.IsNotNull(definedName);
+            Assert.That(definedName, Is.Not.Null);
             Assert.That(definedName.Ranges, Has.Count.EqualTo(1));
             Assert.Multiple(() =>
             {
@@ -210,7 +213,7 @@ namespace ClosedXML.Tests.Excel
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             var definedName = wb.DefinedName("Sheet1!Result");
-            Assert.IsNotNull(definedName);
+            Assert.That(definedName, Is.Not.Null);
             Assert.That(definedName.Ranges, Has.Count.EqualTo(1));
             Assert.Multiple(() =>
             {
@@ -234,7 +237,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLRange range = wb.Range("Sheet1!Result");
-            Assert.IsNotNull(range);
+            Assert.That(range, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(range.Cells().Count(), Is.EqualTo(1));
@@ -249,7 +252,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLRange range = wb.Range("Sheet1!Result");
-            Assert.IsNotNull(range);
+            Assert.That(range, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(range.Cells().Count(), Is.EqualTo(1));
@@ -262,7 +265,7 @@ namespace ClosedXML.Tests.Excel
         {
             var wb = new XLWorkbook();
             IXLRanges ranges = wb.Ranges("ABC");
-            Assert.IsNotNull(ranges);
+            Assert.That(ranges, Is.Not.Null);
             Assert.That(ranges, Is.Empty);
         }
 
@@ -273,7 +276,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
-            Assert.IsNotNull(ranges);
+            Assert.That(ranges, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(ranges.Cells().Count(), Is.EqualTo(1));
@@ -288,7 +291,7 @@ namespace ClosedXML.Tests.Excel
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
-            Assert.IsNotNull(ranges);
+            Assert.That(ranges, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(ranges.Cells().Count(), Is.EqualTo(1));
@@ -362,8 +365,11 @@ namespace ClosedXML.Tests.Excel
             });
 
             IXLRanges wsRanges = wb.Ranges("TestRange, Test2");
-            Assert.That(wsRanges.First().RangeAddress.ToString(), Is.EqualTo(original.RangeAddress.ToStringFixed()));
-            Assert.That(wsRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(wsRanges.First().RangeAddress.ToString(), Is.EqualTo(original.RangeAddress.ToStringFixed()));
+                Assert.That(wsRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            });
         }
 
         [Test]
@@ -374,12 +380,18 @@ namespace ClosedXML.Tests.Excel
             wb.DefinedNames.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
 
             IXLRanges wbRanges = ws.Ranges("TestRange");
-            Assert.That(wbRanges.First().RangeAddress.ToStringFixed(), Is.EqualTo("$A$1:$A$1"));
-            Assert.That(wbRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(wbRanges.First().RangeAddress.ToStringFixed(), Is.EqualTo("$A$1:$A$1"));
+                Assert.That(wbRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            });
 
             IXLRanges wsRanges = ws.Ranges("TestRange");
-            Assert.That(wsRanges.First().RangeAddress.ToStringFixed(), Is.EqualTo("$A$1:$A$1"));
-            Assert.That(wsRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(wsRanges.First().RangeAddress.ToStringFixed(), Is.EqualTo("$A$1:$A$1"));
+                Assert.That(wsRanges.Last().RangeAddress.ToStringFixed(), Is.EqualTo("$A$3:$A$3"));
+            });
         }
 
         [Test]

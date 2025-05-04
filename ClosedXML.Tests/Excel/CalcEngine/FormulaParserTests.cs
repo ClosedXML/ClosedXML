@@ -380,7 +380,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
             var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{1;2,3}"))!;
-            StringAssert.Contains("Rows of an array don't have same size.", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Rows of an array don't have same size."));
         }
 
         [Test]
@@ -389,7 +389,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // XLParser allows @ for number through 'PrefixOp + Number'
             var calcEngine = new XLCalcEngine(CultureInfo.InvariantCulture);
             var ex = Assert.Throws<ExpressionParseException>(() => calcEngine.Parse("{@1}"))!;
-            StringAssert.Contains("Unexpected token INTERSECT.", ex.Message);
+            Assert.That(ex.Message, Does.Contain("Unexpected token INTERSECT."));
         }
 
         [TestCaseSource(nameof(ArrayCases))]

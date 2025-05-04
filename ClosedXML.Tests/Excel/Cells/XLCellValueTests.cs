@@ -647,33 +647,55 @@ namespace ClosedXML.Tests.Excel.Cells
             XLCellValue value = 5;
             Assert.That(value.TryConvert(out double number, c), Is.True);
             Assert.That(number, Is.EqualTo(5.0));
+            
             value = "1,5";
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(1.5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(1.5));
+            });
 
             value = "1 1/4";
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(1.25));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(1.25));
+            });
 
             value = "3.1.1900";
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(3));
+            });
 
             value = true;
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(1.0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(1.0));
+            });
 
             value = false;
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(0.0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(0.0));
+            });
 
             value = new DateTime(2020, 4, 5, 10, 14, 5);
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(43926.42644675926));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(43926.42644675926));
+            });
 
             value = new TimeSpan(18, 0, 0);
-            Assert.That(value.TryConvert(out number, c), Is.True);
-            Assert.That(number, Is.EqualTo(0.75));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value.TryConvert(out number, c), Is.True);
+                Assert.That(number, Is.EqualTo(0.75));
+            });
         }
 
         [Test]

@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel
 
             Assert.That(ws.Column(1).Cell(1).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
             Assert.That(ws.Column(1).Cell(2).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
-            Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Column(1).Cell(3).Style.Fill.BackgroundColor);
+            Assert.That(ws.Column(1).Cell(3).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
 
             Assert.Multiple(() =>
             {

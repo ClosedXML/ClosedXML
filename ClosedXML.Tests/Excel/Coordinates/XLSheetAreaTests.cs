@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             Assert.That(sameSheetIntersection, Is.EqualTo(new XLBookArea("sheet", XLSheetRange.Parse("B2:C3"))));
 
             var differentSheetIntersection = sheetArea1.Intersect(otherSheetArea);
-            Assert.Null(differentSheetIntersection);
+            Assert.That(differentSheetIntersection, Is.Null);
         }
     }
 }

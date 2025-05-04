@@ -35,8 +35,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 }
 
                 var outsideCell = ws.Cell("A3");
-                Assert.IsEmpty(outsideCell.FormulaA1);
-                Assert.Null(outsideCell.FormulaReference);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(outsideCell.FormulaA1, Is.Empty);
+                    Assert.That(outsideCell.FormulaReference, Is.Null);
+                });
             }, @"Other\Formulas\ArrayFormula.xlsx");
         }
 
@@ -71,10 +74,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             foreach (var cell in arrayFormulaRange.Cells())
             {
-                Assert.That(cell.Value, Is.EqualTo(Blank.Value));
-                Assert.False(cell.HasArrayFormula);
-                Assert.IsEmpty(cell.FormulaA1);
-                Assert.Null(cell.FormulaReference);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(cell.Value, Is.EqualTo(Blank.Value));
+                    Assert.False(cell.HasArrayFormula);
+                    Assert.That(cell.FormulaA1, Is.Empty);
+                    Assert.That(cell.FormulaReference, Is.Null);
+                });
             }
         }
 

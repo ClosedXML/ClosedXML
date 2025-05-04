@@ -150,7 +150,7 @@ namespace ClosedXML.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(ws.FirstCell().DataType, Is.EqualTo(XLDataType.Text));
-                Assert.That(ws.FirstCell().GetText().Length, Is.EqualTo(Guid.NewGuid().ToString().Length));
+                Assert.That(ws.FirstCell().GetText(), Has.Length.EqualTo(Guid.NewGuid().ToString().Length));
             });
         }
 
@@ -826,11 +826,11 @@ namespace ClosedXML.Tests
 
             Assert.That(ws.Cell("A10").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("A10:A10"));
             Assert.That(ws.Cell("B5").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("B5:B5"));
-            Assert.AreEqual("P1:P1", ws.Cell("P1").CurrentRegion.RangeAddress.ToString());
+            Assert.That(ws.Cell("P1").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("P1:P1"));
 
-            Assert.AreEqual("B1:D3", ws.Cell("D3").CurrentRegion.RangeAddress.ToString());
-            Assert.AreEqual("B1:D4", ws.Cell("D4").CurrentRegion.RangeAddress.ToString());
-            Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
+            Assert.That(ws.Cell("D3").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("B1:D3"));
+            Assert.That(ws.Cell("D4").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("B1:D4"));
+            Assert.That(ws.Cell("E4").CurrentRegion.RangeAddress.ToString(), Is.EqualTo("B1:E4"));
 
             foreach (var c in ws.Range("B1:D3").Cells())
             {

@@ -372,8 +372,11 @@ namespace ClosedXML.Tests.Excel
             using (XLWorkbook book2 = new XLWorkbook(ms))
             {
                 var ws = book2.Worksheet(1);
-                Assert.That(ws.Cell("A2").NeedsRecalculation, Is.False);
-                Assert.That(ws.Cell("A2").CachedValue, Is.EqualTo(expectedCachedValue));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.Cell("A2").NeedsRecalculation, Is.False);
+                    Assert.That(ws.Cell("A2").CachedValue, Is.EqualTo(expectedCachedValue));
+                });
             }
         }
 
@@ -462,7 +465,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(ws.Cell(1, 1).GetFormattedString(), Is.EqualTo("21 January 2019"));
                 Assert.That(ws.Cell(2, 1).GetFormattedString(), Is.EqualTo("21-Jan-19"));
                 Assert.That(ws.Cell(3, 1).GetFormattedString(), Is.EqualTo("Monday, 21 January 2019"));
-                Assert.AreEqual("21 Jan 2019", ws.Cell(4, 1).GetFormattedString());
+                Assert.That(ws.Cell(4, 1).GetFormattedString(), Is.EqualTo("21 Jan 2019"));
             }, @"TryToLoad\CellsWithDateTimeWithLocalePrefix.xlsx");
         }
 
@@ -496,17 +499,23 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
-                Assert.That(ws.ColumnWidth, Is.EqualTo(8.43).Within(XLHelper.Epsilon));
-                Assert.That(ws.Column(1).Width, Is.EqualTo(8.43).Within(XLHelper.Epsilon));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.ColumnWidth, Is.EqualTo(8.43).Within(XLHelper.Epsilon));
+                    Assert.That(ws.Column(1).Width, Is.EqualTo(8.43).Within(XLHelper.Epsilon));
+                });
             }
 
-            // worksheet has base column width.
+            // the worksheet has base column width.
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\BaseColumnWidth.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
-                Assert.That(ws.ColumnWidth, Is.EqualTo(11.17).Within(XLHelper.Epsilon));
-                Assert.That(ws.Column(1).Width, Is.EqualTo(11.17).Within(XLHelper.Epsilon));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.ColumnWidth, Is.EqualTo(11.17).Within(XLHelper.Epsilon));
+                    Assert.That(ws.Column(1).Width, Is.EqualTo(11.17).Within(XLHelper.Epsilon));
+                });
             }
         }
 
@@ -531,7 +540,7 @@ namespace ClosedXML.Tests.Excel
 
             Assert.That(ws.SelectedRanges, Has.Count.EqualTo(2));
             Assert.That(ws.SelectedRanges.First().RangeAddress.ToString(), Is.EqualTo("B2:B2"));
-            Assert.AreEqual("B2:C2", ws.SelectedRanges.Last().RangeAddress.ToString());
+            Assert.That(ws.SelectedRanges.Last().RangeAddress.ToString(), Is.EqualTo("B2:C2"));
         }
 
         [Test]
@@ -566,18 +575,27 @@ namespace ClosedXML.Tests.Excel
 
             var c = ws.Cell("A1");
             var themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
-            Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent2));
-            Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FFED7D31"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent2));
+                Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FFED7D31"));
+            });
 
             c = ws.Cell("A2");
             themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
-            Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent4));
-            Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FFFFC000"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent4));
+                Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FFFFC000"));
+            });
 
             c = ws.Cell("A3");
             themeColor = c.Style.Fill.BackgroundColor.ThemeColor;
-            Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent6));
-            Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FF70AD47"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(themeColor, Is.EqualTo(XLThemeColor.Accent6));
+                Assert.That(wb.Theme.ResolveThemeColor(themeColor).Color.ToHex(), Is.EqualTo("FF70AD47"));
+            });
         }
 
         [Test]
@@ -588,9 +606,12 @@ namespace ClosedXML.Tests.Excel
             var ws = wb.Worksheet(1);
 
             var c = ws.Cell("B2");
-            Assert.That(c.Style.Border.TopBorderColor.ColorType, Is.EqualTo(XLColorType.Theme));
-            Assert.That(c.Style.Border.TopBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
-            Assert.That(c.Style.Border.TopBorderColor.ThemeTint, Is.EqualTo(0.39994506668294322d).Within(XLHelper.Epsilon));
+            Assert.Multiple(() =>
+            {
+                Assert.That(c.Style.Border.TopBorderColor.ColorType, Is.EqualTo(XLColorType.Theme));
+                Assert.That(c.Style.Border.TopBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(c.Style.Border.TopBorderColor.ThemeTint, Is.EqualTo(0.39994506668294322d).Within(XLHelper.Epsilon));
+            });
         }
 
         [Test]
@@ -600,9 +621,12 @@ namespace ClosedXML.Tests.Excel
             using var wb = new XLWorkbook(stream);
             var ws = wb.Worksheet(1);
 
-            Assert.That(ws.Row(1).Style.Font.FontSize, Is.EqualTo(8));
-            Assert.That(ws.Row(2).Style.Font.FontSize, Is.EqualTo(8));
-            Assert.That(ws.Column("A").Style.Font.FontSize, Is.EqualTo(8));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Row(1).Style.Font.FontSize, Is.EqualTo(8));
+                Assert.That(ws.Row(2).Style.Font.FontSize, Is.EqualTo(8));
+                Assert.That(ws.Column("A").Style.Font.FontSize, Is.EqualTo(8));
+            });
         }
 
         [Test]
@@ -692,7 +716,7 @@ namespace ClosedXML.Tests.Excel
             {
                 var ws = wb.Worksheets.Single();
                 Assert.That(ws.Cell("A1").Style.Font.FontColor, Is.EqualTo(XLColor.FromArgb(0xFF000000)));
-                Assert.AreEqual(XLColor.FromArgb(0xFF000FED), ws.Cell("A2").Style.Fill.BackgroundColor);
+                Assert.That(ws.Cell("A2").Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromArgb(0xFF000FED)));
             }, @"TryToLoad\InvalidColors.xlsx");
         }
 
@@ -715,11 +739,11 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(wb.Worksheet("Sheet1").Cell("A1").Value, Is.EqualTo("Sheet1"));
 
                 // Second sheet doesn't have r:id, so it is empty after load.
-                Assert.AreEqual(Blank.Value, wb.Worksheet("Sheet without relId").Cell("A1").Value);
+                Assert.That(wb.Worksheet("Sheet without relId").Cell("A1").Value, Is.EqualTo(Blank.Value));
 
                 // Third sheet doesn't have r:id and it contains pivot table that is not loaded.
                 var ptSheet = wb.Worksheet("Pivot Sheet without relId");
-                Assert.AreEqual(Blank.Value, ptSheet.Cell("A1").Value);
+                Assert.That(ptSheet.Cell("A1").Value, Is.EqualTo(Blank.Value));
                 Assert.False(ptSheet.PivotTables.Any());
             }, @"TryToLoad\SheetsWithoutRelId.xlsx");
         }
@@ -738,8 +762,8 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(wb.UnsupportedSheets, Has.Count.EqualTo(1));
 
                 // Data and pivot sheets
-                Assert.AreEqual(2, wb.Worksheets.Count);
-                Assert.NotNull(wb.Worksheet("Pivot").PivotTables.Contains("PivotTable1"));
+                Assert.That(wb.Worksheets.Count, Is.EqualTo(2));
+                Assert.That(wb.Worksheet("Pivot").PivotTables.Contains("PivotTable1"), Is.True);
             }, @"TryToLoad\DialogSheet.xlsx");
         }
     }

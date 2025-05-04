@@ -81,7 +81,7 @@ namespace ClosedXML.Tests.Excel.Misc
         {
             var theme = new XLWorkbook().Theme;
             var color = theme.ResolveThemeColor(themeColor);
-            Assert.IsNotNull(color);
+            Assert.That(color, Is.Not.Null);
         }
 
         [Test]

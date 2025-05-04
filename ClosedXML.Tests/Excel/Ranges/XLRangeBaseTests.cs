@@ -219,13 +219,16 @@ namespace ClosedXML.Tests
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
-            Assert.Null(ws.Cell("A1").AsRange().Shrink());
-            Assert.Null(ws.Range("B2:C3").Shrink());
-            Assert.That(ws.Range("B2:D4").Shrink().RangeAddress.ToString(), Is.EqualTo("C3:C3"));
-            Assert.That(ws.Range("A1:Z26").Shrink(10).RangeAddress.ToString(), Is.EqualTo("K11:P16"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").AsRange().Shrink(), Is.Null);
+                Assert.That(ws.Range("B2:C3").Shrink(), Is.Null);
+                Assert.That(ws.Range("B2:D4").Shrink().RangeAddress.ToString(), Is.EqualTo("C3:C3"));
+                Assert.That(ws.Range("A1:Z26").Shrink(10).RangeAddress.ToString(), Is.EqualTo("K11:P16"));
 
-            // Grow and shrink back
-            Assert.That(ws.Cell("Z26").AsRange().Grow(10).Shrink(10).RangeAddress.ToString(), Is.EqualTo("Z26:Z26"));
+                // Grow and shrink back
+                Assert.That(ws.Cell("Z26").AsRange().Grow(10).Shrink(10).RangeAddress.ToString(), Is.EqualTo("Z26:Z26"));
+            });
         }
 
         [Test]
@@ -250,11 +253,11 @@ namespace ClosedXML.Tests
             rangeAddress = (XLRangeAddress)ws.Cell("A1").AsRange().Intersection(ws.Cell("C3").AsRange());
             Assert.That(rangeAddress.IsValid, Is.False);
 
-            Assert.Null(ws.Range("A1:C3").Intersection(null));
+            Assert.That(ws.Range("A1:C3").Intersection(null), Is.Null);
 
             var otherWs = wb.AddWorksheet("Sheet2");
-            Assert.Null(ws.Intersection(otherWs));
-            Assert.Null(ws.Cell("A1").AsRange().Intersection(otherWs.Cell("A2").AsRange()));
+            Assert.That(ws.Intersection(otherWs), Is.Null);
+            Assert.That(ws.Cell("A1").AsRange().Intersection(otherWs.Cell("A2").AsRange()), Is.Null);
         }
 
         [Test]

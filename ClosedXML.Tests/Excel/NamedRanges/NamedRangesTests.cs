@@ -454,9 +454,12 @@ namespace ClosedXML.Tests.Excel
                     Assert.That(nr.RefersTo, Is.EqualTo("'Sheet 1'!$A$5:$D$5,'Sheet 1'!$A$15:$D$15"));
                     Assert.That(nr.Ranges, Has.Count.EqualTo(2));
                 });
-                Assert.That(nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!A5:D5"));
-                Assert.That(nr.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!A15:D15"));
-                Assert.That(nr.SheetReferencesList, Has.Count.EqualTo(2));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!A5:D5"));
+                    Assert.That(nr.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!A15:D15"));
+                    Assert.That(nr.SheetReferencesList, Has.Count.EqualTo(2));
+                });
                 Assert.Multiple(() =>
                 {
                     Assert.That(nr.SheetReferencesList.First(), Is.EqualTo("'Sheet 1'!$A$5:$D$5"));
@@ -579,8 +582,8 @@ namespace ClosedXML.Tests.Excel
             });
             Assert.That(wsCopy.DefinedName("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true),
                 Is.EqualTo("Copy!A3:A3"));
-            Assert.AreEqual("Sheet2!A4:A4",
-                wsCopy.DefinedName("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
+            Assert.That(wsCopy.DefinedName("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true),
+                Is.EqualTo("Sheet2!A4:A4"));
         }
 
         [Test]
@@ -637,8 +640,11 @@ namespace ClosedXML.Tests.Excel
                         Is.EqualTo("'Sheet 1'!A2:D2"));
                 });
 
-                Assert.That(wb.DefinedNames.ElementAt(1).Name, Is.EqualTo("Named range 4"));
-                Assert.That(wb.DefinedNames.ElementAt(1).Scope, Is.EqualTo(XLNamedRangeScope.Workbook));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(wb.DefinedNames.ElementAt(1).Name, Is.EqualTo("Named range 4"));
+                    Assert.That(wb.DefinedNames.ElementAt(1).Scope, Is.EqualTo(XLNamedRangeScope.Workbook));
+                });
                 Assert.Multiple(() =>
                 {
                     Assert.That(wb.DefinedNames.ElementAt(1).RefersTo, Is.EqualTo("#REF!"));
@@ -679,12 +685,12 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(wb.DefinedNames.Contains("Sheet1!NameX"), Is.False);
             });
 
-            Assert.IsNotNull(wb.DefinedName("Sheet1!Name"));
+            Assert.That(wb.DefinedName("Sheet1!Name"), Is.Not.Null);
             Assert.That(wb.DefinedName("Sheet1!NameX"), Is.Null);
 
             Boolean found1 = wb.DefinedNames.TryGetValue("Sheet1!Name", out var definedName1);
             Assert.That(found1, Is.True);
-            Assert.IsNotNull(definedName1);
+            Assert.That(definedName1, Is.Not.Null);
             Assert.That(definedName1.Scope, Is.EqualTo(XLNamedRangeScope.Worksheet));
 
             Boolean found2 = wb.DefinedNames.TryGetValue("Sheet1!NameX", out var definedName2);
@@ -705,12 +711,12 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(wb.DefinedNames.Contains("NameX"), Is.False);
             });
 
-            Assert.IsNotNull(wb.DefinedName("Name"));
+            Assert.That(wb.DefinedName("Name"), Is.Not.Null);
             Assert.That(wb.DefinedName("NameX"), Is.Null);
 
             Boolean found1 = wb.DefinedNames.TryGetValue("Name", out var definedName1);
             Assert.That(found1, Is.True);
-            Assert.IsNotNull(definedName1);
+            Assert.That(definedName1, Is.Not.Null);
 
             Boolean found2 = wb.DefinedNames.TryGetValue("NameX", out var definedName2);
             Assert.That(found2, Is.False);
@@ -730,12 +736,12 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(ws.DefinedNames.Contains("NameX"), Is.False);
             });
 
-            Assert.IsNotNull(ws.DefinedName("Name"));
+            Assert.That(ws.DefinedName("Name"), Is.Not.Null);
             Assert.Throws<KeyNotFoundException>(() => ws.DefinedName("NameX"));
 
             Boolean found1 = ws.DefinedNames.TryGetValue("Name", out var definedName1);
             Assert.That(found1, Is.True);
-            Assert.IsNotNull(definedName1);
+            Assert.That(definedName1, Is.Not.Null);
 
             Boolean found2 = ws.DefinedNames.TryGetValue("NameX", out var definedName2);
             Assert.That(found2, Is.False);

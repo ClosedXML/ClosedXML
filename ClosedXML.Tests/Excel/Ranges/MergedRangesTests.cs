@@ -38,7 +38,7 @@ namespace ClosedXML.Tests
             ws.Column(2).InsertColumnsAfter(2);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(1));
+            Assert.That(mr, Has.Length.EqualTo(1));
             Assert.Multiple(() =>
             {
                 Assert.That(mr.Single(), Is.SameAs(range));
@@ -60,7 +60,7 @@ namespace ClosedXML.Tests
             ws.Row(2).InsertRowsBelow(2);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(1));
+            Assert.That(mr, Has.Length.EqualTo(1));
             Assert.Multiple(() =>
             {
                 Assert.That(mr.Single(), Is.SameAs(range));
@@ -84,7 +84,7 @@ namespace ClosedXML.Tests
             var mr = ws.MergedRanges.ToArray();
             if (expectedExist)
             {
-                Assert.That(mr.Length, Is.EqualTo(1));
+                Assert.That(mr, Has.Length.EqualTo(1));
                 Assert.Multiple(() =>
                 {
                     Assert.That(mr.Single(), Is.SameAs(range));
@@ -117,7 +117,7 @@ namespace ClosedXML.Tests
             var mr = ws.MergedRanges.ToArray();
             if (expectedExist)
             {
-                Assert.That(mr.Length, Is.EqualTo(1));
+                Assert.That(mr, Has.Length.EqualTo(1));
                 Assert.Multiple(() =>
                 {
                     Assert.That(mr.Single(), Is.SameAs(range));
@@ -149,7 +149,7 @@ namespace ClosedXML.Tests
             ws.Range("D3:E4").InsertColumnsAfter(2);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(4));
+            Assert.That(mr, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(mr[0].RangeAddress.ToString(), Is.EqualTo("H1:I2"));
@@ -174,7 +174,7 @@ namespace ClosedXML.Tests
             ws.Range("D3:E4").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(4));
+            Assert.That(mr, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(mr[0].RangeAddress.ToString(), Is.EqualTo("H1:I2"));
@@ -199,7 +199,7 @@ namespace ClosedXML.Tests
             ws.Range("C4:D5").InsertRowsBelow(2);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(4));
+            Assert.That(mr, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(mr[0].RangeAddress.ToString(), Is.EqualTo("B2:C3"));
@@ -224,7 +224,7 @@ namespace ClosedXML.Tests
             ws.Range("C4:D5").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
             var mr = ws.MergedRanges.ToArray();
-            Assert.That(mr.Length, Is.EqualTo(4));
+            Assert.That(mr, Has.Length.EqualTo(4));
             Assert.Multiple(() =>
             {
                 Assert.That(mr[0].RangeAddress.ToString(), Is.EqualTo("B2:C3"));
