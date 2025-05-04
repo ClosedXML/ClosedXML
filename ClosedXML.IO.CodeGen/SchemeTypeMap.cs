@@ -40,14 +40,15 @@ internal class SchemeTypeMap
 
     private void AddSimpleTypeTemplate(string typeName, bool isRequired, string methodTemplate, string cSharpTypeName)
     {
+        // Simple type can be added multiple types for optional and required templates
         if (!_simpleTypeMap.TryGetValue(typeName, out var existingCSharpType))
         {
-            _simpleTypeMap.TryAdd(typeName, cSharpTypeName);
+            _simpleTypeMap.Add(typeName, cSharpTypeName);
         }
         else
         {
             if (cSharpTypeName != existingCSharpType)
-                throw new InvalidOperationException($"Adding XML type {typeName} should be mapped to {cSharpTypeName}, but is already mapped to {existingCSharpType}.");
+                throw new InvalidOperationException($"The XML type {typeName} should be mapped to {cSharpTypeName}, but is already mapped to {existingCSharpType}.");
         }
 
         var typeTemplate = isRequired ? _requiredSimpleTypeTemplate : _optionalSimpleTypeTemplate;
