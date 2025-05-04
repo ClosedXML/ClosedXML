@@ -40,6 +40,10 @@ public class Program
                 Console.WriteLine($"Wrote copy to {outputFile}");
                 break;
 
+            case "styles":
+                GenerateStylesReader(schema);
+                break;
+
             case "cache-records":
                 GenerateCacheRecords(schema);
                 break;
@@ -50,6 +54,28 @@ public class Program
         }
 
         Console.ReadKey();
+    }
+
+    private static void GenerateStylesReader(Schema schema)
+    {
+        var typeMap = new SchemeTypeMap()
+            .AddPrimitiveTypes()
+            .AddSimpleTypeRequired<uint>("ST_NumFmtId", "_reader.GetUInt(\"{0}\")")
+            ;
+
+        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesPartReader1", "_ns");
+
+        stylesReaderGenerator
+            .AddParseMethod("CT_Stylesheet")
+            .AddParseMethod("CT_NumFmts")
+            .AddParseMethod("CT_NumFmt")
+            .AddParseMethod("CT_Fonts")
+            .AddParseMethod("CT_Font")
+            .AddParseMethod("CT_FontName")
+            ;
+
+        var cacheRecordsSource = stylesReaderGenerator.Generate();
+        Console.WriteLine(cacheRecordsSource);
     }
 
     private static void GenerateCacheRecords(Schema schema)
