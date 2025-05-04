@@ -61,17 +61,11 @@ public class Program
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes()
             .AddSimpleTypeRequired("ST_NumFmtId", "_reader.GetUInt(\"{0}\")", "uint")
+            .AddSimpleTypeOptional("ST_PatternType", "_reader.GetOptionalEnum<XLFillPatternValues>(\"{0}\")", "XLFillPatternValues")
             ;
 
-        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesPartReader1", "_ns");
-
-        stylesReaderGenerator
-            .AddParseMethod("CT_Stylesheet")
-            .AddParseMethod("CT_NumFmts")
-            .AddParseMethod("CT_NumFmt")
-            .AddParseMethod("CT_Fonts")
-            .AddParseMethod("CT_Font")
-            .AddParseMethod("CT_FontName")
+        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesPartReader", "_ns")
+            .AddParseMethod("CT_PatternFill")
             ;
 
         var cacheRecordsSource = stylesReaderGenerator.Generate();
