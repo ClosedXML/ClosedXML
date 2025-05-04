@@ -5,18 +5,19 @@ using ClosedXML.IO.CodeGen.Model;
 
 namespace ClosedXML.IO.CodeGen;
 
-public class ParserGenerator
+internal class ParserGenerator
 {
     private readonly Schema _schema;
     private readonly string _readerName;
     private readonly string _namespaceField;
     private readonly List<string> _parseMethods = new();
-    private readonly SchemeTypeMap _typeMap = new();
+    private readonly SchemeTypeMap _typeMap;
     private string _targetNamespace = "ClosedXML.Excel.IO";
 
-    public ParserGenerator(Schema schema, string readerField, string nsVariable)
+    internal ParserGenerator(Schema schema, SchemeTypeMap typeMap, string readerField, string nsVariable)
     {
         _schema = schema;
+        _typeMap = typeMap;
         _readerName = readerField;
         _namespaceField = nsVariable;
     }
@@ -34,18 +35,6 @@ public class ParserGenerator
     public ParserGenerator AddParseMethod(string complexTypeName)
     {
         _parseMethods.Add(complexTypeName);
-        return this;
-    }
-
-    public ParserGenerator AddSimpleTypeRequired<CSharpType>(string typeName, string methodTemplate)
-    {
-        _typeMap.AddSimpleTypeTemplate<CSharpType>(typeName, true, methodTemplate);
-        return this;
-    }
-
-    public ParserGenerator AddSimpleTypeOptional<CSharpType>(string typeName, string methodTemplate)
-    {
-        _typeMap.AddSimpleTypeTemplate<CSharpType>(typeName, false, methodTemplate);
         return this;
     }
 

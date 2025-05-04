@@ -1,4 +1,4 @@
-﻿using ClosedXML.IO.CodeGen.Model;
+using ClosedXML.IO.CodeGen.Model;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +26,19 @@ internal class SchemeTypeMap
     /// </summary>
     private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
 
-    internal void AddSimpleTypeTemplate<CSharpType>(string typeName, bool isRequired, string methodTemplate)
+    internal SchemeTypeMap AddSimpleTypeRequired<CSharpType>(string typeName, string methodTemplate)
+    {
+        AddSimpleTypeTemplate<CSharpType>(typeName, true, methodTemplate);
+        return this;
+    }
+
+    internal SchemeTypeMap AddSimpleTypeOptional<CSharpType>(string typeName, string methodTemplate)
+    {
+        AddSimpleTypeTemplate<CSharpType>(typeName, false, methodTemplate);
+        return this;
+    }
+
+    private void AddSimpleTypeTemplate<CSharpType>(string typeName, bool isRequired, string methodTemplate)
     {
         RegisterTypeMapping<CSharpType>(typeName, isRequired);
 
