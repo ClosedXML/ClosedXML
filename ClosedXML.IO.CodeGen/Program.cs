@@ -55,17 +55,7 @@ public class Program
     private static void GenerateCacheRecords(Schema schema)
     {
         var typeMap = new SchemeTypeMap()
-            .AddSimpleTypeRequired<uint>("xsd:unsignedInt", "_reader.GetUInt(\"{0}\")")
-            .AddSimpleTypeOptional<int?>("xsd:int", "_reader.GetOptionalInt(\"{0}\")")
-            .AddSimpleTypeRequired<bool>("xsd:boolean", "_reader.GetBool(\"{0}\")")
-            .AddSimpleTypeOptional<bool?>("xsd:boolean", "_reader.GetOptionalBool(\"{0}\")")
-            .AddSimpleTypeOptional<string?>("s:ST_Xstring", "_reader.GetOptionalXString(\"{0}\")")
-            .AddSimpleTypeRequired<string>("s:ST_Xstring", "_reader.GetXString(\"{0}\")")
-            .AddSimpleTypeOptional<uint?>("xsd:unsignedInt", "_reader.GetOptionalUInt(\"{0}\")")
-            .AddSimpleTypeRequired<DateTime>("xsd:dateTime", "_reader.GetDateTime(\"{0}\")")
-            .AddSimpleTypeOptional<uint?>("ST_UnsignedIntHex", "_reader.GetOptionalUIntHex(\"{0}\")")
-            .AddSimpleTypeRequired<double>("xsd:double", "_reader.GetDouble(\"{0}\")")
-            ;
+            .AddPrimitiveTypes();
 
         var cacheRecordsGenerator = new ParserGenerator(schema, typeMap, "PivotCacheRecordsReader", "_ns")
                 .WithNamespace("ClosedXML.Excel.IO")
