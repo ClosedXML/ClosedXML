@@ -60,7 +60,7 @@ public class Program
     {
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes()
-            .AddSimpleTypeRequired<uint>("ST_NumFmtId", "_reader.GetUInt(\"{0}\")")
+            .AddSimpleTypeRequired("ST_NumFmtId", "_reader.GetUInt(\"{0}\")", "uint")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesPartReader1", "_ns");
