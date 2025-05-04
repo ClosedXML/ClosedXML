@@ -1,6 +1,7 @@
 using ClosedXML.IO.CodeGen.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.IO.CodeGen;
 
@@ -11,6 +12,12 @@ internal class SchemeTypeMap
     /// namespace). The type is never nullable, nullability is determined by other XML attributes.
     /// </summary>
     private readonly Dictionary<string, string> _simpleTypeMap = new();
+
+    /// <summary>
+    /// Map of XML complex type name to C# type (as a text). If there isn't a record in the map,
+    /// complex type isn't mapped to C# type and returns <c>void</c>.
+    /// </summary>
+    private readonly Dictionary<string, string> _complexTypeMap = new();
 
     /// <summary>
     /// Templates for required attributes in XML. The key is XML simple type name, the value is a
@@ -25,6 +32,12 @@ internal class SchemeTypeMap
     /// that is substituted with a name of an attribute.
     /// </summary>
     private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
+
+    internal SchemeTypeMap AddComplexTypeMapping(string typeName, string cSharpType)
+    {
+        _complexTypeMap.Add(typeName, cSharpType);
+        return this;
+    }
 
     internal SchemeTypeMap AddSimpleTypeRequired(string typeName, string methodTemplate, string cSharpTypeName)
     {
@@ -69,6 +82,11 @@ internal class SchemeTypeMap
             throw new InvalidOperationException($"Simple type {typeName} ({(isOptional ? "optional" : "required")}) doesn't have defined template.");
 
         return string.Format(methodTemplate, attribute.Name);
+    }
+
+    internal bool TryGetComplexTypeCsType(string complexType, [NotNullWhen(true)] out string? csType)
+    {
+        return _complexTypeMap.TryGetValue(complexType, out csType);
     }
 
     public SchemeTypeMap AddPrimitiveTypes()

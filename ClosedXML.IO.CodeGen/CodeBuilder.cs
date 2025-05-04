@@ -1,6 +1,7 @@
 using ClosedXML.IO.CodeGen.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ClosedXML.IO.CodeGen;
@@ -89,6 +90,16 @@ internal class CodeBuilder
         return typeName[CtPrefix.Length..];
     }
 
+    internal string GetSimpleType(string simpleType)
+    {
+        return _typeMap.GetSimpleTypeName(simpleType);
+    }
+
+    internal bool TryGetComplexType(string complexType, [NotNullWhen(true)] out string? csType)
+    {
+        return _typeMap.TryGetComplexTypeCsType(complexType, out csType);
+    }
+
     internal CodeBuilder AppendComplexType(string typeName)
     {
         _sb.Append(NormalizeCt(typeName));
@@ -99,24 +110,6 @@ internal class CodeBuilder
     {
         var codeFragment = _typeMap.GetSimpleTypeMethod(attribute);
         return Append(codeFragment);
-    }
-
-    internal CodeBuilder AppendSimpleType(AttributeElement attribute)
-    {
-        AppendSimpleType(attribute.Type!);
-
-        var isOptional = attribute.Use is AttributeUseType.Default or AttributeUseType.Optional;
-        var nullable = isOptional && attribute.DefaultValue is null;
-        if (nullable)
-            _sb.Append('?');
-
-        return this;
-    }
-
-    private void AppendSimpleType(string typeName)
-    {
-        var cSharpTypeName = _typeMap.GetSimpleTypeName(typeName);
-        _sb.Append(cSharpTypeName);
     }
 
     private void AddIndentedLine(string text)

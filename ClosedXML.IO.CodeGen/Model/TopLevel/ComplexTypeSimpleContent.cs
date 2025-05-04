@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
@@ -22,7 +24,7 @@ public class ComplexTypeSimpleContent : ComplexType, INode
         return visitor.Visit(this);
     }
 
-    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
         throw new System.NotImplementedException();
     }

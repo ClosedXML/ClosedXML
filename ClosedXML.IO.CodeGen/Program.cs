@@ -62,9 +62,10 @@ public class Program
             .AddPrimitiveTypes()
             .AddSimpleTypeRequired("ST_NumFmtId", "_reader.GetUInt(\"{0}\")", "uint")
             .AddSimpleTypeOptional("ST_PatternType", "_reader.GetOptionalEnum<XLFillPatternValues>(\"{0}\")", "XLFillPatternValues")
+            .AddComplexTypeMapping("CT_Color", "XLColor")
             ;
 
-        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesPartReader", "_ns")
+        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
             .AddParseMethod("CT_PatternFill")
             ;
 

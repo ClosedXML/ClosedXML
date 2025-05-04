@@ -1,5 +1,6 @@
-﻿using ClosedXML.IO.CodeGen.Model.Elements;
+using ClosedXML.IO.CodeGen.Model.Elements;
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -27,7 +28,7 @@ public class ComplexTypeChoice : ComplexType, INode
         return visitor.Visit(this);
     }
 
-    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
         var min = Choice.Occurrences.Min ?? 1;
         var max = Choice.Occurrences.Max ?? 1;
@@ -60,5 +61,7 @@ public class ComplexTypeChoice : ComplexType, INode
         {
             throw new NotImplementedException($"{min}-{max} choice is not implemented.");
         }
+
+        return [];
     }
 }

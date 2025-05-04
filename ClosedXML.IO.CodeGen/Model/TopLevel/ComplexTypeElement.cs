@@ -1,4 +1,6 @@
-﻿namespace ClosedXML.IO.CodeGen.Model.TopLevel;
+using System.Collections.Generic;
+
+namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
 /// <summary>
 /// <c><![CDATA[<xsd:complexType/>]]></c> inside <c><![CDATA[<xsd:schema/>]]></c>. It doesn't have
@@ -11,8 +13,9 @@ public class ComplexTypeElement : ComplexType, INode
         return visitor.Visit(this);
     }
 
-    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
         code.AddLine($"_reader.Close(elementName, {namespaceField});");
+        return [];
     }
 }

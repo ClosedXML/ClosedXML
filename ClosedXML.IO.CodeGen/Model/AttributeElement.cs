@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace ClosedXML.IO.CodeGen.Model;
 
@@ -28,12 +28,16 @@ public class AttributeElement : INode
 
     public string? DefaultValue { get; set; }
 
+    internal bool IsOptional => Use is AttributeUseType.Default or AttributeUseType.Optional;
+
+    internal bool CanBeNull => IsOptional && DefaultValue is null;
+
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
 
-    internal void Generate(CodeBuilder code)
+    internal Variable Generate(CodeBuilder code)
     {
         Debug.Assert(Name is not null);
         Debug.Assert(Type is not null);
@@ -41,5 +45,8 @@ public class AttributeElement : INode
         if (DefaultValue is not null)
             code.Append(" ?? ").Append(DefaultValue);
         code.Append(";").EndLine();
+
+        var csType = CanBeNull ? code.GetSimpleType(Type) + '?' : code.GetSimpleType(Type);
+        return new Variable(csType, Name);
     }
 }

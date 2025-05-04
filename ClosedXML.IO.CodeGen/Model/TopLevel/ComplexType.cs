@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model.Elements;
 
@@ -24,13 +24,15 @@ public abstract class ComplexType : IReferencable
 
     internal void Generate(CodeBuilder code, string namespaceField)
     {
+        var attributeVariables = new List<Variable>();
         code.StartMethod("void Parse{0}(string elementName)", Name);
         code.OpenBrace();
         foreach (var oneOfAttribute in Attributes)
         {
             if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
             {
-                attribute.Generate(code);
+                var attributeVariable = attribute.Generate(code);
+                attributeVariables.Add(attributeVariable);
             }
             else
             {
@@ -38,57 +40,45 @@ public abstract class ComplexType : IReferencable
             }
         }
 
-        GenerateParseMethod(code, namespaceField);
-        CallListener(code);
+        var elementVariables = GenerateParseMethod(code, namespaceField);
+        List<Variable> dataVariables = [.. elementVariables, .. attributeVariables];
+        CallListener(code, dataVariables);
         code.CloseBrace();
 
-        AddPartialMethodSignature(code, Name);
+        AddPartialMethodSignature(code, Name, dataVariables);
     }
 
-    internal abstract void GenerateParseMethod(CodeBuilder code, string namespaceField);
+    internal abstract List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField);
 
-    private void CallListener(CodeBuilder code)
+    private void CallListener(CodeBuilder code, IReadOnlyList<Variable> arguments)
     {
         code.WriteIndent().Append("On").AppendComplexType(Name).Append("Parsed(");
         var isFirst = true;
-        foreach (var oneOfAttribute in Attributes)
+        foreach (var variable in arguments)
         {
-            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-            {
-                if (!isFirst)
-                    code.Append(", ");
-                code.AppendVariable(attribute.Name!);
-                isFirst = false;
-            }
-            else
-            {
-                throw new NotImplementedException($"Attribute group ({attributeGroup.RefName}) not yet implemented.");
-            }
+            if (!isFirst)
+                code.Append(", ");
+
+            code.AppendVariable(variable.Name);
+            isFirst = false;
         }
 
         code.Append(");").EndLine();
     }
 
-    private void AddPartialMethodSignature(CodeBuilder code, string typeName)
+    private void AddPartialMethodSignature(CodeBuilder code, string typeName, IReadOnlyList<Variable> parameters)
     {
         code.EndLine();
-        code.WriteIndent().Append($"partial void On").AppendComplexType(typeName).Append("Parsed(");
+        code.WriteIndent().Append("partial void On").AppendComplexType(typeName).Append("Parsed(");
 
         var isFirst = true;
-        foreach (var oneOfAttribute in Attributes)
+        foreach (var parameter in parameters)
         {
-            if (oneOfAttribute.TryPickT1(out var attribute, out var attributeGroup))
-            {
-                if (!isFirst)
-                    code.Append(", ");
+            if (!isFirst)
+                code.Append(", ");
 
-                code.AppendSimpleType(attribute).Append(" ").AppendVariable(attribute.Name!);
-                isFirst = false;
-            }
-            else
-            {
-                throw new NotImplementedException($"Attribute group ({attributeGroup.RefName}) not yet implemented.");
-            }
+            code.Append(parameter.Type).Append(" ").AppendVariable(parameter.Name);
+            isFirst = false;
         }
 
         code.Append(");").EndLine();

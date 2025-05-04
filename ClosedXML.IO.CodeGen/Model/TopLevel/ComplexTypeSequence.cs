@@ -1,5 +1,6 @@
-﻿using ClosedXML.IO.CodeGen.Model.Elements;
+using ClosedXML.IO.CodeGen.Model.Elements;
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -27,8 +28,9 @@ public class ComplexTypeSequence : ComplexType, INode
         return visitor.Visit(this);
     }
 
-    internal override void GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
+        var dataVariables = new List<Variable>();
         var min = Sequence.Occurrences.Min ?? 1;
         var max = Sequence.Occurrences.Max ?? 1;
         if (min == 1 && max == 1)
@@ -37,7 +39,9 @@ public class ComplexTypeSequence : ComplexType, INode
             {
                 if (element is ElementType elementType)
                 {
-                    elementType.Generate(code, namespaceField);
+                    var variable = elementType.Generate(code, namespaceField);
+                    if (variable is not null)
+                        dataVariables.Add(variable);
                 }
                 else
                 {
@@ -51,5 +55,6 @@ public class ComplexTypeSequence : ComplexType, INode
         }
 
         code.AddLine($"_reader.Close(elementName, {namespaceField});");
+        return dataVariables;
     }
 }
