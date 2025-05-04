@@ -49,7 +49,7 @@ public class Program
                 break;
 
             default:
-                Console.WriteLine($"Unknown command '{args[1]}'");
+                Console.WriteLine($"Unknown command '{command}'");
                 break;
         }
 
@@ -68,8 +68,8 @@ public class Program
             .AddParseMethod("CT_PatternFill")
             ;
 
-        var cacheRecordsSource = stylesReaderGenerator.Generate();
-        Console.WriteLine(cacheRecordsSource);
+        var stylesReaderSource = stylesReaderGenerator.Generate();
+        Console.WriteLine(stylesReaderSource);
     }
 
     private static void GenerateCacheRecords(Schema schema)
@@ -78,20 +78,20 @@ public class Program
             .AddPrimitiveTypes();
 
         var cacheRecordsGenerator = new ParserGenerator(schema, typeMap, "PivotCacheRecordsReader", "_ns")
-                .WithNamespace("ClosedXML.Excel.IO")
+            .WithNamespace("ClosedXML.Excel.IO")
 
-                // CT_PivotCacheRecords - hand-coded
-                .AddParseMethod("CT_Record")
-                .AddParseMethod("CT_Missing")
-                .AddParseMethod("CT_Number")
-                .AddParseMethod("CT_Boolean")
-                .AddParseMethod("CT_Error")
-                .AddParseMethod("CT_String")
-                .AddParseMethod("CT_DateTime")
-                .AddParseMethod("CT_Index")
-                .AddParseMethod("CT_X")
-                .AddParseMethod("CT_Tuples")
-                .AddParseMethod("CT_Tuple")
+            // CT_PivotCacheRecords - hand-coded
+            .AddParseMethod("CT_Record")
+            .AddParseMethod("CT_Missing")
+            .AddParseMethod("CT_Number")
+            .AddParseMethod("CT_Boolean")
+            .AddParseMethod("CT_Error")
+            .AddParseMethod("CT_String")
+            .AddParseMethod("CT_DateTime")
+            .AddParseMethod("CT_Index")
+            .AddParseMethod("CT_X")
+            .AddParseMethod("CT_Tuples")
+            .AddParseMethod("CT_Tuple")
             ;
 
         var cacheRecordsSource = cacheRecordsGenerator.Generate();
