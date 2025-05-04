@@ -19,7 +19,7 @@ public class XLHyperlinksTests
 
         structuralChange(ws);
 
-        Assert.False(ws.Cell(hyperlinkPosition).HasHyperlink);
+        Assert.That(ws.Cell(hyperlinkPosition).HasHyperlink, Is.False);
         Assert.That(hyperlink, Is.SameAs(ws.Cell(expectedPosition).GetHyperlink()));
     }
 

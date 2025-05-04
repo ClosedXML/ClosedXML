@@ -170,7 +170,7 @@ namespace ClosedXML.Tests.Excel
             var r = wb.Ranges(rangesAddress);
 
             Assert.That(r, Is.Not.Null);
-            Assert.False(r.Any());
+            Assert.That(r.Any(), Is.False);
         }
 
         [Test]

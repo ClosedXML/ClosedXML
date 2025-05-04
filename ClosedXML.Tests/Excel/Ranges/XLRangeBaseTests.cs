@@ -279,8 +279,8 @@ namespace ClosedXML.Tests
             });
 
             var otherWs = wb.AddWorksheet("Sheet2");
-            Assert.False(ws.Union(otherWs).Any());
-            Assert.False(ws.Cell("A1").AsRange().Union(otherWs.Cell("A2").AsRange()).Any());
+            Assert.That(ws.Union(otherWs).Any(), Is.False);
+            Assert.That(ws.Cell("A1").AsRange().Union(otherWs.Cell("A2").AsRange()).Any(), Is.False);
         }
 
         [Test]
@@ -302,8 +302,8 @@ namespace ClosedXML.Tests
             });
 
             var otherWs = wb.AddWorksheet("Sheet2");
-            Assert.False(ws.Difference(otherWs).Any());
-            Assert.False(ws.Cell("A1").AsRange().Difference(otherWs.Cell("A2").AsRange()).Any());
+            Assert.That(ws.Difference(otherWs).Any(), Is.False);
+            Assert.That(ws.Cell("A1").AsRange().Difference(otherWs.Cell("A2").AsRange()).Any(), Is.False);
         }
 
         [Test]

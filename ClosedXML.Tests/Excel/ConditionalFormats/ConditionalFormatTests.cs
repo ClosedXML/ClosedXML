@@ -151,7 +151,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             {
                 var cf = ws.ConditionalFormats.Single(cf => cf.ConditionalFormatType == XLConditionalFormatType.Expression && cf.Range.RangeAddress.ToString() == range);
                 Assert.That(cf.Values, Has.Count.EqualTo(1));
-                Assert.That(cf.Values[1].Value, Is.EqualTo(expectedFormula).AsCollection);
+                Assert.That(cf.Values[1].Value, Is.EqualTo(expectedFormula));
             }
         }
     }

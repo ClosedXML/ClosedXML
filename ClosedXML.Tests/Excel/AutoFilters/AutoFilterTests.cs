@@ -212,7 +212,7 @@ namespace ClosedXML.Tests
 
             // Unhide the rows so that the table is out of sync with the filter
             autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
-            Assert.False(autoFilter.HiddenRows.Any());
+            Assert.That(autoFilter.HiddenRows.Any(), Is.False);
 
             autoFilter.Reapply();
             Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(3));

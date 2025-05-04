@@ -143,8 +143,8 @@ namespace ClosedXML.Tests.Excel.PivotTables
                 Assert.That(pt.RowLabels.Contains("id"), Is.True);
                 Assert.That(pt.RowLabels.Contains(idField), Is.True);
             });
-            Assert.False(pt.RowLabels.Contains("color"));
-            Assert.False(pt.RowLabels.Contains("nonexistent"));
+            Assert.That(pt.RowLabels.Contains("color"), Is.False);
+            Assert.That(pt.RowLabels.Contains("nonexistent"), Is.False);
         }
 
         #endregion

@@ -316,17 +316,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var cell = sheet.Cell("B3");
             cell.FormulaA1 = "HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")";
             Assert.That(cell.Value, Is.EqualTo("http://github.com/ClosedXML/ClosedXML"));
-            Assert.False(cell.HasHyperlink);
+            Assert.That(cell.HasHyperlink, Is.False);
 
             cell = sheet.Cell("B4");
             cell.FormulaA1 = "HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")";
             Assert.That(cell.Value, Is.EqualTo("jsmith@github.com"));
-            Assert.False(cell.HasHyperlink);
+            Assert.That(cell.HasHyperlink, Is.False);
 
             cell = sheet.Cell("B5");
             cell.FormulaA1 = "HYPERLINK(\"[Test.xlsx]Sheet1!A5\", \"Cell A5\")";
             Assert.That(cell.Value, Is.EqualTo("Cell A5"));
-            Assert.False(cell.HasHyperlink);
+            Assert.That(cell.HasHyperlink, Is.False);
         }
 
         [Test]

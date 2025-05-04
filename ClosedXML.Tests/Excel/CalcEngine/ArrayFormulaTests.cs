@@ -77,7 +77,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.Multiple(() =>
                 {
                     Assert.That(cell.Value, Is.EqualTo(Blank.Value));
-                    Assert.False(cell.HasArrayFormula);
+                    Assert.That(cell.HasArrayFormula, Is.False);
                     Assert.That(cell.FormulaA1, Is.Empty);
                     Assert.That(cell.FormulaReference, Is.Null);
                 });
@@ -145,8 +145,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            Assert.False(ws.Cell("A1").NeedsRecalculation);
-            Assert.False(ws.Cell("A2").NeedsRecalculation);
+            Assert.That(ws.Cell("A1").NeedsRecalculation, Is.False);
+            Assert.That(ws.Cell("A2").NeedsRecalculation, Is.False);
 
             ws.Range("A1:A2").FormulaArrayA1 = "ABS(-3)";
 

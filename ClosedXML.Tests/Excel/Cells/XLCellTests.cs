@@ -1094,14 +1094,14 @@ namespace ClosedXML.Tests
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             Assert.That(ws.ActiveCell, Is.Null);
-            Assert.False(ws.Cell(1, 1).Active);
+            Assert.That(ws.Cell(1, 1).Active, Is.False);
 
             ws.ActiveCell = ws.Cell("C4");
             Assert.That(ws.Cell("C4").Active, Is.True);
-            Assert.False(ws.Cell("C5").Active);
+            Assert.That(ws.Cell("C5").Active, Is.False);
 
             ws.ActiveCell = null;
-            Assert.False(ws.Cell("C4").Active);
+            Assert.That(ws.Cell("C4").Active, Is.False);
         }
 
         [Test]

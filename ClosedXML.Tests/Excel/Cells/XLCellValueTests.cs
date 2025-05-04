@@ -530,10 +530,10 @@ namespace ClosedXML.Tests.Excel.Cells
         public void UnifiedNumber_IsFormOf_Number_DateTime_And_TimeSpan()
         {
             XLCellValue value = Blank.Value;
-            Assert.False(value.IsUnifiedNumber);
+            Assert.That(value.IsUnifiedNumber, Is.False);
 
             value = true;
-            Assert.False(value.IsUnifiedNumber);
+            Assert.That(value.IsUnifiedNumber, Is.False);
 
             value = 14;
             Assert.Multiple(() =>
@@ -557,10 +557,10 @@ namespace ClosedXML.Tests.Excel.Cells
             });
 
             value = "Text";
-            Assert.False(value.IsUnifiedNumber);
+            Assert.That(value.IsUnifiedNumber, Is.False);
 
             value = XLError.CellReference;
-            Assert.False(value.IsUnifiedNumber);
+            Assert.That(value.IsUnifiedNumber, Is.False);
         }
 
         [TestCase("1900-01-01", 1)]
@@ -629,11 +629,11 @@ namespace ClosedXML.Tests.Excel.Cells
 
             value = "False";
             Assert.That(value.TryConvert(out boolean), Is.True);
-            Assert.False(boolean);
+            Assert.That(boolean, Is.False);
 
             value = 0;
             Assert.That(value.TryConvert(out boolean), Is.True);
-            Assert.False(boolean);
+            Assert.That(boolean, Is.False);
 
             value = 0.001;
             Assert.That(value.TryConvert(out boolean), Is.True);
@@ -711,7 +711,7 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.That(dt, Is.EqualTo(new DateTime(9999, 12, 31)));
 
             v = lastSerialDate + 1;
-            Assert.False(v.TryConvert(out dt));
+            Assert.That(v.TryConvert(out dt), Is.False);
 
             v = new TimeSpan(14, 0, 0, 0);
             Assert.That(v.TryConvert(out dt), Is.True);

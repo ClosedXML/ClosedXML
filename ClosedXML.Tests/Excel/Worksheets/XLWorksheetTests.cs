@@ -1323,7 +1323,7 @@ namespace ClosedXML.Tests
             Assert.That(sut.Cell("A1").NeedsRecalculation, Is.False);
             Assert.That(sut.Cell("A1").CachedValue, Is.EqualTo(15.0));
 
-            Assert.False(sut.Cell("A2").NeedsRecalculation);
+            Assert.That(sut.Cell("A2").NeedsRecalculation, Is.False);
             Assert.That(sut.Cell("A2").CachedValue, Is.EqualTo(3.0));
         }
 

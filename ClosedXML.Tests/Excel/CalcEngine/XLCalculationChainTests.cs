@@ -195,7 +195,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
             });
 
-            Assert.False(chain.MoveAhead());
+            Assert.That(chain.MoveAhead(), Is.False);
             Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
         }
 
@@ -248,7 +248,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // A1 is no longer in a current, because current position is 2, but last position
             // of A1 was 1 => there has been a processed node in the meantime.
-            Assert.False(chain.IsCurrentInCycle);
+            Assert.That(chain.IsCurrentInCycle, Is.False);
 
             chain.MoveToCurrent(b1);
             Assert.Multiple(() =>
@@ -256,7 +256,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, b1, a1 }).AsCollection);
                 Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
             });
-            Assert.False(chain.IsCurrentInCycle);
+            Assert.That(chain.IsCurrentInCycle, Is.False);
 
             chain.MoveToCurrent(a1);
             Assert.Multiple(() =>
@@ -272,7 +272,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
                 Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
             });
-            Assert.False(chain.IsCurrentInCycle);
+            Assert.That(chain.IsCurrentInCycle, Is.False);
 
             chain.MoveAhead();
             Assert.Multiple(() =>

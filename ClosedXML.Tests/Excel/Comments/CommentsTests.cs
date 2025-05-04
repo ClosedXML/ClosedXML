@@ -174,7 +174,7 @@ namespace ClosedXML.Tests.Excel.Comments
             var ws = workbook.Worksheets.First();
 
             Assert.That(ws.Cell("A1").GetComment().Visible, Is.True);
-            Assert.False(ws.Cell("A4").GetComment().Visible);
+            Assert.That(ws.Cell("A4").GetComment().Visible, Is.False);
         }
 
         [Test]

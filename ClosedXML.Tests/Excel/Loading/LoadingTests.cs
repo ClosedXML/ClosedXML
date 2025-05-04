@@ -744,7 +744,7 @@ namespace ClosedXML.Tests.Excel
                 // Third sheet doesn't have r:id and it contains pivot table that is not loaded.
                 var ptSheet = wb.Worksheet("Pivot Sheet without relId");
                 Assert.That(ptSheet.Cell("A1").Value, Is.EqualTo(Blank.Value));
-                Assert.False(ptSheet.PivotTables.Any());
+                Assert.That(ptSheet.PivotTables.Any(), Is.False);
             }, @"TryToLoad\SheetsWithoutRelId.xlsx");
         }
 

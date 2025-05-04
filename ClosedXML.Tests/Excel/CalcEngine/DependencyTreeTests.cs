@@ -129,7 +129,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var tree = new DependencyTree();
             tree.AddSheetTree(ws);
             var cellFormula = AddFormula(tree, ws, "B3", "=C4");
-            Assert.False(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.False);
 
             // Remove inserted formula removes the dependent and also removes the precedent
             // area from the tree because there is no formula depending on it.
@@ -150,12 +150,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             tree.AddSheetTree(ws);
             var cellFormulaA1 = AddFormula(tree, ws, "A1", "=C4 + B1");
             var cellFormulaA2 = AddFormula(tree, ws, "A2", "=B1 / C4");
-            Assert.False(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.False);
 
             // Remove first formula, but the precedent area is still used
             // by second formula so it is not removed.
             tree.RemoveFormula(cellFormulaA1);
-            Assert.False(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.False);
 
             // Remove second formula
             tree.RemoveFormula(cellFormulaA2);
@@ -324,8 +324,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
 
             Recalculate();
-            Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
-            Assert.False(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.False);
+            Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.False);
 
             // Both depend on Unchanged!A1
             unchangedSheet.Cell("A1").Value = 110;
@@ -357,7 +357,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Only unchanged depends on Unchanged!A3. The renamed formula keeps value.
             unchangedSheet.Cell("A3").Value = 330;
-            Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.False);
             Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.True);
             Recalculate();
             Assert.Multiple(() =>
@@ -369,7 +369,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Only renamed depends on Renamed!A3. The unchanged formula keeps value.
             renamedSheet.Cell("A3").Value = 403;
             Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.True);
-            Assert.False(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.False);
             Recalculate();
             Assert.Multiple(() =>
             {

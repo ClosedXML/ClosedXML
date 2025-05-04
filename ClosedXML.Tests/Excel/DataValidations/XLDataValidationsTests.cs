@@ -145,7 +145,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 Assert.That(consolidatedDv, Is.SameAs(dv1));
                 Assert.That(ws.Cell("C1").HasDataValidation, Is.True);
             });
-            Assert.False(ws.Cell("D1").HasDataValidation);
+            Assert.That(ws.Cell("D1").HasDataValidation, Is.False);
         }
     }
 }

@@ -139,7 +139,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var originalArea = XLSheetRange.Parse(original);
             var insertedArea = XLSheetRange.Parse(inserted);
 
-            Assert.False(originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result));
+            Assert.That(originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result), Is.False);
         }
 
         [TestCase("D6:G10", "A1:C15", "D6:G10")] // Inserted are is fully to the left
@@ -176,7 +176,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var originalArea = XLSheetRange.Parse(original);
             var insertedArea = XLSheetRange.Parse(inserted);
 
-            Assert.False(originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result));
+            Assert.That(originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result), Is.False);
         }
 
         [TestCase("E4:G4", "B3:C5", "C4:E4")] // Deleted area fully to the left with overlapping width
@@ -213,7 +213,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var deletedArea = XLSheetRange.Parse(deleted);
             var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
 
-            Assert.False(success);
+            Assert.That(success, Is.False);
             Assert.That(result, Is.Null);
         }
 
@@ -251,7 +251,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var deletedArea = XLSheetRange.Parse(deleted);
             var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
 
-            Assert.False(success);
+            Assert.That(success, Is.False);
             Assert.That(result, Is.Null);
         }
     }

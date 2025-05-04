@@ -69,8 +69,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Range("A1:B1").InsertRowsAbove(2);
 
             Assert.That(ws.Cell("A3").Value, Is.EqualTo(12.0));
-            Assert.False(ws.Cell("A3").NeedsRecalculation);
-            Assert.False(ws.Cell("B3").NeedsRecalculation);
+            Assert.That(ws.Cell("A3").NeedsRecalculation, Is.False);
+            Assert.That(ws.Cell("B3").NeedsRecalculation, Is.False);
 
             // Dependency tree should pick up the change
             ws.Cell("C1").FormulaA1 = "2+2";
@@ -96,7 +96,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A2").InsertCellsBefore(4);
 
             Assert.That(ws.Cell("A1").Value, Is.EqualTo(12.0));
-            Assert.False(ws.Cell("E2").NeedsRecalculation);
+            Assert.That(ws.Cell("E2").NeedsRecalculation, Is.False);
 
             // Dependency tree should pick up the change
             ws.Cell("A3").FormulaA1 = "2+2";
@@ -122,8 +122,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Range("B2:C4").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
             Assert.That(ws.Cell("C2").Value, Is.EqualTo(12.0));
-            Assert.False(ws.Cell("B2").NeedsRecalculation);
-            Assert.False(ws.Cell("A2").NeedsRecalculation);
+            Assert.That(ws.Cell("B2").NeedsRecalculation, Is.False);
+            Assert.That(ws.Cell("A2").NeedsRecalculation, Is.False);
 
             // Dependency tree should pick up the change
             ws.Cell("A5").FormulaA1 = "2+2";
@@ -149,8 +149,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Range("A1:C5").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
             Assert.That(ws.Cell("A3").Value, Is.EqualTo(12.0));
-            Assert.False(ws.Cell("B2").NeedsRecalculation);
-            Assert.False(ws.Cell("A1").NeedsRecalculation);
+            Assert.That(ws.Cell("B2").NeedsRecalculation, Is.False);
+            Assert.That(ws.Cell("A1").NeedsRecalculation, Is.False);
 
             // Dependency tree should pick up the change
             ws.Cell("A1").FormulaA1 = "2+2";

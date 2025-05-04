@@ -39,7 +39,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             for (int i = 1; i <= TEST_COUNT; i++)
             {
                 var address = new XLAddress(ws, i * 2 + 1, 3, false, false);
-                Assert.False(index.Contains(in address));
+                Assert.That(index.Contains(in address), Is.False);
             }
         }
 
@@ -79,13 +79,13 @@ namespace ClosedXML.Tests.Excel.Ranges
                     new XLAddress(ws, i * 2 + 1, 1 + i % 4, false, false),
                     new XLAddress(ws, i * 2 + 1, 8 - i % 3, false, false));
 
-                Assert.False(index.Intersects(in rangeAddress));
+                Assert.That(index.Intersects(in rangeAddress), Is.False);
             }
 
             var columnAddress = XLRangeAddress.EntireColumn(ws, 1);
-            Assert.False(index.Intersects(in columnAddress));
+            Assert.That(index.Intersects(in columnAddress), Is.False);
             columnAddress = XLRangeAddress.EntireColumn(ws, 5);
-            Assert.False(index.Intersects(in columnAddress));
+            Assert.That(index.Intersects(in columnAddress), Is.False);
         }
 
         [Test]
