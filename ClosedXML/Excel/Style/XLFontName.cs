@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using ClosedXML.Excel.Formatting;
 
@@ -7,7 +7,7 @@ namespace ClosedXML.Excel;
 /// <summary>
 /// A font name, two font names are equal when they are case insensitive equal. It is a custom
 /// class because that way <see cref="XLFontFormat"/> and other structures don't have to implement
-/// custom ahs code and equality methods.
+/// custom hash code and equality methods.
 /// </summary>
 internal readonly record struct XLFontName
 {
