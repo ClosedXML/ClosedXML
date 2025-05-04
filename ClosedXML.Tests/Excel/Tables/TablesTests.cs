@@ -1062,7 +1062,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(ws2.Cell("C1").Value, Is.EqualTo("Custom column 3"));
                 Assert.That(ws2.Cell("A2").Value, Is.EqualTo("Value 1"));
                 Assert.That((double)ws2.Cell("B2").Value, Is.EqualTo(123.45).Within(XLHelper.Epsilon));
-                Assert.That(ws2.Cell("C2").Value, Is.EqualTo(new DateTime(2018, 5, 10)));
+                Assert.That(ws2.Cell("C2").Value.GetDateTime(), Is.EqualTo(new DateTime(2018, 5, 10)));
             });
         }
 
@@ -1101,7 +1101,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.That(ws2.Cell("C1").Value, Is.EqualTo("Custom column 3"));
                 Assert.That(ws2.Cell("A2").Value, Is.EqualTo("Value 1"));
                 Assert.That((double)ws2.Cell("B2").Value, Is.EqualTo(123.45).Within(XLHelper.Epsilon));
-                Assert.That(ws2.Cell("C2").Value, Is.EqualTo(new DateTime(2018, 5, 10)));
+                Assert.That(ws2.Cell("C2").Value.GetDateTime(), Is.EqualTo(new DateTime(2018, 5, 10)));
             });
         }
 
@@ -1148,7 +1148,7 @@ namespace ClosedXML.Tests.Excel
                     Assert.That(ws.Cell("C1").Value, Is.EqualTo("Custom column 3"));
                     Assert.That(ws.Cell("A2").Value, Is.EqualTo("Value 1"));
                     Assert.That((double)ws.Cell("B2").Value, Is.EqualTo(123.45).Within(XLHelper.Epsilon));
-                    Assert.That(ws.Cell("C2").Value, Is.EqualTo(new DateTime(2018, 5, 10)));
+                    Assert.That(ws.Cell("C2").Value.GetDateTime(), Is.EqualTo(new DateTime(2018, 5, 10)));
                 });
             }
         }

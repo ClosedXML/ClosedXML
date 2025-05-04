@@ -411,7 +411,7 @@ namespace ClosedXML.Tests
             {
                 Assert.That(ws2.Cell("A1").Value, Is.EqualTo("A1 value"));
                 Assert.That(ws2.Cell("A2").Value, Is.EqualTo(100));
-                Assert.That(ws2.Cell("D4").Value, Is.EqualTo(new DateTime(2018, 5, 1)));
+                Assert.That(ws2.Cell("D4").Value.GetDateTime(), Is.EqualTo(new DateTime(2018, 5, 1)));
             });
         }
 

@@ -84,7 +84,7 @@ namespace ClosedXML.Tests
                     fileStream.Close();
                 }
 
-                Parallel.Invoke(() => verifyAddImageFromFile(path), () => verifyAddImageFromFile(path));
+                Parallel.Invoke(() => VerifyAddImageFromFile(path), () => VerifyAddImageFromFile(path));
             }
             finally
             {
@@ -95,7 +95,7 @@ namespace ClosedXML.Tests
             }
         }
 
-        private void verifyAddImageFromFile(string filePath)
+        private static void VerifyAddImageFromFile(string filePath)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
@@ -104,12 +104,12 @@ namespace ClosedXML.Tests
                 .WithPlacement(XLPicturePlacement.FreeFloating)
                 .MoveTo(50, 50);
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(picture.Format, Is.EqualTo(XLPictureFormat.Jpeg));
-                Assert.That(picture.Width, Is.EqualTo(400));
-                Assert.That(picture.Top, Is.EqualTo(50));
-            });
+            // Do not Wrap inside an Assert.Multiple, will create an error due to parallel invoke.
+#pragma warning disable NUnit2045
+            Assert.That(picture.Format, Is.EqualTo(XLPictureFormat.Jpeg));
+            Assert.That(picture.Width, Is.EqualTo(400));
+            Assert.That(picture.Top, Is.EqualTo(50));
+#pragma warning restore NUnit2045
         }
 
         [Test]
@@ -404,6 +404,7 @@ namespace ClosedXML.Tests
                     .WithPlacement(XLPicturePlacement.FreeFloating)
                     .MoveTo(220, 155) as XLPicture;
             }
+
             var ws2 = wb.Worksheets.Add("Sheet2");
 
             var copy = original.CopyTo(ws2);

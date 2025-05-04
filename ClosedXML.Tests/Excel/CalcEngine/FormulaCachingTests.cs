@@ -323,7 +323,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.That(cell.CachedValue, Is.EqualTo(74.0));
 
             cell.Value = new DateTime(2019, 1, 1, 14, 0, 0);
-            Assert.That(cell.CachedValue, Is.EqualTo(new DateTime(2019, 1, 1, 14, 0, 0)));
+            Assert.That(cell.CachedValue.GetDateTime(), Is.EqualTo(new DateTime(2019, 1, 1, 14, 0, 0)));
         }
     }
 }

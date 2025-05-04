@@ -738,7 +738,7 @@ namespace ClosedXML.Tests
                 Assert.Multiple(() =>
                 {
                     Assert.That(c.DataType, Is.EqualTo(XLDataType.DateTime));
-                    Assert.That(c.Value, Is.EqualTo(new DateTime(2017, 10, 08)));
+                    Assert.That(c.Value.GetDateTime(), Is.EqualTo(new DateTime(2017, 10, 08)));
                 });
 
                 wb.SaveAs(ms);
@@ -751,7 +751,7 @@ namespace ClosedXML.Tests
                 Assert.Multiple(() =>
                 {
                     Assert.That(c.DataType, Is.EqualTo(XLDataType.DateTime));
-                    Assert.That(c.Value, Is.EqualTo(new DateTime(2017, 10, 08)));
+                    Assert.That(c.Value.GetDateTime(), Is.EqualTo(new DateTime(2017, 10, 08)));
                 });
 
                 c.Clear();
