@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.Cells
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Cell(1, 1).FormulaA1 = "=B1";
-            Assert.AreEqual("B1", ws.Cell(1, 1).FormulaA1);
+            Assert.That(ws.Cell(1, 1).FormulaA1, Is.EqualTo("B1"));
         }
 
         [Test]

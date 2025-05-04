@@ -16,10 +16,13 @@ namespace ClosedXML.Tests.Excel.Coordinates
         public void ParseCellRefsAccordingToGrammar(string refText, int firstRow, int firstCol, int lastRow, int lastCol)
         {
             var reference = XLSheetRange.Parse(refText);
-            Assert.AreEqual(firstRow, reference.FirstPoint.Row);
-            Assert.AreEqual(firstCol, reference.FirstPoint.Column);
-            Assert.AreEqual(lastRow, reference.LastPoint.Row);
-            Assert.AreEqual(lastCol, reference.LastPoint.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(reference.FirstPoint.Row, Is.EqualTo(firstRow));
+                Assert.That(reference.FirstPoint.Column, Is.EqualTo(firstCol));
+                Assert.That(reference.LastPoint.Row, Is.EqualTo(lastRow));
+                Assert.That(reference.LastPoint.Column, Is.EqualTo(lastCol));
+            });
         }
 
         [TestCase("")]
@@ -42,7 +45,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         public void CanFormatToString(string cellRef, string expected)
         {
             var r = XLSheetRange.Parse(cellRef);
-            Assert.AreEqual(expected, r.ToString());
+            Assert.That(r.ToString(), Is.EqualTo(expected));
         }
 
         [TestCase("A1", "A1", "A1")]
@@ -57,7 +60,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var right = XLSheetRange.Parse(rightOperand);
             var expected = XLSheetRange.Parse(expectedRange);
 
-            Assert.AreEqual(expected, left.Range(right));
+            Assert.That(left.Range(right), Is.EqualTo(expected));
         }
 
         [TestCase("A1", "A1", "A1")]
@@ -72,7 +75,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var right = XLSheetRange.Parse(rightOperand);
             var expected = expectedRange is null ? (XLSheetRange?)null : XLSheetRange.Parse(expectedRange);
 
-            Assert.AreEqual(expected, left.Intersect(right));
+            Assert.That(left.Intersect(right), Is.EqualTo(expected));
         }
 
         [TestCase("A1", "A1", true)]
@@ -86,7 +89,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var left = XLSheetRange.Parse(leftOperand);
             var right = XLSheetRange.Parse(rightOperand);
 
-            Assert.AreEqual(expected, left.Intersects(right));
+            Assert.That(left.Intersects(right), Is.EqualTo(expected));
         }
 
         [TestCase("A1", "A1", true)]
@@ -99,7 +102,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var left = XLSheetRange.Parse(leftOperand);
             var right = XLSheetRange.Parse(rightOperand);
 
-            Assert.AreEqual(expected, left.Overlaps(right));
+            Assert.That(left.Overlaps(right), Is.EqualTo(expected));
         }
 
         [TestCase("C4:F8", "C1:F3", "C4:F8")] // Inserted area is fully above
@@ -121,8 +124,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             var success = originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result);
 
-            Assert.True(success);
-            Assert.AreEqual(repositionedArea, result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(success, Is.True);
+                Assert.That(result, Is.EqualTo(repositionedArea));
+            });
         }
 
         [TestCase("C4:F8", "B3:B4")] // Partially above
@@ -155,8 +161,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             var success = originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result);
 
-            Assert.True(success);
-            Assert.AreEqual(repositionedArea, result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(success, Is.True);
+                Assert.That(result, Is.EqualTo(repositionedArea));
+            });
         }
 
         [TestCase("D6:G10", "A6:E6")] // Left
@@ -188,8 +197,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
 
-            Assert.True(success);
-            Assert.AreEqual(repositionedArea, result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(success, Is.True);
+                Assert.That(result, Is.EqualTo(repositionedArea));
+            });
         }
 
         [TestCase("D4:E8", "A1:B5")] // Partial left
@@ -223,8 +235,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
 
-            Assert.True(success);
-            Assert.AreEqual(expectedResult, result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(success, Is.True);
+                Assert.That(result, Is.EqualTo(expectedResult));
+            });
         }
 
         [TestCase("B5:D8", "A1:B3")] // Partial above

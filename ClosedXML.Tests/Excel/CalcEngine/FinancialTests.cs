@@ -13,7 +13,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Fv_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [TestCase("FV(0,1,1000)", -1000)] // Zero interest rate
@@ -27,25 +27,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Fv_EdgeCases(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [Test]
         public void Fv_DefaultFutureValueIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("FV(0.1,2,1000)"), XLWorkbook.EvaluateExpr("FV(0.1,2,1000,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("FV(0.1,2,1000,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("FV(0.1,2,1000)")));
         }
 
         [Test]
         public void Fv_DefaultTypeIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("FV(0.1,5,1000)"), XLWorkbook.EvaluateExpr("FV(0.1,5,1000,0,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("FV(0.1,5,1000,0,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("FV(0.1,5,1000)")));
         }
 
         [Test]
         public void Fv_ZeroPeriodsReturnsPresentValue()
         {
-            Assert.AreEqual(-100, XLWorkbook.EvaluateExpr("FV(0.1,0,1000, 100)"));
+            Assert.That(XLWorkbook.EvaluateExpr("FV(0.1,0,1000, 100)"), Is.EqualTo(-100));
         }
 
         [TestCase("IPMT(0.1/12,1,3*12,8000)", -66.666666666666686)]
@@ -53,7 +53,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Ipmt_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [TestCase("IPMT(0,1,1,1000)", 0)] // Zero interest rate
@@ -67,26 +67,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Ipmt_EdgeCases(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [Test]
         public void Ipmt_DefaultFutureValueIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000)"), XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("IPMT(0.1,1,2,1000)")));
         }
 
         [Test]
         public void Ipmt_DefaultTypeIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000)"), XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000,0,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000,0,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("IPMT(0.1,1,5,1000)")));
         }
 
         [Test]
         public void Ipmt_ZeroOrNegativePeriodsReturnsNumError()
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,1,0,1000)"));
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,1,-1,1000)"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,1,0,1000)"), Is.EqualTo(XLError.NumberInvalid));
+                Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,1,-1,1000)"), Is.EqualTo(XLError.NumberInvalid));
+            });
         }
 
         [TestCase(-1)]
@@ -94,14 +97,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-100)]
         public void Ipmt_RateLessOrEqualMinusOneReturnsNumError(double rate)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"IPMT({rate},2,3,1000,10000,1)"));
+            Assert.That(XLWorkbook.EvaluateExpr($"IPMT({rate},2,3,1000,10000,1)"), Is.EqualTo(XLError.NumberInvalid));
         }
 
         [Test]
         public void Ipmt_PeriodOutOfRangeReturnsNumError()
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,0,1,1000)"));
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("IPMT(0.1,2,1,1000)"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,0,1,1000)"), Is.EqualTo(XLError.NumberInvalid));
+                Assert.That(XLWorkbook.EvaluateExpr("IPMT(0.1,2,1,1000)"), Is.EqualTo(XLError.NumberInvalid));
+            });
         }
 
         [TestCase("PMT(0.08/12,10,10000)", -1037.03208935915)]
@@ -109,14 +115,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Pmt_ReferenceExamplesFromExcelDocumentations(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [Test]
         public void Pmt_PaymentsMustPayForPrincipalAndFutureValue()
         {
             var actual = (double)XLWorkbook.EvaluateExpr("PMT(0,2,5000,10000)");
-            Assert.AreEqual(-7500, actual);
+            Assert.That(actual, Is.EqualTo(-7500));
         }
 
         [TestCase("PMT(0,1,1000)", -1000)] // Zero interest rate
@@ -130,7 +136,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Pmt_EdgeCases(string formula, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+            Assert.That(actual, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [Test]
@@ -142,26 +148,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var oneType = (double)XLWorkbook.EvaluateExpr(string.Format(formulaFormat, "1"));
             var nonZeroType = (double)XLWorkbook.EvaluateExpr(string.Format(formulaFormat, "0.000001"));
 
-            Assert.AreNotEqual(zeroType, oneType);
-            Assert.AreEqual(oneType, nonZeroType);
+            Assert.Multiple(() =>
+            {
+                Assert.That(oneType, Is.Not.EqualTo(zeroType));
+                Assert.That(nonZeroType, Is.EqualTo(oneType));
+            });
         }
 
         [Test]
         public void Pmt_DefaultFutureValueIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("PMT(0.1,2,1000)"), XLWorkbook.EvaluateExpr("PMT(0.1,2,1000,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("PMT(0.1,2,1000,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("PMT(0.1,2,1000)")));
         }
 
         [Test]
         public void Pmt_DefaultTypeIsZero()
         {
-            Assert.AreEqual(XLWorkbook.EvaluateExpr("PMT(0.1,5,1000)"), XLWorkbook.EvaluateExpr("PMT(0.1,5,1000,0,0)"));
+            Assert.That(XLWorkbook.EvaluateExpr("PMT(0.1,5,1000,0,0)"), Is.EqualTo(XLWorkbook.EvaluateExpr("PMT(0.1,5,1000)")));
         }
 
         [Test]
         public void Pmt_ZeroPeriodsReturnsNumError()
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr("PMT(0.1,0,1000)"));
+            Assert.That(XLWorkbook.EvaluateExpr("PMT(0.1,0,1000)"), Is.EqualTo(XLError.NumberInvalid));
         }
 
         [TestCase(-1)]
@@ -169,7 +178,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-100)]
         public void Pmt_RateLessOrEqualMinusOneReturnsNumError(double rate)
         {
-            Assert.AreEqual(XLError.NumberInvalid, XLWorkbook.EvaluateExpr($"PMT({rate},1,1000,5000,1)"));
+            Assert.That(XLWorkbook.EvaluateExpr($"PMT({rate},1,1000,5000,1)"), Is.EqualTo(XLError.NumberInvalid));
         }
     }
 }

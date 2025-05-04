@@ -32,7 +32,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 {
                     ws.AutoFilter.Reapply();
                     var dataVisibility = ws.Rows("2:5").Select(row => !row.IsHidden);
-                    CollectionAssert.AreEqual(new[] { true, false, false, true }, dataVisibility);
+                    Assert.That(dataVisibility, Is.EqualTo(new[] { true, false, false, true }).AsCollection);
                 }, false);
         }
 

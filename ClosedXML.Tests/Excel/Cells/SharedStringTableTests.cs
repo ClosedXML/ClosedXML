@@ -16,12 +16,12 @@ namespace ClosedXML.Tests.Excel.Cells
             var ws2 = wb.AddWorksheet();
             var txt1 = "Hello";
             var txt2 = new StringBuilder("Hel").Append("lo").ToString();
-            Assert.AreNotSame(txt1, txt2);
+            Assert.That(txt2, Is.Not.SameAs(txt1));
 
             ws1.Cell(1, 1).Value = txt1;
             ws2.Cell(1, 1).Value = txt2;
 
-            Assert.AreSame(ws1.Cell(1, 1).Value.GetText(), ws2.Cell(1, 1).Value.GetText());
+            Assert.That(ws2.Cell(1, 1).Value.GetText(), Is.SameAs(ws1.Cell(1, 1).Value.GetText()));
         }
 
         [Test]
@@ -29,8 +29,11 @@ namespace ClosedXML.Tests.Excel.Cells
         {
             var sst = new SharedStringTable();
             var id = sst.IncreaseRef("test", false);
-            Assert.AreEqual("test", sst[id]);
-            Assert.AreEqual(1, sst.Count);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[id], Is.EqualTo("test"));
+                Assert.That(sst.Count, Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -40,7 +43,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var id = sst.IncreaseRef("test", false);
             sst.DecreaseRef(id);
 
-            Assert.AreEqual(0, sst.Count);
+            Assert.That(sst.Count, Is.EqualTo(0));
             Assert.That(() => _ = sst[id], Throws.ArgumentException.With.Message.EqualTo("Id 0 has no text."));
         }
 
@@ -52,20 +55,26 @@ namespace ClosedXML.Tests.Excel.Cells
             var id = sst.IncreaseRef(text, false);
 
             sst.IncreaseRef(text, false);
-            Assert.AreEqual(text, sst[id]);
-            Assert.AreEqual(1, sst.Count);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[id], Is.EqualTo(text));
+                Assert.That(sst.Count, Is.EqualTo(1));
+            });
 
             sst.DecreaseRef(id);
-            Assert.AreEqual(text, sst[id]);
-            Assert.AreEqual(1, sst.Count);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[id], Is.EqualTo(text));
+                Assert.That(sst.Count, Is.EqualTo(1));
+            });
 
             sst.IncreaseRef(text, false);
-            Assert.AreEqual(text, sst[id]);
-            Assert.AreEqual(1, sst.Count);
+            Assert.That(sst[id], Is.EqualTo(text));
+            Assert.That(sst.Count, Is.EqualTo(1));
 
             sst.DecreaseRef(id);
-            Assert.AreEqual(text, sst[id]);
-            Assert.AreEqual(1, sst.Count);
+            Assert.That(sst[id], Is.EqualTo(text));
+            Assert.That(sst.Count, Is.EqualTo(1));
 
             sst.DecreaseRef(id);
             Assert.Throws<ArgumentException>(() => _ = sst[id]);
@@ -85,8 +94,11 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.Throws<ArgumentException>(() => _ = sst[originalId]);
 
             var replacementId = sst.IncreaseRef("replacement", false);
-            Assert.AreEqual(originalId, replacementId);
-            Assert.AreEqual("replacement", sst[replacementId]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(replacementId, Is.EqualTo(originalId));
+                Assert.That(sst[replacementId], Is.EqualTo("replacement"));
+            });
         }
 
         [Test]
@@ -107,7 +119,7 @@ namespace ClosedXML.Tests.Excel.Cells
             TestHelper.LoadAndAssert((_, ws) =>
             {
                 // Check that type is a empty string, just like in Excel.
-                Assert.AreEqual(2, ws.Evaluate("TYPE(B2)"));
+                Assert.That(ws.Evaluate("TYPE(B2)"), Is.EqualTo(2));
                 Assert.IsEmpty(ws.Cell("B2").GetText());
             }, @"Other\Cells\EmptySi.xlsx");
         }
@@ -126,8 +138,11 @@ namespace ClosedXML.Tests.Excel.Cells
                 },
                 (_, ws) =>
                 {
-                    Assert.AreEqual("", ws.Cell("B1").CachedValue);
-                    Assert.AreEqual("", ws.Cell("B2").GetRichText().Text);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(ws.Cell("B1").CachedValue, Is.EqualTo(""));
+                        Assert.That(ws.Cell("B2").GetRichText().Text, Is.EqualTo(""));
+                    });
                 },
                 @"Other\Cells\EmptyText.xlsx");
         }

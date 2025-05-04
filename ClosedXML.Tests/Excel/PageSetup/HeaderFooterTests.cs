@@ -31,20 +31,18 @@ namespace ClosedXML.Tests.Excel
             ws = wb.Worksheets.First();
 
             var newHeader = ws.PageSetup.Header.Center.GetText(XLHFOccurrence.EvenPages);
-            Assert.AreEqual("Changed header", newHeader);
+            Assert.That(newHeader, Is.EqualTo("Changed header"));
         }
 
         [TestCase("")]
         [TestCase("&L&C&\"Arial\"&9 19-10-2017 \n&9&\"Arial\" &P    &N &R")] // https://github.com/ClosedXML/ClosedXML/issues/563
         public void CanSetHeaderFooter(string s)
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
             {
-                var ws = wb.AddWorksheet("Sheet1");
-                {
-                    var header = ws.PageSetup.Header as XLHeaderFooter;
-                    header.SetInnerText(XLHFOccurrence.AllPages, s);
-                }
+                var header = ws.PageSetup.Header as XLHeaderFooter;
+                header.SetInnerText(XLHFOccurrence.AllPages, s);
             }
         }
     }

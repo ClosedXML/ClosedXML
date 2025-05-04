@@ -33,16 +33,22 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             var idField = pt.RowLabels.Add("ID", "Item ID").AddSubtotal(XLSubtotalFunction.Automatic);
 
-            Assert.AreEqual("ID", idField.SourceName);
-            Assert.AreEqual("Item ID", idField.CustomName);
-            Assert.AreEqual("Item ID", pt.RowLabels.Single().CustomName);
+            Assert.Multiple(() =>
+            {
+                Assert.That(idField.SourceName, Is.EqualTo("ID"));
+                Assert.That(idField.CustomName, Is.EqualTo("Item ID"));
+                Assert.That(pt.RowLabels.Single().CustomName, Is.EqualTo("Item ID"));
+            });
 
             // Adds values and default aggregation func to items of the field
             var fieldItems = internalPt.PivotFields[0].Items;
-            Assert.AreEqual(2, fieldItems.Count);
-            Assert.AreEqual(XLPivotItemType.Data, fieldItems[0].ItemType);
-            Assert.AreEqual(0, fieldItems[0].ItemIndex);
-            Assert.AreEqual(XLPivotItemType.Default, fieldItems[1].ItemType);
+            Assert.That(fieldItems, Has.Count.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(fieldItems[0].ItemType, Is.EqualTo(XLPivotItemType.Data));
+                Assert.That(fieldItems[0].ItemIndex, Is.EqualTo(0));
+                Assert.That(fieldItems[1].ItemType, Is.EqualTo(XLPivotItemType.Default));
+            });
         }
 
         [Test]
@@ -60,7 +66,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             pt.RowLabels.Add("ID", "Item ID");
 
             var ex = Assert.Throws<InvalidOperationException>(() => pt.RowLabels.Add("ID", "Item ID"))!;
-            Assert.AreEqual("Custom name 'Item ID' is already used.", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("Custom name 'Item ID' is already used."));
         }
 
         [Test]
@@ -78,7 +84,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             Assert.DoesNotThrow(() => pt.RowLabels.Add("ID", "Item ID"));
 
             var ex = Assert.Throws<InvalidOperationException>(() => pt.RowLabels.Add("nonexistent"))!;
-            Assert.AreEqual("Field 'nonexistent' not found in pivot cache.", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("Field 'nonexistent' not found in pivot cache."));
         }
 
         #endregion
@@ -132,8 +138,11 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var idField = pt.RowLabels.Add("ID", "Item ID");
             pt.ColumnLabels.Add("Color");
 
-            Assert.True(pt.RowLabels.Contains("id"));
-            Assert.True(pt.RowLabels.Contains(idField));
+            Assert.Multiple(() =>
+            {
+                Assert.That(pt.RowLabels.Contains("id"), Is.True);
+                Assert.That(pt.RowLabels.Contains(idField), Is.True);
+            });
             Assert.False(pt.RowLabels.Contains("color"));
             Assert.False(pt.RowLabels.Contains("nonexistent"));
         }
@@ -157,9 +166,9 @@ namespace ClosedXML.Tests.Excel.PivotTables
             pt.RowLabels.Add("ID", "Item ID");
             pt.ColumnLabels.Add("Color");
 
-            Assert.AreEqual("ID", pt.RowLabels.Get("id").SourceName);
+            Assert.That(pt.RowLabels.Get("id").SourceName, Is.EqualTo("ID"));
             var ex = Assert.Throws<KeyNotFoundException>(() => pt.RowLabels.Get("color"))!;
-            Assert.AreEqual("Field with source name 'color' not found in AxisRow.", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("Field with source name 'color' not found in AxisRow."));
         }
 
         #endregion
@@ -181,7 +190,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             pt.RowLabels.Add("ID", "Item ID");
             pt.ColumnLabels.Add("Color");
 
-            Assert.AreEqual("ID", pt.RowLabels.Get(0).SourceName);
+            Assert.That(pt.RowLabels.Get(0).SourceName, Is.EqualTo("ID"));
             Assert.Throws<IndexOutOfRangeException>(() => pt.RowLabels.Get(-2));
             Assert.Throws<IndexOutOfRangeException>(() => pt.RowLabels.Get(1));
         }
@@ -205,10 +214,13 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var idField = pt.RowLabels.Add("ID", "Item ID");
             pt.ColumnLabels.Add("Color");
 
-            Assert.AreEqual(0, pt.RowLabels.IndexOf("ID"));
-            Assert.AreEqual(0, pt.RowLabels.IndexOf(idField));
-            Assert.AreEqual(-1, pt.RowLabels.IndexOf("item id"));
-            Assert.AreEqual(-1, pt.RowLabels.IndexOf("Color"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(pt.RowLabels.IndexOf("ID"), Is.EqualTo(0));
+                Assert.That(pt.RowLabels.IndexOf(idField), Is.EqualTo(0));
+                Assert.That(pt.RowLabels.IndexOf("item id"), Is.EqualTo(-1));
+                Assert.That(pt.RowLabels.IndexOf("Color"), Is.EqualTo(-1));
+            });
         }
 
         #endregion

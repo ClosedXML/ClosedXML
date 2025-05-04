@@ -9,6 +9,12 @@ namespace ClosedXML.Tests.Excel.Ranges
     {
         private XLWorkbook workbook;
 
+        [TearDown]
+        public void Cleanup()
+        {
+            workbook.Dispose();
+        }
+        
         [SetUp]
         public void SetupWorkbook()
         {
@@ -31,7 +37,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(2, i);
+            Assert.That(i, Is.EqualTo(2));
 
             i = 0;
             row = workbook.Worksheets.First().FirstRow().RowBelow();
@@ -39,38 +45,36 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(1, i);
+            Assert.That(i, Is.EqualTo(1));
 
             i = 0;
             row = workbook.Worksheets.First().LastRowUsed(XLCellsUsedOptions.All);
-            Assert.AreEqual(6, row.RowNumber());
+            Assert.That(row.RowNumber(), Is.EqualTo(6));
             foreach (var cell in row.Cells())
             {
                 i++;
             }
-            Assert.AreEqual(1, i);
+            Assert.That(i, Is.EqualTo(1));
 
             i = 0;
             row = workbook.Worksheets.First().LastRowUsed(XLCellsUsedOptions.All);
-            Assert.AreEqual(6, row.RowNumber());
+            Assert.That(row.RowNumber(), Is.EqualTo(6));
             foreach (var cell in row.CellsUsed())
             {
                 i++;
             }
-            Assert.AreEqual(0, i);
+            Assert.That(i, Is.EqualTo(0));
         }
 
         [Test(Description = "See 1443")]
         public void FirstRowUsedRegression()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-                ws.Range("B3:F6").SetValue(100);
+            ws.Range("B3:F6").SetValue(100);
 
-                Assert.AreEqual(3, ws.FirstRowUsed(XLCellsUsedOptions.AllContents).RowNumber());
-            }
+            Assert.That(ws.FirstRowUsed(XLCellsUsedOptions.AllContents).RowNumber(), Is.EqualTo(3));
         }
 
         [Test]
@@ -82,7 +86,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(3, i);
+            Assert.That(i, Is.EqualTo(3));
 
             i = 0;
             row = workbook.Worksheets.First().FirstRow().RowBelow(); //This row has no empty cells BETWEEN used cells
@@ -90,7 +94,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(1, i);
+            Assert.That(i, Is.EqualTo(1));
         }
 
         [Test]
@@ -102,7 +106,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(2, i);
+            Assert.That(i, Is.EqualTo(2));
 
             i = 0;
             column = workbook.Worksheets.First().FirstColumn().ColumnRight().ColumnRight();
@@ -110,7 +114,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(1, i);
+            Assert.That(i, Is.EqualTo(1));
 
             i = 0;
             column = workbook.Worksheets.First().Column(2);
@@ -118,7 +122,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(3, i);
+            Assert.That(i, Is.EqualTo(3));
 
             i = 0;
             column = workbook.Worksheets.First().Column(2);
@@ -126,7 +130,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(2, i);
+            Assert.That(i, Is.EqualTo(2));
         }
 
         [Test]
@@ -138,7 +142,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(4, i);
+            Assert.That(i, Is.EqualTo(4));
 
             i = 0;
             column = workbook.Worksheets.First().FirstColumn().ColumnRight().ColumnRight(); //This column has no empty cells BETWEEN used cells
@@ -146,7 +150,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(1, i);
+            Assert.That(i, Is.EqualTo(1));
         }
 
         [Test]
@@ -159,7 +163,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(6, i);
+            Assert.That(i, Is.EqualTo(6));
         }
 
         [Test]
@@ -172,7 +176,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(5, i);
+            Assert.That(i, Is.EqualTo(5));
         }
 
         [Test]
@@ -185,23 +189,21 @@ namespace ClosedXML.Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(18, i);
+            Assert.That(i, Is.EqualTo(18));
         }
 
         [Test]
         public void GetCellsUsedNonRectangular()
         {
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                var sheet = wb.AddWorksheet("page1");
+            using XLWorkbook wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet("page1");
 
-                sheet.Range("C1:E1").Value = "row1";
-                sheet.Range("A2:E2").Value = "row2";
+            sheet.Range("C1:E1").Value = "row1";
+            sheet.Range("A2:E2").Value = "row2";
 
-                var used = sheet.RangeUsed().RangeAddress.ToString(XLReferenceStyle.A1);
+            var used = sheet.RangeUsed().RangeAddress.ToString(XLReferenceStyle.A1);
 
-                Assert.AreEqual("A1:E2", used);
-            }
+            Assert.That(used, Is.EqualTo("A1:E2"));
         }
 
         [TestCase(true, "A1:D2", "A1")]
@@ -217,185 +219,181 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void RangeUsedIncludesMergedCells(bool includeFormatting, string expectedRange,
             params string[] cellsWithValues)
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using XLWorkbook wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            foreach (var cellAddress in cellsWithValues)
             {
-                var ws = wb.AddWorksheet("Sheet1");
-                foreach (var cellAddress in cellsWithValues)
-                {
-                    ws.Cell(cellAddress).Value = "Not empty";
-                }
-                ws.Range("B2:D2").Merge();
-
-                var options = includeFormatting
-                    ? XLCellsUsedOptions.All
-                    : XLCellsUsedOptions.AllContents | XLCellsUsedOptions.MergedRanges;
-                var actual = ws.RangeUsed(options).RangeAddress;
-
-                Assert.AreEqual(expectedRange, actual.ToString());
+                ws.Cell(cellAddress).Value = "Not empty";
             }
+            ws.Range("B2:D2").Merge();
+
+            var options = includeFormatting
+                ? XLCellsUsedOptions.All
+                : XLCellsUsedOptions.AllContents | XLCellsUsedOptions.MergedRanges;
+            var actual = ws.RangeUsed(options).RangeAddress;
+
+            Assert.That(actual.ToString(), Is.EqualTo(expectedRange));
         }
 
         [Test]
         public void LastCellUsedPredicateConsidersMergedRanges()
         {
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
-                ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
-                ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
-                ws.Range("A1:C1").Merge();
-                ws.Range("A2:C2").Merge();
-                ws.Range("A3:C3").Merge();
+            using XLWorkbook wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
+            ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
+            ws.Range("A1:C1").Merge();
+            ws.Range("A2:C2").Merge();
+            ws.Range("A3:C3").Merge();
 
-                var actual = ws.LastCellUsed(XLCellsUsedOptions.All,
-                    c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+            var actual = ws.LastCellUsed(XLCellsUsedOptions.All,
+                c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
 
-                Assert.AreEqual("C2", actual.Address.ToString());
-            }
+            Assert.That(actual.Address.ToString(), Is.EqualTo("C2"));
         }
 
         [Test]
         public void FirstCellUsedPredicateConsidersMergedRanges()
         {
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
-                ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
-                ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
-                ws.Range("A1:C1").Merge();
-                ws.Range("A2:C2").Merge();
-                ws.Range("A3:C3").Merge();
+            using XLWorkbook wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
+            ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
+            ws.Range("A1:C1").Merge();
+            ws.Range("A2:C2").Merge();
+            ws.Range("A3:C3").Merge();
 
-                var actual = ws.FirstCellUsed(XLCellsUsedOptions.All,
-                    c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+            var actual = ws.FirstCellUsed(XLCellsUsedOptions.All,
+                c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
 
-                Assert.AreEqual("A2", actual.Address.ToString());
-            }
+            Assert.That(actual.Address.ToString(), Is.EqualTo("A2"));
         }
 
         [Test]
         public void ApplyingDataValidationMakesCellNotEmpty()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.Range("B2:B12").CreateDataValidation()
-                    .Decimal.EqualOrGreaterThan(0);
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Range("B2:B12").CreateDataValidation()
+                .Decimal.EqualOrGreaterThan(0);
 
-                var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
+            var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
-                Assert.AreEqual(11, usedCells.Count);
-                Assert.AreEqual("B2", usedCells.First().Address.ToString());
-                Assert.AreEqual("B12", usedCells.Last().Address.ToString());
-            }
+            Assert.That(usedCells, Has.Count.EqualTo(11));
+            Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
+            Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
         }
 
         [Test]
         public void MergeMakesCellNotEmpty()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.Range("B2:B12").Merge();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Range("B2:B12").Merge();
 
-                var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
+            var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
-                Assert.AreEqual(11, usedCells.Count);
-                Assert.AreEqual("B2", usedCells.First().Address.ToString());
-                Assert.AreEqual("B12", usedCells.Last().Address.ToString());
-            }
+            Assert.That(usedCells, Has.Count.EqualTo(11));
+            Assert.That(usedCells.First().Address.ToString(), Is.EqualTo("B2"));
+            Assert.That(usedCells.Last().Address.ToString(), Is.EqualTo("B12"));
         }
 
         [Test]
         public void FirstCellUsedNotHangingOnLargeCFRules()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
+
+            var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
-
-                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual("A1", firstCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(firstCell.Address.ToString(), Is.EqualTo("A1"));
+            });
         }
 
         [Test]
         public void LastCellUsedNotHangingOnLargeCFRules()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
+
+            var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
-
-                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(lastCell.Address.ToString(), Is.EqualTo(XLHelper.LastCell));
+            });
         }
 
         [Test]
         public void FirstCellUsedNotHangingOnLargeDVRules()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.CreateDataValidation().WholeNumber.GreaterThan(0);
+
+            var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.CreateDataValidation().WholeNumber.GreaterThan(0);
-
-                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual("A1", firstCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(firstCell.Address.ToString(), Is.EqualTo("A1"));
+            });
         }
 
         [Test]
         public void LastCellUsedNotHangingOnLargeDVRules()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.CreateDataValidation().WholeNumber.GreaterThan(0);
+
+            var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.CreateDataValidation().WholeNumber.GreaterThan(0);
-
-                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(lastCell.Address.ToString(), Is.EqualTo(XLHelper.LastCell));
+            });
         }
 
         [Test]
         public void FirstCellUsedNotHangingOnLargeMergedRanges()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Merge();
+
+            var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.Merge();
-
-                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual("A1", firstCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(firstCell.Address.ToString(), Is.EqualTo("A1"));
+            });
         }
 
         [Test]
         public void LastCellUsedNotHangingOnLargeMergedRanges()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Merge();
+
+            var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                ws.Merge();
-
-                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
-
-                Assert.AreEqual(0, ((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count());
-                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
-            }
+                Assert.That(((XLWorksheet)ws).Internals.CellsCollection.GetCells().Count(), Is.EqualTo(0));
+                Assert.That(lastCell.Address.ToString(), Is.EqualTo(XLHelper.LastCell));
+            });
         }
     }
 }

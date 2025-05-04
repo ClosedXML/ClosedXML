@@ -42,12 +42,12 @@ internal class XmlTreeReaderExtensionsTests
 
     [TestCase("00000000", 0u)]
     [TestCase("0G000000", null)]
-    [TestCase(@"FFFFFFFF", 0xFFFFFFFF)]
-    [TestCase(@"FFFFFFFF", 0xFFFFFFFF)]
+    [TestCase("FFFFFFFF", 0xFFFFFFFF)]
+    [TestCase("FFFFFFFF", 0xFFFFFFFF)]
     [TestCase("abcdef00", 0xABCDEF00)]
     [TestCase("0000000", null)]
-    [TestCase(@"", null)]
-    [TestCase(@"hello", null)]
+    [TestCase("", null)]
+    [TestCase("hello", null)]
     public void GetOptionalUIntHex_parses_8_hex_digits(string xmlText, uint? expectedValue)
     {
         using var reader = CreateReader(xmlText);

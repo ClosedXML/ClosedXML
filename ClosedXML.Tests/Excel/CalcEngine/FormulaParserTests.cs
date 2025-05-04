@@ -18,13 +18,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Formula_string_can_starting_with_an_equal_sign()
         {
-            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("=1"));
+            Assert.That(XLWorkbook.EvaluateExpr("=1"), Is.EqualTo(1));
         }
 
         [TestCase]
         public void Formula_string_can_omit_starting_equal_sign()
         {
-            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("1"));
+            Assert.That(XLWorkbook.EvaluateExpr("1"), Is.EqualTo(1));
         }
 
         [TestCase]
@@ -47,7 +47,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Cell("A1").Value = "Text";
-            Assert.AreEqual("Text", ws.Evaluate("=A1"));
+            Assert.That(ws.Evaluate("=A1"), Is.EqualTo("Text"));
         }
 
         [TestCase("=1", 1)]
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=TRUE", true)]
         public void Formula_can_be_constant(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("=SUM(1,2)", 3)]
@@ -64,21 +64,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=150%", 1.5)]
         public void Formula_can_be_function_call(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase]
         public void Formula_can_be_constant_array()
         {
             // 1 is determined through implicit intersection (first element)
-            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("={1,2,3;4,5,6}"));
+            Assert.That(XLWorkbook.EvaluateExpr("={1,2,3;4,5,6}"), Is.EqualTo(1));
         }
 
         [TestCase("=(1)", 1)]
         [TestCase("=(\"text\")", "text")]
         public void Formula_can_be_another_formula_in_parenthesis(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
         #endregion
 
@@ -93,7 +93,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Constant_can_be_number(string formula, double expectedNumber)
         {
             // Irony returns number as an object of various types, e.g. int or double
-            Assert.AreEqual(expectedNumber, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedNumber));
         }
 
         [TestCase("=\"text\"", "text")]
@@ -102,7 +102,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=\"use two double quote \"\" to nest quotes\"", "use two double quote \" to nest quotes")]
         public void Constant_can_be_text(string formula, string expectedText)
         {
-            Assert.AreEqual(expectedText, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedText));
         }
 
         [TestCase("=TRUE", true)]
@@ -110,7 +110,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=tRuE", true)]
         public void Constant_can_be_bool(string formula, bool expectedBool)
         {
-            Assert.AreEqual(expectedBool, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedBool));
         }
 
         // #REF! is converted by a different rule, so it is not here.
@@ -123,7 +123,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Constant_can_be_error(string formula, object expectedError)
         {
             var error = (XLError)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedError, error);
+            Assert.That(error, Is.EqualTo(expectedError));
         }
         #endregion
 
@@ -134,7 +134,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=SUM(1,2,3)", 6)]
         public void FunctionCall_can_be_excel_predefined_function(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("=+1", 1)]
@@ -142,13 +142,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         //        [TestCase("=@A1", 1)]
         public void FunctionCall_can_be_unary_prefix_operation(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("=75%", 0.75)]
         public void FunctionCall_can_be_unary_postfix_operation(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("=2^3", 8)]
@@ -175,7 +175,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=2<=1", false)]
         public void FunctionCall_can_be_binary_infix_operation(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
         #endregion
 
@@ -202,14 +202,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A2").Value = 5;
             ws.Range("A2:A2").AddToNamed("TestRangeName");
 
-            Assert.AreEqual(expectedValue, ws.Evaluate(formula));
+            Assert.That(ws.Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase]
         public void Reference_can_be_reference_function_call()
         {
             // XLParser considers a limited subset of predefined functions (IF, CHOOSE, INDEX...) to be different from other predefined function because they can return reference.
-            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("=IF(FALSE,1,2)"));
+            Assert.That(XLWorkbook.EvaluateExpr("=IF(FALSE,1,2)"), Is.EqualTo(2));
         }
 
         [TestCase]
@@ -219,7 +219,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Cell("A1").Value = 1;
 
-            Assert.AreEqual(1, ws.Evaluate("=(A1)"));
+            Assert.That(ws.Evaluate("=(A1)"), Is.EqualTo(1));
         }
 
         [TestCase]
@@ -230,7 +230,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws2 = wb.AddWorksheet("Sheet2");
             ws2.Cell("A1").Value = 1;
 
-            Assert.AreEqual(1, ws1.Evaluate("=Sheet2!  A1"));
+            Assert.That(ws1.Evaluate("=Sheet2!  A1"), Is.EqualTo(1));
         }
 
         [TestCase]
@@ -269,7 +269,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_function_call_can_be_reference_function()
         {
-            Assert.AreEqual(1, XLWorkbook.EvaluateExpr("=IF(TRUE,1,2)"));
+            Assert.That(XLWorkbook.EvaluateExpr("=IF(TRUE,1,2)"), Is.EqualTo(1));
         }
 
         [TestCase]
@@ -286,7 +286,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         // [TestCase("=CHOOSE(2,\"A\",\"B\",73)", "B")] Not implemented
         public void Ref_function_name_can_be_excel_ref_conditional_function(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("=INDEX(A1:B2,1,2)", "Lemons")]
@@ -300,7 +300,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B1").Value = "Lemons";
             ws.Cell("A2").Value = "Bananas";
             ws.Cell("B2").Value = "Pears";
-            Assert.AreEqual(expectedValue, ws.Evaluate(formula));
+            Assert.That(ws.Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -315,7 +315,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Cell("A1").Value = 1;
 
-            Assert.AreEqual(1, ws.Evaluate("=A1"));
+            Assert.That(ws.Evaluate("=A1"), Is.EqualTo(1));
         }
 
         [TestCase("TestRange")]
@@ -326,7 +326,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Range("A1:C4").SetValue(1).AddToNamed(rangeName);
 
-            Assert.AreEqual(12, ws.Evaluate($"=SUM({rangeName})"));
+            Assert.That(ws.Evaluate($"=SUM({rangeName})"), Is.EqualTo(12));
         }
 
         [TestCase]
@@ -336,7 +336,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Range("A1:C4").SetValue(1);
 
-            Assert.AreEqual(8, ws.Evaluate("=SUM(A:B)"));
+            Assert.That(ws.Evaluate("=SUM(A:B)"), Is.EqualTo(8));
         }
 
         [TestCase]
@@ -346,19 +346,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Range("A1:C4").SetValue(1);
 
-            Assert.AreEqual(3, ws.Evaluate("=SUM(2:2)"));
+            Assert.That(ws.Evaluate("=SUM(2:2)"), Is.EqualTo(3));
         }
 
         [TestCase]
         public void Reference_item_can_be_ref_error()
         {
-            Assert.AreEqual(XLError.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
+            Assert.That(XLWorkbook.EvaluateExpr("#REF!"), Is.EqualTo(XLError.CellReference));
         }
 
         [TestCase]
         public void Reference_item_can_be_user_defined_function_call()
         {
-            Assert.AreEqual(XLError.NameNotRecognized, XLWorkbook.EvaluateExpr("CustomFunction(1)"));
+            Assert.That(XLWorkbook.EvaluateExpr("CustomFunction(1)"), Is.EqualTo(XLError.NameNotRecognized));
         }
 
         [TestCase]
@@ -368,7 +368,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Cell("A1").InsertTable(new[] { new { Amount = 1 }, new { Amount = 2 } });
 
-            Assert.AreEqual(3, ws.Evaluate("SUM(Table1[#Data])"));
+            Assert.That(ws.Evaluate("SUM(Table1[#Data])"), Is.EqualTo(3));
         }
 
         #endregion
@@ -401,15 +401,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ast = calcEngine.Parse(formula);
 
             var actual = ((ArrayNode)ast.AstRoot).Value;
-            Assert.AreEqual(expectedArray.Width, actual.Width);
-            Assert.AreEqual(expectedArray.Height, actual.Height);
+            Assert.Multiple(() =>
+            {
+                Assert.That(actual.Width, Is.EqualTo(expectedArray.Width));
+                Assert.That(actual.Height, Is.EqualTo(expectedArray.Height));
+            });
             for (var row = 0; row < actual.Height; ++row)
             {
                 for (var col = 0; col < actual.Width; ++col)
                 {
                     var actualElement = actual[row, col];
                     var expectedElement = expectedArray[row, col];
-                    Assert.AreEqual(expectedElement, actualElement);
+                    Assert.That(actualElement, Is.EqualTo(expectedElement));
                 }
             }
         }
@@ -464,7 +467,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet(sheetName);
             ws.Cell("A1").Value = 5;
-            Assert.AreEqual(5, ws.Evaluate(formula));
+            Assert.That(ws.Evaluate(formula), Is.EqualTo(5));
         }
 
         [TestCase("=Sheet1:Sheet5!A1")]

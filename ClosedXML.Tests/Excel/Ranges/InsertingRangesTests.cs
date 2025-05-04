@@ -24,17 +24,23 @@ namespace ClosedXML.Tests
             column1.InsertColumnsBefore(1);
             column2.InsertColumnsBefore(1);
 
-            Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Column(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Column(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Column(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Column(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Xanadu, ws.Column(5).Style.Fill.BackgroundColor);
+            Assert.That(ws.Column(1).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+            Assert.That(ws.Column(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Column(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+                Assert.That(ws.Column(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+                Assert.That(ws.Column(5).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Xanadu));
 
-            Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Cell(2, 1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(2, 2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(2, 3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(2, 4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.MacaroniAndCheese, ws.Cell(2, 5).Style.Fill.BackgroundColor);
+                Assert.That(ws.Cell(2, 1).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+            });
+            Assert.That(ws.Cell(2, 2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell(2, 3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+                Assert.That(ws.Cell(2, 4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+                Assert.That(ws.Cell(2, 5).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.MacaroniAndCheese));
+            });
         }
 
         [Test]
@@ -49,9 +55,12 @@ namespace ClosedXML.Tests
             IXLRangeRow r = ws.Range("B4").InsertRowsAbove(1).First();
             r.Cell(1).SetValue("A");
 
-            Assert.AreEqual("X", ws.Cell("B3").GetText());
-            Assert.AreEqual("A", ws.Cell("B4").GetText());
-            Assert.AreEqual("B", ws.Cell("B5").GetText());
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("B3").GetText(), Is.EqualTo("X"));
+                Assert.That(ws.Cell("B4").GetText(), Is.EqualTo("A"));
+                Assert.That(ws.Cell("B5").GetText(), Is.EqualTo("B"));
+            });
         }
 
         [Test]
@@ -70,17 +79,23 @@ namespace ClosedXML.Tests
             row1.InsertRowsAbove(1);
             row2.InsertRowsAbove(1);
 
-            Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Row(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Row(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Row(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FrenchLilac, ws.Row(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Xanadu, ws.Row(5).Style.Fill.BackgroundColor);
+            Assert.That(ws.Row(1).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+            Assert.That(ws.Row(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Row(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+                Assert.That(ws.Row(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FrenchLilac));
+                Assert.That(ws.Row(5).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Xanadu));
 
-            Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Cell(1, 2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(2, 2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(3, 2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.Fulvous, ws.Cell(4, 2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.MacaroniAndCheese, ws.Cell(5, 2).Style.Fill.BackgroundColor);
+                Assert.That(ws.Cell(1, 2).Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+            });
+            Assert.That(ws.Cell(2, 2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell(3, 2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+                Assert.That(ws.Cell(4, 2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Fulvous));
+                Assert.That(ws.Cell(5, 2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.MacaroniAndCheese));
+            });
         }
 
         [Test]
@@ -94,7 +109,7 @@ namespace ClosedXML.Tests
             ws.Cell("A3").SetValue("Cell with comment").GetComment().AddText("Comment here");
 
             ws.Row(1).InsertRowsBelow(2);
-            Assert.AreEqual("Comment here", ws.Cell("A5").GetComment().Text);
+            Assert.That(ws.Cell("A5").GetComment().Text, Is.EqualTo("Comment here"));
         }
 
         [Test]
@@ -108,7 +123,7 @@ namespace ClosedXML.Tests
             ws.Cell("C1").SetValue("Cell with comment").GetComment().AddText("Comment here");
 
             ws.Column(1).InsertColumnsAfter(2);
-            Assert.AreEqual("Comment here", ws.Cell("E1").GetComment().Text);
+            Assert.That(ws.Cell("E1").GetComment().Text, Is.EqualTo("Comment here"));
         }
 
         [Test]
@@ -131,33 +146,32 @@ namespace ClosedXML.Tests
         [TestCase("B1:B8", "A1:C4", -1, "B1:B8")]  // More rows, shift left
         public void ShiftColumnsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns, string expectedRange)
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+            thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
-
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
-
-                Assert.IsTrue(thisRange.RangeAddress.IsValid);
-                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
-            }
+                Assert.That(thisRange.RangeAddress.IsValid, Is.True);
+                Assert.That(thisRange.RangeAddress.ToString(), Is.EqualTo(expectedRange));
+            });
         }
 
         [Test]
         [TestCase("B1:B4", "A1:C4", -2)] // Shift left too much
         public void ShiftColumnsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+            thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsValid);
-            }
+            Assert.That(thisRange.RangeAddress.IsValid, Is.False);
         }
 
         [Test]
@@ -181,33 +195,32 @@ namespace ClosedXML.Tests
         [TestCase("A2:D2", "A1:C4", -1, "A2:D2")]   // More columns, shift up
         public void ShiftRowsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows, string expectedRange)
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+            thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
-
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
-
-                Assert.IsTrue(thisRange.RangeAddress.IsValid);
-                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
-            }
+                Assert.That(thisRange.RangeAddress.IsValid, Is.True);
+                Assert.That(thisRange.RangeAddress.ToString(), Is.EqualTo(expectedRange));
+            });
         }
 
         [Test]
         [TestCase("A2:C2", "A1:C4", -2)] // Shift up too much
         public void ShiftRowsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+            thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsValid);
-            }
+            Assert.That(thisRange.RangeAddress.IsValid, Is.False);
         }
 
         [Test]
@@ -268,30 +281,28 @@ namespace ClosedXML.Tests
         public void MergedRangesConsistencyWhenInsertingRows()
         {
             // https://github.com/ClosedXML/ClosedXML/issues/1013
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+            //create merged row
+            ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
+            ws.Range("A1:F1").Row(1).Merge();
+
+            var row = ws.FirstRow();
+
+            // Add some lines and copy format & merging
+            for (var r = 1; r <= 10; r++)
             {
-                var ws = wb.AddWorksheet("Sheet1");
+                row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
+                row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
 
-                //create merged row
-                ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
-                ws.Range("A1:F1").Row(1).Merge();
+                var duplicates = ws.MergedRanges
+                    .GroupBy(s => s.ToString())
+                    .Where(g => g.Count() > 1)
+                    .Select(y => new { Element = y.Key, Counter = y.Count() })
+                    .ToList();
 
-                var row = ws.FirstRow();
-
-                // Add some lines and copy format & merging
-                for (var r = 1; r <= 10; r++)
-                {
-                    row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
-                    row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
-
-                    var duplicates = ws.MergedRanges
-                        .GroupBy(s => s.ToString())
-                        .Where(g => g.Count() > 1)
-                        .Select(y => new { Element = y.Key, Counter = y.Count() })
-                        .ToList();
-
-                    Assert.AreEqual(0, duplicates.Count);
-                }
+                Assert.That(duplicates.Count, Is.EqualTo(0));
             }
         }
     }

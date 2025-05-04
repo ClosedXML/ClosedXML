@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             ws.Cell("C2").Value = 2;
             var sparklineGroup = ws.SparklineGroups.Add(sparklineAddress, "B2:C2");
             insertAction(ws);
-            Assert.AreEqual(expectedAddress, sparklineGroup.SingleOrDefault()?.Location.Address.ToString());
+            Assert.That(sparklineGroup.SingleOrDefault()?.Location.Address.ToString(), Is.EqualTo(expectedAddress));
             if (expectedAddress is null)
                 Assert.IsEmpty(sparklineGroup);
         }

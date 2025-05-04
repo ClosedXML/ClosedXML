@@ -124,7 +124,7 @@ namespace ClosedXML.Tests
             return XNode.DeepEquals(leftXml, rightXml);
         }
 
-        private static void RemoveIgnoredParts(XDocument document, Uri partUri, Boolean stripColumnWidths)
+        private static void RemoveIgnoredParts(XDocument document, Uri partUri, bool stripColumnWidths)
         {
             foreach (var ignoredNode in ignoredNodes.Where(i => partUri.OriginalString.Contains(i.PartSubstring)))
                 document.Descendants(ignoredNode.NodeName).Remove();

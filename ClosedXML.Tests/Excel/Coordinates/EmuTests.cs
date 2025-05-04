@@ -15,7 +15,7 @@ internal class EmuTests
     [TestCase(2348.52, AbsLengthUnit.Inch, null)]
     public void From_converts_value_to_emu(double value, AbsLengthUnit unit, int? emu)
     {
-        Assert.AreEqual(emu, Emu.From(value, unit)?.Value);
+        Assert.That(Emu.From(value, unit)?.Value, Is.EqualTo(emu));
     }
 
     [TestCase(AbsLengthUnit.Inch, 5.9912904636920388)]
@@ -26,13 +26,13 @@ internal class EmuTests
     [TestCase(AbsLengthUnit.Emu, 5_478_436)]
     public void To_converts_to_specified_unit(AbsLengthUnit unit, double value)
     {
-        Assert.AreEqual(value, Emu.From(5_478_436, AbsLengthUnit.Emu)?.To(unit));
+        Assert.That(Emu.From(5_478_436, AbsLengthUnit.Emu)?.To(unit), Is.EqualTo(value));
     }
 
     [Test]
     [SetCulture("cs-CZ")]
     public void ToString_uses_culture_invariant_format()
     {
-        Assert.AreEqual("1.4mm", Emu.From(1.4, AbsLengthUnit.Millimeter).ToString());
+        Assert.That(Emu.From(1.4, AbsLengthUnit.Millimeter).ToString(), Is.EqualTo("1.4mm"));
     }
 }

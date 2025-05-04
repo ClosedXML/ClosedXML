@@ -55,23 +55,29 @@ namespace ClosedXML.Tests
                 .Border.SetOutsideBorderColor(XLColor.Blue)
                 .Font.SetBold();
 
-            Assert.AreEqual(XLDataType.Text, ws.Cell("A1").Value.Type);
-            Assert.AreEqual(XLDataType.Text, ws.Cell("A2").Value.Type);
-            Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").Value.Type);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value.Type, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A2").Value.Type, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A3").Value.Type, Is.EqualTo(XLDataType.DateTime));
 
-            Assert.AreEqual(false, ws.Cell("A1").HasFormula);
-            Assert.AreEqual(true, ws.Cell("A2").HasFormula);
-            Assert.AreEqual(false, ws.Cell("A1").HasFormula);
+                Assert.That(ws.Cell("A1").HasFormula, Is.False);
+                Assert.That(ws.Cell("A2").HasFormula, Is.EqualTo(true));
+            });
+            Assert.That(ws.Cell("A1").HasFormula, Is.EqualTo(false));
 
             foreach (var cell in ws.Range("A1:A3").Cells())
             {
-                Assert.AreEqual(backgroundColor, cell.Style.Fill.BackgroundColor);
-                Assert.AreEqual(foregroundColor, cell.Style.Font.FontColor);
-                Assert.IsTrue(ws.ConditionalFormats.Any());
-                Assert.IsTrue(cell.HasComment);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(cell.Style.Fill.BackgroundColor, Is.EqualTo(backgroundColor));
+                    Assert.That(cell.Style.Font.FontColor, Is.EqualTo(foregroundColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.True);
+                    Assert.That(cell.HasComment, Is.True);
+                });
             }
 
-            Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
+            Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.EqualTo("B1"));
 
             return wb;
         }
@@ -79,183 +85,202 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearAll()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.All);
+
+            foreach (var c in ws.Range("A1:A10").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.All);
-
-                foreach (var c in ws.Range("A1:A10").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.IsTrue(c.IsEmpty());
-                    Assert.AreEqual(XLDataType.Blank, c.DataType);
-                    Assert.AreEqual(ws.Style.Fill.BackgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(ws.Style.Font.FontColor, c.Style.Font.FontColor);
-                    Assert.IsFalse(ws.ConditionalFormats.Any());
-                    Assert.IsFalse(c.HasComment);
-                    Assert.AreEqual(String.Empty, c.GetDataValidation().Value);
-                }
+                    Assert.That(c.IsEmpty(), Is.True);
+                    Assert.That(c.DataType, Is.EqualTo(XLDataType.Blank));
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(ws.Style.Font.FontColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.False);
+                    Assert.That(c.HasComment, Is.False);
+                    Assert.That(c.GetDataValidation().Value, Is.Empty);
+                });
             }
         }
 
         [Test]
         public void WorksheetClearContents()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.Contents);
+
+            foreach (var c in ws.Range("A1:A3").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.Contents);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.AreEqual(XLDataType.Blank, ws.Cell("A1").DataType);
-                    Assert.IsTrue(c.IsEmpty(XLCellsUsedOptions.Contents));
+                    Assert.That(ws.Cell("A1").DataType, Is.EqualTo(XLDataType.Blank));
+                    Assert.That(c.IsEmpty(XLCellsUsedOptions.Contents), Is.True);
 
-                    Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
-                    Assert.IsTrue(ws.ConditionalFormats.Any());
-                    Assert.IsTrue(c.HasComment);
-                }
-
-                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(backgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(foregroundColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.True);
+                    Assert.That(c.HasComment, Is.True);
+                });
             }
+
+            Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.EqualTo("B1"));
         }
 
         [Test]
         public void WorksheetClearNormalFormats()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.NormalFormats);
+
+            foreach (var c in ws.Range("A1:A3").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.NormalFormats);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.IsFalse(c.IsEmpty());
-                    Assert.AreEqual(ws.Style.Fill.BackgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(ws.Style.Font.FontColor, c.Style.Font.FontColor);
-                    Assert.IsTrue(ws.ConditionalFormats.Any());
-                    Assert.IsTrue(c.HasComment);
-                }
-
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-                Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
-
-                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
+                    Assert.That(c.IsEmpty(), Is.False);
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(ws.Style.Fill.BackgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(ws.Style.Font.FontColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.True);
+                    Assert.That(c.HasComment, Is.True);
+                });
             }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A2").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A3").DataType, Is.EqualTo(XLDataType.DateTime));
+
+                Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.EqualTo("B1"));
+            });
         }
 
         [Test]
         public void WorksheetClearConditionalFormats()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.ConditionalFormats);
+
+            foreach (var c in ws.Range("A1:A3").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.ConditionalFormats);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.IsFalse(c.IsEmpty());
-                    Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
-                    Assert.IsFalse(ws.ConditionalFormats.Any());
-                    Assert.IsTrue(c.HasComment);
-                }
-
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-                Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
-
-                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
+                    Assert.That(c.IsEmpty(), Is.False);
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(backgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(foregroundColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.False);
+                    Assert.That(c.HasComment, Is.True);
+                });
             }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A2").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A3").DataType, Is.EqualTo(XLDataType.DateTime));
+
+                Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.EqualTo("B1"));
+            });
         }
 
         [Test]
         public void WorksheetClearComments()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.Comments);
+
+            foreach (var c in ws.Range("A1:A3").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.Comments);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.IsFalse(c.IsEmpty());
-                    Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
-                    Assert.IsTrue(ws.ConditionalFormats.Any());
-                    Assert.IsFalse(c.HasComment);
-                }
-
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-                Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
-
-                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
+                    Assert.That(c.IsEmpty(), Is.False);
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(backgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(foregroundColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.True);
+                    Assert.That(c.HasComment, Is.False);
+                });
             }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A2").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A3").DataType, Is.EqualTo(XLDataType.DateTime));
+
+                Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.EqualTo("B1"));
+            });
         }
 
         [Test]
         public void WorksheetClearDataValidation()
         {
-            using (var wb = SetupWorkbook())
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+
+            ws.Clear(XLClearOptions.DataValidation);
+
+            foreach (var c in ws.Range("A1:A3").Cells())
             {
-                var ws = wb.Worksheets.First();
-
-                ws.Clear(XLClearOptions.DataValidation);
-
-                foreach (var c in ws.Range("A1:A3").Cells())
+                Assert.Multiple(() =>
                 {
-                    Assert.IsFalse(c.IsEmpty());
-                    Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
-                    Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
-                    Assert.IsTrue(ws.ConditionalFormats.Any());
-                    Assert.IsTrue(c.HasComment);
-                }
-
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
-                Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
-                Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
-
-                Assert.AreEqual(string.Empty, ws.Cell("A1").GetDataValidation().Value);
+                    Assert.That(c.IsEmpty(), Is.False);
+                    Assert.That(c.Style.Fill.BackgroundColor, Is.EqualTo(backgroundColor));
+                    Assert.That(c.Style.Font.FontColor, Is.EqualTo(foregroundColor));
+                    Assert.That(ws.ConditionalFormats.Any(), Is.True);
+                    Assert.That(c.HasComment, Is.True);
+                });
             }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A2").DataType, Is.EqualTo(XLDataType.Text));
+                Assert.That(ws.Cell("A3").DataType, Is.EqualTo(XLDataType.DateTime));
+
+                Assert.That(ws.Cell("A1").GetDataValidation().Value, Is.Empty);
+            });
         }
 
         [Test]
         public void DeleteClearedCellValue()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = SetupWorkbook())
             {
-                using (var wb = SetupWorkbook())
+                var ws = wb.Worksheets.First();
+                Assert.Multiple(() =>
                 {
-                    var ws = wb.Worksheets.First();
-                    Assert.AreEqual("Hello world!", ws.Cell("A1").GetText());
-                    Assert.AreEqual(new DateTime(2018, 1, 15), ws.Cell("A3").GetDateTime());
+                    Assert.That(ws.Cell("A1").GetText(), Is.EqualTo("Hello world!"));
+                    Assert.That(ws.Cell("A3").GetDateTime(), Is.EqualTo(new DateTime(2018, 1, 15)));
+                });
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
-                    ws.Clear(XLClearOptions.Contents);
-                    Assert.AreEqual(Blank.Value, ws.Cell("A1").Value);
-                    Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                ws.Clear(XLClearOptions.Contents);
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(Blank.Value));
+                Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
 
-                    wb.Save();
-                }
+                wb.Save();
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
-                    Assert.AreEqual(Blank.Value, ws.Cell("A1").Value);
-                    Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(Blank.Value));
+                Assert.Throws<InvalidCastException>(() => ws.Cell("A3").GetDateTime());
             }
         }
 
@@ -266,19 +291,17 @@ namespace ClosedXML.Tests
         [TestCase(XLClearOptions.MergedRanges, 2)]
         public void CanClearMergedRanges(XLClearOptions options, int expectedCount)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Test");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Test");
 
-                ws.Range("A1:C3").Merge();
-                ws.Range("A4:B6").Merge();
-                ws.Range("D1:F3").Merge();
-                ws.Range("E4:F6").Merge();
+            ws.Range("A1:C3").Merge();
+            ws.Range("A4:B6").Merge();
+            ws.Range("D1:F3").Merge();
+            ws.Range("E4:F6").Merge();
 
-                ws.Range("C1:D6").Clear(options);
+            ws.Range("C1:D6").Clear(options);
 
-                Assert.AreEqual(expectedCount, ws.MergedRanges.Count);
-            }
+            Assert.That(ws.MergedRanges, Has.Count.EqualTo(expectedCount));
         }
     }
 }

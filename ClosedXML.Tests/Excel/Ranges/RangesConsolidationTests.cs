@@ -25,13 +25,16 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             var consRanges = ranges.Consolidate().ToList();
 
-            Assert.AreEqual(6, consRanges.Count);
-            Assert.AreEqual("A1:E9", consRanges[0].RangeAddress.ToString());
-            Assert.AreEqual("F2:F12", consRanges[1].RangeAddress.ToString());
-            Assert.AreEqual("G6:I9", consRanges[2].RangeAddress.ToString());
-            Assert.AreEqual("A10:B10", consRanges[3].RangeAddress.ToString());
-            Assert.AreEqual("E10:E12", consRanges[4].RangeAddress.ToString());
-            Assert.AreEqual("I10:I13", consRanges[5].RangeAddress.ToString());
+            Assert.That(consRanges, Has.Count.EqualTo(6));
+            Assert.Multiple(() =>
+            {
+                Assert.That(consRanges[0].RangeAddress.ToString(), Is.EqualTo("A1:E9"));
+                Assert.That(consRanges[1].RangeAddress.ToString(), Is.EqualTo("F2:F12"));
+                Assert.That(consRanges[2].RangeAddress.ToString(), Is.EqualTo("G6:I9"));
+                Assert.That(consRanges[3].RangeAddress.ToString(), Is.EqualTo("A10:B10"));
+                Assert.That(consRanges[4].RangeAddress.ToString(), Is.EqualTo("E10:E12"));
+                Assert.That(consRanges[5].RangeAddress.ToString(), Is.EqualTo("I10:I13"));
+            });
         }
 
         [Test]
@@ -53,10 +56,13 @@ namespace ClosedXML.Tests.Excel.Ranges
                 .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
                 .ToList();
 
-            Assert.AreEqual(3, consRanges.Count);
-            Assert.AreEqual("D:F", consRanges[0].RangeAddress.ToString());
-            Assert.AreEqual("A5:C7", consRanges[1].RangeAddress.ToString());
-            Assert.AreEqual("G5:XFD7", consRanges[2].RangeAddress.ToString());
+            Assert.That(consRanges, Has.Count.EqualTo(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(consRanges[0].RangeAddress.ToString(), Is.EqualTo("D:F"));
+                Assert.That(consRanges[1].RangeAddress.ToString(), Is.EqualTo("A5:C7"));
+                Assert.That(consRanges[2].RangeAddress.ToString(), Is.EqualTo("G5:XFD7"));
+            });
         }
 
         [Test]
@@ -90,17 +96,20 @@ namespace ClosedXML.Tests.Excel.Ranges
                 .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
                 .ToList();
 
-            Assert.AreEqual(9, consRanges.Count);
-            Assert.AreEqual("Sheet1!$A$1:$E$9", consRanges[0].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet1!$F$2:$F$12", consRanges[1].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet1!$G$6:$I$9", consRanges[2].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet1!$A$10:$B$10", consRanges[3].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet1!$E$10:$E$12", consRanges[4].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet1!$I$10:$I$13", consRanges[5].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.That(consRanges, Has.Count.EqualTo(9));
+            Assert.Multiple(() =>
+            {
+                Assert.That(consRanges[0].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$A$1:$E$9"));
+                Assert.That(consRanges[1].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$F$2:$F$12"));
+                Assert.That(consRanges[2].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$G$6:$I$9"));
+                Assert.That(consRanges[3].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$A$10:$B$10"));
+                Assert.That(consRanges[4].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$E$10:$E$12"));
+                Assert.That(consRanges[5].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$I$10:$I$13"));
 
-            Assert.AreEqual("Sheet2!$D:$F", consRanges[6].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet2!$A$5:$C$7", consRanges[7].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
-            Assert.AreEqual("Sheet2!$G$5:$XFD$7", consRanges[8].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
+                Assert.That(consRanges[6].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet2!$D:$F"));
+                Assert.That(consRanges[7].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet2!$A$5:$C$7"));
+                Assert.That(consRanges[8].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet2!$G$5:$XFD$7"));
+            });
         }
 
         [Test]
@@ -116,11 +125,14 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             var consRanges = ranges.Consolidate().ToList();
 
-            Assert.AreEqual(4, consRanges.Count);
-            Assert.AreEqual("A1:C1", consRanges[0].RangeAddress.ToString());
-            Assert.AreEqual("E1:G1", consRanges[1].RangeAddress.ToString());
-            Assert.AreEqual("A3:C3", consRanges[2].RangeAddress.ToString());
-            Assert.AreEqual("E3:G3", consRanges[3].RangeAddress.ToString());
+            Assert.That(consRanges, Has.Count.EqualTo(4));
+            Assert.Multiple(() =>
+            {
+                Assert.That(consRanges[0].RangeAddress.ToString(), Is.EqualTo("A1:C1"));
+                Assert.That(consRanges[1].RangeAddress.ToString(), Is.EqualTo("E1:G1"));
+                Assert.That(consRanges[2].RangeAddress.ToString(), Is.EqualTo("A3:C3"));
+                Assert.That(consRanges[3].RangeAddress.ToString(), Is.EqualTo("E3:G3"));
+            });
         }
     }
 }

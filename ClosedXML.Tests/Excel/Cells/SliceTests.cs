@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var slice = new Slice<int>();
             var point = new XLSheetPoint(574, 241);
             slice.Set(point, 1);
-            Assert.AreEqual(1, slice[point]);
+            Assert.That(slice[point], Is.EqualTo(1));
         }
 
         [Test]
@@ -21,13 +21,19 @@ namespace ClosedXML.Tests.Excel.Cells
             var slice = new Slice<int>();
             var point = new XLSheetPoint(574, 241);
             slice.Set(point, 1);
-            Assert.AreEqual(574, slice.MaxRow);
-            Assert.AreEqual(241, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(574));
+                Assert.That(slice.MaxColumn, Is.EqualTo(241));
+            });
 
             slice.Set(point, 0);
 
-            Assert.AreEqual(0, slice.MaxRow);
-            Assert.AreEqual(0, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(0));
+                Assert.That(slice.MaxColumn, Is.EqualTo(0));
+            });
         }
 
         [Test]
@@ -38,23 +44,35 @@ namespace ClosedXML.Tests.Excel.Cells
             slice.Set(140, 32, 1);
             slice.Set(140, 72, 1);
 
-            Assert.AreEqual(140, slice.MaxRow);
-            Assert.AreEqual(72, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(140));
+                Assert.That(slice.MaxColumn, Is.EqualTo(72));
+            });
 
             slice.Set(140, 72, 0);
 
-            Assert.AreEqual(140, slice.MaxRow);
-            Assert.AreEqual(32, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(140));
+                Assert.That(slice.MaxColumn, Is.EqualTo(32));
+            });
 
             slice.Set(140, 32, 0);
 
-            Assert.AreEqual(54, slice.MaxRow);
-            Assert.AreEqual(32, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(54));
+                Assert.That(slice.MaxColumn, Is.EqualTo(32));
+            });
 
             slice.Set(54, 32, 0);
 
-            Assert.AreEqual(0, slice.MaxRow);
-            Assert.AreEqual(0, slice.MaxColumn);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice.MaxRow, Is.EqualTo(0));
+                Assert.That(slice.MaxColumn, Is.EqualTo(0));
+            });
         }
 
         [Test]
@@ -64,25 +82,25 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.IsEmpty(slice.UsedRows);
 
             slice.Set(new XLSheetPoint(1, 1), 1);
-            CollectionAssert.AreEquivalent(new[] { 1 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1 }));
 
             slice.Set(new XLSheetPoint(70, 1), 1);
-            CollectionAssert.AreEquivalent(new[] { 1, 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1, 70 }));
 
             slice.Set(new XLSheetPoint(35, 1), 1);
-            CollectionAssert.AreEquivalent(new[] { 1, 35, 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1, 35, 70 }));
 
             slice.Set(new XLSheetPoint(35, 2), 1);
-            CollectionAssert.AreEquivalent(new[] { 1, 35, 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1, 35, 70 }));
 
             slice.Set(new XLSheetPoint(35, 1), 0);
-            CollectionAssert.AreEquivalent(new[] { 1, 35, 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1, 35, 70 }));
 
             slice.Set(new XLSheetPoint(35, 2), 0);
-            CollectionAssert.AreEquivalent(new[] { 1, 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 1, 70 }));
 
             slice.Set(new XLSheetPoint(1, 1), 0);
-            CollectionAssert.AreEquivalent(new[] { 70 }, slice.UsedRows);
+            Assert.That(slice.UsedRows, Is.EquivalentTo(new[] { 70 }));
 
             slice.Set(new XLSheetPoint(70, 1), 0);
             Assert.IsEmpty(slice.UsedRows);
@@ -95,25 +113,25 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.IsEmpty(slice.UsedColumns);
 
             slice.Set(new XLSheetPoint(1, 5), 1);
-            CollectionAssert.AreEquivalent(new[] { 5 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5 }));
 
             slice.Set(new XLSheetPoint(1, 750), 1);
-            CollectionAssert.AreEquivalent(new[] { 5, 750 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5, 750 }));
 
             slice.Set(new XLSheetPoint(1, 90), 1);
-            CollectionAssert.AreEquivalent(new[] { 5, 90, 750 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5, 90, 750 }));
 
             slice.Set(new XLSheetPoint(2, 5), 1);
-            CollectionAssert.AreEquivalent(new[] { 5, 90, 750 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5, 90, 750 }));
 
             slice.Set(new XLSheetPoint(1, 5), 0);
-            CollectionAssert.AreEquivalent(new[] { 5, 90, 750 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 5, 90, 750 }));
 
             slice.Set(new XLSheetPoint(2, 5), 0);
-            CollectionAssert.AreEquivalent(new[] { 90, 750 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 90, 750 }));
 
             slice.Set(new XLSheetPoint(1, 750), 0);
-            CollectionAssert.AreEquivalent(new[] { 90 }, slice.UsedColumns);
+            Assert.That(slice.UsedColumns, Is.EquivalentTo(new[] { 90 }));
 
             slice.Set(new XLSheetPoint(1, 90), 0);
             Assert.IsEmpty(slice.UsedColumns);
@@ -133,10 +151,13 @@ namespace ClosedXML.Tests.Excel.Cells
             slice.Set(lastCorner, 1);
 
             slice.Clear(new XLSheetRange(firstCorner, lastCorner));
-            Assert.AreEqual(1, slice[outsideAddress]);
-            Assert.AreEqual(0, slice[firstCorner]);
-            Assert.AreEqual(0, slice[insideAddress]);
-            Assert.AreEqual(0, slice[lastCorner]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice[outsideAddress], Is.EqualTo(1));
+                Assert.That(slice[firstCorner], Is.EqualTo(0));
+                Assert.That(slice[insideAddress], Is.EqualTo(0));
+                Assert.That(slice[lastCorner], Is.EqualTo(0));
+            });
         }
 
         [Test]
@@ -153,10 +174,13 @@ namespace ClosedXML.Tests.Excel.Cells
 
             slice.InsertAreaAndShiftDown(new XLSheetRange(new XLSheetPoint(1, 1), new XLSheetPoint(2, 2)));
 
-            Assert.AreEqual(1, slice[3, 1]);
-            Assert.AreEqual(2, slice[5, 1]);
-            Assert.AreEqual(0, slice[XLHelper.MaxRowNumber, 2]);
-            Assert.AreEqual(4, slice[outsideAddress]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice[3, 1], Is.EqualTo(1));
+                Assert.That(slice[5, 1], Is.EqualTo(2));
+                Assert.That(slice[XLHelper.MaxRowNumber, 2], Is.EqualTo(0));
+                Assert.That(slice[outsideAddress], Is.EqualTo(4));
+            });
         }
 
         [Test]
@@ -173,10 +197,13 @@ namespace ClosedXML.Tests.Excel.Cells
 
             slice.InsertAreaAndShiftRight(new XLSheetRange(new XLSheetPoint(1, 1), new XLSheetPoint(2, 2)));
 
-            Assert.AreEqual(1, slice[1, 3]);
-            Assert.AreEqual(2, slice[1, 5]);
-            Assert.AreEqual(0, slice[purgedAddress]);
-            Assert.AreEqual(4, slice[outsideAddress]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice[1, 3], Is.EqualTo(1));
+                Assert.That(slice[1, 5], Is.EqualTo(2));
+                Assert.That(slice[purgedAddress], Is.EqualTo(0));
+                Assert.That(slice[outsideAddress], Is.EqualTo(4));
+            });
         }
 
         [Test]
@@ -198,12 +225,15 @@ namespace ClosedXML.Tests.Excel.Cells
 
             var deleteArea = new XLSheetRange(firstCorner, secondCorner);
             slice.DeleteAreaAndShiftUp(deleteArea);
-            Assert.AreEqual(0, slice[firstCorner]);
-            Assert.AreEqual(0, slice[secondCorner]);
-            Assert.AreEqual(5, slice[belowAddress.Row - deleteArea.Height, belowAddress.Column]);
-            Assert.AreEqual(1, slice[aboveAddress]);
-            Assert.AreEqual(4, slice[rightAddress]);
-            Assert.AreEqual(6, slice[leftAddress]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice[firstCorner], Is.EqualTo(0));
+                Assert.That(slice[secondCorner], Is.EqualTo(0));
+                Assert.That(slice[belowAddress.Row - deleteArea.Height, belowAddress.Column], Is.EqualTo(5));
+                Assert.That(slice[aboveAddress], Is.EqualTo(1));
+                Assert.That(slice[rightAddress], Is.EqualTo(4));
+                Assert.That(slice[leftAddress], Is.EqualTo(6));
+            });
         }
 
         [Test]
@@ -225,12 +255,15 @@ namespace ClosedXML.Tests.Excel.Cells
 
             var deleteArea = new XLSheetRange(firstCorner, secondCorner);
             slice.DeleteAreaAndShiftLeft(deleteArea);
-            Assert.AreEqual(0, slice[firstCorner]);
-            Assert.AreEqual(0, slice[secondCorner]);
-            Assert.AreEqual(5, slice[rightAddress.Row, rightAddress.Column - deleteArea.Width]);
-            Assert.AreEqual(1, slice[leftAddress]);
-            Assert.AreEqual(4, slice[belowAddress]);
-            Assert.AreEqual(6, slice[aboveAddress]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(slice[firstCorner], Is.EqualTo(0));
+                Assert.That(slice[secondCorner], Is.EqualTo(0));
+                Assert.That(slice[rightAddress.Row, rightAddress.Column - deleteArea.Width], Is.EqualTo(5));
+                Assert.That(slice[leftAddress], Is.EqualTo(1));
+                Assert.That(slice[belowAddress], Is.EqualTo(4));
+                Assert.That(slice[aboveAddress], Is.EqualTo(6));
+            });
         }
     }
 }

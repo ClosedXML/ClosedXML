@@ -135,7 +135,7 @@ namespace ClosedXML.Tests
 
             if (assembly is null)
             {
-                throw new ArgumentNullException("assembly");
+                throw new ArgumentNullException(nameof(assembly));
             }
 
             #endregion Check
@@ -164,7 +164,7 @@ namespace ClosedXML.Tests
 
         public bool IsStatic { get; set; }
 
-        public IEnumerable<string> GetFileNames(Func<String, Boolean> predicate = null)
+        public IEnumerable<string> GetFileNames(Func<string, bool> predicate = null)
         {
             predicate = predicate ?? (s => true);
 

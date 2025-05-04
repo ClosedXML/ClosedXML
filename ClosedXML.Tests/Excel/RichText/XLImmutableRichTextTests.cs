@@ -24,24 +24,24 @@ namespace ClosedXML.Tests.Excel.RichText
             // Assert equal
             var immutableRichText = XLImmutableRichText.Create(richText);
             var equalImmutableRichText = XLImmutableRichText.Create(richText);
-            Assert.AreEqual(immutableRichText, equalImmutableRichText);
+            Assert.That(equalImmutableRichText, Is.EqualTo(immutableRichText));
 
             // Different font of a first run
             richText.ElementAt(0).SetBold(false);
             var withDifferentTextRunFont = XLImmutableRichText.Create(richText);
-            Assert.AreNotEqual(immutableRichText, withDifferentTextRunFont);
+            Assert.That(withDifferentTextRunFont, Is.Not.EqualTo(immutableRichText));
             richText.ElementAt(0).SetBold(true);
 
             // Different phonetic properties
             richText.Phonetics.SetAlignment(XLPhoneticAlignment.Left);
             var withDifferentPhoneticsProps = XLImmutableRichText.Create(richText);
-            Assert.AreNotEqual(immutableRichText, withDifferentPhoneticsProps);
+            Assert.That(withDifferentPhoneticsProps, Is.Not.EqualTo(immutableRichText));
             richText.Phonetics.SetAlignment(XLPhoneticAlignment.Distributed);
 
             // Different phonetic runs
             richText.Phonetics.Add("せかい", 6, 8);
             var withDifferentTextPhonetics = XLImmutableRichText.Create(richText);
-            Assert.AreNotEqual(immutableRichText, withDifferentTextPhonetics);
+            Assert.That(withDifferentTextPhonetics, Is.Not.EqualTo(immutableRichText));
         }
     }
 }

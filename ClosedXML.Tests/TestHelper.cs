@@ -35,21 +35,21 @@ namespace ClosedXML.Tests
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
+            workbook.SaveAs(Path.Combine(new[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
         // Because different fonts are installed on Unix,
-        // the columns widths after AdjustToContents() will
+        // the column widths after AdjustToContents() will
         // cause the tests to fail.
-        // Therefore we ignore the width attribute when running on Unix
-        public static bool StripColumnWidths { get { return IsRunningOnUnix; } }
+        // Therefore, we ignore the width attribute when running on Unix
+        public static bool StripColumnWidths => IsRunningOnUnix;
 
         public static bool IsRunningOnUnix
         {
             get
             {
-                int p = (int)Environment.OSVersion.Platform;
-                return ((p == 4) || (p == 6) || (p == 128));
+                var p = (int)Environment.OSVersion.Platform;
+                return p is 4 or 6 or 128;
             }
         }
 
@@ -87,17 +87,15 @@ namespace ClosedXML.Tests
             if (CompareWithResources)
             {
                 string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
-                using (var streamActual = File.OpenRead(filePath2))
-                {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
+                using var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath);
+                using var streamActual = File.OpenRead(filePath2);
+                var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                var formattedMessage =
+                    string.Format(
+                        "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
+                        filePath2, resourcePath, message);
 
-                    Assert.IsTrue(success, formattedMessage);
-                }
+                Assert.That(success, Is.True, formattedMessage);
             }
         }
 
@@ -140,17 +138,15 @@ namespace ClosedXML.Tests
             if (CompareWithResources)
             {
                 string resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
-                using (var streamActual = File.OpenRead(filePath2))
-                {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
+                using var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath);
+                using var streamActual = File.OpenRead(filePath2);
+                var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                var formattedMessage =
+                    string.Format(
+                        "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
+                        filePath2, resourcePath, message);
 
-                    Assert.IsTrue(success, formattedMessage);
-                }
+                Assert.That(success, Is.True, formattedMessage);
             }
         }
 
@@ -219,13 +215,11 @@ namespace ClosedXML.Tests
         public static void LoadFile(string filePartName)
         {
             IXLWorkbook wb;
-            using (var stream = GetStreamFromResource(GetResourcePath(filePartName)))
-            {
-                Assert.DoesNotThrow(() => wb = new XLWorkbook(stream), "Unable to load resource {0}", filePartName);
-            }
+            using var stream = GetStreamFromResource(GetResourcePath(filePartName));
+            Assert.DoesNotThrow(() => wb = new XLWorkbook(stream), "Unable to load resource {0}", filePartName);
         }
 
-        public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
+        public static IEnumerable<string> ListResourceFiles(Func<string, bool> predicate = null)
         {
             return _extractor.GetFileNames(predicate);
         }

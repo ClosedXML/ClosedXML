@@ -13,41 +13,37 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void PreserveCellFormat()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+            var table = new DataTable();
+            table.Columns.Add("Date", typeof(DateTime));
+
+            for (int i = 0; i < 10; i++)
             {
-                var ws = wb.AddWorksheet("Sheet1");
-
-                var table = new DataTable();
-                table.Columns.Add("Date", typeof(DateTime));
-
-                for (int i = 0; i < 10; i++)
-                {
-                    table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
-                }
-
-                ws.Column(1).Style.NumberFormat.Format = "yy-MM-dd";
-                ws.Cell("A1").InsertData(table);
-                Assert.AreEqual("yy-MM-dd", ws.Cell("A5").Style.DateFormat.Format);
-
-                ws.Row(1).Style.NumberFormat.Format = "yy-MM-dd";
-                ws.Cell("A1").InsertData(table.Rows, true);
-                Assert.AreEqual("yy-MM-dd", ws.Cell("E1").Style.DateFormat.Format);
+                table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
             }
+
+            ws.Column(1).Style.NumberFormat.Format = "yy-MM-dd";
+            ws.Cell("A1").InsertData(table);
+            Assert.That(ws.Cell("A5").Style.DateFormat.Format, Is.EqualTo("yy-MM-dd"));
+
+            ws.Row(1).Style.NumberFormat.Format = "yy-MM-dd";
+            ws.Cell("A1").InsertData(table.Rows, true);
+            Assert.That(ws.Cell("E1").Style.DateFormat.Format, Is.EqualTo("yy-MM-dd"));
         }
 
         [Test]
         public void TestExcelNumberFormats()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var c = ws.FirstCell()
-                    .SetValue((41573.875));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var c = ws.FirstCell()
+                .SetValue((41573.875));
 
-                c.Style.NumberFormat.SetFormat("m/d/yy\\ h:mm;@");
+            c.Style.NumberFormat.SetFormat("m/d/yy\\ h:mm;@");
 
-                Assert.AreEqual("10/26/13 21:00", c.GetFormattedString());
-            }
+            Assert.That(c.GetFormattedString(), Is.EqualTo("10/26/13 21:00"));
         }
 
         [Test]
@@ -59,32 +55,30 @@ namespace ClosedXML.Tests.Excel
             var cell = ws.Cell("A1").SetValue(10000.5);
 
             var currentCultureFormat = cell.GetFormattedString();
-            Assert.AreEqual("10000.5", currentCultureFormat);
+            Assert.That(currentCultureFormat, Is.EqualTo("10000.5"));
 
             var czechCultureFormat = cell.GetFormattedString(CultureInfo.GetCultureInfo("cs-CZ"));
-            Assert.AreEqual("10000,5", czechCultureFormat);
+            Assert.That(czechCultureFormat, Is.EqualTo("10000,5"));
         }
 
         [Test]
         public void ReadAndWriteColumnNumberFormat()
         {
-            using (var memoryStream = new MemoryStream())
+            using var memoryStream = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet();
-                    var sourceColumn = ws.Column(1);
-                    sourceColumn.Style.NumberFormat.Format = "0.000";
-                    wb.SaveAs(memoryStream);
-                }
+                var ws = wb.AddWorksheet();
+                var sourceColumn = ws.Column(1);
+                sourceColumn.Style.NumberFormat.Format = "0.000";
+                wb.SaveAs(memoryStream);
+            }
 
-                memoryStream.Position = 0;
+            memoryStream.Position = 0;
 
-                using (var wb = new XLWorkbook(memoryStream))
-                {
-                    var column = wb.Worksheets.Single().Column(1);
-                    Assert.AreEqual("0.000", column.Style.NumberFormat.Format);
-                }
+            using (var wb = new XLWorkbook(memoryStream))
+            {
+                var column = wb.Worksheets.Single().Column(1);
+                Assert.That(column.Style.NumberFormat.Format, Is.EqualTo("0.000"));
             }
         }
 
@@ -94,7 +88,7 @@ namespace ClosedXML.Tests.Excel
             var numberFormatKey1 = XLNumberFormatKey.ForFormat("MM");
             var numberFormatKey2 = XLNumberFormatKey.ForFormat("mm");
 
-            Assert.AreNotEqual(numberFormatKey1.GetHashCode(), numberFormatKey2.GetHashCode());
+            Assert.That(numberFormatKey2.GetHashCode(), Is.Not.EqualTo(numberFormatKey1.GetHashCode()));
         }
 
         [Test]
@@ -103,29 +97,27 @@ namespace ClosedXML.Tests.Excel
             var numberFormatKey1 = XLNumberFormatKey.ForFormat("MM");
             var numberFormatKey2 = XLNumberFormatKey.ForFormat("mm");
 
-            Assert.IsFalse(numberFormatKey1.Equals(numberFormatKey2));
+            Assert.That(numberFormatKey1.Equals(numberFormatKey2), Is.False);
         }
 
         [Test]
         public void AddCustomNumberFormatsToFileWithNonSequentialNumberFormatIds()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NumberFormats\NonSequentialNumberFormatsIds-Input.xlsx")))
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NumberFormats\NonSequentialNumberFormatsIds-Input.xlsx"));
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
+                var wb = new XLWorkbook(stream);
 
-                    var ws = wb.Worksheet("Sheet1");
+                var ws = wb.Worksheet("Sheet1");
 
-                    var format = "\"P\" #,##0.00; \"N\" #,##0.00;0;@";
-                    ws.Cell(5, 1).Value = 1.2;
-                    ws.Cell(5, 1).Style.NumberFormat.Format = format;
-                    ws.Cell(5, 2).Value = -1.2;
-                    ws.Cell(5, 2).Style.NumberFormat.Format = format;
+                var format = "\"P\" #,##0.00; \"N\" #,##0.00;0;@";
+                ws.Cell(5, 1).Value = 1.2;
+                ws.Cell(5, 1).Style.NumberFormat.Format = format;
+                ws.Cell(5, 2).Value = -1.2;
+                ws.Cell(5, 2).Style.NumberFormat.Format = format;
 
-                    return wb;
-                }, @"Other\NumberFormats\NonSequentialNumberFormatsIds-Output.xlsx");
-            }
+                return wb;
+            }, @"Other\NumberFormats\NonSequentialNumberFormatsIds-Output.xlsx");
         }
     }
 }

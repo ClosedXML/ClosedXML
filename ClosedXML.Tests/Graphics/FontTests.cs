@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Graphics
             var box = engine.GetGlyphBox(text, nonExistentFont, new Dpi(96, 96));
 
             // Max digit width of CarlitoBare is 7, unlike MS Sans Serif which is 8
-            Assert.AreEqual(7, box.AdvanceWidth);
+            Assert.That(box.AdvanceWidth, Is.EqualTo(7));
         }
 
         [TestCase]
@@ -80,7 +80,7 @@ namespace ClosedXML.Tests.Graphics
             var widthOfLetterA = engine.GetTextWidth("A", nonExistentFont, 120);
 
             const double expectedWidthOfLetterA = 31.25d;
-            Assert.AreEqual(expectedWidthOfLetterA, widthOfLetterA, 0.0001);
+            Assert.That(widthOfLetterA, Is.EqualTo(expectedWidthOfLetterA).Within(0.0001));
         }
 
         [TestCase]
@@ -93,7 +93,7 @@ namespace ClosedXML.Tests.Graphics
             var widthOfLetterB = engine.GetTextWidth("B", new DummyFont("TestFontB", 30), 96);
 
             const double expectedWidthOfLetterB = 25d;
-            Assert.AreEqual(expectedWidthOfLetterB, widthOfLetterB, 0.0001);
+            Assert.That(widthOfLetterB, Is.EqualTo(expectedWidthOfLetterB).Within(0.0001));
         }
 
         [TestCase]

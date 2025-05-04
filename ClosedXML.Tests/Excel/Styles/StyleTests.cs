@@ -13,35 +13,39 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void EmptyCellWithQuotePrefixNotTreatedAsEmpty()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().SetValue("Empty cell with quote prefix:");
+                var cell = ws.FirstCell().CellRight() as XLCell;
+
+                Assert.That(cell.IsEmpty(), Is.True);
+                cell.Value = string.Empty;
+                cell.Style.IncludeQuotePrefix = true;
+
+                Assert.Multiple(() =>
                 {
-                    var ws = wb.AddWorksheet("Sheet1");
-                    ws.FirstCell().SetValue("Empty cell with quote prefix:");
-                    var cell = ws.FirstCell().CellRight() as XLCell;
+                    Assert.That(cell.IsEmpty(), Is.True);
+                    Assert.That(cell.IsEmpty(XLCellsUsedOptions.All), Is.False);
+                });
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    cell.Value = String.Empty;
-                    cell.Style.IncludeQuotePrefix = true;
+                wb.SaveAs(ms);
+            }
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
+            ms.Seek(0, SeekOrigin.Begin);
 
-                    wb.SaveAs(ms);
-                }
-
-                ms.Seek(0, SeekOrigin.Begin);
-
-                using (var wb = new XLWorkbook(ms))
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                var cell = (XLCell)ws.Cell("B1");
+                Assert.Multiple(() =>
                 {
-                    var ws = wb.Worksheets.First();
-                    var cell = (XLCell)ws.Cell("B1");
-                    Assert.AreEqual(1, cell.MemorySstId);
+                    Assert.That(cell.MemorySstId, Is.EqualTo(1));
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
-                }
+                    Assert.That(cell.IsEmpty(), Is.True);
+                    Assert.That(cell.IsEmpty(XLCellsUsedOptions.All), Is.False);
+                });
             }
         }
 
@@ -52,34 +56,33 @@ namespace ClosedXML.Tests.Excel
         [TestCase("F6", TestName = "Non-initialized cell")]
         public void CellTakesWorksheetStyle(string cellAddress)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Column(2);
-                ws.Row(2);
-                ws.Cell("D4").Value = "Non empty";
-                ws.Style.Font.SetFontName("Arial");
-                ws.Style.Font.SetFontSize(9);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Column(2);
+            ws.Row(2);
+            ws.Cell("D4").Value = "Non empty";
+            ws.Style.Font.SetFontName("Arial");
+            ws.Style.Font.SetFontSize(9);
 
-                var cell = ws.Cell(cellAddress);
-                Assert.AreEqual("Arial", cell.Style.Font.FontName);
-                Assert.AreEqual(9, cell.Style.Font.FontSize);
-            }
+            var cell = ws.Cell(cellAddress);
+            Assert.Multiple(() =>
+            {
+                Assert.That(cell.Style.Font.FontName, Is.EqualTo("Arial"));
+                Assert.That(cell.Style.Font.FontSize, Is.EqualTo(9));
+            });
         }
 
         [TestCaseSource(nameof(StylizedEntities))]
         public void WorksheetStyleAffectsAllNestedEntities(Func<IXLWorksheet, IXLStyle> getEntityStyle)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-                ws.Style.Font.FontSize = 8;
+            ws.Style.Font.FontSize = 8;
 
-                var style = getEntityStyle(ws);
+            var style = getEntityStyle(ws);
 
-                Assert.AreEqual(8, style.Font.FontSize);
-            }
+            Assert.That(style.Font.FontSize, Is.EqualTo(8));
         }
 
         // https://github.com/ClosedXML/ClosedXML/issues/1813
@@ -157,18 +160,21 @@ namespace ClosedXML.Tests.Excel
                 .NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.Precision2);
 
             var crossCellStyle = ws.Cell(4, 2).Style;
-            Assert.AreEqual(XLAlignmentHorizontalValues.Center, crossCellStyle.Alignment.Horizontal);
-            Assert.AreEqual(XLBorderStyleValues.Double, crossCellStyle.Border.BottomBorder);
-            Assert.AreEqual(XLColor.Blue, crossCellStyle.Fill.BackgroundColor);
-            Assert.AreEqual(true, crossCellStyle.IncludeQuotePrefix);
-            Assert.AreEqual((int)XLPredefinedFormat.Number.Precision2, crossCellStyle.NumberFormat.NumberFormatId);
-            Assert.AreEqual(true, crossCellStyle.Protection.Locked);
+            Assert.Multiple(() =>
+            {
+                Assert.That(crossCellStyle.Alignment.Horizontal, Is.EqualTo(XLAlignmentHorizontalValues.Center));
+                Assert.That(crossCellStyle.Border.BottomBorder, Is.EqualTo(XLBorderStyleValues.Double));
+                Assert.That(crossCellStyle.Fill.BackgroundColor, Is.EqualTo(XLColor.Blue));
+                Assert.That(crossCellStyle.IncludeQuotePrefix, Is.True);
+                Assert.That(crossCellStyle.NumberFormat.NumberFormatId, Is.EqualTo((int)XLPredefinedFormat.Number.Precision2));
+                Assert.That(crossCellStyle.Protection.Locked, Is.True);
+            });
 
             var rowCellStyle = ws.Cell(4, 3).Style;
-            Assert.AreEqual(rowStyle, rowCellStyle);
+            Assert.That(rowCellStyle, Is.EqualTo(rowStyle));
 
             var colCellStyle = ws.Cell(5, 2).Style;
-            Assert.AreEqual(colStyle, colCellStyle);
+            Assert.That(colCellStyle, Is.EqualTo(colStyle));
         }
 
         private static IEnumerable<TestCaseData> StylizedEntities

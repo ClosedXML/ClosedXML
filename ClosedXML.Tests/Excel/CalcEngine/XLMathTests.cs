@@ -9,15 +9,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void IsEven()
         {
-            Assert.IsTrue(XLMath.IsEven(2));
-            Assert.IsFalse(XLMath.IsEven(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLMath.IsEven(2), Is.True);
+                Assert.That(XLMath.IsEven(3), Is.False);
+            });
         }
 
         [Test]
         public void IsOdd()
         {
-            Assert.IsTrue(XLMath.IsOdd(3));
-            Assert.IsFalse(XLMath.IsOdd(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLMath.IsOdd(3), Is.True);
+                Assert.That(XLMath.IsOdd(2), Is.False);
+            });
         }
     }
 }

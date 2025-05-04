@@ -126,7 +126,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(ObjectWithAttributes);
-            Assert.AreEqual(2, reader.GetRecords().Count());
+            Assert.That(reader.GetRecords().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -138,15 +138,18 @@ namespace ClosedXML.Tests.Excel.InsertData
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();
 
-            Assert.AreEqual("Value 2", firstRecord[0]);
-            Assert.AreEqual("Value 1", firstRecord[1]);
-            Assert.AreEqual(4, firstRecord[2]);
-            Assert.AreEqual(3, firstRecord[3]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(firstRecord[0], Is.EqualTo("Value 2"));
+                Assert.That(firstRecord[1], Is.EqualTo("Value 1"));
+                Assert.That(firstRecord[2], Is.EqualTo(4));
+                Assert.That(firstRecord[3], Is.EqualTo(3));
 
-            Assert.AreEqual("Value 6", lastRecord[0]);
-            Assert.AreEqual("Value 5", lastRecord[1]);
-            Assert.AreEqual(8, lastRecord[2]);
-            Assert.AreEqual(7, lastRecord[3]);
+                Assert.That(lastRecord[0], Is.EqualTo("Value 6"));
+                Assert.That(lastRecord[1], Is.EqualTo("Value 5"));
+                Assert.That(lastRecord[2], Is.EqualTo(8));
+                Assert.That(lastRecord[3], Is.EqualTo(7));
+            });
         }
 
         [Test]
@@ -158,13 +161,16 @@ namespace ClosedXML.Tests.Excel.InsertData
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();
 
-            Assert.AreEqual(1, firstRecord[0]);
-            Assert.AreEqual(2, firstRecord[1]);
-            Assert.AreEqual(3, firstRecord[2]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(firstRecord[0], Is.EqualTo(1));
+                Assert.That(firstRecord[1], Is.EqualTo(2));
+                Assert.That(firstRecord[2], Is.EqualTo(3));
 
-            Assert.AreEqual(0, lastRecord[0]);
-            Assert.AreEqual(0, lastRecord[1]);
-            Assert.AreEqual(Blank.Value, lastRecord[2]);
+                Assert.That(lastRecord[0], Is.EqualTo(0));
+                Assert.That(lastRecord[1], Is.EqualTo(0));
+                Assert.That(lastRecord[2], Is.EqualTo(Blank.Value));
+            });
         }
 
         [Test]
@@ -176,13 +182,16 @@ namespace ClosedXML.Tests.Excel.InsertData
             var firstRecord = result.First().ToArray();
             var lastRecord = result.Last().ToArray();
 
-            Assert.AreEqual(1, firstRecord[0]);
-            Assert.AreEqual(2, firstRecord[1]);
-            Assert.AreEqual(3, firstRecord[2]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(firstRecord[0], Is.EqualTo(1));
+                Assert.That(firstRecord[1], Is.EqualTo(2));
+                Assert.That(firstRecord[2], Is.EqualTo(3));
 
-            Assert.AreEqual(Blank.Value, lastRecord[0]);
-            Assert.AreEqual(Blank.Value, lastRecord[1]);
-            Assert.AreEqual(Blank.Value, lastRecord[2]);
+                Assert.That(lastRecord[0], Is.EqualTo(Blank.Value));
+                Assert.That(lastRecord[1], Is.EqualTo(Blank.Value));
+                Assert.That(lastRecord[2], Is.EqualTo(Blank.Value));
+            });
         }
 
         [Test]
@@ -191,8 +200,11 @@ namespace ClosedXML.Tests.Excel.InsertData
             var data = new[] { new TestClassWithIndexer() };
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
 
-            Assert.AreEqual(1, reader.GetPropertiesCount());
-            Assert.AreEqual(nameof(TestClassWithIndexer.Value), reader.GetPropertyName(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(reader.GetPropertiesCount(), Is.EqualTo(1));
+                Assert.That(reader.GetPropertyName(0), Is.EqualTo(nameof(TestClassWithIndexer.Value)));
+            });
         }
 
         private record TestClassWithIndexer

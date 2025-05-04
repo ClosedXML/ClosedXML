@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D5").FormulaA1 = "ABS(B3:B3)";
 
-            Assert.AreEqual(1, ws.Cell("D5").Value);
+            Assert.That(ws.Cell("D5").Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D3").FormulaA1 = "ABS(B1:B10)";
 
-            Assert.AreEqual(1, ws.Cell("D3").Value);
+            Assert.That(ws.Cell("D3").Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("B5").FormulaA1 = "ABS(A3:Z3)";
 
-            Assert.AreEqual(1, ws.Cell("B5").Value);
+            Assert.That(ws.Cell("B5").Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var sheet2 = wb.AddWorksheet("Sheet2");
             sheet2.Cell("D3").FormulaA1 = "ABS(Sheet1!B1:B10)";
 
-            Assert.AreEqual(1, sheet2.Cell("D3").Value);
+            Assert.That(sheet2.Cell("D3").Value, Is.EqualTo(1));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D5").FormulaA1 = "ABS(B1:B4)";
 
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("D5").Value);
+            Assert.That(ws.Cell("D5").Value, Is.EqualTo(XLError.IncompatibleValue));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             ws.Cell("D3").FormulaA1 = "ABS((B1:B2,B3:B5))"; // A continous range made of two areas
 
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Cell("D3").Value);
+            Assert.That(ws.Cell("D3").Value, Is.EqualTo(XLError.IncompatibleValue));
         }
 
         [Test]
@@ -84,11 +84,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B3").Value = -1;
             var horizontalIntersectionCell = ws.Cell("D3");
             horizontalIntersectionCell.FormulaA1 = "ABS(A1:B5)";
-            Assert.AreEqual(XLError.IncompatibleValue, horizontalIntersectionCell.Value);
+            Assert.That(horizontalIntersectionCell.Value, Is.EqualTo(XLError.IncompatibleValue));
 
             var verticalIntersectionCell = ws.Cell("B5");
             verticalIntersectionCell.FormulaA1 = "ABS(A3:C4)";
-            Assert.AreEqual(XLError.IncompatibleValue, verticalIntersectionCell.Value);
+            Assert.That(verticalIntersectionCell.Value, Is.EqualTo(XLError.IncompatibleValue));
         }
 
         #endregion
@@ -113,7 +113,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cells("A1:Z100").Value = 1;
 
             var referenceCells = ws.Evaluate($"SUM({referenceFormula})");
-            Assert.AreEqual(expectedCellCount, referenceCells);
+            Assert.That(referenceCells, Is.EqualTo(expectedCellCount));
         }
 
         [TestCase("Sheet1!A1:C5")]
@@ -127,7 +127,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var secondSheet = wb.AddWorksheet("Sheet2");
             secondSheet.Cell("A1").FormulaA1 = $"=SUM({formula})";
 
-            Assert.AreEqual(15, secondSheet.Cell("A1").Value);
+            Assert.That(secondSheet.Cell("A1").Value, Is.EqualTo(15));
         }
 
         [TestCase("Current!A1:Other!B2")]
@@ -143,7 +143,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var formulaSheet = wb.AddWorksheet("Current");
             wb.AddWorksheet("Other");
 
-            Assert.AreEqual(XLError.IncompatibleValue, formulaSheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.That(formulaSheet.Evaluate($"SUM({referenceFormula})"), Is.EqualTo(XLError.IncompatibleValue));
         }
 
         [TestCase("A1:IF(TRUE,1,)")]
@@ -155,7 +155,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var sheet = wb.AddWorksheet();
 
-            Assert.AreEqual(XLError.IncompatibleValue, sheet.Evaluate($"SUM({referenceFormula})"));
+            Assert.That(sheet.Evaluate($"SUM({referenceFormula})"), Is.EqualTo(XLError.IncompatibleValue));
         }
 
         #endregion
@@ -183,7 +183,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Not extra braces, so the comma is interpreted as union and not an extra argument
             var value = currentSheet.Evaluate($"SUM(({formula}))");
 
-            Assert.AreEqual(expectedSum, value);
+            Assert.That(value, Is.EqualTo(expectedSum));
         }
 
         #endregion

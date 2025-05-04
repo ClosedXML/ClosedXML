@@ -39,40 +39,41 @@ namespace ClosedXML.Tests.Excel.Misc
 
             IXLCell center = range.Cell(2, 2);
 
-            Assert.AreEqual(XLColor.Red, center.Style.Border.TopBorderColor);
-            Assert.AreEqual(XLColor.Red, center.Style.Border.BottomBorderColor);
-            Assert.AreEqual(XLColor.Red, center.Style.Border.LeftBorderColor);
-            Assert.AreEqual(XLColor.Red, center.Style.Border.RightBorderColor);
+            Assert.Multiple(() =>
+            {
+                Assert.That(center.Style.Border.TopBorderColor, Is.EqualTo(XLColor.Red));
+                Assert.That(center.Style.Border.BottomBorderColor, Is.EqualTo(XLColor.Red));
+                Assert.That(center.Style.Border.LeftBorderColor, Is.EqualTo(XLColor.Red));
+                Assert.That(center.Style.Border.RightBorderColor, Is.EqualTo(XLColor.Red));
 
-            Assert.AreEqual(XLBorderStyleValues.None, range.FirstRow().Cell(1).Style.Border.TopBorder);
-            Assert.AreEqual(XLBorderStyleValues.Thick, range.FirstRow().Cell(2).Style.Border.TopBorder);
-            Assert.AreEqual(XLBorderStyleValues.Double, range.FirstRow().Cell(3).Style.Border.TopBorder);
+                Assert.That(range.FirstRow().Cell(1).Style.Border.TopBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(range.FirstRow().Cell(2).Style.Border.TopBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(range.FirstRow().Cell(3).Style.Border.TopBorder, Is.EqualTo(XLBorderStyleValues.Double));
 
-            Assert.AreEqual(XLBorderStyleValues.None, range.LastRow().Cell(1).Style.Border.BottomBorder);
-            Assert.AreEqual(XLBorderStyleValues.Thick, range.LastRow().Cell(2).Style.Border.BottomBorder);
-            Assert.AreEqual(XLBorderStyleValues.Double, range.LastRow().Cell(3).Style.Border.BottomBorder);
+                Assert.That(range.LastRow().Cell(1).Style.Border.BottomBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(range.LastRow().Cell(2).Style.Border.BottomBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(range.LastRow().Cell(3).Style.Border.BottomBorder, Is.EqualTo(XLBorderStyleValues.Double));
 
-            Assert.AreEqual(XLBorderStyleValues.None, range.FirstColumn().Cell(1).Style.Border.LeftBorder);
-            Assert.AreEqual(XLBorderStyleValues.Thick, range.FirstColumn().Cell(2).Style.Border.LeftBorder);
-            Assert.AreEqual(XLBorderStyleValues.Double, range.FirstColumn().Cell(3).Style.Border.LeftBorder);
+                Assert.That(range.FirstColumn().Cell(1).Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(range.FirstColumn().Cell(2).Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(range.FirstColumn().Cell(3).Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.Double));
 
-            Assert.AreEqual(XLBorderStyleValues.None, range.LastColumn().Cell(1).Style.Border.RightBorder);
-            Assert.AreEqual(XLBorderStyleValues.Thick, range.LastColumn().Cell(2).Style.Border.RightBorder);
-            Assert.AreEqual(XLBorderStyleValues.Double, range.LastColumn().Cell(3).Style.Border.RightBorder);
+                Assert.That(range.LastColumn().Cell(1).Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(range.LastColumn().Cell(2).Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.Thick));
+                Assert.That(range.LastColumn().Cell(3).Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.Double));
+            });
         }
 
         [Test]
         public void ResolveThemeColors()
         {
-            using (var wb = new XLWorkbook())
-            {
-                string color;
-                color = wb.Theme.ResolveThemeColor(XLThemeColor.Accent1).Color.ToHex();
-                Assert.AreEqual("FF4F81BD", color);
+            using var wb = new XLWorkbook();
+            string color;
+            color = wb.Theme.ResolveThemeColor(XLThemeColor.Accent1).Color.ToHex();
+            Assert.That(color, Is.EqualTo("FF4F81BD"));
 
-                color = wb.Theme.ResolveThemeColor(XLThemeColor.Background1).Color.ToHex();
-                Assert.AreEqual("FFFFFFFF", color);
-            }
+            color = wb.Theme.ResolveThemeColor(XLThemeColor.Background1).Color.ToHex();
+            Assert.That(color, Is.EqualTo("FFFFFFFF"));
         }
 
         [Theory]
@@ -86,25 +87,26 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void SetStyleViaRowReference()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Style
+                .Font.SetFontSize(8)
+                .Font.SetFontColor(XLColor.Green)
+                .Font.SetBold(true);
+
+            var row = ws.Row(1);
+            ws.Cell(1, 1).Value = "Test";
+            row.Cell(2).Value = "Test";
+            row.Cells(3, 3).Value = "Test";
+
+            foreach (var cell in ws.CellsUsed())
             {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Style
-                   .Font.SetFontSize(8)
-                   .Font.SetFontColor(XLColor.Green)
-                   .Font.SetBold(true);
-
-                var row = ws.Row(1);
-                ws.Cell(1, 1).Value = "Test";
-                row.Cell(2).Value = "Test";
-                row.Cells(3, 3).Value = "Test";
-
-                foreach (var cell in ws.CellsUsed())
+                Assert.Multiple(() =>
                 {
-                    Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
-                    Assert.AreEqual(XLColor.Green, ws.Cell("B1").Style.Font.FontColor);
-                    Assert.AreEqual(true, ws.Cell("C1").Style.Font.Bold);
-                }
+                    Assert.That(ws.Cell("A1").Style.Font.FontSize, Is.EqualTo(8));
+                    Assert.That(ws.Cell("B1").Style.Font.FontColor, Is.EqualTo(XLColor.Green));
+                    Assert.That(ws.Cell("C1").Style.Font.Bold, Is.True);
+                });
             }
         }
     }

@@ -15,7 +15,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var firstValue = (double)XLWorkbook.EvaluateExpr("\"0:0:0.0015\" * 1");
             var secondValue = (double)XLWorkbook.EvaluateExpr("\"0:0:0.0024\" * 1");
-            Assert.AreEqual(firstValue, secondValue);
+            Assert.That(secondValue, Is.EqualTo(firstValue));
         }
 
         [TestCase("100%", 1)]
@@ -314,9 +314,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var parsedValue = wb.Evaluate($"\"{text}\"*1");
             if (expectedValue is null)
-                Assert.AreEqual(XLError.IncompatibleValue, parsedValue);
+                Assert.That(parsedValue, Is.EqualTo(XLError.IncompatibleValue));
             else
-                Assert.AreEqual(expectedValue.Value, (double)parsedValue, tolerance);
+                Assert.That((double)parsedValue, Is.EqualTo(expectedValue.Value).Within(tolerance));
         }
     }
 }

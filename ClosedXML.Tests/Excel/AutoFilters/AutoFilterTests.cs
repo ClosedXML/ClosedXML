@@ -15,44 +15,43 @@ namespace ClosedXML.Tests
         [Test]
         public void AutoFilterExpandsWithTable()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+
+            ws.FirstCell().SetValue("Categories")
+                .CellBelow().SetValue("1")
+                .CellBelow().SetValue("2");
+
+            IXLTable table = ws.RangeUsed().CreateTable();
+
+            var listOfArr = new List<int>();
+            listOfArr.Add(3);
+            listOfArr.Add(4);
+            listOfArr.Add(5);
+            listOfArr.Add(6);
+
+            table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
+            table.DataRange.FirstCell().InsertData(listOfArr);
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-
-                ws.FirstCell().SetValue("Categories")
-                    .CellBelow().SetValue("1")
-                    .CellBelow().SetValue("2");
-
-                IXLTable table = ws.RangeUsed().CreateTable();
-
-                var listOfArr = new List<Int32>();
-                listOfArr.Add(3);
-                listOfArr.Add(4);
-                listOfArr.Add(5);
-                listOfArr.Add(6);
-
-                table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
-                table.DataRange.FirstCell().InsertData(listOfArr);
-
-                Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
-                Assert.AreEqual(5, table.AutoFilter.VisibleRows.Count());
-            }
+                Assert.That(table.AutoFilter.Range.RangeAddress.ToStringRelative(), Is.EqualTo("A1:A5"));
+                Assert.That(table.AutoFilter.VisibleRows.Count(), Is.EqualTo(5));
+            });
         }
 
         [Test]
         public void AutoFilterSortWhenNotInFirstRow()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 
-                ws.Cell(3, 3).SetValue("Names")
-                    .CellBelow().SetValue("Manuel")
-                    .CellBelow().SetValue("Carlos")
-                    .CellBelow().SetValue("Dominic");
-                ws.RangeUsed().SetAutoFilter().Sort();
-                Assert.AreEqual("Carlos", ws.Cell(4, 3).GetText());
-            }
+            ws.Cell(3, 3).SetValue("Names")
+                .CellBelow().SetValue("Manuel")
+                .CellBelow().SetValue("Carlos")
+                .CellBelow().SetValue("Dominic");
+            ws.RangeUsed().SetAutoFilter().Sort();
+            Assert.That(ws.Cell(4, 3).GetText(), Is.EqualTo("Carlos"));
         }
 
         [Test]
@@ -78,52 +77,48 @@ namespace ClosedXML.Tests
         [Test]
         public void CanClearAutoFilter2()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("AutoFilter");
-                ws.Cell("A1").Value = "Names";
-                ws.Cell("A2").Value = "John";
-                ws.Cell("A3").Value = "Hank";
-                ws.Cell("A4").Value = "Dagny";
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("AutoFilter");
+            ws.Cell("A1").Value = "Names";
+            ws.Cell("A2").Value = "John";
+            ws.Cell("A3").Value = "Hank";
+            ws.Cell("A4").Value = "Dagny";
 
-                ws.SetAutoFilter(false);
-                Assert.That(!ws.AutoFilter.IsEnabled);
+            ws.SetAutoFilter(false);
+            Assert.That(!ws.AutoFilter.IsEnabled);
 
-                ws.RangeUsed().SetAutoFilter();
-                Assert.That(ws.AutoFilter.IsEnabled);
+            ws.RangeUsed().SetAutoFilter();
+            Assert.That(ws.AutoFilter.IsEnabled);
 
-                ws.RangeUsed().SetAutoFilter(false);
-                Assert.That(!ws.AutoFilter.IsEnabled);
-            }
+            ws.RangeUsed().SetAutoFilter(false);
+            Assert.That(!ws.AutoFilter.IsEnabled);
         }
 
         [Test]
         public void CanCopyAutoFilterToNewSheetOnNewWorkbook()
         {
-            using (var ms1 = new MemoryStream())
-            using (var ms2 = new MemoryStream())
+            using var ms1 = new MemoryStream();
+            using var ms2 = new MemoryStream();
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
             {
-                using (var wb1 = new XLWorkbook())
-                using (var wb2 = new XLWorkbook())
-                {
-                    var ws = wb1.Worksheets.Add("AutoFilter");
-                    ws.Cell("A1").Value = "Names";
-                    ws.Cell("A2").Value = "John";
-                    ws.Cell("A3").Value = "Hank";
-                    ws.Cell("A4").Value = "Dagny";
+                var ws = wb1.Worksheets.Add("AutoFilter");
+                ws.Cell("A1").Value = "Names";
+                ws.Cell("A2").Value = "John";
+                ws.Cell("A3").Value = "Hank";
+                ws.Cell("A4").Value = "Dagny";
 
-                    ws.RangeUsed().SetAutoFilter();
+                ws.RangeUsed().SetAutoFilter();
 
-                    wb1.SaveAs(ms1);
+                wb1.SaveAs(ms1);
 
-                    ws.CopyTo(wb2, ws.Name);
-                    wb2.SaveAs(ms2);
-                }
+                ws.CopyTo(wb2, ws.Name);
+                wb2.SaveAs(ms2);
+            }
 
-                using (var wb2 = new XLWorkbook(ms2))
-                {
-                    Assert.IsTrue(wb2.Worksheets.First().AutoFilter.IsEnabled);
-                }
+            using (var wb2 = new XLWorkbook(ms2))
+            {
+                Assert.That(wb2.Worksheets.First().AutoFilter.IsEnabled, Is.True);
             }
         }
 
@@ -151,81 +146,76 @@ namespace ClosedXML.Tests
         public void AutoFilterRangeRemainsValidOnInsertColumn(string rangeAddress)
         {
             //Arrange
-            using (var ms1 = new MemoryStream())
-            {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.Worksheets.Add("AutoFilter");
-                    ws.Cell("A1").Value = "Ids";
-                    ws.Cell("B1").Value = "Names";
-                    ws.Cell("B2").Value = "John";
-                    ws.Cell("B3").Value = "Hank";
-                    ws.Cell("B4").Value = "Dagny";
-                    ws.Cell("C1").Value = "Phones";
+            using var ms1 = new MemoryStream();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("AutoFilter");
+            ws.Cell("A1").Value = "Ids";
+            ws.Cell("B1").Value = "Names";
+            ws.Cell("B2").Value = "John";
+            ws.Cell("B3").Value = "Hank";
+            ws.Cell("B4").Value = "Dagny";
+            ws.Cell("C1").Value = "Phones";
 
-                    ws.Range("B1:B4").SetAutoFilter(true);
+            ws.Range("B1:B4").SetAutoFilter(true);
 
-                    //Act
-                    var range = ws.Range(rangeAddress);
-                    range.InsertColumnsBefore(1);
+            //Act
+            var range = ws.Range(rangeAddress);
+            range.InsertColumnsBefore(1);
 
-                    //Assert
-                    Assert.IsTrue(ws.AutoFilter.Range.RangeAddress.IsValid);
-                }
-            }
+            //Assert
+            Assert.That(ws.AutoFilter.Range.RangeAddress.IsValid, Is.True);
         }
 
         [Test]
         public void AutoFilterVisibleRows()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+
+            ws.Cell(3, 3).SetValue("Names")
+                .CellBelow().SetValue("Manuel")
+                .CellBelow().SetValue("Carlos")
+                .CellBelow().SetValue("Dominic");
+
+            var autoFilter = ws.RangeUsed()
+                .SetAutoFilter();
+
+            autoFilter.Column(1).AddFilter("Carlos");
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheets.Add("Sheet1");
-
-                ws.Cell(3, 3).SetValue("Names")
-                    .CellBelow().SetValue("Manuel")
-                    .CellBelow().SetValue("Carlos")
-                    .CellBelow().SetValue("Dominic");
-
-                var autoFilter = ws.RangeUsed()
-                    .SetAutoFilter();
-
-                autoFilter.Column(1).AddFilter("Carlos");
-
-                Assert.AreEqual("Carlos", ws.Cell(5, 3).GetText());
-                Assert.AreEqual(2, autoFilter.VisibleRows.Count());
-                Assert.AreEqual(3, autoFilter.VisibleRows.First().WorksheetRow().RowNumber());
-                Assert.AreEqual(5, autoFilter.VisibleRows.Last().WorksheetRow().RowNumber());
-            }
+                Assert.That(ws.Cell(5, 3).GetText(), Is.EqualTo("Carlos"));
+                Assert.That(autoFilter.VisibleRows.Count(), Is.EqualTo(2));
+                Assert.That(autoFilter.VisibleRows.First().WorksheetRow().RowNumber(), Is.EqualTo(3));
+                Assert.That(autoFilter.VisibleRows.Last().WorksheetRow().RowNumber(), Is.EqualTo(5));
+            });
         }
 
         [Test]
         public void ReapplyAutoFilter()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 
-                ws.Cell(3, 3).SetValue("Names")
-                    .CellBelow().SetValue("Manuel")
-                    .CellBelow().SetValue("Carlos")
-                    .CellBelow().SetValue("Dominic")
-                    .CellBelow().SetValue("Jose");
+            ws.Cell(3, 3).SetValue("Names")
+                .CellBelow().SetValue("Manuel")
+                .CellBelow().SetValue("Carlos")
+                .CellBelow().SetValue("Dominic")
+                .CellBelow().SetValue("Jose");
 
-                var autoFilter = ws.RangeUsed()
-                    .SetAutoFilter();
+            var autoFilter = ws.RangeUsed()
+                .SetAutoFilter();
 
-                autoFilter.Column(1).AddFilter("Carlos");
+            autoFilter.Column(1).AddFilter("Carlos");
 
-                Assert.AreEqual(3, autoFilter.HiddenRows.Count());
+            Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(3));
 
-                // Unhide the rows so that the table is out of sync with the filter
-                autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
-                Assert.False(autoFilter.HiddenRows.Any());
+            // Unhide the rows so that the table is out of sync with the filter
+            autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
+            Assert.False(autoFilter.HiddenRows.Any());
 
-                autoFilter.Reapply();
-                Assert.AreEqual(3, autoFilter.HiddenRows.Count());
-            }
+            autoFilter.Reapply();
+            Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(3));
         }
 
         [Test]
@@ -253,13 +243,16 @@ namespace ClosedXML.Tests
                 {
                     var ws = wb.Worksheets.First();
 
-                    // Regular filter compares values as strings, doesn't convert to XLCellValue,
-                    // so the value is read from the file as a text despite looking like a number.
-                    Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value);
-                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+                    Assert.Multiple(() =>
+                    {
+                        // Regular filter compares values as strings, doesn't convert to XLCellValue,
+                        // so the value is read from the file as a text despite looking like a number.
+                        Assert.That(((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value, Is.EqualTo("10 000.00"));
+                        Assert.That(ws.AutoFilter.VisibleRows.Count(), Is.EqualTo(2));
+                    });
 
                     ws.AutoFilter.Reapply();
-                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+                    Assert.That(ws.AutoFilter.VisibleRows.Count(), Is.EqualTo(2));
                 }
 
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
@@ -268,13 +261,13 @@ namespace ClosedXML.Tests
                 using (var wb = new XLWorkbook(stream))
                 {
                     var ws = wb.Worksheets.First();
-                    Assert.AreEqual("10 000.00", ((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value);
+                    Assert.That(((XLAutoFilter)ws.AutoFilter).Column(1).Single().Value, Is.EqualTo("10 000.00"));
 
                     var v = ws.AutoFilter.VisibleRows.Select(r => r.FirstCell().Value).ToList();
-                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+                    Assert.That(ws.AutoFilter.VisibleRows.Count(), Is.EqualTo(2));
 
                     ws.AutoFilter.Reapply();
-                    Assert.AreEqual(1, ws.AutoFilter.VisibleRows.Count());
+                    Assert.That(ws.AutoFilter.VisibleRows.Count(), Is.EqualTo(1));
                 }
             }
             finally
@@ -286,36 +279,34 @@ namespace ClosedXML.Tests
         [Test]
         public void Issue1917NotContainsFilter()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
+                var ws = wb.Worksheets.Add("Test");
+                ws.Cell(1, 1).SetValue("StringCol");
+
+                for (var i = 0; i < 5; i++)
                 {
-                    var ws = wb.Worksheets.Add("Test");
-                    ws.Cell(1, 1).SetValue("StringCol");
-
-                    for (var i = 0; i < 5; i++)
-                    {
-                        ws.Cell(i + 2, 1).SetValue($"String{i}");
-                    }
-
-                    var autoFilter = ws.RangeUsed()
-                        .SetAutoFilter();
-
-                    autoFilter.Column(1).NotContains("String3");
-                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
-
-                    wb.SaveAs(ms);
+                    ws.Cell(i + 2, 1).SetValue($"String{i}");
                 }
 
-                ms.Position = 0;
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.Worksheet("Test");
-                    var autoFilter = ws.AutoFilter;
+                var autoFilter = ws.RangeUsed()
+                    .SetAutoFilter();
 
-                    autoFilter.Reapply();
-                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
-                }
+                autoFilter.Column(1).NotContains("String3");
+                Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(1));
+
+                wb.SaveAs(ms);
+            }
+
+            ms.Position = 0;
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Worksheet("Test");
+                var autoFilter = ws.AutoFilter;
+
+                autoFilter.Reapply();
+                Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(1));
             }
         }
 
@@ -326,51 +317,49 @@ namespace ClosedXML.Tests
         [TestCase("contains")]
         public void NotStringFilter(string type)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
+                var ws = wb.Worksheets.Add("Test");
+                ws.Cell(1, 1).SetValue("StringCol");
+
+                for (var i = 0; i < 5; i++)
                 {
-                    var ws = wb.Worksheets.Add("Test");
-                    ws.Cell(1, 1).SetValue("StringCol");
-
-                    for (var i = 0; i < 5; i++)
-                    {
-                        ws.Cell(i + 2, 1).SetValue($"{i}-String{i}");
-                    }
-
-                    ws.Columns().AdjustToContents();
-                    var autoFilter = ws.RangeUsed()
-                        .SetAutoFilter();
-
-                    switch (type)
-                    {
-                        case "ends":
-                            autoFilter.Column(1).NotEndsWith("3");
-                            break;
-                        case "begins":
-                            autoFilter.Column(1).NotBeginsWith("3");
-                            break;
-                        case "equal":
-                            autoFilter.Column(1).NotEqualTo("3-String3");
-                            break;
-                        case "contains":
-                            autoFilter.Column(1).NotContains("3-");
-                            break;
-                    }
-                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
-
-                    wb.SaveAs(ms);
+                    ws.Cell(i + 2, 1).SetValue($"{i}-String{i}");
                 }
 
-                ms.Position = 0;
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.Worksheet("Test");
-                    var autoFilter = ws.AutoFilter;
+                ws.Columns().AdjustToContents();
+                var autoFilter = ws.RangeUsed()
+                    .SetAutoFilter();
 
-                    autoFilter.Reapply();
-                    Assert.AreEqual(1, autoFilter.HiddenRows.Count());
+                switch (type)
+                {
+                    case "ends":
+                        autoFilter.Column(1).NotEndsWith("3");
+                        break;
+                    case "begins":
+                        autoFilter.Column(1).NotBeginsWith("3");
+                        break;
+                    case "equal":
+                        autoFilter.Column(1).NotEqualTo("3-String3");
+                        break;
+                    case "contains":
+                        autoFilter.Column(1).NotContains("3-");
+                        break;
                 }
+                Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(1));
+
+                wb.SaveAs(ms);
+            }
+
+            ms.Position = 0;
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Worksheet("Test");
+                var autoFilter = ws.AutoFilter;
+
+                autoFilter.Reapply();
+                Assert.That(autoFilter.HiddenRows.Count(), Is.EqualTo(1));
             }
         }
     }

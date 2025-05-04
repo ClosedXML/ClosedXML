@@ -27,24 +27,30 @@ namespace ClosedXML.Tests
             ws.Cell(1, 3).CopyFrom(column1.Column(1, 7));
 
             IXLColumn column2 = ws.Column(2);
-            Assert.AreEqual(XLColor.Red, column2.Cell(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromArgb(1, 1, 1), column2.Cell(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), column2.Cell(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromIndex(26), column2.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen),
-                column2.Cell(5).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromName("Blue"), column2.Cell(6).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), column2.Cell(7).Style.Fill.BackgroundColor);
+            Assert.Multiple(() =>
+            {
+                Assert.That(column2.Cell(1).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Red));
+                Assert.That(column2.Cell(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromArgb(1, 1, 1)));
+                Assert.That(column2.Cell(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromHtml("#CCCCCC")));
+                Assert.That(column2.Cell(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromIndex(26)));
+                Assert.That(column2.Cell(5).Style.Fill.BackgroundColor,
+                    Is.EqualTo(XLColor.FromColor(Color.MediumSeaGreen)));
+                Assert.That(column2.Cell(6).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromName("Blue")));
+                Assert.That(column2.Cell(7).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromTheme(XLThemeColor.Accent3)));
+            });
 
             IXLColumn column3 = ws.Column(3);
-            Assert.AreEqual(XLColor.Red, column3.Cell(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromArgb(1, 1, 1), column3.Cell(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), column3.Cell(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromIndex(26), column3.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen),
-                column3.Cell(5).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromName("Blue"), column3.Cell(6).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), column3.Cell(7).Style.Fill.BackgroundColor);
+            Assert.Multiple(() =>
+            {
+                Assert.That(column3.Cell(1).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Red));
+                Assert.That(column3.Cell(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromArgb(1, 1, 1)));
+                Assert.That(column3.Cell(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromHtml("#CCCCCC")));
+                Assert.That(column3.Cell(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromIndex(26)));
+                Assert.That(column3.Cell(5).Style.Fill.BackgroundColor,
+                    Is.EqualTo(XLColor.FromColor(Color.MediumSeaGreen)));
+                Assert.That(column3.Cell(6).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromName("Blue")));
+                Assert.That(column3.Cell(7).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromTheme(XLThemeColor.Accent3)));
+            });
         }
 
         [Test]
@@ -60,27 +66,33 @@ namespace ClosedXML.Tests
             ws.Cell(3, 1).CopyFrom(row1.Row(1, 7));
 
             IXLRow row2 = ws.Row(2);
-            Assert.AreEqual(XLColor.Red, row2.Cell(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromArgb(1, 1, 1), row2.Cell(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), row2.Cell(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromIndex(26), row2.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen), row2.Cell(5).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromName("Blue"), row2.Cell(6).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), row2.Cell(7).Style.Fill.BackgroundColor);
+            Assert.Multiple(() =>
+            {
+                Assert.That(row2.Cell(1).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Red));
+                Assert.That(row2.Cell(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromArgb(1, 1, 1)));
+                Assert.That(row2.Cell(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromHtml("#CCCCCC")));
+                Assert.That(row2.Cell(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromIndex(26)));
+                Assert.That(row2.Cell(5).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromColor(Color.MediumSeaGreen)));
+                Assert.That(row2.Cell(6).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromName("Blue")));
+                Assert.That(row2.Cell(7).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromTheme(XLThemeColor.Accent3)));
+            });
 
             IXLRow row3 = ws.Row(3);
-            Assert.AreEqual(XLColor.Red, row3.Cell(1).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromArgb(1, 1, 1), row3.Cell(2).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), row3.Cell(3).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromIndex(26), row3.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen), row3.Cell(5).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromName("Blue"), row3.Cell(6).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), row3.Cell(7).Style.Fill.BackgroundColor);
+            Assert.Multiple(() =>
+            {
+                Assert.That(row3.Cell(1).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Red));
+                Assert.That(row3.Cell(2).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromArgb(1, 1, 1)));
+                Assert.That(row3.Cell(3).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromHtml("#CCCCCC")));
+                Assert.That(row3.Cell(4).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromIndex(26)));
+                Assert.That(row3.Cell(5).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromColor(Color.MediumSeaGreen)));
+                Assert.That(row3.Cell(6).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromName("Blue")));
+                Assert.That(row3.Cell(7).Style.Fill.BackgroundColor, Is.EqualTo(XLColor.FromTheme(XLThemeColor.Accent3)));
 
-            Assert.AreEqual(3, ws.ConditionalFormats.Count());
-            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B1").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula));
-            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B2:B2").Values.Any(v => v.Value.Value == "G2" && v.Value.IsFormula));
-            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B3:B3").Values.Any(v => v.Value.Value == "G3" && v.Value.IsFormula));
+                Assert.That(ws.ConditionalFormats.Count(), Is.EqualTo(3));
+                Assert.That(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B1").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula), Is.True);
+                Assert.That(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B2:B2").Values.Any(v => v.Value.Value == "G2" && v.Value.IsFormula), Is.True);
+                Assert.That(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B3:B3").Values.Any(v => v.Value.Value == "G3" && v.Value.IsFormula), Is.True);
+            });
         }
 
         [Test]
@@ -97,9 +109,12 @@ namespace ClosedXML.Tests
 
             ws.Cell(5, 2).CopyFrom(ws.Row(2).Row(1, 7));
 
-            Assert.AreEqual(2, ws.ConditionalFormats.Count());
-            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B3").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula));
-            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "C5:C5").Values.Any(v => v.Value.Value == "H5" && v.Value.IsFormula));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.ConditionalFormats.Count(), Is.EqualTo(2));
+                Assert.That(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B3").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula), Is.True);
+                Assert.That(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "C5:C5").Values.Any(v => v.Value.Value == "H5" && v.Value.IsFormula), Is.True);
+            });
         }
 
         [Test]
@@ -124,16 +139,19 @@ namespace ClosedXML.Tests
 
             ws2.FirstCell().CopyFrom(ws1.Range("B1:B4"));
 
-            Assert.AreEqual(1, ws2.ConditionalFormats.Count());
-            Assert.IsTrue(ws2.ConditionalFormats.All(x => x.Ranges.All(s => s.Worksheet == ws2)), "A conditional format was created for another worksheet.");
-            Assert.IsTrue(ws2.ConditionalFormats
-                .Single(x => x.Range.RangeAddress.ToStringRelative() == "A1:A2")
-                .Values.Any(v => v.Value.Value == "E1" && v.Value.IsFormula), "The formula has not been transferred correctly.");
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws2.ConditionalFormats.Count(), Is.EqualTo(1));
+                Assert.That(ws2.ConditionalFormats.All(x => x.Ranges.All(s => s.Worksheet == ws2)), Is.True, "A conditional format was created for another worksheet.");
+                Assert.That(ws2.ConditionalFormats
+                    .Single(x => x.Range.RangeAddress.ToStringRelative() == "A1:A2")
+                    .Values.Any(v => v.Value.Value == "E1" && v.Value.IsFormula), Is.True, "The formula has not been transferred correctly.");
 
-            Assert.AreEqual("Sheet1", ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name);
-            Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
-            Assert.AreEqual("A1:J2", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
-            Assert.AreEqual("A1:A2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+                Assert.That(ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name, Is.EqualTo("Sheet1"));
+                Assert.That(ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name, Is.EqualTo("Sheet2"));
+                Assert.That(ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString(), Is.EqualTo("A1:J2"));
+            });
+            Assert.That(ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString(), Is.EqualTo("A1:A2"));
         }
 
         private static void FillRow(IXLRow row1)

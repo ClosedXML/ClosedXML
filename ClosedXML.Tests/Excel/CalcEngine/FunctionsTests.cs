@@ -17,19 +17,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Asc()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Asc(""Text"")");
-            Assert.AreEqual("Text", actual);
+            Assert.That(actual, Is.EqualTo("Text"));
         }
 
         [Test]
         public void Clean()
         {
-            Object actual;
+            object actual;
 
-            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", Environment.NewLine));
-            Assert.AreEqual("AB", actual);
+            actual = XLWorkbook.EvaluateExpr(string.Format(@"Clean(""A{0}B"")", Environment.NewLine));
+            Assert.That(actual, Is.EqualTo("AB"));
         }
 
         [Test]
@@ -37,10 +37,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             object actual = wb.Evaluate("DOLLAR(12345.123)");
-            Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.12", actual);
+            Assert.That(actual, Is.EqualTo(TestHelper.CurrencySymbol + "12,345.12"));
 
             actual = wb.Evaluate("DOLLAR(12345.123, 1)");
-            Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.1", actual);
+            Assert.That(actual, Is.EqualTo(TestHelper.CurrencySymbol + "12,345.1"));
         }
 
         [TestCase("A", "A", true)]
@@ -49,43 +49,49 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Exact(string lhs, string rhs, bool result)
         {
             var actual = XLWorkbook.EvaluateExpr($"EXACT(\"{lhs}\", \"{rhs}\")");
-            Assert.AreEqual(result, actual);
+            Assert.That(actual, Is.EqualTo(result));
         }
 
         [Test]
         public void Exact_converts_values_to_text()
         {
-            Assert.AreEqual(false, XLWorkbook.EvaluateExpr("EXACT(TRUE, \"true\")"));
-            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(TRUE, \"TRUE\")"));
-            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(1, \"1\")"));
-            Assert.AreEqual(true, XLWorkbook.EvaluateExpr("EXACT(IF(TRUE,), \"\")"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(TRUE, \"true\")"), Is.EqualTo(false));
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(TRUE, \"TRUE\")"), Is.EqualTo(true));
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(1, \"1\")"), Is.EqualTo(true));
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(IF(TRUE,), \"\")"), Is.EqualTo(true));
+            });
 
             // Check blank cell
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            Assert.AreEqual(true, ws.Evaluate("EXACT(A1, \"\")"));
+            Assert.That(ws.Evaluate("EXACT(A1, \"\")"), Is.EqualTo(true));
         }
 
         [Test]
         public void Exact_propagates_errors()
         {
-            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("EXACT(#DIV/0!, \"A\")"));
-            Assert.AreEqual(XLError.DivisionByZero, XLWorkbook.EvaluateExpr("EXACT(\"A\", #DIV/0!)"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(#DIV/0!, \"A\")"), Is.EqualTo(XLError.DivisionByZero));
+                Assert.That(XLWorkbook.EvaluateExpr("EXACT(\"A\", #DIV/0!)"), Is.EqualTo(XLError.DivisionByZero));
+            });
         }
 
         [Test]
         public void Fixed()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123)");
-            Assert.AreEqual("12,345.12", actual);
+            Assert.That(actual, Is.EqualTo("12,345.12"));
 
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1)");
-            Assert.AreEqual("12,345.1", actual);
+            Assert.That(actual, Is.EqualTo("12,345.1"));
 
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1, TRUE)");
-            Assert.AreEqual("12345.1", actual);
+            Assert.That(actual, Is.EqualTo("12345.1"));
         }
 
         [Test]
@@ -97,7 +103,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             IXLWorksheet ws2 = wb.AddWorksheet("ws2");
             ws2.FirstCell().SetFormulaA1("ws1!B1 + 1");
             object v = ws2.FirstCell().Value;
-            Assert.AreEqual(3.0, v);
+            Assert.That(v, Is.EqualTo(3.0));
         }
 
         [Test]
@@ -113,17 +119,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("C1").FormulaA1 = "\"The total value is: \" & SUM(A1:B2)";
 
             object r = ws.Cell("C1").Value;
-            Assert.AreEqual("The total value is: 4", r);
+            Assert.That(r, Is.EqualTo("The total value is: 4"));
         }
 
         [Test]
         public void Trim()
         {
-            Assert.AreEqual("Test", XLWorkbook.EvaluateExpr("Trim(\"Test    \")"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("Trim(\"Test    \")"), Is.EqualTo("Test"));
 
-            //Should not trim non breaking space
-            //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
-            Assert.AreEqual("Test\u00A0", XLWorkbook.EvaluateExpr("Trim(\"Test\u00A0 \")"));
+                //Should not trim non breaking space
+                //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
+                Assert.That(XLWorkbook.EvaluateExpr("Trim(\"Test\u00A0 \")"), Is.EqualTo("Test\u00A0"));
+            });
         }
 
         [Test]
@@ -133,31 +142,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add("TallyTests");
             var cell = wb.Worksheet(1).Cell(1, 1).SetFormulaA1("=MAX(D1,D2)");
-            Assert.AreEqual(0, cell.Value);
+            Assert.That(cell.Value, Is.EqualTo(0));
             cell = wb.Worksheet(1).Cell(2, 1).SetFormulaA1("=MIN(D1,D2)");
-            Assert.AreEqual(0, cell.Value);
+            Assert.That(cell.Value, Is.EqualTo(0));
             cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=SUM(D1,D2)");
-            Assert.AreEqual(0, cell.Value);
+            Assert.That(cell.Value, Is.EqualTo(0));
         }
 
         [Test]
         public void TestOmittedParameters()
         {
-            using (var wb = new XLWorkbook())
-            {
-                object value;
-                value = wb.Evaluate("=IF(TRUE,1)");
-                Assert.AreEqual(1, value);
+            using var wb = new XLWorkbook();
+            object value;
+            value = wb.Evaluate("=IF(TRUE,1)");
+            Assert.That(value, Is.EqualTo(1));
 
-                value = wb.Evaluate("=IF(TRUE,1,)");
-                Assert.AreEqual(1, value);
+            value = wb.Evaluate("=IF(TRUE,1,)");
+            Assert.That(value, Is.EqualTo(1));
 
-                value = wb.Evaluate("=ISBLANK(IF(FALSE,1,))");
-                Assert.AreEqual(true, value);
+            value = wb.Evaluate("=ISBLANK(IF(FALSE,1,))");
+            Assert.That(value, Is.EqualTo(true));
 
-                value = wb.Evaluate("=IF(FALSE,,2)");
-                Assert.AreEqual(2, value);
-            }
+            value = wb.Evaluate("=IF(FALSE,,2)");
+            Assert.That(value, Is.EqualTo(2));
         }
 
         [Test]
@@ -165,7 +172,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             Assert.DoesNotThrow(() => XLWorkbook.EvaluateExpr("TODAY()"));
             Assert.DoesNotThrow(() => XLWorkbook.EvaluateExpr("_xlfn.TODAY()"));
-            Assert.IsTrue((bool)XLWorkbook.EvaluateExpr("_xlfn.TODAY() = TODAY()"));
+            Assert.That((bool)XLWorkbook.EvaluateExpr("_xlfn.TODAY() = TODAY()"), Is.True);
         }
 
         [TestCase("=1234%", 12.34)]
@@ -180,7 +187,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var res = (double)XLWorkbook.EvaluateExpr(formula);
 
-            Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
+            Assert.That(res, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [TestCase("=--1", 1)]
@@ -191,7 +198,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var res = (double)XLWorkbook.EvaluateExpr(formula);
 
-            Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
+            Assert.That(res, Is.EqualTo(expectedResult).Within(XLHelper.Epsilon));
         }
 
         [TestCase("RIGHT(\"2020\", 2) + 1", 21)]
@@ -203,7 +210,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var actual = XLWorkbook.EvaluateExpr(formula);
 
-            Assert.AreEqual(expectedResult, actual);
+            Assert.That(actual, Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -213,7 +220,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Cell("A1").FormulaA1 = "$B$4(5)";
 
-            Assert.AreEqual(XLError.CellReference, ws.Cell("A1").Value);
+            Assert.That(ws.Cell("A1").Value, Is.EqualTo(XLError.CellReference));
         }
     }
 }

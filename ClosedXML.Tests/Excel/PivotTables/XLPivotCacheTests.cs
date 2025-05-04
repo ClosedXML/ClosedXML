@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var pivotCache = wb.PivotCaches.Add(range);
             ws.Cell("A1").Value = "Pastry";
 
-            Assert.AreEqual(new[] { "Name" }, pivotCache.FieldNames);
+            Assert.That(pivotCache.FieldNames, Is.EqualTo(new[] { "Name" }));
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             ws.Cell("A1").Value = "Pastry";
             pivotCache.Refresh();
 
-            Assert.AreEqual(new[] { "Pastry" }, pivotCache.FieldNames);
+            Assert.That(pivotCache.FieldNames, Is.EqualTo(new[] { "Pastry" }));
         }
 
         [Test]
@@ -48,9 +48,12 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             pivotCache.Refresh();
 
-            Assert.AreEqual(XLItemsToRetain.None, pivotCache.ItemsToRetainPerField);
-            Assert.AreEqual(false, pivotCache.SaveSourceData);
-            Assert.AreEqual(true, pivotCache.RefreshDataOnOpen);
+            Assert.Multiple(() =>
+            {
+                Assert.That(pivotCache.ItemsToRetainPerField, Is.EqualTo(XLItemsToRetain.None));
+                Assert.That(pivotCache.SaveSourceData, Is.False);
+                Assert.That(pivotCache.RefreshDataOnOpen, Is.True);
+            });
         }
 
         [Test]

@@ -51,7 +51,7 @@ namespace ClosedXML.Tests.Extensions
         public void IsStatic(string memberName, bool expectedIsStatic)
         {
             var member = typeof(TestClass).GetMember(memberName).Single();
-            Assert.AreEqual(expectedIsStatic, member.IsStatic());
+            Assert.That(member.IsStatic(), Is.EqualTo(expectedIsStatic));
         }
 
         [TestCase(BindingFlags.Static | BindingFlags.NonPublic, true)]
@@ -59,7 +59,7 @@ namespace ClosedXML.Tests.Extensions
         public void ConstructorIsStatic(BindingFlags flag, bool expectedIsStatic)
         {
             var constructors = typeof(TestClass).GetConstructors(flag);
-            Assert.AreEqual(expectedIsStatic, constructors.Single().IsStatic());
+            Assert.That(constructors.Single().IsStatic(), Is.EqualTo(expectedIsStatic));
         }
     }
 }

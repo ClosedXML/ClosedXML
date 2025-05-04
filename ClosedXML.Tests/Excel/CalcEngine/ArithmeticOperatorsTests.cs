@@ -15,7 +15,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"\" & \"\"", "")]
         public void Concat_ConcatenateText(string formula, object expectedResult)
         {
-            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedResult));
         }
 
         [TestCase("A1 & \"\"", "")]
@@ -23,7 +23,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1 & A1", "")]
         public void Concat_ConcatenateBlank(string formula, object expectedResult)
         {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedResult));
         }
 
         [TestCase("TRUE & \" to text\"", "TRUE to text")]
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("TRUE & FALSE", @"TRUEFALSE")]
         public void Concat_ConvertsLogicalToString(string formula, object expectedResult)
         {
-            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedResult));
         }
 
         [SetCulture("cs-CZ")]
@@ -43,7 +43,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Concat_ConvertsNumberToStringUsingCulture(string formula, object expectedResult)
         {
             var wb = new XLWorkbook();
-            Assert.AreEqual(expectedResult, wb.Evaluate(formula));
+            Assert.That(wb.Evaluate(formula), Is.EqualTo(expectedResult));
         }
 
         [TestCase("#DIV/0! & 1", XLError.DivisionByZero)]
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("1 & #NAME?", XLError.NameNotRecognized)]
         public void Concat_WithErrorAsOperandReturnsTheError(string formula, XLError expectedError)
         {
-            Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedError));
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("ISBLANK(+A1)", true)]
         public void UnaryPlus_IsNonOpThatKeepsValueAndType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -83,7 +83,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("-A1", 0.0)]
         public void UnaryMinus_ConvertsArgumentBeforeNegating(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -102,7 +102,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1%", 0.0)]
         public void UnaryPercent_ConvertsArgumentBeforePercentOperator(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -171,7 +171,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("5/A1", XLError.DivisionByZero)]
         public void Division_CanWorkWithScalars(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -190,7 +190,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1 + 7", 7)]
         public void Addition_CanWorkWithScalars(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1 - 5", -5)]
         public void Subtraction_CanWorkWithScalars(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -224,7 +224,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").Value = new DateTime(2021, 1, 15);
             ws.Cell("A2").Value = new DateTime(2021, 1, 10);
             ws.Cell("B1").Value = new DateTime(2021, 1, 5);
-            Assert.AreEqual(5, ws.Evaluate("MIN(A1:A2-B1)"));
+            Assert.That(ws.Evaluate("MIN(A1:A2-B1)"), Is.EqualTo(5));
         }
 
         [Test]
@@ -233,54 +233,75 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Cells("A1:A2").Value = 1;
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate("(A1:A1,A1:A2)+1"));
-            Assert.AreEqual(16, ws.Evaluate("TYPE((A1:A1,A1:A2)+1)")); // The result is a scalar error, not an array of errors
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Evaluate("(A1:A1,A1:A2)+1"), Is.EqualTo(XLError.IncompatibleValue));
+                Assert.That(ws.Evaluate("TYPE((A1:A1,A1:A2)+1)"), Is.EqualTo(16)); // The result is a scalar error, not an array of errors
+            });
         }
 
         [Test]
         public void ArrayOperation_SameSizeArrayPerformsOperationIndividually()
         {
-            Assert.AreEqual(6 * 7, XLWorkbook.EvaluateExpr("SUM({1,2,3;4,5,6} + {6,5,4;3,2,1})"));
-            Assert.AreEqual(2, XLWorkbook.EvaluateExpr("COLUMNS({1,2} + \"A\")"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,2,3;4,5,6} + {6,5,4;3,2,1})"), Is.EqualTo(6 * 7));
+                Assert.That(XLWorkbook.EvaluateExpr("COLUMNS({1,2} + \"A\")"), Is.EqualTo(2));
+            });
         }
 
         [Test]
         public void ArrayOperation_ArrayPlusScalarUpscalesScalarToSizeOfArray()
         {
-            Assert.AreEqual(18, XLWorkbook.EvaluateExpr("SUM({1,1,1;1,1,1} * 3)"));
-            Assert.AreEqual(15, XLWorkbook.EvaluateExpr("SUM(6 / {2,2,2;3,3,3})"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,1,1;1,1,1} * 3)"), Is.EqualTo(18));
+                Assert.That(XLWorkbook.EvaluateExpr("SUM(6 / {2,2,2;3,3,3})"), Is.EqualTo(15));
+            });
         }
 
         [Test]
         public void ArrayOperation_RowOnlyArrayIsRepeatedToHaveSameNumberOfRowsAsOtherArray()
         {
-            // {3,2} is scaled to {3,2;3,2} of second array
-            Assert.AreEqual(14, XLWorkbook.EvaluateExpr("SUM({3,2}+{1,1;1,1})"));
-            Assert.AreEqual(14, XLWorkbook.EvaluateExpr("SUM({1,1;1,1}+{3,2})"));
+            Assert.Multiple(() =>
+            {
+                // {3,2} is scaled to {3,2;3,2} of second array
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({3,2}+{1,1;1,1})"), Is.EqualTo(14));
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,1;1,1}+{3,2})"), Is.EqualTo(14));
+            });
         }
 
         [Test]
         public void ArrayOperation_ColumnOnlyArrayIsRepeatedToHaveSameNumberOfColumnsAsOtherArray()
         {
-            // {3;2} is scaled to {3,3;2,2} of second array
-            Assert.AreEqual(16, XLWorkbook.EvaluateExpr("SUM({3;2}*{1,1;2,3})"));
-            Assert.AreEqual(16, XLWorkbook.EvaluateExpr("SUM({1,1;2,3}*{3;2})"));
+            Assert.Multiple(() =>
+            {
+                // {3;2} is scaled to {3,3;2,2} of second array
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({3;2}*{1,1;2,3})"), Is.EqualTo(16));
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,1;2,3}*{3;2})"), Is.EqualTo(16));
+            });
         }
 
         [Test]
         public void ArrayOperation_1x1ArrayIsScaledToOtherArray()
         {
-            Assert.AreEqual(20, XLWorkbook.EvaluateExpr("SUM({2}*{1,2;3,4})"));
-            Assert.AreEqual(20, XLWorkbook.EvaluateExpr("SUM({1,2;3,4}*{2})"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({2}*{1,2;3,4})"), Is.EqualTo(20));
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,2;3,4}*{2})"), Is.EqualTo(20));
+            });
         }
 
         [Test]
         public void ArrayOperation_DifferentSizedArraysAreUpscaledToContainingSize()
         {
-            // The extra value are #N/A + value, i.e. #N/A, thus the whole sum is #N/A
-            Assert.AreEqual(XLError.NoValueAvailable, XLWorkbook.EvaluateExpr("SUM({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
-            Assert.AreEqual(3, XLWorkbook.EvaluateExpr("ROWS({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
-            Assert.AreEqual(3, XLWorkbook.EvaluateExpr("COLUMNS({1,2;3,4;5,6}+{1,2,3;4,5,6})"));
+            Assert.Multiple(() =>
+            {
+                // The extra value are #N/A + value, i.e. #N/A, thus the whole sum is #N/A
+                Assert.That(XLWorkbook.EvaluateExpr("SUM({1,2;3,4;5,6}+{1,2,3;4,5,6})"), Is.EqualTo(XLError.NoValueAvailable));
+                Assert.That(XLWorkbook.EvaluateExpr("ROWS({1,2;3,4;5,6}+{1,2,3;4,5,6})"), Is.EqualTo(3));
+                Assert.That(XLWorkbook.EvaluateExpr("COLUMNS({1,2;3,4;5,6}+{1,2,3;4,5,6})"), Is.EqualTo(3));
+            });
         }
 
         #endregion

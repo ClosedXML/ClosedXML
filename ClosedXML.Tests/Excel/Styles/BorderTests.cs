@@ -8,29 +8,33 @@ namespace ClosedXML.Tests.Excel.Styles
         [Test]
         public void SetInsideBorderPreservesOutsideBorders()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            ws.Cells("B2:C2").Style
+                .Border.SetOutsideBorder(XLBorderStyleValues.Thin)
+                .Border.SetOutsideBorderColor(XLColor.FromTheme(XLThemeColor.Accent1, 0.5));
+
+            Assert.Multiple(() =>
             {
-                var ws = wb.AddWorksheet();
-
-                ws.Cells("B2:C2").Style
-                    .Border.SetOutsideBorder(XLBorderStyleValues.Thin)
-                    .Border.SetOutsideBorderColor(XLColor.FromTheme(XLThemeColor.Accent1, 0.5));
-
                 //Check pre-conditions
-                Assert.AreEqual(XLBorderStyleValues.Thin, ws.Cell("B2").Style.Border.LeftBorder);
-                Assert.AreEqual(XLBorderStyleValues.Thin, ws.Cell("B2").Style.Border.RightBorder);
-                Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("B2").Style.Border.LeftBorderColor.ThemeColor);
-                Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("B2").Style.Border.RightBorderColor.ThemeColor);
+                Assert.That(ws.Cell("B2").Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.Thin));
+                Assert.That(ws.Cell("B2").Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.Thin));
+                Assert.That(ws.Cell("B2").Style.Border.LeftBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(ws.Cell("B2").Style.Border.RightBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+            });
 
-                ws.Range("B2:C2").Style.Border.SetInsideBorder(XLBorderStyleValues.None);
+            ws.Range("B2:C2").Style.Border.SetInsideBorder(XLBorderStyleValues.None);
 
-                Assert.AreEqual(XLBorderStyleValues.Thin, ws.Cell("B2").Style.Border.LeftBorder);
-                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B2").Style.Border.RightBorder);
-                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C2").Style.Border.LeftBorder);
-                Assert.AreEqual(XLBorderStyleValues.Thin, ws.Cell("C2").Style.Border.RightBorder);
-                Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("B2").Style.Border.LeftBorderColor.ThemeColor);
-                Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("C2").Style.Border.RightBorderColor.ThemeColor);
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("B2").Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.Thin));
+                Assert.That(ws.Cell("B2").Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(ws.Cell("C2").Style.Border.LeftBorder, Is.EqualTo(XLBorderStyleValues.None));
+                Assert.That(ws.Cell("C2").Style.Border.RightBorder, Is.EqualTo(XLBorderStyleValues.Thin));
+                Assert.That(ws.Cell("B2").Style.Border.LeftBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(ws.Cell("C2").Style.Border.RightBorderColor.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+            });
         }
     }
 }

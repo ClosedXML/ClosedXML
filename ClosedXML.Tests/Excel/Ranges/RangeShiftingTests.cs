@@ -8,74 +8,64 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void CellsContentShiftedAfterColumnDeleted()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                SetContent(ws.Cell("D4"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            SetContent(ws.Cell("D4"));
 
-                ws.Column("C").Delete();
+            ws.Column("C").Delete();
 
-                AssertContent(ws.Cell("C4"), "D4");
-            }
+            AssertContent(ws.Cell("C4"), "D4");
         }
 
         [Test]
         public void CellsContentShiftedAfterRowDeleted()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                SetContent(ws.Cell("D4"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            SetContent(ws.Cell("D4"));
 
-                ws.Row(3).Delete();
+            ws.Row(3).Delete();
 
-                AssertContent(ws.Cell("D3"), "D4");
-            }
+            AssertContent(ws.Cell("D3"), "D4");
         }
 
         [Test]
         public void CellsContentShiftedAfterColumnInserted()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                SetContent(ws.Cell("D4"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            SetContent(ws.Cell("D4"));
 
-                ws.Column("C").InsertColumnsBefore(1);
+            ws.Column("C").InsertColumnsBefore(1);
 
-                AssertContent(ws.Cell("E4"), "D4");
-            }
+            AssertContent(ws.Cell("E4"), "D4");
         }
 
         [Test]
         public void CellsContentShiftedAfterRowInserted()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                SetContent(ws.Cell("D4"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            SetContent(ws.Cell("D4"));
 
-                ws.Row(3).InsertRowsAbove(1);
+            ws.Row(3).InsertRowsAbove(1);
 
-                AssertContent(ws.Cell("D5"), "D4");
-            }
+            AssertContent(ws.Cell("D5"), "D4");
         }
 
         [Test]
         public void CellsContentShiftAfterRangeDeleted()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                SetContent(ws.Cell("D4"));
-                SetContent(ws.Cell("F8"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            SetContent(ws.Cell("D4"));
+            SetContent(ws.Cell("F8"));
 
-                ws.Range("B2:C5").Delete(XLShiftDeletedCells.ShiftCellsLeft);
-                ws.Range("E5:F7").Delete(XLShiftDeletedCells.ShiftCellsUp);
+            ws.Range("B2:C5").Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            ws.Range("E5:F7").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-                AssertContent(ws.Cell("B4"), "D4");
-                AssertContent(ws.Cell("F5"), "F8");
-            }
+            AssertContent(ws.Cell("B4"), "D4");
+            AssertContent(ws.Cell("F5"), "F8");
         }
 
         [Theory]
@@ -98,8 +88,11 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             deletedRange.Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            Assert.IsTrue(mergedRange.IsMerged());
-            Assert.AreEqual(deletedRangeAddress, mergedRange.RangeAddress.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(mergedRange.IsMerged(), Is.True);
+                Assert.That(mergedRange.RangeAddress.ToString(), Is.EqualTo(deletedRangeAddress));
+            });
         }
 
         [Theory]
@@ -122,8 +115,11 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             deletedRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
-            Assert.IsTrue(mergedRange.IsMerged());
-            Assert.AreEqual(deletedRangeAddress, mergedRange.RangeAddress.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(mergedRange.IsMerged(), Is.True);
+                Assert.That(mergedRange.RangeAddress.ToString(), Is.EqualTo(deletedRangeAddress));
+            });
         }
 
         private void SetContent(IXLCell cell)
@@ -135,10 +131,16 @@ namespace ClosedXML.Tests.Excel.Ranges
 
         private void AssertContent(IXLCell cell, string originalAddress)
         {
-            Assert.AreEqual($"\"Formula \" & \"{originalAddress}\"", cell.FormulaA1);
-            Assert.AreEqual(XLColor.Green, cell.Style.Fill.BackgroundColor);
-            Assert.True(cell.HasComment);
-            Assert.AreEqual($"Some comment {originalAddress}", cell.GetComment().Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(cell.FormulaA1, Is.EqualTo($"\"Formula \" & \"{originalAddress}\""));
+                Assert.That(cell.Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Green));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(cell.HasComment, Is.True);
+                Assert.That(cell.GetComment().Text, Is.EqualTo($"Some comment {originalAddress}"));
+            });
         }
     }
 }

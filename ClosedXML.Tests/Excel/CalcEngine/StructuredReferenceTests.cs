@@ -149,17 +149,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var table = Add4X3Table(ws, "E7");
             table.ShowTotalsRow = true;
 
-            // Right above header row
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula, "D6"));
+            Assert.Multiple(() =>
+            {
+                // Right above header row
+                Assert.That(ws.Evaluate(formula, "D6"), Is.EqualTo(XLError.IncompatibleValue));
 
-            // Header row
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula, "D7"));
+                // Header row
+                Assert.That(ws.Evaluate(formula, "D7"), Is.EqualTo(XLError.IncompatibleValue));
 
-            // Whether there is a totals row or not, the result is #VALUE!
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula, "D11"));
+                // Whether there is a totals row or not, the result is #VALUE!
+                Assert.That(ws.Evaluate(formula, "D11"), Is.EqualTo(XLError.IncompatibleValue));
+            });
 
             table.ShowTotalsRow = false;
-            Assert.AreEqual(XLError.IncompatibleValue, ws.Evaluate(formula, "D11"));
+            Assert.That(ws.Evaluate(formula, "D11"), Is.EqualTo(XLError.IncompatibleValue));
         }
 
         private static IXLTable Add4X3Table(IXLWorksheet ws, string origin)
@@ -192,15 +195,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             if (expectedArea == "#REF!")
             {
-                Assert.AreEqual(XLError.CellReference, ws.Evaluate(structureReference, formulaAddress));
+                Assert.That(ws.Evaluate(structureReference, formulaAddress), Is.EqualTo(XLError.CellReference));
                 return;
             }
 
             var expected = XLSheetRange.Parse(expectedArea);
-            Assert.AreEqual(expected.LeftColumn, ws.Evaluate($"COLUMN({structureReference})", formulaAddress));
-            Assert.AreEqual(expected.TopRow, ws.Evaluate($"ROW({structureReference})", formulaAddress));
-            Assert.AreEqual(expected.Height, ws.Evaluate($"ROWS({structureReference})", formulaAddress));
-            Assert.AreEqual(expected.Width, ws.Evaluate($"COLUMNS({structureReference})", formulaAddress));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Evaluate($"COLUMN({structureReference})", formulaAddress), Is.EqualTo(expected.LeftColumn));
+                Assert.That(ws.Evaluate($"ROW({structureReference})", formulaAddress), Is.EqualTo(expected.TopRow));
+                Assert.That(ws.Evaluate($"ROWS({structureReference})", formulaAddress), Is.EqualTo(expected.Height));
+                Assert.That(ws.Evaluate($"COLUMNS({structureReference})", formulaAddress), Is.EqualTo(expected.Width));
+            });
         }
     }
 }

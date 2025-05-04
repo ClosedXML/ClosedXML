@@ -21,8 +21,11 @@ namespace ClosedXML.Tests.Excel.Worksheets
 
             var ws2 = ws1.CopyTo(wb2, "WS2");
 
-            Assert.AreEqual(ws2, ws2.SheetView.Worksheet);
-            Assert.AreEqual("AZ2000", ws2.SheetView.TopLeftCellAddress.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws2.SheetView.Worksheet, Is.EqualTo(ws2));
+                Assert.That(ws2.SheetView.TopLeftCellAddress.ToString(), Is.EqualTo("AZ2000"));
+            });
         }
 
         [Test]
@@ -51,7 +54,7 @@ namespace ClosedXML.Tests.Excel.Worksheets
             using (var wb = new XLWorkbook(ms))
             {
                 var ws = wb.Worksheets.First();
-                Assert.AreEqual("AZ2000", ws.SheetView.TopLeftCellAddress.ToString());
+                Assert.That(ws.SheetView.TopLeftCellAddress.ToString(), Is.EqualTo("AZ2000"));
 
                 ws.SheetView.TopLeftCellAddress = ws.Cell("AZ2000")
                     .CellBelow()
@@ -66,7 +69,7 @@ namespace ClosedXML.Tests.Excel.Worksheets
             using (var wb = new XLWorkbook(ms))
             {
                 var ws = wb.Worksheets.First();
-                Assert.AreEqual("BA2001", ws.SheetView.TopLeftCellAddress.ToString());
+                Assert.That(ws.SheetView.TopLeftCellAddress.ToString(), Is.EqualTo("BA2001"));
             }
         }
     }

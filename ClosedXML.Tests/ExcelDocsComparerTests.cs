@@ -16,7 +16,7 @@ namespace ClosedXML.Tests
             {
                 new BasicTable().Create(left);
                 new BasicTable().Create(right);
-                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, out string message));
+                Assert.That(ExcelDocsComparer.Compare(left, right, out string message), Is.True);
             }
             finally
             {
@@ -41,7 +41,7 @@ namespace ClosedXML.Tests
                 new BasicTable().Create(left);
                 new HelloWorld().Create(right);
 
-                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, out string message));
+                Assert.That(ExcelDocsComparer.Compare(left, right, out string message), Is.False);
             }
             finally
             {

@@ -35,11 +35,11 @@ namespace ClosedXML.Tests.Excel.Styles
             TestHelper.LoadAndAssert(wb =>
             {
                 var ws = wb.Worksheets.Single();
-                Assert.AreEqual(255, ws.Cell(1,1).Style.Alignment.TextRotation);
+                Assert.That(ws.Cell(1, 1).Style.Alignment.TextRotation, Is.EqualTo(255));
                 for (var column = 2; column < 21; ++column)
                 {
                     var expectedAngle = (column - 2) * 10 - 90;
-                    Assert.AreEqual(expectedAngle, ws.Cell(1, column).Style.Alignment.TextRotation);
+                    Assert.That(ws.Cell(1, column).Style.Alignment.TextRotation, Is.EqualTo(expectedAngle));
                 }
             }, @"Other\Styles\Alignment\TextRotation.xlsx");
         }

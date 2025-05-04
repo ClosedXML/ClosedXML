@@ -13,21 +13,24 @@ namespace ClosedXML.Tests.Extensions
         [Test]
         public void CanGetItemType()
         {
-            var array = new int[0];
-            Assert.AreEqual(typeof(int), array.GetItemType());
+            var array = Array.Empty<int>();
+            Assert.That(array.GetItemType(), Is.EqualTo(typeof(int)));
 
             var list = new List<double>();
-            Assert.AreEqual(typeof(double), list.GetItemType());
-            Assert.AreEqual(typeof(double), list.AsEnumerable().GetItemType());
+            Assert.Multiple(() =>
+            {
+                Assert.That(list.GetItemType(), Is.EqualTo(typeof(double)));
+                Assert.That(list.AsEnumerable().GetItemType(), Is.EqualTo(typeof(double)));
+            });
 
             IEnumerable<IEnumerable> enumerable = new List<string>();
-            Assert.AreEqual(typeof(string), enumerable.GetItemType());
+            Assert.That(enumerable.GetItemType(), Is.EqualTo(typeof(string)));
 
             enumerable = new List<List<string>>();
-            Assert.AreEqual(typeof(List<string>), enumerable.GetItemType());
+            Assert.That(enumerable.GetItemType(), Is.EqualTo(typeof(List<string>)));
 
             enumerable = new List<int[]>();
-            Assert.AreEqual(typeof(int[]), enumerable.GetItemType());
+            Assert.That(enumerable.GetItemType(), Is.EqualTo(typeof(int[])));
 
             var anonymousIterator = new List<TablesTests.TestObjectWithoutAttributes>()
                 .Select(o => new { FirstName = o.Column1, LastName = o.Column2 });
@@ -38,26 +41,32 @@ namespace ClosedXML.Tests.Extensions
             var expectedTypeStart = "<>f__AnonymousType";
             var expectedTypeEnd = "`2[System.String,System.String]";
             var actualType = anonymousIterator.GetItemType().ToString();
-            Assert.True(actualType.StartsWith(expectedTypeStart));
-            Assert.True(actualType.EndsWith(expectedTypeEnd));
+            Assert.Multiple(() =>
+            {
+                Assert.That(actualType, Does.StartWith(expectedTypeStart));
+                Assert.That(actualType, Does.EndWith(expectedTypeEnd));
+            });
 
             IEnumerable<object> obj = anonymousIterator;
             actualType = obj.GetItemType().ToString();
-            Assert.True(actualType.StartsWith(expectedTypeStart));
-            Assert.True(actualType.EndsWith(expectedTypeEnd));
+            Assert.Multiple(() =>
+            {
+                Assert.That(actualType, Does.StartWith(expectedTypeStart));
+                Assert.That(actualType, Does.EndWith(expectedTypeEnd));
+            });
         }
 
         [Test]
         public void SkipLast_skips_last_element_of_enumerable()
         {
             var empty = Array.Empty<int>().SkipLast();
-            CollectionAssert.IsEmpty(empty);
+            Assert.That(empty, Is.Empty);
 
             var oneElement = new[] { 1 }.SkipLast();
-            CollectionAssert.IsEmpty(oneElement);
+            Assert.That(oneElement, Is.Empty);
 
             var twoElements = new[] { 1, 2 }.SkipLast();
-            CollectionAssert.AreEqual(new[] { 1 }, twoElements);
+            Assert.That(twoElements, Is.EqualTo(new[] { 1 }).AsCollection);
         }
 
         [Test]
@@ -67,7 +76,7 @@ namespace ClosedXML.Tests.Extensions
 
             var result = source.WhereNotNull(x => x);
 
-            CollectionAssert.AreEqual(new[] { 1, 2 }, result);
+            Assert.That(result, Is.EqualTo(new[] { 1, 2 }).AsCollection);
         }
     }
 }

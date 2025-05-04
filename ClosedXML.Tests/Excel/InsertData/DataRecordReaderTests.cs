@@ -20,25 +20,21 @@ namespace ClosedXML.Tests.Excel.InsertData
             union all
             select 'Value 3', 300";
 
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(queryString, connection))
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(queryString, connection);
+            try
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch
-                {
-                    Assert.Ignore("Could not connect to localdb");
-                }
+                connection.Open();
+            }
+            catch
+            {
+                Assert.Ignore("Could not connect to localdb");
+            }
 
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader;
-                    }
-                }
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                yield return reader;
             }
         }
 
@@ -46,22 +42,25 @@ namespace ClosedXML.Tests.Excel.InsertData
         public void CanGetPropertyName()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
-            Assert.AreEqual("StringValue", reader.GetPropertyName(0));
-            Assert.AreEqual("NumericValue", reader.GetPropertyName(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(reader.GetPropertyName(0), Is.EqualTo("StringValue"));
+                Assert.That(reader.GetPropertyName(1), Is.EqualTo("NumericValue"));
+            });
         }
 
         [Test]
         public void CanGetPropertiesCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
-            Assert.AreEqual(2, reader.GetPropertiesCount());
+            Assert.That(reader.GetPropertiesCount(), Is.EqualTo(2));
         }
 
         [Test]
         public void CanGetRecordsCount()
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
-            Assert.AreEqual(3, reader.GetRecords().Count());
+            Assert.That(reader.GetRecords().Count(), Is.EqualTo(3));
         }
 
         [Test]
@@ -70,10 +69,13 @@ namespace ClosedXML.Tests.Excel.InsertData
             var reader = InsertDataReaderFactory.Instance.CreateReader(GetData());
             var result = reader.GetRecords().ToArray();
 
-            Assert.AreEqual("Value 1", result.First().First());
-            Assert.AreEqual(100, result.First().Last());
-            Assert.AreEqual("Value 3", result.Last().First());
-            Assert.AreEqual(300, result.Last().Last());
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.First().First(), Is.EqualTo("Value 1"));
+                Assert.That(result.First().Last(), Is.EqualTo(100));
+                Assert.That(result.Last().First(), Is.EqualTo("Value 3"));
+                Assert.That(result.Last().Last(), Is.EqualTo(300));
+            });
         }
     }
 }

@@ -120,7 +120,7 @@ internal class XmlTreeReaderAttributesTests
         var mapper = new XmlToEnumMapper.Builder().Add(new Dictionary<string, BindingFlags>
         {
             { "def", BindingFlags.Default },
-            { "ci", BindingFlags.IgnoreCase },
+            { "ci", BindingFlags.IgnoreCase }
         }).Build();
 
         using var reader = CreateReader(xmlText, mapper);

@@ -17,14 +17,14 @@ namespace ClosedXML.Tests.Excel.Protection
         public void TestSHA512()
         {
             var hash = CryptographicAlgorithms.GetPasswordHash(Algorithm.SHA512, "12345", "aVvPw1DNH3evPqRAd/y3UQ==", 100000);
-            Assert.AreEqual("E+qAhyIg/HM0dUrPaENfimFOZp7wlOkJsf/sdG+AGHOA9grOv7VLb1ik2vuYohljI9G36e0ea9wnixCK0MMuyQ==", hash);
+            Assert.That(hash, Is.EqualTo("E+qAhyIg/HM0dUrPaENfimFOZp7wlOkJsf/sdG+AGHOA9grOv7VLb1ik2vuYohljI9G36e0ea9wnixCK0MMuyQ=="));
         }
 
         [Test]
         public void TestSimple()
         {
             var hash = CryptographicAlgorithms.GetPasswordHash(Algorithm.SimpleHash, "12345");
-            Assert.AreEqual("CA9C", hash);
+            Assert.That(hash, Is.EqualTo("CA9C"));
         }
     }
 }

@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             for (var row = 1; row <= values.Length; ++row)
             {
                 var sortedValue = ws.Cell(row, 1).Value;
-                Assert.AreEqual(values[row - 1], sortedValue);
+                Assert.That(sortedValue, Is.EqualTo(values[row - 1]));
             }
         }
 
@@ -57,7 +57,7 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             ws.Range(1, 1, values.Length, 1).Sort("1", sortOrder);
 
-            Assert.AreEqual(Blank.Value, ws.Cell(3, 1).Value);
+            Assert.That(ws.Cell(3, 1).Value, Is.EqualTo(Blank.Value));
         }
 
         [Test]
@@ -72,10 +72,13 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             ws.Range("A1:A3").Sort(1, ignoreBlanks: false);
 
-            // Since blank is treated as empty string, it is not shuffled to the end.
-            Assert.AreEqual(Blank.Value, ws.Cell("A1").Value);
-            Assert.AreEqual(string.Empty, ws.Cell("A2").Value);
-            Assert.AreEqual("Text", ws.Cell("A3").Value);
+            Assert.Multiple(() =>
+            {
+                // Since blank is treated as empty string, it is not shuffled to the end.
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(Blank.Value));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(""));
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo("Text"));
+            });
         }
 
         [TestCase(true, "a", "A")]
@@ -92,8 +95,11 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             ws.Range("A1:A2").Sort(1, matchCase: matchCase);
 
-            Assert.AreEqual(expectedFirst, ws.Cell("A1").Value);
-            Assert.AreEqual(expectedSecond, ws.Cell("A2").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(expectedFirst));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(expectedSecond));
+            });
         }
 
         [Test]
@@ -110,12 +116,15 @@ namespace ClosedXML.Tests.Excel.Ranges
 
             ws.Range("A1:B4").Sort("2 ASC, 1 DESC");
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(1, ws.Cell("B1").Value);
-            Assert.AreEqual(2, ws.Cell("A2").Value);
-            Assert.AreEqual(2, ws.Cell("B2").Value);
-            Assert.AreEqual(1, ws.Cell("A3").Value);
-            Assert.AreEqual(2, ws.Cell("B3").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("B1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("B2").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("B3").Value, Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -132,12 +141,15 @@ namespace ClosedXML.Tests.Excel.Ranges
             // Doesn't have parameters, so it is first rows ASC, second row ASC.
             ws.Range("A1:C2").SortLeftToRight();
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(1, ws.Cell("A2").Value);
-            Assert.AreEqual(2, ws.Cell("B1").Value);
-            Assert.AreEqual(1, ws.Cell("B2").Value);
-            Assert.AreEqual(2, ws.Cell("C1").Value);
-            Assert.AreEqual(2, ws.Cell("C2").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("B1").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("B2").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("C1").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("C2").Value, Is.EqualTo(2));
+            });
         }
     }
 }

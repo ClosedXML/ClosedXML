@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
 
             colorField.SetCustomName("Changed color");
 
-            Assert.AreEqual("Changed color", pt.RowLabels.Get(0).CustomName);
+            Assert.That(pt.RowLabels.Get(0).CustomName, Is.EqualTo("Changed color"));
         }
 
         [Test]
@@ -43,9 +43,9 @@ namespace ClosedXML.Tests.Excel.PivotTables
             var colorField = pt.RowLabels.Add("Color");
 
             var ex1 = Assert.Throws<ArgumentException>(() => idField.SetCustomName("Color"))!;
-            Assert.AreEqual("Custom name 'Color' is already used by another field.", ex1.Message);
+            Assert.That(ex1.Message, Is.EqualTo("Custom name 'Color' is already used by another field."));
             var ex2 = Assert.Throws<ArgumentException>(() => colorField.SetCustomName("Custom ID"));
-            Assert.AreEqual("Custom name 'Custom ID' is already used by another field.", ex2.Message);
+            Assert.That(ex2.Message, Is.EqualTo("Custom name 'Custom ID' is already used by another field."));
         }
     }
 }

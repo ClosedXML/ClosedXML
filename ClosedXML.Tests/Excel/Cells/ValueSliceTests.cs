@@ -17,12 +17,15 @@ namespace ClosedXML.Tests.Excel.Cells
             removedWs.Cell("A1").Value = "Double referenced text";
             removedWs.Cell("B1").Value = "Single referenced text";
 
-            Assert.AreEqual(2, sst.Count);
+            Assert.That(sst.Count, Is.EqualTo(2));
 
             wb.Worksheets.Delete(removedWs.Name);
 
-            Assert.AreEqual(1, sst.Count);
-            Assert.AreEqual("Double referenced text", keptWs.Cell(1, 1).Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst.Count, Is.EqualTo(1));
+                Assert.That(keptWs.Cell(1, 1).Value, Is.EqualTo("Double referenced text"));
+            });
         }
 
         [Test]
@@ -35,10 +38,13 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("B2").Value = "Double referenced text";
             ws.Cell("C2").Value = "Single referenced text";
 
-            Assert.AreEqual(2, sst.Count);
+            Assert.That(sst.Count, Is.EqualTo(2));
             ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.Clear(new XLSheetRange(2, 2, 2, 3));
-            Assert.AreEqual(1, sst.Count);
-            Assert.AreEqual("Double referenced text", ws.Cell("A1").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst.Count, Is.EqualTo(1));
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo("Double referenced text"));
+            });
         }
 
         [Test]
@@ -54,9 +60,12 @@ namespace ClosedXML.Tests.Excel.Cells
 
             ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new XLSheetRange(2, 2, 3, 3));
 
-            Assert.AreEqual(2, sst.Count);
-            Assert.AreEqual("Kept Single Reference", sst[1]);
-            Assert.AreEqual("Kept Double Reference", sst[2]);
+            Assert.That(sst.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[1], Is.EqualTo("Kept Single Reference"));
+                Assert.That(sst[2], Is.EqualTo("Kept Double Reference"));
+            });
         }
 
         [Test]
@@ -72,9 +81,12 @@ namespace ClosedXML.Tests.Excel.Cells
 
             ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new XLSheetRange(2, 2, 3, 3));
 
-            Assert.AreEqual(2, sst.Count);
-            Assert.AreEqual("Kept Single Reference", sst[1]);
-            Assert.AreEqual("Kept Double Reference", sst[2]);
+            Assert.That(sst.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[1], Is.EqualTo("Kept Single Reference"));
+                Assert.That(sst[2], Is.EqualTo("Kept Double Reference"));
+            });
         }
 
         [Test]
@@ -90,9 +102,12 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("B1048576").Value = "Kept Double Reference"; // id 2
             ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftDown(new XLSheetRange(3, 2, 4, 3));
 
-            Assert.AreEqual(2, sst.Count);
-            Assert.AreEqual("Kept Single Reference", sst[0]);
-            Assert.AreEqual("Kept Double Reference", sst[2]);
+            Assert.That(sst.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[0], Is.EqualTo("Kept Single Reference"));
+                Assert.That(sst[2], Is.EqualTo("Kept Double Reference"));
+            });
         }
 
         [Test]
@@ -108,9 +123,12 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("XFB3").Value = "Kept Double Reference"; // id 2
             ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftRight(new XLSheetRange(2, 3, 3, 4));
 
-            Assert.AreEqual(2, sst.Count);
-            Assert.AreEqual("Kept Single Reference", sst[0]);
-            Assert.AreEqual("Kept Double Reference", sst[2]);
+            Assert.That(sst.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(sst[0], Is.EqualTo("Kept Single Reference"));
+                Assert.That(sst[2], Is.EqualTo("Kept Double Reference"));
+            });
         }
     }
 }

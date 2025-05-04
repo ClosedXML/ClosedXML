@@ -27,8 +27,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 foreach (var arrayFormulaCell in ws.Range("A1:B2").Cells())
                 {
-                    Assert.AreEqual("1+2", arrayFormulaCell.FormulaA1);
-                    Assert.AreEqual("A1:B2", arrayFormulaCell.FormulaReference.ToStringRelative());
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(arrayFormulaCell.FormulaA1, Is.EqualTo("1+2"));
+                        Assert.That(arrayFormulaCell.FormulaReference.ToStringRelative(), Is.EqualTo("A1:B2"));
+                    });
                 }
 
                 var outsideCell = ws.Cell("A3");
@@ -46,9 +49,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             oneCell.AsRange().FormulaArrayA1 = "2+5";
 
-            Assert.True(oneCell.HasArrayFormula);
-            Assert.AreEqual("2+5", oneCell.FormulaA1);
-            Assert.AreEqual("B3:B3", oneCell.FormulaReference.ToStringRelative());
+            Assert.That(oneCell.HasArrayFormula, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(oneCell.FormulaA1, Is.EqualTo("2+5"));
+                Assert.That(oneCell.FormulaReference.ToStringRelative(), Is.EqualTo("B3:B3"));
+            });
         }
 
         [TestCase("B2:C3")]
@@ -65,7 +71,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             foreach (var cell in arrayFormulaRange.Cells())
             {
-                Assert.AreEqual(Blank.Value, cell.Value);
+                Assert.That(cell.Value, Is.EqualTo(Blank.Value));
                 Assert.False(cell.HasArrayFormula);
                 Assert.IsEmpty(cell.FormulaA1);
                 Assert.Null(cell.FormulaReference);
@@ -138,8 +144,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Range("A1:A2").FormulaArrayA1 = "ABS(-3)";
 
-            Assert.True(ws.Cell("A1").NeedsRecalculation);
-            Assert.True(ws.Cell("A2").NeedsRecalculation);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A2").NeedsRecalculation, Is.True);
+            });
         }
 
         [Test]

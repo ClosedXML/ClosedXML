@@ -14,7 +14,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Enumerating_empty_chain()
         {
             var chain = new XLCalculationChain();
-            CollectionAssert.IsEmpty(GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.Empty);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 expectedPoints.Add(point);
             }
 
-            CollectionAssert.AreEqual(expectedPoints, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(expectedPoints).AsCollection);
         }
 
         [Test]
@@ -61,19 +61,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Remove point in the middle
             chain.Remove(c1);
-            CollectionAssert.AreEqual(new[] { a1, b1, d1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1, d1 }).AsCollection);
 
             // Remove last point in the sequence
             chain.Remove(d1);
-            CollectionAssert.AreEqual(new[] { a1, b1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1 }).AsCollection);
 
             // Remove head
             chain.Remove(a1);
-            CollectionAssert.AreEqual(new[] { b1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1 }).AsCollection);
 
             // Remove the only remaining
             chain.Remove(b1);
-            CollectionAssert.IsEmpty(GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.Empty);
         }
 
         [Test]
@@ -86,17 +86,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Add as tail for single link chain
             var b1 = new XLBookPoint(1, new XLSheetPoint(1, 2));
             chain.AddAfter(a1, b1, 0);
-            CollectionAssert.AreEqual(new[] { a1, b1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1 }).AsCollection);
 
             // Add as tail for multi link chain
             var c1 = new XLBookPoint(1, new XLSheetPoint(1, 3));
             chain.AddAfter(b1, c1, 0);
-            CollectionAssert.AreEqual(new[] { a1, b1, c1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1, c1 }).AsCollection);
 
             // Add somewhere in the middle
             var d1 = new XLBookPoint(1, new XLSheetPoint(1, 4));
             chain.AddAfter(b1, d1, 0);
-            CollectionAssert.AreEqual(new[] { a1, b1, d1, c1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1, d1, c1 }).AsCollection);
         }
 
         [Test]
@@ -112,58 +112,91 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var d1 = new XLBookPoint(1, new XLSheetPoint(1, 4));
             chain.AddLast(d1);
 
-            Assert.True(chain.MoveAhead());
-            Assert.AreEqual(a1, chain.Current);
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.MoveAhead(), Is.True);
+                Assert.That(chain.Current, Is.EqualTo(a1));
+            });
 
             // a,b,c,d -> d,a,b,c
             chain.MoveToCurrent(d1);
-            Assert.AreEqual(d1, chain.Current);
-            Assert.AreEqual(new[] { d1, a1, b1, c1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(d1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { d1, a1, b1, c1 }));
+            });
 
             // d,a,b,c -> b,d,a,c
             chain.MoveToCurrent(b1);
-            Assert.AreEqual(b1, chain.Current);
-            Assert.AreEqual(new[] { b1, d1, a1, c1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(b1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, d1, a1, c1 }));
+            });
 
-            Assert.True(chain.MoveAhead());
-            Assert.AreEqual(d1, chain.Current);
-            Assert.AreEqual(new[] { b1, d1, a1, c1 }, GetPoints(chain));
+            Assert.That(chain.MoveAhead(), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(d1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, d1, a1, c1 }));
+            });
 
             // d,a,c -> a,d,c
             chain.MoveToCurrent(a1);
-            Assert.AreEqual(a1, chain.Current);
-            Assert.AreEqual(new[] { b1, a1, d1, c1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(a1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, a1, d1, c1 }));
+            });
 
             // Move A1 to front when it's already at front
             chain.MoveToCurrent(a1);
-            Assert.AreEqual(a1, chain.Current);
-            Assert.AreEqual(new[] { b1, a1, d1, c1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(a1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, a1, d1, c1 }));
+            });
 
             // a,d,c -> c,a,d
             chain.MoveToCurrent(c1);
-            Assert.AreEqual(c1, chain.Current);
-            Assert.AreEqual(new[] { b1, c1, a1, d1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(c1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, a1, d1 }));
+            });
 
-            Assert.True(chain.MoveAhead());
-            Assert.AreEqual(a1, chain.Current);
-            Assert.AreEqual(new[] { b1, c1, a1, d1 }, GetPoints(chain));
+            Assert.That(chain.MoveAhead(), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(a1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, a1, d1 }));
+            });
 
             // a,d -> d,a
             chain.MoveToCurrent(d1);
-            Assert.AreEqual(d1, chain.Current);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(d1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
+            });
 
-            Assert.True(chain.MoveAhead());
-            Assert.AreEqual(a1, chain.Current);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetPoints(chain));
+            Assert.That(chain.MoveAhead(), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(a1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
+            });
 
             // a -> a
             chain.MoveToCurrent(a1);
-            Assert.AreEqual(a1, chain.Current);
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetPoints(chain));
+            Assert.Multiple(() =>
+            {
+                Assert.That(chain.Current, Is.EqualTo(a1));
+                Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
+            });
 
             Assert.False(chain.MoveAhead());
-            Assert.AreEqual(new[] { b1, c1, d1, a1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { b1, c1, d1, a1 }));
         }
 
         [Test]
@@ -181,60 +214,60 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             chain.AddLast(c1);
 
             // Move to the first link.
-            Assert.True(chain.MoveAhead());
+            Assert.That(chain.MoveAhead(), Is.True);
 
             // Cycle a1, c1, when we first encounter c1, we don't know yet that it's a cycle
             chain.MoveToCurrent(c1);
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
 
             // A1 is marked with a position, because they have been at the current
             // C1 hasn't ben pushed back yet, so it keeps 0.
-            CollectionAssert.AreEqual(new[] { 0, 1, 0 }, GetPositions(chain));
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 1, 0 }).AsCollection);
 
             // But then we get A1 again, without any other point being marked
             // as done, therefore we are at cycle.
             chain.MoveToCurrent(a1);
-            CollectionAssert.AreEqual(new[] { a1, c1, b1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 1, 1, 0 }, GetPositions(chain));
-            Assert.True(chain.IsCurrentInCycle);
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, c1, b1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 1, 1, 0 }).AsCollection);
+            Assert.That(chain.IsCurrentInCycle, Is.True);
 
             // When we encounter C1 again, it's obviously a cycle.
             chain.MoveToCurrent(c1);
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 1, 1, 0 }, GetPositions(chain));
-            Assert.True(chain.IsCurrentInCycle);
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 1, 1, 0 }).AsCollection);
+            Assert.That(chain.IsCurrentInCycle, Is.True);
 
             // Let's move on and get A1 to the current. Because the C1 has been
             // marked as done, A1 is no longer in cycle.
             chain.MoveAhead();
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
 
             // C1 position has been cleared, because it has moved beyond
             // current and A1 is now current.
-            CollectionAssert.AreEqual(new[] { 0, 1, 0 }, GetPositions(chain));
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 1, 0 }).AsCollection);
 
             // A1 is no longer in a current, because current position is 2, but last position
             // of A1 was 1 => there has been a processed node in the meantime.
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveToCurrent(b1);
-            CollectionAssert.AreEqual(new[] { c1, b1, a1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 0, 0, 2 }, GetPositions(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, b1, a1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveToCurrent(a1);
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 0, 2, 2 }, GetPositions(chain));
-            Assert.True(chain.IsCurrentInCycle);
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 2, 2 }).AsCollection);
+            Assert.That(chain.IsCurrentInCycle, Is.True);
 
             chain.MoveAhead();
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 0, 0, 2 }, GetPositions(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 2 }).AsCollection);
             Assert.False(chain.IsCurrentInCycle);
 
             chain.MoveAhead();
-            CollectionAssert.AreEqual(new[] { c1, a1, b1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 0, 0, 0 }, GetPositions(chain));
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { c1, a1, b1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 0 }).AsCollection);
         }
 
         [Test]
@@ -248,17 +281,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var c1 = new XLBookPoint(1, new XLSheetPoint(1, 3));
             chain.AddLast(c1);
 
-            Assert.True(chain.MoveAhead());
+            Assert.That(chain.MoveAhead(), Is.True);
 
             chain.MoveToCurrent(b1);
             chain.MoveToCurrent(a1);
-            Assert.True(chain.IsCurrentInCycle);
-            CollectionAssert.AreEqual(new[] { a1, b1, c1 }, GetPoints(chain));
-            CollectionAssert.AreEqual(new[] { 1, 1, 0 }, GetPositions(chain));
+            Assert.That(chain.IsCurrentInCycle, Is.True);
+            Assert.That(GetPoints(chain), Is.EqualTo(new[] { a1, b1, c1 }).AsCollection);
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 1, 1, 0 }).AsCollection);
 
             chain.Reset();
 
-            CollectionAssert.AreEqual(new[] { 0, 0, 0 }, GetPositions(chain));
+            Assert.That(GetPositions(chain), Is.EqualTo(new[] { 0, 0, 0 }).AsCollection);
         }
 
         private static IEnumerable<XLBookPoint> GetPoints(XLCalculationChain chain)

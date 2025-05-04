@@ -11,14 +11,14 @@ namespace ClosedXML.Tests.Excel
         public void BackgroundColorSetsPattern()
         {
             var fill = new XLFill { BackgroundColor = XLColor.Blue };
-            Assert.AreEqual(XLFillPatternValues.Solid, fill.PatternType);
+            Assert.That(fill.PatternType, Is.EqualTo(XLFillPatternValues.Solid));
         }
 
         [Test]
         public void BackgroundNoColorSetsPatternNone()
         {
             var fill = new XLFill { BackgroundColor = XLColor.NoColor };
-            Assert.AreEqual(XLFillPatternValues.None, fill.PatternType);
+            Assert.That(fill.PatternType, Is.EqualTo(XLFillPatternValues.None));
         }
 
         [Test]
@@ -26,8 +26,11 @@ namespace ClosedXML.Tests.Excel
         {
             var fill1 = new XLFill { BackgroundColor = XLColor.Blue };
             var fill2 = new XLFill { BackgroundColor = XLColor.Blue };
-            Assert.IsTrue(fill1.Equals(fill2));
-            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
+            Assert.Multiple(() =>
+            {
+                Assert.That(fill1.Equals(fill2), Is.True);
+                Assert.That(fill2.GetHashCode(), Is.EqualTo(fill1.GetHashCode()));
+            });
         }
 
         [Test]
@@ -35,8 +38,11 @@ namespace ClosedXML.Tests.Excel
         {
             var fill1 = new XLFill { PatternType = XLFillPatternValues.Solid, BackgroundColor = XLColor.Blue };
             var fill2 = new XLFill { PatternType = XLFillPatternValues.Solid, BackgroundColor = XLColor.Red };
-            Assert.IsFalse(fill1.Equals(fill2));
-            Assert.AreNotEqual(fill1.GetHashCode(), fill2.GetHashCode());
+            Assert.Multiple(() =>
+            {
+                Assert.That(fill1.Equals(fill2), Is.False);
+                Assert.That(fill2.GetHashCode(), Is.Not.EqualTo(fill1.GetHashCode()));
+            });
         }
 
         [Test]
@@ -47,12 +53,15 @@ namespace ClosedXML.Tests.Excel
             var fill3 = new XLFill { BackgroundColor = XLColor.FromIndex(64) };
             var fill4 = new XLFill { BackgroundColor = XLColor.NoColor };
 
-            Assert.IsTrue(fill1.Equals(fill2));
-            Assert.IsTrue(fill1.Equals(fill3));
-            Assert.IsTrue(fill1.Equals(fill4));
-            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
-            Assert.AreEqual(fill1.GetHashCode(), fill3.GetHashCode());
-            Assert.AreEqual(fill1.GetHashCode(), fill4.GetHashCode());
+            Assert.Multiple(() =>
+            {
+                Assert.That(fill1.Equals(fill2), Is.True);
+                Assert.That(fill1.Equals(fill3), Is.True);
+                Assert.That(fill1.Equals(fill4), Is.True);
+                Assert.That(fill2.GetHashCode(), Is.EqualTo(fill1.GetHashCode()));
+                Assert.That(fill3.GetHashCode(), Is.EqualTo(fill1.GetHashCode()));
+                Assert.That(fill4.GetHashCode(), Is.EqualTo(fill1.GetHashCode()));
+            });
         }
 
         [Test]
@@ -72,8 +81,11 @@ namespace ClosedXML.Tests.Excel
                 PatternColor = XLColor.Green
             };
 
-            Assert.IsTrue(fill1.Equals(fill2));
-            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
+            Assert.Multiple(() =>
+            {
+                Assert.That(fill1.Equals(fill2), Is.True);
+                Assert.That(fill2.GetHashCode(), Is.EqualTo(fill1.GetHashCode()));
+            });
         }
 
         [Test]
@@ -88,30 +100,31 @@ namespace ClosedXML.Tests.Excel
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
                 .Border.SetOutsideBorderColor(XLColor.Blue);
 
-            Assert.AreEqual(style.Border.BottomBorder, XLBorderStyleValues.Thick);
-            Assert.AreEqual(style.Border.TopBorder, XLBorderStyleValues.Thick);
-            Assert.AreEqual(style.Border.LeftBorder, XLBorderStyleValues.Thick);
-            Assert.AreEqual(style.Border.RightBorder, XLBorderStyleValues.Thick);
+            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.BottomBorder));
+            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.TopBorder));
+            Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.LeftBorder));
+            Assert.Multiple(() =>
+            {
+                Assert.That(XLBorderStyleValues.Thick, Is.EqualTo(style.Border.RightBorder));
 
-            Assert.AreEqual(style.Border.BottomBorderColor, XLColor.Blue);
-            Assert.AreEqual(style.Border.TopBorderColor, XLColor.Blue);
-            Assert.AreEqual(style.Border.LeftBorderColor, XLColor.Blue);
-            Assert.AreEqual(style.Border.RightBorderColor, XLColor.Blue);
+                Assert.That(XLColor.Blue, Is.EqualTo(style.Border.BottomBorderColor));
+            });
+            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.TopBorderColor));
+            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.LeftBorderColor));
+            Assert.That(XLColor.Blue, Is.EqualTo(style.Border.RightBorderColor));
         }
 
         [Test]
         public void LoadAndSaveTransparentBackgroundFill()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx"));
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
-                    return wb;
-                }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
-            }
+                var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+                return wb;
+            }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
         }
 
         [Test]

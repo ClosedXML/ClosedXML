@@ -17,7 +17,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             foreach (var arrayFormulaCell in range.Cells())
             {
-                Assert.AreEqual(1, arrayFormulaCell.Value);
+                Assert.That(arrayFormulaCell.Value, Is.EqualTo(1));
             }
         }
 
@@ -30,8 +30,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             range.FormulaArrayA1 = "TRANSPOSE({1,2})";
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(2, ws.Cell("A2").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -43,10 +46,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             range.FormulaArrayA1 = "{1,2,3,4,5}";
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(2, ws.Cell("B1").Value);
-            Assert.AreEqual(3, ws.Cell("C1").Value);
-            Assert.AreEqual(Blank.Value, ws.Cell("D1").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("B1").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("C1").Value, Is.EqualTo(3));
+                Assert.That(ws.Cell("D1").Value, Is.EqualTo(Blank.Value));
+            });
         }
 
         [Test]
@@ -58,10 +64,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             range.FormulaArrayA1 = "{1;2;3;4;5}";
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(2, ws.Cell("A2").Value);
-            Assert.AreEqual(3, ws.Cell("A3").Value);
-            Assert.AreEqual(Blank.Value, ws.Cell("A4").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo(3));
+                Assert.That(ws.Cell("A4").Value, Is.EqualTo(Blank.Value));
+            });
         }
 
         [Test]
@@ -75,9 +84,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             for (var column = 1; column <= 3; column++)
             {
-                Assert.AreEqual(1, ws.Cell(1, column).Value);
-                Assert.AreEqual(2, ws.Cell(2, column).Value);
-                Assert.AreEqual(XLError.NoValueAvailable, ws.Cell(3, column).Value);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.Cell(1, column).Value, Is.EqualTo(1));
+                    Assert.That(ws.Cell(2, column).Value, Is.EqualTo(2));
+                    Assert.That(ws.Cell(3, column).Value, Is.EqualTo(XLError.NoValueAvailable));
+                });
             }
         }
 
@@ -92,9 +104,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             for (var row = 1; row <= 3; row++)
             {
-                Assert.AreEqual(1, ws.Cell(row, 1).Value);
-                Assert.AreEqual(2, ws.Cell(row, 2).Value);
-                Assert.AreEqual(XLError.NoValueAvailable, ws.Cell(row, 3).Value);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.Cell(row, 1).Value, Is.EqualTo(1));
+                    Assert.That(ws.Cell(row, 2).Value, Is.EqualTo(2));
+                    Assert.That(ws.Cell(row, 3).Value, Is.EqualTo(XLError.NoValueAvailable));
+                });
             }
         }
 
@@ -107,15 +122,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             range.FormulaArrayA1 = "{1,2;3,4}";
 
-            Assert.AreEqual(1, ws.Cell("A1").Value);
-            Assert.AreEqual(2, ws.Cell("B1").Value);
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Cell("C1").Value);
-            Assert.AreEqual(3, ws.Cell("A2").Value);
-            Assert.AreEqual(4, ws.Cell("B2").Value);
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Cell("C2").Value);
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Cell("A3").Value);
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Cell("B3").Value);
-            Assert.AreEqual(XLError.NoValueAvailable, ws.Cell("C3").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(1));
+                Assert.That(ws.Cell("B1").Value, Is.EqualTo(2));
+                Assert.That(ws.Cell("C1").Value, Is.EqualTo(XLError.NoValueAvailable));
+                Assert.That(ws.Cell("A2").Value, Is.EqualTo(3));
+                Assert.That(ws.Cell("B2").Value, Is.EqualTo(4));
+                Assert.That(ws.Cell("C2").Value, Is.EqualTo(XLError.NoValueAvailable));
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo(XLError.NoValueAvailable));
+                Assert.That(ws.Cell("B3").Value, Is.EqualTo(XLError.NoValueAvailable));
+                Assert.That(ws.Cell("C3").Value, Is.EqualTo(XLError.NoValueAvailable));
+            });
         }
 
         [Test]
@@ -125,10 +143,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             ws.Range("B1:B3").FormulaArrayA1 = "SIGN({-1,2,0})";
 
-            // Uses only -1 for all values
-            Assert.AreEqual(-1, ws.Cell("B1").Value);
-            Assert.AreEqual(-1, ws.Cell("B2").Value);
-            Assert.AreEqual(-1, ws.Cell("B3").Value);
+            Assert.Multiple(() =>
+            {
+                // Uses only -1 for all values
+                Assert.That(ws.Cell("B1").Value, Is.EqualTo(-1));
+                Assert.That(ws.Cell("B2").Value, Is.EqualTo(-1));
+                Assert.That(ws.Cell("B3").Value, Is.EqualTo(-1));
+            });
         }
     }
 }

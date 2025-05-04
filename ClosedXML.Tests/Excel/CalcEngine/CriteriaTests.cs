@@ -17,13 +17,13 @@ internal class CriteriaTests
     {
         var criteria = Criteria.Create(selectionCriteria, CultureInfo.CurrentCulture);
         var matchResult = criteria.Match(value);
-        Assert.AreEqual(expectedResult, matchResult);
+        Assert.That(matchResult, Is.EqualTo(expectedResult));
 
         // TallyCriteria skips unused (=blank) cells as an optimization (e.g. SUMIF over whole column/sheet),
         // unless it's possible that blanks will match the criteria. Assert that when tested value matches and
         // is blank, teh TallyCriteria will include blank cells.
         if (matchResult && value.IsBlank)
-            Assert.True(criteria.CanBlankValueMatch);
+            Assert.That(criteria.CanBlankValueMatch, Is.True);
     }
 
     public static IEnumerable<object> CriteriaTestCases

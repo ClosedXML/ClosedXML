@@ -11,7 +11,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("abc")]
         public void Empty_Pattern_Matches_Any_String(string text)
         {
-            Assert.AreEqual(0, SearchWildcard(text, string.Empty));
+            Assert.That(SearchWildcard(text, string.Empty), Is.EqualTo(0));
         }
 
         [TestCase("", "abc", 0)]
@@ -22,25 +22,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("c", "abc", 2)]
         public void Substring_Of_Text_Matches_Text(string substringPattern, string text, int expectedIndex)
         {
-            Assert.AreEqual(expectedIndex, SearchWildcard(text, substringPattern));
+            Assert.That(SearchWildcard(text, substringPattern), Is.EqualTo(expectedIndex));
         }
 
         [TestCase("abcd", "abc")]
         public void Pattern_Not_In_Text_Returns_Negative_One(string pattern, string text)
         {
-            Assert.AreEqual(-1, SearchWildcard(text, pattern));
+            Assert.That(SearchWildcard(text, pattern), Is.EqualTo(-1));
         }
 
         [Test]
         public void Pattern_Comparison_Is_Case_Insensitive()
         {
-            Assert.AreEqual(1, SearchWildcard("zabcd", "AbCd"));
+            Assert.That(SearchWildcard("zabcd", "AbCd"), Is.EqualTo(1));
         }
 
         [Test]
         public void Tilde_Is_Escape_Char()
         {
-            Assert.AreEqual(1, SearchWildcard("_abc_", "~a~B~c"));
+            Assert.That(SearchWildcard("_abc_", "~a~B~c"), Is.EqualTo(1));
         }
 
         [TestCase("~*", "*", 0)]
@@ -50,13 +50,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("~a~b~", "ab", 0)]
         public void Escaped_Wildcards_Are_Matched_As_Chars(string pattern, string text, int expectedPosition)
         {
-            Assert.AreEqual(expectedPosition, SearchWildcard(text, pattern));
+            Assert.That(SearchWildcard(text, pattern), Is.EqualTo(expectedPosition));
         }
 
         [Test]
         public void Question_Mark_Wildcard_Matches_Any_Char()
         {
-            Assert.AreEqual(0, SearchWildcard("abc", "a?c"));
+            Assert.That(SearchWildcard("abc", "a?c"), Is.EqualTo(0));
         }
 
         [TestCase("abcd", "ab*cd", 0)]
@@ -65,27 +65,30 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         public void Star_Wildcard_Matches_Any_Number_Of_Chars(string text, string pattern, int index)
         {
-            Assert.AreEqual(index, SearchWildcard(text, pattern));
+            Assert.That(SearchWildcard(text, pattern), Is.EqualTo(index));
         }
 
         [Test]
         public void Unpaired_Escape_Char_At_The_End_Of_Pattern_Is_Not_Char()
         {
-            Assert.AreEqual(0, SearchWildcard("a", "a~"));
+            Assert.That(SearchWildcard("a", "a~"), Is.EqualTo(0));
         }
 
         [Test]
         public void Star_Wildcard_At_The_Beginning_Matches_First_Char()
         {
-            Assert.AreEqual(0, SearchWildcard("abcccd", "*ccd"));
+            Assert.That(SearchWildcard("abcccd", "*ccd"), Is.EqualTo(0));
         }
 
         [Test]
         public void Pattern_Size_Is_Limited_To_255_Chars()
         {
-            Assert.AreEqual(0, SearchWildcard(new string('a', 1000), new string('a', 255)));
+            Assert.Multiple(() =>
+            {
+                Assert.That(SearchWildcard(new string('a', 1000), new string('a', 255)), Is.EqualTo(0));
 
-            Assert.AreEqual(-1, SearchWildcard(new string('a', 1000), new string('a', 256)));
+                Assert.That(SearchWildcard(new string('a', 1000), new string('a', 256)), Is.EqualTo(-1));
+            });
         }
 
         [TestCase("?", "a", true)]
@@ -103,7 +106,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("a*", @"zaba", false)]
         public void Matches(string pattern, string text, bool matches)
         {
-            Assert.AreEqual(matches, new Wildcard(pattern).Matches(text.AsSpan()));
+            Assert.That(new Wildcard(pattern).Matches(text.AsSpan()), Is.EqualTo(matches));
         }
 
         private static int SearchWildcard(string text, string pattern)

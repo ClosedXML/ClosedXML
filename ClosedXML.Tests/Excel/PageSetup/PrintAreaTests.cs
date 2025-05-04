@@ -20,7 +20,7 @@ namespace ClosedXML.Tests.Excel
                 (_, ws) =>
                 {
                     var actualPrintAddresses = ws.PageSetup.PrintAreas.Select(pa => pa.RangeAddress.ToStringRelative());
-                    CollectionAssert.AreEqual(printAreaRangeAddresses, actualPrintAddresses);
+                    Assert.That(actualPrintAddresses, Is.EqualTo(printAreaRangeAddresses).AsCollection);
                 });
         }
     }

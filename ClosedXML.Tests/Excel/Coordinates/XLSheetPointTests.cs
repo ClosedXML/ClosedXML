@@ -19,8 +19,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
         public void ParseCellRefsAccordingToGrammar(string cellRef, int columnNumber, int rowNumber)
         {
             var sheetPoint = XLSheetPoint.Parse(cellRef.AsSpan());
-            Assert.AreEqual(columnNumber, sheetPoint.Column);
-            Assert.AreEqual(rowNumber, sheetPoint.Row);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sheetPoint.Column, Is.EqualTo(columnNumber));
+                Assert.That(sheetPoint.Row, Is.EqualTo(rowNumber));
+            });
         }
 
         [TestCase("")]
@@ -58,7 +61,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         public void CanFormatToString(string cellRef)
         {
             var r = XLSheetPoint.Parse(cellRef);
-            Assert.AreEqual(cellRef, r.ToString());
+            Assert.That(r.ToString(), Is.EqualTo(cellRef));
         }
     }
 }

@@ -15,19 +15,15 @@ namespace ClosedXML.Tests
         {
             Assert.DoesNotThrow(() =>
             {
-                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
-                using (var wb = new XLWorkbook(stream))
-                {
-                    var ws = wb.Worksheet("PastrySalesData");
-                    var table = ws.Table("PastrySalesData");
-                    var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                    ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
+                using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx"));
+                using var wb = new XLWorkbook(stream);
+                var ws = wb.Worksheet("PastrySalesData");
+                var table = ws.Table("PastrySalesData");
+                var ptSheet = wb.Worksheets.Add("BlankPivotTable");
+                ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
 
-                    using (var ms = new MemoryStream())
-                    {
-                        wb.SaveAs(ms, true);
-                    }
-                }
+                using var ms = new MemoryStream();
+                wb.SaveAs(ms, true);
             });
         }
 
@@ -35,175 +31,167 @@ namespace ClosedXML.Tests
         public void TestPivotTableVersioningAttributes()
         {
             // Pivot cache definitions in input file has created and refreshed version attributes = 3
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\VersioningAttributes\inputfile.xlsx")))
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\VersioningAttributes\inputfile.xlsx"));
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
+                var wb = new XLWorkbook(stream);
 
-                    var data = wb.Worksheet("Data");
+                var data = wb.Worksheet("Data");
 
-                    var pt = data.RangeUsed().CreatePivotTable(wb.AddWorksheet("pvt2").FirstCell(), "pvt2");
+                var pt = data.RangeUsed().CreatePivotTable(wb.AddWorksheet("pvt2").FirstCell(), "pvt2");
 
-                    pt.ColumnLabels.Add("Sex");
-                    pt.RowLabels.Add("FullName");
-                    pt.Values.Add("Id", "Count of Id").SetSummaryFormula(XLPivotSummary.Count);
+                pt.ColumnLabels.Add("Sex");
+                pt.RowLabels.Add("FullName");
+                pt.Values.Add("Id", "Count of Id").SetSummaryFormula(XLPivotSummary.Count);
 
-                    return wb;
-                    // Pivot cache definitions in output file has created and refreshed version attributes = 5
-                }, @"Other\PivotTableReferenceFiles\VersioningAttributes\outputfile.xlsx");
-            }
+                return wb;
+                // Pivot cache definitions in output file has created and refreshed version attributes = 5
+            }, @"Other\PivotTableReferenceFiles\VersioningAttributes\outputfile.xlsx");
         }
 
         [Test]
         public void PivotTableOptionsSaveTest()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws = wb.Worksheet("PastrySalesData");
+            var table = ws.Table("PastrySalesData");
+            var ptSheet = wb.Worksheets.Add("BlankPivotTable");
+            var pt = ptSheet.PivotTables.Add("pvtOptionsTest", ptSheet.Cell(1, 1), table);
+
+            pt.ColumnHeaderCaption = "clmn header";
+            pt.RowHeaderCaption = "row header";
+
+            pt.AutofitColumns = true;
+            pt.PreserveCellFormatting = false;
+            pt.ShowGrandTotalsColumns = true;
+            pt.ShowGrandTotalsRows = true;
+            pt.UseCustomListsForSorting = false;
+            pt.ShowExpandCollapseButtons = false;
+            pt.ShowContextualTooltips = false;
+            pt.DisplayCaptionsAndDropdowns = false;
+            pt.RepeatRowLabels = true;
+            pt.PivotCache.SaveSourceData = false;
+            pt.EnableShowDetails = false;
+            pt.ShowColumnHeaders = false;
+            pt.ShowRowHeaders = false;
+
+            pt.MergeAndCenterWithLabels = true; // MergeItem
+            pt.RowLabelIndent = 12; // Indent
+            pt.FilterAreaOrder = XLFilterAreaOrder.OverThenDown; // PageOverThenDown
+            pt.FilterFieldsPageWrap = 14; // PageWrap
+            pt.ErrorValueReplacement = "error test"; // ErrorCaption
+            pt.EmptyCellReplacement = "empty test"; // MissingCaption
+
+            pt.FilteredItemsInSubtotals = true; // Subtotal filtered page items
+            pt.AllowMultipleFilters = false; // MultipleFieldFilters
+
+            pt.ShowPropertiesInTooltips = false;
+            pt.ClassicPivotTableLayout = true;
+            pt.ShowEmptyItemsOnRows = true;
+            pt.ShowEmptyItemsOnColumns = true;
+            pt.DisplayItemLabels = false;
+            pt.SortFieldsAtoZ = true;
+
+            pt.PrintExpandCollapsedButtons = true;
+            pt.PrintTitles = true;
+
+            pt.PivotCache.RefreshDataOnOpen = false;
+            pt.PivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
+            pt.EnableCellEditing = true;
+            pt.ShowValuesRow = true;
+            pt.ShowRowStripes = true;
+            pt.ShowColumnStripes = true;
+            pt.Theme = XLPivotTableTheme.PivotStyleDark13;
+
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms, true);
+
+            ms.Position = 0;
+
+            using var wbassert = new XLWorkbook(ms);
+            var wsassert = wbassert.Worksheet("BlankPivotTable");
+            var ptassert = wsassert.PivotTable("pvtOptionsTest");
+            Assert.That(ptassert, Is.Not.Null, "name save failure");
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheet("PastrySalesData");
-                var table = ws.Table("PastrySalesData");
-                var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                var pt = ptSheet.PivotTables.Add("pvtOptionsTest", ptSheet.Cell(1, 1), table);
-
-                pt.ColumnHeaderCaption = "clmn header";
-                pt.RowHeaderCaption = "row header";
-
-                pt.AutofitColumns = true;
-                pt.PreserveCellFormatting = false;
-                pt.ShowGrandTotalsColumns = true;
-                pt.ShowGrandTotalsRows = true;
-                pt.UseCustomListsForSorting = false;
-                pt.ShowExpandCollapseButtons = false;
-                pt.ShowContextualTooltips = false;
-                pt.DisplayCaptionsAndDropdowns = false;
-                pt.RepeatRowLabels = true;
-                pt.PivotCache.SaveSourceData = false;
-                pt.EnableShowDetails = false;
-                pt.ShowColumnHeaders = false;
-                pt.ShowRowHeaders = false;
-
-                pt.MergeAndCenterWithLabels = true; // MergeItem
-                pt.RowLabelIndent = 12; // Indent
-                pt.FilterAreaOrder = XLFilterAreaOrder.OverThenDown; // PageOverThenDown
-                pt.FilterFieldsPageWrap = 14; // PageWrap
-                pt.ErrorValueReplacement = "error test"; // ErrorCaption
-                pt.EmptyCellReplacement = "empty test"; // MissingCaption
-
-                pt.FilteredItemsInSubtotals = true; // Subtotal filtered page items
-                pt.AllowMultipleFilters = false; // MultipleFieldFilters
-
-                pt.ShowPropertiesInTooltips = false;
-                pt.ClassicPivotTableLayout = true;
-                pt.ShowEmptyItemsOnRows = true;
-                pt.ShowEmptyItemsOnColumns = true;
-                pt.DisplayItemLabels = false;
-                pt.SortFieldsAtoZ = true;
-
-                pt.PrintExpandCollapsedButtons = true;
-                pt.PrintTitles = true;
-
-                pt.PivotCache.RefreshDataOnOpen = false;
-                pt.PivotCache.ItemsToRetainPerField = XLItemsToRetain.Max;
-                pt.EnableCellEditing = true;
-                pt.ShowValuesRow = true;
-                pt.ShowRowStripes = true;
-                pt.ShowColumnStripes = true;
-                pt.Theme = XLPivotTableTheme.PivotStyleDark13;
-
-                using (var ms = new MemoryStream())
-                {
-                    wb.SaveAs(ms, true);
-
-                    ms.Position = 0;
-
-                    using (var wbassert = new XLWorkbook(ms))
-                    {
-                        var wsassert = wbassert.Worksheet("BlankPivotTable");
-                        var ptassert = wsassert.PivotTable("pvtOptionsTest");
-                        Assert.AreNotEqual(null, ptassert, "name save failure");
-                        Assert.AreEqual("clmn header", ptassert.ColumnHeaderCaption, "ColumnHeaderCaption save failure");
-                        Assert.AreEqual("row header", ptassert.RowHeaderCaption, "RowHeaderCaption save failure");
-                        Assert.AreEqual(true, ptassert.MergeAndCenterWithLabels, "MergeAndCenterWithLabels save failure");
-                        Assert.AreEqual(12, ptassert.RowLabelIndent, "RowLabelIndent save failure");
-                        Assert.AreEqual(XLFilterAreaOrder.OverThenDown, ptassert.FilterAreaOrder, "FilterAreaOrder save failure");
-                        Assert.AreEqual(14, ptassert.FilterFieldsPageWrap, "FilterFieldsPageWrap save failure");
-                        Assert.AreEqual("error test", ptassert.ErrorValueReplacement, "ErrorValueReplacement save failure");
-                        Assert.AreEqual("empty test", ptassert.EmptyCellReplacement, "EmptyCellReplacement save failure");
-                        Assert.AreEqual(true, ptassert.AutofitColumns, "AutofitColumns save failure");
-                        Assert.AreEqual(false, ptassert.PreserveCellFormatting, "PreserveCellFormatting save failure");
-                        Assert.AreEqual(true, ptassert.ShowGrandTotalsRows, "ShowGrandTotalsRows save failure");
-                        Assert.AreEqual(true, ptassert.ShowGrandTotalsColumns, "ShowGrandTotalsColumns save failure");
-                        Assert.AreEqual(true, ptassert.FilteredItemsInSubtotals, "FilteredItemsInSubtotals save failure");
-                        Assert.AreEqual(false, ptassert.AllowMultipleFilters, "AllowMultipleFilters save failure");
-                        Assert.AreEqual(false, ptassert.UseCustomListsForSorting, "UseCustomListsForSorting save failure");
-                        Assert.AreEqual(false, ptassert.ShowExpandCollapseButtons, "ShowExpandCollapseButtons save failure");
-                        Assert.AreEqual(false, ptassert.ShowContextualTooltips, "ShowContextualTooltips save failure");
-                        Assert.AreEqual(false, ptassert.ShowPropertiesInTooltips, "ShowPropertiesInTooltips save failure");
-                        Assert.AreEqual(false, ptassert.DisplayCaptionsAndDropdowns, "DisplayCaptionsAndDropdowns save failure");
-                        Assert.AreEqual(true, ptassert.ClassicPivotTableLayout, "ClassicPivotTableLayout save failure");
-                        Assert.AreEqual(true, ptassert.ShowEmptyItemsOnRows, "ShowEmptyItemsOnRows save failure");
-                        Assert.AreEqual(true, ptassert.ShowEmptyItemsOnColumns, "ShowEmptyItemsOnColumns save failure");
-                        Assert.AreEqual(false, ptassert.DisplayItemLabels, "DisplayItemLabels save failure");
-                        Assert.AreEqual(true, ptassert.SortFieldsAtoZ, "SortFieldsAtoZ save failure");
-                        Assert.AreEqual(true, ptassert.PrintExpandCollapsedButtons, "PrintExpandCollapsedButtons save failure");
-                        Assert.AreEqual(true, ptassert.RepeatRowLabels, "RepeatRowLabels save failure");
-                        Assert.AreEqual(true, ptassert.PrintTitles, "PrintTitles save failure");
-                        Assert.AreEqual(false, ptassert.PivotCache.SaveSourceData, "SaveSourceData save failure");
-                        Assert.AreEqual(false, ptassert.EnableShowDetails, "EnableShowDetails save failure");
-                        Assert.AreEqual(false, ptassert.PivotCache.RefreshDataOnOpen, "RefreshDataOnOpen save failure");
-                        Assert.AreEqual(XLItemsToRetain.Max, ptassert.PivotCache.ItemsToRetainPerField, "ItemsToRetainPerField save failure");
-                        Assert.AreEqual(true, ptassert.EnableCellEditing, "EnableCellEditing save failure");
-                        Assert.AreEqual(XLPivotTableTheme.PivotStyleDark13, ptassert.Theme, "Theme save failure");
-                        Assert.AreEqual(true, ptassert.ShowValuesRow, "ShowValuesRow save failure");
-                        Assert.AreEqual(false, ptassert.ShowRowHeaders, "ShowRowHeaders save failure");
-                        Assert.AreEqual(false, ptassert.ShowColumnHeaders, "ShowColumnHeaders save failure");
-                        Assert.AreEqual(true, ptassert.ShowRowStripes, "ShowRowStripes save failure");
-                        Assert.AreEqual(true, ptassert.ShowColumnStripes, "ShowColumnStripes save failure");
-                    }
-                }
-            }
+                Assert.That(ptassert.ColumnHeaderCaption, Is.EqualTo("clmn header"), "ColumnHeaderCaption save failure");
+                Assert.That(ptassert.RowHeaderCaption, Is.EqualTo("row header"), "RowHeaderCaption save failure");
+                Assert.That(ptassert.MergeAndCenterWithLabels, Is.True, "MergeAndCenterWithLabels save failure");
+                Assert.That(ptassert.RowLabelIndent, Is.EqualTo(12), "RowLabelIndent save failure");
+                Assert.That(ptassert.FilterAreaOrder, Is.EqualTo(XLFilterAreaOrder.OverThenDown), "FilterAreaOrder save failure");
+                Assert.That(ptassert.FilterFieldsPageWrap, Is.EqualTo(14), "FilterFieldsPageWrap save failure");
+                Assert.That(ptassert.ErrorValueReplacement, Is.EqualTo("error test"), "ErrorValueReplacement save failure");
+                Assert.That(ptassert.EmptyCellReplacement, Is.EqualTo("empty test"), "EmptyCellReplacement save failure");
+                Assert.That(ptassert.AutofitColumns, Is.True, "AutofitColumns save failure");
+                Assert.That(ptassert.PreserveCellFormatting, Is.False, "PreserveCellFormatting save failure");
+                Assert.That(ptassert.ShowGrandTotalsRows, Is.True, "ShowGrandTotalsRows save failure");
+                Assert.That(ptassert.ShowGrandTotalsColumns, Is.True, "ShowGrandTotalsColumns save failure");
+                Assert.That(ptassert.FilteredItemsInSubtotals, Is.True, "FilteredItemsInSubtotals save failure");
+                Assert.That(ptassert.AllowMultipleFilters, Is.False, "AllowMultipleFilters save failure");
+                Assert.That(ptassert.UseCustomListsForSorting, Is.False, "UseCustomListsForSorting save failure");
+                Assert.That(ptassert.ShowExpandCollapseButtons, Is.False, "ShowExpandCollapseButtons save failure");
+                Assert.That(ptassert.ShowContextualTooltips, Is.False, "ShowContextualTooltips save failure");
+                Assert.That(ptassert.ShowPropertiesInTooltips, Is.False, "ShowPropertiesInTooltips save failure");
+                Assert.That(ptassert.DisplayCaptionsAndDropdowns, Is.False, "DisplayCaptionsAndDropdowns save failure");
+                Assert.That(ptassert.ClassicPivotTableLayout, Is.True, "ClassicPivotTableLayout save failure");
+                Assert.That(ptassert.ShowEmptyItemsOnRows, Is.True, "ShowEmptyItemsOnRows save failure");
+                Assert.That(ptassert.ShowEmptyItemsOnColumns, Is.True, "ShowEmptyItemsOnColumns save failure");
+                Assert.That(ptassert.DisplayItemLabels, Is.False, "DisplayItemLabels save failure");
+                Assert.That(ptassert.SortFieldsAtoZ, Is.True, "SortFieldsAtoZ save failure");
+                Assert.That(ptassert.PrintExpandCollapsedButtons, Is.True, "PrintExpandCollapsedButtons save failure");
+                Assert.That(ptassert.RepeatRowLabels, Is.True, "RepeatRowLabels save failure");
+                Assert.That(ptassert.PrintTitles, Is.True, "PrintTitles save failure");
+                Assert.That(ptassert.PivotCache.SaveSourceData, Is.False, "SaveSourceData save failure");
+                Assert.That(ptassert.EnableShowDetails, Is.False, "EnableShowDetails save failure");
+                Assert.That(ptassert.PivotCache.RefreshDataOnOpen, Is.False, "RefreshDataOnOpen save failure");
+                Assert.That(ptassert.PivotCache.ItemsToRetainPerField, Is.EqualTo(XLItemsToRetain.Max), "ItemsToRetainPerField save failure");
+                Assert.That(ptassert.EnableCellEditing, Is.True, "EnableCellEditing save failure");
+                Assert.That(ptassert.Theme, Is.EqualTo(XLPivotTableTheme.PivotStyleDark13), "Theme save failure");
+                Assert.That(ptassert.ShowValuesRow, Is.True, "ShowValuesRow save failure");
+                Assert.That(ptassert.ShowRowHeaders, Is.False, "ShowRowHeaders save failure");
+                Assert.That(ptassert.ShowColumnHeaders, Is.False, "ShowColumnHeaders save failure");
+                Assert.That(ptassert.ShowRowStripes, Is.True, "ShowRowStripes save failure");
+                Assert.That(ptassert.ShowColumnStripes, Is.True, "ShowColumnStripes save failure");
+            });
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void PivotFieldOptionsSaveTest(bool withDefaults)
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws = wb.Worksheet("PastrySalesData");
+            var table = ws.Table("PastrySalesData");
+
+            var ptSheet = wb.Worksheets.Add("pvtFieldOptionsTest");
+            var pt = ptSheet.PivotTables.Add("pvtFieldOptionsTest", ptSheet.Cell(1, 1), table);
+
+            var field = pt.RowLabels.Add("Name")
+                .SetSubtotalCaption("Test caption")
+                .SetCustomName("Test name");
+            SetFieldOptions(field, withDefaults);
+
+            pt.ColumnLabels.Add("Month");
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms, true);
+
+            ms.Position = 0;
+
+            using var wbassert = new XLWorkbook(ms);
+            var wsassert = wbassert.Worksheet("pvtFieldOptionsTest");
+            var ptassert = wsassert.PivotTable("pvtFieldOptionsTest");
+            var pfassert = ptassert.RowLabels.Get("Name");
+            Assert.That(pfassert, Is.Not.Null, "name save failure");
+            Assert.Multiple(() =>
             {
-                var ws = wb.Worksheet("PastrySalesData");
-                var table = ws.Table("PastrySalesData");
-
-                var ptSheet = wb.Worksheets.Add("pvtFieldOptionsTest");
-                var pt = ptSheet.PivotTables.Add("pvtFieldOptionsTest", ptSheet.Cell(1, 1), table);
-
-                var field = pt.RowLabels.Add("Name")
-                    .SetSubtotalCaption("Test caption")
-                    .SetCustomName("Test name");
-                SetFieldOptions(field, withDefaults);
-
-                pt.ColumnLabels.Add("Month");
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-
-                using (var ms = new MemoryStream())
-                {
-                    wb.SaveAs(ms, true);
-
-                    ms.Position = 0;
-
-                    using (var wbassert = new XLWorkbook(ms))
-                    {
-                        var wsassert = wbassert.Worksheet("pvtFieldOptionsTest");
-                        var ptassert = wsassert.PivotTable("pvtFieldOptionsTest");
-                        var pfassert = ptassert.RowLabels.Get("Name");
-                        Assert.AreNotEqual(null, pfassert, "name save failure");
-                        Assert.AreEqual("Test caption", pfassert.SubtotalCaption, "SubtotalCaption save failure");
-                        Assert.AreEqual("Test name", pfassert.CustomName, "CustomName save failure");
-                        AssertFieldOptions(pfassert, withDefaults);
-                    }
-                }
-            }
+                Assert.That(pfassert.SubtotalCaption, Is.EqualTo("Test caption"), "SubtotalCaption save failure");
+                Assert.That(pfassert.CustomName, Is.EqualTo("Test name"), "CustomName save failure");
+            });
+            AssertFieldOptions(pfassert, withDefaults);
         }
 
         [Test]
@@ -296,37 +284,33 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyPivotTableTests()
         {
-            using (var ms = new MemoryStream())
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
-            using (var wb = new XLWorkbook(stream))
-            {
-                var ws1 = wb.Worksheet("pvt1");
-                var pt1 = ws1.PivotTables.First() as XLPivotTable;
+            using var ms = new MemoryStream();
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws1 = wb.Worksheet("pvt1");
+            var pt1 = ws1.PivotTables.First() as XLPivotTable;
 
-                Assert.Throws<InvalidOperationException>(() => pt1.CopyTo(pt1.TargetCell));
+            Assert.Throws<InvalidOperationException>(() => pt1.CopyTo(pt1.TargetCell));
 
-                var pt2 = pt1.CopyTo(ws1.Cell("AB100")) as XLPivotTable;
+            var pt2 = pt1.CopyTo(ws1.Cell("AB100")) as XLPivotTable;
 
-                AssertPivotTablesAreEqual(pt1, pt2, compareName: false);
+            AssertPivotTablesAreEqual(pt1, pt2, compareName: false);
 
-                var ws2 = wb.AddWorksheet("Copy Of pvt1");
-                AssertPivotTablesAreEqual(pt1, pt1.CopyTo(ws2.FirstCell()) as XLPivotTable, compareName: true);
+            var ws2 = wb.AddWorksheet("Copy Of pvt1");
+            AssertPivotTablesAreEqual(pt1, pt1.CopyTo(ws2.FirstCell()) as XLPivotTable, compareName: true);
 
-                using (var wb2 = new XLWorkbook())
-                {
-                    wb.Worksheet("PastrySalesData").CopyTo(wb2);
+            using var wb2 = new XLWorkbook();
+            wb.Worksheet("PastrySalesData").CopyTo(wb2);
 
-                    AssertPivotTablesAreEqual(pt1, pt1.CopyTo(wb2.AddWorksheet("pvt").FirstCell()) as XLPivotTable, compareName: true);
-                }
-            }
+            AssertPivotTablesAreEqual(pt1, pt1.CopyTo(wb2.AddWorksheet("pvt").FirstCell()) as XLPivotTable, compareName: true);
         }
 
-        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, Boolean compareName)
+        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, bool compareName)
         {
-            Assert.AreEqual(compareName, original.Name.Equals(copy.Name));
+            Assert.That(original.Name.Equals(copy.Name), Is.EqualTo(compareName));
 
             var comparer = new PivotTableComparer(compareName: compareName, compareRelId: false, compareTargetCellAddress: false);
-            Assert.IsTrue(comparer.Equals(original, copy));
+            Assert.That(comparer.Equals(original, copy), Is.True);
         }
 
         private class Pastry
@@ -363,79 +347,77 @@ namespace ClosedXML.Tests
         [Test]
         public void BlankPivotTableField()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
+                // Based on .\ClosedXML\ClosedXML.Examples\PivotTables\PivotTables.cs
+                // But with empty column for Month
+                var pastries = new List<Pastry>
                 {
-                    // Based on .\ClosedXML\ClosedXML.Examples\PivotTables\PivotTables.cs
-                    // But with empty column for Month
-                    var pastries = new List<Pastry>
-                    {
-                        new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                        new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                        new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                        new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                        new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                        new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                        new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                        new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                        new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                        new Pastry("Danish", 104, 394, -20.24, "", null),
-                        new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                        new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+                    new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
+                    new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
+                    new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
+                    new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
+                    new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
+                    new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
+                    new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
+                    new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
+                    new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
+                    new Pastry("Danish", 104, 394, -20.24, "", null),
+                    new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
+                    new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
 
-                        // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                        new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                        new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                        new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+                    // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                    new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
+                    new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
+                    new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
 
-                        // For ContainsBlank and integer rows/columns test
-                        new Pastry("Scone", null, 255, 18.4, "", null),
-                    };
+                    // For ContainsBlank and integer rows/columns test
+                    new Pastry("Scone", null, 255, 18.4, "", null),
+                };
 
-                    var wb = new XLWorkbook();
+                var wb = new XLWorkbook();
 
-                    var sheet = wb.Worksheets.Add("PastrySalesData");
-                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
-                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet.Columns().AdjustToContents();
+                var sheet = wb.Worksheets.Add("PastrySalesData");
+                // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                sheet.Columns().AdjustToContents();
 
-                    IXLWorksheet ptSheet;
-                    IXLPivotTable pt;
+                IXLWorksheet ptSheet;
+                IXLPivotTable pt;
 
-                    for (var i = 1; i <= 5; i++)
-                    {
-                        // Add a new sheet for our pivot table
-                        ptSheet = wb.Worksheets.Add("pvt" + i);
+                for (var i = 1; i <= 5; i++)
+                {
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt" + i);
 
-                        // Create the pivot table, using the data from the "PastrySalesData" table
-                        pt = ptSheet.PivotTables.Add("pvt" + i, ptSheet.Cell(1, 1), table);
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("pvt" + i, ptSheet.Cell(1, 1), table);
 
-                        if (i == 1 || i == 4 || i == 5)
-                            pt.ColumnLabels.Add("Name");
-                        else if (i == 2 || i == 3)
-                            pt.RowLabels.Add("Name");
+                    if (i == 1 || i == 4 || i == 5)
+                        pt.ColumnLabels.Add("Name");
+                    else if (i == 2 || i == 3)
+                        pt.RowLabels.Add("Name");
 
-                        if (i == 1 || i == 3)
-                            pt.RowLabels.Add("Month");
-                        else if (i == 2 || i == 4)
-                            pt.ColumnLabels.Add("Month");
-                        else if (i == 5)
-                            pt.RowLabels.Add("BakeDate");
+                    if (i == 1 || i == 3)
+                        pt.RowLabels.Add("Month");
+                    else if (i == 2 || i == 4)
+                        pt.ColumnLabels.Add("Month");
+                    else if (i == 5)
+                        pt.RowLabels.Add("BakeDate");
 
-                        // The values in our table will come from the "NumberOfOrders" field
-                        // The default calculation setting is a total of each row/column
-                        pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
-                            .ShowAsPercentageFrom("Name").And("Bearclaw")
-                            .NumberFormat.Format = "0%";
+                    // The values in our table will come from the "NumberOfOrders" field
+                    // The default calculation setting is a total of each row/column
+                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
+                        .ShowAsPercentageFrom("Name").And("Bearclaw")
+                        .NumberFormat.Format = "0%";
 
-                        ptSheet.Columns().AdjustToContents();
-                    }
+                    ptSheet.Columns().AdjustToContents();
+                }
 
-                    return wb;
-                }, @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
-            }
+                return wb;
+            }, @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
         }
 
         [Test]
@@ -470,16 +452,14 @@ namespace ClosedXML.Tests
         [Test]
         public void PivotTableWithNoneTheme()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx"));
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
-                    return wb;
-                }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
-            }
+                var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+                return wb;
+            }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
         }
 
         [Test]
@@ -547,8 +527,11 @@ namespace ClosedXML.Tests
                         .ReportFilters
                         .ToArray();
 
-                    Assert.AreEqual("Month", pageFields[0].SourceName);
-                    Assert.AreEqual("Name", pageFields[1].SourceName);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(pageFields[0].SourceName, Is.EqualTo("Month"));
+                        Assert.That(pageFields[1].SourceName, Is.EqualTo("Name"));
+                    });
                 }
             }
 
@@ -590,8 +573,11 @@ namespace ClosedXML.Tests
                         .ColumnLabels
                         .ToArray();
 
-                    Assert.AreEqual("Month", columnLabels[0].SourceName);
-                    Assert.AreEqual("Name", columnLabels[1].SourceName);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(columnLabels[0].SourceName, Is.EqualTo("Month"));
+                        Assert.That(columnLabels[1].SourceName, Is.EqualTo("Name"));
+                    });
                 }
             }
 
@@ -634,9 +620,12 @@ namespace ClosedXML.Tests
                         .RowLabels
                         .ToArray();
 
-                    Assert.AreEqual("Month", rowLabels[0].SourceName);
-                    Assert.AreEqual("Name", rowLabels[1].SourceName);
-                    Assert.AreEqual("{{Values}}", rowLabels[2].SourceName);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(rowLabels[0].SourceName, Is.EqualTo("Month"));
+                        Assert.That(rowLabels[1].SourceName, Is.EqualTo("Name"));
+                        Assert.That(rowLabels[2].SourceName, Is.EqualTo("{{Values}}"));
+                    });
                 }
             }
         }
@@ -668,52 +657,50 @@ namespace ClosedXML.Tests
                 new Pastry("Scone", null, 255, 18.4, "", null),
             };
 
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.Worksheets.Add("PastrySalesData");
-                    var table = ws.FirstCell().InsertTable(pastries, "PastrySalesData", true);
+                var ws = wb.Worksheets.Add("PastrySalesData");
+                var table = ws.FirstCell().InsertTable(pastries, "PastrySalesData", true);
 
-                    var pvtSheet = wb.Worksheets.Add("pvt");
-                    var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
+                var pvtSheet = wb.Worksheets.Add("pvt");
+                var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
 
-                    pvt.ColumnLabels.Add("Month");
-                    pvt.RowLabels.Add("Name");
-                    pvt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                pvt.ColumnLabels.Add("Month");
+                pvt.RowLabels.Add("Name");
+                pvt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
 
-                    //Deliberately try to save twice
-                    wb.SaveAs(ms);
-                    wb.SaveAs(ms);
-                }
+                //Deliberately try to save twice
+                wb.SaveAs(ms);
+                wb.SaveAs(ms);
+            }
 
-                ms.Seek(0, SeekOrigin.Begin);
+            ms.Seek(0, SeekOrigin.Begin);
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    Assert.AreEqual(1, wb.Worksheets.SelectMany(ws => ws.PivotTables).Count());
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                Assert.That(wb.Worksheets.SelectMany(ws => ws.PivotTables).Count(), Is.EqualTo(1));
             }
         }
 
         [Test]
         public void TwoPivotWithOneSourceTest()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx")))
-                TestHelper.CreateAndCompare(() =>
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx"));
+            TestHelper.CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook(stream);
+                var srcRange = wb.Range("Sheet1!$B$2:$H$207");
+
+                var pivotSource = wb.PivotCaches.Add(srcRange);
+
+                foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
                 {
-                    var wb = new XLWorkbook(stream);
-                    var srcRange = wb.Range("Sheet1!$B$2:$H$207");
+                    pt.PivotCache = pivotSource;
+                }
 
-                    var pivotSource = wb.PivotCaches.Add(srcRange);
-
-                    foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
-                    {
-                        pt.PivotCache = pivotSource;
-                    }
-
-                    return wb;
-                }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
+                return wb;
+            }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
         }
 
         [Test]
@@ -730,27 +717,31 @@ namespace ClosedXML.Tests
         public void ClearPivotTableRenderedRange()
         {
             // https://github.com/ClosedXML/ClosedXML/pull/856
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx"));
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook(stream))
             {
-                using (var wb = new XLWorkbook(stream))
+                var ws = wb.Worksheet("Sheet1");
+                Assert.Multiple(() =>
                 {
-                    var ws = wb.Worksheet("Sheet1");
-                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
-                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
-                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
-                    wb.SaveAs(ms);
-                }
+                    Assert.That(ws.Cell("B1").IsEmpty(), Is.True);
+                    Assert.That(ws.Cell("C2").IsEmpty(), Is.True);
+                    Assert.That(ws.Cell("D5").IsEmpty(), Is.True);
+                });
+                wb.SaveAs(ms);
+            }
 
-                ms.Seek(0, SeekOrigin.Begin);
+            ms.Seek(0, SeekOrigin.Begin);
 
-                using (var wb = new XLWorkbook(ms))
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheet("Sheet1");
+                Assert.Multiple(() =>
                 {
-                    var ws = wb.Worksheet("Sheet1");
-                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
-                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
-                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
-                }
+                    Assert.That(ws.Cell("B1").IsEmpty(), Is.True);
+                    Assert.That(ws.Cell("C2").IsEmpty(), Is.True);
+                    Assert.That(ws.Cell("D5").IsEmpty(), Is.True);
+                });
             }
         }
 
@@ -770,8 +761,8 @@ namespace ClosedXML.Tests
             var rangePivot1 = ws.PivotTables.Add("rangePivot1", ws.Cell("D1"), range);
             var rangePivot2 = ws.PivotTables.Add("rangePivot2", ws.Cell("D20"), range);
 
-            Assert.AreNotSame(rangePivot1, rangePivot2);
-            Assert.AreSame(rangePivot1.PivotCache, rangePivot2.PivotCache);
+            Assert.That(rangePivot2, Is.Not.SameAs(rangePivot1));
+            Assert.That(rangePivot2.PivotCache, Is.SameAs(rangePivot1.PivotCache));
         }
 
         [Test]
@@ -790,8 +781,8 @@ namespace ClosedXML.Tests
             var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), table);
             var tablePivot2 = ws.PivotTables.Add("tablePivot2", ws.Cell("J20"), table);
 
-            Assert.AreNotSame(tablePivot1, tablePivot2);
-            Assert.AreSame(tablePivot1.PivotCache, tablePivot2.PivotCache);
+            Assert.That(tablePivot2, Is.Not.SameAs(tablePivot1));
+            Assert.That(tablePivot2.PivotCache, Is.SameAs(tablePivot1.PivotCache));
         }
 
         [Test]
@@ -815,8 +806,11 @@ namespace ClosedXML.Tests
             var tablePivot1 = ws.PivotTables.Add("tablePivot1", ws.Cell("J1"), matchingRange);
 
             var cacheSource = (XLPivotSourceReference)((XLPivotCache)tablePivot1.PivotCache).Source;
-            Assert.True(cacheSource.UsesName);
-            Assert.AreEqual("Test table", cacheSource.Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That(cacheSource.UsesName, Is.True);
+                Assert.That(cacheSource.Name, Is.EqualTo("Test table"));
+            });
         }
 
         [Test]
@@ -846,7 +840,7 @@ namespace ClosedXML.Tests
             TestHelper.LoadAndAssert(wb =>
             {
                 // Check that existing pivot table is loaded.
-                Assert.True(wb.Worksheet("pivot").PivotTables.Contains("Pastries"));
+                Assert.That(wb.Worksheet("pivot").PivotTables.Contains("Pastries"), Is.True);
             }, @"Other\PivotTableReferenceFiles\ChartsheetAndPivotTable.xlsx");
         }
 
@@ -867,13 +861,19 @@ namespace ClosedXML.Tests
             var pt = ws.PivotTables.Add("pt", ws.Cell("E1"), data);
             pt.ReportFilters.Add("City");
 
-            // Even when we added filter and a gap row, the target cell is still E1
-            Assert.AreEqual("E1", pt.TargetCell.Address.ToString());
-            Assert.AreEqual("E3", ((XLPivotTable)pt).Area.FirstPoint.ToString());
+            Assert.Multiple(() =>
+            {
+                // Even when we added filter and a gap row, the target cell is still E1
+                Assert.That(pt.TargetCell.Address.ToString(), Is.EqualTo("E1"));
+                Assert.That(((XLPivotTable)pt).Area.FirstPoint.ToString(), Is.EqualTo("E3"));
+            });
 
             pt.TargetCell = ws.Cell("E2");
-            Assert.AreEqual("E2", pt.TargetCell.Address.ToString());
-            Assert.AreEqual("E4", ((XLPivotTable)pt).Area.FirstPoint.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(pt.TargetCell.Address.ToString(), Is.EqualTo("E2"));
+                Assert.That(((XLPivotTable)pt).Area.FirstPoint.ToString(), Is.EqualTo("E4"));
+            });
         }
 
         #endregion
@@ -901,7 +901,7 @@ namespace ClosedXML.Tests
 
             // Indirect detection of filter fields layout: The address of pivot table are is
             // determined by filter area order.
-            Assert.AreEqual(tableAddress, ((XLPivotTable)pt).Area.ToString());
+            Assert.That(((XLPivotTable)pt).Area.ToString(), Is.EqualTo(tableAddress));
         }
 
         #endregion
@@ -961,15 +961,18 @@ namespace ClosedXML.Tests
 
         private static void AssertFieldOptions(IXLPivotField field, bool withDefaults)
         {
-            Assert.AreEqual(!withDefaults, field.SubtotalsAtTop, "SubtotalsAtTop save failure");
-            Assert.AreEqual(!withDefaults, field.ShowBlankItems, "ShowBlankItems save failure");
-            Assert.AreEqual(!withDefaults, field.Outline, "Outline save failure");
-            Assert.AreEqual(!withDefaults, field.Compact, "Compact save failure");
-            Assert.AreEqual(withDefaults, field.Collapsed, "Collapsed save failure");
-            Assert.AreEqual(withDefaults, field.InsertBlankLines, "InsertBlankLines save failure");
-            Assert.AreEqual(withDefaults, field.RepeatItemLabels, "RepeatItemLabels save failure");
-            Assert.AreEqual(withDefaults, field.InsertPageBreaks, "InsertPageBreaks save failure");
-            Assert.AreEqual(withDefaults, field.IncludeNewItemsInFilter, "IncludeNewItemsInFilter save failure");
+            Assert.Multiple(() =>
+            {
+                Assert.That(field.SubtotalsAtTop, Is.EqualTo(!withDefaults), "SubtotalsAtTop save failure");
+                Assert.That(field.ShowBlankItems, Is.EqualTo(!withDefaults), "ShowBlankItems save failure");
+                Assert.That(field.Outline, Is.EqualTo(!withDefaults), "Outline save failure");
+                Assert.That(field.Compact, Is.EqualTo(!withDefaults), "Compact save failure");
+                Assert.That(field.Collapsed, Is.EqualTo(withDefaults), "Collapsed save failure");
+                Assert.That(field.InsertBlankLines, Is.EqualTo(withDefaults), "InsertBlankLines save failure");
+                Assert.That(field.RepeatItemLabels, Is.EqualTo(withDefaults), "RepeatItemLabels save failure");
+                Assert.That(field.InsertPageBreaks, Is.EqualTo(withDefaults), "InsertPageBreaks save failure");
+                Assert.That(field.IncludeNewItemsInFilter, Is.EqualTo(withDefaults), "IncludeNewItemsInFilter save failure");
+            });
         }
     }
 }

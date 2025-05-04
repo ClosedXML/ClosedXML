@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel.AutoFilters
                 {
                     ws.AutoFilter.Reapply();
                     var filterResult = ws.Rows("2:7").Select(row => !row.IsHidden);
-                    CollectionAssert.AreEqual(new[] { false, false, false, false, true, true }, filterResult);
+                    Assert.That(filterResult, Is.EqualTo(new[] { false, false, false, false, true, true }).AsCollection);
                 });
         }
 

@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Excel.PageSetup
         {
             TestHelper.CreateSaveLoadAssert(
                 (_, ws) => ws.PageSetup.FirstPageNumber = -3,
-                (_, ws) => Assert.AreEqual(-3, ws.PageSetup.FirstPageNumber),
+                (_, ws) => Assert.That(ws.PageSetup.FirstPageNumber, Is.EqualTo(-3)),
                 @"Other\PageSetup\Negative_first_page_number.xlsx");
         }
     }

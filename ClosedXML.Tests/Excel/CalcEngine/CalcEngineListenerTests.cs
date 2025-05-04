@@ -15,17 +15,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var sutWs = wb.AddWorksheet();
             sutWs.Cell("A1").FormulaA1 = "new!A1";
-            Assert.AreEqual(XLError.CellReference, sutWs.Cell("A1").Value);
+            Assert.That(sutWs.Cell("A1").Value, Is.EqualTo(XLError.CellReference));
 
             var newWs = wb.AddWorksheet("new");
             newWs.Cell("A1").Value = 5;
 
-            // Cell contains last calculated value
-            Assert.AreEqual(XLError.CellReference, sutWs.Cell("A1").CachedValue);
+            Assert.Multiple(() =>
+            {
+                // Cell contains last calculated value
+                Assert.That(sutWs.Cell("A1").CachedValue, Is.EqualTo(XLError.CellReference));
 
-            // But once asked for real value, it calculates it.
-            Assert.True(sutWs.Cell("A1").NeedsRecalculation);
-            Assert.AreEqual(5.0, sutWs.Cell("A1").Value);
+                // But once asked for real value, it calculates it.
+                Assert.That(sutWs.Cell("A1").NeedsRecalculation, Is.True);
+                Assert.That(sutWs.Cell("A1").Value, Is.EqualTo(5.0));
+            });
         }
 
         [Test]
@@ -37,16 +40,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             deletedWs.Cell("A1").Value = 5;
             keptWs.Cell("A1").FormulaA1 = "deleted!A1";
-            Assert.AreEqual(5.0, keptWs.Cell("A1").Value);
+            Assert.That(keptWs.Cell("A1").Value, Is.EqualTo(5.0));
 
             deletedWs.Delete();
 
-            // Cell contains last calculated value
-            Assert.AreEqual(5.0, keptWs.Cell("A1").CachedValue);
+            Assert.Multiple(() =>
+            {
+                // Cell contains last calculated value
+                Assert.That(keptWs.Cell("A1").CachedValue, Is.EqualTo(5.0));
 
-            // But once asked for real value, it calculates it.
-            Assert.True(keptWs.Cell("A1").NeedsRecalculation);
-            Assert.AreEqual(XLError.CellReference, keptWs.Cell("A1").Value);
+                // But once asked for real value, it calculates it.
+                Assert.That(keptWs.Cell("A1").NeedsRecalculation, Is.True);
+                Assert.That(keptWs.Cell("A1").Value, Is.EqualTo(XLError.CellReference));
+            });
         }
 
         [Test]
@@ -62,15 +68,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Range("A1:B1").InsertRowsAbove(2);
 
-            Assert.AreEqual(12.0, ws.Cell("A3").Value);
+            Assert.That(ws.Cell("A3").Value, Is.EqualTo(12.0));
             Assert.False(ws.Cell("A3").NeedsRecalculation);
             Assert.False(ws.Cell("B3").NeedsRecalculation);
 
             // Dependency tree should pick up the change
             ws.Cell("C1").FormulaA1 = "2+2";
-            Assert.True(ws.Cell("A3").NeedsRecalculation);
-            Assert.True(ws.Cell("B3").NeedsRecalculation);
-            Assert.AreEqual(16.0, ws.Cell("A3").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("A3").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("B3").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo(16.0));
+            });
         }
 
         [Test]
@@ -86,14 +95,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Cell("A2").InsertCellsBefore(4);
 
-            Assert.AreEqual(12.0, ws.Cell("A1").Value);
+            Assert.That(ws.Cell("A1").Value, Is.EqualTo(12.0));
             Assert.False(ws.Cell("E2").NeedsRecalculation);
 
             // Dependency tree should pick up the change
             ws.Cell("A3").FormulaA1 = "2+2";
-            Assert.True(ws.Cell("E2").NeedsRecalculation);
-            Assert.True(ws.Cell("A1").NeedsRecalculation);
-            Assert.AreEqual(16.0, ws.Cell("A1").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("E2").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A1").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A1").Value, Is.EqualTo(16.0));
+            });
         }
 
         [Test]
@@ -109,15 +121,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Range("B2:C4").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            Assert.AreEqual(12.0, ws.Cell("C2").Value);
+            Assert.That(ws.Cell("C2").Value, Is.EqualTo(12.0));
             Assert.False(ws.Cell("B2").NeedsRecalculation);
             Assert.False(ws.Cell("A2").NeedsRecalculation);
 
             // Dependency tree should pick up the change
             ws.Cell("A5").FormulaA1 = "2+2";
-            Assert.True(ws.Cell("B2").NeedsRecalculation);
-            Assert.True(ws.Cell("C2").NeedsRecalculation);
-            Assert.AreEqual(16.0, ws.Cell("C2").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("B2").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("C2").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("C2").Value, Is.EqualTo(16.0));
+            });
         }
 
         [Test]
@@ -133,15 +148,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Range("A1:C5").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
-            Assert.AreEqual(12.0, ws.Cell("A3").Value);
+            Assert.That(ws.Cell("A3").Value, Is.EqualTo(12.0));
             Assert.False(ws.Cell("B2").NeedsRecalculation);
             Assert.False(ws.Cell("A1").NeedsRecalculation);
 
             // Dependency tree should pick up the change
             ws.Cell("A1").FormulaA1 = "2+2";
-            Assert.True(ws.Cell("B2").NeedsRecalculation);
-            Assert.True(ws.Cell("A3").NeedsRecalculation);
-            Assert.AreEqual(16.0, ws.Cell("A3").Value);
+            Assert.Multiple(() =>
+            {
+                Assert.That(ws.Cell("B2").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A3").NeedsRecalculation, Is.True);
+                Assert.That(ws.Cell("A3").Value, Is.EqualTo(16.0));
+            });
         }
     }
 }

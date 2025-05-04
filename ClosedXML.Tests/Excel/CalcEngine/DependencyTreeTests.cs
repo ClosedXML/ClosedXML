@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Area_dependencies_are_extracted_from_formula(string formula, IReadOnlyList<XLBookArea> expectedAreas)
         {
             var dependencies = GetDependencies(formula);
-            CollectionAssert.AreEquivalent(expectedAreas, dependencies.Areas);
+            Assert.That(dependencies.Areas, Is.EquivalentTo(expectedAreas));
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Name_dependencies_are_kept_for_dependencies_update(string formula, IReadOnlyList<XLName> expectedNames)
         {
             var dependencies = GetDependencies(formula);
-            CollectionAssert.AreEquivalent(expectedNames, dependencies.Names);
+            Assert.That(dependencies.Names, Is.EquivalentTo(expectedNames));
         }
 
         [Test]
@@ -34,13 +34,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 wb.DefinedNames.Add("name", "Sheet!$B$4+Sheet!$C$6");
             });
-            CollectionAssert.AreEquivalent(new XLBookArea[]
+            Assert.That(dependencies.Areas, Is.EquivalentTo(new XLBookArea[]
             {
                 new("Sheet", XLSheetRange.Parse("D2")),
                 new("Sheet", XLSheetRange.Parse("B4")),
                 new("Sheet", XLSheetRange.Parse("C6"))
-            }, dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+            }));
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("name") }));
         }
 
         [Test]
@@ -50,11 +50,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 wb.DefinedNames.Add("name", "Sheet!$D$7");
             });
-            CollectionAssert.AreEquivalent(new XLBookArea[]
+            Assert.That(dependencies.Areas, Is.EquivalentTo(new XLBookArea[]
             {
                 new("Sheet", XLSheetRange.Parse("B3:D7")),
-            }, dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+            }));
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("name") }));
         }
 
         [Test]
@@ -65,12 +65,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 wb.DefinedNames.Add("outer", "Sheet!$D$7 + inner");
                 wb.DefinedNames.Add("inner", "Sheet!$B$1");
             });
-            CollectionAssert.AreEquivalent(new XLBookArea[]
+            Assert.That(dependencies.Areas, Is.EquivalentTo(new XLBookArea[]
             {
                 new("Sheet", XLSheetRange.Parse("D7")),
                 new("Sheet", XLSheetRange.Parse("B1")),
-            }, dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("outer"), new XLName("inner") }, dependencies.Names);
+            }));
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("outer"), new XLName("inner") }));
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 wb.DefinedNames.Add("name", "1+3");
             });
-            CollectionAssert.IsEmpty(dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+            Assert.That(dependencies.Areas, Is.Empty);
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("name") }));
         }
 
         [Test]
@@ -95,11 +95,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 wb.Worksheet("Sheet").DefinedNames.Add("name", "Sheet!$A$1");
                 wb.DefinedNames.Add("name", "Sheet!$B$10");
             });
-            CollectionAssert.AreEquivalent(new XLBookArea[]
+            Assert.That(dependencies.Areas, Is.EquivalentTo(new XLBookArea[]
             {
                 new("Sheet", XLSheetRange.Parse("A1"))
-            }, dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+            }));
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("name") }));
         }
 
         [Test]
@@ -110,11 +110,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 wb.DefinedNames.Add("name", "Sheet!B4"); // equivalent of R[3]C[2]
             });
-            CollectionAssert.AreEquivalent(new XLBookArea[]
+            Assert.That(dependencies.Areas, Is.EquivalentTo(new XLBookArea[]
             {
                 new("Sheet", XLSheetRange.Parse("F7")), // D4 (formula cell) + R[3]C[2] (name relative reference) = F7
-            }, dependencies.Areas);
-            CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
+            }));
+            Assert.That(dependencies.Names, Is.EquivalentTo(new[] { new XLName("name") }));
         }
 
         #endregion
@@ -134,11 +134,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Remove inserted formula removes the dependent and also removes the precedent
             // area from the tree because there is no formula depending on it.
             tree.RemoveFormula(cellFormula);
-            Assert.True(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.True);
 
             // Removing already removed formula doesn't throw.
             Assert.DoesNotThrow(() => tree.RemoveFormula(cellFormula));
-            Assert.True(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.True);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Remove second formula
             tree.RemoveFormula(cellFormulaA2);
-            Assert.True(tree.IsEmpty);
+            Assert.That(tree.IsEmpty, Is.True);
         }
 
         #endregion
@@ -317,8 +317,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             renamedSheet.Name = "Renamed";
 
-            Assert.AreEqual("SUM(Renamed!A1:A2, A3, Unchanged!A1:A2)", renamedSheet.Cell("A4").FormulaA1);
-            Assert.AreEqual("SUM(Unchanged!A1:A2, A3, Renamed!A1:A2)", unchangedSheet.Cell("A4").FormulaA1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").FormulaA1, Is.EqualTo("SUM(Renamed!A1:A2, A3, Unchanged!A1:A2)"));
+                Assert.That(unchangedSheet.Cell("A4").FormulaA1, Is.EqualTo("SUM(Unchanged!A1:A2, A3, Renamed!A1:A2)"));
+            });
 
             Recalculate();
             Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
@@ -326,35 +329,53 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Both depend on Unchanged!A1
             unchangedSheet.Cell("A1").Value = 110;
-            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
-            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.True);
+                Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.True);
+            });
             Recalculate();
-            Assert.AreEqual(136, renamedSheet.Cell("A4").CachedValue);
-            Assert.AreEqual(163, unchangedSheet.Cell("A4").CachedValue);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").CachedValue, Is.EqualTo(136));
+                Assert.That(unchangedSheet.Cell("A4").CachedValue, Is.EqualTo(163));
+            });
 
             // Both depend on Renamed!A1
             renamedSheet.Cell("A1").Value = 201;
-            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
-            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.True);
+                Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.True);
+            });
             Recalculate();
-            Assert.AreEqual(336, renamedSheet.Cell("A4").CachedValue);
-            Assert.AreEqual(363, unchangedSheet.Cell("A4").CachedValue);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").CachedValue, Is.EqualTo(336));
+                Assert.That(unchangedSheet.Cell("A4").CachedValue, Is.EqualTo(363));
+            });
 
             // Only unchanged depends on Unchanged!A3. The renamed formula keeps value.
             unchangedSheet.Cell("A3").Value = 330;
             Assert.False(renamedSheet.Cell("A4").NeedsRecalculation);
-            Assert.True(unchangedSheet.Cell("A4").NeedsRecalculation);
+            Assert.That(unchangedSheet.Cell("A4").NeedsRecalculation, Is.True);
             Recalculate();
-            Assert.AreEqual(336, renamedSheet.Cell("A4").CachedValue);
-            Assert.AreEqual(663, unchangedSheet.Cell("A4").CachedValue);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").CachedValue, Is.EqualTo(336));
+                Assert.That(unchangedSheet.Cell("A4").CachedValue, Is.EqualTo(663));
+            });
 
             // Only renamed depends on Renamed!A3. The unchanged formula keeps value.
             renamedSheet.Cell("A3").Value = 403;
-            Assert.True(renamedSheet.Cell("A4").NeedsRecalculation);
+            Assert.That(renamedSheet.Cell("A4").NeedsRecalculation, Is.True);
             Assert.False(unchangedSheet.Cell("A4").NeedsRecalculation);
             Recalculate();
-            Assert.AreEqual(736, renamedSheet.Cell("A4").CachedValue);
-            Assert.AreEqual(663, unchangedSheet.Cell("A4").CachedValue);
+            Assert.Multiple(() =>
+            {
+                Assert.That(renamedSheet.Cell("A4").CachedValue, Is.EqualTo(736));
+                Assert.That(unchangedSheet.Cell("A4").CachedValue, Is.EqualTo(663));
+            });
 
             void Recalculate()
             {
@@ -398,7 +419,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 foreach (var dirtyCell in ws.Cells(dirtyRange))
                 {
-                    Assert.AreEqual(expectedDirtyFlag, dirtyCell.Formula?.IsDirty);
+                    Assert.That(dirtyCell.Formula?.IsDirty, Is.EqualTo(expectedDirtyFlag));
                 }
             }
         }

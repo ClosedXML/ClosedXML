@@ -124,13 +124,16 @@ namespace ClosedXML.Tests.Graphics
             using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ClosedXML.Tests.Resource.Images.{imageName}");
             var info = DefaultGraphicEngine.Instance.Value.GetPictureInfo(stream, XLPictureFormat.Unknown);
 
-            Assert.AreEqual(expectedFormat, info.Format);
-            Assert.AreEqual(expectedPxSize, info.SizePx);
-            Assert.AreEqual(expectedHiMetricSize, info.SizePhys);
+            Assert.Multiple(() =>
+            {
+                Assert.That(info.Format, Is.EqualTo(expectedFormat));
+                Assert.That(info.SizePx, Is.EqualTo(expectedPxSize));
+                Assert.That(info.SizePhys, Is.EqualTo(expectedHiMetricSize));
 
-            // Some DPI is stored as pixels per meter, causing a rounding errors.
-            Assert.AreEqual(expectedDpiX, info.DpiX, 0.02);
-            Assert.AreEqual(expectedDpiY, info.DpiY, 0.02);
+                // Some DPI is stored as pixels per meter, causing a rounding errors.
+                Assert.That(info.DpiX, Is.EqualTo(expectedDpiX).Within(0.02));
+                Assert.That(info.DpiY, Is.EqualTo(expectedDpiY).Within(0.02));
+            });
         }
     }
 }

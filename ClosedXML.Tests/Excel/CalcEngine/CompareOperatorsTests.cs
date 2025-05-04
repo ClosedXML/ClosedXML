@@ -20,7 +20,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1=B1", true)] // blanks are equal
         public void EqualTo_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("1<>1", false)]
@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1<>B1", false)] // blanks are equal
         public void NotEqualTo_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("1>1", false)]
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1>A2", false)]
         public void GreaterThen_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("1>=1", true)]
@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1>=A2", true)]
         public void GreaterThenOrEqual_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("-5<5", true)]
@@ -84,7 +84,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1<A2", false)]
         public void LessThen_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("-5<=5", true)]
@@ -101,7 +101,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1<=A2", true)]
         public void LessThenOrEqual_WithSameType(string formula, object expectedValue)
         {
-            Assert.AreEqual(expectedValue, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         [TestCase("TRUE>-1", true)]
@@ -130,7 +130,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("TRUE<10", false)]
         public void Comparison_LogicalIsAlwaysGreaterThanAnyTextOrNumber(string formula, bool expectedResult)
         {
-            Assert.AreEqual(expectedResult, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedResult));
         }
 
         [TestCase("\"\">10", true)]
@@ -139,7 +139,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("10<\"1\"", true)]
         public void Comparison_TextIsAlwaysGreaterThanAnyNumber(string formula, bool expectedResult)
         {
-            Assert.AreEqual(expectedResult, XLWorkbook.EvaluateExpr(formula));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedResult));
         }
 
         [TestCase("FALSE=A1")]
@@ -150,7 +150,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1=\"\"")]
         public void Comparison_BlankIsEqualToFalseOrZeroOrEmptyString(string formula)
         {
-            Assert.AreEqual(true, Evaluate(formula));
+            Assert.That(Evaluate(formula), Is.EqualTo(true));
         }
 
         private static XLCellValue Evaluate(string formula)

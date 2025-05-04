@@ -11,8 +11,11 @@ namespace ClosedXML.Tests.Excel.Coordinates
         {
             var upperCase = new XLBookArea("NAME", new XLSheetRange(1, 2, 3, 4));
             var lowerCase = new XLBookArea("name", new XLSheetRange(1, 2, 3, 4));
-            Assert.AreEqual(upperCase.GetHashCode(), lowerCase.GetHashCode());
-            Assert.AreEqual(upperCase, lowerCase);
+            Assert.Multiple(() =>
+            {
+                Assert.That(lowerCase.GetHashCode(), Is.EqualTo(upperCase.GetHashCode()));
+                Assert.That(lowerCase, Is.EqualTo(upperCase));
+            });
         }
 
         [Test]
@@ -23,7 +26,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
             var otherSheetArea = new XLBookArea("Other", XLSheetRange.Parse("B2:D4"));
 
             var sameSheetIntersection = sheetArea1.Intersect(sheetArea2);
-            Assert.AreEqual(new XLBookArea("sheet", XLSheetRange.Parse("B2:C3")), sameSheetIntersection);
+            Assert.That(sameSheetIntersection, Is.EqualTo(new XLBookArea("sheet", XLSheetRange.Parse("B2:C3"))));
 
             var differentSheetIntersection = sheetArea1.Intersect(otherSheetArea);
             Assert.Null(differentSheetIntersection);

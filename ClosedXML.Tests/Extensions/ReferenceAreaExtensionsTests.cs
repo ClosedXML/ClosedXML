@@ -15,14 +15,14 @@ namespace ClosedXML.Tests.Extensions
         [TestCaseSource(nameof(A1TestCases))]
         public void ToSheetPoint_converts_a1_reference_to_sheet_range(ReferenceArea tokenArea, XLSheetRange expectedRange)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(default));
+            Assert.That(tokenArea.ToSheetRange(default), Is.EqualTo(expectedRange));
         }
 
         [Test]
         [TestCaseSource(nameof(R1C1TestCases))]
         public void ToSheetPoint_converts_r1c1_reference_to_sheet_range(XLSheetPoint anchor, ReferenceArea tokenArea, XLSheetRange expectedRange)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(anchor));
+            Assert.That(tokenArea.ToSheetRange(anchor), Is.EqualTo(expectedRange));
         }
 
         public static IEnumerable<object[]> A1TestCases()

@@ -12,22 +12,25 @@ namespace ClosedXML.Tests
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLAddress address = ws.Cell(1, 1).Address;
 
-            Assert.AreEqual("A1", address.ToString());
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToString(XLReferenceStyle.R1C1));
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.Default));
-            Assert.AreEqual("Sheet1!A1", address.ToString(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToString(), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.A1), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!A1"));
 
-            Assert.AreEqual("A1", address.ToStringRelative());
-            Assert.AreEqual("Sheet1!A1", address.ToStringRelative(true));
+                Assert.That(address.ToStringRelative(), Is.EqualTo("A1"));
+                Assert.That(address.ToStringRelative(true), Is.EqualTo("Sheet1!A1"));
 
-            Assert.AreEqual("$A$1", address.ToStringFixed());
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToStringFixed(XLReferenceStyle.R1C1));
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.Default));
-            Assert.AreEqual("Sheet1!$A$1", address.ToStringFixed(XLReferenceStyle.A1, true));
-            Assert.AreEqual("Sheet1!R1C1", address.ToStringFixed(XLReferenceStyle.R1C1, true));
-            Assert.AreEqual("Sheet1!$A$1", address.ToStringFixed(XLReferenceStyle.Default, true));
+                Assert.That(address.ToStringFixed(), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1, true), Is.EqualTo("Sheet1!$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1, true), Is.EqualTo("Sheet1!R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("Sheet1!$A$1"));
+            });
         }
 
         [Test]
@@ -36,22 +39,25 @@ namespace ClosedXML.Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
             IXLAddress address = ws.Cell(1, 1).Address;
 
-            Assert.AreEqual("A1", address.ToString());
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToString(XLReferenceStyle.R1C1));
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.Default));
-            Assert.AreEqual("'Sheet 1'!A1", address.ToString(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToString(), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.A1), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default, true), Is.EqualTo("'Sheet 1'!A1"));
 
-            Assert.AreEqual("A1", address.ToStringRelative());
-            Assert.AreEqual("'Sheet 1'!A1", address.ToStringRelative(true));
+                Assert.That(address.ToStringRelative(), Is.EqualTo("A1"));
+                Assert.That(address.ToStringRelative(true), Is.EqualTo("'Sheet 1'!A1"));
 
-            Assert.AreEqual("$A$1", address.ToStringFixed());
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToStringFixed(XLReferenceStyle.R1C1));
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.Default));
-            Assert.AreEqual("'Sheet 1'!$A$1", address.ToStringFixed(XLReferenceStyle.A1, true));
-            Assert.AreEqual("'Sheet 1'!R1C1", address.ToStringFixed(XLReferenceStyle.R1C1, true));
-            Assert.AreEqual("'Sheet 1'!$A$1", address.ToStringFixed(XLReferenceStyle.Default, true));
+                Assert.That(address.ToStringFixed(), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1, true), Is.EqualTo("'Sheet 1'!R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("'Sheet 1'!$A$1"));
+            });
         }
 
         [Test]
@@ -59,11 +65,14 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddress();
 
-            Assert.AreEqual("#REF!", address.ToString());
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.A1));
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.R1C1));
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.Default));
-            Assert.AreEqual("'Sheet 1'!#REF!", address.ToString(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToString(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.A1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.R1C1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.Default), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.Default, true), Is.EqualTo("'Sheet 1'!#REF!"));
+            });
         }
 
         [Test]
@@ -71,13 +80,16 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddress();
 
-            Assert.AreEqual("#REF!", address.ToStringFixed());
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.A1));
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.R1C1));
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.Default));
-            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.A1, true));
-            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.R1C1, true));
-            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringFixed(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1, true), Is.EqualTo("'Sheet 1'!#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1, true), Is.EqualTo("'Sheet 1'!#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("'Sheet 1'!#REF!"));
+            });
         }
 
         [Test]
@@ -85,8 +97,11 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddress();
 
-            Assert.AreEqual("#REF!", address.ToStringRelative());
-            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringRelative(true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringRelative(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringRelative(true), Is.EqualTo("'Sheet 1'!#REF!"));
+            });
         }
 
         [Test]
@@ -94,11 +109,14 @@ namespace ClosedXML.Tests
         {
             var address = ProduceAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("A1", address.ToString());
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToString(XLReferenceStyle.R1C1));
-            Assert.AreEqual("A1", address.ToString(XLReferenceStyle.Default));
-            Assert.AreEqual("#REF!A1", address.ToString(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToString(), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.A1), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default), Is.EqualTo("A1"));
+                Assert.That(address.ToString(XLReferenceStyle.Default, true), Is.EqualTo("#REF!A1"));
+            });
         }
 
         [Test]
@@ -106,13 +124,16 @@ namespace ClosedXML.Tests
         {
             var address = ProduceAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("$A$1", address.ToStringFixed());
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.A1));
-            Assert.AreEqual("R1C1", address.ToStringFixed(XLReferenceStyle.R1C1));
-            Assert.AreEqual("$A$1", address.ToStringFixed(XLReferenceStyle.Default));
-            Assert.AreEqual("#REF!$A$1", address.ToStringFixed(XLReferenceStyle.A1, true));
-            Assert.AreEqual("#REF!R1C1", address.ToStringFixed(XLReferenceStyle.R1C1, true));
-            Assert.AreEqual("#REF!$A$1", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringFixed(), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1), Is.EqualTo("R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default), Is.EqualTo("$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1, true), Is.EqualTo("#REF!$A$1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1, true), Is.EqualTo("#REF!R1C1"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("#REF!$A$1"));
+            });
         }
 
         [Test]
@@ -120,8 +141,11 @@ namespace ClosedXML.Tests
         {
             var address = ProduceAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("A1", address.ToStringRelative());
-            Assert.AreEqual("#REF!A1", address.ToStringRelative(true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringRelative(), Is.EqualTo("A1"));
+                Assert.That(address.ToStringRelative(true), Is.EqualTo("#REF!A1"));
+            });
         }
 
         [Test]
@@ -129,11 +153,14 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("#REF!", address.ToString());
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.A1));
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.R1C1));
-            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.Default));
-            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToString(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.A1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.R1C1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.Default), Is.EqualTo("#REF!"));
+                Assert.That(address.ToString(XLReferenceStyle.Default, true), Is.EqualTo("#REF!#REF!"));
+            });
         }
 
         [Test]
@@ -141,13 +168,16 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("#REF!", address.ToStringFixed());
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.A1));
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.R1C1));
-            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.Default));
-            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.A1, true));
-            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.R1C1, true));
-            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringFixed(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.A1, true), Is.EqualTo("#REF!#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.R1C1, true), Is.EqualTo("#REF!#REF!"));
+                Assert.That(address.ToStringFixed(XLReferenceStyle.Default, true), Is.EqualTo("#REF!#REF!"));
+            });
         }
 
         [Test]
@@ -155,8 +185,11 @@ namespace ClosedXML.Tests
         {
             var address = ProduceInvalidAddressOnDeletedWorksheet();
 
-            Assert.AreEqual("#REF!", address.ToStringRelative());
-            Assert.AreEqual("#REF!#REF!", address.ToStringRelative(true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(address.ToStringRelative(), Is.EqualTo("#REF!"));
+                Assert.That(address.ToStringRelative(true), Is.EqualTo("#REF!#REF!"));
+            });
         }
 
         #region Private Methods

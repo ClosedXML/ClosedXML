@@ -20,7 +20,7 @@ public class XLHyperlinksTests
         structuralChange(ws);
 
         Assert.False(ws.Cell(hyperlinkPosition).HasHyperlink);
-        Assert.AreSame(ws.Cell(expectedPosition).GetHyperlink(), hyperlink);
+        Assert.That(hyperlink, Is.SameAs(ws.Cell(expectedPosition).GetHyperlink()));
     }
 
     public static IEnumerable<object[]> StructuralChangeCases

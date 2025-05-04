@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.InsertData
             var factory = InsertDataReaderFactory.Instance;
 
             Assert.IsNotNull(factory);
-            Assert.AreSame(factory, InsertDataReaderFactory.Instance);
+            Assert.That(InsertDataReaderFactory.Instance, Is.SameAs(factory));
         }
 
         [TestCaseSource(nameof(SimpleSources))]

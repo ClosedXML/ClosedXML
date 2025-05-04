@@ -15,19 +15,19 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColorEqualOperatorInPlace()
         {
-            Assert.IsTrue(XLColor.Black == XLColor.Black);
+            Assert.That(XLColor.Black == XLColor.Black, Is.True);
         }
 
         [Test]
         public void ColorNotEqualOperatorInPlace()
         {
-            Assert.IsFalse(XLColor.Black != XLColor.Black);
+            Assert.That(XLColor.Black != XLColor.Black, Is.False);
         }
 
         [Test]
         public void ColorNamedVsHTML()
         {
-            Assert.IsTrue(XLColor.Black == XLColor.FromHtml("#000000"));
+            Assert.That(XLColor.Black == XLColor.FromHtml("#000000"), Is.True);
         }
 
         [Test]
@@ -36,9 +36,12 @@ namespace ClosedXML.Tests.Excel
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             XLColor color = ws.FirstCell().Style.Fill.BackgroundColor;
-            Assert.AreEqual(XLColorType.Indexed, color.ColorType);
-            Assert.AreEqual(64, color.Indexed);
-            Assert.AreEqual(Color.Transparent, color.Color);
+            Assert.Multiple(() =>
+            {
+                Assert.That(color.ColorType, Is.EqualTo(XLColorType.Indexed));
+                Assert.That(color.Indexed, Is.EqualTo(64));
+                Assert.That(color.Color, Is.EqualTo(Color.Transparent));
+            });
         }
 
         [Test]
@@ -54,25 +57,28 @@ namespace ClosedXML.Tests.Excel
             var color3 = new BackgroundColor().FromClosedXMLColor<BackgroundColor>(xlColor3);
             var color4 = new BackgroundColor().FromClosedXMLColor<BackgroundColor>(xlColor4);
 
-            Assert.AreEqual("FFFF0000", color1.Rgb.Value);
-            Assert.IsNull(color1.Indexed);
-            Assert.IsNull(color1.Theme);
-            Assert.IsNull(color1.Tint);
+            Assert.That(color1.Rgb.Value, Is.EqualTo("FFFF0000"));
+            Assert.That(color1.Indexed, Is.Null);
+            Assert.That(color1.Theme, Is.Null);
+            Assert.That(color1.Tint, Is.Null);
 
-            Assert.IsNull(color2.Rgb);
-            Assert.AreEqual(20, color2.Indexed.Value);
-            Assert.IsNull(color2.Theme);
-            Assert.IsNull(color2.Tint);
+            Assert.That(color2.Rgb, Is.Null);
+            Assert.That(color2.Indexed.Value, Is.EqualTo(20));
+            Assert.That(color2.Theme, Is.Null);
+            Assert.That(color2.Tint, Is.Null);
 
-            Assert.IsNull(color3.Rgb);
-            Assert.IsNull(color3.Indexed);
-            Assert.AreEqual(4, color3.Theme.Value);
-            Assert.IsNull(color3.Tint);
+            Assert.That(color3.Rgb, Is.Null);
+            Assert.That(color3.Indexed, Is.Null);
+            Assert.That(color3.Theme.Value, Is.EqualTo(4));
+            Assert.That(color3.Tint, Is.Null);
 
-            Assert.IsNull(color4.Rgb);
-            Assert.IsNull(color4.Indexed);
-            Assert.AreEqual(5, color4.Theme.Value);
-            Assert.AreEqual(0.4, color4.Tint.Value);
+            Assert.That(color4.Rgb, Is.Null);
+            Assert.That(color4.Indexed, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(color4.Theme.Value, Is.EqualTo(5));
+                Assert.That(color4.Tint.Value, Is.EqualTo(0.4));
+            });
         }
 
         [Test]
@@ -88,25 +94,28 @@ namespace ClosedXML.Tests.Excel
             var color3 = new X14.FillColor().FromClosedXMLColor<X14.FillColor>(xlColor3);
             var color4 = new X14.HighMarkerColor().FromClosedXMLColor<X14.HighMarkerColor>(xlColor4);
 
-            Assert.AreEqual("FFFF0000", color1.Rgb.Value);
-            Assert.IsNull(color1.Indexed);
-            Assert.IsNull(color1.Theme);
-            Assert.IsNull(color1.Tint);
+            Assert.That(color1.Rgb.Value, Is.EqualTo("FFFF0000"));
+            Assert.That(color1.Indexed, Is.Null);
+            Assert.That(color1.Theme, Is.Null);
+            Assert.That(color1.Tint, Is.Null);
 
-            Assert.IsNull(color2.Rgb);
-            Assert.AreEqual(20, color2.Indexed.Value);
-            Assert.IsNull(color2.Theme);
-            Assert.IsNull(color2.Tint);
+            Assert.That(color2.Rgb, Is.Null);
+            Assert.That(color2.Indexed.Value, Is.EqualTo(20));
+            Assert.That(color2.Theme, Is.Null);
+            Assert.That(color2.Tint, Is.Null);
 
-            Assert.IsNull(color3.Rgb);
-            Assert.IsNull(color3.Indexed);
-            Assert.AreEqual(4, color3.Theme.Value);
-            Assert.IsNull(color3.Tint);
+            Assert.That(color3.Rgb, Is.Null);
+            Assert.That(color3.Indexed, Is.Null);
+            Assert.That(color3.Theme.Value, Is.EqualTo(4));
+            Assert.That(color3.Tint, Is.Null);
 
-            Assert.IsNull(color4.Rgb);
-            Assert.IsNull(color4.Indexed);
-            Assert.AreEqual(5, color4.Theme.Value);
-            Assert.AreEqual(0.4, color4.Tint.Value);
+            Assert.That(color4.Rgb, Is.Null);
+            Assert.That(color4.Indexed, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(color4.Theme.Value, Is.EqualTo(5));
+                Assert.That(color4.Tint.Value, Is.EqualTo(0.4));
+            });
         }
 
         [Test]
@@ -126,19 +135,22 @@ namespace ClosedXML.Tests.Excel
             var xlColor3 = color3.ToClosedXMLColor();
             var xlColor4 = color4.ToClosedXMLColor();
 
-            Assert.AreEqual(XLColorType.Color, xlColor1.ColorType);
-            Assert.AreEqual(XLColor.Red.Color, xlColor1.Color);
+            Assert.Multiple(() =>
+            {
+                Assert.That(xlColor1.ColorType, Is.EqualTo(XLColorType.Color));
+                Assert.That(xlColor1.Color, Is.EqualTo(XLColor.Red.Color));
 
-            Assert.AreEqual(XLColorType.Indexed, xlColor2.ColorType);
-            Assert.AreEqual(20, xlColor2.Indexed);
+                Assert.That(xlColor2.ColorType, Is.EqualTo(XLColorType.Indexed));
+                Assert.That(xlColor2.Indexed, Is.EqualTo(20));
 
-            Assert.AreEqual(XLColorType.Theme, xlColor3.ColorType);
-            Assert.AreEqual(XLThemeColor.Accent1, xlColor3.ThemeColor);
-            Assert.AreEqual(0, xlColor3.ThemeTint, XLHelper.Epsilon);
+                Assert.That(xlColor3.ColorType, Is.EqualTo(XLColorType.Theme));
+                Assert.That(xlColor3.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(xlColor3.ThemeTint, Is.EqualTo(0).Within(XLHelper.Epsilon));
 
-            Assert.AreEqual(XLColorType.Theme, xlColor4.ColorType);
-            Assert.AreEqual(XLThemeColor.Accent1, xlColor4.ThemeColor);
-            Assert.AreEqual(0.4, xlColor4.ThemeTint, XLHelper.Epsilon);
+                Assert.That(xlColor4.ColorType, Is.EqualTo(XLColorType.Theme));
+                Assert.That(xlColor4.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(xlColor4.ThemeTint, Is.EqualTo(0.4).Within(XLHelper.Epsilon));
+            });
         }
 
         [Test]
@@ -158,19 +170,22 @@ namespace ClosedXML.Tests.Excel
             var xlColor3 = color3.ToClosedXMLColor();
             var xlColor4 = color4.ToClosedXMLColor();
 
-            Assert.AreEqual(XLColorType.Color, xlColor1.ColorType);
-            Assert.AreEqual(XLColor.Red.Color, xlColor1.Color);
+            Assert.Multiple(() =>
+            {
+                Assert.That(xlColor1.ColorType, Is.EqualTo(XLColorType.Color));
+                Assert.That(xlColor1.Color, Is.EqualTo(XLColor.Red.Color));
 
-            Assert.AreEqual(XLColorType.Indexed, xlColor2.ColorType);
-            Assert.AreEqual(20, xlColor2.Indexed);
+                Assert.That(xlColor2.ColorType, Is.EqualTo(XLColorType.Indexed));
+                Assert.That(xlColor2.Indexed, Is.EqualTo(20));
 
-            Assert.AreEqual(XLColorType.Theme, xlColor3.ColorType);
-            Assert.AreEqual(XLThemeColor.Accent1, xlColor3.ThemeColor);
-            Assert.AreEqual(0, xlColor3.ThemeTint, XLHelper.Epsilon);
+                Assert.That(xlColor3.ColorType, Is.EqualTo(XLColorType.Theme));
+                Assert.That(xlColor3.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(xlColor3.ThemeTint, Is.EqualTo(0).Within(XLHelper.Epsilon));
 
-            Assert.AreEqual(XLColorType.Theme, xlColor4.ColorType);
-            Assert.AreEqual(XLThemeColor.Accent1, xlColor4.ThemeColor);
-            Assert.AreEqual(0.4, xlColor4.ThemeTint, XLHelper.Epsilon);
+                Assert.That(xlColor4.ColorType, Is.EqualTo(XLColorType.Theme));
+                Assert.That(xlColor4.ThemeColor, Is.EqualTo(XLThemeColor.Accent1));
+                Assert.That(xlColor4.ThemeTint, Is.EqualTo(0.4).Within(XLHelper.Epsilon));
+            });
         }
 
         [Test]
@@ -181,7 +196,7 @@ namespace ClosedXML.Tests.Excel
             culture.TextInfo.ListSeparator = "#";
             Thread.CurrentThread.CurrentCulture = culture;
             var color = XLColor.FromHtml("#FF008000");
-            Assert.AreEqual(XLColor.Green, color);
+            Assert.That(color, Is.EqualTo(XLColor.Green));
         }
     }
 }
