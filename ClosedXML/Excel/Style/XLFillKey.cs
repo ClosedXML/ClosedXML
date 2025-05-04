@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel;
 
 internal readonly record struct XLFillKey
@@ -12,18 +10,23 @@ internal readonly record struct XLFillKey
 
     public override int GetHashCode()
     {
-        var hash = new HashCode();
+        unchecked
+        {
+            var hash = 0;
 
-        if (HasNoFill()) return hash.ToHashCode();
+            if (!HasNoFill())
+            {
+                hash = (int)PatternType;
+                hash = (hash * 397) ^ BackgroundColor.GetHashCode();
 
-        hash.Add(PatternType);
-        hash.Add(BackgroundColor);
+                if (!HasNoForeground())
+                {
+                    hash = (hash * 397) ^ PatternColor.GetHashCode();
+                }
+            }
 
-        if (HasNoForeground()) return hash.ToHashCode();
-                
-        hash.Add(PatternColor);
-            
-        return hash.ToHashCode();
+            return hash;
+        }
     }
 
     public bool Equals(XLFillKey other)
