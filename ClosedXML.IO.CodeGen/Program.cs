@@ -66,17 +66,14 @@ public class Program
                 CsTypeName = "uint",
                 RequiredTemplate = "_reader.GetUInt(\"{0}\")"
             })
-            .AddSimpleType(new SimpleTypeMapping
-            {
-                Name = "ST_PatternType",
-                CsTypeName = "XLFillPatternValues",
-                OptionalTemplate = "_reader.GetOptionalEnum<XLFillPatternValues>(\"{0}\")"
-            })
+            .AddSimpleTypeEnum("ST_PatternType", "XLFillPatternValues")
+            .AddSimpleTypeEnum("ST_GradientType", "XLGradientType", new() { { "linear", "XLGradientType.Linear" } })
             .AddComplexTypeMapping("CT_Color", "XLColor")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
             .AddParseMethod("CT_PatternFill")
+            .AddParseMethod("CT_GradientFill")
             ;
 
         var stylesReaderSource = stylesReaderGenerator.Generate();

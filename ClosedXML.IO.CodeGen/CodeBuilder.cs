@@ -92,7 +92,14 @@ internal class CodeBuilder
 
     internal string GetSimpleType(string simpleType)
     {
-        return _typeMap.GetSimpleTypeName(simpleType);
+        return _typeMap.GetSimpleType(simpleType).CsTypeName;
+    }
+
+    internal CodeBuilder AppendValue(string simpleType, string value)
+    {
+        var mappedValue = _typeMap.GetSimpleType(simpleType).MapValue(value);
+        _sb.Append(mappedValue);
+        return this;
     }
 
     internal bool TryGetComplexType(string complexType, [NotNullWhen(true)] out string? csType)

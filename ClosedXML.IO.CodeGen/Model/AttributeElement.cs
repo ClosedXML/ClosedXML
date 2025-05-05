@@ -43,7 +43,7 @@ public class AttributeElement : INode
         Debug.Assert(Type is not null);
         code.WriteIndent().Append("var ").AppendVariable(Name).Append(" = ").AppendSimpleTypeMethod(this);
         if (DefaultValue is not null)
-            code.Append(" ?? ").Append(DefaultValue);
+            code.Append(" ?? ").AppendValue(Type, DefaultValue);
 
         code.Append(";").EndLine();
 

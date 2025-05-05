@@ -30,9 +30,21 @@ internal class SchemeTypeMap
         return this;
     }
 
-    internal string GetSimpleTypeName(string typeName)
+    internal SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, Dictionary<string, string>? valuesMap = null)
     {
-        return _simpleTypeMap[typeName].CsTypeName;
+        return AddSimpleType(new SimpleTypeMapping
+        {
+            Name = simpleType,
+            CsTypeName = csTypeName,
+            RequiredTemplate = $"_reader.GetEnum<{csTypeName}>(\"{{0}}\")",
+            OptionalTemplate = $"_reader.GetOptionalEnum<{csTypeName}>(\"{{0}}\")",
+            MapValue = xmlName => valuesMap?[xmlName] ?? throw new InvalidOperationException($"The XML value {xmlName} is not mapped to {csTypeName}.")
+        });
+    }
+
+    internal SimpleTypeMapping GetSimpleType(string typeName)
+    {
+        return _simpleTypeMap[typeName];
     }
 
     internal string GetSimpleTypeMethod(AttributeElement attribute)

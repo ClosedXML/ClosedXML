@@ -34,4 +34,9 @@ internal record SimpleTypeMapping
         get => _optionalTemplate ?? throw new InvalidOperationException();
         init => _optionalTemplate = value;
     }
+
+    /// <summary>
+    /// Map values from XML default value to C# value.
+    /// </summary>
+    public Func<string, string> MapValue { get; init; } = x => x;
 }
