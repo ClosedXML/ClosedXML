@@ -8,10 +8,9 @@ namespace ClosedXML.IO.CodeGen;
 internal class SchemeTypeMap
 {
     /// <summary>
-    /// Simple type map. The key is an XML simple name, the value is C# type name (including
-    /// namespace). The type is never nullable, nullability is determined by other XML attributes.
+    /// Simple type map. The key is an XML simple name, the value is info about how to work with it in the C# code.
     /// </summary>
-    private readonly Dictionary<string, string> _simpleTypeMap = new();
+    private readonly Dictionary<string, SimpleTypeMapping> _simpleTypeMap = new();
 
     /// <summary>
     /// Map of XML complex type name to C# type (as a text). If there isn't a record in the map,
@@ -19,69 +18,29 @@ internal class SchemeTypeMap
     /// </summary>
     private readonly Dictionary<string, string> _complexTypeMap = new();
 
-    /// <summary>
-    /// Templates for required attributes in XML. The key is XML simple type name, the value is a
-    /// code expression template used to get the value. The template has one argument (<c>{0}</c>)
-    /// that is substituted with a name of an attribute.
-    /// </summary>
-    private readonly Dictionary<string, string> _requiredSimpleTypeTemplate = new();
-
-    /// <summary>
-    /// Templates for optional attributes in XML. The key is XML simple type name, the value is a
-    /// code expression template used to get the value. The template has one argument (<c>{0}</c>)
-    /// that is substituted with a name of an attribute.
-    /// </summary>
-    private readonly Dictionary<string, string> _optionalSimpleTypeTemplate = new();
-
     internal SchemeTypeMap AddComplexTypeMapping(string typeName, string cSharpType)
     {
         _complexTypeMap.Add(typeName, cSharpType);
         return this;
     }
 
-    internal SchemeTypeMap AddSimpleTypeRequired(string typeName, string methodTemplate, string cSharpTypeName)
+    internal SchemeTypeMap AddSimpleType(SimpleTypeMapping simpleType)
     {
-        AddSimpleTypeTemplate(typeName, true, methodTemplate, cSharpTypeName);
+        _simpleTypeMap.Add(simpleType.Name, simpleType);
         return this;
-    }
-
-    internal SchemeTypeMap AddSimpleTypeOptional(string typeName, string methodTemplate, string cSharpTypeName)
-    {
-        AddSimpleTypeTemplate(typeName, false, methodTemplate, cSharpTypeName);
-        return this;
-    }
-
-    private void AddSimpleTypeTemplate(string typeName, bool isRequired, string methodTemplate, string cSharpTypeName)
-    {
-        // Simple type can be added multiple types for optional and required templates
-        if (!_simpleTypeMap.TryGetValue(typeName, out var existingCSharpType))
-        {
-            _simpleTypeMap.Add(typeName, cSharpTypeName);
-        }
-        else
-        {
-            if (cSharpTypeName != existingCSharpType)
-                throw new InvalidOperationException($"The XML type {typeName} should be mapped to {cSharpTypeName}, but is already mapped to {existingCSharpType}.");
-        }
-
-        var typeTemplate = isRequired ? _requiredSimpleTypeTemplate : _optionalSimpleTypeTemplate;
-        typeTemplate.Add(typeName, methodTemplate);
     }
 
     internal string GetSimpleTypeName(string typeName)
     {
-        return _simpleTypeMap[typeName];
+        return _simpleTypeMap[typeName].CsTypeName;
     }
 
     internal string GetSimpleTypeMethod(AttributeElement attribute)
     {
-        var isOptional = attribute.Use is AttributeUseType.Default or AttributeUseType.Optional;
-        var templates = isOptional ? _optionalSimpleTypeTemplate : _requiredSimpleTypeTemplate;
-        var typeName = attribute.Type ?? throw new InvalidOperationException();
-        if (!templates.TryGetValue(typeName, out var methodTemplate))
-            throw new InvalidOperationException($"Simple type {typeName} ({(isOptional ? "optional" : "required")}) doesn't have defined template.");
-
-        return string.Format(methodTemplate, attribute.Name);
+        var simpleTypeName = attribute.Type ?? throw new InvalidOperationException();
+        var simpleType = _simpleTypeMap[simpleTypeName];
+        var expressionTemplate = attribute.IsOptional ? simpleType.OptionalTemplate : simpleType.RequiredTemplate;
+        return string.Format(expressionTemplate, attribute.Name);
     }
 
     internal bool TryGetComplexTypeCsType(string complexType, [NotNullWhen(true)] out string? csType)
@@ -91,16 +50,54 @@ internal class SchemeTypeMap
 
     public SchemeTypeMap AddPrimitiveTypes()
     {
-        AddSimpleTypeRequired("xsd:unsignedInt", "_reader.GetUInt(\"{0}\")", "uint");
-        AddSimpleTypeOptional("xsd:int", "_reader.GetOptionalInt(\"{0}\")", "int");
-        AddSimpleTypeRequired("xsd:boolean", "_reader.GetBool(\"{0}\")", "bool");
-        AddSimpleTypeOptional("xsd:boolean", "_reader.GetOptionalBool(\"{0}\")", "bool");
-        AddSimpleTypeOptional("s:ST_Xstring", "_reader.GetOptionalXString(\"{0}\")", "string");
-        AddSimpleTypeRequired("s:ST_Xstring", "_reader.GetXString(\"{0}\")", "string");
-        AddSimpleTypeOptional("xsd:unsignedInt", "_reader.GetOptionalUInt(\"{0}\")", "uint");
-        AddSimpleTypeRequired("xsd:dateTime", "_reader.GetDateTime(\"{0}\")", "System.DateTime");
-        AddSimpleTypeOptional("ST_UnsignedIntHex", "_reader.GetOptionalUIntHex(\"{0}\")", "uint");
-        AddSimpleTypeRequired("xsd:double", "_reader.GetDouble(\"{0}\")", "double");
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:boolean",
+            CsTypeName = "bool",
+            RequiredTemplate = "_reader.GetBool(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalBool(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:int",
+            CsTypeName = "int",
+            RequiredTemplate = "_reader.GetInt(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalInt(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:unsignedInt",
+            CsTypeName = "uint",
+            RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:double",
+            CsTypeName = "double",
+            RequiredTemplate = "_reader.GetDouble(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalDouble(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "s:ST_Xstring",
+            CsTypeName = "string",
+            RequiredTemplate = "_reader.GetXString(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalXString(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:dateTime",
+            CsTypeName = "System.DateTime",
+            RequiredTemplate = "_reader.GetDateTime(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalDateTime(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "ST_UnsignedIntHex",
+            CsTypeName = "uint",
+            OptionalTemplate = "_reader.GetOptionalUIntHex(\"{0}\")"
+        });
         return this;
     }
 }

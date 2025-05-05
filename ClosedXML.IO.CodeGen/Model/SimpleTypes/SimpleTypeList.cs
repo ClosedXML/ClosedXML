@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
+namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 
 /// <summary>
 /// <c><![CDATA[<xsd:simpleType>]]></c> inside <c><![CDATA[<xsd:schema>]]></c>. List items are

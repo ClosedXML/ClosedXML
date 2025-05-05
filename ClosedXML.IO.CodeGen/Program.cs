@@ -60,8 +60,18 @@ public class Program
     {
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes()
-            .AddSimpleTypeRequired("ST_NumFmtId", "_reader.GetUInt(\"{0}\")", "uint")
-            .AddSimpleTypeOptional("ST_PatternType", "_reader.GetOptionalEnum<XLFillPatternValues>(\"{0}\")", "XLFillPatternValues")
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_NumFmtId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_PatternType",
+                CsTypeName = "XLFillPatternValues",
+                OptionalTemplate = "_reader.GetOptionalEnum<XLFillPatternValues>(\"{0}\")"
+            })
             .AddComplexTypeMapping("CT_Color", "XLColor")
             ;
 

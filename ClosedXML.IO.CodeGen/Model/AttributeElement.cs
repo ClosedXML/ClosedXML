@@ -30,7 +30,7 @@ public class AttributeElement : INode
 
     internal bool IsOptional => Use is AttributeUseType.Default or AttributeUseType.Optional;
 
-    internal bool CanBeNull => IsOptional && DefaultValue is null;
+    private bool CanBeNull => IsOptional && DefaultValue is null;
 
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
@@ -44,6 +44,7 @@ public class AttributeElement : INode
         code.WriteIndent().Append("var ").AppendVariable(Name).Append(" = ").AppendSimpleTypeMethod(this);
         if (DefaultValue is not null)
             code.Append(" ?? ").Append(DefaultValue);
+
         code.Append(";").EndLine();
 
         var csType = CanBeNull ? code.GetSimpleType(Type) + '?' : code.GetSimpleType(Type);
