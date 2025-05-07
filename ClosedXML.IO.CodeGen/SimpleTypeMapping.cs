@@ -22,7 +22,7 @@ internal record SimpleTypeMapping
     /// </summary>
     public string RequiredTemplate
     {
-        get => _requiredTemplate ?? throw new InvalidOperationException();
+        get => _requiredTemplate ?? throw new InvalidOperationException($"Required template not defined for {Name}.");
         init => _requiredTemplate = value;
     }
 
@@ -31,7 +31,7 @@ internal record SimpleTypeMapping
     /// </summary>
     public string OptionalTemplate
     {
-        get => _optionalTemplate ?? throw new InvalidOperationException();
+        get => _optionalTemplate ?? throw new InvalidOperationException($"Optional template not defined for {Name}.");
         init => _optionalTemplate = value;
     }
 

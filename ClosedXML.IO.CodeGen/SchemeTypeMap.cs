@@ -30,6 +30,11 @@ internal class SchemeTypeMap
         return this;
     }
 
+    internal SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, string xmlValue, string csValue)
+    {
+        return AddSimpleTypeEnum(simpleType, csTypeName, new() { { xmlValue, csValue } });
+    }
+
     internal SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, Dictionary<string, string>? valuesMap = null)
     {
         return AddSimpleType(new SimpleTypeMapping
