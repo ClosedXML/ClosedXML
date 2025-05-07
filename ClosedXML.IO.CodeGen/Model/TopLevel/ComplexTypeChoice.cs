@@ -110,7 +110,7 @@ public class ComplexTypeChoice : ComplexType, INode
         var max = Choice.Occurrences.Max ?? 1;
 
         var allChoicesSame = Choice.Children.All(x => x is ElementType) &&
-                             Choice.Children.Cast<ElementType>().Select(x => x.Occurrences.Elements).Count() == 1;
+                             Choice.Children.Cast<ElementType>().Select(x => x.Occurrences.Elements).Distinct().Count() == 1;
 
         ElementsCount? choicesElements = allChoicesSame ? Choice.Children.Cast<ElementType>().First().Occurrences.Elements : null;
 
