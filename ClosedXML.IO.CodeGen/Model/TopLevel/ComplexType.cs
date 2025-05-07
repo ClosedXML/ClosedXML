@@ -25,7 +25,12 @@ public abstract class ComplexType : IReferencable
     internal void Generate(CodeBuilder code, string namespaceField)
     {
         var attributeVariables = new List<Variable>();
-        code.StartMethod("void Parse{0}(string elementName)", Name);
+
+        // Get return type of Parse* method
+        if (!code.TryGetComplexType(Name, out var csReturnType))
+            csReturnType = "void";
+
+        code.StartMethod($"{csReturnType} Parse{{0}}(string elementName)", Name);
         code.OpenBrace();
         foreach (var oneOfAttribute in Attributes)
         {
@@ -42,17 +47,28 @@ public abstract class ComplexType : IReferencable
 
         var elementVariables = GenerateParseMethod(code, namespaceField);
         List<Variable> dataVariables = [.. elementVariables, .. attributeVariables];
-        CallListener(code, dataVariables);
-        code.CloseBrace();
 
-        AddPartialMethodSignature(code, Name, dataVariables);
+        if (csReturnType == "void")
+        {
+            code.WriteIndent();
+            AppendCallListener(code, dataVariables);
+            code.CloseBrace();
+
+            AddPartialMethodSignature(code, Name, dataVariables);
+        }
+        else
+        {
+            code.WriteIndent().Append("return ");
+            AppendCallListener(code, dataVariables);
+            code.CloseBrace();
+        }
     }
 
     internal abstract List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField);
 
-    private void CallListener(CodeBuilder code, IReadOnlyList<Variable> arguments)
+    private void AppendCallListener(CodeBuilder code, IReadOnlyList<Variable> arguments)
     {
-        code.WriteIndent().Append("On").AppendComplexType(Name).Append("Parsed(");
+        code.Append("On").AppendComplexType(Name).Append("Parsed(");
         var isFirst = true;
         foreach (var variable in arguments)
         {

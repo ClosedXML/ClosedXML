@@ -47,6 +47,7 @@ internal class ParserGenerator
         var code = new CodeBuilder(new StringBuilder(), _typeMap);
         code.AddLine("#nullable enable");
         code.EndLine();
+        code.AddLine("using System.Collections.Generic;");
         code.AddLine("using ClosedXML.IO;");
         code.EndLine();
         code.AddLine($"namespace {_targetNamespace};");
