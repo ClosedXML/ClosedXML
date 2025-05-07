@@ -99,6 +99,13 @@ internal class SchemeTypeMap
         });
         AddSimpleType(new SimpleTypeMapping
         {
+            Name = "xsd:string",
+            CsTypeName = "string",
+            RequiredTemplate = "_reader.GetString(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalString(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
             Name = "xsd:dateTime",
             CsTypeName = "System.DateTime",
             RequiredTemplate = "_reader.GetDateTime(\"{0}\")",
