@@ -36,6 +36,7 @@ public class ElementType : IElementGroup
 
     internal Variable? Generate(CodeBuilder code, string namespaceField)
     {
+        Variable? variable = null;
         var typeName = code.NormalizeCt(TypeName);
         var elementParseCall = $"Parse{typeName}(\"{Name}\")";
         var openArgs = $"\"{Name}\", {namespaceField}";
@@ -44,20 +45,26 @@ public class ElementType : IElementGroup
 
         if (min == 1 && max == 1)
         {
-            code.AddLine($"_reader.Open({openArgs}))");
-            code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+            code.AddLine($"_reader.Open({openArgs});");
+            code.WriteIndent();
+            if (code.TryGetComplexType(TypeName, out var csType))
+            {
+                variable = new Variable(csType, Name);
+                code.Append("var ").AppendVariable(Name).Append(" = ");
+            }
+            code.Append(elementParseCall).Append(";").EndLine();
         }
         else if (min == 0 && max == 1)
         {
             if (code.TryGetComplexType(TypeName, out var csType))
             {
                 csType += "?";
+                variable = new Variable(csType, Name);
                 code.WriteIndent().Append(csType).Append(" ").AppendVariable(Name).Append(" = default;").EndLine();
                 code.AddLine($"if (_reader.TryOpen({openArgs}))");
                 code.OpenBrace();
                 code.WriteIndent().AppendVariable(Name).Append(" = ").Append(elementParseCall).Append(";").EndLine();
                 code.CloseBrace();
-                return new Variable(csType, Name);
             }
             else
             {
@@ -69,25 +76,38 @@ public class ElementType : IElementGroup
         }
         else if (min == 0 && max == int.MaxValue)
         {
-            code.AddLine($"while (_reader.TryOpen({openArgs}))")
-                .OpenBrace()
-                .WriteIndent().Append(elementParseCall).Append(";").EndLine()
-                .CloseBrace();
+            if (code.TryGetComplexType(TypeName, out var csType))
+            {
+                csType = $"List<{csType}>";
+                variable = new Variable(csType, Name);
+                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append($" = new {csType}();").EndLine();
+                code.AddLine($"while (_reader.TryOpen({openArgs}))");
+                code.OpenBrace();
+                code.WriteIndent().AppendVariable(variable.Name).Append($".Add({elementParseCall})").Append(";").EndLine();
+                code.CloseBrace();
+            }
+            else
+            {
+                code.AddLine($"while (_reader.TryOpen({openArgs}))");
+                code.OpenBrace();
+                code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+                code.CloseBrace();
+            }
         }
         else if (min == 1 && max == int.MaxValue)
         {
-            code.AddLine($"_reader.Open({openArgs});")
-                .AddLine("do")
-                .OpenBrace()
-                .WriteIndent().Append(elementParseCall).Append(";").EndLine()
-                .CloseBrace()
-                .AddLine($"while (_reader.TryOpen({openArgs}));");
+            code.AddLine($"_reader.Open({openArgs});");
+            code.AddLine("do");
+            code.OpenBrace();
+            code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+            code.CloseBrace();
+            code.AddLine($"while (_reader.TryOpen({openArgs}));");
         }
         else
         {
             throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
         }
 
-        return null;
+        return variable;
     }
 }
