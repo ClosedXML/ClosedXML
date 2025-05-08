@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.Formatting;
+using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel;
@@ -11,15 +11,35 @@ internal class XLWorkbookStyles
     /// <summary>
     /// The index is XfId, the value is formatting record.
     /// </summary>
-    private List<XLCellFormat> _masterFormats;
+    private readonly Dictionary<int, XLCellFormat> _masterFormats;
 
-    private readonly List<XLFontFormat> _fontFormats;
+    private readonly Dictionary<int, XLFontFormat> _fontFormats;
 
-    internal XLWorkbookStyles(List<XLCellFormat> masterFormats, List<XLFontFormat> fontFormats)
+    internal XLWorkbookStyles()
     {
-        _masterFormats = masterFormats;
-        _fontFormats = fontFormats;
+        _masterFormats = new Dictionary<int, XLCellFormat>();
+        _fontFormats = new Dictionary<int, XLFontFormat>();
     }
 
-    internal IReadOnlyList<XLFontFormat> FontFormats => _fontFormats;
+    internal XLStyleKey ApplyFontFormat(int fontId, ref XLStyleKey xlStyle)
+    {
+        var fontFormat = _fontFormats[fontId];
+        var xlFont = fontFormat.ApplyTo(xlStyle.Font);
+        return xlStyle with { Font = xlFont };
+    }
+
+    internal void AddFontFormat(XLFontFormat fontFormat)
+    {
+        _fontFormats.Add(_fontFormats.Count, fontFormat);
+    }
+
+    internal void AddFormat(uint? fontId)
+    {
+        var xfId = _masterFormats.Count;
+        XLFontFormat? font = fontId is not null ? _fontFormats[checked((int)fontId)] : null;
+        _masterFormats.Add(xfId, new XLCellFormat
+        {
+            Font = font
+        });
+    }
 }

@@ -64,19 +64,95 @@ public class Program
             {
                 Name = "ST_NumFmtId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_FontId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_FillId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_BorderId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_CellStyleXfId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_TextRotation",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_DxfId",
+                CsTypeName = "uint",
+                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
             })
             .AddSimpleTypeEnum("ST_PatternType", "XLFillPatternValues")
-            .AddSimpleTypeEnum("ST_GradientType", "XLGradientType", new() { { "linear", "XLGradientType.Linear" } })
+            .AddSimpleTypeEnum("ST_GradientType", "XLGradientType", "linear", "XLGradientType.Linear")
+            .AddSimpleTypeEnum("ST_BorderStyle", "XLBorderStyleValues", "none", "XLBorderStyleValues.None")
+            .AddSimpleTypeEnum("ST_HorizontalAlignment", "XLAlignmentHorizontalValues")
+            .AddSimpleTypeEnum("ST_VerticalAlignment", "XLAlignmentVerticalValues", "bottom", "XLAlignmentVerticalValues.Bottom")
+            .AddSimpleTypeEnum("ST_TableStyleType", "XLTableStyleType")
             .AddComplexTypeMapping("CT_Color", "XLColor")
+            //.AddComplexTypeMapping("CT_GradientStop", "(double Value, XLColor Color)")
+            //.AddComplexTypeMapping("CT_BorderPr", "XLBorderProperty")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
             .AddUsing("System.Collections.Generic")
             .AddUsing("ClosedXML.IO")
             .AddUsing("ClosedXML.Excel.Formatting")
+            .AddParseMethod("CT_Stylesheet")
+            .AddParseMethod("CT_NumFmts")
+            .AddParseMethod("CT_NumFmt")
+            .AddParseMethod("CT_Fonts")
+            // AddParseMethod("CT_Font")
+            .AddParseMethod("CT_Fills")
+            .AddParseMethod("CT_Fill")
             .AddParseMethod("CT_PatternFill")
             .AddParseMethod("CT_GradientFill")
+            .AddParseMethod("CT_GradientStop")
+            .AddParseMethod("CT_Borders")
+            .AddParseMethod("CT_Border")
+            .AddParseMethod("CT_BorderPr")
+            .AddParseMethod("CT_CellStyleXfs")
+            .AddParseMethod("CT_Xf")
+            .AddParseMethod("CT_CellAlignment")
+            .AddParseMethod("CT_CellProtection")
+            //.AddParseMethod("CT_CellXfs")
+            .AddParseMethod("CT_CellStyles")
+            .AddParseMethod("CT_CellStyle")
+            .AddParseMethod("CT_Dxfs")
+            .AddParseMethod("CT_Dxf")
+            .AddParseMethod("CT_TableStyles")
+            .AddParseMethod("CT_TableStyle")
+            .AddParseMethod("CT_TableStyleElement")
+            .AddParseMethod("CT_Colors")
+            .AddParseMethod("CT_IndexedColors")
+            .AddParseMethod("CT_MRUColors")
+            .AddParseMethod("CT_RgbColor")
             ;
 
         var stylesReaderSource = stylesReaderGenerator.Generate();

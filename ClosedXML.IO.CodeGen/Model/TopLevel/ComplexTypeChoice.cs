@@ -66,6 +66,7 @@ public class ComplexTypeChoice : ComplexType, INode
                 isFirst = false;
             }
 
+            code.AddLine($"_reader.Close(elementName, {namespaceField});");
             return variables;
         }
 

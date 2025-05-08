@@ -1,4 +1,4 @@
-﻿using ClosedXML.Extensions;
+using ClosedXML.Extensions;
 using ClosedXML.IO;
 using System;
 
@@ -37,7 +37,7 @@ internal partial class PivotCacheRecordsReader
 
         if (_reader.TryOpen("extLst", _ns))
         {
-            _reader.Skip();
+            _reader.Skip("extLst");
         }
 
         _reader.Close("pivotCacheRecords", _ns);

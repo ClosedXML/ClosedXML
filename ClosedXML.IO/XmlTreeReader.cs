@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
@@ -203,7 +203,7 @@ public sealed class XmlTreeReader : IDisposable
     /// on an ending element of a subtree in a processed state.
     /// </summary>
     /// <exception cref="InvalidOperationException">Reader isn't on opening element.</exception>
-    public void Skip()
+    public void Skip(string elementName)
     {
         ThrowOnNonStartElement();
         var startDepth = _reader.Depth;

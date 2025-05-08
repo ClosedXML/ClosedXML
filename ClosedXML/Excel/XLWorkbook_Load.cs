@@ -177,12 +177,15 @@ namespace ClosedXML.Excel
                     Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
             }
 
-            Stylesheet s = workbookPart.WorkbookStylesPart?.Stylesheet;
-            if (s is not null)
+            var stylesPart = workbookPart.WorkbookStylesPart;
+            if (stylesPart is not null)
             {
-                Styles = StylesPartReader.Load(s);
+                using var xmlReader = CreateTreeReader(stylesPart);
+                var stylesReader = new StylesReader(xmlReader, Styles);
+                stylesReader.Load();
             }
 
+            Stylesheet s = stylesPart?.Stylesheet;
             NumberingFormats numberingFormats = s?.NumberingFormats;
             context.LoadNumberFormats(numberingFormats);
             Fills fills = s?.Fills;
@@ -1219,11 +1222,9 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (cellFormat.FontId?.Value is { } fontId && fontId < styles.FontFormats.Count)
+            if (cellFormat.FontId?.Value is { } fontId)
             {
-                var xlFontFormat = styles.FontFormats[(int)fontId];
-                var xlFont = xlFontFormat.ApplyTo(xlStyle.Font);
-                xlStyle = xlStyle with { Font = xlFont };
+                xlStyle = styles.ApplyFontFormat((int)fontId, ref xlStyle);
             }
 
             if (UInt32HasValue(cellFormat.NumberFormatId))

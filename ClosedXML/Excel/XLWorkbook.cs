@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
 
         internal SharedStringTable SharedStringTable { get; } = new();
 
-        internal XLWorkbookStyles Styles { get; set; } = new(new List<XLCellFormat>(), new List<XLFontFormat>());
+        internal XLWorkbookStyles Styles { get; set; } = new();
 
         #region Nested Type : XLLoadSource
 

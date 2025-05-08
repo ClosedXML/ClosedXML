@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ClosedXML.IO;
 
@@ -59,6 +59,105 @@ internal sealed class XmlToEnumMapper : IEnumMapper
             { "baseline", XLFontVerticalTextAlignmentValues.Baseline },
             { "subscript", XLFontVerticalTextAlignmentValues.Subscript },
             { "superscript", XLFontVerticalTextAlignmentValues.Superscript },
+        });
+
+        // ST_PatternType
+        builder.Add(new Dictionary<string, XLFillPatternValues>
+        {
+            { "none", XLFillPatternValues.None },
+            { "solid", XLFillPatternValues.Solid },
+            { "mediumGray", XLFillPatternValues.MediumGray },
+            { "darkGray", XLFillPatternValues.DarkGray },
+            { "lightGray", XLFillPatternValues.LightGray },
+            { "darkHorizontal", XLFillPatternValues.DarkHorizontal },
+            { "darkVertical", XLFillPatternValues.DarkVertical },
+            { "darkDown", XLFillPatternValues.DarkDown },
+            { "darkUp", XLFillPatternValues.DarkUp },
+            { "darkGrid", XLFillPatternValues.DarkGrid },
+            { "darkTrellis", XLFillPatternValues.DarkTrellis },
+            { "lightHorizontal", XLFillPatternValues.LightHorizontal },
+            { "lightVertical", XLFillPatternValues.LightVertical },
+            { "lightDown", XLFillPatternValues.LightDown },
+            { "lightUp", XLFillPatternValues.LightUp },
+            { "lightGrid", XLFillPatternValues.LightGrid },
+            { "lightTrellis", XLFillPatternValues.LightTrellis },
+            { "gray125", XLFillPatternValues.Gray125 },
+            { "gray0625", XLFillPatternValues.Gray0625 },
+        });
+
+        // ST_BorderStyle
+        builder.Add(new Dictionary<string, XLBorderStyleValues>
+        {
+            { "none", XLBorderStyleValues.None },
+            { "thin", XLBorderStyleValues.Thin },
+            { "medium", XLBorderStyleValues.Medium },
+            { "dashed", XLBorderStyleValues.Dashed },
+            { "dotted", XLBorderStyleValues.Dotted },
+            { "thick", XLBorderStyleValues.Thick },
+            { "double", XLBorderStyleValues.Double },
+            { "hair", XLBorderStyleValues.Hair },
+            { "mediumDashed", XLBorderStyleValues.MediumDashed },
+            { "dashDot", XLBorderStyleValues.DashDot },
+            { "mediumDashDot", XLBorderStyleValues.MediumDashDot },
+            { "dashDotDot", XLBorderStyleValues.DashDotDot },
+            { "mediumDashDotDot", XLBorderStyleValues.MediumDashDotDot },
+            { "slantDashDot", XLBorderStyleValues.SlantDashDot },
+        });
+
+        // ST_HorizontalAlignment
+        builder.Add(new Dictionary<string, XLAlignmentHorizontalValues>
+        {
+            { "general", XLAlignmentHorizontalValues.General },
+            { "left", XLAlignmentHorizontalValues.Left },
+            { "center", XLAlignmentHorizontalValues.Center },
+            { "right", XLAlignmentHorizontalValues.Right },
+            { "fill", XLAlignmentHorizontalValues.Fill },
+            { "justify", XLAlignmentHorizontalValues.Justify },
+            { "centerContinuous", XLAlignmentHorizontalValues.CenterContinuous },
+            { "distributed", XLAlignmentHorizontalValues.Distributed },
+        });
+
+        // ST_VerticalAlignment
+        builder.Add(new Dictionary<string, XLAlignmentVerticalValues>
+        {
+            { "top", XLAlignmentVerticalValues.Top },
+            { "center", XLAlignmentVerticalValues.Center },
+            { "bottom", XLAlignmentVerticalValues.Bottom },
+            { "justify", XLAlignmentVerticalValues.Justify },
+            { "distributed", XLAlignmentVerticalValues.Distributed },
+        });
+
+        // ST_TableStyleType
+        builder.Add(new Dictionary<string, XLTableStyleType>
+        {
+            { "wholeTable", XLTableStyleType.WholeTable },
+            { "headerRow", XLTableStyleType.HeaderRow },
+            { "totalRow", XLTableStyleType.TotalRow },
+            { "firstColumn", XLTableStyleType.FirstColumn },
+            { "lastColumn", XLTableStyleType.LastColumn },
+            { "firstRowStripe", XLTableStyleType.FirstRowStripe },
+            { "secondRowStripe", XLTableStyleType.SecondRowStripe },
+            { "firstColumnStripe", XLTableStyleType.FirstColumnStripe },
+            { "secondColumnStripe", XLTableStyleType.SecondColumnStripe },
+            { "firstHeaderCell", XLTableStyleType.FirstHeaderCell },
+            { "lastHeaderCell", XLTableStyleType.LastHeaderCell },
+            { "firstTotalCell", XLTableStyleType.FirstTotalCell },
+            { "lastTotalCell", XLTableStyleType.LastTotalCell },
+            { "firstSubtotalColumn", XLTableStyleType.FirstSubtotalColumn },
+            { "secondSubtotalColumn", XLTableStyleType.SecondSubtotalColumn },
+            { "thirdSubtotalColumn", XLTableStyleType.ThirdSubtotalColumn },
+            { "firstSubtotalRow", XLTableStyleType.FirstSubtotalRow },
+            { "secondSubtotalRow", XLTableStyleType.SecondSubtotalRow },
+            { "thirdSubtotalRow", XLTableStyleType.ThirdSubtotalRow },
+            { "blankRow", XLTableStyleType.BlankRow },
+            { "firstColumnSubheading", XLTableStyleType.FirstColumnSubheading },
+            { "secondColumnSubheading", XLTableStyleType.SecondColumnSubheading },
+            { "thirdColumnSubheading", XLTableStyleType.ThirdColumnSubheading },
+            { "firstRowSubheading", XLTableStyleType.FirstRowSubheading },
+            { "secondRowSubheading", XLTableStyleType.SecondRowSubheading },
+            { "thirdRowSubheading", XLTableStyleType.ThirdRowSubheading },
+            { "pageFieldLabels", XLTableStyleType.PageFieldLabels },
+            { "pageFieldValues", XLTableStyleType.PageFieldValues },
         });
 
         return builder.Build();
