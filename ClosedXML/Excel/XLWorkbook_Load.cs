@@ -1211,20 +1211,14 @@ namespace ClosedXML.Excel
                 xlStyle = xlStyle with { Alignment = xlAlignment };
             }
 
-            if (UInt32HasValue(cellFormat.BorderId))
-            {
-                uint borderId = cellFormat.BorderId.Value;
-                var border = (Border)borders.ElementAt((Int32)borderId);
-                if (border is not null)
-                {
-                    var xlBorder = OpenXmlHelper.BorderToClosedXml(border, xlStyle.Border);
-                    xlStyle = xlStyle with { Border = xlBorder };
-                }
-            }
-
             if (cellFormat.FontId?.Value is { } fontId)
             {
-                xlStyle = styles.ApplyFontFormat((int)fontId, ref xlStyle);
+                xlStyle = styles.ApplyFontFormat(checked((int)fontId), ref xlStyle);
+            }
+
+            if (cellFormat.BorderId?.Value is { } borderId)
+            {
+                xlStyle = styles.ApplyBorderFormat(checked((int)borderId), ref xlStyle);
             }
 
             if (UInt32HasValue(cellFormat.NumberFormatId))

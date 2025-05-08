@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel.Formatting;
+namespace ClosedXML.Excel.Formatting;
 
 /// <summary>
 /// A formatting record for <see cref="XLCellFormat"/>. Unlike <see cref="XLFontKey"/>, attributes are optional.

@@ -117,7 +117,7 @@ public class Program
             .AddSimpleTypeEnum("ST_TableStyleType", "XLTableStyleType")
             .AddComplexTypeMapping("CT_Color", "XLColor")
             //.AddComplexTypeMapping("CT_GradientStop", "(double Value, XLColor Color)")
-            //.AddComplexTypeMapping("CT_BorderPr", "XLBorderProperty")
+            .AddComplexTypeMapping("CT_BorderPr", "XLBorderLine")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")

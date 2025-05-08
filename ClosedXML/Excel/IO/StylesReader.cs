@@ -107,6 +107,29 @@ internal partial class StylesReader
         _styles.AddFontFormat(format);
     }
 
+    partial void OnBorderParsed(XLBorderLine? left, XLBorderLine? right, XLBorderLine? top, XLBorderLine? bottom, XLBorderLine? diagonal, XLBorderLine? vertical, XLBorderLine? horizontal, bool? diagonalUp, bool? diagonalDown, bool outline)
+    {
+        var borderFormat = new XLBorderFormat
+        {
+            Left = left,
+            Right = right,
+            Top = top,
+            Bottom = bottom,
+            Diagonal = diagonal,
+            Vertical = vertical,
+            Horizontal = horizontal,
+            DiagonalUp = diagonalUp ?? false, // OI-29500: Excel uses false as default value
+            DiagonalDown = diagonalDown ?? false, // OI-29500: Excel uses false as default value
+            Outline = outline
+        };
+        _styles.AddBorderFormat(borderFormat);
+    }
+
+    private XLBorderLine OnBorderPrParsed(XLColor? color, XLBorderStyleValues style)
+    {
+        return new XLBorderLine(color ?? XLColor.NoColor, style);
+    }
+
     private void ParseCellXfs(string elementName)
     {
         _insideCellXfs = true;
@@ -127,7 +150,7 @@ internal partial class StylesReader
         if (_insideCellXfs)
         {
             // We are in cellXfs
-            _styles.AddFormat(fontId);
+            _styles.AddFormat(fontId, borderId);
         }
     }
 

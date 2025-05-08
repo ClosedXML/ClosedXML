@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel.Formatting;
+namespace ClosedXML.Excel.Formatting;
 
 /// <summary>
 /// <para>
@@ -18,6 +18,8 @@
 internal readonly record struct XLCellFormat
 {
     public XLFontFormat? Font { get; init; }
+
+    public XLBorderFormat? Border { get; init; }
 
     // TODO: Add remaining properties. For now only font
 }

@@ -191,41 +191,48 @@ internal partial class StylesReader
         var diagonalUp = _reader.GetOptionalBool("diagonalUp");
         var diagonalDown = _reader.GetOptionalBool("diagonalDown");
         var outline = _reader.GetOptionalBool("outline") ?? true;
+        XLBorderLine? left = default;
         if (_reader.TryOpen("left", _ns))
         {
-            ParseBorderPr("left");
+            left = ParseBorderPr("left");
         }
+        XLBorderLine? right = default;
         if (_reader.TryOpen("right", _ns))
         {
-            ParseBorderPr("right");
+            right = ParseBorderPr("right");
         }
+        XLBorderLine? top = default;
         if (_reader.TryOpen("top", _ns))
         {
-            ParseBorderPr("top");
+            top = ParseBorderPr("top");
         }
+        XLBorderLine? bottom = default;
         if (_reader.TryOpen("bottom", _ns))
         {
-            ParseBorderPr("bottom");
+            bottom = ParseBorderPr("bottom");
         }
+        XLBorderLine? diagonal = default;
         if (_reader.TryOpen("diagonal", _ns))
         {
-            ParseBorderPr("diagonal");
+            diagonal = ParseBorderPr("diagonal");
         }
+        XLBorderLine? vertical = default;
         if (_reader.TryOpen("vertical", _ns))
         {
-            ParseBorderPr("vertical");
+            vertical = ParseBorderPr("vertical");
         }
+        XLBorderLine? horizontal = default;
         if (_reader.TryOpen("horizontal", _ns))
         {
-            ParseBorderPr("horizontal");
+            horizontal = ParseBorderPr("horizontal");
         }
         _reader.Close(elementName, _ns);
-        OnBorderParsed(diagonalUp, diagonalDown, outline);
+        OnBorderParsed(left, right, top, bottom, diagonal, vertical, horizontal, diagonalUp, diagonalDown, outline);
     }
 
-    partial void OnBorderParsed(bool? diagonalUp, bool? diagonalDown, bool outline);
+    partial void OnBorderParsed(XLBorderLine? left, XLBorderLine? right, XLBorderLine? top, XLBorderLine? bottom, XLBorderLine? diagonal, XLBorderLine? vertical, XLBorderLine? horizontal, bool? diagonalUp, bool? diagonalDown, bool outline);
 
-    private void ParseBorderPr(string elementName)
+    private XLBorderLine ParseBorderPr(string elementName)
     {
         var style = _reader.GetOptionalEnum<XLBorderStyleValues>("style") ?? XLBorderStyleValues.None;
         XLColor? color = default;
@@ -234,10 +241,8 @@ internal partial class StylesReader
             color = ParseColor("color");
         }
         _reader.Close(elementName, _ns);
-        OnBorderPrParsed(color, style);
+        return OnBorderPrParsed(color, style);
     }
-
-    partial void OnBorderPrParsed(XLColor? color, XLBorderStyleValues style);
 
     private void ParseCellStyleXfs(string elementName)
     {
