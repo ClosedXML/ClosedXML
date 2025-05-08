@@ -72,6 +72,9 @@ public class Program
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
+            .AddUsing("System.Collections.Generic")
+            .AddUsing("ClosedXML.IO")
+            .AddUsing("ClosedXML.Excel.Formatting")
             .AddParseMethod("CT_PatternFill")
             .AddParseMethod("CT_GradientFill")
             ;
@@ -87,6 +90,8 @@ public class Program
 
         var cacheRecordsGenerator = new ParserGenerator(schema, typeMap, "PivotCacheRecordsReader", "_ns")
             .WithNamespace("ClosedXML.Excel.IO")
+            .AddUsing("System.Collections.Generic")
+            .AddUsing("ClosedXML.IO")
 
             // CT_PivotCacheRecords - hand-coded
             .AddParseMethod("CT_Record")

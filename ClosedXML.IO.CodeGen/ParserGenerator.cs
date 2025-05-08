@@ -12,6 +12,7 @@ internal class ParserGenerator
     private readonly string _namespaceField;
     private readonly List<string> _parseMethods = new();
     private readonly SchemeTypeMap _typeMap;
+    private readonly List<string> _usings = new();
     private string _targetNamespace = "ClosedXML.Excel.IO";
 
     internal ParserGenerator(Schema schema, SchemeTypeMap typeMap, string readerField, string nsVariable)
@@ -25,6 +26,12 @@ internal class ParserGenerator
     public ParserGenerator WithNamespace(string targetNamespace)
     {
         _targetNamespace = targetNamespace;
+        return this;
+    }
+
+    public ParserGenerator AddUsing(string usingNamespace)
+    {
+        _usings.Add(usingNamespace);
         return this;
     }
 
@@ -47,8 +54,9 @@ internal class ParserGenerator
         var code = new CodeBuilder(new StringBuilder(), _typeMap);
         code.AddLine("#nullable enable");
         code.EndLine();
-        code.AddLine("using System.Collections.Generic;");
-        code.AddLine("using ClosedXML.IO;");
+        foreach (var usingNs in _usings)
+            code.AddLine($"using {usingNs};");
+
         code.EndLine();
         code.AddLine($"namespace {_targetNamespace};");
         code.EndLine();
