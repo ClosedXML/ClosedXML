@@ -111,21 +111,23 @@ internal partial class StylesReader
 
     private void ParseFill(string elementName)
     {
+        XLFillFormat? patternFill = null;
+        XLFillFormat? gradientFill = null;
         if (_reader.TryOpen("patternFill", _ns))
         {
-            ParsePatternFill("patternFill");
+            patternFill = ParsePatternFill("patternFill");
         }
         else if (_reader.TryOpen("gradientFill", _ns))
         {
-            ParseGradientFill("gradientFill");
+            gradientFill = ParseGradientFill("gradientFill");
         }
         _reader.Close(elementName, _ns);
-        OnFillParsed();
+        OnFillParsed(patternFill, gradientFill);
     }
 
-    partial void OnFillParsed();
+    partial void OnFillParsed(XLFillFormat? patternFill, XLFillFormat? gradientFill);
 
-    private void ParsePatternFill(string elementName)
+    private XLFillFormat ParsePatternFill(string elementName)
     {
         var patternType = _reader.GetOptionalEnum<XLFillPatternValues>("patternType");
         XLColor? fgColor = default;
@@ -139,12 +141,10 @@ internal partial class StylesReader
             bgColor = ParseColor("bgColor");
         }
         _reader.Close(elementName, _ns);
-        OnPatternFillParsed(fgColor, bgColor, patternType);
+        return OnPatternFillParsed(fgColor, bgColor, patternType);
     }
 
-    partial void OnPatternFillParsed(XLColor? fgColor, XLColor? bgColor, XLFillPatternValues? patternType);
-
-    private void ParseGradientFill(string elementName)
+    private XLFillFormat ParseGradientFill(string elementName)
     {
         var type = _reader.GetOptionalEnum<XLGradientType>("type") ?? XLGradientType.Linear;
         var degree = _reader.GetOptionalDouble("degree") ?? 0;
@@ -152,26 +152,23 @@ internal partial class StylesReader
         var right = _reader.GetOptionalDouble("right") ?? 0;
         var top = _reader.GetOptionalDouble("top") ?? 0;
         var bottom = _reader.GetOptionalDouble("bottom") ?? 0;
+        var stop = new List<(FractionOfOne Value, XLColor Color)>();
         while (_reader.TryOpen("stop", _ns))
         {
-            ParseGradientStop("stop");
+            stop.Add(ParseGradientStop("stop"));
         }
         _reader.Close(elementName, _ns);
-        OnGradientFillParsed(type, degree, left, right, top, bottom);
+        return OnGradientFillParsed(stop, type, degree, left, right, top, bottom);
     }
 
-    partial void OnGradientFillParsed(XLGradientType type, double degree, double left, double right, double top, double bottom);
-
-    private void ParseGradientStop(string elementName)
+    private (FractionOfOne Value, XLColor Color) ParseGradientStop(string elementName)
     {
         var position = _reader.GetDouble("position");
         _reader.Open("color", _ns);
         var color = ParseColor("color");
         _reader.Close(elementName, _ns);
-        OnGradientStopParsed(color, position);
+        return OnGradientStopParsed(color, position);
     }
-
-    partial void OnGradientStopParsed(XLColor color, double position);
 
     private void ParseBorders(string elementName)
     {

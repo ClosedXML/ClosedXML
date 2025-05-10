@@ -35,7 +35,7 @@ internal readonly record struct XLFontFormat
 
     public required XLFontScheme? Scheme { get; init; }
 
-    public XLFontKey ApplyTo(XLFontKey nf)
+    internal XLFontKey ApplyTo(XLFontKey nf)
     {
         // No Outline, Condense or Extend
         if (Name is not null)

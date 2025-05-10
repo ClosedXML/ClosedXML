@@ -35,7 +35,7 @@ internal record XLBorderFormat
 
     public required bool Outline { get; init; }
 
-    public XLBorderKey ApplyTo(XLBorderKey borderKey)
+    internal XLBorderKey ApplyTo(XLBorderKey borderKey)
     {
         if (Left is not null)
             borderKey = borderKey with { LeftBorder = Left.Value.Style, LeftBorderColor = Left.Value.Color.Key };

@@ -160,6 +160,13 @@ internal sealed class XmlToEnumMapper : IEnumMapper
             { "pageFieldValues", XLTableStyleType.PageFieldValues },
         });
 
+        // ST_GradientType
+        builder.Add(new Dictionary<string, XLGradientType>
+        {
+            { "linear", XLGradientType.Linear },
+            { "path", XLGradientType.Path }
+        });
+
         return builder.Build();
     }
 

@@ -15,20 +15,32 @@ internal class XLWorkbookStyles
 
     private readonly Dictionary<int, XLFontFormat> _fontFormats;
 
+    private readonly Dictionary<int, XLFillFormat> _fillFormats;
+
     private readonly Dictionary<int, XLBorderFormat> _borderFormats;
 
     internal XLWorkbookStyles()
     {
         _masterFormats = new Dictionary<int, XLCellFormat>();
         _fontFormats = new Dictionary<int, XLFontFormat>();
+        _fillFormats = new Dictionary<int, XLFillFormat>();
         _borderFormats = new Dictionary<int, XLBorderFormat>();
     }
+
+    internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
 
     internal XLStyleKey ApplyFontFormat(int fontId, ref XLStyleKey styleKey)
     {
         var fontFormat = _fontFormats[fontId];
         var fontKey = fontFormat.ApplyTo(styleKey.Font);
         return styleKey with { Font = fontKey };
+    }
+
+    internal XLStyleKey ApplyPatternFormat(int fillId, ref XLStyleKey styleKey)
+    {
+        var fillFormat = _fillFormats[fillId];
+        var fillKey = fillFormat.ApplyTo(styleKey.Fill);
+        return styleKey with { Fill = fillKey };
     }
 
     internal XLStyleKey ApplyBorderFormat(int borderId, ref XLStyleKey styleKey)
@@ -43,19 +55,26 @@ internal class XLWorkbookStyles
         _fontFormats.Add(_fontFormats.Count, fontFormat);
     }
 
+    internal void AddFillFormat(XLFillFormat fillFormat)
+    {
+        _fillFormats.Add(_fillFormats.Count, fillFormat);
+    }
+
     internal void AddBorderFormat(XLBorderFormat borderFormat)
     {
         _borderFormats.Add(_borderFormats.Count, borderFormat);
     }
 
-    internal void AddFormat(uint? fontId, uint? borderId)
+    internal void AddFormat(uint? fontId, uint? fillId, uint? borderId)
     {
         var xfId = _masterFormats.Count;
         XLFontFormat? font = fontId is not null ? _fontFormats[checked((int)fontId)] : null;
-        XLBorderFormat? border = borderId is not null ? _borderFormats[checked((int)borderId)] : null;
+        var fill = fillId is not null ? _fillFormats[checked((int)fillId)] : null;
+        var border = borderId is not null ? _borderFormats[checked((int)borderId)] : null;
         _masterFormats.Add(xfId, new XLCellFormat
         {
             Font = font,
+            Fill = fill,
             Border = border,
         });
     }

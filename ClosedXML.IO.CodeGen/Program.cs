@@ -116,8 +116,10 @@ public class Program
             .AddSimpleTypeEnum("ST_VerticalAlignment", "XLAlignmentVerticalValues", "bottom", "XLAlignmentVerticalValues.Bottom")
             .AddSimpleTypeEnum("ST_TableStyleType", "XLTableStyleType")
             .AddComplexTypeMapping("CT_Color", "XLColor")
-            //.AddComplexTypeMapping("CT_GradientStop", "(double Value, XLColor Color)")
+            .AddComplexTypeMapping("CT_GradientStop", "(FractionOfOne Value, XLColor Color)")
             .AddComplexTypeMapping("CT_BorderPr", "XLBorderLine")
+            .AddComplexTypeMapping("CT_PatternFill", "XLFillFormat")
+            .AddComplexTypeMapping("CT_GradientFill", "XLFillFormat")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")

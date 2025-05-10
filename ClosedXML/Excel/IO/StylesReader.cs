@@ -1,5 +1,8 @@
 using ClosedXML.Excel.Formatting;
 using ClosedXML.IO;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel.IO;
 
@@ -107,6 +110,53 @@ internal partial class StylesReader
         _styles.AddFontFormat(format);
     }
 
+    partial void OnFillParsed(XLFillFormat? patternFill, XLFillFormat? gradientFill)
+    {
+        _styles.AddFillFormat(patternFill ?? gradientFill ?? XLFillFormat.Empty);
+    }
+
+    private XLFillFormat OnPatternFillParsed(XLColor? fgColor, XLColor? bgColor, XLFillPatternValues? patternType)
+    {
+        var patternFill = new XLPatternFill
+        {
+            PatternColor = fgColor ?? XLColor.NoColor,
+            BackgroundColor = bgColor ?? XLColor.NoColor,
+            PatternType = patternType ?? XLFillPatternValues.None,
+        };
+        return new XLFillFormat(patternFill);
+    }
+
+    private XLFillFormat OnGradientFillParsed(List<(FractionOfOne Value, XLColor Color)> stop, XLGradientType type, double degree, double left, double right, double top, double bottom)
+    {
+        var stops = stop.ToDictionary(x => x.Value, x => x.Color);
+        switch (type)
+        {
+            case XLGradientType.Linear:
+                return new XLFillFormat(new XLLinearGradientFill
+                {
+                    Stops = stops,
+                    Degrees = degree,
+                });
+            case XLGradientType.Path:
+                return new XLFillFormat(new XLPathGradientFill
+                {
+                    Stops = stops,
+                    InnerLeft = left,
+                    InnerRight = right,
+                    InnerTop = top,
+                    InnerBottom = bottom
+                });
+            default:
+                throw new UnreachableException();
+        }
+    }
+
+    private (FractionOfOne Position, XLColor Color) OnGradientStopParsed(XLColor color, double position)
+    {
+        // Spec requires stop positions to be 0..1, but doesn't have a type for that. Excel repairs workbook when it receives values outside 0..1.
+        return (position, color);
+    }
+
     partial void OnBorderParsed(XLBorderLine? left, XLBorderLine? right, XLBorderLine? top, XLBorderLine? bottom, XLBorderLine? diagonal, XLBorderLine? vertical, XLBorderLine? horizontal, bool? diagonalUp, bool? diagonalDown, bool outline)
     {
         var borderFormat = new XLBorderFormat
@@ -150,7 +200,7 @@ internal partial class StylesReader
         if (_insideCellXfs)
         {
             // We are in cellXfs
-            _styles.AddFormat(fontId, borderId);
+            _styles.AddFormat(fontId, fillId, borderId);
         }
     }
 

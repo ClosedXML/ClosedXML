@@ -21,5 +21,7 @@ internal readonly record struct XLCellFormat
 
     public XLBorderFormat? Border { get; init; }
 
+    public XLFillFormat? Fill { get; init; }
+
     // TODO: Add remaining properties. For now only font
 }

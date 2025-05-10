@@ -1193,17 +1193,6 @@ namespace ClosedXML.Excel
                 xlStyle = xlStyle with { Protection = xlProtection };
             }
 
-            if (UInt32HasValue(cellFormat.FillId))
-            {
-                var fill = (Fill)fills.ElementAt((Int32)cellFormat.FillId.Value);
-                if (fill.PatternFill != null)
-                {
-                    var xlFill = new XLFill();
-                    OpenXmlHelper.LoadFill(fill, xlFill, differentialFillFormat: false);
-                    xlStyle = xlStyle with { Fill = xlFill.Key };
-                }
-            }
-
             var alignment = cellFormat.Alignment;
             if (alignment != null)
             {
@@ -1214,6 +1203,11 @@ namespace ClosedXML.Excel
             if (cellFormat.FontId?.Value is { } fontId)
             {
                 xlStyle = styles.ApplyFontFormat(checked((int)fontId), ref xlStyle);
+            }
+
+            if (cellFormat.FillId?.Value is { } fillId)
+            {
+                xlStyle = styles.ApplyPatternFormat(checked((int)fillId), ref xlStyle);
             }
 
             if (cellFormat.BorderId?.Value is { } borderId)
