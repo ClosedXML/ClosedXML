@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
@@ -117,6 +118,8 @@ public sealed class XmlTreeReader : IDisposable
     /// </summary>
     private bool _inLookup = true;
 
+    private readonly List<string> _context = new();
+
     public XmlTreeReader(Stream stream, IEnumMapper enumMapper, bool suppressFormatErrors)
     {
         _reader = XmlReader.Create(stream, Settings);
@@ -130,6 +133,13 @@ public sealed class XmlTreeReader : IDisposable
         _enumMapper = enumMapper;
         SuppressFormatErrors = suppressFormatErrors;
     }
+
+    /// <summary>
+    /// Returns names of elements from currently processed element to root. The <c>On*Parsed</c>
+    /// hook is called after processed element is closed. Therefore when the context is inspected
+    /// in the <c>On*Parsed</c> hook, it doesn't contain the name of element that was just processed.
+    /// </summary>
+    public IReadOnlyList<string> Context => _context;
 
     /// <summary>
     /// Get name of current element (lookup/processing). It includes an alias for ns.
@@ -156,6 +166,7 @@ public sealed class XmlTreeReader : IDisposable
         {
             // Element has been opened, so it should be processed.
             SwitchToProcessing();
+            _context.Add(localName);
             return true;
         }
 
@@ -176,6 +187,7 @@ public sealed class XmlTreeReader : IDisposable
         // as "done." Be lazy, e.g. last element of a document doesn't have next element. If
         // parsing logic needs further elements, it will read them when they are needed.
         SwitchToProcessing();
+        _context.RemoveAt(_context.Count - 1);
         return true;
     }
 
