@@ -120,6 +120,38 @@ internal class StylesReaderTests
             });
     }
 
+    [Test]
+    public void Can_read_alignment()
+    {
+        AssertCellXfs(
+            """
+            <alignment horizontal="center" 
+                       vertical="top"
+                       textRotation="45"
+                       wrapText="1"
+                       indent="7"
+                       relativeIndent="4"
+                       justifyLastLine="1"
+                       shrinkToFit="1"
+                       readingOrder="2"
+                       />
+            """,
+            styles =>
+            {
+                var alignment = styles.CellFormats[0].Alignment;
+                Assert.NotNull(alignment);
+                Assert.AreEqual(XLAlignmentHorizontalValues.Center, alignment.Horizontal);
+                Assert.AreEqual(XLAlignmentVerticalValues.Top, alignment.Vertical);
+                Assert.AreEqual(45, alignment.TextRotation.Value);
+                Assert.IsTrue(alignment.WrapText);
+                Assert.AreEqual(7, alignment.Indent);
+                Assert.AreEqual(4, alignment.RelativeIndent);
+                Assert.IsTrue(alignment.JustifyLastLine);
+                Assert.IsTrue(alignment.ShrinkToFit);
+                Assert.AreEqual(XLAlignmentReadingOrderValues.RightToLeft, alignment.ReadingOrder);
+            });
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
@@ -140,6 +172,20 @@ internal class StylesReaderTests
                      <fills>
                        {fillsXml}
                      </fills>
+                   </styleSheet>
+                   """;
+        AssertFormat(assert, xml);
+    }
+
+    private static void AssertCellXfs(string cellXfsXml, Action<XLWorkbookStyles> assert)
+    {
+        var xml = $"""
+                   <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                     <cellXfs>
+                       <xf>
+                         {cellXfsXml}
+                       </xf>
+                     </cellXfs>
                    </styleSheet>
                    """;
         AssertFormat(assert, xml);

@@ -237,7 +237,7 @@ namespace ClosedXML.Utils
                 ReadingOrder = alignment.ReadingOrder?.Value.ToClosedXml() ?? defaultAlignment.ReadingOrder,
                 WrapText = alignment.WrapText?.Value ?? defaultAlignment.WrapText,
                 TextRotation = alignment.TextRotation is not null
-                    ? OpenXmlHelper.GetClosedXmlTextRotation(alignment)
+                    ? NormalizeRotation(alignment.TextRotation?.Value ?? 0)
                     : defaultAlignment.TextRotation,
                 ShrinkToFit = alignment.ShrinkToFit?.Value ?? defaultAlignment.ShrinkToFit,
                 RelativeIndent = alignment.RelativeIndent?.Value ?? defaultAlignment.RelativeIndent,
@@ -432,17 +432,14 @@ namespace ClosedXML.Utils
             }
         }
 
-        internal static int GetClosedXmlTextRotation(Alignment alignment)
+        internal static int NormalizeRotation(uint textRotation)
         {
-            if (alignment.TextRotation is null)
-                return 0;
-
-            var textRotation = (int)alignment.TextRotation.Value;
             return textRotation switch
             {
+                <= 90 => (int)textRotation,
+                <= 180 => 90 - (int)textRotation,
                 255 => 255,
-                > 90 => 90 - textRotation,
-                _ => textRotation
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 

@@ -3,6 +3,7 @@ using ClosedXML.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel.IO;
 
@@ -204,15 +205,35 @@ internal partial class StylesReader
         return new XLBorderLine(color ?? XLColor.NoColor, style);
     }
 
-    partial void OnXfParsed(uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
+    partial void OnXfParsed(XLAlignmentFormat? alignment, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
     {
         // When xf is parsed, all number formats, fonts, fills and borders should already be read.
         // Skip cell style xfs for now.
         if (_reader.Context[^1] == "cellXfs")
         {
             // We are in cellXfs
-            _styles.AddFormat(fontId, fillId, borderId);
+            _styles.AddFormat(fontId, fillId, borderId, alignment);
         }
+    }
+
+    private XLAlignmentFormat OnCellAlignmentParsed(XLAlignmentHorizontalValues? horizontal, XLAlignmentVerticalValues vertical, uint? textRotation, bool? wrapText, uint? indent, int? relativeIndent, bool? justifyLastLine, bool? shrinkToFit, uint? readingOrder)
+    {
+        if (readingOrder is not null && readingOrder is not (0 or 1 or 2))
+            throw PartStructureException.InvalidAttributeFormat();
+
+        var normalizedTextRotation = OpenXmlHelper.NormalizeRotation(textRotation ?? 0);
+        return new XLAlignmentFormat
+        {
+            Horizontal = horizontal ?? XLAlignmentHorizontalValues.General,
+            Vertical = vertical,
+            TextRotation = new TextRotation(normalizedTextRotation),
+            WrapText = wrapText ?? false,
+            Indent = indent is not null ? checked((int)indent.Value) : 0,
+            RelativeIndent = relativeIndent ?? 0,
+            JustifyLastLine = justifyLastLine ?? false,
+            ShrinkToFit = shrinkToFit ?? false,
+            ReadingOrder = readingOrder is not null ? (XLAlignmentReadingOrderValues)readingOrder.Value : XLAlignmentReadingOrderValues.ContextDependent
+        };
     }
 
     private XLColor ParseColor(string elementName)

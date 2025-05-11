@@ -121,6 +121,7 @@ public class Program
             .AddComplexTypeMapping("CT_PatternFill", "XLFillFormat")
             .AddComplexTypeMapping("CT_GradientFill", "XLFillFormat")
             .AddComplexTypeMapping("CT_NumFmt", "(int NumFmtId, string FormatCode)")
+            .AddComplexTypeMapping("CT_CellAlignment", "XLAlignmentFormat")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")

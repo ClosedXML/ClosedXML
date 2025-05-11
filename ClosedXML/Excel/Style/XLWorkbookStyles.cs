@@ -11,7 +11,7 @@ internal class XLWorkbookStyles
     /// <summary>
     /// The index is XfId, the value is formatting record.
     /// </summary>
-    private readonly Dictionary<int, XLCellFormat> _masterFormats;
+    private readonly Dictionary<int, XLCellFormat> _cellFormats;
 
     private readonly Dictionary<int, string> _numberFormats;
 
@@ -23,7 +23,7 @@ internal class XLWorkbookStyles
 
     internal XLWorkbookStyles()
     {
-        _masterFormats = new Dictionary<int, XLCellFormat>();
+        _cellFormats = new Dictionary<int, XLCellFormat>();
         _numberFormats = new Dictionary<int, string>();
         _fontFormats = new Dictionary<int, XLFontFormat>();
         _fillFormats = new Dictionary<int, XLFillFormat>();
@@ -33,6 +33,8 @@ internal class XLWorkbookStyles
     internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
+
+    internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
 
     internal XLStyleKey ApplyNumberFormat(int numberFormatId, ref XLStyleKey styleKey)
     {
@@ -99,17 +101,18 @@ internal class XLWorkbookStyles
         _borderFormats.Add(_borderFormats.Count, borderFormat);
     }
 
-    internal void AddFormat(uint? fontId, uint? fillId, uint? borderId)
+    internal void AddFormat(uint? fontId, uint? fillId, uint? borderId, XLAlignmentFormat? alignment)
     {
-        var xfId = _masterFormats.Count;
+        var xfId = _cellFormats.Count;
         XLFontFormat? font = fontId is not null ? _fontFormats[checked((int)fontId)] : null;
         var fill = fillId is not null ? _fillFormats[checked((int)fillId)] : null;
         var border = borderId is not null ? _borderFormats[checked((int)borderId)] : null;
-        _masterFormats.Add(xfId, new XLCellFormat
+        _cellFormats.Add(xfId, new XLCellFormat
         {
             Font = font,
             Fill = fill,
             Border = border,
+            Alignment = alignment
         });
     }
 }

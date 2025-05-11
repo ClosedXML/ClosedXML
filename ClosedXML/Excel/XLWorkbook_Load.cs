@@ -1188,11 +1188,11 @@ namespace ClosedXML.Excel
                 xlStyle = xlStyle with { Protection = xlProtection };
             }
 
-            var alignment = cellFormat.Alignment;
-            if (alignment != null)
+            var xlCellFormat = styles.CellFormats[styleIndex];
+            if (xlCellFormat.Alignment is not null)
             {
-                var xlAlignment = OpenXmlHelper.AlignmentToClosedXml(alignment, xlStyle.Alignment);
-                xlStyle = xlStyle with { Alignment = xlAlignment };
+                var alignmentKey = xlCellFormat.Alignment.ApplyTo(xlStyle.Alignment);
+                xlStyle = xlStyle with { Alignment = alignmentKey };
             }
 
             if (cellFormat.NumberFormatId?.Value is { } numberFormatId)

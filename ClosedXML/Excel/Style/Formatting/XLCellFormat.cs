@@ -17,11 +17,13 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal readonly record struct XLCellFormat
 {
-    public XLFontFormat? Font { get; init; }
+    public required XLFontFormat? Font { get; init; }
 
-    public XLBorderFormat? Border { get; init; }
+    public required XLBorderFormat? Border { get; init; }
 
-    public XLFillFormat? Fill { get; init; }
+    public required XLFillFormat? Fill { get; init; }
+
+    public required XLAlignmentFormat? Alignment { get; init; }
 
     // TODO: Add remaining properties. For now only font
 }
