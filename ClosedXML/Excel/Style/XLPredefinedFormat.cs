@@ -172,51 +172,37 @@ namespace ClosedXML.Excel
             Text = 49
         }
 
-        private static IDictionary<int, string>? _formatCodes;
-
-        internal static IDictionary<int, string> FormatCodes
+        internal static IReadOnlyDictionary<int, string> FormatCodes { get; } = new Dictionary<int, string>
         {
-            get
-            {
-                if (_formatCodes == null)
-                {
-                    var fCodes = new Dictionary<int, string>
-                    {
-                        {0, string.Empty},
-                        {1, "0"},
-                        {2, "0.00"},
-                        {3, "#,##0"},
-                        {4, "#,##0.00"},
-                        {7, "$#,##0.00_);($#,##0.00)"},
-                        {9, "0%"},
-                        {10, "0.00%"},
-                        {11, "0.00E+00"},
-                        {12, "# ?/?"},
-                        {13, "# ??/??"},
-                        {14, "M/d/yyyy"},
-                        {15, "d-MMM-yy"},
-                        {16, "d-MMM"},
-                        {17, "MMM-yy"},
-                        {18, "h:mm tt"},
-                        {19, "h:mm:ss tt"},
-                        {20, "H:mm"},
-                        {21, "H:mm:ss"},
-                        {22, "M/d/yyyy H:mm"},
-                        {37, "#,##0 ;(#,##0)"},
-                        {38, "#,##0 ;[Red](#,##0)"},
-                        {39, "#,##0.00;(#,##0.00)"},
-                        {40, "#,##0.00;[Red](#,##0.00)"},
-                        {45, "mm:ss"},
-                        {46, "[h]:mm:ss"},
-                        {47, "mm:ss.0"},
-                        {48, "##0.0E+0"},
-                        {49, "@"}
-                    };
-                    _formatCodes = fCodes;
-                }
-
-                return _formatCodes;
-            }
-        }
+            { 0, string.Empty },
+            { 1, "0" },
+            { 2, "0.00" },
+            { 3, "#,##0" },
+            { 4, "#,##0.00" },
+            { 7, "$#,##0.00_);($#,##0.00)" },
+            { 9, "0%" },
+            { 10, "0.00%" },
+            { 11, "0.00E+00" },
+            { 12, "# ?/?" },
+            { 13, "# ??/??" },
+            { 14, "M/d/yyyy" },
+            { 15, "d-MMM-yy" },
+            { 16, "d-MMM" },
+            { 17, "MMM-yy" },
+            { 18, "h:mm tt" },
+            { 19, "h:mm:ss tt" },
+            { 20, "H:mm" },
+            { 21, "H:mm:ss" },
+            { 22, "M/d/yyyy H:mm" },
+            { 37, "#,##0 ;(#,##0)" },
+            { 38, "#,##0 ;[Red](#,##0)" },
+            { 39, "#,##0.00;(#,##0.00)" },
+            { 40, "#,##0.00;[Red](#,##0.00)" },
+            { 45, "mm:ss" },
+            { 46, "[h]:mm:ss" },
+            { 47, "mm:ss.0" },
+            { 48, "##0.0E+0" },
+            { 49, "@" }
+        };
     }
 }
