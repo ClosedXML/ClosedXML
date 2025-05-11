@@ -144,7 +144,7 @@ public class Program
             .AddParseMethod("CT_Xf")
             .AddParseMethod("CT_CellAlignment")
             .AddParseMethod("CT_CellProtection")
-            //.AddParseMethod("CT_CellXfs")
+            .AddParseMethod("CT_CellXfs")
             .AddParseMethod("CT_CellStyles")
             .AddParseMethod("CT_CellStyle")
             .AddParseMethod("CT_Dxfs")

@@ -12,12 +12,6 @@ internal partial class StylesReader
     private readonly XLWorkbookStyles _styles;
     private readonly string _ns = OpenXmlConst.Main2006SsNs;
 
-    /// <summary>
-    /// A marker for <c>xf</c>> parsing. The <c>cellStyleXfs</c> and <c>cellXfs</c> both use same
-    /// element and even same name. This flag is used on the hook to differentiate them.
-    /// </summary>
-    private bool _insideCellXfs = false;
-
     public StylesReader(XmlTreeReader reader, XLWorkbookStyles styles)
     {
         _reader = reader;
@@ -210,24 +204,11 @@ internal partial class StylesReader
         return new XLBorderLine(color ?? XLColor.NoColor, style);
     }
 
-    private void ParseCellXfs(string elementName)
-    {
-        _insideCellXfs = true;
-        _reader.Open("xf", _ns);
-        do
-        {
-            ParseXf("xf");
-        }
-        while (_reader.TryOpen("xf", _ns));
-        _reader.Close(elementName, _ns);
-        _insideCellXfs = false;
-    }
-
     partial void OnXfParsed(uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
     {
         // When xf is parsed, all number formats, fonts, fills and borders should already be read.
         // Skip cell style xfs for now.
-        if (_insideCellXfs)
+        if (_reader.Context[^1] == "cellXfs")
         {
             // We are in cellXfs
             _styles.AddFormat(fontId, fillId, borderId);

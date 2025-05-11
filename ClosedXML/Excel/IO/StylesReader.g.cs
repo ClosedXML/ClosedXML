@@ -315,6 +315,21 @@ internal partial class StylesReader
 
     partial void OnCellProtectionParsed(bool? locked, bool? hidden);
 
+    private void ParseCellXfs(string elementName)
+    {
+        var count = _reader.GetOptionalUInt("count");
+        _reader.Open("xf", _ns);
+        do
+        {
+            ParseXf("xf");
+        }
+        while (_reader.TryOpen("xf", _ns));
+        _reader.Close(elementName, _ns);
+        OnCellXfsParsed(count);
+    }
+
+    partial void OnCellXfsParsed(uint? count);
+
     private void ParseCellStyles(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
