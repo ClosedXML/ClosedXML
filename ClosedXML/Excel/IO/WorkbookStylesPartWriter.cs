@@ -81,12 +81,7 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            var alignments = xlStyles.Select(s => s.Alignment).Distinct().ToList();
-            var borders = xlStyles.Select(s => s.Border).Distinct().ToList();
             var fonts = xlStyles.Select(s => s.Font).Distinct().ToList();
-            var fills = xlStyles.Select(s => s.Fill).Distinct().ToList();
-            var protections = xlStyles.Select(s => s.Protection).Distinct().ToList();
-
             for (int i = 0; i < fonts.Count; i++)
             {
                 if (!context.SharedFonts.ContainsKey(fonts[i]))
@@ -95,9 +90,11 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
+            var fills = xlStyles.Select(s => s.Fill).Distinct().ToList();
             var sharedFills = fills.ToDictionary(
                 f => f, f => new FillInfo { FillId = fillCount++, Fill = f });
 
+            var borders = xlStyles.Select(s => s.Border).Distinct().ToList();
             var sharedBorders = borders.ToDictionary(
                 b => b, b => new BorderInfo { BorderId = borderCount++, Border = b });
 
