@@ -2093,7 +2093,10 @@ namespace ClosedXML.Excel
                         if (styleValue.NumberFormat.Format.Length == 0 &&
                             styleValue.NumberFormat.NumberFormatId == 0)
                         {
-                            var dateTimeNumberFormat = styleValue.NumberFormat.WithNumberFormatId(onlyDatePart ? 14 : 22);
+                            var numberFormatId = onlyDatePart
+                                ? XLPredefinedFormat.DateTime.DayMonthYear4WithSlashes
+                                : XLPredefinedFormat.DateTime.MonthDayYear4WithDashesHour24Minutes;
+                            var dateTimeNumberFormat = styleValue.NumberFormat.ForPredefined((int)numberFormatId);
                             return styleValue.WithNumberFormat(dateTimeNumberFormat);
                         }
                     }
@@ -2104,7 +2107,7 @@ namespace ClosedXML.Excel
                         var styleValue = GetStyleValue(point);
                         if (styleValue.NumberFormat.Format.Length == 0 && styleValue.NumberFormat.NumberFormatId == 0)
                         {
-                            var durationNumberFormat = styleValue.NumberFormat.WithNumberFormatId(46);
+                            var durationNumberFormat = styleValue.NumberFormat.ForPredefined((int)XLPredefinedFormat.DateTime.Hour12MinutesSeconds);
                             return styleValue.WithNumberFormat(durationNumberFormat);
                         }
                     }

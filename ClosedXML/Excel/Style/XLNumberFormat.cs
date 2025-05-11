@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel;
 
@@ -67,9 +68,12 @@ internal class XLNumberFormat : IXLNumberFormat
         get => Key.NumberFormatId;
         set
         {
+            if (!XLPredefinedFormat.FormatCodes.TryGetValue(value, out var format))
+                throw new ArgumentOutOfRangeException($"Only predefined format is permitted. Use nested enums/members of {nameof(XLPredefinedFormat)}.");
+
             Modify(_ => new XLNumberFormatKey
             {
-                Format = XLNumberFormatValue.Default.Format,
+                Format = format,
                 NumberFormatId = value,
             });
         }
@@ -80,12 +84,11 @@ internal class XLNumberFormat : IXLNumberFormat
         get => Key.Format;
         set
         {
+            var numberFormatId = XLPredefinedFormat.NumberFormatIds.GetValueOrDefault(value, XLNumberFormatKey.CustomFormatNumberId);
             Modify(_ => new XLNumberFormatKey
             {
                 Format = value,
-                NumberFormatId = string.IsNullOrWhiteSpace(value)
-                    ? XLNumberFormatValue.Default.NumberFormatId
-                    : XLNumberFormatKey.CustomFormatNumberId
+                NumberFormatId = numberFormatId
             });
         }
     }
@@ -122,7 +125,7 @@ internal class XLNumberFormat : IXLNumberFormat
         return NumberFormatId + "-" + Format;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return Equals(obj as IXLNumberFormatBase);
     }

@@ -47,6 +47,17 @@ internal class XLWorkbookStyles
         };
         return styleKey with { NumberFormat = numberFormat };
     }
+
+    internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
+    {
+        var xlNumberFormat = new XLNumberFormatKey
+        {
+            NumberFormatId = numberFormatId,
+            Format = _numberFormats[numberFormatId]
+        };
+        return XLNumberFormatValue.FromKey(ref xlNumberFormat);
+    }
+
     internal XLStyleKey ApplyFontFormat(int fontId, ref XLStyleKey styleKey)
     {
         var fontFormat = _fontFormats[fontId];

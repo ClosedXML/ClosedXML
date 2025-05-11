@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
                 DifferentialFormats = new Dictionary<XLStyleValue, int>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
-                SharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
+                SavedNumberFormats = new Dictionary<string, int>();
                 SharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
@@ -29,7 +29,14 @@ namespace ClosedXML.Excel
             public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
-            public Dictionary<XLNumberFormatValue, NumberFormatInfo> SharedNumberFormats { get; private set; }
+
+            /// <summary>
+            /// A map of number format to a number format id for saved file. It contains all number
+            /// formats from the file, all number formats used in the application (styles, pivot
+            /// tables, dxf) and all predefined formats.
+            /// </summary>
+            public Dictionary<string, int> SavedNumberFormats { get; }
+
             public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -62,14 +69,15 @@ namespace ClosedXML.Excel
                 return sharedStringId;
             }
 
+            /// <summary>
+            /// Get id of number format that is going to be actually saved to database.
+            /// </summary>
             internal int? GetNumberFormat(XLNumberFormatValue? numberFormat)
             {
                 if (numberFormat is null)
                     return null;
 
-                return SharedNumberFormats.TryGetValue(numberFormat, out var customFormat)
-                    ? customFormat.NumberFormatId
-                    : numberFormat.NumberFormatId;
+                return SavedNumberFormats[numberFormat.Format];
             }
             #nullable disable
         }
@@ -189,16 +197,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Nested type: BorderInfo
-
-        #region Nested type: NumberFormatInfo
-
-        internal struct NumberFormatInfo
-        {
-            public XLNumberFormatValue NumberFormat;
-            public Int32 NumberFormatId;
-        }
-
-        #endregion Nested type: NumberFormatInfo
 
         #region Nested type: StyleInfo
 

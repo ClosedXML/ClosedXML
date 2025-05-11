@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel;
 
@@ -20,12 +20,10 @@ internal readonly record struct XLNumberFormatKey
 
     public static XLNumberFormatKey ForFormat(string customFormat)
     {
-        if (string.IsNullOrEmpty(customFormat))
-            throw new ArgumentException();
-
+        var numberFormatId = XLPredefinedFormat.NumberFormatIds.GetValueOrDefault(customFormat, CustomFormatNumberId);
         return new XLNumberFormatKey
         {
-            NumberFormatId = CustomFormatNumberId,
+            NumberFormatId = numberFormatId,
             Format = customFormat,
         };
     }

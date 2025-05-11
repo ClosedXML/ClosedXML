@@ -16,16 +16,13 @@ namespace ClosedXML.Excel
             get => _pivotValue.NumberFormatValue?.NumberFormatId ?? -1;
             set
             {
-                if (value == -1)
-                {
-                    _pivotValue.NumberFormatValue = null;
-                    return;
-                }
+                if (!XLPredefinedFormat.FormatCodes.TryGetValue(value, out var format))
+                    throw new ArgumentOutOfRangeException($"Only predefined format is permitted. Use nested enums/members of {nameof(XLPredefinedFormat)}.");
 
                 var key = new XLNumberFormatKey
                 {
                     NumberFormatId = value,
-                    Format = string.Empty,
+                    Format = format
                 };
                 _pivotValue.NumberFormatValue = XLNumberFormatValue.FromKey(ref key);
             }
@@ -36,17 +33,7 @@ namespace ClosedXML.Excel
             get => _pivotValue.NumberFormatValue?.Format ?? string.Empty;
             set
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    _pivotValue.NumberFormatValue = null;
-                    return;
-                }
-
-                var key = new XLNumberFormatKey
-                {
-                    NumberFormatId = -1,
-                    Format = value,
-                };
+                var key = XLNumberFormatKey.ForFormat(value);
                 _pivotValue.NumberFormatValue = XLNumberFormatValue.FromKey(ref key);
             }
         }
@@ -60,19 +47,6 @@ namespace ClosedXML.Excel
         public IXLPivotValue SetFormat(String value)
         {
             Format = value;
-            NumberFormatId = value switch
-            {
-                "General" => 0,
-                "0" => 1,
-                "0.00" => 2,
-                "#,##0" => 3,
-                "#,##0.00" => 4,
-                "0%" => 9,
-                "0.00%" => 10,
-                "0.00E+00" => 11,
-                _ => -1,
-            };
-
             return _pivotValue;
         }
     }

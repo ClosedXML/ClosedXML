@@ -186,10 +186,6 @@ namespace ClosedXML.Excel
             }
 
             Stylesheet s = stylesPart?.Stylesheet;
-            NumberingFormats numberingFormats = s?.NumberingFormats;
-            context.LoadNumberFormats(numberingFormats);
-            Fills fills = s?.Fills;
-            Borders borders = s?.Borders;
             Int32 dfCount = 0;
             Dictionary<Int32, DifferentialFormat> differentialFormats;
             if (s != null && s.DifferentialFormats != null)
@@ -202,7 +198,7 @@ namespace ClosedXML.Excel
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
-                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, fills, borders, numberingFormats, Styles);
+                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, Styles);
                 Style = new XLStyle(null, normalStyleKey);
                 ColumnWidth = XLHelper.CalculateColumnWidth(8, Style.Font, this);
             }
@@ -275,7 +271,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, s, fills, borders, numberingFormats, worksheetPart, sharedStrings, differentialFormats, context);
+                worksheetPartReader.LoadWorksheet(ws, s, worksheetPart, sharedStrings, differentialFormats, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 
@@ -1173,8 +1169,7 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
-                                NumberingFormats numberingFormats, XLWorkbookStyles styles)
+        internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, XLWorkbookStyles styles)
         {
             if (s == null || s.CellFormats is null) return; //No Stylesheet, no Styles
 

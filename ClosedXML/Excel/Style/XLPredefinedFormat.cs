@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -204,5 +205,7 @@ namespace ClosedXML.Excel
             { 48, "##0.0E+0" },
             { 49, "@" }
         };
+
+        internal static IReadOnlyDictionary<string, int> NumberFormatIds { get; } = FormatCodes.ToDictionary(x => x.Value, x => x.Key);
     }
 }

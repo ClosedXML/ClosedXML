@@ -13,6 +13,7 @@ namespace ClosedXML.Excel
         /// the <see cref="XLPredefinedFormat"/>.
         /// </summary>
         /// <param name="value">A numeric value describing how should the number be formatted.</param>
+        /// <exception cref="ArgumentOutOfRangeException">The passed value is not a predefined format.</exception>
         IXLPivotValue SetNumberFormatId(Int32 value);
 
         IXLPivotValue SetFormat(String value);

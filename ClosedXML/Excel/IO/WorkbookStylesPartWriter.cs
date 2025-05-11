@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Packaging;
@@ -61,7 +61,6 @@ namespace ClosedXML.Excel.IO
             UInt32 fontCount = 1;
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
-            var xlPivotTablesCustomFormats = new HashSet<string>();
             var xlStyles = new HashSet<XLStyleValue>();
 
             foreach (var worksheet in workbook.WorksheetsInternal)
@@ -80,19 +79,12 @@ namespace ClosedXML.Excel.IO
                 {
                     xlStyles.Add(c.StyleValue);
                 }
-
-                var xlPivotTableCustomFormats = worksheet.PivotTables
-                    .SelectMany<XLPivotTable, XLPivotDataField>(pt => pt.DataFields)
-                    .Where(x => x.NumberFormatValue is not null && !string.IsNullOrEmpty(x.NumberFormatValue.Format))
-                    .Select(x => x.NumberFormatValue.Format);
-                xlPivotTablesCustomFormats.UnionWith(xlPivotTableCustomFormats);
             }
 
             var alignments = xlStyles.Select(s => s.Alignment).Distinct().ToList();
             var borders = xlStyles.Select(s => s.Border).Distinct().ToList();
             var fonts = xlStyles.Select(s => s.Font).Distinct().ToList();
             var fills = xlStyles.Select(s => s.Fill).Distinct().ToList();
-            var numberFormats = xlStyles.Select(s => s.NumberFormat).Distinct().ToList();
             var protections = xlStyles.Select(s => s.Protection).Distinct().ToList();
 
             for (int i = 0; i < fonts.Count; i++)
@@ -109,22 +101,18 @@ namespace ClosedXML.Excel.IO
             var sharedBorders = borders.ToDictionary(
                 b => b, b => new BorderInfo { BorderId = borderCount++, Border = b });
 
-            var customNumberFormats = numberFormats
-                .Where(nf => nf.NumberFormatId == -1)
-                .ToHashSet();
-
-            foreach (var pivotNumberFormat in xlPivotTablesCustomFormats)
+            var customNumberFormats = GetAllCustomNumberFormats(workbook, xlStyles);
+            var allFileNumberFormats = ResolveNumberFormats(workbookStylesPart, customNumberFormats);
+            foreach (var nf in allFileNumberFormats)
             {
-                var numberFormatKey = XLNumberFormatKey.ForFormat(pivotNumberFormat);
-                var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
-
-                customNumberFormats.Add(numberFormat);
+                context.SavedNumberFormats.Add(nf.Key, nf.Value);
             }
 
-            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, customNumberFormats, defaultFormatId);
-            foreach (var nf in allSharedNumberFormats)
+            // The collection is used to determine what numberFormatId to write
+            // to file in various places. It must also contain predefined formats.
+            foreach (var (numberFormatId, formatCode) in XLPredefinedFormat.FormatCodes)
             {
-                context.SharedNumberFormats.Add(nf.Key, nf.Value);
+                context.SavedNumberFormats.Add(formatCode, numberFormatId);
             }
 
             ResolveFonts(workbookStylesPart, context);
@@ -133,9 +121,7 @@ namespace ClosedXML.Excel.IO
 
             foreach (var xlStyle in xlStyles)
             {
-                var numberFormatId = xlStyle.NumberFormat.NumberFormatId >= 0
-                    ? xlStyle.NumberFormat.NumberFormatId
-                    : allSharedNumberFormats[xlStyle.NumberFormat].NumberFormatId;
+                var numberFormatId = context.SavedNumberFormats[xlStyle.NumberFormat.Format];
 
                 if (!context.SharedStyles.ContainsKey(xlStyle))
                     context.SharedStyles.Add(xlStyle,
@@ -861,10 +847,36 @@ namespace ClosedXML.Excel.IO
             return convertedFont.Equals(xlFont.Key);
         }
 
-        private static Dictionary<XLNumberFormatValue, NumberFormatInfo> ResolveNumberFormats(
+        /// <summary>
+        /// Get all custom format codes used anywhere in the workbook.
+        /// </summary>
+        private static HashSet<string> GetAllCustomNumberFormats(XLWorkbook workbook, HashSet<XLStyleValue> xlStyles)
+        {
+            // From sheet/row/column/cell styles
+            var customNumberFormats = xlStyles
+                .Select(s => s.NumberFormat)
+                .Where(nf => !nf.IsPredefined)
+                .Select(x => x.Format)
+                .ToHashSet();
+
+            // From pivot tables
+            foreach (var worksheet in workbook.WorksheetsInternal)
+            {
+                var pivotNumberFormats = worksheet.PivotTables
+                    .SelectMany<XLPivotTable, XLPivotDataField>(pt => pt.DataFields)
+                    .Where(x => x.NumberFormatValue is not null)
+                    .Where(x => !x.NumberFormatValue.IsPredefined)
+                    .Select(x => x.NumberFormatValue.Format)
+                    .ToList();
+                customNumberFormats.UnionWith(pivotNumberFormats);
+            }
+
+            return customNumberFormats;
+        }
+
+        private static Dictionary<string, int> ResolveNumberFormats(
             WorkbookStylesPart workbookStylesPart,
-            HashSet<XLNumberFormatValue> customNumberFormats,
-            UInt32 defaultFormatId)
+            HashSet<string> customNumberFormats)
         {
             if (workbookStylesPart.Stylesheet.NumberingFormats == null)
             {
@@ -876,7 +888,7 @@ namespace ClosedXML.Excel.IO
                 });
             }
 
-            var allSharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
+            var allSharedNumberFormats = new Dictionary<string, int>();
             var partNumberingFormats = workbookStylesPart.Stylesheet.NumberingFormats;
 
             // number format ids in the part can have holes in the sequence and first id can be greater than last built-in style id.
@@ -886,7 +898,7 @@ namespace ClosedXML.Excel.IO
                 : XLConstants.NumberOfBuiltInStyles; // 0-based
 
             // Merge custom formats used in the workbook that are not already present in the part to the part and assign ids
-            foreach (var customNumberFormat in customNumberFormats.Where(nf => nf.NumberFormatId != defaultFormatId))
+            foreach (var customNumberFormat in customNumberFormats)
             {
                 NumberingFormat partNumberFormat = null;
                 foreach (var nf in workbookStylesPart.Stylesheet.NumberingFormats.Cast<NumberingFormat>())
@@ -902,30 +914,23 @@ namespace ClosedXML.Excel.IO
                     partNumberFormat = new NumberingFormat
                     {
                         NumberFormatId = (UInt32)availableNumberFormatId++,
-                        FormatCode = customNumberFormat.Format
+                        FormatCode = customNumberFormat
                     };
                     workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(partNumberFormat);
                 }
-                allSharedNumberFormats.Add(customNumberFormat,
-                    new NumberFormatInfo
-                    {
-                        NumberFormat = customNumberFormat,
-                        NumberFormatId = (Int32)partNumberFormat.NumberFormatId!.Value
-                    });
+                allSharedNumberFormats.Add(customNumberFormat, (Int32)partNumberFormat.NumberFormatId!.Value);
             }
             workbookStylesPart.Stylesheet.NumberingFormats.Count =
                 (UInt32)workbookStylesPart.Stylesheet.NumberingFormats.Count();
             return allSharedNumberFormats;
         }
 
-        private static bool CustomNumberFormatsAreEqual(NumberingFormat nf, XLNumberFormatValue xlNumberFormat)
+        private static bool CustomNumberFormatsAreEqual(NumberingFormat nf, string xlNumberFormat)
         {
             if (nf.FormatCode != null && !String.IsNullOrWhiteSpace(nf.FormatCode.Value))
-                return string.Equals(xlNumberFormat?.Format, nf.FormatCode.Value);
+                return string.Equals(xlNumberFormat, nf.FormatCode.Value);
 
             return false;
         }
-
-
     }
 }

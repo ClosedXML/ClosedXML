@@ -36,6 +36,9 @@ namespace ClosedXML.Excel
 
         public string Format { get { return Key.Format; } }
 
+        internal bool IsPredefined => XLPredefinedFormat.FormatCodes.ContainsKey(NumberFormatId) ||
+                                      XLPredefinedFormat.NumberFormatIds.ContainsKey(Format);
+
         private XLNumberFormatValue(XLNumberFormatKey key)
         {
             Key = key;
@@ -53,10 +56,14 @@ namespace ClosedXML.Excel
             return 1507230172 + Key.GetHashCode();
         }
 
-        internal XLNumberFormatValue WithNumberFormatId(int numberFormatId)
+        internal XLNumberFormatValue ForPredefined(int numberFormatId)
         {
-            var keyCopy = Key with { NumberFormatId = numberFormatId };
-            return FromKey(ref keyCopy);
+            var predefinedNumberFormatKey = new XLNumberFormatKey
+            {
+                NumberFormatId = numberFormatId,
+                Format = XLPredefinedFormat.FormatCodes[numberFormatId]
+            };
+            return FromKey(ref predefinedNumberFormatKey);
         }
     }
 }
