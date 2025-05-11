@@ -42,11 +42,6 @@ namespace ClosedXML.Excel
             public uint PivotSourceCacheId { get; set; }
 
             /// <summary>
-            /// A dictionary of extra info for pivot during saving. The key is <see cref="XLPivotCache.Guid"/>.
-            /// </summary>
-            public IDictionary<Guid, PivotSourceInfo> PivotSources { get; }
-
-            /// <summary>
             /// A map of shared string ids. The index is the actual index from sharedStringId and
             /// value is an mapped stringId to write to a file. The mapped stringId has no gaps
             /// between ids.
