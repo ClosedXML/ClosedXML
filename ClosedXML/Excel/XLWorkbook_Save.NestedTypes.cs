@@ -158,12 +158,6 @@ namespace ClosedXML.Excel
                     id++;
                 }
             }
-
-            public void Reset(RelType relType)
-            {
-                if (_relIds.ContainsKey(relType))
-                    _relIds.Remove(relType);
-            }
         }
 
         #endregion Nested type: RelIdGenerator
@@ -212,21 +206,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion Nested type: StyleInfo
-
-        #region Nested type: Pivot tables
-
-        internal struct PivotTableFieldInfo
-        {
-            public Boolean MixedDataType;
-            public IReadOnlyList<XLCellValue> DistinctValues;
-            public Boolean IsTotallyBlankField;
-        }
-
-        internal struct PivotSourceInfo
-        {
-            public IDictionary<String, PivotTableFieldInfo> Fields;
-        }
-
-        #endregion Nested type: Pivot tables
     }
 }

@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Packaging;
@@ -199,16 +199,6 @@ namespace ClosedXML.Excel.IO
                     cacheFields.AppendChild(cacheField);
                 }
                 var sharedItems = cacheField.SharedItems;
-
-                var ptfi = new PivotTableFieldInfo
-                {
-                    IsTotallyBlankField = xlSharedItems.Length == 0,
-                    MixedDataType = xlSharedItems
-                        .Select(v => v.Type)
-                        .Distinct()
-                        .Count() > 1,
-                    DistinctValues = xlSharedItems,
-                };
 
                 var stats = fieldValues.Stats;
 
