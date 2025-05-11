@@ -13,6 +13,20 @@ namespace ClosedXML.Tests.Excel.IO;
 internal class StylesReaderTests
 {
     [Test]
+    public void Can_parse_number_format()
+    {
+        AssertNumberFormats(
+            """
+            <numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/>
+            """,
+            styles =>
+            {
+                var formatCode = styles.NumberFormats[164];
+                Assert.AreEqual("\"$\"#,##0.00", formatCode);
+            });
+    }
+
+    [Test]
     public void Can_read_empty_fill()
     {
         AssertFills("<fill/>", styles =>
@@ -106,6 +120,19 @@ internal class StylesReaderTests
             });
     }
 
+    private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
+    {
+        var xml = $"""
+                   <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                     <numFmts>
+                       {numberFormatsXml}
+                     </numFmts>
+                   </styleSheet>
+                   """;
+        AssertFormat(assert, xml);
+    }
+
+
     private static void AssertFills(string fillsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
@@ -115,6 +142,11 @@ internal class StylesReaderTests
                      </fills>
                    </styleSheet>
                    """;
+        AssertFormat(assert, xml);
+    }
+
+    private static void AssertFormat(Action<XLWorkbookStyles> assert, string xml)
+    {
         using var stream = new MemoryStream(XLHelper.NoBomUTF8.GetBytes(xml));
         using var xmlTreeReader = new XmlTreeReader(stream, XmlToEnumMapper.Instance, false);
         var styles = new XLWorkbookStyles();
