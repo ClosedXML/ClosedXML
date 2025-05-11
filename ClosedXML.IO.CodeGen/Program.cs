@@ -120,6 +120,7 @@ public class Program
             .AddComplexTypeMapping("CT_BorderPr", "XLBorderLine")
             .AddComplexTypeMapping("CT_PatternFill", "XLFillFormat")
             .AddComplexTypeMapping("CT_GradientFill", "XLFillFormat")
+            .AddComplexTypeMapping("CT_NumFmt", "(int NumFmtId, string FormatCode)")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")

@@ -63,25 +63,24 @@ internal partial class StylesReader
     private void ParseNumFmts(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
+        var numFmt = new List<(int NumFmtId, string FormatCode)>();
         while (_reader.TryOpen("numFmt", _ns))
         {
-            ParseNumFmt("numFmt");
+            numFmt.Add(ParseNumFmt("numFmt"));
         }
         _reader.Close(elementName, _ns);
-        OnNumFmtsParsed(count);
+        OnNumFmtsParsed(numFmt, count);
     }
 
-    partial void OnNumFmtsParsed(uint? count);
+    partial void OnNumFmtsParsed(List<(int NumFmtId, string FormatCode)> numFmt, uint? count);
 
-    private void ParseNumFmt(string elementName)
+    private (int NumFmtId, string FormatCode) ParseNumFmt(string elementName)
     {
         var numFmtId = _reader.GetUInt("numFmtId");
         var formatCode = _reader.GetXString("formatCode");
         _reader.Close(elementName, _ns);
-        OnNumFmtParsed(numFmtId, formatCode);
+        return OnNumFmtParsed(numFmtId, formatCode);
     }
-
-    partial void OnNumFmtParsed(uint numFmtId, string formatCode);
 
     private void ParseFonts(string elementName)
     {
@@ -368,9 +367,10 @@ internal partial class StylesReader
         {
             ParseFont("font");
         }
+        (int NumFmtId, string FormatCode)? numFmt = default;
         if (_reader.TryOpen("numFmt", _ns))
         {
-            ParseNumFmt("numFmt");
+            numFmt = ParseNumFmt("numFmt");
         }
         if (_reader.TryOpen("fill", _ns))
         {
@@ -393,10 +393,10 @@ internal partial class StylesReader
             ParseExtensionList("extLst");
         }
         _reader.Close(elementName, _ns);
-        OnDxfParsed();
+        OnDxfParsed(numFmt);
     }
 
-    partial void OnDxfParsed();
+    partial void OnDxfParsed((int NumFmtId, string FormatCode)? numFmt);
 
     private void ParseTableStyles(string elementName)
     {

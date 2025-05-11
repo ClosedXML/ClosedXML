@@ -1200,6 +1200,11 @@ namespace ClosedXML.Excel
                 xlStyle = xlStyle with { Alignment = xlAlignment };
             }
 
+            if (cellFormat.NumberFormatId?.Value is { } numberFormatId)
+            {
+                xlStyle = styles.ApplyNumberFormat(checked((int)numberFormatId), ref xlStyle);
+            }
+
             if (cellFormat.FontId?.Value is { } fontId)
             {
                 xlStyle = styles.ApplyFontFormat(checked((int)fontId), ref xlStyle);
@@ -1214,38 +1219,6 @@ namespace ClosedXML.Excel
             {
                 xlStyle = styles.ApplyBorderFormat(checked((int)borderId), ref xlStyle);
             }
-
-            if (UInt32HasValue(cellFormat.NumberFormatId))
-            {
-                var numberFormatId = cellFormat.NumberFormatId;
-
-                string formatCode = String.Empty;
-                if (numberingFormats != null)
-                {
-                    var numberingFormat =
-                        numberingFormats.FirstOrDefault(
-                            nf =>
-                            ((NumberingFormat)nf).NumberFormatId != null &&
-                            ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId) as NumberingFormat;
-
-                    if (numberingFormat != null && numberingFormat.FormatCode != null)
-                        formatCode = numberingFormat.FormatCode.Value;
-                }
-
-                var xlNumberFormat = xlStyle.NumberFormat;
-                if (formatCode.Length > 0)
-                {
-                    xlNumberFormat = XLNumberFormatKey.ForFormat(formatCode);
-                }
-                else
-                    xlNumberFormat = xlNumberFormat with { NumberFormatId = (Int32)numberFormatId.Value };
-                xlStyle = xlStyle with { NumberFormat = xlNumberFormat };
-            }
-        }
-
-        private static Boolean UInt32HasValue(UInt32Value value)
-        {
-            return value != null && value.HasValue;
         }
 
         private static XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)

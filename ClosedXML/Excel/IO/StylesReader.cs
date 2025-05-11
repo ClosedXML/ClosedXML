@@ -28,6 +28,36 @@ internal partial class StylesReader
     {
         _reader.Open("styleSheet", _ns);
         ParseStylesheet("styleSheet");
+
+        // Add predefined formats, so we can treat predefined number formats and
+        // user defined number formats the same way.
+        foreach (var (numFmtId, formatCode) in XLPredefinedFormat.FormatCodes)
+        {
+            if (!_styles.NumberFormats.ContainsKey(numFmtId))
+            {
+                _styles.AddNumberFormat(numFmtId, formatCode);
+            }
+        }
+    }
+
+    private (int NumFmtId, string FormatCode) OnNumFmtParsed(uint numFmtId, string formatCode)
+    {
+        return (checked((int)numFmtId), formatCode);
+    }
+
+    partial void OnNumFmtsParsed(List<(int NumFmtId, string FormatCode)> numFmt, uint? count)
+    {
+        foreach (var (numFmtId, formatCode) in numFmt)
+        {
+            // Excel skips empty format codes.
+            if (string.IsNullOrEmpty(formatCode))
+                continue;
+
+            // Even if numFmtId is predefined, store the supplied value. Excel accepts predefined
+            // numFmtId and uses supplied format instead of predefined format. It fixes situation
+            // during save, where such items are saved to user supplied numFmtId range.
+            _styles.AddNumberFormat(numFmtId, formatCode);
+        }
     }
 
     private void ParseFont(string elementName)
