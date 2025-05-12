@@ -1178,21 +1178,17 @@ namespace ClosedXML.Excel
             var xlIncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
             xlStyle = xlStyle with { IncludeQuotePrefix = xlIncludeQuotePrefix };
 
-            if (cellFormat.ApplyProtection != null)
-            {
-                var protection = cellFormat.Protection;
-                var xlProtection = XLProtectionValue.Default.Key;
-                if (protection is not null)
-                    xlProtection = OpenXmlHelper.ProtectionToClosedXml(protection, xlProtection);
-
-                xlStyle = xlStyle with { Protection = xlProtection };
-            }
-
             var xlCellFormat = styles.CellFormats[styleIndex];
             if (xlCellFormat.Alignment is not null)
             {
                 var alignmentKey = xlCellFormat.Alignment.ApplyTo(xlStyle.Alignment);
                 xlStyle = xlStyle with { Alignment = alignmentKey };
+            }
+
+            if (xlCellFormat.Protection is not null)
+            {
+                var protectionKey = xlCellFormat.Protection.ApplyTo(xlStyle.Protection);
+                xlStyle = xlStyle with { Protection = protectionKey };
             }
 
             if (cellFormat.NumberFormatId?.Value is { } numberFormatId)

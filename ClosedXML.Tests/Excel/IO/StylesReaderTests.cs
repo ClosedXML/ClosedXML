@@ -125,7 +125,7 @@ internal class StylesReaderTests
     {
         AssertCellXfs(
             """
-            <alignment horizontal="center" 
+            <alignment horizontal="center"
                        vertical="top"
                        textRotation="45"
                        wrapText="1"
@@ -149,6 +149,22 @@ internal class StylesReaderTests
                 Assert.IsTrue(alignment.JustifyLastLine);
                 Assert.IsTrue(alignment.ShrinkToFit);
                 Assert.AreEqual(XLAlignmentReadingOrderValues.RightToLeft, alignment.ReadingOrder);
+            });
+    }
+
+    [Test]
+    public void Can_read_protection()
+    {
+        AssertCellXfs(
+            """
+            <protection locked="false" hidden="1"/>
+            """,
+            styles =>
+            {
+                var protection = styles.CellFormats[0].Protection;
+                Assert.NotNull(protection);
+                Assert.IsFalse(protection.Locked);
+                Assert.IsTrue(protection.Hidden);
             });
     }
 

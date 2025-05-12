@@ -205,14 +205,17 @@ internal partial class StylesReader
         return new XLBorderLine(color ?? XLColor.NoColor, style);
     }
 
-    partial void OnXfParsed(XLAlignmentFormat? alignment, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
+    partial void OnXfParsed(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
     {
         // When xf is parsed, all number formats, fonts, fills and borders should already be read.
         // Skip cell style xfs for now.
         if (_reader.Context[^1] == "cellXfs")
         {
             // We are in cellXfs
-            _styles.AddFormat(fontId, fillId, borderId, alignment);
+            var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
+            var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
+
+            _styles.AddFormat(alignment, protection, fontId, fill, border);
         }
     }
 
@@ -244,5 +247,15 @@ internal partial class StylesReader
     private void ParseExtensionList(string elementName)
     {
         _reader.Skip(elementName);
+    }
+
+    private XLProtectionFormat OnCellProtectionParsed(bool? locked, bool? hidden)
+    {
+        // Defaults are from OI-29500
+        return new XLProtectionFormat
+        {
+            Locked = locked ?? true,
+            Hidden = hidden ?? false
+        };
     }
 }

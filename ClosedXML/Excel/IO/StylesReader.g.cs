@@ -275,19 +275,20 @@ internal partial class StylesReader
         {
             alignment = ParseCellAlignment("alignment");
         }
+        XLProtectionFormat? protection = default;
         if (_reader.TryOpen("protection", _ns))
         {
-            ParseCellProtection("protection");
+            protection = ParseCellProtection("protection");
         }
         if (_reader.TryOpen("extLst", _ns))
         {
             ParseExtensionList("extLst");
         }
         _reader.Close(elementName, _ns);
-        OnXfParsed(alignment, numFmtId, fontId, fillId, borderId, xfId, quotePrefix, pivotButton, applyNumberFormat, applyFont, applyFill, applyBorder, applyAlignment, applyProtection);
+        OnXfParsed(alignment, protection, numFmtId, fontId, fillId, borderId, xfId, quotePrefix, pivotButton, applyNumberFormat, applyFont, applyFill, applyBorder, applyAlignment, applyProtection);
     }
 
-    partial void OnXfParsed(XLAlignmentFormat? alignment, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection);
+    partial void OnXfParsed(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection);
 
     private XLAlignmentFormat ParseCellAlignment(string elementName)
     {
@@ -304,15 +305,13 @@ internal partial class StylesReader
         return OnCellAlignmentParsed(horizontal, vertical, textRotation, wrapText, indent, relativeIndent, justifyLastLine, shrinkToFit, readingOrder);
     }
 
-    private void ParseCellProtection(string elementName)
+    private XLProtectionFormat ParseCellProtection(string elementName)
     {
         var locked = _reader.GetOptionalBool("locked");
         var hidden = _reader.GetOptionalBool("hidden");
         _reader.Close(elementName, _ns);
-        OnCellProtectionParsed(locked, hidden);
+        return OnCellProtectionParsed(locked, hidden);
     }
-
-    partial void OnCellProtectionParsed(bool? locked, bool? hidden);
 
     private void ParseCellXfs(string elementName)
     {
@@ -399,19 +398,20 @@ internal partial class StylesReader
         {
             ParseBorder("border");
         }
+        XLProtectionFormat? protection = default;
         if (_reader.TryOpen("protection", _ns))
         {
-            ParseCellProtection("protection");
+            protection = ParseCellProtection("protection");
         }
         if (_reader.TryOpen("extLst", _ns))
         {
             ParseExtensionList("extLst");
         }
         _reader.Close(elementName, _ns);
-        OnDxfParsed(numFmt, alignment);
+        OnDxfParsed(numFmt, alignment, protection);
     }
 
-    partial void OnDxfParsed((int NumFmtId, string FormatCode)? numFmt, XLAlignmentFormat? alignment);
+    partial void OnDxfParsed((int NumFmtId, string FormatCode)? numFmt, XLAlignmentFormat? alignment, XLProtectionFormat? protection);
 
     private void ParseTableStyles(string elementName)
     {

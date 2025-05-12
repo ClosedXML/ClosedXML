@@ -30,9 +30,13 @@ internal class XLWorkbookStyles
         _borderFormats = new Dictionary<int, XLBorderFormat>();
     }
 
+    internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
+
+    internal IReadOnlyDictionary<int, XLFontFormat> Fonts=> _fontFormats;
+
     internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
 
-    internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
+    internal IReadOnlyDictionary<int, XLBorderFormat> Borders => _borderFormats;
 
     internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
 
@@ -101,18 +105,17 @@ internal class XLWorkbookStyles
         _borderFormats.Add(_borderFormats.Count, borderFormat);
     }
 
-    internal void AddFormat(uint? fontId, uint? fillId, uint? borderId, XLAlignmentFormat? alignment)
+    internal void AddFormat(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? fontId, XLFillFormat? fill, XLBorderFormat? border)
     {
         var xfId = _cellFormats.Count;
         XLFontFormat? font = fontId is not null ? _fontFormats[checked((int)fontId)] : null;
-        var fill = fillId is not null ? _fillFormats[checked((int)fillId)] : null;
-        var border = borderId is not null ? _borderFormats[checked((int)borderId)] : null;
         _cellFormats.Add(xfId, new XLCellFormat
         {
+            Alignment = alignment,
+            Protection = protection,
             Font = font,
             Fill = fill,
             Border = border,
-            Alignment = alignment
         });
     }
 }
