@@ -22,11 +22,35 @@ namespace ClosedXML.Excel
 
     public enum XLFontFamilyNumberingValues
     {
+        /// <summary>
+        /// No information about font family is available.
+        /// </summary>
         NotApplicable = 0,
+
+        /// <summary>
+        /// Proportional font with serifs.
+        /// </summary>
         Roman = 1,
+
+        /// <summary>
+        /// Proportional font without serifs.
+        /// </summary>
         Swiss = 2,
+
+        /// <summary>
+        /// Monospace font with or without serifs.
+        /// </summary>
         Modern = 3,
+
+        /// <summary>
+        /// Font that mimics the appearance of handwriting.
+        /// </summary>
         Script = 4,
+
+        /// <summary>
+        /// A Novelty font family. A decorative or thematic fonts, suitable for headlines or
+        /// posters, not suitable for text.
+        /// </summary>
         Decorative = 5
     }
 
