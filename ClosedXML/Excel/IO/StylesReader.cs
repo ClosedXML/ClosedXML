@@ -59,72 +59,89 @@ internal partial class StylesReader
     {
         // Font is mostly buggy specification. Excel basically chokes on anything but a sequence,
         // but standard requires an unbound choice where elements can repeat.
-        XLFontFormat format = default;
+        XLFontName? fontName = null;
+        XLFontCharSet? fontCharset = null;
+        XLFontFamilyNumberingValues? fontFamily = null;
+        bool? fontBold = null, fontItalic = null, fontStrikethrough = null, fontOutline = null, fontShadow = null, fontCondense = null, fontExtend = null;
+        XLColor? fontColor = null;
+        XLFontSize? fontSize = null;
+        XLFontUnderlineValues? fontUnderline = null;
+        XLFontVerticalTextAlignmentValues? fontVerticalAlignment = null;
+        XLFontScheme? fontScheme = null;
         while (!_reader.TryClose(elementName, _ns))
         {
-            if (_reader.TryReadXStringValElement("name", _ns, out var fontName))
+            if (_reader.TryReadXStringValElement("name", _ns, out var name))
             {
-                format = format with { Name = fontName };
+                fontName = name;
             }
             else if (_reader.TryReadIntValElement("charset", _ns, out var charset))
             {
-                format = format with { Charset = (XLFontCharSet?)charset };
+                fontCharset = (XLFontCharSet)charset;
             }
             else if (_reader.TryReadIntValElement("family", _ns, out var family))
             {
-                format = format with { Family = (XLFontFamilyNumberingValues)family };
+                // Bug in the spec. Spec says that it has values 0-14 and doesn't specify meaning
+                // for the numerical values. It's supposed to refer to the same enum ST_FontFamily
+                // as in WordML. The OI-29500 fixes this problem:
+                // "Excel restricts the value of this attribute to be at least 0 and at most 5."
+                fontFamily = family switch
+                {
+                    >= 0 and <= 5 => (XLFontFamilyNumberingValues)family,
+                    > 5 and <= 14 => XLFontFamilyNumberingValues.NotApplicable,
+                    _ => throw PartStructureException.InvalidAttributeFormat(),
+                };
             }
             else if (_reader.TryReadBoolElement("b", _ns, out var b))
             {
-                format = format with { Bold = b };
+                fontBold = b;
             }
             else if (_reader.TryReadBoolElement("i", _ns, out var i))
             {
-                format = format with { Italic = i };
+                fontItalic = i;
             }
             else if (_reader.TryReadBoolElement("strike", _ns, out var strike))
             {
-                format = format with { Strikethrough = strike };
+                fontStrikethrough = strike;
             }
             else if (_reader.TryReadBoolElement("outline", _ns, out var outline))
             {
-                format = format with { Outline = outline };
+                fontOutline = outline;
             }
             else if (_reader.TryReadBoolElement("shadow", _ns, out var shadow))
             {
-                format = format with { Shadow = shadow };
+                fontShadow = shadow;
             }
             else if (_reader.TryReadBoolElement("condense", _ns, out var condense))
             {
-                format = format with { Condense = condense };
+                fontCondense = condense;
             }
             else if (_reader.TryReadBoolElement("extend", _ns, out var extend))
             {
-                format = format with { Extend = extend };
+                fontExtend = extend;
             }
             else if (_reader.TryReadColor("color", _ns, out var color))
             {
-                format = format with { Color = color };
+                fontColor = color;
             }
             else if (_reader.TryOpen("sz", _ns))
             {
                 var fontSizePt = _reader.GetDouble("val");
                 _reader.Close("sz", _ns);
-                format = format with { Size = XLFontSize.FromPoints(fontSizePt) };
+                fontSize = XLFontSize.FromPoints(fontSizePt);
             }
             else if (_reader.TryOpen("u", _ns))
             {
                 var underline = _reader.GetOptionalEnum<XLFontUnderlineValues>("val") ?? XLFontUnderlineValues.Single;
                 _reader.Close("u", _ns);
-                format = format with { Underline = underline };
+                fontUnderline = underline;
             }
             else if (_reader.TryReadEnumValElement<XLFontVerticalTextAlignmentValues>("vertAlign", _ns, out var vertAlign))
             {
-                format = format with { VerticalAlignment = vertAlign };
+                fontVerticalAlignment = vertAlign;
             }
             else if (_reader.TryReadEnumValElement<XLFontScheme>("scheme", _ns, out var scheme))
             {
-                format = format with { Scheme = scheme };
+                fontScheme = scheme;
             }
             else
             {
@@ -132,6 +149,24 @@ internal partial class StylesReader
             }
         }
 
+        var format = new XLFontFormat
+        {
+            Name = fontName,
+            Charset = fontCharset,
+            Family = fontFamily,
+            Bold = fontBold,
+            Italic = fontItalic,
+            Strikethrough = fontStrikethrough,
+            Outline = fontOutline,
+            Shadow = fontShadow,
+            Condense = fontCondense,
+            Extend = fontExtend,
+            Color = fontColor,
+            Size = fontSize,
+            Underline = fontUnderline,
+            VerticalAlignment = fontVerticalAlignment,
+            Scheme = fontScheme,
+        };
         _styles.AddFontFormat(format);
     }
 
@@ -212,10 +247,11 @@ internal partial class StylesReader
         if (_reader.Context[^1] == "cellXfs")
         {
             // We are in cellXfs
+            var font = fontId is not null ? _styles.Fonts[checked((int)fontId)] : null;
             var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
             var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
 
-            _styles.AddFormat(alignment, protection, fontId, fill, border);
+            _styles.AddFormat(alignment, protection, font, fill, border);
         }
     }
 

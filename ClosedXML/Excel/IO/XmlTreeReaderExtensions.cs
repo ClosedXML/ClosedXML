@@ -112,7 +112,7 @@ internal static class XmlTreeReaderExtensions
     /// <summary>
     /// Try to read an optional element of type <c>CT_IntProperty</c>
     /// </summary>
-    public static bool TryReadIntValElement(this XmlTreeReader reader, string elementName, string ns, [NotNullWhen(true)] out int? value)
+    public static bool TryReadIntValElement(this XmlTreeReader reader, string elementName, string ns, out int value)
     {
         if (reader.TryOpen(elementName, ns))
         {
@@ -121,7 +121,7 @@ internal static class XmlTreeReaderExtensions
             return true;
         }
 
-        value = null;
+        value = default;
         return false;
     }
 

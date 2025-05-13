@@ -3,7 +3,7 @@ namespace ClosedXML.Excel.Formatting;
 /// <summary>
 /// A formatting record for <see cref="XLCellFormat"/>. Unlike <see cref="XLFontKey"/>, attributes are optional.
 /// </summary>
-internal readonly record struct XLFontFormat
+internal record XLFontFormat
 {
     public required XLFontName? Name { get; init; }
 

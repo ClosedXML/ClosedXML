@@ -27,6 +27,114 @@ internal class StylesReaderTests
     }
 
     [Test]
+    public void Can_read_empty_font()
+    {
+        // Empty font is valid, it will just inherit everything
+        AssertFonts("<font/>", styles =>
+        {
+            var font = styles.Fonts.Single().Value;
+            Assert.Null(font.Name);
+            Assert.Null(font.Charset);
+            Assert.Null(font.Family);
+            Assert.Null(font.Bold);
+            Assert.Null(font.Italic);
+            Assert.Null(font.Strikethrough);
+            Assert.Null(font.Outline);
+            Assert.Null(font.Shadow);
+            Assert.Null(font.Condense);
+            Assert.Null(font.Extend);
+            Assert.Null(font.Color);
+            Assert.Null(font.Size);
+            Assert.Null(font.Underline);
+            Assert.Null(font.VerticalAlignment);
+            Assert.Null(font.Scheme);
+        });
+    }
+
+    [Test]
+    public void Can_read_font()
+    {
+        AssertFonts(
+            """
+            <font>
+              <b/>
+              <i/>
+              <strike/>
+              <condense/>
+              <extend/>
+              <outline/>
+              <shadow/>
+              <u val="double"/>
+              <vertAlign val="superscript"/>
+              <sz val="8.5"/>
+              <color rgb="FF802010"/>
+              <name val="Calibri"/>
+              <family val="2"/>
+              <charset val="128"/>
+              <scheme val="none"/>
+            </font>
+            """, styles =>
+        {
+            var font = styles.Fonts.Single().Value;
+            Assert.AreEqual("Calibri", font.Name);
+            Assert.AreEqual(XLFontCharSet.ShiftJIS, font.Charset);
+            Assert.AreEqual(XLFontFamilyNumberingValues.Swiss, font.Family);
+            Assert.IsTrue(font.Bold);
+            Assert.IsTrue(font.Italic);
+            Assert.IsTrue(font.Strikethrough);
+            Assert.IsTrue(font.Outline);
+            Assert.IsTrue(font.Shadow);
+            Assert.IsTrue(font.Condense);
+            Assert.IsTrue(font.Extend);
+            Assert.AreEqual(XLColor.FromRgb(0x802010), font.Color);
+            Assert.AreEqual(8.5, font.Size);
+            Assert.AreEqual(XLFontUnderlineValues.Double, font.Underline);
+            Assert.AreEqual(XLFontVerticalTextAlignmentValues.Superscript, font.VerticalAlignment);
+            Assert.AreEqual(XLFontScheme.None, font.Scheme);
+        });
+    }
+
+    [TestCase(6)]
+    [TestCase(14)]
+    public void Interprets_undefined_font_family_values_as_unknown_font_family(int fontFamily)
+    {
+        // Deal with serious difference between standard and Excel. Standard only defines range of
+        // numerical values, but there is no meaning assigned. Thus it makes sense to take font
+        // family values allowed by standard (that have no defined meaning) and convert them
+        // to unknown font family.
+        AssertFonts(
+            $"""
+            <font>
+              <family val="{fontFamily}"/>
+            </font>
+            """, styles =>
+            {
+                var font = styles.Fonts.Single().Value;
+                Assert.AreEqual(XLFontFamilyNumberingValues.NotApplicable, font.Family);
+            });
+    }
+
+    [Test]
+    public void Can_repeat_and_reorder_font_properties()
+    {
+        // Excel requires basically a sequence, but spec allows to repeat properties and mix the order.
+        AssertFonts(
+            """
+            <font>
+              <name val="First Font"/>
+              <name val="Second Font"/>
+              <b/>
+              <b val="0"/>
+            </font>
+            """, styles =>
+            {
+                var font = styles.Fonts.Single().Value;
+                Assert.AreEqual("Second Font", font.Name);
+                Assert.IsFalse(font.Bold);
+            });
+    }
+
+    [Test]
     public void Can_read_empty_fill()
     {
         AssertFills("<fill/>", styles =>
@@ -180,6 +288,17 @@ internal class StylesReaderTests
         AssertFormat(assert, xml);
     }
 
+    private static void AssertFonts(string fontsXml, Action<XLWorkbookStyles> assert)
+    {
+        var xml = $"""
+                   <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                     <fonts>
+                       {fontsXml}
+                     </fonts>
+                   </styleSheet>
+                   """;
+        AssertFormat(assert, xml);
+    }
 
     private static void AssertFills(string fillsXml, Action<XLWorkbookStyles> assert)
     {
