@@ -31,8 +31,6 @@ internal class WorksheetPartReader
 
     internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
     {
-        ApplyStyle(ws, 0, s, ws.Workbook.Styles);
-
         var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
 
@@ -79,9 +77,9 @@ internal class WorksheetPartReader
                     }
                 }
                 else if (reader.ElementType == typeof(Columns))
-                    LoadColumns(s, ws, (Columns)reader.LoadCurrentElement());
+                    LoadColumns(ws, (Columns)reader.LoadCurrentElement());
                 else if (reader.ElementType == typeof(Row))
-                    LoadRow(s, ws, sharedStrings, styleList, reader);
+                    LoadRow(ws, sharedStrings, styleList, reader);
                 else if (reader.ElementType == typeof(AutoFilter))
                     AutoFilterReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(SheetProtection))
@@ -144,7 +142,7 @@ internal class WorksheetPartReader
             pageSetupProperties = sheetProperty.PageSetupProperties;
     }
 
-    private static void LoadColumns(Stylesheet s, XLWorksheet ws, Columns columns)
+    private static void LoadColumns(XLWorksheet ws, Columns columns)
     {
         if (columns == null) return;
 
@@ -158,7 +156,7 @@ internal class WorksheetPartReader
                                       ? Int32.Parse(wsDefaultColumn.Style.InnerText)
                                       : -1;
         if (styleIndexDefault >= 0)
-            ApplyStyle(ws, styleIndexDefault, s, ws.Workbook.Styles);
+            ApplyStyle(ws, styleIndexDefault, ws.Workbook.Styles);
 
         foreach (Column col in columns.Elements<Column>())
         {
@@ -190,7 +188,7 @@ internal class WorksheetPartReader
             Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
             if (styleIndex >= 0)
             {
-                ApplyStyle(xlColumns, styleIndex, s, ws.Workbook.Styles);
+                ApplyStyle(xlColumns, styleIndex, ws.Workbook.Styles);
             }
             else
             {
@@ -199,7 +197,7 @@ internal class WorksheetPartReader
         }
     }
 
-    private void LoadRow(Stylesheet s, XLWorksheet ws, SharedStringItem[] sharedStrings,
+    private void LoadRow(XLWorksheet ws, SharedStringItem[] sharedStrings,
                           Dictionary<Int32, IXLStyle> styleList,
                           OpenXmlPartReader reader)
     {
@@ -249,7 +247,7 @@ internal class WorksheetPartReader
             var styleIndex = attributes.GetIntAttribute("s");
             if (styleIndex is not null)
             {
-                ApplyStyle(xlRow, styleIndex.Value, s, ws.Workbook.Styles);
+                ApplyStyle(xlRow, styleIndex.Value, ws.Workbook.Styles);
             }
             else
             {
@@ -264,7 +262,7 @@ internal class WorksheetPartReader
 
         while (reader.IsStartElement("c"))
         {
-            LoadCell(sharedStrings, s, ws, styleList, reader, rowIndex);
+            LoadCell(sharedStrings, ws, styleList, reader, rowIndex);
 
             // Move from end element of 'cell' either to next cell, extList start or end of row.
             reader.MoveAhead();
@@ -275,7 +273,7 @@ internal class WorksheetPartReader
             reader.Skip();
     }
 
-    private void LoadCell(SharedStringItem[] sharedStrings, Stylesheet s,
+    private void LoadCell(SharedStringItem[] sharedStrings,
                           XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, OpenXmlPartReader reader, Int32 rowIndex)
     {
         Debug.Assert(reader.LocalName == "c" && reader.IsStartElement);
@@ -308,7 +306,7 @@ internal class WorksheetPartReader
         }
         else
         {
-            ApplyStyle(xlCell, styleIndex, s, ws.Workbook.Styles);
+            ApplyStyle(xlCell, styleIndex, ws.Workbook.Styles);
         }
 
         var showPhonetic = attributes.GetBoolAttribute("ph", false);
@@ -1230,10 +1228,10 @@ internal class WorksheetPartReader
         }
     }
 
-    private static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, XLWorkbookStyles styles)
+    private static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, XLWorkbookStyles styles)
     {
         var xlStyleKey = XLStyle.Default.Key;
-        XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, s, styles);
+        XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
 
         // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
         if (xlStylized is IXLColumns columns)

@@ -316,7 +316,7 @@ internal partial class StylesReader
                 Fill = fill,
                 Border = border,
                 CellStyle = null, // TODO: Set once cell styles are read
-                QuotePrefix = quotePrefix,
+                IncludeQuotePrefix = quotePrefix,
                 PivotButton = pivotButton,
                 StyleComponents = CellFormatComponents.None // TODO: No cell style = no components
             };

@@ -34,7 +34,7 @@ internal record XLCellFormat
     /// </summary>
     public required XLCellStyle? CellStyle {get; init; }
 
-    public required bool QuotePrefix { get; init; }
+    public required bool IncludeQuotePrefix { get; init; }
 
     public required bool PivotButton { get; init; }
 

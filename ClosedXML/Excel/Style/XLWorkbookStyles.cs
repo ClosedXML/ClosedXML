@@ -40,20 +40,6 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
 
-    internal XLStyleKey ApplyNumberFormat(int numberFormatId, ref XLStyleKey styleKey)
-    {
-        // Unlike other aspects of formatting, number format is skipped when numFmtId is not found
-        if (!_numberFormats.TryGetValue(numberFormatId, out var formatCode))
-            return styleKey;
-
-        var numberFormat = new XLNumberFormatKey
-        {
-            NumberFormatId = numberFormatId,
-            Format = formatCode
-        };
-        return styleKey with { NumberFormat = numberFormat };
-    }
-
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
         var xlNumberFormat = new XLNumberFormatKey
@@ -62,27 +48,6 @@ internal class XLWorkbookStyles
             Format = _numberFormats[numberFormatId]
         };
         return XLNumberFormatValue.FromKey(ref xlNumberFormat);
-    }
-
-    internal XLStyleKey ApplyFontFormat(int fontId, ref XLStyleKey styleKey)
-    {
-        var fontFormat = _fontFormats[fontId];
-        var fontKey = fontFormat.ApplyTo(styleKey.Font);
-        return styleKey with { Font = fontKey };
-    }
-
-    internal XLStyleKey ApplyPatternFormat(int fillId, ref XLStyleKey styleKey)
-    {
-        var fillFormat = _fillFormats[fillId];
-        var fillKey = fillFormat.ApplyTo(styleKey.Fill);
-        return styleKey with { Fill = fillKey };
-    }
-
-    internal XLStyleKey ApplyBorderFormat(int borderId, ref XLStyleKey styleKey)
-    {
-        var borderFormat = _borderFormats[borderId];
-        var borderKey = borderFormat.ApplyTo(styleKey.Border);
-        return styleKey with { Border = borderKey };
     }
 
     internal void AddNumberFormat(int numFmtId, string formatCode)

@@ -198,7 +198,7 @@ namespace ClosedXML.Excel
             if (normalStyle != null)
             {
                 var normalStyleKey = ((XLStyle)Style).Key;
-                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, s, Styles);
+                LoadStyle(ref normalStyleKey, (Int32)normalStyle.FormatId.Value, Styles);
                 Style = new XLStyle(null, normalStyleKey);
                 ColumnWidth = XLHelper.CalculateColumnWidth(8, Style.Font, this);
             }
@@ -1169,16 +1169,11 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, Stylesheet s, XLWorkbookStyles styles)
+        internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, XLWorkbookStyles styles)
         {
-            if (s == null || s.CellFormats is null) return; //No Stylesheet, no Styles
-
-            var cellFormat = (CellFormat)s.CellFormats.ElementAt(styleIndex);
-
-            var xlIncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
-            xlStyle = xlStyle with { IncludeQuotePrefix = xlIncludeQuotePrefix };
-
             var xlCellFormat = styles.CellFormats[styleIndex];
+            xlStyle = xlStyle with { IncludeQuotePrefix = xlCellFormat.IncludeQuotePrefix };
+
             if (xlCellFormat.Alignment is not null)
             {
                 var alignmentKey = xlCellFormat.Alignment.ApplyTo(xlStyle.Alignment);
@@ -1191,24 +1186,24 @@ namespace ClosedXML.Excel
                 xlStyle = xlStyle with { Protection = protectionKey };
             }
 
-            if (cellFormat.NumberFormatId?.Value is { } numberFormatId)
+            if (xlCellFormat.NumberFormat is not null)
             {
-                xlStyle = styles.ApplyNumberFormat(checked((int)numberFormatId), ref xlStyle);
+                xlStyle = xlStyle with { NumberFormat = XLNumberFormatKey.ForFormat(xlCellFormat.NumberFormat) };
             }
 
-            if (cellFormat.FontId?.Value is { } fontId)
+            if (xlCellFormat.Font is not null)
             {
-                xlStyle = styles.ApplyFontFormat(checked((int)fontId), ref xlStyle);
+                xlStyle = xlStyle with { Font = xlCellFormat.Font.ApplyTo(xlStyle.Font) };
             }
 
-            if (cellFormat.FillId?.Value is { } fillId)
+            if (xlCellFormat.Fill is not null)
             {
-                xlStyle = styles.ApplyPatternFormat(checked((int)fillId), ref xlStyle);
+                xlStyle = xlStyle with { Fill = xlCellFormat.Fill.ApplyTo(xlStyle.Fill) };
             }
 
-            if (cellFormat.BorderId?.Value is { } borderId)
+            if (xlCellFormat.Border is not null)
             {
-                xlStyle = styles.ApplyBorderFormat(checked((int)borderId), ref xlStyle);
+                xlStyle = xlStyle with { Border = xlCellFormat.Border.ApplyTo(xlStyle.Border) };
             }
         }
 
