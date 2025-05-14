@@ -129,7 +129,7 @@ public class Program
             .AddUsing("System.Collections.Generic")
             .AddUsing("ClosedXML.IO")
             .AddUsing("ClosedXML.Excel.Formatting")
-            .AddParseMethod("CT_Stylesheet")
+            //.AddParseMethod("CT_Stylesheet")
             .AddParseMethod("CT_NumFmts")
             .AddParseMethod("CT_NumFmt")
             .AddParseMethod("CT_Fonts")

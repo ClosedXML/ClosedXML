@@ -105,16 +105,9 @@ internal class XLWorkbookStyles
         _borderFormats.Add(_borderFormats.Count, borderFormat);
     }
 
-    internal void AddFormat(XLAlignmentFormat? alignment, XLProtectionFormat? protection, XLFontFormat? font, XLFillFormat? fill, XLBorderFormat? border)
+    internal void AddFormat(XLCellFormat cellFormat)
     {
         var xfId = _cellFormats.Count;
-        _cellFormats.Add(xfId, new XLCellFormat
-        {
-            Alignment = alignment,
-            Protection = protection,
-            Font = font,
-            Fill = fill,
-            Border = border,
-        });
+        _cellFormats.Add(xfId, cellFormat);
     }
 }

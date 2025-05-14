@@ -229,7 +229,7 @@ internal class StylesReaderTests
     }
 
     [Test]
-    public void Can_read_alignment()
+    public void Can_read_cell_format_alignment()
     {
         AssertCellXfs(
             """
@@ -261,7 +261,7 @@ internal class StylesReaderTests
     }
 
     [Test]
-    public void Can_read_protection()
+    public void Can_read_cell_format_protection()
     {
         AssertCellXfs(
             """
@@ -274,6 +274,65 @@ internal class StylesReaderTests
                 Assert.IsFalse(protection.Locked);
                 Assert.IsTrue(protection.Hidden);
             });
+    }
+
+    [Test]
+    public void Can_read_cell_format_properties()
+    {
+        var xml =
+            $"""
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <numFmts>
+                <numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/>
+              </numFmts>
+              <fonts>
+                <font>
+                  <color theme="1"/>
+                </font>
+                <font>
+                  <sz val="11"/>
+                </font>
+              </fonts>
+              <fills count="5">
+                <fill>
+                  <patternFill patternType="none"/>
+                </fill>
+                <fill>
+                  <patternFill patternType="gray125"/>
+                </fill>
+              </fills>
+              <borders>
+                <border>
+                  <bottom style="double">
+                    <color indexed="64"/>
+                  </bottom>
+                </border>
+              </borders>
+              <cellXfs>
+                <xf numFmtId="164" fontId="1" fillId="1" borderId="0" xfId="0" quotePrefix="1" pivotButton="1" applyNumberFormat="0" applyFont="0" applyFill="0" applyBorder="0" applyAlignment="0" applyProtection="0">
+                  <alignment horizontal="left"/>
+                  <protection/>
+                </xf>
+              </cellXfs>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            var format = styles.CellFormats[0];
+            Assert.NotNull(format.Alignment);
+            Assert.AreEqual(XLAlignmentHorizontalValues.Left, format.Alignment.Horizontal);
+
+            Assert.NotNull(format.Protection);
+            Assert.IsTrue(format.Protection.Locked);
+            Assert.IsFalse(format.Protection.Hidden);
+
+            Assert.AreEqual(styles.NumberFormats[164], format.NumberFormat);
+            Assert.AreEqual(styles.Fonts[1], format.Font);
+            Assert.AreEqual(styles.Fills[1], format.Fill);
+            Assert.AreEqual(styles.Borders[0], format.Border);
+
+            // TODO: Add style and style components, once they will be loaded
+        }, xml);
     }
 
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)

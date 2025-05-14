@@ -23,7 +23,66 @@ internal partial class StylesReader
     {
         _reader.Open("styleSheet", _ns);
         ParseStylesheet("styleSheet");
+    }
 
+    private void ParseStylesheet(string elementName)
+    {
+        if (_reader.TryOpen("numFmts", _ns))
+        {
+            ParseNumFmts("numFmts");
+        }
+
+        // The spec says that the predefined formats have "formatCode value [..] implied rather
+        // than explicitly saved in the file."... so if there was something saved, it should have
+        // be used. If something was saved, it's explicit and explicit (generally) has preference
+        // over implicit. It needs to be added after numFmts, but before cellStyleXfs/cellXfs.
+        AddImpliedNumberFormats();
+
+        if (_reader.TryOpen("fonts", _ns))
+        {
+            ParseFonts("fonts");
+        }
+        if (_reader.TryOpen("fills", _ns))
+        {
+            ParseFills("fills");
+        }
+        if (_reader.TryOpen("borders", _ns))
+        {
+            ParseBorders("borders");
+        }
+        if (_reader.TryOpen("cellStyleXfs", _ns))
+        {
+            ParseCellStyleXfs("cellStyleXfs");
+        }
+        if (_reader.TryOpen("cellXfs", _ns))
+        {
+            ParseCellXfs("cellXfs");
+        }
+        if (_reader.TryOpen("cellStyles", _ns))
+        {
+            ParseCellStyles("cellStyles");
+        }
+        if (_reader.TryOpen("dxfs", _ns))
+        {
+            ParseDxfs("dxfs");
+        }
+        if (_reader.TryOpen("tableStyles", _ns))
+        {
+            ParseTableStyles("tableStyles");
+        }
+        if (_reader.TryOpen("colors", _ns))
+        {
+            ParseColors("colors");
+        }
+        if (_reader.TryOpen("extLst", _ns))
+        {
+            ParseExtensionList("extLst");
+        }
+        _reader.Close(elementName, _ns);
+    }
+
+    private void AddImpliedNumberFormats()
+    {
         // Add predefined formats, so we can treat predefined number formats and
         // user defined number formats the same way.
         foreach (var (numFmtId, formatCode) in XLPredefinedFormat.FormatCodes)
@@ -44,10 +103,6 @@ internal partial class StylesReader
     {
         foreach (var (numFmtId, formatCode) in numFmt)
         {
-            // Excel skips empty format codes.
-            if (string.IsNullOrEmpty(formatCode))
-                continue;
-
             // Even if numFmtId is predefined, store the supplied value. Excel accepts predefined
             // numFmtId and uses supplied format instead of predefined format. It fixes situation
             // during save, where such items are saved to user supplied numFmtId range.
@@ -247,11 +302,25 @@ internal partial class StylesReader
         if (_reader.Context[^1] == "cellXfs")
         {
             // We are in cellXfs
+            var numberFormat = numFmtId is not null ? _styles.NumberFormats[checked((int)numFmtId)] : null;
             var font = fontId is not null ? _styles.Fonts[checked((int)fontId)] : null;
             var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
             var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
 
-            _styles.AddFormat(alignment, protection, font, fill, border);
+            var cellFormat = new XLCellFormat
+            {
+                NumberFormat = numberFormat,
+                Alignment = alignment,
+                Protection = protection,
+                Font = font,
+                Fill = fill,
+                Border = border,
+                CellStyle = null, // TODO: Set once cell styles are read
+                QuotePrefix = quotePrefix,
+                PivotButton = pivotButton,
+                StyleComponents = CellFormatComponents.None // TODO: No cell style = no components
+            };
+            _styles.AddFormat(cellFormat);
         }
     }
 

@@ -15,8 +15,10 @@ namespace ClosedXML.Excel.Formatting;
 /// cell.
 /// </para>
 /// </summary>
-internal readonly record struct XLCellFormat
+internal record XLCellFormat
 {
+    public required string? NumberFormat { get; init; }
+
     public required XLAlignmentFormat? Alignment { get; init; }
 
     public required XLProtectionFormat? Protection { get; init; }
@@ -27,5 +29,33 @@ internal readonly record struct XLCellFormat
 
     public required XLBorderFormat? Border { get; init; }
 
-    // TODO: Add remaining properties. For now only font
+    /// <summary>
+    /// A cell style that was originally used to create this format.
+    /// </summary>
+    public required XLCellStyle? CellStyle {get; init; }
+
+    public required bool QuotePrefix { get; init; }
+
+    public required bool PivotButton { get; init; }
+
+    /// <summary>
+    /// <para>
+    /// Format components that should be updated when the original <see cref="CellStyle"/> is
+    /// changed. The format is immutable, so the change is actually creation of derived format and
+    /// usage replacement.
+    /// </para>
+    /// <para>
+    /// Only used if format was created from a style.
+    /// </para>
+    /// <para>
+    /// <example>
+    /// User stylizes a cell with an <em>Input</em> style that specifies a font, fill and border.
+    /// User then changes size of a text in a cell, thus the cell format now contains a different
+    /// font format. If the style <em>Input</em> changes background, the cell format should now use
+    /// a new background. But if style <em>Input</em> changes font, it shouldn't be reflected in
+    /// the format, because it was explicitly set to a different value from a style.
+    /// </example>
+    /// </para>
+    /// </summary>
+    public required CellFormatComponents StyleComponents { get; init; }
 }

@@ -8,58 +8,6 @@ namespace ClosedXML.Excel.IO;
 
 internal partial class StylesReader
 {
-    private void ParseStylesheet(string elementName)
-    {
-        if (_reader.TryOpen("numFmts", _ns))
-        {
-            ParseNumFmts("numFmts");
-        }
-        if (_reader.TryOpen("fonts", _ns))
-        {
-            ParseFonts("fonts");
-        }
-        if (_reader.TryOpen("fills", _ns))
-        {
-            ParseFills("fills");
-        }
-        if (_reader.TryOpen("borders", _ns))
-        {
-            ParseBorders("borders");
-        }
-        if (_reader.TryOpen("cellStyleXfs", _ns))
-        {
-            ParseCellStyleXfs("cellStyleXfs");
-        }
-        if (_reader.TryOpen("cellXfs", _ns))
-        {
-            ParseCellXfs("cellXfs");
-        }
-        if (_reader.TryOpen("cellStyles", _ns))
-        {
-            ParseCellStyles("cellStyles");
-        }
-        if (_reader.TryOpen("dxfs", _ns))
-        {
-            ParseDxfs("dxfs");
-        }
-        if (_reader.TryOpen("tableStyles", _ns))
-        {
-            ParseTableStyles("tableStyles");
-        }
-        if (_reader.TryOpen("colors", _ns))
-        {
-            ParseColors("colors");
-        }
-        if (_reader.TryOpen("extLst", _ns))
-        {
-            ParseExtensionList("extLst");
-        }
-        _reader.Close(elementName, _ns);
-        OnStylesheetParsed();
-    }
-
-    partial void OnStylesheetParsed();
-
     private void ParseNumFmts(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
