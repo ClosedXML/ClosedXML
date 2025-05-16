@@ -191,19 +191,20 @@ internal partial class StylesReader
     private void ParseCellStyleXfs(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
+        var xf = new List<(XLCellFormat Format, int? CellStyleXfId)>();
         _reader.Open("xf", _ns);
         do
         {
-            ParseXf("xf");
+            xf.Add(ParseXf("xf"));
         }
         while (_reader.TryOpen("xf", _ns));
         _reader.Close(elementName, _ns);
-        OnCellStyleXfsParsed(count);
+        OnCellStyleXfsParsed(xf, count);
     }
 
-    partial void OnCellStyleXfsParsed(uint? count);
+    partial void OnCellStyleXfsParsed(List<(XLCellFormat Format, int? CellStyleXfId)> xf, uint? count);
 
-    private void ParseXf(string elementName)
+    private (XLCellFormat Format, int? CellStyleXfId) ParseXf(string elementName)
     {
         var numFmtId = _reader.GetOptionalUInt("numFmtId");
         var fontId = _reader.GetOptionalUInt("fontId");
@@ -233,10 +234,8 @@ internal partial class StylesReader
             ParseExtensionList("extLst");
         }
         _reader.Close(elementName, _ns);
-        OnXfParsed(alignment, protection, numFmtId, fontId, fillId, borderId, xfId, quotePrefix, pivotButton, applyNumberFormat, applyFont, applyFill, applyBorder, applyAlignment, applyProtection);
+        return OnXfParsed(alignment, protection, numFmtId, fontId, fillId, borderId, xfId, quotePrefix, pivotButton, applyNumberFormat, applyFont, applyFill, applyBorder, applyAlignment, applyProtection);
     }
-
-    partial void OnXfParsed(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection);
 
     private XLAlignmentFormat ParseCellAlignment(string elementName)
     {
@@ -261,37 +260,35 @@ internal partial class StylesReader
         return OnCellProtectionParsed(locked, hidden);
     }
 
-    private void ParseCellXfs(string elementName)
+    private List<(XLCellFormat Format, int? CellStyleXfId)> ParseCellXfs(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
+        var xf = new List<(XLCellFormat Format, int? CellStyleXfId)>();
         _reader.Open("xf", _ns);
         do
         {
-            ParseXf("xf");
+            xf.Add(ParseXf("xf"));
         }
         while (_reader.TryOpen("xf", _ns));
         _reader.Close(elementName, _ns);
-        OnCellXfsParsed(count);
+        return OnCellXfsParsed(xf, count);
     }
 
-    partial void OnCellXfsParsed(uint? count);
-
-    private void ParseCellStyles(string elementName)
+    private Dictionary<int, XLCellStyle> ParseCellStyles(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
+        var cellStyle = new List<(int CellStyleXfId, XLCellStyle Style)>();
         _reader.Open("cellStyle", _ns);
         do
         {
-            ParseCellStyle("cellStyle");
+            cellStyle.Add(ParseCellStyle("cellStyle"));
         }
         while (_reader.TryOpen("cellStyle", _ns));
         _reader.Close(elementName, _ns);
-        OnCellStylesParsed(count);
+        return OnCellStylesParsed(cellStyle, count);
     }
 
-    partial void OnCellStylesParsed(uint? count);
-
-    private void ParseCellStyle(string elementName)
+    private (int CellStyleXfId, XLCellStyle Style) ParseCellStyle(string elementName)
     {
         var name = _reader.GetOptionalXString("name");
         var xfId = _reader.GetUInt("xfId");
@@ -304,10 +301,8 @@ internal partial class StylesReader
             ParseExtensionList("extLst");
         }
         _reader.Close(elementName, _ns);
-        OnCellStyleParsed(name, xfId, builtinId, iLevel, hidden, customBuiltin);
+        return OnCellStyleParsed(name, xfId, builtinId, iLevel, hidden, customBuiltin);
     }
-
-    partial void OnCellStyleParsed(string? name, uint xfId, uint? builtinId, uint? iLevel, bool? hidden, bool? customBuiltin);
 
     private void ParseDxfs(string elementName)
     {
@@ -435,17 +430,18 @@ internal partial class StylesReader
 
     private void ParseMRUColors(string elementName)
     {
+        var color = new List<XLColor>();
         _reader.Open("color", _ns);
         do
         {
-            ParseColor("color");
+            color.Add(ParseColor("color"));
         }
         while (_reader.TryOpen("color", _ns));
         _reader.Close(elementName, _ns);
-        OnMRUColorsParsed();
+        OnMRUColorsParsed(color);
     }
 
-    partial void OnMRUColorsParsed();
+    partial void OnMRUColorsParsed(List<XLColor> color);
 
     private void ParseRgbColor(string elementName)
     {

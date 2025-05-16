@@ -1,5 +1,7 @@
+using System;
 using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ClosedXML.Excel;
 
@@ -8,11 +10,6 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class XLWorkbookStyles
 {
-    /// <summary>
-    /// The index is XfId, the value is formatting record.
-    /// </summary>
-    private readonly Dictionary<int, XLCellFormat> _cellFormats;
-
     private readonly Dictionary<int, string> _numberFormats;
 
     private readonly Dictionary<int, XLFontFormat> _fontFormats;
@@ -21,13 +18,24 @@ internal class XLWorkbookStyles
 
     private readonly Dictionary<int, XLBorderFormat> _borderFormats;
 
+    /// <summary>
+    /// The key is XfId, the value is cell format.
+    /// </summary>
+    private readonly Dictionary<int, XLCellFormat> _cellFormats;
+
+    /// <summary>
+    /// The key is cellStyleXfId, the value is cell style.
+    /// </summary>
+    private readonly Dictionary<int, XLCellStyle> _cellStyles;
+
     internal XLWorkbookStyles()
     {
-        _cellFormats = new Dictionary<int, XLCellFormat>();
         _numberFormats = new Dictionary<int, string>();
         _fontFormats = new Dictionary<int, XLFontFormat>();
         _fillFormats = new Dictionary<int, XLFillFormat>();
         _borderFormats = new Dictionary<int, XLBorderFormat>();
+        _cellFormats = new Dictionary<int, XLCellFormat>();
+        _cellStyles = new Dictionary<int, XLCellStyle>();
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
@@ -39,6 +47,8 @@ internal class XLWorkbookStyles
     internal IReadOnlyDictionary<int, XLBorderFormat> Borders => _borderFormats;
 
     internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
+
+    internal IReadOnlyDictionary<int, XLCellStyle> CellStyles => _cellStyles;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -74,5 +84,10 @@ internal class XLWorkbookStyles
     {
         var xfId = _cellFormats.Count;
         _cellFormats.Add(xfId, cellFormat);
+    }
+
+    public void AddCellStyle(int cellStyleXfId, XLCellStyle cellStyle)
+    {
+        _cellStyles.Add(cellStyleXfId, cellStyle);
     }
 }

@@ -13,6 +13,12 @@ internal partial class StylesReader
     private readonly XmlTreeReader _reader;
     private readonly XLWorkbookStyles _styles;
     private readonly string _ns = OpenXmlConst.Main2006SsNs;
+    private readonly SequentialNameGenerator _styleNameGenerator = new("Style ", 1);
+
+    /// <summary>
+    /// Style formats from <c>cellStyleXfs</c>.
+    /// </summary>
+    private List<XLCellFormat> _styleFormats = new();
 
     public StylesReader(XmlTreeReader reader, XLWorkbookStyles styles)
     {
@@ -55,14 +61,23 @@ internal partial class StylesReader
         {
             ParseCellStyleXfs("cellStyleXfs");
         }
+
+        var cellFormats = new List<(XLCellFormat Format, int? CellStyleXfId)>();
         if (_reader.TryOpen("cellXfs", _ns))
         {
-            ParseCellXfs("cellXfs");
+            cellFormats = ParseCellXfs("cellXfs");
         }
+
+        var cellStyles = new Dictionary<int, XLCellStyle>();
         if (_reader.TryOpen("cellStyles", _ns))
         {
-            ParseCellStyles("cellStyles");
+            cellStyles = ParseCellStyles("cellStyles");
         }
+
+        RepairMissingStyles(cellStyles);
+        AddCellStyles(cellStyles);
+        AddFormats(cellFormats, cellStyles);
+
         if (_reader.TryOpen("dxfs", _ns))
         {
             ParseDxfs("dxfs");
@@ -93,6 +108,56 @@ internal partial class StylesReader
                 _styles.AddNumberFormat(numFmtId, formatCode);
             }
         }
+    }
+
+    private void RepairMissingStyles(Dictionary<int, XLCellStyle> cellStyles)
+    {
+        // Because cellStyleXfs might be referenced from cell formats, each one must be converted
+        // to a cell style. If the cellStyles didn't contain a record for any cellStyleXf, add it.
+        for (var cellStyleXfId = 0; cellStyleXfId < _styleFormats.Count; ++cellStyleXfId)
+        {
+            if (!cellStyles.ContainsKey(cellStyleXfId))
+            {
+                var format = _styleFormats[cellStyleXfId];
+                var generatedName = _styleNameGenerator.NextUnusedStyleName();
+                cellStyles.Add(cellStyleXfId, new XLCellStyle
+                {
+                    Name = generatedName,
+                    BuiltInStyle = null,
+                    Hidden = false,
+                    NumberFormat = format.NumberFormat,
+                    Alignment = format.Alignment,
+                    Protection = format.Protection,
+                    Font = format.Font,
+                    Fill = format.Fill,
+                    Border = format.Border,
+                    ApplyComponents = CellFormatComponents.All
+                });
+            }
+        }
+    }
+
+    private void AddCellStyles(Dictionary<int, XLCellStyle> cellStyles)
+    {
+        foreach (var (cellStyleXfId, cellStyle) in cellStyles)
+            _styles.AddCellStyle(cellStyleXfId, cellStyle);
+    }
+
+    private void AddFormats(List<(XLCellFormat Format, int? CellStyleXfId)> cellFormats, Dictionary<int, XLCellStyle> cellStyles)
+    {
+        // At the time when cellXf were parsed, cell styles weren't resolved. Resolve them now.
+        for (var xfId = 0; xfId < cellFormats.Count; ++xfId)
+        {
+            if (cellFormats[xfId].CellStyleXfId is { } cellStyleXfId)
+            {
+                var cellStyle = cellStyles[cellStyleXfId];
+                var cellFormat = cellFormats[xfId].Format with { CellStyle = cellStyle };
+                cellFormats[xfId] = (cellFormat, cellStyleXfId);
+            }
+        }
+
+        foreach (var (cellFormat, _) in cellFormats)
+            _styles.AddFormat(cellFormat);
     }
 
     private (int NumFmtId, string FormatCode) OnNumFmtParsed(uint numFmtId, string formatCode)
@@ -296,33 +361,130 @@ internal partial class StylesReader
         return new XLBorderLine(color ?? XLColor.NoColor, style);
     }
 
-    partial void OnXfParsed(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
+    partial void OnCellStyleXfsParsed(List<(XLCellFormat Format, int? CellStyleXfId)> xf, uint? count)
+    {
+        _styleFormats = xf.Select(x => x.Format).ToList();
+    }
+
+    private (XLCellFormat Format, int? CellStyleXfId) OnXfParsed(XLAlignmentFormat? alignment, XLProtectionFormat? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
     {
         // When xf is parsed, all number formats, fonts, fills and borders should already be read.
-        // Skip cell style xfs for now.
-        if (_reader.Context[^1] == "cellXfs")
-        {
-            // We are in cellXfs
-            var numberFormat = numFmtId is not null ? _styles.NumberFormats[checked((int)numFmtId)] : null;
-            var font = fontId is not null ? _styles.Fonts[checked((int)fontId)] : null;
-            var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
-            var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
+        // The apply* attributes have default value true for cellStyleXfs and false for cellXfs.
+        var defaultApply = _reader.Context[^1] == "cellStyleXfs";
+        string? numberFormat = null;
+        if (numFmtId is not null)
+            numberFormat = _styles.NumberFormats.GetValueOrDefault(checked((int)numFmtId));
 
-            var cellFormat = new XLCellFormat
-            {
-                NumberFormat = numberFormat,
-                Alignment = alignment,
-                Protection = protection,
-                Font = font,
-                Fill = fill,
-                Border = border,
-                CellStyle = null, // TODO: Set once cell styles are read
-                IncludeQuotePrefix = quotePrefix,
-                PivotButton = pivotButton,
-                StyleComponents = CellFormatComponents.None // TODO: No cell style = no components
-            };
-            _styles.AddFormat(cellFormat);
+        var font = fontId is not null ? _styles.Fonts[checked((int)fontId)] : null;
+        var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
+        var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
+
+        var components = CellFormatComponents.None;
+        components |= (applyNumberFormat ?? defaultApply) ? CellFormatComponents.NumberFormat : CellFormatComponents.None;
+        components |= (applyFont ?? defaultApply) ? CellFormatComponents.Font : CellFormatComponents.None;
+        components |= (applyFill ?? defaultApply) ? CellFormatComponents.Fill : CellFormatComponents.None;
+        components |= (applyBorder ?? defaultApply) ? CellFormatComponents.Border : CellFormatComponents.None;
+        components |= (applyAlignment ?? defaultApply) ? CellFormatComponents.Alignment : CellFormatComponents.None;
+        components |= (applyProtection ?? defaultApply) ? CellFormatComponents.Protection : CellFormatComponents.None;
+
+        var format = new XLCellFormat
+        {
+            NumberFormat = numberFormat,
+            Alignment = alignment,
+            Protection = protection,
+            Font = font,
+            Fill = fill,
+            Border = border,
+            CellStyle = null, // The style is set once cell styles are resolved
+            IncludeQuotePrefix = quotePrefix,
+            PivotButton = pivotButton,
+            StyleComponents = components
+        };
+        return (format, checked((int?)xfId));
+    }
+
+    private List<(XLCellFormat Format, int? CellStyleXfId)> OnCellXfsParsed(List<(XLCellFormat Format, int? CellStyleXfId)> xf, uint? count)
+    {
+        return xf;
+    }
+
+    private (int XfId, XLCellStyle Style) OnCellStyleParsed(string? name, uint xfId, uint? builtinId, uint? iLevel, bool? hidden, bool? customBuiltin)
+    {
+        // The quotePrefix and pivotButton attributes of the cellStyleXf are not applied, plus
+        // the xfId of the cellStyle is ignored. The OI-29500 also requires uniqueness of xfId
+        // in the cellStyle elements, although Excel can load such workbook and has several
+        // "linked" styles. It's likely the separation into two elements is based on the internal
+        // structure inside the Excel.
+
+        // Fill dummy name for the style
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            name = _styleNameGenerator.NextUnusedStyleName();
         }
+        else
+        {
+            _styleNameGenerator.AddName(name);
+        }
+
+        var cellStyleFormat = _styleFormats[checked((int)xfId)];
+
+        // If the built in style is an outline style, expand it to avoid ugly representation.
+        // The spec has only one only builtIn id for all RowLevel* styles (1) and one builtIn
+        // id for all ColLevel* styles (2). Since the iLevel/outlineLevel is used only for
+        // the RowLevel/ColLevel (OI-29500), expand the builtIn+iLevel for Row/Col level into
+        // a separate builtIn styles (101-107 for RowLevel1-7, 201-207 for ColumnLevel1-7).
+        if (builtinId is 1 or 2)
+            builtinId = builtinId.Value * 100 + 1 + iLevel ?? 0;
+
+        // BuiltIn must be among defined built-in styles ("implementers should restrict the content
+        // of this attribute to enumerations present in the list")
+        if (builtinId is not null && !Enum.IsDefined(typeof(BuiltInStyleValues), checked((int)builtinId.Value)))
+        {
+            throw PartStructureException.InvalidAttributeFormat();
+        }
+
+        // The apply* attributes have default `true` for cellStyleXfs and `false` for cellXfs.
+        // We already took care of correct default value during the parsing of <xf>, so we don't
+        // have to deal with it here.
+        var applyComponents = cellStyleFormat.StyleComponents;
+        var cellStyle = new XLCellStyle
+        {
+            Name = name,
+            BuiltInStyle = builtinId is not null ? (BuiltInStyleValues)builtinId.Value : null,
+            Hidden = hidden ?? false,
+            NumberFormat = cellStyleFormat.NumberFormat,
+            Alignment = cellStyleFormat.Alignment,
+            Protection = cellStyleFormat.Protection,
+            Font = cellStyleFormat.Font,
+            Fill = cellStyleFormat.Fill,
+            Border = cellStyleFormat.Border,
+            ApplyComponents = applyComponents
+        };
+
+        return (checked((int)xfId), cellStyle);
+    }
+
+    private Dictionary<int, XLCellStyle> OnCellStylesParsed(List<(int CellStyleXfId, XLCellStyle Style)> cellStyle, uint? count)
+    {
+        var cellStyles = new Dictionary<int, XLCellStyle>();
+        foreach (var (cellStyleXfId, style) in cellStyle)
+        {
+            // Multiple cell styles use same style formatting - split them, so each one uses
+            // separate formatting. I considered removing duplicates, but it could mean that I
+            // also might remove normal style, which is not desirable.
+            if (!cellStyles.ContainsKey(cellStyleXfId))
+            {
+                cellStyles.Add(cellStyleXfId, style);
+            }
+            else
+            {
+                _styleFormats.Add(_styleFormats[cellStyleXfId]);
+                var newCellStyleXfId = _styleFormats.Count - 1;
+                cellStyles.Add(newCellStyleXfId, style);
+            }
+        }
+
+        return cellStyles;
     }
 
     private XLAlignmentFormat OnCellAlignmentParsed(XLAlignmentHorizontalValues? horizontal, XLAlignmentVerticalValues vertical, uint? textRotation, bool? wrapText, uint? indent, int? relativeIndent, bool? justifyLastLine, bool? shrinkToFit, uint? readingOrder)
