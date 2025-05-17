@@ -1,7 +1,5 @@
-using System;
 using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace ClosedXML.Excel;
 
@@ -28,6 +26,8 @@ internal class XLWorkbookStyles
     /// </summary>
     private readonly Dictionary<int, XLCellStyle> _cellStyles;
 
+    private readonly Dictionary<int, XLDifferentialFormat> _differentialFormats;
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
@@ -36,11 +36,12 @@ internal class XLWorkbookStyles
         _borderFormats = new Dictionary<int, XLBorderFormat>();
         _cellFormats = new Dictionary<int, XLCellFormat>();
         _cellStyles = new Dictionary<int, XLCellStyle>();
+        _differentialFormats = new Dictionary<int, XLDifferentialFormat>();
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
 
-    internal IReadOnlyDictionary<int, XLFontFormat> Fonts=> _fontFormats;
+    internal IReadOnlyDictionary<int, XLFontFormat> Fonts => _fontFormats;
 
     internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
 
@@ -49,6 +50,8 @@ internal class XLWorkbookStyles
     internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
 
     internal IReadOnlyDictionary<int, XLCellStyle> CellStyles => _cellStyles;
+
+    internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -89,5 +92,10 @@ internal class XLWorkbookStyles
     public void AddCellStyle(int cellStyleXfId, XLCellStyle cellStyle)
     {
         _cellStyles.Add(cellStyleXfId, cellStyle);
+    }
+
+    public void AddDifferentialFormat(XLDifferentialFormat dxf)
+    {
+        _differentialFormats.Add(_differentialFormats.Count, dxf);
     }
 }

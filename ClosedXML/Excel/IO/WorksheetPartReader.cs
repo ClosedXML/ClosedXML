@@ -29,7 +29,7 @@ internal class WorksheetPartReader
     private Int32 _lastRow;
     private Int32 _lastColumnNumber;
 
-    internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
+    internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, LoadContext context)
     {
         var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
@@ -87,7 +87,7 @@ internal class WorksheetPartReader
                 else if (reader.ElementType == typeof(DataValidations))
                     LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(ConditionalFormatting))
-                    LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats, context);
+                    LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, context);
                 else if (reader.ElementType == typeof(Hyperlinks))
                     LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                 else if (reader.ElementType == typeof(PrintOptions))
@@ -785,11 +785,11 @@ internal class WorksheetPartReader
     /// Loads the conditional formatting.
     /// </summary>
     // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
-    private static void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
-        Dictionary<Int32, DifferentialFormat> differentialFormats, LoadContext context)
+    private static void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, LoadContext context)
     {
         if (conditionalFormatting == null) return;
 
+        var differentialFormats = ws.Workbook.Styles.DifferentialFormats;
         foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
         {
             var ranges = conditionalFormatting.SequenceOfReferences.Items
@@ -798,15 +798,24 @@ internal class WorksheetPartReader
 
             conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
 
-            if (fr.FormatId != null)
+            var dxfKey = XLStyle.Default.Value.Key;
+            if (fr.FormatId is not null)
             {
-                OpenXmlHelper.LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
-                OpenXmlHelper.LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
-                    differentialFillFormat: true);
-                OpenXmlHelper.LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
-                OpenXmlHelper.LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat,
-                    conditionalFormat.Style.NumberFormat);
+                var df = differentialFormats[checked((int)fr.FormatId.Value)];
+                if (df.NumberFormat is not null)
+                    dxfKey = dxfKey with { NumberFormat = XLNumberFormatKey.ForFormat(df.NumberFormat) };
+
+                if (df.Font is not null)
+                    dxfKey = dxfKey with { Font = df.Font.ApplyTo(dxfKey.Font) };
+
+                if (df.Fill is not null)
+                    dxfKey = dxfKey with { Fill = df.Fill.ApplyTo(dxfKey.Fill) };
+
+                if (df.Border is not null)
+                    dxfKey = dxfKey with { Border = df.Border.ApplyTo(dxfKey.Border) };
             }
+
+            conditionalFormat.Style = new XLStyle(null, dxfKey);
 
             // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
             if (fr.Type == null) continue;

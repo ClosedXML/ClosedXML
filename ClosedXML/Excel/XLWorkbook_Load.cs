@@ -186,12 +186,6 @@ namespace ClosedXML.Excel
             }
 
             Stylesheet s = stylesPart?.Stylesheet;
-            Int32 dfCount = 0;
-            Dictionary<Int32, DifferentialFormat> differentialFormats;
-            if (s != null && s.DifferentialFormats != null)
-                differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
-            else
-                differentialFormats = new Dictionary<Int32, DifferentialFormat>();
 
             // If the loaded workbook has a changed "Normal" style, it might affect the default width of a column.
             var normalStyle = s?.CellStyles?.Elements<CellStyle>().FirstOrDefault(x => x.BuiltinId is not null && x.BuiltinId.Value == 0);
@@ -271,7 +265,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, s, worksheetPart, sharedStrings, differentialFormats, context);
+                worksheetPartReader.LoadWorksheet(ws, s, worksheetPart, sharedStrings, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 
@@ -481,7 +475,7 @@ namespace ClosedXML.Excel
 
                     foreach (var pivotTablePart in worksheetPart.PivotTableParts)
                     {
-                        PivotTableDefinitionPartReader.Load(workbookPart, differentialFormats, pivotTablePart, worksheetPart, ws, context);
+                        PivotTableDefinitionPartReader.Load(workbookPart, pivotTablePart, worksheetPart, ws, context);
                     }
                 }
             }

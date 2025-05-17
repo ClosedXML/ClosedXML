@@ -147,11 +147,6 @@ namespace ClosedXML.Excel
             CopyDefaultModify = copyDefaultModify;
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
-            : this(conditionalFormat, new[] { targetRange })
-        {
-        }
-
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IEnumerable<IXLRange> targetRanges)
             : this(conditionalFormat.StyleValue)
         {

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 
 namespace ClosedXML.Excel
@@ -24,6 +22,11 @@ namespace ClosedXML.Excel
         LightVertical,
         MediumGray,
         None,
+
+        /// <summary>
+        /// For solid fill, the fill color is taken from the <see cref="IXLFill.PatternColor"/>.
+        /// The <see cref="IXLFill.BackgroundColor"/> is not used.
+        /// </summary>
         Solid
     }
 

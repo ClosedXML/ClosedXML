@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.IO;
-using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -18,7 +17,7 @@ internal class PivotTableDefinitionPartReader
     /// </summary>
     private const int ValuesFieldIndex = -2;
 
-    internal static void Load(WorkbookPart workbookPart, Dictionary<int, DifferentialFormat> differentialFormats, PivotTablePart pivotTablePart, WorksheetPart worksheetPart, XLWorksheet ws, LoadContext context)
+    internal static void Load(WorkbookPart workbookPart, PivotTablePart pivotTablePart, WorksheetPart worksheetPart, XLWorksheet ws, LoadContext context)
     {
         var workbook = ws.Workbook;
         var cache = pivotTablePart.PivotTableCacheDefinitionPart;
@@ -46,7 +45,7 @@ internal class PivotTableDefinitionPartReader
 
         if (target != null && pivotSource != null)
         {
-            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, differentialFormats, context);
+            var pt = LoadPivotTableDefinition(pivotTableDefinition, ws, pivotSource, context);
             ws.PivotTables.Add(pt);
 
             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
@@ -55,7 +54,7 @@ internal class PivotTableDefinitionPartReader
     }
 
 #nullable enable
-    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache, Dictionary<int, DifferentialFormat> differentialFormats, LoadContext context)
+    private static XLPivotTable LoadPivotTableDefinition(PivotTableDefinition pivotTable, XLWorksheet sheet, XLPivotCache cache, LoadContext context)
     {
         var styles = sheet.Workbook.Styles;
 
@@ -147,23 +146,32 @@ internal class PivotTableDefinitionPartReader
             foreach (var format in formats.Cast<Format>())
             {
                 var action = format.Action?.Value.ToClosedXml() ?? XLPivotFormatAction.Formatting;
-                var dxfStyle = XLStyle.Default;
+                var dxfKey = XLStyleValue.Default.Key;
                 if (format.FormatId is not null)
                 {
                     // TODO: What about alignment?
+                    var differentialFormats = sheet.Workbook.Styles.DifferentialFormats;
                     var df = differentialFormats[checked((int)format.FormatId.Value)];
-                    OpenXmlHelper.LoadFont(df.Font, dxfStyle.Font);
-                    OpenXmlHelper.LoadFill(df.Fill, dxfStyle.Fill, differentialFillFormat: true);
-                    OpenXmlHelper.LoadBorder(df.Border, dxfStyle.Border);
-                    OpenXmlHelper.LoadNumberFormat(df.NumberingFormat, dxfStyle.NumberFormat);
+                    if (df.NumberFormat is not null)
+                        dxfKey = dxfKey with { NumberFormat = XLNumberFormatKey.ForFormat(df.NumberFormat) };
+
+                    if (df.Font is not null)
+                        dxfKey = dxfKey with { Font = df.Font.ApplyTo(dxfKey.Font) };
+
+                    if (df.Fill is not null)
+                        dxfKey = dxfKey with { Fill = df.Fill.ApplyTo(dxfKey.Fill) };
+
+                    if (df.Border is not null)
+                        dxfKey = dxfKey with { Border = df.Border.ApplyTo(dxfKey.Border) };
                 }
 
+                var dxfValue = XLStyleValue.FromKey(ref dxfKey);
                 var pivotArea = format.PivotArea ?? throw PartStructureException.ExpectedElementNotFound();
                 var xlPivotArea = LoadPivotArea(pivotArea);
                 var xlFormat = new XLPivotFormat(xlPivotArea)
                 {
                     Action = action,
-                    DxfStyleValue = dxfStyle.Value,
+                    DxfStyleValue = dxfValue,
                 };
                 xlPivotTable.AddFormat(xlFormat);
             }

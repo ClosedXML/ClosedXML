@@ -176,7 +176,7 @@ internal partial class StylesReader
         }
     }
 
-    private void ParseFont(string elementName)
+    private XLFontFormat ParseFont(string elementName)
     {
         // Font is mostly buggy specification. Excel basically chokes on anything but a sequence,
         // but standard requires an unbound choice where elements can repeat.
@@ -270,7 +270,7 @@ internal partial class StylesReader
             }
         }
 
-        var format = new XLFontFormat
+        var fontFormat = new XLFontFormat
         {
             Name = fontName,
             Charset = fontCharset,
@@ -288,23 +288,63 @@ internal partial class StylesReader
             VerticalAlignment = fontVerticalAlignment,
             Scheme = fontScheme,
         };
-        _styles.AddFontFormat(format);
+        _styles.AddFontFormat(fontFormat);
+        return fontFormat;
     }
 
-    partial void OnFillParsed(XLFillFormat? patternFill, XLFillFormat? gradientFill)
+    private XLFillFormat OnFillParsed(XLFillFormat? patternFill, XLFillFormat? gradientFill)
     {
-        _styles.AddFillFormat(patternFill ?? gradientFill ?? XLFillFormat.Empty);
+        var fillFormat = patternFill ?? gradientFill ?? XLFillFormat.Empty;
+        _styles.AddFillFormat(fillFormat);
+        return fillFormat;
     }
 
     private XLFillFormat OnPatternFillParsed(XLColor? fgColor, XLColor? bgColor, XLFillPatternValues? patternType)
     {
-        var patternFill = new XLPatternFill
+        // There is a discrepancy between <fill> interpretation for a solid fill:
+        // * cell fill: Pattern color is the one used for fill, the background color is ignored
+        // * dxf fill: Pattern color is ignored, the background color is used for fill
+        // The GUI in both cases says that the background color is the one that is used. Therefore
+        // use background is correct per GUI. The problem is that ClosedXML historically says
+        // the pattern color is the one that is used. This sucks, I have to live with it.
+        // The alternative is a breaking change with no benefit.
+        //
+        // The other difference between dxf and cell fill is the default pattern type. Spec and
+        // OI-29500 is silent, but Excel uses solid fill for dxf and none for cell fill.
+        if (_reader.Context[^2] == "dxf")
         {
-            PatternColor = fgColor ?? XLColor.NoColor,
-            BackgroundColor = bgColor ?? XLColor.NoColor,
-            PatternType = patternType ?? XLFillPatternValues.None,
-        };
-        return new XLFillFormat(patternFill);
+            var pattern = patternType ?? XLFillPatternValues.Solid;
+            if (pattern == XLFillPatternValues.Solid)
+            {
+                // Fix solid pattern discrepancy for dxf
+                var solidFill = new XLPatternFill
+                {
+                    PatternColor = bgColor ?? XLColor.NoColor,
+                    BackgroundColor = fgColor ?? XLColor.NoColor,
+                    PatternType = XLFillPatternValues.Solid,
+                };
+                return new XLFillFormat(solidFill);
+            }
+
+            var patternFill = new XLPatternFill
+            {
+                PatternColor = fgColor ?? XLColor.NoColor,
+                BackgroundColor = bgColor ?? XLColor.NoColor,
+                PatternType = pattern,
+            };
+            return new XLFillFormat(patternFill);
+        }
+        else
+        {
+            // Pattern for cell style fill
+            var patternFill = new XLPatternFill
+            {
+                PatternColor = fgColor ?? XLColor.NoColor,
+                BackgroundColor = bgColor ?? XLColor.NoColor,
+                PatternType = patternType ?? XLFillPatternValues.None,
+            };
+            return new XLFillFormat(patternFill);
+        }
     }
 
     private XLFillFormat OnGradientFillParsed(List<(FractionOfOne Value, XLColor Color)> stop, XLGradientType type, double degree, double left, double right, double top, double bottom)
@@ -338,7 +378,7 @@ internal partial class StylesReader
         return (position, color);
     }
 
-    partial void OnBorderParsed(XLBorderLine? left, XLBorderLine? right, XLBorderLine? top, XLBorderLine? bottom, XLBorderLine? diagonal, XLBorderLine? vertical, XLBorderLine? horizontal, bool? diagonalUp, bool? diagonalDown, bool outline)
+    private XLBorderFormat OnBorderParsed(XLBorderLine? left, XLBorderLine? right, XLBorderLine? top, XLBorderLine? bottom, XLBorderLine? diagonal, XLBorderLine? vertical, XLBorderLine? horizontal, bool? diagonalUp, bool? diagonalDown, bool outline)
     {
         var borderFormat = new XLBorderFormat
         {
@@ -354,6 +394,7 @@ internal partial class StylesReader
             Outline = outline
         };
         _styles.AddBorderFormat(borderFormat);
+        return borderFormat;
     }
 
     private XLBorderLine OnBorderPrParsed(XLColor? color, XLBorderStyleValues style)
@@ -505,6 +546,20 @@ internal partial class StylesReader
             ShrinkToFit = shrinkToFit ?? false,
             ReadingOrder = readingOrder is not null ? (XLAlignmentReadingOrderValues)readingOrder.Value : XLAlignmentReadingOrderValues.ContextDependent
         };
+    }
+
+    partial void OnDxfParsed(XLFontFormat? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormat? fill, XLAlignmentFormat? alignment, XLBorderFormat? border, XLProtectionFormat? protection)
+    {
+        var dxf = new XLDifferentialFormat
+        {
+            NumberFormat = numFmt?.FormatCode,
+            Font = font,
+            Fill = fill,
+            Alignment = alignment,
+            Border = border,
+            Protection = protection,
+        };
+        _styles.AddDifferentialFormat(dxf);
     }
 
     private XLColor ParseColor(string elementName)

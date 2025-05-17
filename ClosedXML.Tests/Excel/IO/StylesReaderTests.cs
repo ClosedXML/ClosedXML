@@ -530,6 +530,103 @@ internal class StylesReaderTests
             Assert.IsNull(styles.CellStyles[2].Font);
         }, xml);
     }
+
+    [Test]
+    public void Can_read_differential_formats()
+    {
+        AssertDxf(
+            """
+            <dxf>
+              <font>
+                <b/>
+              </font>
+              <numFmt numFmtId="176" formatCode="0.00"/>
+              <fill>
+                <patternFill patternType="lightGrid">
+                  <fgColor rgb="FF0000FF"/>
+                  <bgColor rgb="FF00FF00"/>
+                </patternFill>
+              </fill>
+              <border>
+                <right style="thin">
+                  <color rgb="FF00FF00"/>
+                </right>
+              </border>
+            </dxf>
+            """,
+            styles =>
+            {
+                var (dxfId, dxf) = styles.DifferentialFormats.Single();
+                Assert.AreEqual(0, dxfId);
+                Assert.IsTrue(dxf.Font?.Bold);
+                Assert.AreEqual("0.00", dxf.NumberFormat);
+                Assert.AreEqual(XLFillPatternValues.LightGrid, dxf.Fill?.Pattern?.PatternType);
+                Assert.AreEqual(XLColor.FromRgb(0x0000FF), dxf.Fill.Pattern.PatternColor);
+                Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Fill.Pattern.BackgroundColor);
+                Assert.AreEqual(XLBorderStyleValues.Thin, dxf.Border?.Right?.Style);
+                Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Border?.Right?.Color);
+                Assert.IsNull(dxf.Border.Left);
+                Assert.IsNull(dxf.Border.Top);
+                Assert.IsNull(dxf.Border.Bottom);
+            });
+    }
+
+    [Test]
+    public void Differential_formats_do_not_have_to_specify_any_component()
+    {
+        AssertDxf(
+            "<dxf/>",
+            styles =>
+            {
+                var dxf = styles.DifferentialFormats.Single().Value;
+                Assert.IsNull(dxf.Font);
+                Assert.IsNull(dxf.NumberFormat);
+                Assert.IsNull(dxf.Fill);
+                Assert.IsNull(dxf.Border);
+            });
+    }
+
+    [Test]
+    public void Default_pattern_type_for_differential_formats_is_solid()
+    {
+        AssertDxf(
+            """
+            <dxf>
+              <fill>
+                <patternFill/>
+              </fill>
+            </dxf>
+            """,
+            styles =>
+            {
+                var dxf = styles.DifferentialFormats.Single().Value;
+                Assert.AreEqual(XLFillPatternValues.Solid, dxf.Fill?.Pattern?.PatternType);
+            });
+    }
+
+    [Test]
+    public void Differential_formats_use_background_color_for_solid_fill_color()
+    {
+        AssertDxf(
+            """
+            <dxf>
+              <fill>
+                <patternFill patternType="solid">
+                  <fgColor rgb="FF00FF00"/>
+                  <bgColor rgb="FF800000"/>
+                </patternFill>
+              </fill>
+            </dxf>
+            """,
+            styles =>
+            {
+                var dxf = styles.DifferentialFormats.Single().Value;
+                Assert.AreEqual(XLFillPatternValues.Solid, dxf.Fill?.Pattern?.PatternType);
+                Assert.AreEqual(XLColor.FromRgb(0x800000), dxf.Fill?.Pattern?.PatternColor);
+                Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Fill?.Pattern?.BackgroundColor);
+            });
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
@@ -575,6 +672,18 @@ internal class StylesReaderTests
                          {cellXfsXml}
                        </xf>
                      </cellXfs>
+                   </styleSheet>
+                   """;
+        AssertFormat(assert, xml);
+    }
+
+    private static void AssertDxf(string dxfXml, Action<XLWorkbookStyles> assert)
+    {
+        var xml = $"""
+                   <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                     <dxfs>
+                       {dxfXml}
+                     </dxfs>
                    </styleSheet>
                    """;
         AssertFormat(assert, xml);
