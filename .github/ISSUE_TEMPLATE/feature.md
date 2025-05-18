@@ -1,11 +1,15 @@
+---
+name: Feature request
+about: Create a report to help us improve the product
+title: '[FEATURE] - '
+labels: 'enhancement'
+assignees: ''
+
+---
+
 ## Read and complete the full issue template
 
 Do not randomly delete sections. They are here for a reason.
-
-**Do you want to request a *feature* or report a *bug*?**
-- [x] Bug
-- [ ] Feature
-- [ ] Question
 
 **Did you test against the latest CI build?**
 - [ ] Yes
