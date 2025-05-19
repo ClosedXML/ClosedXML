@@ -20,7 +20,8 @@ namespace ClosedXML.Tests.Excel
         private static IEnumerable<string> TryToLoad =>
             TestHelper.ListResourceFiles(s =>
                     s.Contains(".TryToLoad.") &&
-                    !s.Contains(".LO."));
+                    !s.Contains(".LO.") &&
+                    !s.Contains(".Malformed."));
 
         [TestCaseSource(nameof(TryToLoad))]
         public void CanSuccessfullyLoadFiles(string file)
@@ -794,6 +795,25 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(2, wb.Worksheets.Count);
                 Assert.NotNull(wb.Worksheet("Pivot").PivotTables.Contains("PivotTable1"));
             }, @"TryToLoad\DialogSheet.xlsx");
+        }
+
+        [Test]
+        public void Can_load_workbook_with_invalid_attributes_when_strict_parsing_is_disabled()
+        {
+            TestHelper.LoadAndAssert((_, ws) =>
+            {
+                // "Center" - wrong case.
+                Assert.AreEqual(XLAlignmentVerticalValues.Bottom, ws.Cell("A1").Style.Alignment.Vertical);
+
+                // "richtig" - invalid value.
+                Assert.AreEqual(XLAlignmentHorizontalValues.General, ws.Cell("A2").Style.Alignment.Horizontal);
+
+                // "three" - not a number.
+                Assert.AreEqual(0, ws.Cell("A3").Style.Alignment.Indent);
+
+                // "PRAVDA" - not a bool, thus treated as a missing. Thanks to the default true it is still bold.
+                Assert.IsTrue(ws.Cell("A4").Style.Font.Bold);
+            }, @"TryToLoad\Malformed\AttributesWithInvalidValues.xlsx", new LoadOptions { StrictAttributeParsing = false });
         }
     }
 }

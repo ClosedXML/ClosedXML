@@ -10,6 +10,10 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.IO;
 
+/// <summary>
+/// Test that <see cref="XmlTreeReader"/> reads attributes per <see cref="ClosedXML.Excel.LoadOptions.StrictAttributeParsing"/>
+/// option. The invalid attribute values are either interpreted as a missing or throw an exception.
+/// </summary>
 [TestFixture]
 [TestOf(typeof(XmlTreeReader))]
 internal class XmlTreeReaderStrictParsingTests
