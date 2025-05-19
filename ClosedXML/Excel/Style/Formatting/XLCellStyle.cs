@@ -11,5 +11,29 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal class XLCellStyle
 {
-    // TODO: Fill with data
+    /// <summary>
+    /// Name of the style.
+    /// </summary>
+    public required string Name { get; init; }
+
+    public required BuiltInStyleValues? BuiltInStyle { get; init; }
+
+    /// <summary>
+    /// Is style hidden in the UI?
+    /// </summary>
+    public required bool Hidden { get; init; }
+
+    public required string? NumberFormat { get; init; }
+
+    public required XLAlignmentFormat? Alignment { get; init; }
+
+    public required XLProtectionFormat? Protection { get; init; }
+
+    public required XLFontFormat? Font { get; init; }
+
+    public required XLFillFormat? Fill { get; init; }
+
+    public required XLBorderFormat? Border { get; init; }
+
+    public required CellFormatComponents ApplyComponents { get; init; }
 }

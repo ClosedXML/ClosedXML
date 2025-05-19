@@ -96,12 +96,27 @@ public class ElementType : IElementGroup
         }
         else if (min == 1 && max == int.MaxValue)
         {
-            code.AddLine($"_reader.Open({openArgs});");
-            code.AddLine("do");
-            code.OpenBrace();
-            code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
-            code.CloseBrace();
-            code.AddLine($"while (_reader.TryOpen({openArgs}));");
+            if (code.TryGetComplexType(TypeName, out var csType))
+            {
+                csType = $"List<{csType}>";
+                variable = new Variable(csType, Name);
+                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append($" = new {csType}();").EndLine();
+                code.AddLine($"_reader.Open({openArgs});");
+                code.AddLine("do");
+                code.OpenBrace();
+                code.WriteIndent().AppendVariable(variable.Name).Append($".Add({elementParseCall})").Append(";").EndLine();
+                code.CloseBrace();
+                code.AddLine($"while (_reader.TryOpen({openArgs}));");
+            }
+            else
+            {
+                code.AddLine($"_reader.Open({openArgs});");
+                code.AddLine("do");
+                code.OpenBrace();
+                code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+                code.CloseBrace();
+                code.AddLine($"while (_reader.TryOpen({openArgs}));");
+            }
         }
         else
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ClosedXML.Excel;
+using ClosedXML.Excel.Formatting;
 using ClosedXML.Excel.IO;
 using ClosedXML.IO;
 using NUnit.Framework;
@@ -280,40 +281,35 @@ internal class StylesReaderTests
     public void Can_read_cell_format_properties()
     {
         var xml =
-            $"""
+            """
             <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
               <numFmts>
                 <numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/>
               </numFmts>
               <fonts>
-                <font>
-                  <color theme="1"/>
-                </font>
-                <font>
-                  <sz val="11"/>
-                </font>
+                <font><color theme="1"/></font>
+                <font><sz val="11"/></font>
               </fonts>
-              <fills count="5">
-                <fill>
-                  <patternFill patternType="none"/>
-                </fill>
-                <fill>
-                  <patternFill patternType="gray125"/>
-                </fill>
+              <fills>
+                <fill><patternFill patternType="none"/></fill>
+                <fill><patternFill patternType="gray125"/></fill>
               </fills>
               <borders>
-                <border>
-                  <bottom style="double">
-                    <color indexed="64"/>
-                  </bottom>
-                </border>
+                <border><bottom style="double"><color indexed="64"/></bottom></border>
               </borders>
+              <cellStyleXfs>
+                <xf />
+              </cellStyleXfs>
               <cellXfs>
-                <xf numFmtId="164" fontId="1" fillId="1" borderId="0" xfId="0" quotePrefix="1" pivotButton="1" applyNumberFormat="0" applyFont="0" applyFill="0" applyBorder="0" applyAlignment="0" applyProtection="0">
+                <xf numFmtId="164" fontId="1" fillId="1" borderId="0" xfId="0" quotePrefix="1" pivotButton="1"
+                    applyNumberFormat="0" applyBorder="0" applyAlignment="0" applyProtection="0">
                   <alignment horizontal="left"/>
                   <protection/>
                 </xf>
               </cellXfs>
+              <cellStyles>
+                <cellStyle name="Test" xfId="0" />
+              </cellStyles>
             </styleSheet>
             """;
         AssertFormat(styles =>
@@ -326,15 +322,214 @@ internal class StylesReaderTests
             Assert.IsTrue(format.Protection.Locked);
             Assert.IsFalse(format.Protection.Hidden);
 
-            Assert.AreEqual(styles.NumberFormats[164], format.NumberFormat);
-            Assert.AreEqual(styles.Fonts[1], format.Font);
-            Assert.AreEqual(styles.Fills[1], format.Fill);
-            Assert.AreEqual(styles.Borders[0], format.Border);
+            Assert.AreSame(styles.NumberFormats[164], format.NumberFormat);
+            Assert.AreSame(styles.Fonts[1], format.Font);
+            Assert.AreSame(styles.Fills[1], format.Fill);
+            Assert.AreSame(styles.Borders[0], format.Border);
 
-            // TODO: Add style and style components, once they will be loaded
+            // All apply* are 0 or default -> nothing should be overwritten
+            Assert.AreEqual(CellFormatComponents.None, format.StyleComponents);
+            Assert.NotNull(format.CellStyle);
+            Assert.AreEqual("Test", format.CellStyle.Name);
         }, xml);
     }
 
+    [Test]
+    public void Can_read_cell_styles()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <numFmts>
+                <numFmt numFmtId="190" formatCode="0.00"/>
+              </numFmts>
+              <fonts>
+                <font/>
+                <font><sz val="15"/></font>
+              </fonts>
+              <fills>
+                <fill><patternFill patternType="gray125"/></fill>
+                <fill><patternFill patternType="lightGrid"/></fill>
+              </fills>
+              <borders>
+                <border><bottom style="double"><color rgb="FF801040"/></bottom></border>
+              </borders>
+              <cellStyleXfs>
+                <xf numFmtId="190" fontId="1" fillId="1" borderId="0" xfId="0" 
+                    applyNumberFormat="1" applyBorder="1" applyAlignment="1" applyProtection="1">
+                  <alignment horizontal="right"/>
+                  <protection/>
+                </xf>
+              </cellStyleXfs>
+              <cellStyles>
+                <cellStyle name="Test" xfId="0" builtinId="26"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            var style = styles.CellStyles[0];
+            Assert.AreEqual("Test", style.Name);
+            Assert.AreEqual(BuiltInStyleValues.Good, style.BuiltInStyle);
+            Assert.IsFalse(style.Hidden);
+
+            Assert.NotNull(style.Alignment);
+            Assert.AreEqual(XLAlignmentHorizontalValues.Right, style.Alignment.Horizontal);
+
+            Assert.NotNull(style.Protection);
+            Assert.IsTrue(style.Protection.Locked);
+            Assert.IsFalse(style.Protection.Hidden);
+
+            Assert.AreSame(styles.NumberFormats[190], style.NumberFormat);
+            Assert.AreEqual("0.00", style.NumberFormat);
+
+            Assert.AreSame(styles.Fonts[1], style.Font);
+            Assert.AreEqual(15.0, style.Font?.Size);
+
+            Assert.AreSame(styles.Fills[1], style.Fill);
+            Assert.AreEqual(XLFillPatternValues.LightGrid, style.Fill?.Pattern?.PatternType);
+
+            Assert.AreSame(styles.Borders[0], style.Border);
+            Assert.AreEqual(XLBorderStyleValues.Double, style.Border?.Bottom?.Style);
+
+            // All apply* are true or default (true) -> everything should be overwritten
+            Assert.AreEqual(CellFormatComponents.All, style.ApplyComponents);
+        }, xml);
+    }
+
+    [Test]
+    public void Outline_cell_styles_are_normalized()
+    {
+        // builtinId 1 (RowLevel_*) and 2 (ColLevel_*) combined with iLevel are converted
+        // to an item within all builtin styles instead of requiring two combined attributes.
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts><font/></fonts>
+              <fills><fill/></fills>
+              <borders><border/></borders>
+              <cellStyleXfs>
+                <xf/>
+              </cellStyleXfs>
+              <cellStyles>
+                <cellStyle name="RowLevel_3" xfId="0" builtinId="1" iLevel="2"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            var style = styles.CellStyles[0];
+            Assert.AreEqual("RowLevel_3", style.Name);
+            Assert.AreEqual(BuiltInStyleValues.RowLevel3, style.BuiltInStyle);
+        }, xml);
+    }
+
+    [Test]
+    public void Cell_styles_without_name_have_a_generated_one()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts><font/></fonts>
+              <fills><fill/></fills>
+              <borders><border/></borders>
+              <cellStyleXfs>
+                <xf/>
+                <xf/>
+                <xf/>
+              </cellStyleXfs>
+              <cellStyles>
+                <cellStyle name="Style 1" xfId="0"/>
+                <cellStyle xfId="1"/>
+                <cellStyle xfId="2"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            Assert.AreEqual(3, styles.CellStyles.Count);
+            Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
+            Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
+            Assert.AreEqual("Style 3", styles.CellStyles[2].Name);
+        }, xml);
+    }
+
+    [Test]
+    public void Can_read_cell_styles_referencing_same_cell_style_format()
+    {
+        // This is basically pointless, but valid situation. Cell formats reference
+        // the cellStyleXfs, but there are multiple cellStyles for the cellStyleXfs.
+        // Having two names for essentially one style is pretty invalid and OI-29500
+        // even forbids it, but Excel reads it and there are many producers in the world.
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts><font><sz val="15"/></font></fonts>
+              <fills><fill/></fills>
+              <borders><border/></borders>
+              <cellStyleXfs>
+                <xf fontId="0"/>
+              </cellStyleXfs>
+              <cellXfs>
+                <xf xfId="0"/>
+              </cellXfs>
+              <cellStyles>
+                <cellStyle name="Style 1" xfId="0"/>
+                <cellStyle name="Style 2" xfId="0"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            Assert.AreEqual(2, styles.CellStyles.Count);
+            Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
+            Assert.AreEqual(15.0, styles.CellStyles[0].Font?.Size);
+
+            Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
+            Assert.AreEqual(15.0, styles.CellStyles[1].Font?.Size);
+
+            Assert.AreEqual(1, styles.CellFormats.Count);
+            Assert.AreSame(styles.CellStyles[0], styles.CellFormats[0].CellStyle);
+        }, xml);
+    }
+
+    [Test]
+    public void Cell_style_formatting_records_without_cell_style_have_generated_one()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts>
+                <font><sz val="15"/></font>
+                <font><sz val="10"/></font>
+              </fonts>
+              <fills><fill/></fills>
+              <borders><border/></borders>
+              <cellStyleXfs>
+                <xf fontId="0"/>
+                <xf fontId="1"/>
+                <xf/>
+              </cellStyleXfs>
+              <cellStyles>
+                <cellStyle xfId="0"/>
+                <cellStyle name="Style 2" xfId="1"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            Assert.AreEqual(3, styles.CellStyles.Count);
+            Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
+            Assert.AreEqual(15.0, styles.CellStyles[0].Font?.Size);
+
+            Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
+            Assert.AreEqual(10.0, styles.CellStyles[1].Font?.Size);
+
+            // Created style from last formatting record without a cellStyle element
+            Assert.AreEqual("Style 3", styles.CellStyles[2].Name);
+            Assert.IsNull(styles.CellStyles[2].Font);
+        }, xml);
+    }
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""

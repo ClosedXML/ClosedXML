@@ -123,6 +123,10 @@ public class Program
             .AddComplexTypeMapping("CT_NumFmt", "(int NumFmtId, string FormatCode)")
             .AddComplexTypeMapping("CT_CellAlignment", "XLAlignmentFormat")
             .AddComplexTypeMapping("CT_CellProtection", "XLProtectionFormat")
+            .AddComplexTypeMapping("CT_Xf", "(XLCellFormat Format, int? CellStyleXfId)")
+            .AddComplexTypeMapping("CT_CellXfs", "List<(XLCellFormat Format, int? CellStyleXfId)>")
+            .AddComplexTypeMapping("CT_CellStyle", "(int CellStyleXfId, XLCellStyle Style)")
+            .AddComplexTypeMapping("CT_CellStyles", "Dictionary<int, XLCellStyle>")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
