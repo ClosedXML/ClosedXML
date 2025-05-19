@@ -73,8 +73,8 @@ public static class XmlTreeReaderExtensions
 
         if (hexString.Length != 8 || !XStringConvert.TryGetHexValue(hexString.AsSpan(), out var number))
         {
-            if (!reader.SuppressFormatErrors)
-                throw PartStructureException.InvalidAttributeFormat(hexString);
+            if (reader.StrictAttributeParsing)
+                throw PartStructureException.InvalidAttributeFormat(attributeName, hexString, reader);
 
             return null;
         }

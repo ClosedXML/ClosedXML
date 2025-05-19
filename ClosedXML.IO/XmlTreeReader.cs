@@ -120,18 +120,18 @@ public sealed class XmlTreeReader : IDisposable
 
     private readonly List<string> _context = new();
 
-    public XmlTreeReader(Stream stream, IEnumMapper enumMapper, bool suppressFormatErrors)
+    public XmlTreeReader(Stream stream, IEnumMapper enumMapper, bool strictAttributeParsing)
     {
         _reader = XmlReader.Create(stream, Settings);
         _enumMapper = enumMapper;
-        SuppressFormatErrors = suppressFormatErrors;
+        StrictAttributeParsing = strictAttributeParsing;
     }
 
-    public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper, bool suppressFormatErrors)
+    public XmlTreeReader(XmlReader reader, IEnumMapper enumMapper, bool strictAttributeParsing)
     {
         _reader = reader;
         _enumMapper = enumMapper;
-        SuppressFormatErrors = suppressFormatErrors;
+        StrictAttributeParsing = strictAttributeParsing;
     }
 
     /// <summary>
@@ -147,10 +147,11 @@ public sealed class XmlTreeReader : IDisposable
     internal string ElementName => _reader.Name;
 
     /// <summary>
-    /// Should unparseable attributes be treated as errors and throw exception are just return null?
-    /// Excel generally ignores unparseable attributes.
+    /// Should attributes with values outside of their simple type be treated as errors and throw
+    /// an exception or be treated as missing and just return null? Excel generally ignores
+    /// unparseable attributes.
     /// </summary>
-    internal bool SuppressFormatErrors { get; }
+    internal bool StrictAttributeParsing { get; }
 
     /// <summary>
     /// Read next element. Check lookup element is <paramref name="localName"/>. If it is, open the
@@ -283,7 +284,7 @@ public sealed class XmlTreeReader : IDisposable
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
         }
@@ -305,12 +306,12 @@ public sealed class XmlTreeReader : IDisposable
             }
             catch (OverflowException e)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
         }
@@ -331,19 +332,19 @@ public sealed class XmlTreeReader : IDisposable
             }
             catch (OverflowException e)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
         }
 
         if (number is < 0 or > uint.MaxValue)
         {
-            if (!SuppressFormatErrors)
+            if (StrictAttributeParsing)
                 ThrowAttributeFormatException(attributeName);
 
             number = null;
@@ -365,19 +366,19 @@ public sealed class XmlTreeReader : IDisposable
             }
             catch (OverflowException e)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
         }
 
         if (number is not null && (double.IsNaN(number.Value) || double.IsInfinity(number.Value)))
         {
-            if (!SuppressFormatErrors)
+            if (StrictAttributeParsing)
                 ThrowAttributeFormatException(attributeName);
 
             number = null;
@@ -404,7 +405,7 @@ public sealed class XmlTreeReader : IDisposable
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
-                if (!SuppressFormatErrors)
+                if (StrictAttributeParsing)
                     ThrowAttributeFormatException(attributeName, e);
             }
         }
@@ -433,7 +434,7 @@ public sealed class XmlTreeReader : IDisposable
 
         if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
         {
-            if (!SuppressFormatErrors)
+            if (StrictAttributeParsing)
                 ThrowAttributeFormatException(attributeName);
 
             _reader.MoveToElement();

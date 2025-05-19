@@ -69,7 +69,7 @@ internal class XmlTreeReaderStrictParsingTests
         var attributeName = attribute.Name.LocalName;
         var attributeValue = attribute.Value;
 
-        using var reader = new XmlTreeReader(new MemoryStream(Encoding.UTF8.GetBytes(xmlText)), XmlToEnumMapper.Instance, false);
+        using var reader = new XmlTreeReader(new MemoryStream(Encoding.UTF8.GetBytes(xmlText)), XmlToEnumMapper.Instance, true);
         reader.Open("element", string.Empty);
         var ex = Assert.Throws<PartStructureException>(() => readAttribute(reader));
         Assert.That(ex?.Message, Does.StartWith($"The attribute '{attributeName}' contains a value '{attributeValue}' that doesn't match expected format."));
@@ -77,7 +77,7 @@ internal class XmlTreeReaderStrictParsingTests
 
     private static void AssertSkippedOnNonStrict<T>(string xmlText, Func<XmlTreeReader, T> readAttribute)
     {
-        using var reader = new XmlTreeReader(new MemoryStream(Encoding.UTF8.GetBytes(xmlText)), XmlToEnumMapper.Instance, true);
+        using var reader = new XmlTreeReader(new MemoryStream(Encoding.UTF8.GetBytes(xmlText)), XmlToEnumMapper.Instance, false);
         reader.Open("element", string.Empty);
         var readAttributeValue = readAttribute(reader);
         Assert.IsNull(readAttributeValue);

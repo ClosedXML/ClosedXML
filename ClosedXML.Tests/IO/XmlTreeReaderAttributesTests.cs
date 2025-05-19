@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -134,7 +134,7 @@ internal class XmlTreeReaderAttributesTests
         var xmlContext = $"<element {AttributeName}=\"{attributeValue}\"/>";
         var xmlReader = XmlReader.Create(new StringReader(xmlContext));
         mapper ??= new XmlToEnumMapper.Builder().Build();
-        var reader = new XmlTreeReader(xmlReader, mapper, true);
+        var reader = new XmlTreeReader(xmlReader, mapper, false);
         reader.Open("element", string.Empty);
         return reader;
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using ClosedXML.Excel;
@@ -93,7 +93,7 @@ internal class PivotCacheRecordsReaderTests
         }
 
         using var stream = new MemoryStream(XLHelper.NoBomUTF8.GetBytes(recordsXml));
-        using var xmlTreeReader = new XmlTreeReader(stream, XmlToEnumMapper.Instance, false);
+        using var xmlTreeReader = new XmlTreeReader(stream, XmlToEnumMapper.Instance, true);
         var reader = new PivotCacheRecordsReader(xmlTreeReader, cache);
         assert(cache, reader);
     }

@@ -21,7 +21,7 @@ public class Program
 
         var schemaPath = args[0];
         using var fileStream = File.OpenRead(schemaPath);
-        using var reader = new XmlTreeReader(fileStream, new XsdEnumMapper(), false);
+        using var reader = new XmlTreeReader(fileStream, new XsdEnumMapper(), true);
         var parser = new XsdSchemaParser();
 
         var schema = parser.ParseSchema(reader);

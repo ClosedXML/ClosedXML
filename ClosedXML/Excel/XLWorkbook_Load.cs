@@ -1204,7 +1204,7 @@ namespace ClosedXML.Excel
         private XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)
         {
             var stream = openXmlPart.GetStream(FileMode.Open);
-            return new XmlTreeReader(stream, XmlToEnumMapper.Instance, !StrictAttributeParsing);
+            return new XmlTreeReader(stream, XmlToEnumMapper.Instance, StrictAttributeParsing);
         }
     }
 }

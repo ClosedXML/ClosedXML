@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.IO;
 using System.Xml;
 using ClosedXML.Excel.IO;
@@ -60,7 +60,7 @@ internal class XmlTreeReaderExtensionsTests
     {
         var xmlContext = $"<element {AttributeName}=\"{attributeValue}\"/>";
         var xmlReader = XmlReader.Create(new StringReader(xmlContext));
-        var reader = new XmlTreeReader(xmlReader, new XmlToEnumMapper.Builder().Build(), true);
+        var reader = new XmlTreeReader(xmlReader, new XmlToEnumMapper.Builder().Build(), false);
         reader.Open("element", string.Empty);
         return reader;
     }

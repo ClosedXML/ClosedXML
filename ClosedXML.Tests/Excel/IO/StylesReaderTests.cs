@@ -692,7 +692,7 @@ internal class StylesReaderTests
     private static void AssertFormat(Action<XLWorkbookStyles> assert, string xml)
     {
         using var stream = new MemoryStream(XLHelper.NoBomUTF8.GetBytes(xml));
-        using var xmlTreeReader = new XmlTreeReader(stream, XmlToEnumMapper.Instance, false);
+        using var xmlTreeReader = new XmlTreeReader(stream, XmlToEnumMapper.Instance, true);
         var styles = new XLWorkbookStyles();
         var reader = new StylesReader(xmlTreeReader, styles);
         reader.Load();
