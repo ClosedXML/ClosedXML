@@ -284,7 +284,7 @@ public sealed class XmlTreeReader : IDisposable
             catch (XmlException e) when (e.InnerException is FormatException)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
         }
 
@@ -303,15 +303,15 @@ public sealed class XmlTreeReader : IDisposable
             {
                 number = _reader.ReadContentAsInt();
             }
-            catch (OverflowException)
+            catch (OverflowException e)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
         }
 
@@ -329,22 +329,22 @@ public sealed class XmlTreeReader : IDisposable
             {
                 number = _reader.ReadContentAsLong();
             }
-            catch (OverflowException)
+            catch (OverflowException e)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
         }
 
         if (number is < 0 or > uint.MaxValue)
         {
             if (!SuppressFormatErrors)
-                throw PartStructureException.InvalidAttributeFormat(_reader.ReadContentAsString());
+                ThrowAttributeFormatException(attributeName);
 
             number = null;
         }
@@ -363,22 +363,22 @@ public sealed class XmlTreeReader : IDisposable
             {
                 number = _reader.ReadContentAsDouble();
             }
-            catch (OverflowException)
+            catch (OverflowException e)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
             catch (XmlException e) when (e.InnerException is FormatException)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
         }
 
         if (number is not null && (double.IsNaN(number.Value) || double.IsInfinity(number.Value)))
         {
             if (!SuppressFormatErrors)
-                throw PartStructureException.InvalidAttributeFormat(_reader.ReadContentAsString());
+                ThrowAttributeFormatException(attributeName);
 
             number = null;
         }
@@ -405,7 +405,7 @@ public sealed class XmlTreeReader : IDisposable
             catch (XmlException e) when (e.InnerException is FormatException)
             {
                 if (!SuppressFormatErrors)
-                    throw;
+                    ThrowAttributeFormatException(attributeName, e);
             }
         }
 
@@ -424,19 +424,23 @@ public sealed class XmlTreeReader : IDisposable
     {
         ThrowOnNonStartElement();
         var enumString = _reader.MoveToAttribute(attributeName) ? _reader.ReadContentAsString() : null;
-        _reader.MoveToElement();
 
         if (enumString is null)
+        {
+            _reader.MoveToElement();
             return null;
+        }
 
         if (!_enumMapper.TryGetEnum<TEnum>(enumString, out var enumValue))
         {
             if (!SuppressFormatErrors)
-                throw PartStructureException.InvalidAttributeFormat(enumString);
+                ThrowAttributeFormatException(attributeName);
 
+            _reader.MoveToElement();
             return null;
         }
 
+        _reader.MoveToElement();
         return enumValue;
     }
 
@@ -536,5 +540,11 @@ public sealed class XmlTreeReader : IDisposable
     {
         if (_reader.NodeType != XmlNodeType.Element || !_isStart || _inLookup)
             throw new InvalidOperationException("To read content/attribute, the reader must be on start element and in processing state.");
+    }
+
+    private void ThrowAttributeFormatException(string attributeName, Exception? exception = null)
+    {
+        var attributeValue = _reader.ReadContentAsString();
+        throw PartStructureException.InvalidAttributeFormat(attributeName, attributeValue, this, exception);
     }
 }

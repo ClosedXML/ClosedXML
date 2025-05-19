@@ -1201,10 +1201,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)
+        private XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)
         {
             var stream = openXmlPart.GetStream(FileMode.Open);
-            return new XmlTreeReader(stream, XmlToEnumMapper.Instance, false);
+            return new XmlTreeReader(stream, XmlToEnumMapper.Instance, !StrictAttributeParsing);
         }
     }
 }

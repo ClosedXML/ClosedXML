@@ -11,8 +11,8 @@ namespace ClosedXML.IO;
 /// </summary>
 public class PartStructureException : Exception
 {
-    private PartStructureException(string message, XmlTreeReader? reader = null)
-        : base(BuildMessage(message, reader))
+    private PartStructureException(string message, XmlTreeReader? reader = null, Exception? innerException = null)
+        : base(BuildMessage(message, reader), innerException)
     {
     }
 
@@ -122,6 +122,19 @@ public class PartStructureException : Exception
     public static Exception InvalidAttributeFormat(string attributeValue)
     {
         return new PartStructureException($"The attribute has a value ('{attributeValue}') in an incorrect format.");
+    }
+
+    /// <summary>
+    /// Attribute value should have some kind of format (e.g. number or an enum value) and it
+    /// doesn't.
+    /// </summary>
+    /// <param name="attributeName">Name of the attribute.</param>
+    /// <param name="attributeValue">Value of the attribute.</param>
+    /// <param name="reader">Reader to provide info about place where error happened.</param>
+    /// <param name="innerException">Exception that cause the error.</param>
+    public static Exception InvalidAttributeFormat(string attributeName, string attributeValue, XmlTreeReader reader, Exception? innerException = null)
+    {
+        return new PartStructureException($"The attribute '{attributeName}' contains a value '{attributeValue}' that doesn't match expected format.", reader, innerException);
     }
 
     /// <inheritdoc cref="InvalidAttributeValue(string)"/>

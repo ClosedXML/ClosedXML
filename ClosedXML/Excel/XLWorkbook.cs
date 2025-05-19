@@ -127,6 +127,9 @@ namespace ClosedXML.Excel
 
         internal double DpiY { get; }
 
+        /// <inheritdoc cref="LoadOptions.StrictAttributeParsing"/>
+        internal bool StrictAttributeParsing { get; }
+
         internal XLPivotCaches PivotCachesInternal { get; }
 
         internal SharedStringTable SharedStringTable { get; } = new();
@@ -789,6 +792,7 @@ namespace ClosedXML.Excel
 
             DpiX = loadOptions.Dpi.X;
             DpiY = loadOptions.Dpi.Y;
+            StrictAttributeParsing = loadOptions.StrictAttributeParsing;
             GraphicEngine = loadOptions.GraphicEngine ?? LoadOptions.DefaultGraphicEngine ?? DefaultGraphicEngine.Instance.Value;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
