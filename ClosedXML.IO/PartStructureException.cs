@@ -22,7 +22,7 @@ public class PartStructureException : Exception
     /// </summary>
     public static Exception ExpectedElementNotFound()
     {
-        return new PartStructureException($"The structure of XML expected a certain kind of element, but it isn't there.");
+        return new PartStructureException("The structure of XML expected a certain kind of element, but it isn't there.");
     }
 
     /// <summary>
@@ -108,20 +108,13 @@ public class PartStructureException : Exception
         return new PartStructureException(message, reader);
     }
 
-    /// <inheritdoc cref="InvalidAttributeFormat(string)"/>
-    public static Exception InvalidAttributeFormat()
-    {
-        return new PartStructureException("The attribute has a value in an incorrect format.");
-    }
-
     /// <summary>
     /// Attribute value should have some kind of format (e.g. number or an enum value) and it
     /// doesn't.
     /// </summary>
-    /// <param name="attributeValue">Value of the attribute.</param>
-    public static Exception InvalidAttributeFormat(string attributeValue)
+    public static Exception InvalidAttributeFormat()
     {
-        return new PartStructureException($"The attribute has a value ('{attributeValue}') in an incorrect format.");
+        return new PartStructureException("The attribute contains a value that doesn't match expected format.");
     }
 
     /// <summary>
@@ -131,8 +124,8 @@ public class PartStructureException : Exception
     /// <param name="attributeName">Name of the attribute.</param>
     /// <param name="attributeValue">Value of the attribute.</param>
     /// <param name="reader">Reader to provide info about place where error happened.</param>
-    /// <param name="innerException">Exception that cause the error.</param>
-    public static Exception InvalidAttributeFormat(string attributeName, string attributeValue, XmlTreeReader reader, Exception? innerException = null)
+    /// <param name="innerException">Exception that caused the error.</param>
+    public static Exception InvalidAttributeFormat(string attributeName, string attributeValue, XmlTreeReader? reader = null, Exception? innerException = null)
     {
         return new PartStructureException($"The attribute '{attributeName}' contains a value '{attributeValue}' that doesn't match expected format.", reader, innerException);
     }
@@ -145,7 +138,7 @@ public class PartStructureException : Exception
 
     /// <summary>
     /// The attribute value doesn't make sense when taken in context of whole XML document. That is
-    /// different from <see cref="InvalidAttributeFormat(string)"/>, format is a syntactic problem, this
+    /// different from <see cref="InvalidAttributeFormat()"/>, format is a syntactic problem, this
     /// is a semantic problem.
     /// </summary>
     /// <param name="attributeValue">The attribute value, not a name.</param>
