@@ -1487,7 +1487,8 @@ namespace ClosedXML.Excel.IO
             var filterRange = xlAutoFilter.Range;
             autoFilter.Reference = filterRange.RangeAddress.ToString();
 
-            foreach (var (columnNumber, xlFilterColumn) in xlAutoFilter.Columns)
+            // Filter out the XLFilterType.None case to sopport the case when only some columns have automatic filters
+            foreach (var (columnNumber, xlFilterColumn) in xlAutoFilter.Columns.Where(xlAFC => xlAFC.Value.FilterType != XLFilterType.None))
             {
                 var filterColumn = new FilterColumn { ColumnId = (UInt32)columnNumber - 1 };
 
