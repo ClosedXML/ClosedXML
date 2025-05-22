@@ -76,8 +76,6 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet(String sheetName)
         {
-            sheetName = sheetName.UnescapeSheetName();
-
             if (_worksheets.TryGetValue(sheetName, out XLWorksheet w))
                 return w;
 
