@@ -391,14 +391,14 @@ internal partial class StylesReader
 
     private void ParseTableStyleElement(string elementName)
     {
-        var type = _reader.GetEnum<XLTableStyleType>("type");
+        var type = _reader.GetStringMappedValue("type", TableStyleTypeMap);
         var size = _reader.GetOptionalUInt("size") ?? 1;
         var dxfId = _reader.GetOptionalUInt("dxfId");
         _reader.Close(elementName, _ns);
         OnTableStyleElementParsed(type, size, dxfId);
     }
 
-    partial void OnTableStyleElementParsed(XLTableStyleType type, uint size, uint? dxfId);
+    partial void OnTableStyleElementParsed((XLTableStyleRegionValues?, XLPivotStyleRegionValues?) type, uint size, uint? dxfId);
 
     private void ParseColors(string elementName)
     {

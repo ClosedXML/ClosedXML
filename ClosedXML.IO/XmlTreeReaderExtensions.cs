@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO;
 
@@ -97,5 +98,23 @@ public static class XmlTreeReaderExtensions
     {
         var count = reader.GetOptionalUInt("count") ?? 1;
         return checked((int)count);
+    }
+
+    /// <summary>
+    /// Get a value mapped from a string attribute value.
+    /// </summary>
+    /// <typeparam name="TResult">Type of mapped value.</typeparam>
+    /// <param name="reader">Reader to read the attribute.</param>
+    /// <param name="attributeName">Name of the attribute.</param>
+    /// <param name="map">The dictionary that contains mapped values.</param>
+    /// <returns>Mapped value.</returns>
+    /// <exception cref="PartStructureException">Attribute value isn't in the <paramref name="map"/>.</exception>
+    public static TResult GetStringMappedValue<TResult>(this XmlTreeReader reader, string attributeName, IReadOnlyDictionary<string, TResult> map)
+    {
+        var attributeValue = reader.GetString(attributeName);
+        if (!map.TryGetValue(attributeValue, out var result))
+            throw PartStructureException.InvalidAttributeFormat(attributeName, attributeValue, reader);
+
+        return result;
     }
 }

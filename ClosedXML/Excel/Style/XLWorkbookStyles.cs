@@ -28,6 +28,11 @@ internal class XLWorkbookStyles
 
     private readonly Dictionary<int, XLDifferentialFormat> _differentialFormats;
 
+    /// <summary>
+    /// Key is a table style name, value is a table style.
+    /// </summary>
+    private readonly Dictionary<string, XLTableTheme> _tableStyles;
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
@@ -37,6 +42,7 @@ internal class XLWorkbookStyles
         _cellFormats = new Dictionary<int, XLCellFormat>();
         _cellStyles = new Dictionary<int, XLCellStyle>();
         _differentialFormats = new Dictionary<int, XLDifferentialFormat>();
+        _tableStyles = new Dictionary<string, XLTableTheme>(XLHelper.NameComparer);
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
@@ -52,6 +58,8 @@ internal class XLWorkbookStyles
     internal IReadOnlyDictionary<int, XLCellStyle> CellStyles => _cellStyles;
 
     internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats;
+
+    internal IReadOnlyDictionary<string, XLTableTheme> TableStyles => _tableStyles;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -97,5 +105,10 @@ internal class XLWorkbookStyles
     public void AddDifferentialFormat(XLDifferentialFormat dxf)
     {
         _differentialFormats.Add(_differentialFormats.Count, dxf);
+    }
+
+    public void AddTableStyle(XLTableTheme tableStyle)
+    {
+        _tableStyles.Add(tableStyle.Name, tableStyle);
     }
 }

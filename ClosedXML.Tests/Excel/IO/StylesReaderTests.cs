@@ -627,6 +627,82 @@ internal class StylesReaderTests
             });
     }
 
+    [Test]
+    public void Can_read_table_style()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+              <dxf><font><sz val="10"/></font></dxf>
+              <dxf><font><color rgb="FF00FF00"/></font></dxf>
+              <dxf><font><color rgb="FF0000FF"/></font></dxf>
+            </dxfs>
+            <tableStyles count="1"
+                         defaultTableStyle="TableStyleMedium2">
+              <tableStyle name="Test Style"
+                          pivot="0"
+                          count="6">
+                <tableStyleElement type="wholeTable" dxfId="0"/>
+                <tableStyleElement type="headerRow" dxfId="1"/>
+                <tableStyleElement type="firstRowStripe" size="2" dxfId="0"/>
+                <tableStyleElement type="secondRowStripe" size="3" dxfId="1"/>
+                <tableStyleElement type="firstColumnStripe" size="4" dxfId="2"/>
+                <tableStyleElement type="secondColumnStripe" size="5" dxfId="3"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            // TODO: Read default table style
+            // Style names are case insensitive
+            var tableStyle = styles.TableStyles["test style"];
+            Assert.AreEqual("Test Style", tableStyle.Name);
+
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLTableStyleRegionValues.WholeTable, styles.DifferentialFormats[0] },
+                { XLTableStyleRegionValues.HeaderRow, styles.DifferentialFormats[1] },
+                { XLTableStyleRegionValues.FirstRowStripe, styles.DifferentialFormats[0] },
+                { XLTableStyleRegionValues.SecondRowStripe, styles.DifferentialFormats[1] },
+                { XLTableStyleRegionValues.FirstColumnStripe, styles.DifferentialFormats[2] },
+                { XLTableStyleRegionValues.SecondColumnStripe, styles.DifferentialFormats[3] },
+            }));
+
+            Assert.AreEqual(2, tableStyle.RowStripe1BandSize);
+            Assert.AreEqual(3, tableStyle.RowStripe2BandSize);
+            Assert.AreEqual(4, tableStyle.ColumnStripe1BandSize);
+            Assert.AreEqual(5, tableStyle.ColumnStripe2BandSize);
+        });
+    }
+
+    [Test]
+    public void Can_read_table_style_with_repeated_elements()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+              <dxf><font><color rgb="FF00FF00"/></font></dxf>
+            </dxfs>
+            <tableStyles>
+              <tableStyle name="Test Style">
+                <tableStyleElement type="wholeTable" dxfId="0"/>
+                <tableStyleElement type="wholeTable" dxfId="1"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            // Take last element
+            var tableStyle = styles.TableStyles["Test Style"];
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLTableStyleRegionValues.WholeTable, styles.DifferentialFormats[1] }
+            }));
+        });
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
@@ -684,6 +760,16 @@ internal class StylesReaderTests
                      <dxfs>
                        {dxfXml}
                      </dxfs>
+                   </styleSheet>
+                   """;
+        AssertFormat(assert, xml);
+    }
+
+    private void AssertTableStyles(string tableStyleXml, Action<XLWorkbookStyles> assert)
+    {
+        var xml = $"""
+                   <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                     {tableStyleXml}
                    </styleSheet>
                    """;
         AssertFormat(assert, xml);

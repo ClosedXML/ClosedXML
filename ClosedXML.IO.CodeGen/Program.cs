@@ -114,7 +114,12 @@ public class Program
             .AddSimpleTypeEnum("ST_BorderStyle", "XLBorderStyleValues", "none", "XLBorderStyleValues.None")
             .AddSimpleTypeEnum("ST_HorizontalAlignment", "XLAlignmentHorizontalValues")
             .AddSimpleTypeEnum("ST_VerticalAlignment", "XLAlignmentVerticalValues", "bottom", "XLAlignmentVerticalValues.Bottom")
-            .AddSimpleTypeEnum("ST_TableStyleType", "XLTableStyleType")
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_TableStyleType",
+                CsTypeName = "(XLTableStyleRegionValues?, XLPivotStyleRegionValues?)",
+                RequiredTemplate = "_reader.GetStringMappedValue(\"{0}\", TableStyleTypeMap)"
+            })
             .AddComplexTypeMapping("CT_Color", "XLColor")
             .AddComplexTypeMapping("CT_GradientStop", "(FractionOfOne Value, XLColor Color)")
             .AddComplexTypeMapping("CT_Font", "XLFontFormat")

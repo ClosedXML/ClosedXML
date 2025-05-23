@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
@@ -70,8 +72,13 @@ namespace ClosedXML.Excel
 
         public string Name { get; }
 
+        private readonly Dictionary<XLTableStyleRegionValues, XLDifferentialFormat> _regionFormats = new();
+
         public XLTableTheme(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Value is empty.", nameof(name));
+
             this.Name = name;
         }
 
@@ -89,6 +96,28 @@ namespace ClosedXML.Excel
         {
             return GetAllThemes().FirstOrDefault(s => s.Name == name);
         }
+
+        internal IReadOnlyDictionary<XLTableStyleRegionValues, XLDifferentialFormat> RegionFormats => _regionFormats;
+
+        /// <summary>
+        /// A band size (i.e. how many rows does a stripe have) for a <see cref="XLTableStyleRegionValues.FirstRowStripe"/>.
+        /// </summary>
+        internal int RowStripe1BandSize { get; private set; } = 1;
+
+        /// <summary>
+        /// A band size (i.e. how many rows does a stripe have) for a <see cref="XLTableStyleRegionValues.SecondRowStripe"/>.
+        /// </summary>
+        internal int RowStripe2BandSize { get; private set; } = 1;
+
+        /// <summary>
+        /// A band size (i.e. how many column does a stripe have) for a <see cref="XLTableStyleRegionValues.FirstColumnStripe"/>.
+        /// </summary>
+        internal int ColumnStripe1BandSize { get; private set; } = 1;
+
+        /// <summary>
+        /// A band size (i.e. how many column does a stripe have) for a <see cref="XLTableStyleRegionValues.SecondColumnStripe"/>.
+        /// </summary>
+        internal int ColumnStripe2BandSize { get; private set; } = 1;
 
         #region Overrides
 
@@ -109,5 +138,31 @@ namespace ClosedXML.Excel
         }
 
         #endregion Overrides
+
+        internal void SetRegionFormat(XLTableStyleRegionValues region, XLDifferentialFormat dxf, int bandSize = 1)
+        {
+            // Keep values excel compatible.
+            if (bandSize is < 0 or > 9)
+                throw new ArgumentOutOfRangeException(nameof(bandSize));
+
+            // Band size has only meaning for stripe regions
+            switch (region)
+            {
+                case XLTableStyleRegionValues.FirstRowStripe:
+                    RowStripe1BandSize = bandSize;
+                    break;
+                case XLTableStyleRegionValues.SecondRowStripe:
+                    RowStripe2BandSize = bandSize;
+                    break;
+                case XLTableStyleRegionValues.FirstColumnStripe:
+                    ColumnStripe1BandSize = bandSize;
+                    break;
+                case XLTableStyleRegionValues.SecondColumnStripe:
+                    ColumnStripe2BandSize = bandSize;
+                    break;
+            }
+
+            _regionFormats[region] = dxf;
+        }
     }
 }

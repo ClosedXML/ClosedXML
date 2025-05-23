@@ -127,39 +127,6 @@ internal sealed class XmlToEnumMapper : IEnumMapper
             { "distributed", XLAlignmentVerticalValues.Distributed },
         });
 
-        // ST_TableStyleType
-        builder.Add(new Dictionary<string, XLTableStyleType>
-        {
-            { "wholeTable", XLTableStyleType.WholeTable },
-            { "headerRow", XLTableStyleType.HeaderRow },
-            { "totalRow", XLTableStyleType.TotalRow },
-            { "firstColumn", XLTableStyleType.FirstColumn },
-            { "lastColumn", XLTableStyleType.LastColumn },
-            { "firstRowStripe", XLTableStyleType.FirstRowStripe },
-            { "secondRowStripe", XLTableStyleType.SecondRowStripe },
-            { "firstColumnStripe", XLTableStyleType.FirstColumnStripe },
-            { "secondColumnStripe", XLTableStyleType.SecondColumnStripe },
-            { "firstHeaderCell", XLTableStyleType.FirstHeaderCell },
-            { "lastHeaderCell", XLTableStyleType.LastHeaderCell },
-            { "firstTotalCell", XLTableStyleType.FirstTotalCell },
-            { "lastTotalCell", XLTableStyleType.LastTotalCell },
-            { "firstSubtotalColumn", XLTableStyleType.FirstSubtotalColumn },
-            { "secondSubtotalColumn", XLTableStyleType.SecondSubtotalColumn },
-            { "thirdSubtotalColumn", XLTableStyleType.ThirdSubtotalColumn },
-            { "firstSubtotalRow", XLTableStyleType.FirstSubtotalRow },
-            { "secondSubtotalRow", XLTableStyleType.SecondSubtotalRow },
-            { "thirdSubtotalRow", XLTableStyleType.ThirdSubtotalRow },
-            { "blankRow", XLTableStyleType.BlankRow },
-            { "firstColumnSubheading", XLTableStyleType.FirstColumnSubheading },
-            { "secondColumnSubheading", XLTableStyleType.SecondColumnSubheading },
-            { "thirdColumnSubheading", XLTableStyleType.ThirdColumnSubheading },
-            { "firstRowSubheading", XLTableStyleType.FirstRowSubheading },
-            { "secondRowSubheading", XLTableStyleType.SecondRowSubheading },
-            { "thirdRowSubheading", XLTableStyleType.ThirdRowSubheading },
-            { "pageFieldLabels", XLTableStyleType.PageFieldLabels },
-            { "pageFieldValues", XLTableStyleType.PageFieldValues },
-        });
-
         // ST_GradientType
         builder.Add(new Dictionary<string, XLGradientType>
         {

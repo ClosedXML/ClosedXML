@@ -1,10 +1,12 @@
 using System;
-using ClosedXML.Excel.Formatting;
-using ClosedXML.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
+using ClosedXML.IO;
 using ClosedXML.Utils;
+using TS = ClosedXML.Excel.Formatting.XLTableStyleRegionValues;
+using PTS = ClosedXML.Excel.Formatting.XLPivotStyleRegionValues;
 
 namespace ClosedXML.Excel.IO;
 
@@ -14,6 +16,9 @@ internal partial class StylesReader
     private readonly XLWorkbookStyles _styles;
     private readonly string _ns = OpenXmlConst.Main2006SsNs;
     private readonly SequentialNameGenerator _styleNameGenerator = new("Style ", 1);
+
+    // Currently read CT_TableStyle element
+    private Dictionary<TS, (XLDifferentialFormat Dxf, int BandSize)> _currentTableStyle = new();
 
     /// <summary>
     /// Style formats from <c>cellStyleXfs</c>.
@@ -562,6 +567,37 @@ internal partial class StylesReader
         _styles.AddDifferentialFormat(dxf);
     }
 
+    partial void OnTableStyleElementParsed((TS?, PTS?) type, uint size, uint? dxfId)
+    {
+        // Skip definition without a differential format
+        if (dxfId is null)
+            return;
+
+        // Excel permits only 0-9
+        if (size > 9)
+            throw PartStructureException.InvalidAttributeFormat(nameof(size), size.ToString(), _reader);
+
+        // If there is a duplicate definition for a type, last one wins
+        var dxf = _styles.DifferentialFormats[checked((int)dxfId.Value)];
+
+        if (type.Item1 is { } tableStyleRegion)
+            _currentTableStyle[tableStyleRegion] = (dxf, (int)size);
+    }
+
+    partial void OnTableStyleParsed(string name, bool pivot, bool table, uint? count)
+    {
+        if (table)
+        {
+            var tableStyle = new XLTableTheme(name);
+            foreach (var (region, (dxf, bandSize)) in _currentTableStyle)
+                tableStyle.SetRegionFormat(region, dxf, bandSize);
+
+            _styles.AddTableStyle(tableStyle);
+        }
+
+        _currentTableStyle = new Dictionary<TS, (XLDifferentialFormat Dxf, int BandSize)>();
+    }
+
     private XLColor ParseColor(string elementName)
     {
         return _reader.ParseColor(elementName, _ns);
@@ -581,4 +617,39 @@ internal partial class StylesReader
             Hidden = hidden ?? false
         };
     }
+
+    /// <summary>
+    /// A mapping of <c>ST_TableStyleType</c>. Custom enum mapping due to table/pivot duality.
+    /// </summary>
+    private static readonly Dictionary<string, (TS?, PTS?)> TableStyleTypeMap = new()
+    {
+        { "wholeTable", (TS.WholeTable, PTS.WholeTable) },
+        { "headerRow", (TS.HeaderRow, PTS.HeaderRow) },
+        { "totalRow", (TS.TotalRow, PTS.GrandTotalRow) },
+        { "firstColumn", (TS.FirstColumn, PTS.FirstColumn) },
+        { "lastColumn", (TS.LastColumn, PTS.GrandTotalColumn) },
+        { "firstRowStripe", (TS.FirstRowStripe, PTS.FirstRowStripe) },
+        { "secondRowStripe", (TS.SecondRowStripe, PTS.SecondRowStripe) },
+        { "firstColumnStripe", (TS.FirstColumnStripe, PTS.FirstColumnStripe) },
+        { "secondColumnStripe", (TS.SecondColumnStripe, PTS.SecondColumnStripe) },
+        { "firstHeaderCell", (TS.FirstHeaderCell, PTS.FirstHeaderCell) },
+        { "lastHeaderCell", (TS.LastHeaderCell, null) },
+        { "firstTotalCell", ( TS.FirstTotalCell, null) },
+        { "lastTotalCell", ( TS.LastTotalCell, null) },
+        { "firstSubtotalColumn", (null, PTS.SubtotalColumn1) },
+        { "secondSubtotalColumn", (null,PTS.SubtotalColumn2) },
+        { "thirdSubtotalColumn", (null, PTS.SubtotalColumn3) },
+        { "firstSubtotalRow", (null, PTS.SubtotalRow1) },
+        { "secondSubtotalRow", (null, PTS.SubtotalRow2) },
+        { "thirdSubtotalRow", (null, PTS.SubtotalRow3) },
+        { "blankRow", (null, PTS.BlankRow) },
+        { "firstColumnSubheading", (null, PTS.ColumnSubheading1) },
+        { "secondColumnSubheading", (null, PTS.ColumnSubheading2) },
+        { "thirdColumnSubheading", (null, PTS.ColumnSubheading3) },
+        { "firstRowSubheading", (null, PTS.RowSubheading1) },
+        { "secondRowSubheading", (null, PTS.RowSubheading2) },
+        { "thirdRowSubheading", (null, PTS.RowSubheading3) },
+        { "pageFieldLabels", (null, PTS.PageFieldLabels) },
+        { "pageFieldValues", (null, PTS.PageFieldValues) },
+    };
 }
