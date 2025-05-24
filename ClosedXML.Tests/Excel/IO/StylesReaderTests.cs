@@ -703,6 +703,49 @@ internal class StylesReaderTests
         });
     }
 
+    [Test]
+    public void Ignores_table_style_elements_that_are_only_for_pivot_table()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+            </dxfs>
+            <tableStyles>
+              <tableStyle name="Test Style">
+                <tableStyleElement type="firstSubtotalColumn" dxfId="0"/>
+                <tableStyleElement type="headerRow" dxfId="0"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            var tableStyle = styles.TableStyles["Test Style"];
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLTableStyleRegionValues.HeaderRow, styles.DifferentialFormats[0] }
+            }));
+        });
+    }
+
+    [Test]
+    public void Ignores_table_style_elements_without_differential_format()
+    {
+        var xml =
+            """
+            <tableStyles>
+              <tableStyle name="Test Style">
+                <tableStyleElement type="totalRow" />
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            var tableStyle = styles.TableStyles["Test Style"];
+            Assert.That(tableStyle.RegionFormats, Is.Empty);
+        });
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
