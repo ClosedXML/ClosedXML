@@ -33,6 +33,11 @@ internal class XLWorkbookStyles
     /// </summary>
     private readonly Dictionary<string, XLTableTheme> _tableStyles;
 
+    /// <summary>
+    /// Key is a pivot table style name, value is a pivot table style.
+    /// </summary>
+    private readonly Dictionary<string, XLPivotTableStyle> _pivotStyles;
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
@@ -43,6 +48,7 @@ internal class XLWorkbookStyles
         _cellStyles = new Dictionary<int, XLCellStyle>();
         _differentialFormats = new Dictionary<int, XLDifferentialFormat>();
         _tableStyles = new Dictionary<string, XLTableTheme>(XLHelper.NameComparer);
+        _pivotStyles = new Dictionary<string, XLPivotTableStyle>(XLHelper.NameComparer);
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
@@ -60,6 +66,8 @@ internal class XLWorkbookStyles
     internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats;
 
     internal IReadOnlyDictionary<string, XLTableTheme> TableStyles => _tableStyles;
+
+    internal IReadOnlyDictionary<string, XLPivotTableStyle> PivotStyles => _pivotStyles;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -110,5 +118,10 @@ internal class XLWorkbookStyles
     public void AddTableStyle(XLTableTheme tableStyle)
     {
         _tableStyles.Add(tableStyle.Name, tableStyle);
+    }
+
+    public void AddPivotStyle(XLPivotTableStyle pivotStyle)
+    {
+        _pivotStyles.Add(pivotStyle.Name, pivotStyle);
     }
 }

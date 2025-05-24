@@ -627,6 +627,25 @@ internal class StylesReaderTests
             });
     }
 
+    [TestCase(true, true)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(false, false)]
+    public void Only_reads_table_or_pivot_style_when_flag_is_set(bool table, bool pivot)
+    {
+        var xml =
+            $"""
+            <tableStyles>
+              <tableStyle name="Test Style" table="{(table ? 1 : 0)}" pivot="{(pivot ? 1 : 0)}"/>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            Assert.AreEqual(table, styles.TableStyles.ContainsKey("Test Style"));
+            Assert.AreEqual(pivot, styles.PivotStyles.ContainsKey("Test Style"));
+        });
+    }
+
     [Test]
     public void Can_read_table_style()
     {
@@ -742,6 +761,127 @@ internal class StylesReaderTests
         AssertTableStyles(xml, styles =>
         {
             var tableStyle = styles.TableStyles["Test Style"];
+            Assert.That(tableStyle.RegionFormats, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void Can_read_pivot_style()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+              <dxf><font><sz val="10"/></font></dxf>
+              <dxf><font><color rgb="FF00FF00"/></font></dxf>
+              <dxf><font><color rgb="FF0000FF"/></font></dxf>
+            </dxfs>
+            <tableStyles count="1"
+                         defaultTableStyle="TableStyleMedium2">
+              <tableStyle name="Test Style"
+                          pivot="1"
+                          count="7">
+                <tableStyleElement type="wholeTable" dxfId="0"/>
+                <tableStyleElement type="totalRow" dxfId="1"/>
+                <tableStyleElement type="firstRowStripe" size="2" dxfId="0"/>
+                <tableStyleElement type="secondRowStripe" size="3" dxfId="1"/>
+                <tableStyleElement type="firstColumnStripe" size="4" dxfId="2"/>
+                <tableStyleElement type="secondColumnStripe" size="5" dxfId="3"/>
+                <tableStyleElement type="firstSubtotalColumn" dxfId="2"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            // TODO: Read default table style
+            // Style names are case insensitive
+            var pivotStyle = styles.PivotStyles["test style"];
+            Assert.AreEqual("Test Style", pivotStyle.Name);
+
+            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLPivotStyleRegionValues.WholeTable, styles.DifferentialFormats[0] },
+                { XLPivotStyleRegionValues.GrandTotalRow, styles.DifferentialFormats[1] },
+                { XLPivotStyleRegionValues.FirstRowStripe, styles.DifferentialFormats[0] },
+                { XLPivotStyleRegionValues.SecondRowStripe, styles.DifferentialFormats[1] },
+                { XLPivotStyleRegionValues.FirstColumnStripe, styles.DifferentialFormats[2] },
+                { XLPivotStyleRegionValues.SecondColumnStripe, styles.DifferentialFormats[3] },
+                { XLPivotStyleRegionValues.SubtotalColumn1, styles.DifferentialFormats[2] },
+            }));
+
+            Assert.AreEqual(2, pivotStyle.RowStripe1BandSize);
+            Assert.AreEqual(3, pivotStyle.RowStripe2BandSize);
+            Assert.AreEqual(4, pivotStyle.ColumnStripe1BandSize);
+            Assert.AreEqual(5, pivotStyle.ColumnStripe2BandSize);
+        });
+    }
+
+    [Test]
+    public void Can_read_pivot_style_with_repeated_elements()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+              <dxf><font><color rgb="FF00FF00"/></font></dxf>
+            </dxfs>
+            <tableStyles>
+              <tableStyle name="Test Style" pivot="1">
+                <tableStyleElement type="pageFieldLabels" dxfId="0"/>
+                <tableStyleElement type="pageFieldLabels" dxfId="1"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            // When a region is specified multiple times, take the last one
+            var pivotStyle = styles.PivotStyles["Test Style"];
+            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLPivotStyleRegionValues.PageFieldLabels, styles.DifferentialFormats[1] }
+            }));
+        });
+    }
+
+    [Test]
+    public void Ignores_pivot_style_elements_that_are_only_for_table_style()
+    {
+        var xml =
+            """
+            <dxfs>
+              <dxf><font><sz val="5"/></font></dxf>
+            </dxfs>
+            <tableStyles>
+              <tableStyle name="Test Style">
+                <tableStyleElement type="lastHeaderCell" dxfId="0"/>
+                <tableStyleElement type="lastColumn" dxfId="0"/>
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            var tableStyle = styles.PivotStyles["Test Style"];
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            {
+                { XLPivotStyleRegionValues.GrandTotalColumn, styles.DifferentialFormats[0] }
+            }));
+        });
+    }
+
+    [Test]
+    public void Ignores_pivot_style_elements_without_differential_format()
+    {
+        var xml =
+            """
+            <tableStyles>
+              <tableStyle name="Test Style">
+                <tableStyleElement type="firstColumn" />
+              </tableStyle>
+            </tableStyles>
+            """;
+        AssertTableStyles(xml, styles =>
+        {
+            var tableStyle = styles.PivotStyles["Test Style"];
             Assert.That(tableStyle.RegionFormats, Is.Empty);
         });
     }

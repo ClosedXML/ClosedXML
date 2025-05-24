@@ -19,6 +19,7 @@ internal partial class StylesReader
 
     // Currently read CT_TableStyle element
     private Dictionary<TS, (XLDifferentialFormat Dxf, int BandSize)> _currentTableStyle = new();
+    private Dictionary<PTS, (XLDifferentialFormat Dxf, int BandSize)> _currentPivotStyle = new();
 
     /// <summary>
     /// Style formats from <c>cellStyleXfs</c>.
@@ -582,10 +583,15 @@ internal partial class StylesReader
 
         if (type.Item1 is { } tableStyleRegion)
             _currentTableStyle[tableStyleRegion] = (dxf, (int)size);
+
+        if (type.Item2 is { } pivotStyleRegion)
+            _currentPivotStyle[pivotStyleRegion] = (dxf, (int)size);
     }
 
     partial void OnTableStyleParsed(string name, bool pivot, bool table, uint? count)
     {
+        // Because of tableStyle element duality, we are filling both styles and
+        // only insert types that have set flag.
         if (table)
         {
             var tableStyle = new XLTableTheme(name);
@@ -596,6 +602,17 @@ internal partial class StylesReader
         }
 
         _currentTableStyle = new Dictionary<TS, (XLDifferentialFormat Dxf, int BandSize)>();
+
+        if (pivot)
+        {
+            var pivotStyle = new XLPivotTableStyle(name);
+            foreach (var (region, (dxf, bandSize)) in _currentPivotStyle)
+                pivotStyle.SetRegionFormat(region, dxf, bandSize);
+
+            _styles.AddPivotStyle(pivotStyle);
+        }
+
+        _currentPivotStyle = new Dictionary<PTS, (XLDifferentialFormat Dxf, int BandSize)>();
     }
 
     private XLColor ParseColor(string elementName)
