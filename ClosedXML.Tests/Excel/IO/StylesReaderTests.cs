@@ -673,7 +673,8 @@ internal class StylesReaderTests
             """;
         AssertTableStyles(xml, styles =>
         {
-            // TODO: Read default table style
+            Assert.AreEqual("TableStyleMedium2", styles.DefaultTableStyle);
+
             // Style names are case insensitive
             var tableStyle = styles.TableStyles["test style"];
             Assert.AreEqual("Test Style", tableStyle.Name);
@@ -777,7 +778,7 @@ internal class StylesReaderTests
               <dxf><font><color rgb="FF0000FF"/></font></dxf>
             </dxfs>
             <tableStyles count="1"
-                         defaultTableStyle="TableStyleMedium2">
+                         defaultPivotStyle="PivotStyleLight1">
               <tableStyle name="Test Style"
                           pivot="1"
                           count="7">
@@ -793,7 +794,8 @@ internal class StylesReaderTests
             """;
         AssertTableStyles(xml, styles =>
         {
-            // TODO: Read default table style
+            Assert.AreEqual("PivotStyleLight1", styles.DefaultPivotStyle);
+
             // Style names are case insensitive
             var pivotStyle = styles.PivotStyles["test style"];
             Assert.AreEqual("Test Style", pivotStyle.Name);

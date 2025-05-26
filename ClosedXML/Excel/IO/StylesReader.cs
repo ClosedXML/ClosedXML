@@ -615,6 +615,15 @@ internal partial class StylesReader
         _currentPivotStyle = new Dictionary<PTS, (XLDifferentialFormat Dxf, int BandSize)>();
     }
 
+    partial void OnTableStylesParsed(uint? count, string? defaultTableStyle, string? defaultPivotStyle)
+    {
+        if (!string.IsNullOrEmpty(defaultTableStyle))
+            _styles.DefaultTableStyle = defaultTableStyle;
+
+        if (!string.IsNullOrEmpty(defaultPivotStyle))
+            _styles.DefaultPivotStyle = defaultPivotStyle;
+    }
+
     private XLColor ParseColor(string elementName)
     {
         return _reader.ParseColor(elementName, _ns);

@@ -69,6 +69,18 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyDictionary<string, XLPivotTableStyle> PivotStyles => _pivotStyles;
 
+    /// <summary>
+    /// Name of a table style that should be used for newly added tables. It's not used for tables
+    /// without a specified style.
+    /// </summary>
+    internal string? DefaultTableStyle { get; set; }
+
+    /// <summary>
+    /// Name of a pivot style that should be used for newly added pivot tables. It's not used for
+    /// pivot tables without a specified style.
+    /// </summary>
+    internal string? DefaultPivotStyle { get; set; }
+
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
         var xlNumberFormat = new XLNumberFormatKey
