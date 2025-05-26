@@ -418,17 +418,18 @@ internal partial class StylesReader
 
     private void ParseIndexedColors(string elementName)
     {
+        var rgbColor = new List<uint>();
         _reader.Open("rgbColor", _ns);
         do
         {
-            ParseRgbColor("rgbColor");
+            rgbColor.Add(ParseRgbColor("rgbColor"));
         }
         while (_reader.TryOpen("rgbColor", _ns));
         _reader.Close(elementName, _ns);
-        OnIndexedColorsParsed();
+        OnIndexedColorsParsed(rgbColor);
     }
 
-    partial void OnIndexedColorsParsed();
+    partial void OnIndexedColorsParsed(List<uint> rgbColor);
 
     private void ParseMRUColors(string elementName)
     {
@@ -445,12 +446,10 @@ internal partial class StylesReader
 
     partial void OnMRUColorsParsed(List<XLColor> color);
 
-    private void ParseRgbColor(string elementName)
+    private uint ParseRgbColor(string elementName)
     {
         var rgb = _reader.GetOptionalUIntHex("rgb");
         _reader.Close(elementName, _ns);
-        OnRgbColorParsed(rgb);
+        return OnRgbColorParsed(rgb);
     }
-
-    partial void OnRgbColorParsed(uint? rgb);
 }

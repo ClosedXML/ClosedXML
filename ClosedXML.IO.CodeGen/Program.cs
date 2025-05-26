@@ -135,6 +135,7 @@ public class Program
             .AddComplexTypeMapping("CT_CellXfs", "List<(XLCellFormat Format, int? CellStyleXfId)>")
             .AddComplexTypeMapping("CT_CellStyle", "(int CellStyleXfId, XLCellStyle Style)")
             .AddComplexTypeMapping("CT_CellStyles", "Dictionary<int, XLCellStyle>")
+            .AddComplexTypeMapping("CT_RgbColor", "uint")
             ;
 
         var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")

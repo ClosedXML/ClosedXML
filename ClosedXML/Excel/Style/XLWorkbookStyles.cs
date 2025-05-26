@@ -38,6 +38,8 @@ internal class XLWorkbookStyles
     /// </summary>
     private readonly Dictionary<string, XLPivotTableStyle> _pivotStyles;
 
+    private List<uint>? _indexedColorsArgb;
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
@@ -80,6 +82,13 @@ internal class XLWorkbookStyles
     /// pivot tables without a specified style.
     /// </summary>
     internal string? DefaultPivotStyle { get; set; }
+
+    /// <summary>
+    /// Some workbooks use indexed colors that are not in the standard <see cref="XLColor.IndexedColors"/>,
+    /// but have their own list of indexed colors. Legacy feature, do not expose. If the value is null, use
+    /// predefined indexed colors.
+    /// </summary>
+    internal IReadOnlyList<uint>? IndexedColorsArgb => _indexedColorsArgb;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -135,5 +144,10 @@ internal class XLWorkbookStyles
     public void AddPivotStyle(XLPivotTableStyle pivotStyle)
     {
         _pivotStyles.Add(pivotStyle.Name, pivotStyle);
+    }
+
+    public void SetIndexedColors(List<uint> indexedColors)
+    {
+        _indexedColorsArgb = indexedColors;
     }
 }

@@ -624,6 +624,18 @@ internal partial class StylesReader
             _styles.DefaultPivotStyle = defaultPivotStyle;
     }
 
+    private uint OnRgbColorParsed(uint? rgb)
+    {
+        // Despite the name, it's ARGB. If not specified, use black (Excel supplies 0x00000000, but
+        // Excel plays very fast and loose with transparency).
+        return rgb ?? 0xFF000000;
+    }
+
+    partial void OnIndexedColorsParsed(List<uint> rgbColor)
+    {
+        _styles.SetIndexedColors(rgbColor);
+    }
+
     private XLColor ParseColor(string elementName)
     {
         return _reader.ParseColor(elementName, _ns);

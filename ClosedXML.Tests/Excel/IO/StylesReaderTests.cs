@@ -888,6 +888,45 @@ internal class StylesReaderTests
         });
     }
 
+    [Test]
+    public void Can_read_indexed_colors()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <colors>
+                <indexedColors>
+                  <rgbColor rgb="FF20FF00"/>
+                  <rgbColor/>
+                </indexedColors>
+              </colors>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            // Color with missing rgb attribute use black color
+            Assert.That(styles.IndexedColorsArgb, Is.EqualTo(new[] { 0xFF20FF00, 0xFF000000 }));
+        }, xml);
+    }
+
+    [Test]
+    public void Indexed_colors_will_use_default_indexed_colors_from_spec()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <colors/>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            // When styles part doesn't contain custom indexed colors, we default to the ones from
+            // ISO-29500. Keep custom indexed colors null to detect that situation (plus that way
+            // we know not to write custom indexed colors).
+            Assert.That(styles.IndexedColorsArgb, Is.Null);
+        }, xml);
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
