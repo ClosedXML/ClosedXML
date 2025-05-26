@@ -1,20 +1,17 @@
-#nullable disable
+namespace ClosedXML.Excel;
 
-namespace ClosedXML.Excel
+public partial class XLColor
 {
-    public partial class XLColor
+    internal XLColorKey Key { get; }
+
+    private XLColor() : this(new XLColorKey())
     {
-        internal XLColorKey Key { get; private set; }
+        HasValue = false;
+    }
 
-        private XLColor() : this(new XLColorKey())
-        {
-            HasValue = false;
-        }
-
-        internal XLColor(XLColorKey key)
-        {
-            Key = key;
-            HasValue = true;
-        }
+    internal XLColor(XLColorKey key)
+    {
+        Key = key;
+        HasValue = true;
     }
 }
