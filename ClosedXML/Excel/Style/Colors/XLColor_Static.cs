@@ -70,6 +70,80 @@ namespace ClosedXML.Excel
             { "Aqua", Aqua },
         });
 
+        private static readonly Lazy<Dictionary<Int32, XLColor>> IndexedColorsLazy = new(() => new Dictionary<int, XLColor>
+        {
+            {  0, FromArgb(0xFF000000) },
+            {  1, FromArgb(0xFFFFFFFF) },
+            {  2, FromArgb(0xFFFF0000) },
+            {  3, FromArgb(0xFF00FF00) },
+            {  4, FromArgb(0xFF0000FF) },
+            {  5, FromArgb(0xFFFFFF00) },
+            {  6, FromArgb(0xFFFF00FF) },
+            {  7, FromArgb(0xFF00FFFF) },
+            {  8, FromArgb(0xFF000000) },
+            {  9, FromArgb(0xFFFFFFFF) },
+            { 10, FromArgb(0xFFFF0000) },
+            { 11, FromArgb(0xFF00FF00) },
+            { 12, FromArgb(0xFF0000FF) },
+            { 13, FromArgb(0xFFFFFF00) },
+            { 14, FromArgb(0xFFFF00FF) },
+            { 15, FromArgb(0xFF00FFFF) },
+            { 16, FromArgb(0xFF800000) },
+            { 17, FromArgb(0xFF008000) },
+            { 18, FromArgb(0xFF000080) },
+            { 19, FromArgb(0xFF808000) },
+            { 20, FromArgb(0xFF800080) },
+            { 21, FromArgb(0xFF008080) },
+            { 22, FromArgb(0xFFC0C0C0) },
+            { 23, FromArgb(0xFF808080) },
+            { 24, FromArgb(0xFF9999FF) },
+            { 25, FromArgb(0xFF993366) },
+            { 26, FromArgb(0xFFFFFFCC) },
+            { 27, FromArgb(0xFFCCFFFF) },
+            { 28, FromArgb(0xFF660066) },
+            { 29, FromArgb(0xFFFF8080) },
+            { 30, FromArgb(0xFF0066CC) },
+            { 31, FromArgb(0xFFCCCCFF) },
+            { 32, FromArgb(0xFF000080) },
+            { 33, FromArgb(0xFFFF00FF) },
+            { 34, FromArgb(0xFFFFFF00) },
+            { 35, FromArgb(0xFF00FFFF) },
+            { 36, FromArgb(0xFF800080) },
+            { 37, FromArgb(0xFF800000) },
+            { 38, FromArgb(0xFF008080) },
+            { 39, FromArgb(0xFF0000FF) },
+            { 40, FromArgb(0xFF00CCFF) },
+            { 41, FromArgb(0xFFCCFFFF) },
+            { 42, FromArgb(0xFFCCFFCC) },
+            { 43, FromArgb(0xFFFFFF99) },
+            { 44, FromArgb(0xFF99CCFF) },
+            { 45, FromArgb(0xFFFF99CC) },
+            { 46, FromArgb(0xFFCC99FF) },
+            { 47, FromArgb(0xFFFFCC99) },
+            { 48, FromArgb(0xFF3366FF) },
+            { 49, FromArgb(0xFF33CCCC) },
+            { 50, FromArgb(0xFF99CC00) },
+            { 51, FromArgb(0xFFFFCC00) },
+            { 52, FromArgb(0xFFFF9900) },
+            { 53, FromArgb(0xFFFF6600) },
+            { 54, FromArgb(0xFF666699) },
+            { 55, FromArgb(0xFF969696) },
+            { 56, FromArgb(0xFF003366) },
+            { 57, FromArgb(0xFF339966) },
+            { 58, FromArgb(0xFF003300) },
+            { 59, FromArgb(0xFF333300) },
+            { 60, FromArgb(0xFF993300) },
+            { 61, FromArgb(0xFF993366) },
+            { 62, FromArgb(0xFF333399) },
+            { 63, FromArgb(0xFF333333) },
+            { 64, FromColor(Color.Transparent) }, // System Foreground
+        });
+
+        /// <summary>
+        /// Default indexed colors per ISO-298500 indexedColors. All values are either RGB or named.
+        /// </summary>
+        public static Dictionary<Int32, XLColor> IndexedColors => IndexedColorsLazy.Value;
+
         internal static XLColor FromKey(ref XLColorKey key)
         {
             return Repository.GetOrCreate(ref key);
@@ -200,88 +274,6 @@ namespace ClosedXML.Excel
             // Don't crash on unparsable colors, e.g. None or malformed #RED should still be represented, even
             // though we don't actually know how to map them.
             return FromName(vmlColor);
-        }
-
-        private static Dictionary<Int32, XLColor>? _indexedColors;
-
-        public static Dictionary<Int32, XLColor> IndexedColors
-        {
-            get
-            {
-                if (_indexedColors == null)
-                {
-                    var retVal = new Dictionary<Int32, XLColor>
-                        {
-                            {0, FromHtml("#FF000000")},
-                            {1, FromHtml("#FFFFFFFF")},
-                            {2, FromHtml("#FFFF0000")},
-                            {3, FromHtml("#FF00FF00")},
-                            {4, FromHtml("#FF0000FF")},
-                            {5, FromHtml("#FFFFFF00")},
-                            {6, FromHtml("#FFFF00FF")},
-                            {7, FromHtml("#FF00FFFF")},
-                            {8, FromHtml("#FF000000")},
-                            {9, FromHtml("#FFFFFFFF")},
-                            {10, FromHtml("#FFFF0000")},
-                            {11, FromHtml("#FF00FF00")},
-                            {12, FromHtml("#FF0000FF")},
-                            {13, FromHtml("#FFFFFF00")},
-                            {14, FromHtml("#FFFF00FF")},
-                            {15, FromHtml("#FF00FFFF")},
-                            {16, FromHtml("#FF800000")},
-                            {17, FromHtml("#FF008000")},
-                            {18, FromHtml("#FF000080")},
-                            {19, FromHtml("#FF808000")},
-                            {20, FromHtml("#FF800080")},
-                            {21, FromHtml("#FF008080")},
-                            {22, FromHtml("#FFC0C0C0")},
-                            {23, FromHtml("#FF808080")},
-                            {24, FromHtml("#FF9999FF")},
-                            {25, FromHtml("#FF993366")},
-                            {26, FromHtml("#FFFFFFCC")},
-                            {27, FromHtml("#FFCCFFFF")},
-                            {28, FromHtml("#FF660066")},
-                            {29, FromHtml("#FFFF8080")},
-                            {30, FromHtml("#FF0066CC")},
-                            {31, FromHtml("#FFCCCCFF")},
-                            {32, FromHtml("#FF000080")},
-                            {33, FromHtml("#FFFF00FF")},
-                            {34, FromHtml("#FFFFFF00")},
-                            {35, FromHtml("#FF00FFFF")},
-                            {36, FromHtml("#FF800080")},
-                            {37, FromHtml("#FF800000")},
-                            {38, FromHtml("#FF008080")},
-                            {39, FromHtml("#FF0000FF")},
-                            {40, FromHtml("#FF00CCFF")},
-                            {41, FromHtml("#FFCCFFFF")},
-                            {42, FromHtml("#FFCCFFCC")},
-                            {43, FromHtml("#FFFFFF99")},
-                            {44, FromHtml("#FF99CCFF")},
-                            {45, FromHtml("#FFFF99CC")},
-                            {46, FromHtml("#FFCC99FF")},
-                            {47, FromHtml("#FFFFCC99")},
-                            {48, FromHtml("#FF3366FF")},
-                            {49, FromHtml("#FF33CCCC")},
-                            {50, FromHtml("#FF99CC00")},
-                            {51, FromHtml("#FFFFCC00")},
-                            {52, FromHtml("#FFFF9900")},
-                            {53, FromHtml("#FFFF6600")},
-                            {54, FromHtml("#FF666699")},
-                            {55, FromHtml("#FF969696")},
-                            {56, FromHtml("#FF003366")},
-                            {57, FromHtml("#FF339966")},
-                            {58, FromHtml("#FF003300")},
-                            {59, FromHtml("#FF333300")},
-                            {60, FromHtml("#FF993300")},
-                            {61, FromHtml("#FF993366")},
-                            {62, FromHtml("#FF333399")},
-                            {63, FromHtml("#FF333333")},
-                            {64, FromColor(Color.Transparent)}
-                        };
-                    _indexedColors = retVal;
-                }
-                return _indexedColors;
-            }
         }
 
         internal static bool IsNullOrTransparent(XLColor color)
