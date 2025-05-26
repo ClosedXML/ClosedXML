@@ -927,6 +927,32 @@ internal class StylesReaderTests
         }, xml);
     }
 
+    [Test]
+    public void Can_read_most_recently_used_colors()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <colors>
+                <mruColors>
+                  <color rgb="FF90FF66"/>
+                  <color rgb="FF663399"/>
+                  <color theme="4"/>
+                </mruColors>
+              </colors>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            Assert.That(styles.MruColors, Is.EqualTo(new[]
+            {
+                XLColor.FromRgb(0x90FF66),
+                XLColor.FromRgb(0x663399),
+                XLColor.FromTheme(XLThemeColor.Accent1)
+            }));
+        }, xml);
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""

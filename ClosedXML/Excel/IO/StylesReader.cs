@@ -636,6 +636,11 @@ internal partial class StylesReader
         _styles.SetIndexedColors(rgbColor);
     }
 
+    partial void OnMRUColorsParsed(List<XLColor> color)
+    {
+        _styles.SetMruColors(color);
+    }
+
     private XLColor ParseColor(string elementName)
     {
         return _reader.ParseColor(elementName, _ns);

@@ -40,6 +40,8 @@ internal class XLWorkbookStyles
 
     private List<uint>? _indexedColorsArgb;
 
+    private List<XLColor> _mruColors = new();
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
@@ -89,6 +91,13 @@ internal class XLWorkbookStyles
     /// predefined indexed colors.
     /// </summary>
     internal IReadOnlyList<uint>? IndexedColorsArgb => _indexedColorsArgb;
+
+    /// <summary>
+    /// Most recently used colors are colors <em>hand-picked</em> by a user that are displayed in
+    /// the color picker dialogue. The standard and theme colors are always offered in the color
+    /// picker, so they are (in general) not added to the MRU color list.
+    /// </summary>
+    internal IReadOnlyList<XLColor> MruColors => _mruColors;
 
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
@@ -149,5 +158,10 @@ internal class XLWorkbookStyles
     public void SetIndexedColors(List<uint> indexedColors)
     {
         _indexedColorsArgb = indexedColors;
+    }
+
+    public void SetMruColors(List<XLColor> mruColors)
+    {
+        _mruColors = mruColors;
     }
 }
