@@ -33,7 +33,13 @@ namespace ClosedXML.Excel
 
         bool TryGetWorksheet(string sheetName, [NotNullWhen(true)] out IXLWorksheet? worksheet);
 
-        IXLWorksheet Worksheet(String sheetName);
+        /// <summary>
+        /// Get a sheet of a workbook with specified name. Sheet names are case-insensitive.
+        /// </summary>
+        /// <param name="sheetName">Name of sought sheet.</param>
+        /// <returns>Sheet with the specified name.</returns>
+        /// <exception cref="KeyNotFoundException">When sheet with <paramref name="sheetName"/> isn't among the sheets.</exception>
+        IXLWorksheet Worksheet(string sheetName);
 
         IXLWorksheet Worksheet(Int32 position);
     }

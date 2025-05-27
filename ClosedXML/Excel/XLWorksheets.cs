@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     internal class XLWorksheets : IXLWorksheets, IEnumerable<XLWorksheet>
     {
         private readonly XLWorkbook _workbook;
-        private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, XLWorksheet> _worksheets = new(XLHelper.SheetComparer);
         internal ICollection<String> Deleted { get; private set; }
 
         /// <summary>
@@ -74,14 +74,12 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        public IXLWorksheet Worksheet(String sheetName)
+        public IXLWorksheet Worksheet(string sheetName)
         {
-            sheetName = sheetName.UnescapeSheetName();
+            if (!_worksheets.TryGetValue(sheetName, out var foundSheet))
+                throw new KeyNotFoundException($"There isn't a worksheet named '{sheetName}'.");
 
-            if (_worksheets.TryGetValue(sheetName, out XLWorksheet w))
-                return w;
-
-            throw new ArgumentException("There isn't a worksheet named '" + sheetName + "'.");
+            return foundSheet;
         }
 
         public IXLWorksheet Worksheet(Int32 position)

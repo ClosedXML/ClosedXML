@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1365,6 +1366,27 @@ namespace ClosedXML.Tests
             Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD1"));
             Assert.Throws<ArgumentException>(() => _ = ws.Range("DEAD4:BEEF10"));
             Assert.Throws<ArgumentException>(() => _ = ws.Range("nonexistent_range"));
+        }
+
+        [TestCase("Sheet1", "Sheet1")]
+        [TestCase("Sheet1", "SHEET1")]
+        [TestCase("Baker's Paradise", "BAKER'S PARADISE")]
+        [TestCase("XXX''XXX", "XXX''XXX")]
+        public void Worksheet_by_name_returns_worksheet_with_the_same_case_insensitive_name(string sheetName, string searchedSheetName)
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet(sheetName);
+
+            Assert.That(wb.Worksheets.Worksheet(searchedSheetName), Is.SameAs(sheet));
+        }
+
+        [Test]
+        public void Worksheet_by_name_throws_exception_when_no_sheet_with_name_found()
+        {
+            using var wb = new XLWorkbook();
+            wb.AddWorksheet("Sheet");
+
+            Assert.That(() => wb.Worksheets.Worksheet("Nonexistent"), Throws.TypeOf<KeyNotFoundException>());
         }
     }
 }
