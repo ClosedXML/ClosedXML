@@ -31,6 +31,12 @@ namespace ClosedXML.Excel
 
         void Delete(Int32 position);
 
+        /// <summary>
+        /// Try to get a sheet of a workbook with the specified name. Sheet names are case-insensitive.
+        /// </summary>
+        /// <param name="sheetName">Name of sought sheet.</param>
+        /// <param name="worksheet">Found sheet or null if sheet is not found.</param>
+        /// <returns><c>true</c> when sheet was found or <c>false</c> when it wasn't.</returns>
         bool TryGetWorksheet(string sheetName, [NotNullWhen(true)] out IXLWorksheet? worksheet);
 
         /// <summary>

@@ -1388,5 +1388,22 @@ namespace ClosedXML.Tests
 
             Assert.That(() => wb.Worksheets.Worksheet("Nonexistent"), Throws.TypeOf<KeyNotFoundException>());
         }
+
+        [TestCase("Sheet1", "Sheet1", true)]
+        [TestCase("Sheet1", "SHEET1", true)]
+        [TestCase("Sheet1", "Sheet", false)]
+        [TestCase("Sheet1", " Sheet1", false)]
+        [TestCase("Baker's Paradise", "BAKER'S PARADISE", true)]
+        [TestCase("XXX''XXX", "XXX''XXX", true)]
+        public void TryGetWorksheet_finds_worksheet_with_the_same_case_insensitive_name(string sheetName, string searchedSheetName, bool expectedFound)
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet(sheetName);
+
+            var found = wb.Worksheets.TryGetWorksheet(searchedSheetName, out var foundSheet);
+
+            Assert.AreEqual(expectedFound, found);
+            Assert.That(foundSheet, found ? Is.SameAs(sheet): Is.Null);
+        }
     }
 }

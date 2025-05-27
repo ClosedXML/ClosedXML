@@ -65,13 +65,7 @@ namespace ClosedXML.Excel
 
         internal bool TryGetWorksheet(string sheetName, [NotNullWhen(true)] out XLWorksheet? worksheet)
         {
-            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out worksheet))
-            {
-                return true;
-            }
-
-            worksheet = null;
-            return false;
+            return _worksheets.TryGetValue(sheetName, out worksheet);
         }
 
         public IXLWorksheet Worksheet(string sheetName)
