@@ -86,11 +86,6 @@ namespace ClosedXML.Excel
                 .Replace("''", "'");
         }
 
-        internal static string WithoutLast(this String value, int length)
-        {
-            return length < value.Length ? value.Substring(0, value.Length - length) : String.Empty;
-        }
-
         /// <summary>
         /// Convert a string (containing code units) into code points.
         /// Surrogate pairs of code units are joined to code points.
