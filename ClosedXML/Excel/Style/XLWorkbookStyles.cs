@@ -11,23 +11,23 @@ internal class XLWorkbookStyles
 {
     private readonly Dictionary<int, string> _numberFormats;
 
-    private readonly BiDictionary<int, XLFontFormat> _fontFormats;
+    private readonly BiDictionary<int, XLFontFormatValue> _fontFormats;
 
-    private readonly Dictionary<int, XLFillFormat> _fillFormats;
+    private readonly Dictionary<int, XLFillFormatValue> _fillFormats;
 
-    private readonly Dictionary<int, XLBorderFormat> _borderFormats;
+    private readonly Dictionary<int, XLBorderFormatValue> _borderFormats;
 
     /// <summary>
     /// The key is XfId, the value is cell format.
     /// </summary>
-    private readonly Dictionary<int, XLCellFormat> _cellFormats;
+    private readonly Dictionary<int, XLCellFormatValue> _cellFormats;
 
     /// <summary>
     /// The key is cellStyleXfId, the value is cell style.
     /// </summary>
-    private readonly Dictionary<int, XLCellStyle> _cellStyles;
+    private readonly Dictionary<int, XLCellStyleValue> _cellStyles;
 
-    private readonly BiDictionary<int, XLDifferentialFormat> _differentialFormats;
+    private readonly BiDictionary<int, XLDxfValue> _differentialFormats;
 
     /// <summary>
     /// Key is a table style name, value is a table style.
@@ -46,29 +46,29 @@ internal class XLWorkbookStyles
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
-        _fontFormats = new BiDictionary<int, XLFontFormat>();
-        _fillFormats = new Dictionary<int, XLFillFormat>();
-        _borderFormats = new Dictionary<int, XLBorderFormat>();
-        _cellFormats = new Dictionary<int, XLCellFormat>();
-        _cellStyles = new Dictionary<int, XLCellStyle>();
-        _differentialFormats = new BiDictionary<int, XLDifferentialFormat>();
+        _fontFormats = new BiDictionary<int, XLFontFormatValue>();
+        _fillFormats = new Dictionary<int, XLFillFormatValue>();
+        _borderFormats = new Dictionary<int, XLBorderFormatValue>();
+        _cellFormats = new Dictionary<int, XLCellFormatValue>();
+        _cellStyles = new Dictionary<int, XLCellStyleValue>();
+        _differentialFormats = new BiDictionary<int, XLDxfValue>();
         _tableStyles = new Dictionary<string, XLTableTheme>(XLHelper.NameComparer);
         _pivotStyles = new Dictionary<string, XLPivotTableStyle>(XLHelper.NameComparer);
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
 
-    internal IReadOnlyDictionary<int, XLFontFormat> Fonts => _fontFormats.KeyToValue;
+    internal IReadOnlyDictionary<int, XLFontFormatValue> Fonts => _fontFormats.KeyToValue;
 
-    internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
+    internal IReadOnlyDictionary<int, XLFillFormatValue> Fills => _fillFormats;
 
-    internal IReadOnlyDictionary<int, XLBorderFormat> Borders => _borderFormats;
+    internal IReadOnlyDictionary<int, XLBorderFormatValue> Borders => _borderFormats;
 
-    internal IReadOnlyDictionary<int, XLCellFormat> CellFormats => _cellFormats;
+    internal IReadOnlyDictionary<int, XLCellFormatValue> CellFormats => _cellFormats;
 
-    internal IReadOnlyDictionary<int, XLCellStyle> CellStyles => _cellStyles;
+    internal IReadOnlyDictionary<int, XLCellStyleValue> CellStyles => _cellStyles;
 
-    internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats.KeyToValue;
+    internal IReadOnlyDictionary<int, XLDxfValue> DifferentialFormats => _differentialFormats.KeyToValue;
 
     internal IReadOnlyDictionary<string, XLTableTheme> TableStyles => _tableStyles;
 
@@ -115,33 +115,33 @@ internal class XLWorkbookStyles
         _numberFormats.Add(numFmtId, formatCode);
     }
 
-    internal void AddFontFormat(XLFontFormat fontFormat)
+    internal void AddFontFormat(XLFontFormatValue fontFormat)
     {
         _fontFormats.Add(_fontFormats.Count, fontFormat);
     }
 
-    internal void AddFillFormat(XLFillFormat fillFormat)
+    internal void AddFillFormat(XLFillFormatValue fillFormat)
     {
         _fillFormats.Add(_fillFormats.Count, fillFormat);
     }
 
-    internal void AddBorderFormat(XLBorderFormat borderFormat)
+    internal void AddBorderFormat(XLBorderFormatValue borderFormat)
     {
         _borderFormats.Add(_borderFormats.Count, borderFormat);
     }
 
-    internal void AddFormat(XLCellFormat cellFormat)
+    internal void AddFormat(XLCellFormatValue cellFormat)
     {
         var xfId = _cellFormats.Count;
         _cellFormats.Add(xfId, cellFormat);
     }
 
-    public void AddCellStyle(int cellStyleXfId, XLCellStyle cellStyle)
+    public void AddCellStyle(int cellStyleXfId, XLCellStyleValue cellStyle)
     {
         _cellStyles.Add(cellStyleXfId, cellStyle);
     }
 
-    public void AddDifferentialFormat(XLDifferentialFormat dxf)
+    public void AddDifferentialFormat(XLDxfValue dxf)
     {
         _differentialFormats.Add(_differentialFormats.Count, dxf);
     }

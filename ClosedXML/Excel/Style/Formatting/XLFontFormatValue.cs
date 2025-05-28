@@ -1,9 +1,9 @@
 namespace ClosedXML.Excel.Formatting;
 
 /// <summary>
-/// A formatting record for <see cref="XLCellFormat"/>. Unlike <see cref="XLFontKey"/>, attributes are optional.
+/// A formatting record for <see cref="XLCellFormatValue"/>. Unlike <see cref="XLFontKey"/>, attributes are optional.
 /// </summary>
-internal record XLFontFormat
+internal record XLFontFormatValue
 {
     public required XLFontName? Name { get; init; }
 

@@ -3,7 +3,7 @@ namespace ClosedXML.Excel.Formatting;
 /// <summary>
 /// A border format master record.
 /// </summary>
-internal record XLBorderFormat
+internal record XLBorderFormatValue
 {
     public required XLBorderLine? Left { get; init; }
 

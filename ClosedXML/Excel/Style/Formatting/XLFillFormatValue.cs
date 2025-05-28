@@ -3,26 +3,26 @@ namespace ClosedXML.Excel.Formatting;
 /// <summary>
 /// A fill formatting. Fill can have at most one pattern that specifies how to fill a cell.
 /// </summary>
-internal record XLFillFormat
+internal record XLFillFormatValue
 {
-    public static readonly XLFillFormat Empty = new(null, null, null);
+    public static readonly XLFillFormatValue Empty = new(null, null, null);
 
-    public XLFillFormat(XLPatternFill pattern)
+    public XLFillFormatValue(XLPatternFill pattern)
         : this(pattern, null, null)
     {
     }
 
-    public XLFillFormat(XLLinearGradientFill linearGradient)
+    public XLFillFormatValue(XLLinearGradientFill linearGradient)
         : this(null, linearGradient, null)
     {
     }
 
-    public XLFillFormat(XLPathGradientFill pathGradient)
+    public XLFillFormatValue(XLPathGradientFill pathGradient)
         : this(null, null, pathGradient)
     {
     }
 
-    private XLFillFormat(XLPatternFill? pattern, XLLinearGradientFill? linearGradient, XLPathGradientFill? pathGradient)
+    private XLFillFormatValue(XLPatternFill? pattern, XLLinearGradientFill? linearGradient, XLPathGradientFill? pathGradient)
     {
         Pattern = pattern;
         LinearGradient = linearGradient;

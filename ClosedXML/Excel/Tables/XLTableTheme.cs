@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
 
         public string Name { get; }
 
-        private readonly Dictionary<XLTableStyleRegionValues, XLDifferentialFormat> _regionFormats = new();
+        private readonly Dictionary<XLTableStyleRegionValues, XLDxfValue> _regionFormats = new();
 
         public XLTableTheme(string name)
         {
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
             return GetAllThemes().FirstOrDefault(s => s.Name == name);
         }
 
-        internal IReadOnlyDictionary<XLTableStyleRegionValues, XLDifferentialFormat> RegionFormats => _regionFormats;
+        internal IReadOnlyDictionary<XLTableStyleRegionValues, XLDxfValue> RegionFormats => _regionFormats;
 
         /// <summary>
         /// A band size (i.e. how many rows does a stripe have) for a <see cref="XLTableStyleRegionValues.FirstRowStripe"/>.
@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
 
         #endregion Overrides
 
-        internal void SetRegionFormat(XLTableStyleRegionValues region, XLDifferentialFormat dxf, int bandSize = 1)
+        internal void SetRegionFormat(XLTableStyleRegionValues region, XLDxfValue dxf, int bandSize = 1)
         {
             // Keep values excel compatible.
             if (bandSize is < 0 or > 9)

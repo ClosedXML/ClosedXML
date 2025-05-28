@@ -9,7 +9,7 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class XLPivotTableStyle
 {
-    private readonly Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat> _regionFormats = new();
+    private readonly Dictionary<XLPivotStyleRegionValues, XLDxfValue> _regionFormats = new();
 
     public XLPivotTableStyle(string name)
     {
@@ -21,7 +21,7 @@ internal class XLPivotTableStyle
 
     internal string Name { get; }
 
-    internal IReadOnlyDictionary<XLPivotStyleRegionValues, XLDifferentialFormat> RegionFormats => _regionFormats;
+    internal IReadOnlyDictionary<XLPivotStyleRegionValues, XLDxfValue> RegionFormats => _regionFormats;
 
     /// <summary>
     /// A band size (i.e. how many rows does a stripe have) for a <see cref="XLPivotStyleRegionValues.FirstRowStripe"/>.
@@ -43,7 +43,7 @@ internal class XLPivotTableStyle
     /// </summary>
     internal int ColumnStripe2BandSize { get; private set; } = 1;
 
-    internal void SetRegionFormat(XLPivotStyleRegionValues region, XLDifferentialFormat dxf, int bandSize = 1)
+    internal void SetRegionFormat(XLPivotStyleRegionValues region, XLDxfValue dxf, int bandSize = 1)
     {
         // Keep values excel compatible.
         if (bandSize is < 0 or > 9)

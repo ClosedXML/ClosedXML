@@ -1,6 +1,6 @@
 namespace ClosedXML.Excel.Formatting;
 
-internal record XLAlignmentFormat
+internal record XLAlignmentFormatValue
 {
     public required XLAlignmentHorizontalValues Horizontal { get; init; }
 

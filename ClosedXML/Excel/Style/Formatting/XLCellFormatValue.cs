@@ -15,24 +15,24 @@ namespace ClosedXML.Excel.Formatting;
 /// cell.
 /// </para>
 /// </summary>
-internal record XLCellFormat
+internal record XLCellFormatValue
 {
     public required string? NumberFormat { get; init; }
 
-    public required XLAlignmentFormat? Alignment { get; init; }
+    public required XLAlignmentFormatValue? Alignment { get; init; }
 
-    public required XLProtectionFormat? Protection { get; init; }
+    public required XLProtectionFormatValue? Protection { get; init; }
 
-    public required XLFontFormat? Font { get; init; }
+    public required XLFontFormatValue? Font { get; init; }
 
-    public required XLFillFormat? Fill { get; init; }
+    public required XLFillFormatValue? Fill { get; init; }
 
-    public required XLBorderFormat? Border { get; init; }
+    public required XLBorderFormatValue? Border { get; init; }
 
     /// <summary>
     /// A cell style that was originally used to create this format.
     /// </summary>
-    public required XLCellStyle? CellStyle {get; init; }
+    public required XLCellStyleValue? CellStyle {get; init; }
 
     public required bool IncludeQuotePrefix { get; init; }
 

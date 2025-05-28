@@ -33,7 +33,7 @@ internal partial class StylesReader
     private void ParseFonts(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var font = new List<XLFontFormat>();
+        var font = new List<XLFontFormatValue>();
         while (_reader.TryOpen("font", _ns))
         {
             font.Add(ParseFont("font"));
@@ -42,12 +42,12 @@ internal partial class StylesReader
         OnFontsParsed(font, count);
     }
 
-    partial void OnFontsParsed(List<XLFontFormat> font, uint? count);
+    partial void OnFontsParsed(List<XLFontFormatValue> font, uint? count);
 
     private void ParseFills(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var fill = new List<XLFillFormat>();
+        var fill = new List<XLFillFormatValue>();
         while (_reader.TryOpen("fill", _ns))
         {
             fill.Add(ParseFill("fill"));
@@ -56,12 +56,12 @@ internal partial class StylesReader
         OnFillsParsed(fill, count);
     }
 
-    partial void OnFillsParsed(List<XLFillFormat> fill, uint? count);
+    partial void OnFillsParsed(List<XLFillFormatValue> fill, uint? count);
 
-    private XLFillFormat ParseFill(string elementName)
+    private XLFillFormatValue ParseFill(string elementName)
     {
-        XLFillFormat? patternFill = null;
-        XLFillFormat? gradientFill = null;
+        XLFillFormatValue? patternFill = null;
+        XLFillFormatValue? gradientFill = null;
         if (_reader.TryOpen("patternFill", _ns))
         {
             patternFill = ParsePatternFill("patternFill");
@@ -74,7 +74,7 @@ internal partial class StylesReader
         return OnFillParsed(patternFill, gradientFill);
     }
 
-    private XLFillFormat ParsePatternFill(string elementName)
+    private XLFillFormatValue ParsePatternFill(string elementName)
     {
         var patternType = _reader.GetOptionalEnum<XLFillPatternValues>("patternType");
         XLColor? fgColor = default;
@@ -91,7 +91,7 @@ internal partial class StylesReader
         return OnPatternFillParsed(fgColor, bgColor, patternType);
     }
 
-    private XLFillFormat ParseGradientFill(string elementName)
+    private XLFillFormatValue ParseGradientFill(string elementName)
     {
         var type = _reader.GetOptionalEnum<XLGradientType>("type") ?? XLGradientType.Linear;
         var degree = _reader.GetOptionalDouble("degree") ?? 0;
@@ -120,7 +120,7 @@ internal partial class StylesReader
     private void ParseBorders(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var border = new List<XLBorderFormat>();
+        var border = new List<XLBorderFormatValue>();
         while (_reader.TryOpen("border", _ns))
         {
             border.Add(ParseBorder("border"));
@@ -129,9 +129,9 @@ internal partial class StylesReader
         OnBordersParsed(border, count);
     }
 
-    partial void OnBordersParsed(List<XLBorderFormat> border, uint? count);
+    partial void OnBordersParsed(List<XLBorderFormatValue> border, uint? count);
 
-    private XLBorderFormat ParseBorder(string elementName)
+    private XLBorderFormatValue ParseBorder(string elementName)
     {
         var diagonalUp = _reader.GetOptionalBool("diagonalUp");
         var diagonalDown = _reader.GetOptionalBool("diagonalDown");
@@ -190,7 +190,7 @@ internal partial class StylesReader
     private void ParseCellStyleXfs(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var xf = new List<(XLCellFormat Format, int? CellStyleXfId)>();
+        var xf = new List<(XLCellFormatValue Format, int? CellStyleXfId)>();
         _reader.Open("xf", _ns);
         do
         {
@@ -201,9 +201,9 @@ internal partial class StylesReader
         OnCellStyleXfsParsed(xf, count);
     }
 
-    partial void OnCellStyleXfsParsed(List<(XLCellFormat Format, int? CellStyleXfId)> xf, uint? count);
+    partial void OnCellStyleXfsParsed(List<(XLCellFormatValue Format, int? CellStyleXfId)> xf, uint? count);
 
-    private (XLCellFormat Format, int? CellStyleXfId) ParseXf(string elementName)
+    private (XLCellFormatValue Format, int? CellStyleXfId) ParseXf(string elementName)
     {
         var numFmtId = _reader.GetOptionalUInt("numFmtId");
         var fontId = _reader.GetOptionalUInt("fontId");
@@ -218,12 +218,12 @@ internal partial class StylesReader
         var applyBorder = _reader.GetOptionalBool("applyBorder");
         var applyAlignment = _reader.GetOptionalBool("applyAlignment");
         var applyProtection = _reader.GetOptionalBool("applyProtection");
-        XLAlignmentFormat? alignment = default;
+        XLAlignmentFormatValue? alignment = default;
         if (_reader.TryOpen("alignment", _ns))
         {
             alignment = ParseCellAlignment("alignment");
         }
-        XLProtectionFormat? protection = default;
+        XLProtectionFormatValue? protection = default;
         if (_reader.TryOpen("protection", _ns))
         {
             protection = ParseCellProtection("protection");
@@ -236,7 +236,7 @@ internal partial class StylesReader
         return OnXfParsed(alignment, protection, numFmtId, fontId, fillId, borderId, xfId, quotePrefix, pivotButton, applyNumberFormat, applyFont, applyFill, applyBorder, applyAlignment, applyProtection);
     }
 
-    private XLAlignmentFormat ParseCellAlignment(string elementName)
+    private XLAlignmentFormatValue ParseCellAlignment(string elementName)
     {
         var horizontal = _reader.GetOptionalEnum<XLAlignmentHorizontalValues>("horizontal");
         var vertical = _reader.GetOptionalEnum<XLAlignmentVerticalValues>("vertical") ?? XLAlignmentVerticalValues.Bottom;
@@ -251,7 +251,7 @@ internal partial class StylesReader
         return OnCellAlignmentParsed(horizontal, vertical, textRotation, wrapText, indent, relativeIndent, justifyLastLine, shrinkToFit, readingOrder);
     }
 
-    private XLProtectionFormat ParseCellProtection(string elementName)
+    private XLProtectionFormatValue ParseCellProtection(string elementName)
     {
         var locked = _reader.GetOptionalBool("locked");
         var hidden = _reader.GetOptionalBool("hidden");
@@ -259,10 +259,10 @@ internal partial class StylesReader
         return OnCellProtectionParsed(locked, hidden);
     }
 
-    private List<(XLCellFormat Format, int? CellStyleXfId)> ParseCellXfs(string elementName)
+    private List<(XLCellFormatValue Format, int? CellStyleXfId)> ParseCellXfs(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var xf = new List<(XLCellFormat Format, int? CellStyleXfId)>();
+        var xf = new List<(XLCellFormatValue Format, int? CellStyleXfId)>();
         _reader.Open("xf", _ns);
         do
         {
@@ -273,10 +273,10 @@ internal partial class StylesReader
         return OnCellXfsParsed(xf, count);
     }
 
-    private Dictionary<int, XLCellStyle> ParseCellStyles(string elementName)
+    private Dictionary<int, XLCellStyleValue> ParseCellStyles(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var cellStyle = new List<(int CellStyleXfId, XLCellStyle Style)>();
+        var cellStyle = new List<(int CellStyleXfId, XLCellStyleValue Style)>();
         _reader.Open("cellStyle", _ns);
         do
         {
@@ -287,7 +287,7 @@ internal partial class StylesReader
         return OnCellStylesParsed(cellStyle, count);
     }
 
-    private (int CellStyleXfId, XLCellStyle Style) ParseCellStyle(string elementName)
+    private (int CellStyleXfId, XLCellStyleValue Style) ParseCellStyle(string elementName)
     {
         var name = _reader.GetOptionalXString("name");
         var xfId = _reader.GetUInt("xfId");
@@ -318,7 +318,7 @@ internal partial class StylesReader
 
     private void ParseDxf(string elementName)
     {
-        XLFontFormat? font = default;
+        XLFontFormatValue? font = default;
         if (_reader.TryOpen("font", _ns))
         {
             font = ParseFont("font");
@@ -328,22 +328,22 @@ internal partial class StylesReader
         {
             numFmt = ParseNumFmt("numFmt");
         }
-        XLFillFormat? fill = default;
+        XLFillFormatValue? fill = default;
         if (_reader.TryOpen("fill", _ns))
         {
             fill = ParseFill("fill");
         }
-        XLAlignmentFormat? alignment = default;
+        XLAlignmentFormatValue? alignment = default;
         if (_reader.TryOpen("alignment", _ns))
         {
             alignment = ParseCellAlignment("alignment");
         }
-        XLBorderFormat? border = default;
+        XLBorderFormatValue? border = default;
         if (_reader.TryOpen("border", _ns))
         {
             border = ParseBorder("border");
         }
-        XLProtectionFormat? protection = default;
+        XLProtectionFormatValue? protection = default;
         if (_reader.TryOpen("protection", _ns))
         {
             protection = ParseCellProtection("protection");
@@ -356,7 +356,7 @@ internal partial class StylesReader
         OnDxfParsed(font, numFmt, fill, alignment, border, protection);
     }
 
-    partial void OnDxfParsed(XLFontFormat? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormat? fill, XLAlignmentFormat? alignment, XLBorderFormat? border, XLProtectionFormat? protection);
+    partial void OnDxfParsed(XLFontFormatValue? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormatValue? fill, XLAlignmentFormatValue? alignment, XLBorderFormatValue? border, XLProtectionFormatValue? protection);
 
     private void ParseTableStyles(string elementName)
     {

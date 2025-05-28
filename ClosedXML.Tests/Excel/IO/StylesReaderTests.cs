@@ -679,7 +679,7 @@ internal class StylesReaderTests
             var tableStyle = styles.TableStyles["test style"];
             Assert.AreEqual("Test Style", tableStyle.Name);
 
-            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDxfValue>
             {
                 { XLTableStyleRegionValues.WholeTable, styles.DifferentialFormats[0] },
                 { XLTableStyleRegionValues.HeaderRow, styles.DifferentialFormats[1] },
@@ -716,7 +716,7 @@ internal class StylesReaderTests
         {
             // Take last element
             var tableStyle = styles.TableStyles["Test Style"];
-            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDxfValue>
             {
                 { XLTableStyleRegionValues.WholeTable, styles.DifferentialFormats[1] }
             }));
@@ -741,7 +741,7 @@ internal class StylesReaderTests
         AssertTableStyles(xml, styles =>
         {
             var tableStyle = styles.TableStyles["Test Style"];
-            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDifferentialFormat>
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLTableStyleRegionValues, XLDxfValue>
             {
                 { XLTableStyleRegionValues.HeaderRow, styles.DifferentialFormats[0] }
             }));
@@ -800,7 +800,7 @@ internal class StylesReaderTests
             var pivotStyle = styles.PivotStyles["test style"];
             Assert.AreEqual("Test Style", pivotStyle.Name);
 
-            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDxfValue>
             {
                 { XLPivotStyleRegionValues.WholeTable, styles.DifferentialFormats[0] },
                 { XLPivotStyleRegionValues.GrandTotalRow, styles.DifferentialFormats[1] },
@@ -838,7 +838,7 @@ internal class StylesReaderTests
         {
             // When a region is specified multiple times, take the last one
             var pivotStyle = styles.PivotStyles["Test Style"];
-            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            Assert.That(pivotStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDxfValue>
             {
                 { XLPivotStyleRegionValues.PageFieldLabels, styles.DifferentialFormats[1] }
             }));
@@ -863,7 +863,7 @@ internal class StylesReaderTests
         AssertTableStyles(xml, styles =>
         {
             var tableStyle = styles.PivotStyles["Test Style"];
-            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDifferentialFormat>
+            Assert.That(tableStyle.RegionFormats, Is.EquivalentTo(new Dictionary<XLPivotStyleRegionValues, XLDxfValue>
             {
                 { XLPivotStyleRegionValues.GrandTotalColumn, styles.DifferentialFormats[0] }
             }));
