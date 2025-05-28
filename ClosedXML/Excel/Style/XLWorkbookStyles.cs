@@ -1,5 +1,6 @@
 using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel;
 
@@ -10,7 +11,7 @@ internal class XLWorkbookStyles
 {
     private readonly Dictionary<int, string> _numberFormats;
 
-    private readonly Dictionary<int, XLFontFormat> _fontFormats;
+    private readonly BiDictionary<int, XLFontFormat> _fontFormats;
 
     private readonly Dictionary<int, XLFillFormat> _fillFormats;
 
@@ -26,7 +27,7 @@ internal class XLWorkbookStyles
     /// </summary>
     private readonly Dictionary<int, XLCellStyle> _cellStyles;
 
-    private readonly Dictionary<int, XLDifferentialFormat> _differentialFormats;
+    private readonly BiDictionary<int, XLDifferentialFormat> _differentialFormats;
 
     /// <summary>
     /// Key is a table style name, value is a table style.
@@ -45,19 +46,19 @@ internal class XLWorkbookStyles
     internal XLWorkbookStyles()
     {
         _numberFormats = new Dictionary<int, string>();
-        _fontFormats = new Dictionary<int, XLFontFormat>();
+        _fontFormats = new BiDictionary<int, XLFontFormat>();
         _fillFormats = new Dictionary<int, XLFillFormat>();
         _borderFormats = new Dictionary<int, XLBorderFormat>();
         _cellFormats = new Dictionary<int, XLCellFormat>();
         _cellStyles = new Dictionary<int, XLCellStyle>();
-        _differentialFormats = new Dictionary<int, XLDifferentialFormat>();
+        _differentialFormats = new BiDictionary<int, XLDifferentialFormat>();
         _tableStyles = new Dictionary<string, XLTableTheme>(XLHelper.NameComparer);
         _pivotStyles = new Dictionary<string, XLPivotTableStyle>(XLHelper.NameComparer);
     }
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
 
-    internal IReadOnlyDictionary<int, XLFontFormat> Fonts => _fontFormats;
+    internal IReadOnlyDictionary<int, XLFontFormat> Fonts => _fontFormats.KeyToValue;
 
     internal IReadOnlyDictionary<int, XLFillFormat> Fills => _fillFormats;
 
@@ -67,7 +68,7 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyDictionary<int, XLCellStyle> CellStyles => _cellStyles;
 
-    internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats;
+    internal IReadOnlyDictionary<int, XLDifferentialFormat> DifferentialFormats => _differentialFormats.KeyToValue;
 
     internal IReadOnlyDictionary<string, XLTableTheme> TableStyles => _tableStyles;
 
