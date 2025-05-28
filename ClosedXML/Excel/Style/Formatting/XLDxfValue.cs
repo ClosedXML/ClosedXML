@@ -5,6 +5,16 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal record XLDxfValue
 {
+    internal static readonly XLDxfValue Empty = new()
+    {
+        NumberFormat = null,
+        Font = null,
+        Fill = null,
+        Alignment = null,
+        Border = null,
+        Protection = null
+    };
+
     public required string? NumberFormat { get; init; }
 
     public required XLFontFormatValue? Font { get; init; }

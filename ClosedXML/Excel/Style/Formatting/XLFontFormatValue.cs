@@ -5,6 +5,25 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal record XLFontFormatValue
 {
+    public static readonly XLFontFormatValue Empty = new()
+    {
+        Name = null,
+        Charset = null,
+        Family = null,
+        Bold = null,
+        Italic = null,
+        Strikethrough = null,
+        Outline = null,
+        Shadow = null,
+        Condense = null,
+        Extend = null,
+        Color = null,
+        Size = null,
+        Underline = null,
+        VerticalAlignment = null,
+        Scheme = null
+    };
+
     public required XLFontName? Name { get; init; }
 
     public required XLFontCharSet? Charset { get; init; }

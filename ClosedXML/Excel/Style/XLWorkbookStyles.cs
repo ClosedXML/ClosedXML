@@ -1,3 +1,4 @@
+using System;
 using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
 using ClosedXML.Utils;
@@ -164,5 +165,35 @@ internal class XLWorkbookStyles
     public void SetMruColors(List<XLColor> mruColors)
     {
         _mruColors = mruColors;
+    }
+
+    /// <summary>
+    /// Get a font format that is stored in the internal structures of the styles class. The font
+    /// format is created by modification of existing font format. This is essential for saving,
+    /// all formats must be registered in the styles class. 
+    /// </summary>
+    public XLFontFormatValue GetRegisteredFontFormat(XLFontFormatValue original, Func<XLFontFormatValue, XLFontFormatValue> modify)
+    {
+        var modified = modify(original);
+        if (_fontFormats.TryGetValue(modified, out var existingFont))
+            return existingFont;
+
+        AddFontFormat(modified);
+        return modified;
+    }
+
+    /// <summary>
+    /// Get a differential format that is stored in the internal structures of the styles class.
+    /// The differential format is created by modification of existing dxf format. This is
+    /// essential for saving, all formats must be registered in the styles class. 
+    /// </summary>
+    public XLDxfValue GetRegisteredDxFormat(XLDxfValue original, Func<XLDxfValue, XLDxfValue> modify)
+    {
+        var modified = modify(original);
+        if (_differentialFormats.TryGetValue(modified, out var existingDxf))
+            return existingDxf;
+
+        AddDifferentialFormat(modified);
+        return modified;
     }
 }
