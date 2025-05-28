@@ -29,5 +29,5 @@ The method ``IXLWorksheets.Worksheet(string sheetName)`` now throws ``KeyNotFoun
 sheet is not found, instead of original ``ArgumentException``.
 
 Generally speaking, get-by-name methods of all unique-name collections (e.g., worksheets, styles,
-table fields ect) should throw ``KeyNotFoundException`` when item is not found. This change aligns
-the behavior of the ``IXLWorksheets`` with the rest of API.
+table fields, etc.) should throw ``KeyNotFoundException`` when an item is not found. This change
+aligns the behavior of the ``IXLWorksheets`` with the rest of the API.
