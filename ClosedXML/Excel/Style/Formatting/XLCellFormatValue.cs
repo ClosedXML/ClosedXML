@@ -17,6 +17,20 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal record XLCellFormatValue
 {
+    public static readonly XLCellFormatValue Empty = new()
+    {
+        NumberFormat = null,
+        Alignment = null,
+        Protection = null,
+        Font = null,
+        Fill = null,
+        Border = null,
+        CellStyle = null,
+        IncludeQuotePrefix = false,
+        PivotButton = false,
+        StyleComponents = CellFormatComponents.None
+    };
+
     public required string? NumberFormat { get; init; }
 
     public required XLAlignmentFormatValue? Alignment { get; init; }
