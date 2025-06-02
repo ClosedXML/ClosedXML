@@ -1496,6 +1496,8 @@ namespace ClosedXML.Excel
         {
             foreach (var definedName in definedNames)
             {
+                if (!definedName.IsValid)
+                    continue;
                 var newRangeList =
                     definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
