@@ -5,8 +5,10 @@ namespace ClosedXML.Excel.Formatting;
 /// A cell style available in the workbook.
 /// </para>
 /// <para>
-/// Cell style isn't actually used for formatting. A <see cref="XLCellFormatValue"/> is created from
-/// a style and the cell format is then used to format.
+/// The style is intended to be mutable, unlike cell format. Changing a style aspect (name or size)
+/// shouldn't require update of all cells that use it. The <see cref="XLCellFormatValue"/> links to
+/// the style through <see cref="XLCellFormatValue.CellStyleId"/> and the <see cref="XLWorkbookStyles.CellStyles"/>
+/// collection.
 /// </para>
 /// </summary>
 internal class XLCellStyleValue
@@ -35,5 +37,9 @@ internal class XLCellStyleValue
 
     public required XLBorderFormatValue? Border { get; init; }
 
-    public required CellFormatComponents ApplyComponents { get; init; }
+    /// <summary>
+    /// Format components that are decided by the style. Specified components should have
+    /// a non-null value.
+    /// </summary>
+    public required CellFormatComponents IncludedComponents { get; init; }
 }

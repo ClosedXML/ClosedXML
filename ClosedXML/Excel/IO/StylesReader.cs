@@ -137,7 +137,7 @@ internal partial class StylesReader
                     Font = format.Font,
                     Fill = format.Fill,
                     Border = format.Border,
-                    ApplyComponents = CellFormatComponents.All
+                    IncludedComponents = CellFormatComponents.All
                 });
             }
         }
@@ -156,8 +156,11 @@ internal partial class StylesReader
         {
             if (cellFormats[xfId].CellStyleXfId is { } cellStyleXfId)
             {
-                var cellStyle = cellStyles[cellStyleXfId];
-                var cellFormat = cellFormats[xfId].Format with { CellStyle = cellStyle };
+                // Make sure a the styleId is valid, it is only read from file and don't crash later.
+                if (!cellStyles.ContainsKey(cellStyleXfId))
+                    throw PartStructureException.InvalidAttributeValue();
+
+                var cellFormat = cellFormats[xfId].Format with { CellStyleId = cellStyleXfId };
                 cellFormats[xfId] = (cellFormat, cellStyleXfId);
             }
         }
@@ -416,8 +419,6 @@ internal partial class StylesReader
     private (XLCellFormatValue Format, int? CellStyleXfId) OnXfParsed(XLAlignmentFormatValue? alignment, XLProtectionFormatValue? protection, uint? numFmtId, uint? fontId, uint? fillId, uint? borderId, uint? xfId, bool quotePrefix, bool pivotButton, bool? applyNumberFormat, bool? applyFont, bool? applyFill, bool? applyBorder, bool? applyAlignment, bool? applyProtection)
     {
         // When xf is parsed, all number formats, fonts, fills and borders should already be read.
-        // The apply* attributes have default value true for cellStyleXfs and false for cellXfs.
-        var defaultApply = _reader.Context[^1] == "cellStyleXfs";
         string? numberFormat = null;
         if (numFmtId is not null)
             numberFormat = _styles.NumberFormats.GetValueOrDefault(checked((int)numFmtId));
@@ -426,13 +427,35 @@ internal partial class StylesReader
         var fill = fillId is not null ? _styles.Fills[checked((int)fillId)] : null;
         var border = borderId is not null ? _styles.Borders[checked((int)borderId)] : null;
 
+        // Excel doesn't actually use the apply* for xf, but at least it writes as if it did. It
+        // actually checks whether the id is same for xf and a style and if it is, the aspect
+        // should be form a style.To keep with other producers, also use it.
+
+        // Cell format has default apply* false (interpreted as "does format has its own custom format for this aspect")
+        // Style has default apply* true (interpreted as "does style define this aspect")
+        // The apply* attributes have default value true for cellStyleXfs and false for cellXfs.
+        var isStyleXf = _reader.Context[^1] == "cellStyleXfs";
+        var isCellFormat = !isStyleXf;
+        var defaultApply = !isCellFormat;
         var components = CellFormatComponents.None;
-        components |= (applyNumberFormat ?? defaultApply) ? CellFormatComponents.NumberFormat : CellFormatComponents.None;
-        components |= (applyFont ?? defaultApply) ? CellFormatComponents.Font : CellFormatComponents.None;
-        components |= (applyFill ?? defaultApply) ? CellFormatComponents.Fill : CellFormatComponents.None;
-        components |= (applyBorder ?? defaultApply) ? CellFormatComponents.Border : CellFormatComponents.None;
-        components |= (applyAlignment ?? defaultApply) ? CellFormatComponents.Alignment : CellFormatComponents.None;
-        components |= (applyProtection ?? defaultApply) ? CellFormatComponents.Protection : CellFormatComponents.None;
+
+        if (applyNumberFormat ?? defaultApply)
+            components |= CellFormatComponents.NumberFormat;
+
+        if (applyFont ?? defaultApply)
+            components |= CellFormatComponents.Font;
+
+        if (applyFill ?? defaultApply)
+            components |= CellFormatComponents.Fill;
+
+        if (applyBorder ?? defaultApply)
+            components |= CellFormatComponents.Border;
+
+        if (applyAlignment ?? defaultApply)
+            components |= CellFormatComponents.Alignment;
+
+        if (applyProtection ?? defaultApply)
+            components |= CellFormatComponents.Protection;
 
         var format = new XLCellFormatValue
         {
@@ -442,10 +465,10 @@ internal partial class StylesReader
             Font = font,
             Fill = fill,
             Border = border,
-            CellStyle = null, // The style is set once cell styles are resolved
+            CellStyleId = null, // The style is set once cell styles are resolved
             IncludeQuotePrefix = quotePrefix,
             PivotButton = pivotButton,
-            StyleComponents = components
+            CustomFormat = components
         };
         return (format, checked((int?)xfId));
     }
@@ -493,7 +516,7 @@ internal partial class StylesReader
         // The apply* attributes have default `true` for cellStyleXfs and `false` for cellXfs.
         // We already took care of correct default value during the parsing of <xf>, so we don't
         // have to deal with it here.
-        var applyComponents = cellStyleFormat.StyleComponents;
+        var styleIncludesComponents = cellStyleFormat.CustomFormat;
         var cellStyle = new XLCellStyleValue
         {
             Name = name,
@@ -505,7 +528,7 @@ internal partial class StylesReader
             Font = cellStyleFormat.Font,
             Fill = cellStyleFormat.Fill,
             Border = cellStyleFormat.Border,
-            ApplyComponents = applyComponents
+            IncludedComponents = styleIncludesComponents
         };
 
         return (checked((int)xfId), cellStyle);

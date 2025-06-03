@@ -25,10 +25,10 @@ internal record XLCellFormatValue
         Font = null,
         Fill = null,
         Border = null,
-        CellStyle = null,
+        CellStyleId = null,
         IncludeQuotePrefix = false,
         PivotButton = false,
-        StyleComponents = CellFormatComponents.None
+        CustomFormat = CellFormatComponents.None
     };
 
     public required string? NumberFormat { get; init; }
@@ -44,9 +44,10 @@ internal record XLCellFormatValue
     public required XLBorderFormatValue? Border { get; init; }
 
     /// <summary>
-    /// A cell style that was originally used to create this format.
+    /// A cell style that was originally used to create this format. The <c>null</c> value
+    /// means <em>Normal</em> style. Uses a key to connect immutable format to mutable style.
     /// </summary>
-    public required XLCellStyleValue? CellStyle {get; init; }
+    public required StyleId? CellStyleId {get; init; }
 
     public required bool IncludeQuotePrefix { get; init; }
 
@@ -54,12 +55,9 @@ internal record XLCellFormatValue
 
     /// <summary>
     /// <para>
-    /// Format components that should be updated when the original <see cref="CellStyle"/> is
-    /// changed. The format is immutable, so the change is actually creation of derived format and
-    /// usage replacement.
-    /// </para>
-    /// <para>
-    /// Only used if format was created from a style.
+    /// Format components that have been set manually and shouldn't be updated when the original
+    /// <see cref="CellStyleId"/> is changed. The format is immutable, so the change is actually
+    /// creation of derived format and usage replacement.
     /// </para>
     /// <para>
     /// <example>
@@ -71,5 +69,5 @@ internal record XLCellFormatValue
     /// </example>
     /// </para>
     /// </summary>
-    public required CellFormatComponents StyleComponents { get; init; }
+    public required CellFormatComponents CustomFormat { get; init; }
 }

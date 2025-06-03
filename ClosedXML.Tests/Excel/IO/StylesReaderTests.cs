@@ -328,9 +328,9 @@ internal class StylesReaderTests
             Assert.AreSame(styles.Borders[0], format.Border);
 
             // All apply* are 0 or default -> nothing should be overwritten
-            Assert.AreEqual(CellFormatComponents.None, format.StyleComponents);
-            Assert.NotNull(format.CellStyle);
-            Assert.AreEqual("Test", format.CellStyle.Name);
+            Assert.AreEqual(CellFormatComponents.None, format.CustomFormat);
+            Assert.NotNull(format.CellStyleId);
+            Assert.AreEqual("Test", styles.CellStyles[format.CellStyleId.Value].Name);
         }, xml);
     }
 
@@ -393,7 +393,7 @@ internal class StylesReaderTests
             Assert.AreEqual(XLBorderStyleValues.Double, style.Border?.Bottom?.Style);
 
             // All apply* are true or default (true) -> everything should be overwritten
-            Assert.AreEqual(CellFormatComponents.All, style.ApplyComponents);
+            Assert.AreEqual(CellFormatComponents.All, style.IncludedComponents);
         }, xml);
     }
 
@@ -489,7 +489,7 @@ internal class StylesReaderTests
             Assert.AreEqual(15.0, styles.CellStyles[1].Font?.Size);
 
             Assert.AreEqual(1, styles.CellFormats.Count);
-            Assert.AreSame(styles.CellStyles[0], styles.CellFormats[0].CellStyle);
+            Assert.AreEqual(0, styles.CellFormats[0].CellStyleId);
         }, xml);
     }
 
