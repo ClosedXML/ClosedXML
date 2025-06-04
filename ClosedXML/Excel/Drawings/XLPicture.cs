@@ -344,9 +344,6 @@ namespace ClosedXML.Excel.Drawings
             if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                 throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
 
-            if (value.Length > 31)
-                throw new ArgumentException("Picture names cannot be more than 31 characters");
-
             _name = value;
         }
 
