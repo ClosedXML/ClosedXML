@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel;
@@ -38,9 +39,9 @@ namespace ClosedXML.Excel;
 internal readonly struct FormatHierarchy
 {
     /// <summary>
-    /// Containers that are modified by the API changes.
+    /// Container that is modified by the API changes.
     /// </summary>
-    private readonly IXLFormatContainer[] _containers;
+    private readonly IXLFormatContainer _container;
 
     /// <summary>
     /// Cell areas that should have format updated upon a format change.
@@ -60,46 +61,65 @@ internal readonly struct FormatHierarchy
     private readonly IXLFormatContainer? _column;
 
     /// <summary>
-    /// Sheet format is a ClosedXML fiction. OOXML doesn't have a style for a sheet. Think of it as
-    /// all columns without a specified format. The xml tag <![CDATA[<col/>]]> has attributes
-    /// <c>min</c> (column) and <c>max</c> (column), so we can easily specify formatting for
-    /// all columns from start to end (or just ones that don't have explicit format).
-    /// </summary>
-    private readonly IXLFormatContainer? _sheet;
-
-    /// <summary>
     /// A normal style of a workbook. Should have all values.
     /// </summary>
     private readonly IXLFormatContainer _normal;
 
-    public FormatHierarchy(IXLFormatContainer[] containers, IXLFormatContainer? row, IXLFormatContainer? column, IXLFormatContainer? sheet, IXLFormatContainer normal)
+    private FormatHierarchy(IXLFormatContainer container, IXLFormatContainer? row, IXLFormatContainer? column, IXLFormatContainer normal)
     {
-        _containers = containers ?? throw new ArgumentNullException(nameof(containers));
+        _container = container ?? throw new ArgumentNullException(nameof(container));
         _row = row;
         _column = column;
-        _sheet = sheet;
         _normal = normal;
     }
 
-    public T Resolve<T>(Func<XLCellFormatValue, T?> getFormatValue, T existingFormatMissingValueDefault)
-        where T : struct
+    public static FormatHierarchy ForCell(IXLFormatContainer cell, IXLFormatContainer? row, IXLFormatContainer? column, IXLFormatContainer normal)
     {
-        var container = _containers[0];
-        var format = container.FormatValue;
-        if (format is not null)
-        {
-            return getFormatValue(format) ?? existingFormatMissingValueDefault;
-        }
-
-        // Container doesn't even have a format, e.g. it's a style-less cell or a row. 
-        throw new NotImplementedException();
+        return new FormatHierarchy(cell, row, column, normal);
     }
 
-    public T ResolveWithNormalFallback<T>(Func<XLCellFormatValue, T?> getFormatValue)
+    public static FormatHierarchy ForRow(IXLFormatContainer row, IXLFormatContainer normal)
+    {
+        return new FormatHierarchy(row, null, null, normal);
+    }
+
+    public static FormatHierarchy ForColumn(IXLFormatContainer column, IXLFormatContainer normal)
+    {
+        return new FormatHierarchy(column, null, null, normal);
+    }
+
+    public T Resolve<T>(Func<XLCellFormatValue, T?> getFormatValue, XLCellFormatValue defaultFormat)
         where T : struct
     {
-        var normalFormat = _normal.FormatValue ?? throw new InvalidOperationException("Normal style doesn't have format");
-        var normalValue = getFormatValue(normalFormat) ?? throw new InvalidOperationException("Normal style should have everything.");
-        return Resolve(getFormatValue, normalValue);
+        var format = GetNearestFormat(defaultFormat);
+        var formatPropertyValue = getFormatValue(format);
+        if (formatPropertyValue is not null)
+            return formatPropertyValue.Value;
+
+        var defaultPropertyValue = getFormatValue(defaultFormat);
+        if (defaultPropertyValue is not null)
+            return defaultPropertyValue.Value;
+
+        throw new UnreachableException("Default format is missing a value.");
+    }
+
+    private XLCellFormatValue GetNearestFormat(XLCellFormatValue defaultFormat)
+    {
+        // Get the format in hierarchy that is closest to the actual container.
+        if (_container.FormatValue is { } containerFormat)
+            return containerFormat;
+
+        if (_row?.FormatValue is { } rowFormat)
+            return rowFormat;
+
+        if (_column?.FormatValue is { } columnFormat)
+            return columnFormat;
+
+        if (_normal?.FormatValue is { } normalFormat)
+            return normalFormat;
+
+        // We should never get here, but if workbook doesn't specify normal style (technically not
+        // required by the spec), let's go with the default format.
+        return defaultFormat;
     }
 }

@@ -101,6 +101,44 @@ internal class XLWorkbookStyles
     /// </summary>
     internal IReadOnlyList<XLColor> MruColors => _mruColors;
 
+    /// <summary>
+    /// A default format values used when format doesn't have a value in a property. All props in
+    /// the default format must have a value. The default is set on load and not changed later.
+    /// Nearly all props are equivalent of "zero", except things that can't be like that, e.g. font
+    /// name or font size.
+    /// </summary>
+    internal XLCellFormatValue DefaultFormat { get; set; } = new()
+    {
+        Font = new XLFontFormatValue
+        {
+            Name = "Calibri",
+            Charset = XLFontCharSet.Ansi,
+            Family = XLFontFamilyNumberingValues.NotApplicable,
+            Bold = false,
+            Italic = false,
+            Strikethrough = false,
+            Outline = false,
+            Shadow = false,
+            Condense = false,
+            Extend = false,
+            Color = XLColor.FromArgb(0x00000000),
+            Size = XLFontSize.FromPoints(11),
+            Underline = XLFontUnderlineValues.None,
+            VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+            Scheme = XLFontScheme.None
+        },
+        // TODO: Add all default values, not just font
+        NumberFormat = null,
+        Alignment = null,
+        Protection = null,
+        Fill = null,
+        Border = null,
+        CellStyleId = null,
+        IncludeQuotePrefix = false,
+        PivotButton = false,
+        CustomFormat = CellFormatComponents.None
+    };
+
     internal XLNumberFormatValue GetNumberFormat(int numberFormatId)
     {
         var xlNumberFormat = new XLNumberFormatKey

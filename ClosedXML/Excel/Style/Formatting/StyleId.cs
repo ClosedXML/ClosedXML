@@ -4,8 +4,8 @@ namespace ClosedXML.Excel.Formatting;
 
 /// <summary>
 /// A key to a named style that is used to connect immutable <see cref="XLCellFormatValue"/> to
-/// a mutable <see cref="XLCellStyleValue"/>. API that needs access to a resolved format value
-/// should pass style as a parameter.
+/// a changeable <see cref="XLCellStyleValue"/>. API methods that needs access to a resolved format
+/// value should pass <see cref="XLWorkbookStyles.DefaultFormat"/> as a parameter.
 /// </summary>
 internal readonly record struct StyleId(int Value) : IEquatable<int>
 {

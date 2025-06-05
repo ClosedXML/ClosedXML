@@ -156,7 +156,8 @@ internal partial class StylesReader
         {
             if (cellFormats[xfId].CellStyleXfId is { } cellStyleXfId)
             {
-                // Make sure a the styleId is valid, it is only read from file and don't crash later.
+                // Make sure a the styleId is valid. The styleId for cell formats is read from file
+                // and thus could be invalid. We don't want to crash later.
                 if (!cellStyles.ContainsKey(cellStyleXfId))
                     throw PartStructureException.InvalidAttributeValue();
 
@@ -429,7 +430,7 @@ internal partial class StylesReader
 
         // Excel doesn't actually use the apply* for xf, but at least it writes as if it did. It
         // actually checks whether the id is same for xf and a style and if it is, the aspect
-        // should be form a style.To keep with other producers, also use it.
+        // should be from a style. Excel is doesn't use it, other producers might.
 
         // Cell format has default apply* false (interpreted as "does format has its own custom format for this aspect")
         // Style has default apply* true (interpreted as "does style define this aspect")
