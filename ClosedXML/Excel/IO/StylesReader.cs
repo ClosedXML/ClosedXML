@@ -36,6 +36,29 @@ internal partial class StylesReader
     {
         _reader.Open("styleSheet", _ns);
         ParseStylesheet("styleSheet");
+
+        LoadDefaultFormat();
+    }
+
+    private void LoadDefaultFormat()
+    {
+        // Normal style is technically optional.
+        var normalStyle = _styles.CellStyles.Select(x => x.Value).SingleOrDefault(x => x.BuiltInStyle == BuiltInStyleValues.Normal);
+        if (normalStyle is null)
+            return;
+
+        // Default format has mostly unchangeable values regardless of workbook styles, but it
+        // does adjust font name and size from normal style on load.
+        var defaultFontName = normalStyle.Font?.Name ?? _styles.DefaultFormat.Font?.Name;
+        var defaultFontSize = normalStyle.Font?.Size ?? _styles.DefaultFormat.Font?.Size;
+        _styles.DefaultFormat = _styles.DefaultFormat with
+        {
+            Font = _styles.DefaultFormat!.Font! with
+            {
+                Name = defaultFontName,
+                Size = defaultFontSize
+            }
+        };
     }
 
     private void ParseStylesheet(string elementName)

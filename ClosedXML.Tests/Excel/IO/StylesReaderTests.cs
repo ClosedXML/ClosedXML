@@ -953,6 +953,38 @@ internal class StylesReaderTests
         }, xml);
     }
 
+    [Test]
+    public void Updates_default_cell_format_from_normal_style()
+    {
+        // This is Excel specific behavior.
+        // Each format property has a default value that is used when format doesn't specify
+        // the property. Most of the default format values are fixed, but font name and size
+        // are taken from normal style on load. Other format properties, e.g. bold, are not
+        // changed in default format regardless of values in normal style.
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts>
+                <font><name val="Wingdings"/><sz val="5"/></font>
+                <font><name val="Arial"/><sz val="15"/><b/></font>
+              </fonts>
+              <cellStyleXfs>
+                <xf fontId="1"/>
+              </cellStyleXfs>
+              <cellStyles>
+                <cellStyle xfId="0" builtinId="0"/>
+              </cellStyles>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            Assert.AreEqual("Arial", styles.DefaultFormat.Font?.Name);
+            Assert.AreEqual(15.0, styles.DefaultFormat.Font?.Size);
+
+            Assert.IsFalse(styles.DefaultFormat.Font?.Bold);
+        }, xml);
+    }
+
     private static void AssertNumberFormats(string numberFormatsXml, Action<XLWorkbookStyles> assert)
     {
         var xml = $"""
