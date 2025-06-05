@@ -88,19 +88,11 @@ internal readonly struct FormatHierarchy
         return new FormatHierarchy(column, null, null, normal);
     }
 
-    public T Resolve<T>(Func<XLCellFormatValue, T?> getFormatValue, XLCellFormatValue defaultFormat)
+    public T Resolve<T>(Func<XLCellFormatValue, T?> selector, XLCellFormatValue defaultFormat)
         where T : struct
     {
         var format = GetNearestFormat(defaultFormat);
-        var formatPropertyValue = getFormatValue(format);
-        if (formatPropertyValue is not null)
-            return formatPropertyValue.Value;
-
-        var defaultPropertyValue = getFormatValue(defaultFormat);
-        if (defaultPropertyValue is not null)
-            return defaultPropertyValue.Value;
-
-        throw new UnreachableException("Default format is missing a value.");
+        return GetFormatProperty(selector, format, defaultFormat);
     }
 
     private XLCellFormatValue GetNearestFormat(XLCellFormatValue defaultFormat)
@@ -121,5 +113,19 @@ internal readonly struct FormatHierarchy
         // We should never get here, but if workbook doesn't specify normal style (technically not
         // required by the spec), let's go with the default format.
         return defaultFormat;
+    }
+
+    private T GetFormatProperty<T>(Func<XLCellFormatValue, T?> selector, XLCellFormatValue format, XLCellFormatValue defaultFormat)
+        where T:struct
+    {
+        var formatPropertyValue = selector(format);
+        if (formatPropertyValue is not null)
+            return formatPropertyValue.Value;
+
+        var defaultPropertyValue = selector(defaultFormat);
+        if (defaultPropertyValue is not null)
+            return defaultPropertyValue.Value;
+
+        throw new UnreachableException("Default format is missing a value.");
     }
 }
