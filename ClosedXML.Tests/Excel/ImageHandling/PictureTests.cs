@@ -480,5 +480,151 @@ namespace ClosedXML.Tests
                 () => new XLWorkbook(stream),
                 @"Other\Pictures\ImageShapeZOrder-Output.xlsx");
         }
+
+        [Test]
+        public void CannotCreatePictureWithForbiddenCharacters()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))
+                {
+                    // Test each forbidden character
+                    var forbiddenNames = new[] 
+                    { 
+                        "Picture:Name",      // colon
+                        "Picture\\Name",     // backslash
+                        "Picture/Name",      // forward slash
+                        "Picture?Name",      // question mark
+                        "Picture*Name",      // asterisk
+                        "Picture[Name]",     // square brackets
+                        "C:\\Images\\pic.jpg", // path with multiple forbidden chars
+                        "http://example.com/image.jpg" // URL with multiple forbidden chars
+                    };
+
+                    foreach (var name in forbiddenNames)
+                    {
+                        stream.Position = 0;
+                        var exception = Assert.Throws<ArgumentException>(() => 
+                            ws.AddPicture(stream, XLPictureFormat.Png, name));
+                        Assert.That(exception.Message, Does.Contain("Picture names cannot contain any of the following characters"));
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void CanLoadPictureWithForbiddenCharactersFromFile()
+        {
+            // This test simulates loading a file with pictures that have names containing forbidden characters
+            // In real scenarios, this happens when loading Excel files created by other applications
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1") as XLWorksheet;
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))
+                {
+                    // Use the internal Add method that bypasses validation (used when loading from files)
+                    var picturesCollection = ws.Pictures as XLPictures;
+                    
+                    // Test the actual scenario from the issue: "Picture@01\QPosted@"
+                    var picture1 = picturesCollection.Add(stream, "Picture@01\\QPosted@", 1);
+                    stream.Position = 0;
+                    
+                    // Test other forbidden characters
+                    var picture2 = picturesCollection.Add(stream, "C:\\Images\\pic.jpg", 2);
+                    stream.Position = 0;
+                    
+                    var picture3 = picturesCollection.Add(stream, "http://example.com/image.jpg", 3);
+
+                    // Verify the pictures were added with their original names
+                    Assert.AreEqual("Picture@01\\QPosted@", picture1.Name);
+                    Assert.AreEqual("C:\\Images\\pic.jpg", picture2.Name);
+                    Assert.AreEqual("http://example.com/image.jpg", picture3.Name);
+                    
+                    // Verify the pictures are functional
+                    Assert.AreEqual(3, ws.Pictures.Count);
+                    Assert.AreEqual(XLPictureFormat.Png, picture1.Format);
+                    Assert.AreEqual(XLPictureFormat.Png, picture2.Format);
+                    Assert.AreEqual(XLPictureFormat.Png, picture3.Format);
+                }
+            }
+        }
+
+        [Test]
+        public void CanSaveAndLoadWorkbookWithPicturesHavingForbiddenCharacters()
+        {
+            using (var ms = new MemoryStream())
+            {
+                // Create workbook with pictures having forbidden characters (simulating file load)
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1") as XLWorksheet;
+
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))
+                    {
+                        var picturesCollection = ws.Pictures as XLPictures;
+                        picturesCollection.Add(stream, "Picture@01\\QPosted@", 1)
+                            .WithPlacement(XLPicturePlacement.FreeFloating)
+                            .MoveTo(50, 50);
+                    }
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Position = 0;
+
+                // Load the saved workbook and verify the picture name is preserved
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheet("Sheet1");
+                    Assert.AreEqual(1, ws.Pictures.Count);
+                    
+                    var picture = ws.Pictures.First();
+                    Assert.AreEqual("Picture@01\\QPosted@", picture.Name);
+                    Assert.AreEqual(XLPicturePlacement.FreeFloating, picture.Placement);
+                    Assert.AreEqual(50, picture.Left);
+                    Assert.AreEqual(50, picture.Top);
+                }
+            }
+        }
+
+        [Test]
+        public void PictureNameValidationForEmptyAndLongNames()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))
+                {
+                    // Test empty name
+                    stream.Position = 0;
+                    var exception = Assert.Throws<ArgumentException>(() => 
+                        ws.AddPicture(stream, XLPictureFormat.Png, ""));
+                    Assert.That(exception.Message, Does.Contain("Picture names cannot be empty"));
+
+                    // Test whitespace name
+                    stream.Position = 0;
+                    exception = Assert.Throws<ArgumentException>(() => 
+                        ws.AddPicture(stream, XLPictureFormat.Png, "   "));
+                    Assert.That(exception.Message, Does.Contain("Picture names cannot be empty"));
+
+                    // Test name that's too long (>31 characters)
+                    stream.Position = 0;
+                    var longName = new string('a', 32);
+                    exception = Assert.Throws<ArgumentException>(() => 
+                        ws.AddPicture(stream, XLPictureFormat.Png, longName));
+                    Assert.That(exception.Message, Does.Contain("Picture names cannot be more than 31 characters"));
+
+                    // Test name that's exactly 31 characters (should work)
+                    stream.Position = 0;
+                    var validLongName = new string('a', 31);
+                    var picture = ws.AddPicture(stream, XLPictureFormat.Png, validLongName);
+                    Assert.AreEqual(validLongName, picture.Name);
+                }
+            }
+        }
     }
 }

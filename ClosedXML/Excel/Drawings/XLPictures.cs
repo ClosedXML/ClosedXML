@@ -140,7 +140,7 @@ namespace ClosedXML.Excel.Drawings
         internal IXLPicture Add(Stream stream, string name, int Id)
         {
             var picture = (XLPicture)Add(stream);
-            picture.SetName(name);
+            picture.SetName(name, validateName: false);
             picture.Id = Id;
             return picture;
         }
