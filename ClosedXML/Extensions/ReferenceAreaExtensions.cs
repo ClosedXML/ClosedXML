@@ -17,22 +17,37 @@ namespace ClosedXML.Extensions
         /// <returns>Converted absolute range.</returns>
         public static XLSheetRange ToSheetRange(this ReferenceArea area, XLSheetPoint anchor)
         {
-            int col1, row1, col2, row2;
-            if (area.First.IsA1)
-            {
-                row1 = A1ToPosition(area.First.RowType, area.First.RowValue, XLHelper.MinRowNumber);
-                col1 = A1ToPosition(area.First.ColumnType, area.First.ColumnValue, XLHelper.MinColumnNumber);
-                row2 = A1ToPosition(area.Second.RowType, area.Second.RowValue, XLHelper.MaxRowNumber);
-                col2 = A1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, XLHelper.MaxColumnNumber);
-            }
-            else
-            {
-                row1 = R1C1ToPosition(area.First.RowType, area.First.RowValue, anchor.Row, XLHelper.MinRowNumber, XLHelper.MaxRowNumber);
-                col1 = R1C1ToPosition(area.First.ColumnType, area.First.ColumnValue, anchor.Column, XLHelper.MinColumnNumber, XLHelper.MaxColumnNumber);
-                row2 = R1C1ToPosition(area.Second.RowType, area.Second.RowValue, anchor.Row, XLHelper.MaxRowNumber, XLHelper.MaxRowNumber);
-                col2 = R1C1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, anchor.Column, XLHelper.MaxColumnNumber, XLHelper.MaxColumnNumber);
-            }
+            return area.First.IsA1
+                ? ToSheetRangeA1(area)
+                : ToSheetRangeR1C1(area, anchor);
+        }
 
+        public static XLSheetRange ToSheetRangeA1(this ReferenceArea area)
+        {
+            if (area.Style != ReferenceStyle.A1)
+                throw new ArgumentException(nameof(area));
+
+            var row1 = A1ToPosition(area.First.RowType, area.First.RowValue, XLHelper.MinRowNumber);
+            var col1 = A1ToPosition(area.First.ColumnType, area.First.ColumnValue, XLHelper.MinColumnNumber);
+            var row2 = A1ToPosition(area.Second.RowType, area.Second.RowValue, XLHelper.MaxRowNumber);
+            var col2 = A1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, XLHelper.MaxColumnNumber);
+            return ToSheetRange(row1, row2, col1, col2);
+        }
+
+        public static XLSheetRange ToSheetRangeR1C1(this ReferenceArea area, XLSheetPoint anchor)
+        {
+            if (area.Style != ReferenceStyle.R1C1)
+                throw new ArgumentException(nameof(area));
+
+            var row1 = R1C1ToPosition(area.First.RowType, area.First.RowValue, anchor.Row, XLHelper.MinRowNumber, XLHelper.MaxRowNumber);
+            var col1 = R1C1ToPosition(area.First.ColumnType, area.First.ColumnValue, anchor.Column, XLHelper.MinColumnNumber, XLHelper.MaxColumnNumber);
+            var row2 = R1C1ToPosition(area.Second.RowType, area.Second.RowValue, anchor.Row, XLHelper.MaxRowNumber, XLHelper.MaxRowNumber);
+            var col2 = R1C1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, anchor.Column, XLHelper.MaxColumnNumber, XLHelper.MaxColumnNumber);
+            return ToSheetRange(row1, row2, col1, col2);
+        }
+
+        private static XLSheetRange ToSheetRange(int row1, int row2, int col1, int col2)
+        {
             // Points in the token `area` don't have to be in top left and bottom right corners,
             // e.g. D4:A1 or D1:A4. Normalize coordinates, so the sheet range has expected corners.
             var colStart = Math.Min(col1, col2);
