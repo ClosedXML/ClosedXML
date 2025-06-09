@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ClosedXML.Excel;
 using ClosedXML.Parser;
 
@@ -9,6 +9,15 @@ namespace ClosedXML.Extensions
     /// </summary>
     internal static class ReferenceAreaExtensions
     {
+        /// <summary>
+        /// Is reference a row span (e.g. $B:G).
+        /// </summary>
+        public static bool IsColumnSpan(this ReferenceArea reference)
+        {
+            return reference.First.RowType == ReferenceAxisType.None &&
+                   reference.Second.RowType == ReferenceAxisType.None;
+        }
+
         /// <summary>
         /// Convert area to an absolute sheet range (regardless if the area is A1 or R1C1).
         /// </summary>
