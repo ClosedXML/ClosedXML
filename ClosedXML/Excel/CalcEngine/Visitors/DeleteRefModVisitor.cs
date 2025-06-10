@@ -26,10 +26,13 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         if (!XLHelper.SheetComparer.Equals(_deletedBookArea.Name, ctx.Sheet))
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
+        // The two methods could be transposed into a single case, but it is hard to debug and I
+        // will rather take some duplication. Plus there are some problems like transposing row
+        // beyond last column and so on. Make sure to fix/refactor BOTH variants.
         return _shift switch
         {
             XLShiftDeletedCells.ShiftCellsUp => DeleteAndShiftUp(ctx, range, referenceToShift),
-            XLShiftDeletedCells.ShiftCellsLeft => throw new NotImplementedException(),
+            XLShiftDeletedCells.ShiftCellsLeft => DeleteAndShiftLeft(ctx, range, referenceToShift),
             _ => throw new UnreachableException()
         };
     }
@@ -125,10 +128,46 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         throw new UnreachableException($"Unhandled case between a delete area {deletedArea} and a reference area {referenceToShiftArea}.");
     }
 
+    private TransformedSymbol DeleteAndShiftLeft(ModContext ctx, SymbolRange range, ReferenceArea referenceToShift)
+    {
+        // Rows are never changed by shift left deletion.
+        if (referenceToShift.IsRowSpan())
+            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
+
+        var referenceToShiftArea = referenceToShift.ToSheetRangeA1();
+        var deletedArea = _deletedBookArea.Area;
+
+        // Subtraction would cause split -> return original
+        if (!referenceToShiftArea.TrySubtract(deletedArea, out var subtracted))
+            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
+
+        // Whole area was subtracted -> #REF!
+        if (subtracted is null)
+            return TransformedSymbol.ToText(ctx.Formula, range, RefError);
+
+        // If delete area is to the left and covers full height of the subtracted area, then shift
+        var shouldShiftToLeft = deletedArea.RightColumn < subtracted.Value.LeftColumn &&
+                                deletedArea.TopRow <= subtracted.Value.TopRow &&
+                                deletedArea.BottomRow >= subtracted.Value.BottomRow;
+        var result = shouldShiftToLeft
+            ? subtracted.Value.ShiftColumns(-deletedArea.Width)
+            : subtracted.Value;
+        var first = Set(referenceToShift.First, result.TopRow, result.LeftColumn);
+        var second = Set(referenceToShift.Second, result.BottomRow, result.RightColumn);
+        var shiftedReference = new ReferenceArea(first, second);
+        return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
+    }
+
     private static RowCol Shift(RowCol rowCol, int rowUpShift, int columnLeftShift)
     {
         var r = rowCol.RowType != ReferenceAxisType.None ? rowCol.RowValue - rowUpShift : rowCol.RowValue;
         var c = rowCol.ColumnType != ReferenceAxisType.None ? rowCol.ColumnValue - columnLeftShift : rowCol.ColumnValue;
+        return new RowCol(rowCol.RowType, r, rowCol.ColumnType, c, rowCol.Style);
+    }
+    private static RowCol Set(RowCol rowCol, int row, int column)
+    {
+        var r = rowCol.RowType != ReferenceAxisType.None ? row : rowCol.RowValue;
+        var c = rowCol.ColumnType != ReferenceAxisType.None ? column : rowCol.ColumnValue;
         return new RowCol(rowCol.RowType, r, rowCol.ColumnType, c, rowCol.Style);
     }
 }

@@ -32,7 +32,7 @@ public class ReferenceShiftOnDeleteRefModTests
     [TestCase("A1:D3", "Sheet!B1:C3", "A1:D3")]
 
     // Deleted area covers full width of reference
-    [TestCase("A1:D3", "Sheet!A4:D4", "A1:D3")] // Deleted area is completely below the reference.
+    [TestCase("A1:D3", "Sheet!A5:D6", "A1:D3")] // Deleted area is completely below the reference.
     [TestCase("A5:A10", "Sheet!A10:D11", "A5:A9")]
     [TestCase("A5:A10", "Sheet!A10", "A5:A9")]
     [TestCase("A5:A10", "Sheet!A7:A10", "A5:A6")]
@@ -65,6 +65,65 @@ public class ReferenceShiftOnDeleteRefModTests
         var deleted = new XLBookArea(deletedSheet, deletedReference.ToSheetRangeA1());
 
         var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsUp));
+
+        Assert.AreEqual(expected, result);
+    }
+
+    /// <summary>
+    /// This tests how are references changed inside a formula when an area is deleted and shifted left.
+    /// They were derived by using SUM(reference) before and after deletion.
+    /// </summary>
+    [TestCase("D5", "Other!D5", "D5")] // Delete cell with same coordinate on different sheet.
+    [TestCase("D5", "Sheet!D5", "#REF!")] // Fully delete a cell.
+    [TestCase("$D$5", "Sheet!D5", "#REF!")] // Only posıtıon matter, reference style doesn't.
+
+    // Row span tests
+    [TestCase("2:$4", "Sheet!C:F", "2:$4")] // Row span is basically never changed.
+    [TestCase("$2:4", "Sheet!A1:D5", "$2:4")] // Row span is basically never changed.
+
+    // Deleted area is fully upward of the reference.
+    [TestCase("B3:D7", "Sheet!B1:D2", "B3:D7")]
+
+    // Deleted area is fully below of the reference.
+    [TestCase("B3:D7", "Sheet!B8:D9", "B3:D7")]
+
+    // Deleted area is inside and only partially covers rows of a reference.
+    [TestCase("B3:D9", "Sheet!B4:D6", "B3:D9")]
+
+    // Deleted area covers full height of the reference
+    [TestCase("A1:B3", "Sheet!D1:E3", "A1:B3")] // Deleted area is completely to the right of the reference.
+    [TestCase("E1:I2", "Sheet!I1:K5", "E1:H2")]
+    [TestCase("E1:I2", "Sheet!I1:I2", "E1:H2")]
+    [TestCase("E1:I2", "Sheet!H1:I2", "E1:G2")]
+    [TestCase("E1:I2", "Sheet!E1:I2", "#REF!")]
+    [TestCase("E1:I2", "Sheet!E1:F2", "E1:G2")]
+    [TestCase("E1:I2", "Sheet!D1:F2", "D1:F2")]
+    [TestCase("E1:I2", "Sheet!B1:D2", "B1:F2")]
+
+    // Deleted area covers a top slice of a reference
+    [TestCase("B3:D7", "Sheet!B3:D5", "B6:D7")]
+    [TestCase("B3:D7", "Sheet!B1:D5", "B6:D7")]
+    [TestCase("B3:D7", "Sheet!A1:G4", "B5:D7")]
+    [TestCase("B3:D7", "Sheet!C2:D5", "B3:D7")]
+    [TestCase("B3:D7", "Sheet!B1:C3", "B3:D7")]
+    [TestCase("B3:D7", "Sheet!A2:C5", "B3:D7")]
+    [TestCase("B3:D7", "Sheet!E3:F6", "B3:D7")]
+
+    // Deleted area covers bottom slice of a reference
+    [TestCase("C5:E12", "Sheet!C7:E12", "C5:E6")]
+    [TestCase("C5:E12", "Sheet!C10:E16", "C5:E9")]
+    [TestCase("C5:E12", "Sheet!A10:E13", "C5:E9")]
+    [TestCase("C5:E12", "Sheet!D8:E13", "C5:E12")]
+    [TestCase("C5:E12", "Sheet!C8:D13", "C5:E12")]
+    [TestCase("C5:E12", "Sheet!A8:B12", "C5:E12")]
+    [TestCase("C5:E12", "Sheet!F8:F12", "C5:E12")]
+    public void Delete_area_and_shift_left_reference(string formula, string deletedArea, string expected)
+    {
+        // TODO: Once incorporated into cell deletion, replace with a public API test case through SUM(reference) in a cell.
+        Assert.True(ReferenceParser.TryParseSheetA1(deletedArea, out var deletedSheet, out var deletedReference));
+        var deleted = new XLBookArea(deletedSheet, deletedReference.ToSheetRangeA1());
+
+        var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsLeft));
 
         Assert.AreEqual(expected, result);
     }

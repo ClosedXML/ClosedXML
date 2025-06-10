@@ -10,7 +10,16 @@ namespace ClosedXML.Extensions
     internal static class ReferenceAreaExtensions
     {
         /// <summary>
-        /// Is reference a row span (e.g. $B:G).
+        /// Is reference a row span (e.g. $3:7).
+        /// </summary>
+        public static bool IsRowSpan(this ReferenceArea reference)
+        {
+            return reference.First.ColumnType == ReferenceAxisType.None &&
+                   reference.Second.ColumnType == ReferenceAxisType.None;
+        }
+
+        /// <summary>
+        /// Is reference a column span (e.g. $B:G).
         /// </summary>
         public static bool IsColumnSpan(this ReferenceArea reference)
         {
