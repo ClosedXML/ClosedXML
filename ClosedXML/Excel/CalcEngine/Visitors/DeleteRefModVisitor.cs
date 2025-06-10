@@ -1,7 +1,6 @@
+using System.Diagnostics;
 using ClosedXML.Extensions;
 using ClosedXML.Parser;
-using System;
-using System.Diagnostics;
 
 namespace ClosedXML.Excel.CalcEngine.Visitors;
 
@@ -27,8 +26,7 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
         // The two methods could be transposed into a single case, but it is hard to debug and I
-        // will rather take some duplication. Plus there are some problems like transposing row
-        // beyond last column and so on. Make sure to fix/refactor BOTH variants.
+        // will rather take some duplication.
         return _shift switch
         {
             XLShiftDeletedCells.ShiftCellsUp => DeleteAndShiftUp(ctx, range, referenceToShift),
@@ -46,86 +44,25 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         var referenceToShiftArea = referenceToShift.ToSheetRangeA1();
         var deletedArea = _deletedBookArea.Area;
 
-        // Deleted area is fully to the left of the reference - reference will never be shifted up
-        if (deletedArea.RightColumn < referenceToShiftArea.LeftColumn)
+        // Subtraction would cause split -> return original
+        if (!referenceToShiftArea.TrySubtract(deletedArea, out var subtracted))
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
-        // Deleted area is fully to the right of the reference - reference will never be shifted up
-        if (deletedArea.LeftColumn > referenceToShiftArea.RightColumn)
-            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
+        // Whole area was subtracted -> #REF!
+        if (subtracted is null)
+            return TransformedSymbol.ToText(ctx.Formula, range, RefError);
 
-        // Deleted area doesn't fully cover reference columns. It will either cause splits or not move -> keep original.
-        if (deletedArea.LeftColumn > referenceToShiftArea.LeftColumn &&
-            deletedArea.RightColumn < referenceToShiftArea.RightColumn)
-            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
-
-        // Deleted area fully cover reference columns.
-        if (deletedArea.LeftColumn <= referenceToShiftArea.LeftColumn &&
-            deletedArea.RightColumn >= referenceToShiftArea.RightColumn)
-        {
-            // Deleted area is below the reference
-            if (deletedArea.TopRow > referenceToShiftArea.BottomRow)
-                return TransformedSymbol.CopyOriginal(ctx.Formula, range);
-
-            // The deleted area either partially covers the reference or is above the reference -> shift up.
-
-            // How many rows to shift up the reference.
-            var shiftUp = Math.Min(deletedArea.BottomRow + 1, referenceToShiftArea.TopRow) - Math.Min(deletedArea.TopRow, referenceToShiftArea.TopRow);
-
-            // By how many rows to shrink the reference
-            var shrinkBy = deletedArea.BottomRow >= referenceToShiftArea.TopRow
-                ? Math.Min(referenceToShiftArea.BottomRow, deletedArea.BottomRow) - Math.Max(referenceToShiftArea.TopRow, deletedArea.TopRow) + 1
-                : 0;
-
-            // The reference was completely removed by deleted area
-            if (shrinkBy >= referenceToShiftArea.Height)
-                return TransformedSymbol.ToText(ctx.Formula, range, RefError);
-
-            var first = Shift(referenceToShift.First, shiftUp, 0);
-            var second = Shift(referenceToShift.Second, shiftUp + shrinkBy, 0);
-            var shiftedReference = new ReferenceArea(first, second);
-            return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
-        }
-
-        // Deleted area slices off a left part of the reference
-        if (deletedArea.LeftColumn <= referenceToShiftArea.LeftColumn &&
-            deletedArea.RightColumn < referenceToShiftArea.RightColumn &&
-            deletedArea.RightColumn >= referenceToShiftArea.LeftColumn)
-        {
-            if (deletedArea.TopRow <= referenceToShiftArea.TopRow &&
-                deletedArea.BottomRow >= referenceToShiftArea.BottomRow)
-            {
-                // Slice off the right side of the reference
-                var sliceOffLeftColumns = referenceToShiftArea.LeftColumn - deletedArea.RightColumn - 1;
-                var first = Shift(referenceToShift.First, 0, sliceOffLeftColumns);
-                var shiftedReference = new ReferenceArea(first, referenceToShift.Second);
-                return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
-            }
-
-            // Slicing would not change anything or would cause split -> keep original.
-            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
-        }
-
-        // Deleted area slices off a right part of the reference
-        if (deletedArea.RightColumn >= referenceToShiftArea.RightColumn &&
-            deletedArea.LeftColumn > referenceToShiftArea.LeftColumn &&
-            deletedArea.LeftColumn <= referenceToShiftArea.RightColumn)
-        {
-            if (deletedArea.TopRow <= referenceToShiftArea.TopRow &&
-                deletedArea.BottomRow >= referenceToShiftArea.BottomRow)
-            {
-                // Slice off the right side of the reference
-                var sliceOffRightColumns = referenceToShiftArea.RightColumn - deletedArea.LeftColumn + 1;
-                var second = Shift(referenceToShift.Second, 0, sliceOffRightColumns);
-                var shiftedReference = new ReferenceArea(referenceToShift.First, second);
-                return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
-            }
-
-            // Slicing would not change anything or would cause split -> keep original.
-            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
-        }
-
-        throw new UnreachableException($"Unhandled case between a delete area {deletedArea} and a reference area {referenceToShiftArea}.");
+        // If delete area is upwards and covers full width of the subtracted area, then shift
+        var shouldShiftUpwards = deletedArea.BottomRow < subtracted.Value.TopRow &&
+                                 deletedArea.LeftColumn <= subtracted.Value.LeftColumn &&
+                                 deletedArea.RightColumn >= subtracted.Value.RightColumn;
+        var result = shouldShiftUpwards
+            ? subtracted.Value.ShiftRows(-deletedArea.Height)
+            : subtracted.Value;
+        var first = Set(referenceToShift.First, result.TopRow, result.LeftColumn);
+        var second = Set(referenceToShift.Second, result.BottomRow, result.RightColumn);
+        var shiftedReference = new ReferenceArea(first, second);
+        return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
     }
 
     private TransformedSymbol DeleteAndShiftLeft(ModContext ctx, SymbolRange range, ReferenceArea referenceToShift)
@@ -158,12 +95,6 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.GetDisplayStringA1());
     }
 
-    private static RowCol Shift(RowCol rowCol, int rowUpShift, int columnLeftShift)
-    {
-        var r = rowCol.RowType != ReferenceAxisType.None ? rowCol.RowValue - rowUpShift : rowCol.RowValue;
-        var c = rowCol.ColumnType != ReferenceAxisType.None ? rowCol.ColumnValue - columnLeftShift : rowCol.ColumnValue;
-        return new RowCol(rowCol.RowType, r, rowCol.ColumnType, c, rowCol.Style);
-    }
     private static RowCol Set(RowCol rowCol, int row, int column)
     {
         var r = rowCol.RowType != ReferenceAxisType.None ? row : rowCol.RowValue;
