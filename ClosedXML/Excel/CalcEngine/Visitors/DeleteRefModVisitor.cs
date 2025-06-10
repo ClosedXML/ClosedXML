@@ -59,6 +59,11 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         var result = shouldShiftUpwards
             ? subtracted.Value.ShiftRows(-deletedArea.Height)
             : subtracted.Value;
+
+        // If there was no change, just use original text. Don't allocate new symbol needlessly.
+        if (result == referenceToShiftArea)
+            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
+
         var first = Set(referenceToShift.First, result.TopRow, result.LeftColumn);
         var second = Set(referenceToShift.Second, result.BottomRow, result.RightColumn);
         var shiftedReference = new ReferenceArea(first, second);
@@ -89,6 +94,11 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
         var result = shouldShiftToLeft
             ? subtracted.Value.ShiftColumns(-deletedArea.Width)
             : subtracted.Value;
+
+        // If there was no change, just use original text. Don't allocate new symbol needlessly.
+        if (result == referenceToShiftArea)
+            return TransformedSymbol.CopyOriginal(ctx.Formula, range);
+
         var first = Set(referenceToShift.First, result.TopRow, result.LeftColumn);
         var second = Set(referenceToShift.Second, result.BottomRow, result.RightColumn);
         var shiftedReference = new ReferenceArea(first, second);
