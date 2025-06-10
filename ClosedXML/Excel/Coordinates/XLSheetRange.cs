@@ -645,5 +645,85 @@ namespace ClosedXML.Excel
             result = repositioned;
             return true;
         }
+
+        /// <summary>
+        /// Try to subtract the <paramref name="subtrahend"/> from this minuend. If the result of
+        /// subtraction would cause a split (non-rectangular shape), return false.
+        /// </summary>
+        /// <param name="subtrahend">Area that will be subtracted from this area.</param>
+        /// <param name="result">Result of the subtraction. Only used when return value is <c>true</c>. <c>null</c> indicates whole minuend was removed.</param>
+        /// <returns><c>false</c> if the subtraction would cause a split, <c>true</c> otherwise (even full removal returns <c>true</c>).</returns>
+        public bool TrySubtract(XLSheetRange subtrahend, out XLSheetRange? result)
+        {
+            // Subtracted area doesn't even overlap with the area
+            if (subtrahend.RightColumn < LeftColumn ||
+                subtrahend.LeftColumn > RightColumn ||
+                subtrahend.TopRow > BottomRow ||
+                subtrahend.BottomRow < TopRow)
+            {
+                result = this;
+                return true;
+            }
+
+            // Subtrahend overlaps the minuend, clamp it to the minuend.
+            var left = Math.Max(subtrahend.LeftColumn, LeftColumn);
+            var top = Math.Max(subtrahend.TopRow, TopRow);
+            var right = Math.Min(subtrahend.RightColumn, RightColumn);
+            var bottom = Math.Min(subtrahend.BottomRow, BottomRow);
+
+            var isLeftCoincident = left == LeftColumn;
+            var isTopCoincident = top == TopRow;
+            var isRightCoincident = right == RightColumn;
+            var isBottomCoincident = bottom == BottomRow;
+
+            var coincidentCount =
+                (isLeftCoincident ? 1 : 0) +
+                (isTopCoincident ? 1 : 0) +
+                (isRightCoincident ? 1 : 0) +
+                (isBottomCoincident ? 1 : 0);
+            if (coincidentCount <= 2)
+            {
+                // Result would be split
+                // 0 - a area square inside the area, the rest is O
+                // 1 - only touches one side, the result is U
+                // 2 - touches one corner, the rest is L
+                result = null;
+                return false;
+            }
+
+            // Both 4 sides are coincident, the subtracted area completely covered the area.
+            if (coincidentCount == 4)
+            {
+                result = null;
+                return true;
+            }
+
+            // 3 sides coincident.
+            if (!isLeftCoincident)
+            {
+                result = new XLSheetRange(FirstPoint, new XLSheetPoint(LastPoint.Row, left - 1));
+                return true;
+            }
+
+            if (!isTopCoincident)
+            {
+                result = new XLSheetRange(FirstPoint, new XLSheetPoint(top - 1, LastPoint.Column));
+                return true;
+            }
+
+            if (!isRightCoincident)
+            {
+                result = new XLSheetRange(new XLSheetPoint(FirstPoint.Row, right + 1), LastPoint);
+                return true;
+            }
+
+            if (!isBottomCoincident)
+            {
+                result = new XLSheetRange(new XLSheetPoint(bottom + 1, FirstPoint.Column), LastPoint);
+                return true;
+            }
+
+            throw new UnreachableException($"Unhandled case of subtraction {this} - {subtrahend}.");
+        }
     }
 }
