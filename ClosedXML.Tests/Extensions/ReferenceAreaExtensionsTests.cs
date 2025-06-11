@@ -25,6 +25,48 @@ namespace ClosedXML.Tests.Extensions
             Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(anchor));
         }
 
+        [TestCase("C2", "C2", "C3")]
+        [TestCase("$C2", "C2", "$C3")]
+        [TestCase("C2", "B2", "C2")]
+        [TestCase("C2", "D2", "C2")]
+        [TestCase("$5:$7", "A2:XFD4", "$8:$10")]
+        [TestCase("$G:H", "E4:I7", "$G:H")]
+        [TestCase("C4:E10", "C3:E5", "C7:E13")]
+        [TestCase("C4:E10", "C4:E5", "C6:E12")]
+        [TestCase("C4:E10", "C5:E12", "C4:E18")]
+        [TestCase("C4:E10", "C10:E12", "C4:E13")]
+        [TestCase("C4:E10", "C11:E13", "C4:E10")]
+        [TestCase("C1048573:D1048575", "C1048563:D1048566", null)] // Reference at the bottom of a sheet was completely pushed out of a sheet.
+        [TestCase("C1048573:D1048575", "C1048574:D1048576", "C1048573:D1048576")] // Inserted area grew reference beyond bottom of the sheet.
+        public void TryInsertAndShiftDown_shifts_or_grows_reference(string referenceText, string insertedArea, string expectedText)
+        {
+            var reference = ReferenceParser.ParseA1(referenceText);
+            var inserted = XLSheetRange.Parse(insertedArea);
+            ReferenceArea? expected = expectedText is not null ? ReferenceParser.ParseA1(expectedText) : null;
+
+            var didntSplit = reference.TryInsertAndShiftDown(inserted, out var shifted);
+
+            Assert.IsTrue(didntSplit);
+            Assert.AreEqual(expected, shifted);
+        }
+
+        [TestCase("D6:F8", "D3")]
+        [TestCase("D6:F8", "D5")]
+        [TestCase("D6:F8", "E1:G3")]
+        [TestCase("D6:F8", "E7")]
+        [TestCase("D6:F8", "F8")]
+        [TestCase("$5:$7", "E1:G3")]
+        public void TryInsertAndShiftDown_returns_false_on_split(string referenceText, string insertedArea)
+        {
+            Assert.True(ReferenceParser.TryParseA1(referenceText, out var reference));
+            var inserted = XLSheetRange.Parse(insertedArea);
+
+            var didntSplit = reference.TryInsertAndShiftDown(inserted, out var shifted);
+
+            Assert.IsFalse(didntSplit);
+            Assert.IsNull(shifted);
+        }
+
         public static IEnumerable<object[]> A1TestCases()
         {
             // C5

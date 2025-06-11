@@ -64,6 +64,42 @@ namespace ClosedXML.Extensions
             return ToSheetRange(row1, row2, col1, col2);
         }
 
+        /// <summary>
+        /// Shift a reference down on an area insertion. Do not shift if it would cause splits (returns <c>false</c>).
+        /// </summary>
+        /// <param name="reference">Reference to shift.</param>
+        /// <param name="insertedArea">An area inserted into a sheet.</param>
+        /// <param name="shiftedReference">The shifted reference. Can be <c>null</c>, if the reference is shifted out of sheet.</param>
+        /// <returns><c>false</c> if split, <c>true</c> when shift has a rectangular reference.</returns>
+        public static bool TryInsertAndShiftDown(this ReferenceArea reference, XLSheetRange insertedArea, out ReferenceArea? shiftedReference)
+        {
+            // Column span is never shifted
+            if (reference.IsColumnSpan())
+            {
+                shiftedReference = reference;
+                return true;
+            }
+
+            var referenceArea = reference.ToSheetRangeA1();
+            if (!referenceArea.TryInsertAreaAndShiftDown(insertedArea, out var shifted))
+            {
+                shiftedReference = null;
+                return false;
+            }
+
+            // Reference was shifted out of sheet.
+            if (shifted is null)
+            {
+                shiftedReference = null;
+                return true;
+            }
+
+            var first = Set(reference.First, shifted.Value.TopRow, referenceArea.LeftColumn);
+            var second = Set(reference.Second, shifted.Value.BottomRow, referenceArea.RightColumn);
+            shiftedReference = new ReferenceArea(first, second);
+            return true;
+        }
+
         private static XLSheetRange ToSheetRange(int row1, int row2, int col1, int col2)
         {
             // Points in the token `area` don't have to be in top left and bottom right corners,
@@ -111,6 +147,13 @@ namespace ClosedXML.Extensions
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        private static RowCol Set(RowCol rowCol, int row, int column)
+        {
+            var r = rowCol.RowType != ReferenceAxisType.None ? row : rowCol.RowValue;
+            var c = rowCol.ColumnType != ReferenceAxisType.None ? column : rowCol.ColumnValue;
+            return new RowCol(rowCol.RowType, r, rowCol.ColumnType, c, rowCol.Style);
         }
     }
 }
