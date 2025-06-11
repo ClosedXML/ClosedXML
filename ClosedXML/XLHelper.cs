@@ -19,6 +19,8 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
+        internal const string RefError = "#REF!";
+
         /// <summary>
         /// Maximum number of code units that can be stored in a cell.
         /// </summary>

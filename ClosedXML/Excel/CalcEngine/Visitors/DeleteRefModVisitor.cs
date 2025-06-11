@@ -9,7 +9,6 @@ namespace ClosedXML.Excel.CalcEngine.Visitors;
 /// </summary>
 internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
 {
-    private const string RefError = "#REF!";
     private readonly XLBookArea _deletedBookArea;
     private readonly XLShiftDeletedCells _shift;
 
@@ -50,7 +49,7 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
 
         // Whole area was subtracted -> #REF!
         if (subtracted is null)
-            return TransformedSymbol.ToText(ctx.Formula, range, RefError);
+            return TransformedSymbol.ToText(ctx.Formula, range, XLHelper.RefError);
 
         // If delete area is upwards and covers full width of the subtracted area, then shift
         var shouldShiftUpwards = deletedArea.BottomRow < subtracted.Value.TopRow &&
@@ -85,7 +84,7 @@ internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
 
         // Whole area was subtracted -> #REF!
         if (subtracted is null)
-            return TransformedSymbol.ToText(ctx.Formula, range, RefError);
+            return TransformedSymbol.ToText(ctx.Formula, range, XLHelper.RefError);
 
         // If delete area is to the left and covers full height of the subtracted area, then shift
         var shouldShiftToLeft = deletedArea.RightColumn < subtracted.Value.LeftColumn &&
