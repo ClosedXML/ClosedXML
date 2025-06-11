@@ -7,9 +7,32 @@ using NUnit.Framework;
 namespace ClosedXML.Tests.Excel.CalcEngine;
 
 [TestFixture]
+[TestOf(typeof(ReferenceShiftOnInsertRefModVisitor))]
 [TestOf(typeof(ReferenceShiftOnDeleteRefModVisitor))]
-public class ReferenceShiftOnDeleteRefModTests
+public class ReferenceShiftRefModTests
 {
+    [TestCase("C2", "Other!C2", "C2")]
+    [TestCase("$C2", "Sheet!C2", "$C3")]
+    [TestCase("C2", "Sheet!B2", "C2")]
+    [TestCase("C2", "Sheet!D2", "C2")]
+    [TestCase("C2", "Sheet!C3", "C2")]
+    [TestCase("C2", "Sheet!C1", "C3")]
+    [TestCase("C2:D4", "Sheet!C1:D3", "C5:D7")]
+    [TestCase("C2:D4", "Sheet!C2:D2", "C3:D5")]
+    [TestCase("C2:D4", "Sheet!C3:D4", "C2:D6")]
+    [TestCase("C2:D4", "Sheet!D1", "C2:D4")] // Would cause split
+    [TestCase("A1048576", "Sheet!A1048576", "#REF!")]
+    public void Insert_area_and_shift_down_reference(string formula, string insertedArea, string expected)
+    {
+        // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.
+        Assert.True(ReferenceParser.TryParseSheetA1(insertedArea, out var insertedSheet, out var insertedReference));
+        var inserted = new XLBookArea(insertedSheet, insertedReference.ToSheetRangeA1());
+
+        var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnInsertRefModVisitor(inserted, true));
+
+        Assert.AreEqual(expected, result);
+    }
+
     /// <summary>
     /// This tests how are references changed inside a formula when an area is deleted and shifted up.
     /// They were derived by using SUM(reference) before and after deletion.
