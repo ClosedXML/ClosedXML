@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using ClosedXML.Extensions;
 
 namespace ClosedXML.Tests.Excel
 {
@@ -286,6 +287,17 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(100, ws.Column("C").Width, XLHelper.Epsilon);
             Assert.AreEqual(defaultColumnWidth, ws.Column("G").Width, XLHelper.Epsilon);
             Assert.AreEqual(defaultColumnWidth, ws.ColumnWidth, XLHelper.Epsilon);
+        }
+
+        [Test]
+        public void ColumnsCanBeInsertedWhenDocumentHasDefinedNameWithInvalidFormula()
+        {
+            // Issue 2669: InsertColumnsBefore/After fails with a ParsingException when the workbook has a defined name
+            // with an invalid formula.
+            var wb = new XLWorkbook();
+            wb.DefinedNames.Add("TestName", XLError.NameNotRecognized.ToDisplayString());
+            wb.AddWorksheet().FirstColumn().InsertColumnsAfter(1);
+            wb.AddWorksheet().FirstColumn().InsertColumnsBefore(1);
         }
     }
 }

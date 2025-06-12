@@ -1481,7 +1481,7 @@ namespace ClosedXML.Excel
         {
             foreach (var definedName in definedNames)
             {
-                if (definedName.SheetReferencesList.Count() > 0)
+                if (definedName.SheetReferencesList.Count > 0)
                 {
                     var newRangeList =
                         definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
@@ -1496,11 +1496,14 @@ namespace ClosedXML.Excel
         {
             foreach (var definedName in definedNames)
             {
-                var newRangeList =
-                    definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
-                        newReference => newReference.Length > 0).ToList();
-                var unionFormula = string.Join(",", newRangeList);
-                definedName.SetRefersTo(unionFormula);
+                if (definedName.SheetReferencesList.Count > 0)
+                {
+                    var newRangeList =
+                        definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
+                            newReference => newReference.Length > 0).ToList();
+                    var unionFormula = string.Join(",", newRangeList);
+                    definedName.SetRefersTo(unionFormula);
+                }
             }
         }
 
