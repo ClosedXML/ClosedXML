@@ -33,6 +33,36 @@ public class ReferenceShiftRefModTests
         Assert.AreEqual(expected, result);
     }
 
+    [TestCase("C2", "Sheet!B2", "D2")]
+    [TestCase("$C$2", "Sheet!B2", "$D$2")]
+    [TestCase("C2", "Sheet!C1", "C2")]
+    [TestCase("C2", "Sheet!D1", "C2")]
+    [TestCase("C2", "Sheet!E1", "C2")]
+    [TestCase("C2", "Sheet!E2", "C2")]
+    [TestCase("C2", "Sheet!E3", "C2")]
+    [TestCase("C2", "Sheet!D3", "C2")]
+    [TestCase("C2", "Sheet!B3", "C2")]
+    [TestCase("C2:E5", "Sheet!E2:G5", "C2:H5")] // Insert into middle of area
+    [TestCase("XFD1", "Sheet!XFD1", "#REF!")] // Pushed out of a sheet
+    [TestCase("XFB1:XFC1", "Sheet!XFC1:XFD1", "XFB1:XFD1")] // Grew out of a sheet
+    [TestCase("4:$5", "Sheet!B1:E10", "4:$5")]
+    [TestCase("$D:E", "Sheet!B1:E5", "$D:E")]
+
+    // Would cause split
+    [TestCase("C2:E5", "Sheet!B2:B3", "C2:E5")]
+    [TestCase("C2:E5", "Sheet!C2", "C2:E5")]
+    [TestCase("C2:E5", "Sheet!D2:D3", "C2:E5")]
+    public void Insert_area_and_shift_right_reference(string formula, string insertedArea, string expected)
+    {
+        // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.
+        Assert.True(ReferenceParser.TryParseSheetA1(insertedArea, out var insertedSheet, out var insertedReference));
+        var inserted = new XLBookArea(insertedSheet, insertedReference.ToSheetRangeA1());
+
+        var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnInsertRefModVisitor(inserted, false));
+
+        Assert.AreEqual(expected, result);
+    }
+
     /// <summary>
     /// This tests how are references changed inside a formula when an area is deleted and shifted up.
     /// They were derived by using SUM(reference) before and after deletion.

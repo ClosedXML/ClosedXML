@@ -87,7 +87,7 @@ namespace ClosedXML.Extensions
                 return false;
             }
 
-            // Reference was shifted out of sheet.
+            // Reference was pushed out of sheet.
             if (shifted is null)
             {
                 shiftedReference = null;
@@ -96,6 +96,42 @@ namespace ClosedXML.Extensions
 
             var first = Set(reference.First, shifted.Value.TopRow, referenceArea.LeftColumn);
             var second = Set(reference.Second, shifted.Value.BottomRow, referenceArea.RightColumn);
+            shiftedReference = new ReferenceArea(first, second);
+            return true;
+        }
+
+        /// <summary>
+        /// Shift a reference to the right on an area insertion. Do not shift if it would cause splits (returns <c>false</c>).
+        /// </summary>
+        /// <param name="reference">Reference to shift.</param>
+        /// <param name="insertedArea">An area inserted into a sheet.</param>
+        /// <param name="shiftedReference">The shifted reference. Can be <c>null</c>, if the reference is shifted out of sheet.</param>
+        /// <returns><c>false</c> if split, <c>true</c> when shift has a rectangular reference.</returns>
+        public static bool TryInsertAndShiftRight(this ReferenceArea reference, XLSheetRange insertedArea, out ReferenceArea? shiftedReference)
+        {
+            // Row span is never shifted
+            if (reference.IsRowSpan())
+            {
+                shiftedReference = reference;
+                return true;
+            }
+
+            var referenceArea = reference.ToSheetRangeA1();
+            if (!referenceArea.TryInsertAreaAndShiftRight(insertedArea, out var shifted))
+            {
+                shiftedReference = null;
+                return false;
+            }
+
+            // Reference was pushed out of sheet.
+            if (shifted is null)
+            {
+                shiftedReference = null;
+                return true;
+            }
+
+            var first = Set(reference.First, referenceArea.TopRow, shifted.Value.LeftColumn);
+            var second = Set(reference.Second, referenceArea.BottomRow, shifted.Value.RightColumn);
             shiftedReference = new ReferenceArea(first, second);
             return true;
         }

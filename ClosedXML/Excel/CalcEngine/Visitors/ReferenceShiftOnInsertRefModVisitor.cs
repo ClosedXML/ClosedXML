@@ -1,4 +1,3 @@
-using System;
 using ClosedXML.Extensions;
 using ClosedXML.Parser;
 
@@ -23,13 +22,12 @@ internal class ReferenceShiftOnInsertRefModVisitor : CopyVisitor
         if (!XLHelper.SheetComparer.Equals(_insertedBookArea.Name, ctx.Sheet))
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
-        return _shiftDown ? InsertAndShiftDown(ctx, range, referenceToShift) : throw new NotImplementedException();
-    }
+        var wouldSplitArea = _shiftDown
+            ? !referenceToShift.TryInsertAndShiftDown(_insertedBookArea.Area, out var shiftedReference)
+            : !referenceToShift.TryInsertAndShiftRight(_insertedBookArea.Area, out shiftedReference);
 
-    private TransformedSymbol InsertAndShiftDown(ModContext ctx, SymbolRange range, ReferenceArea referenceToShift)
-    {
         // Return original reference if the shift would cause a split
-        if (!referenceToShift.TryInsertAndShiftDown(_insertedBookArea.Area, out var shiftedReference))
+        if (wouldSplitArea)
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
         // If reference was shifted out of sheet, return #REF!
