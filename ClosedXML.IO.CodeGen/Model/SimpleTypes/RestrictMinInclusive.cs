@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
+namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 
 /// <summary>
 /// Numerical value must be at least the specified value.
@@ -11,4 +11,4 @@
 /// ]]></code>
 /// </example>
 /// </summary>
-public record RestrictMinInclusive(int Value) : IValueRestriction;
+public record RestrictMinInclusive(string Value) : IValueRestriction;

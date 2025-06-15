@@ -240,15 +240,33 @@ public class XsdSchemaParser
             }
             else if (reader.TryOpen("minInclusive", XsdNs))
             {
-                var minInclusive = reader.GetInt("value");
+                var minInclusive = reader.GetString("value");
                 valueRestrictions.Add(new RestrictMinInclusive(minInclusive));
                 reader.Close("minInclusive", XsdNs);
             }
+            else if (reader.TryOpen("minExclusive", XsdNs))
+            {
+                var minExclusive = reader.GetString("value");
+                valueRestrictions.Add(new RestrictMinExclusive(minExclusive));
+                reader.Close("minExclusive", XsdNs);
+            }
             else if (reader.TryOpen("maxInclusive", XsdNs))
             {
-                var maxInclusive = reader.GetInt("value");
+                var maxInclusive = reader.GetString("value");
                 valueRestrictions.Add(new RestrictMaxInclusive(maxInclusive));
                 reader.Close("maxInclusive", XsdNs);
+            }
+            else if (reader.TryOpen("maxExclusive", XsdNs))
+            {
+                var maxExclusive = reader.GetString("value");
+                valueRestrictions.Add(new RestrictMaxExclusive(maxExclusive));
+                reader.Close("maxExclusive", XsdNs);
+            }
+            else if (reader.TryOpen("pattern", XsdNs))
+            {
+                var pattern = reader.GetString("value");
+                valueRestrictions.Add(new RestrictPattern(pattern));
+                reader.Close("pattern", XsdNs);
             }
             else
             {

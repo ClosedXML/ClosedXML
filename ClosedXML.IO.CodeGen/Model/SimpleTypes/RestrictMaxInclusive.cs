@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
+namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 
 /// <summary>
 /// Numerical value must be at most the specified value.
@@ -10,4 +10,4 @@
 /// ]]></code>
 /// </example>
 /// </summary>
-public record RestrictMaxInclusive(int Value) : IValueRestriction;
+public record RestrictMaxInclusive(string Value) : IValueRestriction;
