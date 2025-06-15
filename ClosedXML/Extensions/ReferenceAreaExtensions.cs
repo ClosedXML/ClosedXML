@@ -201,10 +201,8 @@ namespace ClosedXML.Extensions
                 return refA1;
 
             var shouldEscape = NameUtils.ShouldQuote(sheet.AsSpan());
-            if (shouldEscape)
-                return sheet.AlwaysEscapeSheetName() + '!' + refA1;
-
-            return sheet + '!' + refA1;
+            var escapedSheetName = shouldEscape ? sheet.AlwaysEscapeSheetName() : sheet;
+            return escapedSheetName + '!' + refA1;
         }
 
         private static XLSheetRange ToSheetRange(int row1, int row2, int col1, int col2)
