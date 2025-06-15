@@ -1200,20 +1200,24 @@ namespace ClosedXML.Excel
             ShiftPageBreaksColumns(range, columnsShifted);
             RemoveInvalidSparklines();
 
-            ISheetListener hyperlinks = Hyperlinks;
+            var sheetListeners = new List<ISheetListener>
+            {
+                Workbook.CalcEngine,
+                Hyperlinks
+            };
             if (columnsShifted > 0)
             {
                 var area = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
                     .ExtendRight(columnsShifted - 1);
-                Workbook.CalcEngine.OnInsertAreaAndShiftRight(range.Worksheet, area);
-                hyperlinks.OnInsertAreaAndShiftRight(range.Worksheet, area);
+                foreach (var listener in sheetListeners)
+                    listener.OnInsertAreaAndShiftRight(range.Worksheet, area);
             }
             else if (columnsShifted < 0)
             {
                 var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
-                Workbook.CalcEngine.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
-                hyperlinks.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
+                foreach (var listener in sheetListeners)
+                    listener.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
             }
         }
 
@@ -1346,20 +1350,24 @@ namespace ClosedXML.Excel
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
 
-            ISheetListener hyperlinks = Hyperlinks;
+            var sheetListeners = new List<ISheetListener>
+            {
+                Workbook.CalcEngine,
+                Hyperlinks,
+            };
             if (rowsShifted > 0)
             {
                 var area = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
                     .ExtendBelow(rowsShifted - 1);
-                Workbook.CalcEngine.OnInsertAreaAndShiftDown(range.Worksheet, area);
-                hyperlinks.OnInsertAreaAndShiftDown(range.Worksheet, area);
+                foreach (var listener in sheetListeners)
+                    listener.OnInsertAreaAndShiftDown(range.Worksheet, area);
             }
             else if (rowsShifted < 0)
             {
                 var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
-                Workbook.CalcEngine.OnDeleteAreaAndShiftUp(range.Worksheet, area);
-                hyperlinks.OnDeleteAreaAndShiftUp(range.Worksheet, area);
+                foreach (var listener in sheetListeners)
+                    listener.OnDeleteAreaAndShiftUp(range.Worksheet, area);
             }
         }
 
