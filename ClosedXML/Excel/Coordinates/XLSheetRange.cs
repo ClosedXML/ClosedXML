@@ -271,7 +271,7 @@ namespace ClosedXML.Excel
             if (columns < 1)
                 throw new ArgumentOutOfRangeException();
 
-            return new XLSheetRange(FirstPoint, new XLSheetPoint(FirstPoint.Row, LeftColumn + columns - 1));
+            return new XLSheetRange(FirstPoint, new XLSheetPoint(LastPoint.Row, LeftColumn + columns - 1));
         }
 
         /// <summary>
@@ -538,17 +538,49 @@ namespace ClosedXML.Excel
                 return true;
             }
 
-            var doesntOverlapHeight = deletedArea.TopRow > TopRow ||
-                                      deletedArea.BottomRow < BottomRow;
-            var deletesColumnsToLeft = deletedArea.LeftColumn < LeftColumn;
-            var deletesColumnsOfArea = deletedArea.LeftColumn <= RightColumn &&
-                                       deletedArea.RightColumn >= LeftColumn;
-            if (doesntOverlapHeight && (deletesColumnsToLeft || deletesColumnsOfArea))
+            var coversWidth = deletedArea.LeftColumn <= LeftColumn &&
+                              deletedArea.RightColumn >= RightColumn;
+            var coversHeight = deletedArea.TopRow <= TopRow &&
+                               deletedArea.BottomRow >= BottomRow;
+            var fullyCovered = coversWidth && coversHeight;
+            if (fullyCovered)
+            {
+                result = null;
+                return true;
+            }
+
+            // When a slice form a top/bottom is deleted, the rest doesn't move.
+            // There is no split either. Whole slice is just removed.
+            var deletedTopSlice = coversWidth &&
+                                  deletedArea.TopRow <= TopRow &&
+                                  deletedArea.BottomRow < BottomRow;
+            if (deletedTopSlice)
+            {
+                var sliceRows = BottomRow - deletedArea.BottomRow;
+                result = SliceFromBottom(sliceRows);
+                return true;
+            }
+
+            var deletedBottomSlice = coversWidth &&
+                                     deletedArea.BottomRow >= BottomRow &&
+                                     deletedArea.TopRow > TopRow;
+            if (deletedBottomSlice)
+            {
+                var sliceRows = deletedArea.TopRow - TopRow;
+                result = SliceFromTop(sliceRows);
+                return true;
+            }
+
+            // Slice cases were already dealt with, anything that doesn't cover height would cause split
+            if (!coversHeight)
             {
                 result = null;
                 return false;
             }
 
+            var deletesColumnsToLeft = deletedArea.LeftColumn < LeftColumn;
+            var deletesColumnsOfArea = deletedArea.LeftColumn <= RightColumn &&
+                                       deletedArea.RightColumn >= LeftColumn;
             var repositioned = this;
             if (deletesColumnsOfArea)
             {
@@ -604,17 +636,51 @@ namespace ClosedXML.Excel
                 return true;
             }
 
+            var coversWidth = deletedArea.LeftColumn <= LeftColumn &&
+                              deletedArea.RightColumn >= RightColumn;
+            var coversHeight = deletedArea.TopRow <= TopRow &&
+                               deletedArea.BottomRow >= BottomRow;
+            var fullyCovered = coversWidth && coversHeight;
+            if (fullyCovered)
+            {
+                result = null;
+                return true;
+            }
+
+            // When a slice form a left/right is deleted, the rest doesn't move.
+            // There is no split either. Whole slice is just removed.
+            var deletedLeftSlice = coversHeight &&
+                                   deletedArea.LeftColumn <= LeftColumn &&
+                                   deletedArea.RightColumn < RightColumn;
+            if (deletedLeftSlice)
+            {
+                var sliceColumns = RightColumn - deletedArea.RightColumn;
+                result = SliceFromRight(sliceColumns);
+                return true;
+            }
+
+            var deletedRightSlice = coversHeight &&
+                                    deletedArea.RightColumn >= RightColumn &&
+                                    deletedArea.LeftColumn > LeftColumn;
+            if (deletedRightSlice)
+            {
+                var sliceRows = deletedArea.LeftColumn - LeftColumn;
+                result = SliceFromLeft(sliceRows);
+                return true;
+            }
+
+            // Slice cases were already dealt with, anything that doesn't cover height would cause split
             var doesntOverlapWidth = deletedArea.LeftColumn > LeftColumn ||
                                      deletedArea.RightColumn < RightColumn;
-            var deletesRowsAboveArea = deletedArea.TopRow < TopRow;
-            var deletesRowsOfArea = deletedArea.TopRow <= BottomRow &&
-                                    deletedArea.BottomRow >= TopRow;
-            if (doesntOverlapWidth && (deletesRowsAboveArea || deletesRowsOfArea))
+            if (doesntOverlapWidth)
             {
                 result = null;
                 return false;
             }
 
+            var deletesRowsAboveArea = deletedArea.TopRow < TopRow;
+            var deletesRowsOfArea = deletedArea.TopRow <= BottomRow &&
+                                    deletedArea.BottomRow >= TopRow;
             var repositioned = this;
             if (deletesRowsOfArea)
             {

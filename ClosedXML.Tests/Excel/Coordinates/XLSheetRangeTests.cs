@@ -180,6 +180,10 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("D4:E4", "A5:F9", "D4:E4")] // Deleted area is fully downward
         [TestCase("D4:E4", "A1:F3", "D4:E4")] // Deleted area is fully upwards
         [TestCase("D4:E4", "A5:F10", "D4:E4")] // Partial deletion is below -> not affected
+        [TestCase("D4:F8", "D4:F6", "D7:F8")] // Delete top slice
+        [TestCase("D4:F8", "B1:H6", "D7:F8")] // Delete top slice
+        [TestCase("D4:F8", "D6:F8", "D4:F5")] // Delete bottom slice
+        [TestCase("D4:F8", "B6:I15", "D4:F5")] // Delete bottom slice
         public void TryDeleteAreaAndShiftLeft_without_partial_cover(string original, string deleted, string repositioned)
         {
             var originalArea = XLSheetRange.Parse(original);
@@ -193,7 +197,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         }
 
         [TestCase("D4:E8", "A1:B5")] // Partial left
-        [TestCase("D4:E8", "D2:E7")] // Partial inside
+        [TestCase("D4:E8", "D6:E7")] // Partial inside
         [TestCase("D4:E8", "C4:D6")] // Partial left and inside
         public void TryDeleteAreaAndShiftLeft_with_partial_cover(string original, string deleted)
         {
@@ -215,6 +219,10 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("B5:B8", "A1:A10", "B5:B8")] // Deleted area is fully on the left
         [TestCase("B5:B8", "C1:C10", "B5:B8")] // Deleted area is fully on the right
         [TestCase("B5:D8", "B9:C10", "B5:D8")] // Partial deletion is below -> not affected
+        [TestCase("D4:H8", "D4:F8", "G4:H8")] // Delete left slice
+        [TestCase("D4:H8", "C1:F9", "G4:H8")] // Delete left slice
+        [TestCase("D4:H8", "G4:H8", "D4:F8")] // Delete right slice
+        [TestCase("D4:H8", "G1:I9", "D4:F8")] // Delete right slice
         public void TryDeleteAreaAndShiftUp_without_partial_cover(string leftOperand, string deleted, string expected)
         {
             var originalArea = XLSheetRange.Parse(leftOperand);
