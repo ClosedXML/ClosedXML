@@ -1193,8 +1193,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesColumns(range, columnsShifted, ws.DefinedNames));
-            MoveDefinedNamesColumns(range, columnsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
@@ -1203,15 +1201,21 @@ namespace ClosedXML.Excel
             var sheetListeners = new List<ISheetListener>
             {
                 Workbook.CalcEngine,
-                Hyperlinks
+                Hyperlinks,
+                Workbook.DefinedNamesInternal,
             };
+
+            foreach (var worksheet in Workbook.WorksheetsInternal)
+                sheetListeners.Add(worksheet.DefinedNames);
+
             if (columnsShifted > 0)
             {
-                var area = XLSheetRange
+                var insertedArea = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
+                    .SliceFromLeft(1)
                     .ExtendRight(columnsShifted - 1);
                 foreach (var listener in sheetListeners)
-                    listener.OnInsertAreaAndShiftRight(range.Worksheet, area);
+                    listener.OnInsertAreaAndShiftRight(range.Worksheet, insertedArea);
             }
             else if (columnsShifted < 0)
             {
@@ -1343,8 +1347,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Workbook.WorksheetsInternal.ForEach<XLWorksheet>(ws => MoveDefinedNamesRows(range, rowsShifted, ws.DefinedNames));
-            MoveDefinedNamesRows(range, rowsShifted, Workbook.DefinedNamesInternal);
             ShiftConditionalFormattingRows(range, rowsShifted);
             ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
@@ -1354,14 +1356,19 @@ namespace ClosedXML.Excel
             {
                 Workbook.CalcEngine,
                 Hyperlinks,
+                Workbook.DefinedNamesInternal,
             };
+            foreach (var worksheet in Workbook.WorksheetsInternal)
+                sheetListeners.Add(worksheet.DefinedNames);
+
             if (rowsShifted > 0)
             {
-                var area = XLSheetRange
+                var insertedArea = XLSheetRange
                     .FromRangeAddress(range.RangeAddress)
+                    .SliceFromTop(1)
                     .ExtendBelow(rowsShifted - 1);
                 foreach (var listener in sheetListeners)
-                    listener.OnInsertAreaAndShiftDown(range.Worksheet, area);
+                    listener.OnInsertAreaAndShiftDown(range.Worksheet, insertedArea);
             }
             else if (rowsShifted < 0)
             {
@@ -1482,33 +1489,6 @@ namespace ClosedXML.Excel
             foreach (var sparkline in invalidSparklines)
             {
                 Worksheet.SparklineGroups.Remove(sparkline.Location);
-            }
-        }
-
-        private void MoveDefinedNamesRows(XLRange range, int rowsShifted, XLDefinedNames definedNames)
-        {
-            foreach (var definedName in definedNames)
-            {
-                if (definedName.SheetReferencesList.Count() > 0)
-                {
-                    var newRangeList =
-                        definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
-                            newReference => newReference.Length > 0).ToList();
-                    var unionFormula = string.Join(",", newRangeList);
-                    definedName.SetRefersTo(unionFormula);
-                }
-            }
-        }
-
-        private void MoveDefinedNamesColumns(XLRange range, int columnsShifted, XLDefinedNames definedNames)
-        {
-            foreach (var definedName in definedNames)
-            {
-                var newRangeList =
-                    definedName.SheetReferencesList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
-                        newReference => newReference.Length > 0).ToList();
-                var unionFormula = string.Join(",", newRangeList);
-                definedName.SetRefersTo(unionFormula);
             }
         }
 

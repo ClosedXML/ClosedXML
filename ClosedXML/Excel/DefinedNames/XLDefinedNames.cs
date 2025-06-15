@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
     /// <summary>
     /// A collection of a named ranges, either for workbook or for worksheet.
     /// </summary>
-    internal class XLDefinedNames : IXLDefinedNames, IEnumerable<XLDefinedName>
+    internal class XLDefinedNames : IXLDefinedNames, IEnumerable<XLDefinedName>, ISheetListener
     {
         private readonly Dictionary<String, XLDefinedName> _namedRanges = new(XLHelper.NameComparer);
 
@@ -227,5 +229,50 @@ namespace ClosedXML.Excel
             _namedRanges.Values
                 .ForEach(nr => nr.OnWorksheetDeleted(worksheetName));
         }
+
+        #region ISheetListner
+
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, true);
+            ShiftReferences(refMod);
+        }
+
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, false);
+            ShiftReferences(refMod);
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsLeft);
+            ShiftReferences(refMod);
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsUp);
+            ShiftReferences(refMod);
+        }
+
+        private void ShiftReferences(CopyVisitor refMod)
+        {
+            foreach (var definedName in _namedRanges.Values)
+            {
+                var nameFormula = definedName.RefersTo;
+
+                // Defined name formula should never rely on a context info. Formula should contain
+                // only absolute references with a sheet -> use empty sheet that should never match
+                // and the cell point is thus never used and can be left at A1.
+                var shiftedFormula = FormulaConverter.ModifyA1(nameFormula, string.Empty, 1, 1, refMod);
+                definedName.SetRefersTo(shiftedFormula);
+            }
+        }
+        #endregion
     }
 }
