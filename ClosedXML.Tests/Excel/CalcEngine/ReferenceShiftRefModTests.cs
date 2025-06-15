@@ -56,6 +56,10 @@ public class ReferenceShiftRefModTests
     [TestCase("C2:E5", "Sheet!B2:B3", "C2:E5")]
     [TestCase("C2:E5", "Sheet!C2", "C2:E5")]
     [TestCase("C2:E5", "Sheet!D2:D3", "C2:E5")]
+
+    // Reference with sheet is modified to a reference with a sheet
+    [TestCase("Sheet1!C2:F2", "Sheet1!D2", "Sheet1!C2:G2")]
+    [TestCase("'Joe''s Bakery'!C5:D5", "'Joe''s Bakery'!B5:C5", "'Joe''s Bakery'!E5:F5")]
     public void Insert_area_and_shift_right_reference(string formula, string insertedArea, string expected)
     {
         // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.

@@ -136,6 +136,64 @@ namespace ClosedXML.Extensions
             return true;
         }
 
+        public static bool TryDeleteAndShiftUp(this ReferenceArea reference, XLSheetRange deletedArea, out ReferenceArea? shiftedReference)
+        {
+            // Column span is never shifted
+            if (reference.IsColumnSpan())
+            {
+                shiftedReference = reference;
+                return true;
+            }
+
+            var referenceArea = reference.ToSheetRangeA1();
+            if (!referenceArea.TryDeleteAreaAndShiftUp(deletedArea, out var shifted))
+            {
+                shiftedReference = null;
+                return false;
+            }
+
+            // Reference was pushed out of sheet.
+            if (shifted is null)
+            {
+                shiftedReference = null;
+                return true;
+            }
+
+            var first = Set(reference.First, shifted.Value.TopRow, shifted.Value.LeftColumn);
+            var second = Set(reference.Second, shifted.Value.BottomRow, shifted.Value.RightColumn);
+            shiftedReference = new ReferenceArea(first, second);
+            return true;
+        }
+
+        public static bool TryDeleteAndShiftLeft(this ReferenceArea reference, XLSheetRange deletedArea, out ReferenceArea? shiftedReference)
+        {
+            // Row span is never shifted
+            if (reference.IsRowSpan())
+            {
+                shiftedReference = reference;
+                return true;
+            }
+
+            var referenceArea = reference.ToSheetRangeA1();
+            if (!referenceArea.TryDeleteAreaAndShiftLeft(deletedArea, out var shifted))
+            {
+                shiftedReference = null;
+                return false;
+            }
+
+            // Reference was pushed out of sheet.
+            if (shifted is null)
+            {
+                shiftedReference = null;
+                return true;
+            }
+
+            var first = Set(reference.First, shifted.Value.TopRow, shifted.Value.LeftColumn);
+            var second = Set(reference.Second, shifted.Value.BottomRow, shifted.Value.RightColumn);
+            shiftedReference = new ReferenceArea(first, second);
+            return true;
+        }
+
         public static string GetDisplayStringA1(this ReferenceArea area, string? sheet)
         {
             var refA1 = area.GetDisplayStringA1();
