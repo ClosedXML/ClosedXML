@@ -136,6 +136,19 @@ namespace ClosedXML.Extensions
             return true;
         }
 
+        public static string GetDisplayStringA1(this ReferenceArea area, string? sheet)
+        {
+            var refA1 = area.GetDisplayStringA1();
+            if (sheet is null)
+                return refA1;
+
+            var shouldEscape = NameUtils.ShouldQuote(sheet.AsSpan());
+            if (shouldEscape)
+                return sheet.AlwaysEscapeSheetName() + '!' + refA1;
+
+            return sheet + '!' + refA1;
+        }
+
         private static XLSheetRange ToSheetRange(int row1, int row2, int col1, int col2)
         {
             // Points in the token `area` don't have to be in top left and bottom right corners,

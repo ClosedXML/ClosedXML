@@ -42,9 +42,14 @@ namespace ClosedXML.Excel
                                                 Char.IsControl(c) ||
                                                 Char.IsSymbol(c));
             if (needEscape)
-                return String.Concat('\'', sheetName.Replace("'", "''"), '\'');
+                return AlwaysEscapeSheetName(sheetName);
             else
                 return sheetName;
+        }
+
+        public static string AlwaysEscapeSheetName(this string sheetName)
+        {
+            return String.Concat('\'', sheetName.Replace("'", "''"), '\'');
         }
 
         internal static String FixNewLines(this String value)

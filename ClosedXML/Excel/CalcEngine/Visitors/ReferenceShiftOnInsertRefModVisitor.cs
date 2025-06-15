@@ -17,9 +17,19 @@ internal class ReferenceShiftOnInsertRefModVisitor : CopyVisitor
         _shiftDown = shiftDown;
     }
 
-    public override TransformedSymbol Reference(ModContext ctx, SymbolRange range, ReferenceArea referenceToShift)
+    public override TransformedSymbol SheetReference(ModContext ctx, SymbolRange range, string sheet, ReferenceArea reference)
     {
-        if (!XLHelper.SheetComparer.Equals(_insertedBookArea.Name, ctx.Sheet))
+        return ShiftFormulaReferences(ctx, range, sheet, reference);
+    }
+
+    public override TransformedSymbol Reference(ModContext ctx, SymbolRange range, ReferenceArea reference)
+    {
+        return ShiftFormulaReferences(ctx, range, null, reference);
+    }
+
+    private TransformedSymbol ShiftFormulaReferences(ModContext ctx, SymbolRange range, string? referenceSheetName, ReferenceArea referenceToShift)
+    {
+        if (!XLHelper.SheetComparer.Equals(_insertedBookArea.Name, referenceSheetName ?? ctx.Sheet))
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
         var wouldSplitArea = _shiftDown
@@ -38,6 +48,7 @@ internal class ReferenceShiftOnInsertRefModVisitor : CopyVisitor
         if (referenceToShift == shiftedReference.Value)
             return TransformedSymbol.CopyOriginal(ctx.Formula, range);
 
-        return TransformedSymbol.ToText(ctx.Formula, range, shiftedReference.Value.GetDisplayStringA1());
+        var shiftedReferenceA1 = shiftedReference.Value.GetDisplayStringA1(referenceSheetName);
+        return TransformedSymbol.ToText(ctx.Formula, range, shiftedReferenceA1);
     }
 }

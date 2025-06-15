@@ -22,6 +22,10 @@ public class ReferenceShiftRefModTests
     [TestCase("C2:D4", "Sheet!C3:D4", "C2:D6")]
     [TestCase("C2:D4", "Sheet!D1", "C2:D4")] // Would cause split
     [TestCase("A1048576", "Sheet!A1048576", "#REF!")]
+
+    // Reference with sheet is modified to a reference with a sheet
+    [TestCase("Sheet1!A1", "Sheet1!A1", "Sheet1!A2")]
+    [TestCase("'Joe''s Bakery'!C2", "'Joe''s Bakery'!C2", "'Joe''s Bakery'!C3")]
     public void Insert_area_and_shift_down_reference(string formula, string insertedArea, string expected)
     {
         // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.
