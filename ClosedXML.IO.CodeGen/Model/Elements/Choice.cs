@@ -28,17 +28,7 @@ public class Choice : IElementGroup
             // The best choice for 0..1 is a variable for each choice and pass all possible choices to the hook.
 
             // Create a variable declarations, one variable for each choice. The values will be passed to the hook.
-            var variables = new List<Variable>();
-            foreach (var child in Children)
-            {
-                var element = (ElementType)child;
-                if (code.TryGetComplexType(element.TypeName, out var csType))
-                {
-                    csType += '?';
-                    code.WriteIndent().Append(csType).Append(" ").AppendVariable(element.Name).Append(" = null;").EndLine();
-                    variables.Add(new Variable(csType, element.Name));
-                }
-            }
+            var variables = DeclareChildrenVariables(code);
 
             var isFirst = true;
             foreach (var child in Children)
@@ -89,6 +79,23 @@ public class Choice : IElementGroup
         }
 
         return [];
+    }
+
+    private List<Variable> DeclareChildrenVariables(CodeBuilder code)
+    {
+        var variables = new List<Variable>();
+        foreach (var child in Children)
+        {
+            var element = (ElementType)child;
+            if (code.TryGetComplexType(element.TypeName, out var csType))
+            {
+                csType += '?';
+                code.WriteIndent().Append(csType).Append(" ").AppendVariable(element.Name).Append(" = null;").EndLine();
+                variables.Add(new Variable(csType, element.Name));
+            }
+        }
+
+        return variables;
     }
 
     private ElementsCount DetermineChoicesCount()
