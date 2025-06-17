@@ -314,50 +314,37 @@ namespace ClosedXML.Tests.Excel
             sheet2.DefinedNames.ForEach(dn => Assert.AreEqual(XLNamedRangeScope.Worksheet, dn.Scope));
         }
 
-        [Test, Ignore("Muted until shifting is fixed (see #880)")]
-        public void NamedRangeBecomesInvalidOnRangeAndWorksheetDeleting()
+        [Test]
+        public void NamedRangeBecomesInvalidOnWorksheetDeleting()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws1 = wb.Worksheets.Add("Sheet 1");
-                var ws2 = wb.Worksheets.Add("Sheet 2");
-                ws1.Range("A1:B2").AddToNamed("Simple", XLScope.Workbook);
-                wb.DefinedNames.Add("Compound", new XLRanges
-                {
-                    ws1.Range("C1:D2"),
-                    ws2.Range("A10:D15")
-                });
+            using var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet 1");
+            var ws2 = wb.Worksheets.Add("Sheet 2");
+            ws1.Range("A1:B2").AddToNamed("Simple", XLScope.Workbook);
+            wb.Ranges("'Sheet 1'!C1:D2,'Sheet 2'!A10:D15").AddToNamed("Compound");
 
-                ws1.Rows(1, 5).Delete();
-                ws1.Delete();
+            ws1.Delete();
 
-                Assert.AreEqual(2, wb.DefinedNames.Count());
-                Assert.AreEqual(0, wb.DefinedNames.ValidNamedRanges().Count());
-                Assert.AreEqual("#REF!#REF!", wb.DefinedNames.ElementAt(0).RefersTo);
-                Assert.AreEqual("#REF!#REF!,'Sheet 2'!A10:D15", wb.DefinedNames.ElementAt(0).RefersTo);
-            }
+            Assert.AreEqual(2, wb.DefinedNames.Count());
+            Assert.AreEqual(0, wb.DefinedNames.ValidNamedRanges().Count());
+            Assert.AreEqual("#REF!", wb.DefinedNames.DefinedName("Simple").RefersTo);
+            Assert.AreEqual("#REF!,'Sheet 2'!$A$10:$D$15", wb.DefinedNames.DefinedName("Compound").RefersTo);
         }
 
-        [Test, Ignore("Muted until shifting is fixed (see #880)")]
+        [Test]
         public void NamedRangeBecomesInvalidOnRangeDeleting()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet 1");
-                ws.Range("A1:B2").AddToNamed("Simple", XLScope.Workbook);
-                wb.DefinedNames.Add("Compound", new XLRanges
-                {
-                    ws.Range("C1:D2"),
-                    ws.Range("A10:D15")
-                });
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet 1");
+            ws.Range("A1:B2").AddToNamed("Simple");
+            ws.Ranges("C1:D2,A10:D15").AddToNamed("Compound");
 
-                ws.Rows(1, 5).Delete();
+            ws.Rows(1, 5).Delete();
 
-                Assert.AreEqual(2, wb.DefinedNames.Count());
-                Assert.AreEqual(0, wb.DefinedNames.ValidNamedRanges().Count());
-                Assert.AreEqual("'Sheet 1'!#REF!", wb.DefinedNames.ElementAt(0).RefersTo);
-                Assert.AreEqual("'Sheet 1'!#REF!,'Sheet 1'!A5:D10", wb.DefinedNames.ElementAt(0).RefersTo);
-            }
+            Assert.AreEqual(2, wb.DefinedNames.Count());
+            Assert.AreEqual(0, wb.DefinedNames.ValidNamedRanges().Count());
+            Assert.AreEqual("#REF!", wb.DefinedNames.DefinedName("Simple").RefersTo);
+            Assert.AreEqual("#REF!,'Sheet 1'!$A$5:$D$10", wb.DefinedNames.DefinedName("Compound").RefersTo);
         }
 
         [Test]
