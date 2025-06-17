@@ -22,7 +22,34 @@ public class Choice : IElementGroup
     {
         var choicesCount = DetermineChoicesCount();
 
-        if (choicesCount == ElementsCount.ZeroToOne)
+        List<Variable> variables;
+        switch (choicesCount)
+        {
+            case ElementsCount.ZeroToOne:
+                {
+                    variables = GenerateParseContent(choicesCount, code, namespaceField);
+                    code.AddLine($"_reader.Close(elementName, {namespaceField});");
+                    break;
+                }
+            case ElementsCount.OneToMany:
+                {
+                    code.AddLine("do");
+                    code.OpenBrace();
+                    variables = GenerateParseContent(choicesCount, code, namespaceField);
+                    code.CloseBrace();
+                    code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
+                    break;
+                }
+            default:
+                throw new NotImplementedException();
+        }
+
+        return variables;
+    }
+
+    private List<Variable> GenerateParseContent(ElementsCount choicesCount, CodeBuilder code, string namespaceField)
+    {
+        if (choicesCount is ElementsCount.ZeroToOne)
         {
             // The problem in 0..1 is what to do when nothing is selected. The lister approach doesn't really detect that
             // The best choice for 0..1 is a variable for each choice and pass all possible choices to the hook.
@@ -45,14 +72,11 @@ public class Choice : IElementGroup
                 isFirst = false;
             }
 
-            code.AddLine($"_reader.Close(elementName, {namespaceField});");
             return variables;
         }
 
         if (choicesCount == ElementsCount.OneToMany)
         {
-            code.AddLine("do");
-            code.OpenBrace();
             var isFirst = true;
             foreach (var child in Children)
             {
@@ -70,8 +94,6 @@ public class Choice : IElementGroup
             code.OpenBrace();
             code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(_reader);");
             code.CloseBrace();
-            code.CloseBrace();
-            code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
         }
         else
         {
