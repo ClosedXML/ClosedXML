@@ -54,7 +54,8 @@ public abstract class ComplexType : IReferencable
             AppendCallListener(code, dataVariables);
             code.CloseBrace();
 
-            AddPartialMethodSignature(code, Name, dataVariables);
+            code.EndLine();
+            code.AppendHookSignature(Name, dataVariables);
         }
         else
         {
@@ -76,24 +77,6 @@ public abstract class ComplexType : IReferencable
                 code.Append(", ");
 
             code.AppendVariable(variable.Name);
-            isFirst = false;
-        }
-
-        code.Append(");").EndLine();
-    }
-
-    private void AddPartialMethodSignature(CodeBuilder code, string typeName, IReadOnlyList<Variable> parameters)
-    {
-        code.EndLine();
-        code.WriteIndent().Append("partial void On").AppendComplexType(typeName).Append("Parsed(");
-
-        var isFirst = true;
-        foreach (var parameter in parameters)
-        {
-            if (!isFirst)
-                code.Append(", ");
-
-            code.Append(parameter.Type).Append(" ").AppendVariable(parameter.Name);
             isFirst = false;
         }
 
