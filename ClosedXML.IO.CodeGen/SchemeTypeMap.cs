@@ -13,22 +13,20 @@ internal class SchemeTypeMap
     private readonly Dictionary<string, SimpleTypeMapping> _simpleTypeMap = new();
 
     /// <summary>
-    /// Map of XML complex type name to C# type (as a text). If there isn't a record in the map,
-    /// complex type isn't mapped to C# type and returns <c>void</c>.
+    /// Map of XML complex type or element group name to C# type (as a text). If there isn't a record in the map,
+    /// there is no mapping codegen will use <c>void</c>.
     /// </summary>
-    private readonly Dictionary<string, string> _complexTypeMap = new();
+    private readonly Dictionary<ParsletName, string> _parsletMap = new();
 
-    private readonly Dictionary<string, string> _elementGroupMap = new();
-
-    internal SchemeTypeMap AddComplexTypeMapping(string typeName, string cSharpType)
+    internal SchemeTypeMap AddComplexTypeMapping(ParsletName complexTypeName, string cSharpType)
     {
-        _complexTypeMap.Add(typeName, cSharpType);
+        _parsletMap.Add(complexTypeName, cSharpType);
         return this;
     }
 
-    internal SchemeTypeMap AddElementGroupMapping(string elementGroup, string cSharpType)
+    internal SchemeTypeMap AddElementGroupMapping(ParsletName elementGroup, string cSharpType)
     {
-        _elementGroupMap.Add(elementGroup, cSharpType);
+        _parsletMap.Add(elementGroup, cSharpType);
         return this;
     }
 
@@ -68,14 +66,9 @@ internal class SchemeTypeMap
         return string.Format(expressionTemplate, attribute.Name);
     }
 
-    internal bool TryGetComplexTypeCsType(string complexType, [NotNullWhen(true)] out string? csType)
+    internal bool TryGetParsletCsType(ParsletName name, [NotNullWhen(true)] out string? csType)
     {
-        return _complexTypeMap.TryGetValue(complexType, out csType);
-    }
-
-    internal bool TryGetElementGroupCsType(string elementGroup, [NotNullWhen(true)] out string? csType)
-    {
-        return _elementGroupMap.TryGetValue(elementGroup, out csType);
+        return _parsletMap.TryGetValue(name, out csType);
     }
 
     public SchemeTypeMap AddPrimitiveTypes()

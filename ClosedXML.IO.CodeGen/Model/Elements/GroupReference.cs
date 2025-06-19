@@ -28,7 +28,7 @@ public class GroupReference : ILeafElement
         switch (Occurrences.Elements)
         {
             case ElementsCount.OneToOne:
-                return code.AppendElementGroupParseCall(RefName);
+                return code.AppendParseCall(RefName);
             default:
                 throw new NotImplementedException();
         }

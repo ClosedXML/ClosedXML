@@ -64,7 +64,7 @@ public class Choice : IElementGroup
                 code.WriteIndent().Append(!isFirst ? "else " : "").Append($"if (_reader.TryOpen(\"{element.Name}\", {namespaceField}))").EndLine();
                 code.OpenBrace();
                 code.WriteIndent();
-                if (code.TryGetComplexType(element.TypeName, out _))
+                if (code.TryGetCsType(element.TypeName, out _))
                     code.AppendVariable(element.Name).Append(" = ");
 
                 code.Append($"Parse{code.NormalizeCt(element.TypeName)}(\"{element.Name}\");").EndLine();
@@ -109,7 +109,7 @@ public class Choice : IElementGroup
         foreach (var child in Children)
         {
             var element = (ElementType)child;
-            if (code.TryGetComplexType(element.TypeName, out var csType))
+            if (code.TryGetCsType(element.TypeName, out var csType))
             {
                 csType += '?';
                 code.WriteIndent().Append(csType).Append(" ").AppendVariable(element.Name).Append(" = null;").EndLine();

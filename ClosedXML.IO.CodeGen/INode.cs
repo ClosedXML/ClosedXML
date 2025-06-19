@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.IO.CodeGen;
+namespace ClosedXML.IO.CodeGen;
 
 /// <summary>
 /// A node visited by a <see cref="IXsdVisitor{TResult}"/>.

@@ -6,7 +6,7 @@ namespace ClosedXML.IO.CodeGen;
 /// <summary>
 /// A name for a top-level elements: <see cref="ComplexType"/> and <see cref="GroupDefinition"/>.
 /// </summary>
-internal readonly record struct ParsletName
+public readonly record struct ParsletName
 {
     public const string CtPrefix = "CT_";
     public const string EgPrefix = "EG_";
@@ -22,4 +22,9 @@ internal readonly record struct ParsletName
     internal string Value { get; }
 
     public static implicit operator ParsletName(string name) => new(name);
+
+    public string WithoutPrefix()
+    {
+        return Value[3..];
+    }
 }

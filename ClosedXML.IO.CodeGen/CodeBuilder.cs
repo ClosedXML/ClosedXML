@@ -79,33 +79,17 @@ internal class CodeBuilder
         return this;
     }
 
-    internal string StartComplexTypeParseMethod(string typeName)
+    internal string StartParseMethod(ParsletName name, params string[] parameters)
     {
-        if (!TryGetComplexType(typeName, out var csReturnType))
+        if (!TryGetCsType(name, out var csReturnType))
             csReturnType = "void";
 
-        var signaturePattern = $"{csReturnType} Parse{{0}}(string elementName)";
-        StartParseMethod(signaturePattern, NormalizeCt(typeName));
-        return csReturnType;
-    }
-
-    internal string StartElementGroupParseMethod(string elementGroupName)
-    {
-        Debug.Assert(elementGroupName.StartsWith(EgPrefix));
-        if (!TryGetElementGroup(elementGroupName, out var csReturnType))
-            csReturnType = "void";
-
-        var signaturePattern = $"{csReturnType} Parse{{0}}()";
-        StartParseMethod(signaturePattern, StripNamePrefix(elementGroupName));
-        return csReturnType;
-    }
-
-    private void StartParseMethod(string signaturePattern, string methodSuffix)
-    {
+        var signaturePattern = $"{csReturnType} Parse{{0}}({string.Join(", ", parameters)})";
         AddIndentation();
         _sb.Append("private ");
-        _sb.AppendFormat(signaturePattern, methodSuffix);
+        _sb.AppendFormat(signaturePattern, name.WithoutPrefix());
         _sb.AppendLine();
+        return csReturnType;
     }
 
     internal string NormalizeCt(string typeName)
@@ -128,31 +112,30 @@ internal class CodeBuilder
         return this;
     }
 
-    internal bool TryGetComplexType(string complexType, [NotNullWhen(true)] out string? csType)
+    internal bool TryGetCsType(ParsletName name, [NotNullWhen(true)] out string? csType)
     {
-        return _typeMap.TryGetComplexTypeCsType(complexType, out csType);
+        return _typeMap.TryGetParsletCsType(name, out csType);
     }
 
-    internal Variable? AppendElementGroupParseCall(string elementGroupName)
+    internal Variable? AppendParseCall(ParsletName name)
     {
-        Debug.Assert(elementGroupName.StartsWith(EgPrefix));
-        var egName = StripNamePrefix(elementGroupName);
-        var parseCall = $"Parse{egName}()";
+        var noPrefixName = name.WithoutPrefix();
+        var parseCall = $"Parse{noPrefixName}()";
         WriteIndent();
-        if (!TryGetElementGroup(egName, out var csType))
+        if (!TryGetCsType(name, out var csType))
         {
             Append(parseCall).Append(";").EndLine();
             return null;
         }
 
-        var variable = new Variable(csType, egName);
+        var variable = new Variable(csType, noPrefixName);
         Append("var ").AppendVariable(variable.Name).Append(" = ").Append(parseCall).Append(";").EndLine();
         return variable;
     }
 
-    internal CodeBuilder AppendCallHook(string complexTypeName, IReadOnlyList<Variable> arguments)
+    internal CodeBuilder AppendCallHook(ParsletName name, IReadOnlyList<Variable> arguments)
     {
-        Append("On").AppendComplexType(complexTypeName).Append("Parsed(");
+        Append("On").Append(name.WithoutPrefix()).Append("Parsed(");
         var isFirst = true;
         foreach (var variable in arguments)
         {
@@ -167,9 +150,9 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder AppendHookSignature(string referencableName, IReadOnlyList<Variable> parameters)
+    internal CodeBuilder AppendHookSignature(ParsletName name, IReadOnlyList<Variable> parameters)
     {
-        WriteIndent().Append("partial void On").Append(StripNamePrefix(referencableName)).Append("Parsed(");
+        WriteIndent().Append("partial void On").Append(name.WithoutPrefix()).Append("Parsed(");
 
         var isFirst = true;
         foreach (var parameter in parameters)
@@ -185,32 +168,10 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder AppendComplexType(string typeName)
-    {
-        _sb.Append(NormalizeCt(typeName));
-        return this;
-    }
-
     internal CodeBuilder AppendSimpleTypeMethod(AttributeElement attribute)
     {
         var codeFragment = _typeMap.GetSimpleTypeMethod(attribute);
         return Append(codeFragment);
-    }
-
-    private bool TryGetElementGroup(string elementGroup, [NotNullWhen(true)] out string? csType)
-    {
-        return _typeMap.TryGetElementGroupCsType(elementGroup, out csType);
-    }
-
-    private static string StripNamePrefix(string name)
-    {
-        if (name.StartsWith(CtPrefix))
-            return name[CtPrefix.Length..];
-
-        if (name.StartsWith(EgPrefix))
-            return name[EgPrefix.Length..];
-
-        throw new ArgumentException("Name isn't prefixed.");
     }
 
     private void AddIndentedLine(string text)

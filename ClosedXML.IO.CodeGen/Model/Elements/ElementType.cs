@@ -47,7 +47,7 @@ public class ElementType : IElementGroup
         {
             code.AddLine($"_reader.Open({openArgs});");
             code.WriteIndent();
-            if (code.TryGetComplexType(TypeName, out var csType))
+            if (code.TryGetCsType(TypeName, out var csType))
             {
                 variable = new Variable(csType, Name);
                 code.Append("var ").AppendVariable(Name).Append(" = ");
@@ -56,7 +56,7 @@ public class ElementType : IElementGroup
         }
         else if (min == 0 && max == 1)
         {
-            if (code.TryGetComplexType(TypeName, out var csType))
+            if (code.TryGetCsType(TypeName, out var csType))
             {
                 csType += "?";
                 variable = new Variable(csType, Name);
@@ -76,7 +76,7 @@ public class ElementType : IElementGroup
         }
         else if (min == 0 && max == int.MaxValue)
         {
-            if (code.TryGetComplexType(TypeName, out var csType))
+            if (code.TryGetCsType(TypeName, out var csType))
             {
                 csType = $"List<{csType}>";
                 variable = new Variable(csType, Name);
@@ -96,7 +96,7 @@ public class ElementType : IElementGroup
         }
         else if (min == 1 && max == int.MaxValue)
         {
-            if (code.TryGetComplexType(TypeName, out var csType))
+            if (code.TryGetCsType(TypeName, out var csType))
             {
                 csType = $"List<{csType}>";
                 variable = new Variable(csType, Name);

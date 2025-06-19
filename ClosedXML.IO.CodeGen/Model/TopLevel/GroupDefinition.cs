@@ -17,7 +17,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// </summary>
 public class GroupDefinition : IParslet, INode
 {
-    public required string Name { get; init; }
+    public required ParsletName Name { get; init; }
 
     public required IElementGroup Content { get; init; }
 
@@ -34,7 +34,7 @@ public class GroupDefinition : IParslet, INode
             if (choicesCount != ElementsCount.OneToOne)
                 throw new NotSupportedException("Element group choice should have 1 occurence.");
 
-            var returnCsType = code.StartElementGroupParseMethod(Name);
+            var returnCsType = code.StartParseMethod(Name);
             code.OpenBrace();
             var variables = choice.GenerateParseContent(choicesCount, code, namespaceField);
             if (returnCsType == "void")

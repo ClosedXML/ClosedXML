@@ -12,7 +12,7 @@ public abstract class ComplexType : IParslet
     /// <summary>
     /// Name of the complex type.
     /// </summary>
-    public required string Name { get; set; }
+    public required ParsletName Name { get; set; }
 
     public List<OneOf<AttributeElement, AttributeGroupReference>> Attributes { get; set; } = [];
 
@@ -25,7 +25,7 @@ public abstract class ComplexType : IParslet
     void IParslet.GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
         var attributeVariables = new List<Variable>();
-        var csReturnType = code.StartComplexTypeParseMethod(Name);
+        var csReturnType = code.StartParseMethod(Name, "string elementName");
         code.OpenBrace();
         foreach (var oneOfAttribute in Attributes)
         {

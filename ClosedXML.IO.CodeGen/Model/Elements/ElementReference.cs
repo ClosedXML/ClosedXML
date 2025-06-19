@@ -1,4 +1,4 @@
-﻿using ClosedXML.IO.CodeGen.Model.TopLevel;
+using ClosedXML.IO.CodeGen.Model.TopLevel;
 using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;

@@ -78,9 +78,9 @@ internal class ParserGenerator
 
     private void GenerateParseMethod(CodeBuilder code, ParsletName parsletName)
     {
-        if (!_schema.TryGetParslet(parsletName, out var fragment))
+        if (!_schema.TryGetParslet(parsletName, out var parslet))
             throw new InvalidOperationException($"Unable to find definition for '{parsletName.Value}'. Was it part of the XSD file?");
 
-        fragment.GenerateParseMethod(code, _namespaceField);
+        parslet.GenerateParseMethod(code, _namespaceField);
     }
 }
