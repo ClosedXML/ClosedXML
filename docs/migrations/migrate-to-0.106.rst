@@ -31,3 +31,10 @@ sheet is not found, instead of original ``ArgumentException``.
 Generally speaking, get-by-name methods of all unique-name collections (e.g., worksheets, styles,
 table fields, etc.) should throw ``KeyNotFoundException`` when an item is not found. This change
 aligns the behavior of the ``IXLWorksheets`` with the rest of the API.
+
+*************
+Defined names
+*************
+
+A property setter ``IXLDefinedName.RefersTo`` now throws an ``ArgumentException``
+when trying to set an empty/whitespace-only value.

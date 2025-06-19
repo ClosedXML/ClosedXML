@@ -157,7 +157,7 @@ namespace ClosedXML.Excel
         internal static String TrimFormulaEqual(this String text)
         {
             var trimmed = text.AsSpan().Trim();
-            if (trimmed.Length > 1 && trimmed[0] == '=')
+            if (trimmed.Length >= 1 && trimmed[0] == '=')
                 return trimmed[1..].TrimStart().ToString();
 
             return text;

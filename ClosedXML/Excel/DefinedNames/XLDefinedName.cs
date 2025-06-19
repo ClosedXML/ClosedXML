@@ -71,6 +71,9 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
                 throw new ArgumentNullException();
 
             var formula = value.TrimFormulaEqual();
+            if (string.IsNullOrWhiteSpace(formula))
+                throw new ArgumentException("Formula can't be empty.");
+
             var references = FormulaReferences.ForFormula(formula);
             if (references.References.Any())
             {

@@ -684,5 +684,27 @@ namespace ClosedXML.Tests.Excel
 
             Assert.AreEqual(50, a2.GetDouble());
         }
+
+        [Test]
+        public void RefersTo_throws_on_null()
+        {
+            using var wb = new XLWorkbook();
+            var name = wb.DefinedNames.Add("name", "1+2");
+            Assert.Throws<ArgumentNullException>(() => name.RefersTo = null!);
+        }
+
+        [TestCase("")]
+        [TestCase("=  ")]
+        [TestCase("  ")]
+        public void RefersTo_cant_be_empty(string formula)
+        {
+            // Excel will try to repair a workbook that contains a defined name with a formula that is an empty string.
+            using var wb = new XLWorkbook();
+            var name = wb.DefinedNames.Add("demo", "1+2");
+            const string message = "Formula can't be empty.";
+
+            Assert.That(() => name.SetRefersTo(formula), Throws.Exception.TypeOf<ArgumentException>().With.Message.EqualTo(message));
+            Assert.That(() => wb.DefinedNames.Add("name", formula), Throws.Exception.TypeOf<ArgumentException>().With.Message.EqualTo(message));
+        }
     }
 }

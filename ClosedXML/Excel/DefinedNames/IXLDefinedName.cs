@@ -62,7 +62,9 @@ namespace ClosedXML.Excel
         /// The name formula can contain a bang reference (e.g. reference without
         /// a sheet, but with exclamation mark <c>!$A$5</c>), but can't contain plain
         /// local cell references (i.e. references without a sheet like <c>A5</c>).
+        /// The value can't be empty and it must be a valid formula.
         /// </summary>
+        /// <exception cref="ArgumentException">When passed formula is empty.</exception>
         String RefersTo { get; set; }
 
         /// <summary>
@@ -97,6 +99,7 @@ namespace ClosedXML.Excel
         /// </summary>
         void Delete();
 
+        /// <inheritdoc cref="RefersTo"/>
         IXLDefinedName SetRefersTo(String formula);
 
         IXLDefinedName SetRefersTo(IXLRangeBase range);
