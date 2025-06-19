@@ -19,6 +19,11 @@ internal class CodeBuilder
     /// </summary>
     private const string CtPrefix = "CT_";
 
+    /// <summary>
+    /// Prefix of element groups in XML schema.
+    /// </summary>
+    private const string EgPrefix = "EG_";
+
     private readonly SchemeTypeMap _typeMap;
     private readonly StringBuilder _sb;
     private int _indentLevel;
@@ -77,7 +82,7 @@ internal class CodeBuilder
     {
         AddIndentation();
         _sb.Append("private ");
-        _sb.AppendFormat(signaturePattern, NormalizeCt(typeName));
+        _sb.AppendFormat(signaturePattern, StripNamePrefix(typeName));
         _sb.AppendLine();
         return this;
     }
@@ -134,6 +139,17 @@ internal class CodeBuilder
     {
         var codeFragment = _typeMap.GetSimpleTypeMethod(attribute);
         return Append(codeFragment);
+    }
+
+    private static string StripNamePrefix(string name)
+    {
+        if (name.StartsWith(CtPrefix))
+            return name[CtPrefix.Length..];
+
+        if (name.StartsWith(EgPrefix))
+            return name[EgPrefix.Length..];
+
+        throw new ArgumentException("Name isn't prefixed.");
     }
 
     private void AddIndentedLine(string text)
