@@ -50,36 +50,17 @@ public abstract class ComplexType : IReferencable
 
         if (csReturnType == "void")
         {
-            code.WriteIndent();
-            AppendCallListener(code, dataVariables);
+            code.WriteIndent().AppendCallHook(Name, dataVariables);
             code.CloseBrace();
-
             code.EndLine();
             code.AppendHookSignature(Name, dataVariables);
         }
         else
         {
-            code.WriteIndent().Append("return ");
-            AppendCallListener(code, dataVariables);
+            code.WriteIndent().Append("return ").AppendCallHook(Name, dataVariables);
             code.CloseBrace();
         }
     }
 
     internal abstract List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField);
-
-    private void AppendCallListener(CodeBuilder code, IReadOnlyList<Variable> arguments)
-    {
-        code.Append("On").AppendComplexType(Name).Append("Parsed(");
-        var isFirst = true;
-        foreach (var variable in arguments)
-        {
-            if (!isFirst)
-                code.Append(", ");
-
-            code.AppendVariable(variable.Name);
-            isFirst = false;
-        }
-
-        code.Append(");").EndLine();
-    }
 }

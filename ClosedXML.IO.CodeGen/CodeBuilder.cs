@@ -112,7 +112,24 @@ internal class CodeBuilder
         return _typeMap.TryGetComplexTypeCsType(complexType, out csType);
     }
 
-    internal void AppendHookSignature(string complexTypeName, IReadOnlyList<Variable> parameters)
+    internal CodeBuilder AppendCallHook(string complexTypeName, IReadOnlyList<Variable> arguments)
+    {
+        Append("On").AppendComplexType(complexTypeName).Append("Parsed(");
+        var isFirst = true;
+        foreach (var variable in arguments)
+        {
+            if (!isFirst)
+                Append(", ");
+
+            AppendVariable(variable.Name);
+            isFirst = false;
+        }
+
+        Append(");").EndLine();
+        return this;
+    }
+
+    internal CodeBuilder AppendHookSignature(string complexTypeName, IReadOnlyList<Variable> parameters)
     {
         WriteIndent().Append("partial void On").AppendComplexType(complexTypeName).Append("Parsed(");
 
@@ -127,6 +144,7 @@ internal class CodeBuilder
         }
 
         Append(");").EndLine();
+        return this;
     }
 
     internal CodeBuilder AppendComplexType(string typeName)
