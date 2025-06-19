@@ -1,4 +1,5 @@
-﻿using ClosedXML.IO.CodeGen.Model.Elements;
+using System;
+using ClosedXML.IO.CodeGen.Model.Elements;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -14,7 +15,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class GroupDefinition : IReferencable, INode
+public class GroupDefinition : IParslet, INode
 {
     public required string Name { get; init; }
 
@@ -23,5 +24,35 @@ public class GroupDefinition : IReferencable, INode
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    void IParslet.GenerateParseMethod(CodeBuilder code, string namespaceField)
+    {
+        if (Content is Choice choice)
+        {
+            var choicesCount = choice.DetermineChoicesCount();
+            if (choicesCount != ElementsCount.OneToOne)
+                throw new NotSupportedException("Element group choice should have 1 occurence.");
+
+            var returnCsType = code.StartElementGroupParseMethod(Name);
+            code.OpenBrace();
+            var variables = choice.GenerateParseContent(choicesCount, code, namespaceField);
+            if (returnCsType == "void")
+            {
+                code.WriteIndent().AppendCallHook(Name, variables);
+                code.CloseBrace();
+                code.EndLine();
+                code.AppendHookSignature(Name, variables);
+            }
+            else
+            {
+                code.WriteIndent().Append("return ").AppendCallHook(Name, variables);
+                code.CloseBrace();
+            }
+        }
+        else
+        {
+            throw new NotImplementedException("Only choice implemented.");
+        }
     }
 }

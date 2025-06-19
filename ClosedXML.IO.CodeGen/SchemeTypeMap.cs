@@ -18,9 +18,17 @@ internal class SchemeTypeMap
     /// </summary>
     private readonly Dictionary<string, string> _complexTypeMap = new();
 
+    private readonly Dictionary<string, string> _elementGroupMap = new();
+
     internal SchemeTypeMap AddComplexTypeMapping(string typeName, string cSharpType)
     {
         _complexTypeMap.Add(typeName, cSharpType);
+        return this;
+    }
+
+    internal SchemeTypeMap AddElementGroupMapping(string elementGroup, string cSharpType)
+    {
+        _elementGroupMap.Add(elementGroup, cSharpType);
         return this;
     }
 
@@ -63,6 +71,11 @@ internal class SchemeTypeMap
     internal bool TryGetComplexTypeCsType(string complexType, [NotNullWhen(true)] out string? csType)
     {
         return _complexTypeMap.TryGetValue(complexType, out csType);
+    }
+
+    internal bool TryGetElementGroupCsType(string elementGroup, [NotNullWhen(true)] out string? csType)
+    {
+        return _elementGroupMap.TryGetValue(elementGroup, out csType);
     }
 
     public SchemeTypeMap AddPrimitiveTypes()

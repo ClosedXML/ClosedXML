@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ClosedXML.IO.CodeGen.Model.TopLevel;
@@ -16,7 +16,7 @@ public class Schema : INode
     public List<ImportElement> Imports { get; } = [];
 
     /// <summary>
-    /// One of <c>xsd:attributeGroup</c>, <c>xsd:complexType</c>, <c>xsd:element</c> or <c>xsd:simpleType</c>.
+    /// One of <c>xsd:attributeGroup</c>, <c>xsd:complexType</c>, <c>xsd:element</c>, <c>xsd:group</c> or <c>xsd:simpleType</c>.
     /// </summary>
     public List<object> Entries { get; } = [];
 
@@ -25,9 +25,9 @@ public class Schema : INode
         return visitor.Visit(this);
     }
 
-    internal bool TryGetComplexType(string complexTypeName, [NotNullWhen(true)] out ComplexType? complexType)
+    internal bool TryGetParslet(ParsletName parsletName, [NotNullWhen(true)] out IParslet? parslet)
     {
-        complexType = Entries.OfType<ComplexType>().SingleOrDefault(x => x.Name == complexTypeName);
-        return complexType is not null;
+        parslet = Entries.OfType<IParslet>().SingleOrDefault(x => x.Name == parsletName);
+        return parslet is not null;
     }
 }

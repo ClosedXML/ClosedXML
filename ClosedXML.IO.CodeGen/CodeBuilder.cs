@@ -1,6 +1,7 @@
 using ClosedXML.IO.CodeGen.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -88,6 +89,17 @@ internal class CodeBuilder
         return csReturnType;
     }
 
+    internal string StartElementGroupParseMethod(string elementGroupName)
+    {
+        Debug.Assert(elementGroupName.StartsWith(EgPrefix));
+        if (!TryGetElementGroup(elementGroupName, out var csReturnType))
+            csReturnType = "void";
+
+        var signaturePattern = $"{csReturnType} Parse{{0}}()";
+        StartParseMethod(signaturePattern, StripNamePrefix(elementGroupName));
+        return csReturnType;
+    }
+
     private void StartParseMethod(string signaturePattern, string methodSuffix)
     {
         AddIndentation();
@@ -121,6 +133,23 @@ internal class CodeBuilder
         return _typeMap.TryGetComplexTypeCsType(complexType, out csType);
     }
 
+    internal Variable? AppendElementGroupParseCall(string elementGroupName)
+    {
+        Debug.Assert(elementGroupName.StartsWith(EgPrefix));
+        var egName = StripNamePrefix(elementGroupName);
+        var parseCall = $"Parse{egName}()";
+        WriteIndent();
+        if (!TryGetElementGroup(egName, out var csType))
+        {
+            Append(parseCall).Append(";").EndLine();
+            return null;
+        }
+
+        var variable = new Variable(csType, egName);
+        Append("var ").AppendVariable(variable.Name).Append(" = ").Append(parseCall).Append(";").EndLine();
+        return variable;
+    }
+
     internal CodeBuilder AppendCallHook(string complexTypeName, IReadOnlyList<Variable> arguments)
     {
         Append("On").AppendComplexType(complexTypeName).Append("Parsed(");
@@ -138,9 +167,9 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder AppendHookSignature(string complexTypeName, IReadOnlyList<Variable> parameters)
+    internal CodeBuilder AppendHookSignature(string referencableName, IReadOnlyList<Variable> parameters)
     {
-        WriteIndent().Append("partial void On").AppendComplexType(complexTypeName).Append("Parsed(");
+        WriteIndent().Append("partial void On").Append(StripNamePrefix(referencableName)).Append("Parsed(");
 
         var isFirst = true;
         foreach (var parameter in parameters)
@@ -166,6 +195,11 @@ internal class CodeBuilder
     {
         var codeFragment = _typeMap.GetSimpleTypeMethod(attribute);
         return Append(codeFragment);
+    }
+
+    private bool TryGetElementGroup(string elementGroup, [NotNullWhen(true)] out string? csType)
+    {
+        return _typeMap.TryGetElementGroupCsType(elementGroup, out csType);
     }
 
     private static string StripNamePrefix(string name)

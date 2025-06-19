@@ -10,7 +10,7 @@ internal class ParserGenerator
     private readonly Schema _schema;
     private readonly string _readerName;
     private readonly string _namespaceField;
-    private readonly List<string> _parseMethods = new();
+    private readonly List<ParsletName> _parseMethods = new();
     private readonly SchemeTypeMap _typeMap;
     private readonly List<string> _usings = new();
     private string _targetNamespace = "ClosedXML.Excel.IO";
@@ -36,12 +36,12 @@ internal class ParserGenerator
     }
 
     /// <summary>
-    /// Generate <c>Parse*</c> method for a complex type.
+    /// Generate <c>Parse*</c> method for a top-level element in the XSD file.
     /// </summary>
-    /// <param name="complexTypeName">Name of a complex type.</param>
-    public ParserGenerator AddParseMethod(string complexTypeName)
+    /// <param name="name">Name of a complex type or element group.</param>
+    public ParserGenerator AddParseMethod(ParsletName name)
     {
-        _parseMethods.Add(complexTypeName);
+        _parseMethods.Add(name);
         return this;
     }
 
@@ -76,11 +76,11 @@ internal class ParserGenerator
         return code.ToString();
     }
 
-    private void GenerateParseMethod(CodeBuilder code, string complexTypeName)
+    private void GenerateParseMethod(CodeBuilder code, ParsletName parsletName)
     {
-        if (!_schema.TryGetComplexType(complexTypeName, out var complexType))
-            throw new InvalidOperationException($"Complex type '{complexTypeName}' not found.");
+        if (!_schema.TryGetParslet(parsletName, out var fragment))
+            throw new InvalidOperationException($"Unable to find definition for '{parsletName.Value}'. Was it part of the XSD file?");
 
-        complexType.Generate(code, _namespaceField);
+        fragment.GenerateParseMethod(code, _namespaceField);
     }
 }

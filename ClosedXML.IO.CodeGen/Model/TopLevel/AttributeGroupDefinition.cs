@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -14,7 +14,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class AttributeGroupDefinition : IReferencable, INode
+public class AttributeGroupDefinition : INode
 {
     /// <summary>
     /// Name of the the attribute group type.

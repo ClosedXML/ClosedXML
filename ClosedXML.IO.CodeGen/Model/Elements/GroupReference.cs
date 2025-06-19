@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;
@@ -20,5 +21,16 @@ public class GroupReference : ILeafElement
     public T Accept<T>(IXsdVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    internal Variable? GenerateParseCall(CodeBuilder code, string namespaceField)
+    {
+        switch (Occurrences.Elements)
+        {
+            case ElementsCount.OneToOne:
+                return code.AppendElementGroupParseCall(RefName);
+            default:
+                throw new NotImplementedException();
+        }
     }
 }

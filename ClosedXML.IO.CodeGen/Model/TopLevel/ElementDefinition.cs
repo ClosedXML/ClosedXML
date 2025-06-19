@@ -1,4 +1,4 @@
-﻿using ClosedXML.IO.CodeGen.Model.Elements;
+using ClosedXML.IO.CodeGen.Model.Elements;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 
@@ -10,7 +10,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ElementDefinition : IReferencable, INode
+public class ElementDefinition : INode
 {
     /// <summary>
     /// Name of the element. Referenced by <see cref="ElementReference.RefName"/>.

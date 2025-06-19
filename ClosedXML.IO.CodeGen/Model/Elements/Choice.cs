@@ -47,7 +47,7 @@ public class Choice : IElementGroup
         return variables;
     }
 
-    private List<Variable> GenerateParseContent(ElementsCount choicesCount, CodeBuilder code, string namespaceField)
+    internal List<Variable> GenerateParseContent(ElementsCount choicesCount, CodeBuilder code, string namespaceField)
     {
         if (choicesCount is ElementsCount.ZeroToOne)
         {
@@ -120,7 +120,7 @@ public class Choice : IElementGroup
         return variables;
     }
 
-    private ElementsCount DetermineChoicesCount()
+    internal ElementsCount DetermineChoicesCount()
     {
         // OOXML XSD is not very consistent with how it defines choices, so normalize
         // the choice to few selected patterns we can implement. Minimum of patterns
@@ -143,6 +143,11 @@ public class Choice : IElementGroup
         if (min == 1 && max == int.MaxValue && choicesElements == ElementsCount.OneToOne)
         {
             return ElementsCount.OneToMany;
+        }
+
+        if (min == 1 && max == 1 && choicesElements == ElementsCount.OneToOne)
+        {
+            return ElementsCount.OneToOne;
         }
 
         throw new NotImplementedException($"Unknown code pattern for a choice.");

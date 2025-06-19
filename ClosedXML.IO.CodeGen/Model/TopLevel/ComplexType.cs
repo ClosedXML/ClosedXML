@@ -7,7 +7,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// <summary>
 /// Base class for nodes representing a <c><![CDATA[<xsd:compleType>]]></c>.
 /// </summary>
-public abstract class ComplexType : IReferencable
+public abstract class ComplexType : IParslet
 {
     /// <summary>
     /// Name of the complex type.
@@ -22,7 +22,7 @@ public abstract class ComplexType : IReferencable
     /// </summary>
     public required bool? Mixed { get; init; }
 
-    internal void Generate(CodeBuilder code, string namespaceField)
+    void IParslet.GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
         var attributeVariables = new List<Variable>();
         var csReturnType = code.StartComplexTypeParseMethod(Name);

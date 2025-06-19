@@ -43,6 +43,12 @@ public class ComplexTypeSequence : ComplexType, INode
                     if (variable is not null)
                         dataVariables.Add(variable);
                 }
+                else if (element is GroupReference groupReference)
+                {
+                    var variable = groupReference.GenerateParseCall(code, namespaceField);
+                    if (variable is not null)
+                        dataVariables.Add(variable);
+                }
                 else
                 {
                     throw new NotImplementedException("Only element type is implemented for a sequence.");
