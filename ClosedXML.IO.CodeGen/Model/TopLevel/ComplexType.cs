@@ -25,12 +25,7 @@ public abstract class ComplexType : IReferencable
     internal void Generate(CodeBuilder code, string namespaceField)
     {
         var attributeVariables = new List<Variable>();
-
-        // Get return type of Parse* method
-        if (!code.TryGetComplexType(Name, out var csReturnType))
-            csReturnType = "void";
-
-        code.StartMethod($"{csReturnType} Parse{{0}}(string elementName)", Name);
+        var csReturnType = code.StartComplexTypeParseMethod(Name);
         code.OpenBrace();
         foreach (var oneOfAttribute in Attributes)
         {

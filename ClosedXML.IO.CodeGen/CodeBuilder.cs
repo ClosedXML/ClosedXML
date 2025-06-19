@@ -78,13 +78,22 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder StartMethod(string signaturePattern, string typeName)
+    internal string StartComplexTypeParseMethod(string typeName)
+    {
+        if (!TryGetComplexType(typeName, out var csReturnType))
+            csReturnType = "void";
+
+        var signaturePattern = $"{csReturnType} Parse{{0}}(string elementName)";
+        StartParseMethod(signaturePattern, NormalizeCt(typeName));
+        return csReturnType;
+    }
+
+    private void StartParseMethod(string signaturePattern, string methodSuffix)
     {
         AddIndentation();
         _sb.Append("private ");
-        _sb.AppendFormat(signaturePattern, StripNamePrefix(typeName));
+        _sb.AppendFormat(signaturePattern, methodSuffix);
         _sb.AppendLine();
-        return this;
     }
 
     internal string NormalizeCt(string typeName)
