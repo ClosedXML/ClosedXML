@@ -10,7 +10,7 @@ using ClosedXML.Parser;
 namespace ClosedXML.Tests.Excel
 {
     [TestFixture]
-    public class NamedRangesTests
+    public class DefinedNamesTests
     {
         [Test]
         public void Formula_must_be_valid()
