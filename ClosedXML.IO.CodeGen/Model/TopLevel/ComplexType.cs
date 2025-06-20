@@ -45,14 +45,14 @@ public abstract class ComplexType : IParslet
 
         if (csReturnType == "void")
         {
-            code.WriteIndent().AppendCallHook(Name, dataVariables);
+            code.WriteIndent().AppendCallHook(Name, dataVariables).Append(";").EndLine();
             code.CloseBrace();
             code.EndLine();
             code.AppendHookSignature(Name, dataVariables);
         }
         else
         {
-            code.WriteIndent().Append("return ").AppendCallHook(Name, dataVariables);
+            code.WriteIndent().Append("return ").AppendCallHook(Name, dataVariables).Append(";").EndLine();
             code.CloseBrace();
         }
     }

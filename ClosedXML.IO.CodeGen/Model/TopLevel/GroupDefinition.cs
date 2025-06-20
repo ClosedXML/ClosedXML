@@ -39,14 +39,14 @@ public class GroupDefinition : IParslet, INode
             var variables = choice.GenerateParseContent(choicesCount, code, namespaceField);
             if (returnCsType == "void")
             {
-                code.WriteIndent().AppendCallHook(Name, variables);
+                code.WriteIndent().AppendCallHook(Name, variables).Append(";").EndLine();
                 code.CloseBrace();
                 code.EndLine();
                 code.AppendHookSignature(Name, variables);
             }
             else
             {
-                code.WriteIndent().Append("return ").AppendCallHook(Name, variables);
+                code.WriteIndent().Append("return ").AppendCallHook(Name, variables).Append(";").EndLine();
                 code.CloseBrace();
             }
         }

@@ -123,7 +123,7 @@ internal class CodeBuilder
             isFirst = false;
         }
 
-        Append(");").EndLine();
+        Append(")");
         return this;
     }
 
