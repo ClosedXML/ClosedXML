@@ -84,11 +84,7 @@ internal class CodeBuilder
         if (!TryGetCsType(name, out var csReturnType))
             csReturnType = "void";
 
-        var signaturePattern = $"{csReturnType} Parse{{0}}({string.Join(", ", parameters)})";
-        AddIndentation();
-        _sb.Append("private ");
-        _sb.AppendFormat(signaturePattern, name.WithoutPrefix());
-        _sb.AppendLine();
+        AddIndentedLine($"private {csReturnType} Parse{name.WithoutPrefix()}({string.Join(", ", parameters)})");
         return csReturnType;
     }
 
