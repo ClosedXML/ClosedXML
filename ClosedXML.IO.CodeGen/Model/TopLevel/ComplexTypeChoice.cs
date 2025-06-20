@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model.Elements;
 
@@ -29,6 +30,26 @@ public class ComplexTypeChoice : ComplexType, INode
 
     internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
     {
-        return Choice.GenerateParseContent(code, namespaceField);
+        var choicesCount = Choice.DetermineChoicesCount();
+        switch (choicesCount)
+        {
+            case ElementsCount.ZeroToOne:
+            {
+                var variables = Choice.GenerateParseContent(choicesCount, code, namespaceField);
+                code.AddLine($"_reader.Close(elementName, {namespaceField});");
+                return variables;
+            }
+            case ElementsCount.OneToMany:
+            {
+                code.AddLine("do");
+                code.OpenBrace();
+                var variables = Choice.GenerateParseContent(choicesCount, code, namespaceField);
+                code.CloseBrace();
+                code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
+                return variables;
+            }
+            default:
+                throw new NotImplementedException();
+        }
     }
 }

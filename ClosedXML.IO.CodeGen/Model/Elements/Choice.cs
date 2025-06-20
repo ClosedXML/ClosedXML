@@ -18,35 +18,6 @@ public class Choice : IElementGroup
         return visitor.Visit(this);
     }
 
-    internal List<Variable> GenerateParseContent(CodeBuilder code, string namespaceField)
-    {
-        var choicesCount = DetermineChoicesCount();
-
-        List<Variable> variables;
-        switch (choicesCount)
-        {
-            case ElementsCount.ZeroToOne:
-                {
-                    variables = GenerateParseContent(choicesCount, code, namespaceField);
-                    code.AddLine($"_reader.Close(elementName, {namespaceField});");
-                    break;
-                }
-            case ElementsCount.OneToMany:
-                {
-                    code.AddLine("do");
-                    code.OpenBrace();
-                    variables = GenerateParseContent(choicesCount, code, namespaceField);
-                    code.CloseBrace();
-                    code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
-                    break;
-                }
-            default:
-                throw new NotImplementedException();
-        }
-
-        return variables;
-    }
-
     internal List<Variable> GenerateParseContent(ElementsCount choicesCount, CodeBuilder code, string namespaceField)
     {
         if (choicesCount is ElementsCount.ZeroToOne)
