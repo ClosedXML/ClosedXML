@@ -37,22 +37,15 @@ public class ElementType : IElementGroup
     internal Variable? Generate(CodeBuilder code, string namespaceField)
     {
         Variable? variable = null;
-        var typeName = code.NormalizeCt(TypeName);
-        var elementParseCall = $"Parse{typeName}(\"{Name}\")";
         var openArgs = $"\"{Name}\", {namespaceField}";
         var min = Occurrences.Min ?? 1;
         var max = Occurrences.Max ?? 1;
+        var parseCallArgs = new[] { $"\"{Name}\"" };
 
         if (min == 1 && max == 1)
         {
             code.AddLine($"_reader.Open({openArgs});");
-            code.WriteIndent();
-            if (code.TryGetCsType(TypeName, out var csType))
-            {
-                variable = new Variable(csType, Name);
-                code.Append("var ").AppendVariable(Name).Append(" = ");
-            }
-            code.Append(elementParseCall).Append(";").EndLine();
+            variable = code.AddParseCall(TypeName, Name, parseCallArgs);
         }
         else if (min == 0 && max == 1)
         {
@@ -63,14 +56,14 @@ public class ElementType : IElementGroup
                 code.WriteIndent().Append(csType).Append(" ").AppendVariable(Name).Append(" = default;").EndLine();
                 code.AddLine($"if (_reader.TryOpen({openArgs}))");
                 code.OpenBrace();
-                code.WriteIndent().AppendVariable(Name).Append(" = ").Append(elementParseCall).Append(";").EndLine();
+                code.WriteIndent().AppendVariable(Name).Append(" = ").AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
                 code.CloseBrace();
             }
             else
             {
                 code.AddLine($"if (_reader.TryOpen({openArgs}))");
                 code.OpenBrace();
-                code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
                 code.CloseBrace();
             }
         }
@@ -83,14 +76,14 @@ public class ElementType : IElementGroup
                 code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append($" = new {csType}();").EndLine();
                 code.AddLine($"while (_reader.TryOpen({openArgs}))");
                 code.OpenBrace();
-                code.WriteIndent().AppendVariable(variable.Name).Append($".Add({elementParseCall})").Append(";").EndLine();
+                code.WriteIndent().AppendVariable(variable.Name).Append(".Add(").AppendParseCall(TypeName, parseCallArgs).Append(");").EndLine();
                 code.CloseBrace();
             }
             else
             {
                 code.AddLine($"while (_reader.TryOpen({openArgs}))");
                 code.OpenBrace();
-                code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
                 code.CloseBrace();
             }
         }
@@ -104,7 +97,7 @@ public class ElementType : IElementGroup
                 code.AddLine($"_reader.Open({openArgs});");
                 code.AddLine("do");
                 code.OpenBrace();
-                code.WriteIndent().AppendVariable(variable.Name).Append($".Add({elementParseCall})").Append(";").EndLine();
+                code.WriteIndent().AppendVariable(variable.Name).Append(".Add(").AppendParseCall(TypeName, parseCallArgs).Append(");").EndLine();
                 code.CloseBrace();
                 code.AddLine($"while (_reader.TryOpen({openArgs}));");
             }
@@ -113,7 +106,7 @@ public class ElementType : IElementGroup
                 code.AddLine($"_reader.Open({openArgs});");
                 code.AddLine("do");
                 code.OpenBrace();
-                code.WriteIndent().Append(elementParseCall).Append(";").EndLine();
+                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
                 code.CloseBrace();
                 code.AddLine($"while (_reader.TryOpen({openArgs}));");
             }

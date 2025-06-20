@@ -38,7 +38,7 @@ public class Choice : IElementGroup
                 if (code.TryGetCsType(element.TypeName, out _))
                     code.AppendVariable(element.Name).Append(" = ");
 
-                code.Append($"Parse{code.NormalizeCt(element.TypeName)}(\"{element.Name}\");").EndLine();
+                code.AppendParseCall(element.TypeName, [$"\"{element.Name}\""]).Append(";").EndLine();
                 code.CloseBrace();
                 isFirst = false;
             }
@@ -57,7 +57,7 @@ public class Choice : IElementGroup
 
                 code.AddLine($"{joiner}if (_reader.TryOpen(\"{element.Name}\", {namespaceField}))");
                 code.OpenBrace();
-                code.AddLine($"Parse{code.NormalizeCt(element.TypeName)}(\"{element.Name}\");");
+                code.WriteIndent().AppendParseCall(element.TypeName, [$"\"{element.Name}\""]).Append(";").EndLine();
                 code.CloseBrace();
             }
 

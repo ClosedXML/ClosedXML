@@ -1,7 +1,5 @@
 using ClosedXML.IO.CodeGen.Model;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -14,16 +12,6 @@ internal class CodeBuilder
     /// <c>@in</c>.
     /// </summary>
     private static readonly HashSet<string> Keywords = ["in", "out", "ref"];
-
-    /// <summary>
-    /// Prefix of complex types in XML schema.
-    /// </summary>
-    private const string CtPrefix = "CT_";
-
-    /// <summary>
-    /// Prefix of element groups in XML schema.
-    /// </summary>
-    private const string EgPrefix = "EG_";
 
     private readonly SchemeTypeMap _typeMap;
     private readonly StringBuilder _sb;
@@ -88,14 +76,6 @@ internal class CodeBuilder
         return csReturnType;
     }
 
-    internal string NormalizeCt(string typeName)
-    {
-        if (!typeName.StartsWith(CtPrefix))
-            throw new ArgumentException("Type isn't a complex type.", nameof(typeName));
-
-        return typeName[CtPrefix.Length..];
-    }
-
     internal string GetSimpleType(string simpleType)
     {
         return _typeMap.GetSimpleType(simpleType).CsTypeName;
@@ -113,20 +93,21 @@ internal class CodeBuilder
         return _typeMap.TryGetParsletCsType(name, out csType);
     }
 
-    internal Variable? AppendParseCall(ParsletName name)
+    internal Variable? AddParseCall(ParsletName name, string variableName, string[] arguments)
     {
-        var noPrefixName = name.WithoutPrefix();
-        var parseCall = $"Parse{noPrefixName}()";
-        WriteIndent();
         if (!TryGetCsType(name, out var csType))
         {
-            Append(parseCall).Append(";").EndLine();
+            WriteIndent().AppendParseCall(name, arguments).Append(";").EndLine();
             return null;
         }
 
-        var variable = new Variable(csType, noPrefixName);
-        Append("var ").AppendVariable(variable.Name).Append(" = ").Append(parseCall).Append(";").EndLine();
-        return variable;
+        WriteIndent().Append("var ").AppendVariable(variableName).Append(" = ").AppendParseCall(name, arguments).Append(";").EndLine();
+        return new Variable(csType, variableName);
+    }
+
+    internal CodeBuilder AppendParseCall(ParsletName name, string[] arguments)
+    {
+        return Append($"Parse{name.WithoutPrefix()}({string.Join(", ", arguments)})");
     }
 
     internal CodeBuilder AppendCallHook(ParsletName name, IReadOnlyList<Variable> arguments)
