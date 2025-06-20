@@ -42,7 +42,7 @@ public class GroupDefinition : IParslet, INode
                 code.WriteIndent().AppendCallHook(Name, variables).Append(";").EndLine();
                 code.CloseBrace();
                 code.EndLine();
-                code.AppendHookSignature(Name, variables);
+                code.AddHookSignature(Name, variables);
             }
             else
             {

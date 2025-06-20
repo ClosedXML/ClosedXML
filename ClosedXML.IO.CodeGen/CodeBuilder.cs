@@ -127,7 +127,7 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder AppendHookSignature(ParsletName name, IReadOnlyList<Variable> parameters)
+    internal CodeBuilder AddHookSignature(ParsletName name, IReadOnlyList<Variable> parameters)
     {
         WriteIndent().Append("partial void On").Append(name.WithoutPrefix()).Append("Parsed(");
 

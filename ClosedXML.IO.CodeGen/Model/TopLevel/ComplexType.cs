@@ -48,7 +48,7 @@ public abstract class ComplexType : IParslet
             code.WriteIndent().AppendCallHook(Name, dataVariables).Append(";").EndLine();
             code.CloseBrace();
             code.EndLine();
-            code.AppendHookSignature(Name, dataVariables);
+            code.AddHookSignature(Name, dataVariables);
         }
         else
         {
