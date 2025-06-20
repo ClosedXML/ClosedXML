@@ -65,13 +65,10 @@ public class Choice : IElementGroup
             code.OpenBrace();
             code.AddLine("throw PartStructureException.ExpectedChoiceElementNotFound(_reader);");
             code.CloseBrace();
-        }
-        else
-        {
-            throw new NotImplementedException("Choice element count range is not implemented.");
+            return [];
         }
 
-        return [];
+        throw new NotImplementedException("Choice element count range is not implemented.");
     }
 
     private List<Variable> DeclareChildrenVariables(CodeBuilder code)
