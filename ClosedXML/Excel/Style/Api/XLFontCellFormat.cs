@@ -1,3 +1,6 @@
+using System;
+using ClosedXML.Excel.Formatting;
+
 namespace ClosedXML.Excel;
 
 /// <summary>
@@ -16,14 +19,20 @@ internal class XLFontCellFormat
         _styles = styles;
     }
 
-    public XLFontName Name => _hierarchy.Resolve(static x => x.Font?.Name, _styles.DefaultFormat);
+    public XLFontName Name => Resolve(static x => x.Font?.Name);
 
-    public bool Bold => _hierarchy.Resolve(static x => x.Font?.Bold, _styles.DefaultFormat);
+    public bool Bold => Resolve(static x => x.Font?.Bold);
 
-    public bool Italic => _hierarchy.Resolve(static x => x.Font?.Italic, _styles.DefaultFormat);
+    public bool Italic => Resolve(static x => x.Font?.Italic);
 
     /// <summary>
     /// Size in points.
     /// </summary>
-    public double Size => _hierarchy.Resolve(static x => x.Font?.Size, _styles.DefaultFormat).Points;
+    public double Size => Resolve(static x => x.Font?.Size).Points;
+
+    private T Resolve<T>(Func<XLCellFormatValue, T?> selector)
+        where T : struct
+    {
+        return _hierarchy.Resolve(selector, _styles.DefaultFormat);
+    }
 }
