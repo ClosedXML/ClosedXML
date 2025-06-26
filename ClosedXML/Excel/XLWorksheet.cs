@@ -1828,7 +1828,7 @@ namespace ClosedXML.Excel
             }
 
             var valueSlice = Internals.CellsCollection.ValueSlice;
-            var styleSlice = Internals.CellsCollection.StyleSlice;
+            var formatSlice = Internals.CellsCollection.FormatSlice;
 
             // A buffer to avoid multiple enumerations of the source.
             var rowBuffer = new List<XLCellValue>();
@@ -1861,7 +1861,7 @@ namespace ClosedXML.Excel
                         if (value.IsText && value.GetText()[0] == '\'')
                             value = value.GetText().Substring(1);
 
-                        styleSlice.Set(point, modifiedStyle);
+                        formatSlice.Set(point, modifiedStyle);
                     }
 
                     valueSlice.SetCellValue(point, value);
@@ -2043,7 +2043,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLStyleValue GetStyleValue(XLSheetPoint point)
         {
-            var styleValue = Internals.CellsCollection.StyleSlice[point];
+            var styleValue = Internals.CellsCollection.FormatSlice.GetStyleValue(point);
             if (styleValue is not null)
                 return styleValue;
 

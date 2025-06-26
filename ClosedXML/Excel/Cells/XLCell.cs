@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
         internal override XLStyleValue StyleValue
         {
             get => Worksheet.GetStyleValue(SheetPoint);
-            private protected set => _cellsCollection.StyleSlice.Set(_rowNumber, _columnNumber, value);
+            private protected set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
         }
 
         internal int MemorySstId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);

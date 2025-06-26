@@ -14,7 +14,8 @@ namespace ClosedXML.Excel
             _ws = ws;
             ValueSlice = new ValueSlice(ws.Workbook.SharedStringTable);
             FormulaSlice = new FormulaSlice(ws);
-            _slices = new List<ISlice> { ValueSlice, FormulaSlice, StyleSlice, MiscSlice };
+            FormatSlice = new FormatSlice();
+            _slices = new List<ISlice> { ValueSlice, FormulaSlice, FormatSlice, MiscSlice };
         }
 
         internal HashSet<int> ColumnsUsedKeys
@@ -71,7 +72,7 @@ namespace ClosedXML.Excel
 
         internal FormulaSlice FormulaSlice { get; }
 
-        internal Slice<XLStyleValue?> StyleSlice { get; } = new();
+        internal FormatSlice FormatSlice { get; }
 
         internal Slice<XLMiscSliceContent> MiscSlice { get; } = new();
 
@@ -357,7 +358,7 @@ namespace ClosedXML.Excel
         {
             ValueSlice.Swap(sp1, sp2);
             FormulaSlice.Swap(sp1, sp2);
-            StyleSlice.Swap(sp1, sp2);
+            FormatSlice.Swap(sp1, sp2);
             MiscSlice.Swap(sp1, sp2);
         }
 
@@ -385,7 +386,7 @@ namespace ClosedXML.Excel
                     reverse,
                     cellsCollection.ValueSlice.GetEnumerator(range, reverse),
                     cellsCollection.FormulaSlice.GetEnumerator(range, reverse),
-                    cellsCollection.StyleSlice.GetEnumerator(range, reverse),
+                    cellsCollection.FormatSlice.GetEnumerator(range, reverse),
                     cellsCollection.MiscSlice.GetEnumerator(range, reverse))
             {
             }
