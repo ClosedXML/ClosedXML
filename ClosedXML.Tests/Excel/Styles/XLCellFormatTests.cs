@@ -55,19 +55,19 @@ internal class XLCellFormatTests
         static object[] MakeCellCase(FormatContainer? cell, FormatContainer? row, FormatContainer? column, FormatContainer normal, int expectedFontSize)
         {
             cell ??= new FormatContainer { FormatValue = null };
-            return new object[] { new XLCellFormat(FormatHierarchy.ForCell(cell, row, column, normal), new XLWorkbookStyles()), expectedFontSize };
+            return new object[] { XLCellFormat.ForCell(new XLWorkbookStyles(), cell, row, column, normal), expectedFontSize };
         }
 
         static object[] MakeRowCase(FormatContainer? row, FormatContainer normal, int expectedFontSize)
         {
             row ??= new FormatContainer { FormatValue = null };
-            return new object[] { new XLCellFormat(FormatHierarchy.ForRow(row, normal), new XLWorkbookStyles()), expectedFontSize };
+            return new object[] { XLCellFormat.ForRow(new XLWorkbookStyles(), row, normal), expectedFontSize };
         }
 
         static object[] MakeColumnCase(FormatContainer? column, FormatContainer normal, int expectedFontSize)
         {
             column ??= new FormatContainer { FormatValue = null };
-            return new object[] { new XLCellFormat(FormatHierarchy.ForColumn(column, normal), new XLWorkbookStyles()), expectedFontSize };
+            return new object[] { XLCellFormat.ForColumn(new XLWorkbookStyles(), column, normal), expectedFontSize };
         }
     }
 
@@ -94,7 +94,7 @@ internal class XLCellFormatTests
             FormatValue = styles.DefaultFormat
         };
         styles.DefaultFormat = styles.DefaultFormat with { Font = styles.DefaultFormat.Font! with { Name = "Default Font", Size = XLFontSize.FromPoints(15) } };
-        var format = new XLCellFormat(FormatHierarchy.ForCell(cell, null, null, normal), styles);
+        var format = XLCellFormat.ForCell(styles, cell, null, null, normal);
         return new[] { format, getter, expectedValue };
     }
 

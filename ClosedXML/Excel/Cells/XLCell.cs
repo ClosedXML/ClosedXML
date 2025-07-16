@@ -14,11 +14,12 @@ using System.Text.RegularExpressions;
 using ClosedXML.Graphics;
 using ClosedXML.Parser;
 using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
-    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLStylized
+    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLStylized, IXLFormatContainer
     {
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -185,6 +186,19 @@ namespace ClosedXML.Excel
         }
 
         #endregion Slice fields
+
+        #region IXLFormatContainer
+#nullable enable
+        XLCellFormatValue? IXLFormatContainer.FormatValue
+        {
+            get => _cellsCollection.FormatSlice.GetFormat(SheetPoint);
+            set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
+        }
+#nullable disable
+        #endregion
+
+        // TODO: Add format inheritance
+        internal XLCellFormat Format => XLCellFormat.ForCell(Worksheet.Workbook.Styles, this, null, null, Worksheet.Workbook);
 
         internal XLComment GetComment()
         {

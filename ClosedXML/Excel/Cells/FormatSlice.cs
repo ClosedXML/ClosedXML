@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel;
@@ -5,8 +6,6 @@ namespace ClosedXML.Excel;
 internal class FormatSlice : ISlice
 {
     private readonly Slice<SliceValue> _slice = new();
-
-    private readonly record struct SliceValue(XLStyleValue? StyleValue);
 
     public bool IsEmpty => _slice.IsEmpty;
 
@@ -60,11 +59,25 @@ internal class FormatSlice : ISlice
 
     public void Set(XLSheetPoint point, XLStyleValue value)
     {
-        _slice.Set(point, new SliceValue(value));
+        var modified = _slice[point] with { StyleValue = value };
+        _slice.Set(point, modified);
+    }
+
+    public void Set(XLSheetPoint point, XLCellFormatValue? value)
+    {
+        var modified = _slice[point] with { Format = value };
+        _slice.Set(point, modified);
     }
 
     internal XLStyleValue? GetStyleValue(XLSheetPoint point)
     {
         return _slice[point].StyleValue;
     }
+
+    internal XLCellFormatValue? GetFormat(XLSheetPoint point)
+    {
+        return _slice[point].Format;
+    }
+
+    private readonly record struct SliceValue(XLStyleValue? StyleValue, XLCellFormatValue? Format);
 }

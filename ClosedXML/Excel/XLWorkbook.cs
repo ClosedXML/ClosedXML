@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
         Simple = 1,
     }
 
-    public partial class XLWorkbook : IXLWorkbook
+    public partial class XLWorkbook : IXLWorkbook, IXLFormatContainer
     {
         #region Static
 
@@ -1139,5 +1139,7 @@ namespace ClosedXML.Excel
                     throw new NotImplementedException();
             }
         }
+
+        XLCellFormatValue IXLFormatContainer.FormatValue { get; set; }
     }
 }

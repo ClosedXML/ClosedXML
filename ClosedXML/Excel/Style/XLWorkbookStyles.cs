@@ -1,6 +1,7 @@
 using System;
 using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
+using System.Diagnostics;
 using ClosedXML.Utils;
 
 namespace ClosedXML.Excel;
@@ -21,7 +22,7 @@ internal class XLWorkbookStyles
     /// <summary>
     /// The key is XfId, the value is cell format.
     /// </summary>
-    private readonly Dictionary<int, XLCellFormatValue> _cellFormats;
+    private readonly BiDictionary<int, XLCellFormatValue> _cellFormats;
 
     /// <summary>
     /// The key is cellStyleXfId, the value is cell style.
@@ -50,7 +51,7 @@ internal class XLWorkbookStyles
         _fontFormats = new BiDictionary<int, XLFontFormatValue>();
         _fillFormats = new Dictionary<int, XLFillFormatValue>();
         _borderFormats = new Dictionary<int, XLBorderFormatValue>();
-        _cellFormats = new Dictionary<int, XLCellFormatValue>();
+        _cellFormats = new BiDictionary<int, XLCellFormatValue>();
         _cellStyles = new Dictionary<StyleId, XLCellStyleValue>();
         _differentialFormats = new BiDictionary<int, XLDxfValue>();
         _tableStyles = new Dictionary<string, XLTableTheme>(XLHelper.NameComparer);
@@ -65,7 +66,7 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyDictionary<int, XLBorderFormatValue> Borders => _borderFormats;
 
-    internal IReadOnlyDictionary<int, XLCellFormatValue> CellFormats => _cellFormats;
+    internal IReadOnlyDictionary<int, XLCellFormatValue> CellFormats => _cellFormats.KeyToValue;
 
     internal IReadOnlyDictionary<StyleId, XLCellStyleValue> CellStyles => _cellStyles;
 
@@ -107,6 +108,7 @@ internal class XLWorkbookStyles
     /// Nearly all props are equivalent of "zero", except things that can't be like that, e.g. font
     /// name or font size.
     /// </summary>
+    // TODO: Make private and use GetDefaultFormat
     internal XLCellFormatValue DefaultFormat { get; set; } = new()
     {
         Font = new XLFontFormatValue
@@ -175,32 +177,32 @@ internal class XLWorkbookStyles
         _cellFormats.Add(xfId, cellFormat);
     }
 
-    public void AddCellStyle(int cellStyleXfId, XLCellStyleValue cellStyle)
+    internal void AddCellStyle(int cellStyleXfId, XLCellStyleValue cellStyle)
     {
         _cellStyles.Add(cellStyleXfId, cellStyle);
     }
 
-    public void AddDifferentialFormat(XLDxfValue dxf)
+    internal void AddDifferentialFormat(XLDxfValue dxf)
     {
         _differentialFormats.Add(_differentialFormats.Count, dxf);
     }
 
-    public void AddTableStyle(XLTableTheme tableStyle)
+    internal void AddTableStyle(XLTableTheme tableStyle)
     {
         _tableStyles.Add(tableStyle.Name, tableStyle);
     }
 
-    public void AddPivotStyle(XLPivotTableStyle pivotStyle)
+    internal void AddPivotStyle(XLPivotTableStyle pivotStyle)
     {
         _pivotStyles.Add(pivotStyle.Name, pivotStyle);
     }
 
-    public void SetIndexedColors(List<uint> indexedColors)
+    internal void SetIndexedColors(List<uint> indexedColors)
     {
         _indexedColorsArgb = indexedColors;
     }
 
-    public void SetMruColors(List<XLColor> mruColors)
+    internal void SetMruColors(List<XLColor> mruColors)
     {
         _mruColors = mruColors;
     }
@@ -210,7 +212,7 @@ internal class XLWorkbookStyles
     /// format is created by modification of existing font format. This is essential for saving,
     /// all formats must be registered in the styles class. 
     /// </summary>
-    public XLFontFormatValue GetRegisteredFontFormat(XLFontFormatValue original, Func<XLFontFormatValue, XLFontFormatValue> modify)
+    internal XLFontFormatValue GetRegisteredFontFormat(XLFontFormatValue original, Func<XLFontFormatValue, XLFontFormatValue> modify)
     {
         var modified = modify(original);
         if (_fontFormats.TryGetValue(modified, out var existingFont))
@@ -220,12 +222,22 @@ internal class XLWorkbookStyles
         return modified;
     }
 
+    internal XLCellFormatValue GetRegisteredCellFormat(XLCellFormatValue original, Func<XLCellFormatValue, XLCellFormatValue> modify)
+    {
+        var modified = modify(original);
+        if (_cellFormats.TryGetValue(modified, out var existing))
+            return existing;
+
+        AddFormat(modified);
+        return modified;
+    }
+
     /// <summary>
     /// Get a differential format that is stored in the internal structures of the styles class.
     /// The differential format is created by modification of existing dxf format. This is
     /// essential for saving, all formats must be registered in the styles class. 
     /// </summary>
-    public XLDxfValue GetRegisteredDxFormat(XLDxfValue original, Func<XLDxfValue, XLDxfValue> modify)
+    internal XLDxfValue GetRegisteredDxFormat(XLDxfValue original, Func<XLDxfValue, XLDxfValue> modify)
     {
         var modified = modify(original);
         if (_differentialFormats.TryGetValue(modified, out var existingDxf))
@@ -233,5 +245,10 @@ internal class XLWorkbookStyles
 
         AddDifferentialFormat(modified);
         return modified;
+    }
+
+    internal T GetDefaultFormat<T>(Func<XLCellFormatValue, T?> selector)
+    {
+        return selector(DefaultFormat) ?? throw new UnreachableException("Default value doesn't contain a format property.");
     }
 }

@@ -9,30 +9,47 @@ namespace ClosedXML.Excel;
 internal class XLFontCellFormat
 {
     private readonly XLCellFormat _parent;
-    private readonly FormatHierarchy _hierarchy;
-    private readonly XLWorkbookStyles _styles;
 
-    internal XLFontCellFormat(XLCellFormat parent, FormatHierarchy hierarchy, XLWorkbookStyles styles)
+    internal XLFontCellFormat(XLCellFormat parent)
     {
         _parent = parent;
-        _hierarchy = hierarchy;
-        _styles = styles;
     }
 
-    public XLFontName Name => Resolve(static x => x.Font?.Name);
+    public XLFontName Name
+    {
+        get => Resolve(static x => x.Font?.Name);
+        set => Modify(static (font, fontName) => font with { Name = fontName }, value);
+    }
 
-    public bool Bold => Resolve(static x => x.Font?.Bold);
+    public bool Bold
+    {
+        get => Resolve(static x => x.Font?.Bold);
+        set => Modify(static (font, bold) => font with { Bold = bold }, value);
+    }
 
-    public bool Italic => Resolve(static x => x.Font?.Italic);
+    public bool Italic
+    {
+        get => Resolve(static x => x.Font?.Italic);
+        set => Modify(static (font, italic) => font with { Italic = italic }, value);
+    }
 
     /// <summary>
     /// Size in points.
     /// </summary>
-    public double Size => Resolve(static x => x.Font?.Size).Points;
+    public double Size
+    {
+        get => Resolve(static x => x.Font?.Size).Points;
+        set => Modify(static (font, size) => font with { Size = size }, XLFontSize.FromPoints(value));
+    }
 
     private T Resolve<T>(Func<XLCellFormatValue, T?> selector)
         where T : struct
     {
-        return _hierarchy.Resolve(selector, _styles.DefaultFormat);
+        return _parent.Resolve(selector);
+    }
+
+    private void Modify<TProperty>(Func<XLFontFormatValue, TProperty, XLFontFormatValue> modifyFont, TProperty value)
+    {
+        _parent.ModifyFont(modifyFont, value);
     }
 }
