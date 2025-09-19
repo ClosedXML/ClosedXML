@@ -60,13 +60,13 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyDictionary<int, string> NumberFormats => _numberFormats;
 
-    internal IReadOnlyDictionary<int, XLFontFormatValue> Fonts => _fontFormats.KeyToValue;
+    internal IReadOnlyBiDictionary<int, XLFontFormatValue> Fonts => _fontFormats;
 
     internal IReadOnlyDictionary<int, XLFillFormatValue> Fills => _fillFormats;
 
     internal IReadOnlyDictionary<int, XLBorderFormatValue> Borders => _borderFormats;
 
-    internal IReadOnlyDictionary<int, XLCellFormatValue> CellFormats => _cellFormats.KeyToValue;
+    internal IReadOnlyBiDictionary<int, XLCellFormatValue> CellFormats => _cellFormats;
 
     internal IReadOnlyDictionary<StyleId, XLCellStyleValue> CellStyles => _cellStyles;
 

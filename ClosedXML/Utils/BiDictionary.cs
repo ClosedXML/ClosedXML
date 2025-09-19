@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,20 +13,44 @@ namespace ClosedXML.Utils;
 /// the list can be duplicate (two same fonts with different id).
 /// </example>
 /// </summary>
-internal class BiDictionary<TKey, TValue>
+internal class BiDictionary<TKey, TValue> : IReadOnlyBiDictionary<TKey, TValue>
     where TKey : notnull
     where TValue : IEquatable<TValue>
 {
-    private readonly Dictionary<TKey, TValue> _keyToValue = new();
+    private readonly Dictionary<TKey, TValue> _keyToValue;
 
     /// <summary>
     /// A reverse dictionary. The original <see cref="_keyToValue"/> can contain same entry multiple times.
     /// </summary>
-    private readonly Dictionary<TValue, TKey> _entryToKey = new();
+    private readonly Dictionary<TValue, TKey> _entryToKey;
+
+    internal BiDictionary()
+    {
+        _entryToKey = new Dictionary<TValue, TKey>();
+        _keyToValue = new Dictionary<TKey, TValue>();
+    }
+
+    internal BiDictionary(int capacity)
+    {
+        _entryToKey = new Dictionary<TValue, TKey>(capacity);
+        _keyToValue = new Dictionary<TKey, TValue>(capacity);
+    }
+
+    public TValue this[TKey key] => _keyToValue[key];
+
+    public int Count => _keyToValue.Count;
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+        return _keyToValue.GetEnumerator();
+    }
 
     internal IReadOnlyDictionary<TKey, TValue> KeyToValue => _keyToValue;
-
-    internal int Count => _keyToValue.Count;
 
     public void Add(TKey id, TValue value)
     {
