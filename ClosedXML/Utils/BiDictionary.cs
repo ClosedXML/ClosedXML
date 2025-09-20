@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -15,7 +14,7 @@ namespace ClosedXML.Utils;
 /// </summary>
 internal class BiDictionary<TKey, TValue> : IReadOnlyBiDictionary<TKey, TValue>
     where TKey : notnull
-    where TValue : IEquatable<TValue>
+    where TValue : notnull
 {
     private readonly Dictionary<TKey, TValue> _keyToValue;
 
@@ -51,6 +50,8 @@ internal class BiDictionary<TKey, TValue> : IReadOnlyBiDictionary<TKey, TValue>
     }
 
     internal IReadOnlyDictionary<TKey, TValue> KeyToValue => _keyToValue;
+
+    internal IReadOnlyDictionary<TValue, TKey> ValueToKey => _entryToKey;
 
     public void Add(TKey id, TValue value)
     {

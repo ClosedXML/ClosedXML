@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model;
 
@@ -21,6 +21,12 @@ public class XsdEnumMapper : IEnumMapper
     {
         var enumMap = (Dictionary<string, TEnum>)_textToEnumMaps[typeof(TEnum)];
         return enumMap.TryGetValue(text, out enumValue);
+    }
+
+    public bool TryGetText<TEnum>(TEnum enumValue, out string text)
+        where TEnum : struct, Enum
+    {
+        throw new NotSupportedException();
     }
 
     private void AddMaps()

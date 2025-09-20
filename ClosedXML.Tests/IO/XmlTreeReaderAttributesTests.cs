@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using ClosedXML.Excel.IO;
 using ClosedXML.IO;
+using ClosedXML.Utils;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.IO;
@@ -117,7 +117,7 @@ internal class XmlTreeReaderAttributesTests
     [TestCase("NonExpectedValue", null)]
     public void GetOptionalEnum_returns_enum_parsed_by_enum_mapper(string xmlText, BindingFlags? enumValue)
     {
-        var mapper = new XmlToEnumMapper.Builder().Add(new Dictionary<string, BindingFlags>
+        var mapper = new XmlToEnumMapper.Builder().Add(new BiDictionary<string, BindingFlags>
         {
             { "def", BindingFlags.Default },
             { "ci", BindingFlags.IgnoreCase },

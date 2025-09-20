@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ClosedXML.IO;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel.IO;
 
@@ -10,10 +11,10 @@ namespace ClosedXML.Excel.IO;
 internal sealed class XmlToEnumMapper : IEnumMapper
 {
     /// <summary>
-    /// A collection of all maps. The key is enum type, the value is Dictionary&lt;string,SomeEnum&gt;
+    /// A collection of all maps. The key is enum type, the value is BiDictionary&lt;string,SomeEnum&gt;
     /// Value can't be typed due to generic limitations (no common ancestor).
     /// </summary>
-    private readonly Dictionary<Type, object> _textToEnumMaps;
+    private readonly Dictionary<Type, object> _enumMaps;
 
     private static readonly Lazy<XmlToEnumMapper> LazyInstance = new(CreateSpreadsheetMapper);
 
@@ -21,14 +22,27 @@ internal sealed class XmlToEnumMapper : IEnumMapper
 
     private XmlToEnumMapper(Dictionary<Type, object> maps)
     {
-        _textToEnumMaps = maps;
+        _enumMaps = maps;
     }
 
     public bool TryGetEnum<TEnum>(string text, out TEnum enumValue)
         where TEnum : struct, Enum
     {
-        var enumMap = (Dictionary<string, TEnum>)_textToEnumMaps[typeof(TEnum)];
-        return enumMap.TryGetValue(text, out enumValue);
+        var enumMap = GetEnumMap<TEnum>();
+        return enumMap.KeyToValue.TryGetValue(text, out enumValue);
+    }
+
+    public bool TryGetText<TEnum>(TEnum enumValue, out string text)
+        where TEnum : struct, Enum
+    {
+        var enumMap = GetEnumMap<TEnum>();
+        return enumMap.ValueToKey.TryGetValue(enumValue, out text);
+    }
+
+    private BiDictionary<string, TEnum> GetEnumMap<TEnum>()
+        where TEnum : struct, Enum
+    {
+        return (BiDictionary<string, TEnum>)_enumMaps[typeof(TEnum)];
     }
 
     private static XmlToEnumMapper CreateSpreadsheetMapper()
@@ -36,7 +50,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         var builder = new Builder();
 
         // ST_FontScheme
-        builder.Add(new Dictionary<string, XLFontScheme>
+        builder.Add(new BiDictionary<string, XLFontScheme>
         {
             { "none", XLFontScheme.None },
             { "major", XLFontScheme.Major },
@@ -44,7 +58,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_UnderlineValues
-        builder.Add(new Dictionary<string, XLFontUnderlineValues>
+        builder.Add(new BiDictionary<string, XLFontUnderlineValues>
         {
             { "double", XLFontUnderlineValues.Double },
             { "doubleAccounting", XLFontUnderlineValues.DoubleAccounting },
@@ -54,7 +68,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_VerticalAlignRun
-        builder.Add(new Dictionary<string, XLFontVerticalTextAlignmentValues>
+        builder.Add(new BiDictionary<string, XLFontVerticalTextAlignmentValues>
         {
             { "baseline", XLFontVerticalTextAlignmentValues.Baseline },
             { "subscript", XLFontVerticalTextAlignmentValues.Subscript },
@@ -62,7 +76,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_PatternType
-        builder.Add(new Dictionary<string, XLFillPatternValues>
+        builder.Add(new BiDictionary<string, XLFillPatternValues>
         {
             { "none", XLFillPatternValues.None },
             { "solid", XLFillPatternValues.Solid },
@@ -86,7 +100,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_BorderStyle
-        builder.Add(new Dictionary<string, XLBorderStyleValues>
+        builder.Add(new BiDictionary<string, XLBorderStyleValues>
         {
             { "none", XLBorderStyleValues.None },
             { "thin", XLBorderStyleValues.Thin },
@@ -105,7 +119,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_HorizontalAlignment
-        builder.Add(new Dictionary<string, XLAlignmentHorizontalValues>
+        builder.Add(new BiDictionary<string, XLAlignmentHorizontalValues>
         {
             { "general", XLAlignmentHorizontalValues.General },
             { "left", XLAlignmentHorizontalValues.Left },
@@ -118,7 +132,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_VerticalAlignment
-        builder.Add(new Dictionary<string, XLAlignmentVerticalValues>
+        builder.Add(new BiDictionary<string, XLAlignmentVerticalValues>
         {
             { "top", XLAlignmentVerticalValues.Top },
             { "center", XLAlignmentVerticalValues.Center },
@@ -128,7 +142,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         });
 
         // ST_GradientType
-        builder.Add(new Dictionary<string, XLGradientType>
+        builder.Add(new BiDictionary<string, XLGradientType>
         {
             { "linear", XLGradientType.Linear },
             { "path", XLGradientType.Path }
@@ -141,7 +155,8 @@ internal sealed class XmlToEnumMapper : IEnumMapper
     {
         private readonly Dictionary<Type, object> _maps = new();
 
-        public Builder Add<T>(Dictionary<string, T> map)
+        public Builder Add<T>(BiDictionary<string, T> map)
+            where T : struct, Enum
         {
             _maps.Add(typeof(T), map);
             return this;

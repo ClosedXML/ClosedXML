@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ClosedXML.IO;
 
@@ -15,5 +15,15 @@ public interface IEnumMapper
     /// <param name="enumValue">Output enum value.</param>
     /// <returns><c>True</c> if enum was found for passed text value, false otherwise.</returns>
     bool TryGetEnum<TEnum>(string text, out TEnum enumValue)
+        where TEnum : struct, Enum;
+
+    /// <summary>
+    /// Try to get a text for an enum value.
+    /// </summary>
+    /// <typeparam name="TEnum">Type of an enum.</typeparam>
+    /// <param name="enumValue">Enum value.</param>
+    /// <param name="text">Output text for the enum value.</param>
+    /// <returns><c>True</c> if text was found for passed enum value, false otherwise.</returns>
+    bool TryGetText<TEnum>(TEnum enumValue, out string text)
         where TEnum : struct, Enum;
 }
