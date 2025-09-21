@@ -2,8 +2,12 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Utils;
 
-internal interface IReadOnlyBiDictionary<TKey, TValue> : IReadOnlyCollection<KeyValuePair<TKey, TValue>>
+internal interface IReadOnlyBiDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     where TKey : notnull
 {
-    TValue this[TKey key] { get; }
+    /// <summary>
+    /// Return the key associated with the value. The bi-dictionary does allow duplicate values.
+    /// In case of duplicates, the earliest added entry will be returned.
+    /// </summary>
+    TKey this[TValue value] { get; }
 }
