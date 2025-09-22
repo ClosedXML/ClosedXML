@@ -7,12 +7,17 @@ namespace ClosedXML.Excel.Formatting;
 /// a changeable <see cref="XLCellStyleValue"/>. API methods that needs access to a resolved format
 /// value should pass <see cref="XLWorkbookStyles.DefaultFormat"/> as a parameter.
 /// </summary>
-internal readonly record struct StyleId(int Value) : IEquatable<int>
+internal readonly record struct StyleId(int Value) : IEquatable<int>, IComparable<StyleId>
 {
     public static implicit operator StyleId(int v) => new(v);
 
     bool IEquatable<int>.Equals(int other)
     {
         return Value == other;
+    }
+
+    public int CompareTo(StyleId other)
+    {
+        return Value.CompareTo(other.Value);
     }
 }

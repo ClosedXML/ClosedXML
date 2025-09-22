@@ -18,4 +18,17 @@ internal readonly record struct TextRotation
     }
 
     public int Value { get; }
+
+    /// <summary>
+    /// Get value that is stored in ISO-29500 (unsigned int)
+    /// </summary>
+    internal uint GetIso()
+    {
+        return Value switch
+        {
+            >= 0 and <= 90 => (uint)Value,
+            >= -90 and <= 0 => (uint)(90 - Value),
+            _ => (uint)Value
+        };
+    }
 }
