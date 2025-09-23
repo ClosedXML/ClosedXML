@@ -29,8 +29,8 @@ internal class StylesWriter
         var usedBorders = new HashSet<XLBorderFormatValue>();
         foreach (var cellFormat in usedCellFormats)
         {
-            if (!string.IsNullOrEmpty(cellFormat.NumberFormat))
-                usedNumberFormats.Add(cellFormat.NumberFormat!);
+            if (cellFormat.NumberFormat is { } numberFormat)
+                usedNumberFormats.Add(numberFormat);
 
             if (cellFormat.Font is { } font)
                 usedFonts.Add(font);
@@ -51,15 +51,22 @@ internal class StylesWriter
         using var xml = new XmlTreeWriter(XmlWriter.Create(partStream, settings), mapper);
 
         xml.WriteStartDocument("styleSheet", _ns);
-        xml.WriteAttribute("xmlns", _ns);
 
         // Number formats
-        var numberFormatMap = new SequentialMap<int, string>(styles.NumberFormats, FirstUserDefinedFormatIndex);
+        var numberFormatMap = new SequentialMap<int, string>(styles.NumberFormats);
+
+        // Add identity map for predefined formats. That way they can be always be mapped. If there
+        // is a workbook that uses predefined ids for a different format (e.g., numId=0 with format
+        // "0.00"), it should be dealt in the loading code.
+        for (var i = 0; i < FirstUserDefinedFormatIndex; ++i)
+            numberFormatMap.Add(i);
+
         foreach (var (actualId, format) in styles.NumberFormats)
         {
             if (!usedNumberFormats.Contains(format))
                 continue;
 
+            // Predefined formats were already added in the identity map and don't need to be written.
             if (XLPredefinedFormat.NumberFormatIds.ContainsKey(format))
                 continue;
 
@@ -67,7 +74,7 @@ internal class StylesWriter
         }
 
         numberFormatMap.Sort();
-        if (numberFormatMap.Count > 0)
+        if (numberFormatMap.Count > FirstUserDefinedFormatIndex)
             WriteNumberFormats(xml, numberFormatMap);
 
         // Fonts
@@ -96,12 +103,12 @@ internal class StylesWriter
     private void WriteNumberFormats(XmlTreeWriter xml, SequentialMap<int, string> idMap)
     {
         xml.WriteStartElement("numFmts", _ns);
-        xml.WriteAttribute("count", idMap.Count);
+        xml.WriteAttribute("count", idMap.Count - FirstUserDefinedFormatIndex);
 
-        var predefinedFormats = XLPredefinedFormat.FormatCodes;
         foreach (var (savedId, format) in idMap.GetActual())
         {
-            if (predefinedFormats.TryGetValue(savedId, out var predefinedFormat) && predefinedFormat == format)
+            // The number format map has identity map for predefined formats
+            if (savedId < FirstUserDefinedFormatIndex)
                 continue;
 
             xml.WriteStartElement("numFmt", _ns);
