@@ -89,7 +89,7 @@ internal class StylesWriter
 
         var borderFormatsMap = SequentialMap<int, XLBorderFormatValue>.Create(usedBorders, styles.Borders);
         if (borderFormatsMap.Count > 0)
-            WriteBorders(xml, borderFormatsMap, styles);
+            WriteBorders(xml, borderFormatsMap);
 
         // TODO: Ensure the normal style cellXfs has index 0
         var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats);
@@ -247,7 +247,7 @@ internal class StylesWriter
         xml.WriteEndElement();
     }
 
-    private void WriteBorders(XmlTreeWriter xml, SequentialMap<int, XLBorderFormatValue> idMap, XLWorkbookStyles styles)
+    private void WriteBorders(XmlTreeWriter xml, SequentialMap<int, XLBorderFormatValue> idMap)
     {
         xml.WriteStartElement("borders", _ns);
         xml.WriteAttribute("count", idMap.Count);
