@@ -42,6 +42,21 @@ internal class StylesWriter
                 usedBorders.Add(border);
         }
 
+        foreach (var cellStyle in styles.CellStyles.Values)
+        {
+            if (cellStyle.NumberFormat is { } numberFormat)
+                usedNumberFormats.Add(numberFormat);
+
+            if (cellStyle.Font is { } font)
+                usedFonts.Add(font);
+
+            if (cellStyle.Fill is { } fill)
+                usedFills.Add(fill);
+
+            if (cellStyle.Border is { } border)
+                usedBorders.Add(border);
+        }
+
         var settings = new XmlWriterSettings
         {
             Encoding = XLHelper.NoBomUTF8
@@ -91,12 +106,22 @@ internal class StylesWriter
         if (borderFormatsMap.Count > 0)
             WriteBorders(xml, borderFormatsMap);
 
+        // TODO: Ensure normal style is written, though that should be done during initialization/loading
+        var cellStylesMap = new SequentialMap<StyleId, XLCellStyleValue>(styles.CellStyles);
+
+        // All cell styles, regardless if they are used or not should be written to the file
+        foreach (var styleId in styles.CellStyles.Keys)
+            cellStylesMap.Add(styleId);
+
+        WriteCellStyleXfs(xml, cellStylesMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
+
         // TODO: Ensure the normal style cellXfs has index 0
         var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats);
-        if (cellXfsMap.Count > 0)
-            WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
+        WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
 
-        // TODO: Rest of elements cellStyleXfs, cellStyles, dxfs, tableStyles, colors
+        WriteCellStyles(xml, cellStylesMap);
+
+        // TODO: Rest of elements dxfs, tableStyles, colors
         xml.WriteEndElement();
     }
 
@@ -285,6 +310,54 @@ internal class StylesWriter
         }
     }
 
+    private void WriteCellStyleXfs(
+        XmlTreeWriter xml,
+        SequentialMap<StyleId, XLCellStyleValue> cellStylesMap,
+        SequentialMap<int, string> numFmtIdMap,
+        SequentialMap<int, XLFontFormatValue> fontIdMap,
+        SequentialMap<int, XLFillFormatValue> fillIdMap,
+        SequentialMap<int, XLBorderFormatValue> borderIdMap)
+    {
+        xml.WriteStartElement("cellStyleXfs", _ns);
+        xml.WriteAttribute("count", cellStylesMap.Count);
+
+        // Collection must have at least one element
+        foreach (var (_, cellStyle) in cellStylesMap.GetActual())
+        {
+            xml.WriteStartElement("xf", _ns);
+            if (cellStyle.NumberFormat is not null)
+                xml.WriteAttributeOptional("numFmtId", numFmtIdMap.GetSavedId(cellStyle.NumberFormat));
+
+            if (cellStyle.Font is not null)
+                xml.WriteAttributeOptional("fontId", fontIdMap.GetSavedId(cellStyle.Font));
+
+            if (cellStyle.Fill is not null)
+                xml.WriteAttributeOptional("fillId", fillIdMap.GetSavedId(cellStyle.Fill));
+
+            if (cellStyle.Border is not null)
+                xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellStyle.Border));
+
+            // cellStyleXf doesn't use quote, pivot button or xfId -> skip those attributes
+            xml.WriteAttributeDefault("applyNumberFormat", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.NumberFormat), true);
+            xml.WriteAttributeDefault("applyFont", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Font), true);
+            xml.WriteAttributeDefault("applyFill", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Fill), true);
+            xml.WriteAttributeDefault("applyBorder", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Border), true);
+            xml.WriteAttributeDefault("applyAlignment", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Alignment), true);
+            xml.WriteAttributeDefault("applyProtection", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Protection), true);
+
+            if (cellStyle.Alignment is { } alignment)
+                WriteAlignment(xml, alignment);
+
+            if (cellStyle.Protection is { } protection)
+                WriteProtection(xml, protection);
+
+            // TODO: extLst
+            xml.WriteEndElement();
+        }
+
+        xml.WriteEndElement();
+    }
+
     private void WriteCellXfs(
         XmlTreeWriter xml,
         SequentialMap<int, XLCellFormatValue> idMap,
@@ -328,29 +401,75 @@ internal class StylesWriter
             xml.WriteAttributeDefault("applyProtection", cellXf.CustomFormat.HasFlag(CellFormatComponents.Protection), false);
 
             if (cellXf.Alignment is { } alignment)
-            {
-                xml.WriteStartElement("alignment", _ns);
-                xml.WriteAttributeDefault("horizontal", alignment.Horizontal, XLAlignmentHorizontalValues.General);
-                xml.WriteAttributeDefault("vertical", alignment.Vertical, XLAlignmentVerticalValues.Bottom);
-                xml.WriteAttributeDefault("textRotation", alignment.TextRotation.GetIso(), 0);
-                xml.WriteAttributeDefault("wrapText", alignment.WrapText, false);
-                xml.WriteAttributeDefault("indent", alignment.Indent, 0);
-                xml.WriteAttributeDefault("relativeIndent", alignment.RelativeIndent, 0);
-                xml.WriteAttributeDefault("justifyLastLine", alignment.JustifyLastLine, false);
-                xml.WriteAttributeDefault("shrinkToFit", alignment.ShrinkToFit, false);
-                xml.WriteAttributeDefault("readingOrder", alignment.ReadingOrder, XLAlignmentReadingOrderValues.ContextDependent);
-                xml.WriteEndElement();
-            }
+                WriteAlignment(xml, alignment);
 
             if (cellXf.Protection is { } protection)
-            {
-                xml.WriteStartElement("protection", _ns);
-                xml.WriteAttributeDefault("locked", protection.Locked, true);
-                xml.WriteAttributeDefault("hidden", protection.Hidden, false);
-                xml.WriteEndElement();
-            }
+                WriteProtection(xml, protection);
 
             // TODO: extLst
+            xml.WriteEndElement();
+        }
+
+        xml.WriteEndElement();
+    }
+
+    private void WriteAlignment(XmlTreeWriter xml, XLAlignmentFormatValue alignment)
+    {
+        xml.WriteStartElement("alignment", _ns);
+        xml.WriteAttributeDefault("horizontal", alignment.Horizontal, XLAlignmentHorizontalValues.General);
+        xml.WriteAttributeDefault("vertical", alignment.Vertical, XLAlignmentVerticalValues.Bottom);
+        xml.WriteAttributeDefault("textRotation", alignment.TextRotation.GetIso(), 0);
+        xml.WriteAttributeDefault("wrapText", alignment.WrapText, false);
+        xml.WriteAttributeDefault("indent", alignment.Indent, 0);
+        xml.WriteAttributeDefault("relativeIndent", alignment.RelativeIndent, 0);
+        xml.WriteAttributeDefault("justifyLastLine", alignment.JustifyLastLine, false);
+        xml.WriteAttributeDefault("shrinkToFit", alignment.ShrinkToFit, false);
+        xml.WriteAttributeDefault("readingOrder", alignment.ReadingOrder, XLAlignmentReadingOrderValues.ContextDependent);
+        xml.WriteEndElement();
+    }
+
+    private void WriteProtection(XmlTreeWriter xml, XLProtectionFormatValue protection)
+    {
+        xml.WriteStartElement("protection", _ns);
+        xml.WriteAttributeDefault("locked", protection.Locked, true);
+        xml.WriteAttributeDefault("hidden", protection.Hidden, false);
+        xml.WriteEndElement();
+    }
+
+    private void WriteCellStyles(XmlTreeWriter xml, SequentialMap<StyleId, XLCellStyleValue> cellStylesMap)
+    {
+        xml.WriteStartElement("cellStyles", _ns);
+        xml.WriteAttribute("count", cellStylesMap.Count);
+
+        // Collection must have at least one element
+        foreach (var (mappedStyleId, cellStyle) in cellStylesMap.GetActual())
+        {
+            xml.WriteStartElement("cellStyle", _ns);
+
+            // Name is technically optional and Excel will generate one if missing, but we ensure the name always exist
+            xml.WriteAttribute("name", cellStyle.Name);
+            xml.WriteAttribute("xfId", mappedStyleId);
+            if (cellStyle.BuiltInStyle is { } builtInStyle)
+            {
+                if (builtInStyle is >= BuiltInStyleValues.RowLevel1 and <= BuiltInStyleValues.RowLevel7)
+                {
+                    xml.WriteAttributeOptional("builtinId", 1);
+                    xml.WriteAttribute("iLevel", BuiltInStyleValues.RowLevel1 - builtInStyle + 1);
+                }
+                else if (builtInStyle is >= BuiltInStyleValues.ColumnLevel1 and <= BuiltInStyleValues.ColumnLevel7)
+                {
+                    xml.WriteAttributeOptional("builtinId", 2);
+                    xml.WriteAttribute("iLevel", BuiltInStyleValues.ColumnLevel1 - builtInStyle + 1);
+                }
+                else
+                {
+                    xml.WriteAttributeOptional("builtinId", (int?)cellStyle.BuiltInStyle);
+                }
+            }
+
+            // Hidden + flag are optional per schema, but basically it's a bool with default
+            xml.WriteAttributeDefault("hidden", cellStyle.Hidden, false);
+            xml.WriteAttributeDefault("customBuiltin", cellStyle.BuiltInStyle is not null, true);
             xml.WriteEndElement();
         }
 
