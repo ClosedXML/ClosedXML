@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.Formatting;
 internal class XLCellStyleValue
 {
     /// <summary>
-    /// Name of the style.
+    /// A unique name of the style.
     /// </summary>
     public required string Name { get; init; }
 
