@@ -117,7 +117,7 @@ internal class StylesWriter
 
         // TODO: Ensure the normal style cellXfs has index 0
         var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats);
-        WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
+        WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap, cellStylesMap);
 
         WriteCellStyles(xml, cellStylesMap);
 
@@ -364,7 +364,8 @@ internal class StylesWriter
         SequentialMap<int, string> numFmtIdMap,
         SequentialMap<int, XLFontFormatValue> fontIdMap,
         SequentialMap<int, XLFillFormatValue> fillIdMap,
-        SequentialMap<int, XLBorderFormatValue> borderIdMap)
+        SequentialMap<int, XLBorderFormatValue> borderIdMap,
+        SequentialMap<StyleId, XLCellStyleValue> cellStyleIdMap)
     {
         xml.WriteStartElement("cellXfs", _ns);
         xml.WriteAttribute("count", idMap.Count);
@@ -389,8 +390,9 @@ internal class StylesWriter
             if (cellXf.Border is not null)
                 xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellXf.Border));
 
-            // TODO: Write cell style
-            // xml.WriteAttributeDefault("xfId", cellXf.CellStyleId, 0);
+            if (cellXf.CellStyleId is not null)
+                xml.WriteAttributeDefault("xfId", cellStyleIdMap.GetSavedId(cellXf.CellStyleId.Value), 0);
+
             xml.WriteAttributeDefault("quotePrefix", cellXf.IncludeQuotePrefix, false);
             xml.WriteAttributeDefault("pivotButton", cellXf.PivotButton, false);
             xml.WriteAttributeDefault("applyNumberFormat", cellXf.CustomFormat.HasFlag(CellFormatComponents.NumberFormat), false);
@@ -532,7 +534,11 @@ internal class StylesWriter
         public int GetSavedId(T item)
         {
             var actualId = _fullMap[item];
+            return GetSavedId(actualId);
+        }
 
+        public int GetSavedId(TKey actualId)
+        {
             // TODO: make another identity map, plus this returns -1 on error
             return _savedIdToActualId.IndexOf(actualId);
         }
