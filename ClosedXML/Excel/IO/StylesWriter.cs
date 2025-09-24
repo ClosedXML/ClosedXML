@@ -244,6 +244,8 @@ internal class StylesWriter
         foreach (var (_, fill) in idMap.GetActual())
         {
             xml.WriteStartElement("fill", _ns);
+
+            // A fill element with no pattern/gradient is a valid state per XML
             if (fill.Pattern is { } patternFill)
             {
                 xml.WriteStartElement("patternFill", _ns);
@@ -274,10 +276,6 @@ internal class StylesWriter
                 WriteStops(pathGradient.Stops);
 
                 xml.WriteEndElement();
-            }
-            else
-            {
-                // Nothing, a fill with no fill/gradient is a valid state per XML
             }
 
             xml.WriteEndElement();
