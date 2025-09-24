@@ -120,7 +120,9 @@ internal class StylesWriter
 
         WriteCellStyles(xml, cellStylesMap);
 
-        // TODO: Rest of elements dxfs, tableStyles, colors
+        // TODO: Rest of elements dxfs, tableStyles and indexed colors
+        WriteColors(xml, styles);
+
         xml.WriteEndElement();
     }
 
@@ -501,6 +503,23 @@ internal class StylesWriter
         }
 
         xml.WriteEndElement();
+    }
+
+    private void WriteColors(XmlTreeWriter xml, XLWorkbookStyles styles)
+    {
+        var hasMruColors = styles.MruColors.Count > 0;
+        if (!hasMruColors)
+            return;
+
+        xml.WriteStartElement("colors", _ns);
+
+        xml.WriteStartElement("mruColors", _ns);
+        foreach (var mruColor in styles.MruColors)
+            xml.WriteColor("color", _ns, mruColor);
+
+        xml.WriteEndElement(); // mruColors
+
+        xml.WriteEndElement(); // colors
     }
 
     private class SequentialMap<TKey, T>
