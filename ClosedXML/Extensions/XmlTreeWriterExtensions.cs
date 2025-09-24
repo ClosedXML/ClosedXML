@@ -38,6 +38,12 @@ internal static class XmlTreeWriterExtensions
             xml.WriteAttribute(attrName, value);
     }
 
+    public static void WriteAttributeDefault(this XmlTreeWriter xml, string attrName, double value, double defaultValue)
+    {
+        if (!value.Equals(defaultValue))
+            xml.WriteAttribute(attrName, value);
+    }
+
     public static void WriteAttributeDefault<TEnum>(this XmlTreeWriter xml, string attrName, TEnum enumValue, TEnum defaultValue)
         where TEnum : struct, Enum
     {

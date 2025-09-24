@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -255,11 +254,26 @@ internal class StylesWriter
             }
             else if (fill.LinearGradient is { } linearGradient)
             {
-                throw new NotImplementedException();
+                // Linear is the default type, so no need to write it
+                xml.WriteStartElement("gradientFill", _ns);
+                xml.WriteAttributeDefault("degree", linearGradient.Degrees, 0);
+
+                WriteStops(linearGradient.Stops);
+
+                xml.WriteEndElement();
             }
             else if (fill.PathGradient is { } pathGradient)
             {
-                throw new NotImplementedException();
+                xml.WriteStartElement("gradientFill", _ns);
+                xml.WriteAttribute("type", "path");
+                xml.WriteAttributeDefault("left", pathGradient.InnerLeft.Value, 0);
+                xml.WriteAttributeDefault("right", pathGradient.InnerRight.Value, 0);
+                xml.WriteAttributeDefault("top", pathGradient.InnerTop.Value, 0);
+                xml.WriteAttributeDefault("bottom", pathGradient.InnerBottom.Value, 0);
+
+                WriteStops(pathGradient.Stops);
+
+                xml.WriteEndElement();
             }
             else
             {
@@ -270,6 +284,19 @@ internal class StylesWriter
         }
 
         xml.WriteEndElement();
+        return;
+
+        void WriteStops(IReadOnlyDictionary<FractionOfOne, XLColor> stops)
+        {
+            // Excel doesn't care about stop order by positions, but sort anyway
+            foreach (var (position, color) in stops.OrderBy(x => x.Key.Value))
+            {
+                xml.WriteStartElement("stop", _ns);
+                xml.WriteAttribute("position", position.Value);
+                xml.WriteColor("color", _ns, color);
+                xml.WriteEndElement();
+            }
+        }
     }
 
     private void WriteBorders(XmlTreeWriter xml, SequentialMap<int, XLBorderFormatValue> idMap)
