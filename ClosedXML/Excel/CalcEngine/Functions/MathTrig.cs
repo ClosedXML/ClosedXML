@@ -710,6 +710,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (multiple == 0)
                 return 0;
 
+            if (number == 0)
+                return 0;
+
             if (Math.Sign(number) != Math.Sign(multiple))
                 return XLError.NumberInvalid;
 

@@ -1573,6 +1573,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(1.4, 0.5, ExpectedResult = 1.5)]
         [TestCase(3, 7, ExpectedResult = 0)]
         [TestCase(3, 0, ExpectedResult = 0)]
+        [TestCase(0, 10, ExpectedResult = 0)]
+        [TestCase(0, -5, ExpectedResult = 0)]
         [DefaultFloatingPointTolerance(1e-12)]
         public double MRound(double number, double multiple)
         {
