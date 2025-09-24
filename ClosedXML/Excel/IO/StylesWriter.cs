@@ -120,7 +120,7 @@ internal class StylesWriter
 
         WriteCellStyles(xml, cellStylesMap);
 
-        // TODO: Rest of elements dxfs, tableStyles and indexed colors
+        // TODO: Rest of elements dxfs and tableStyles
         WriteColors(xml, styles);
 
         xml.WriteEndElement();
@@ -508,16 +508,34 @@ internal class StylesWriter
     private void WriteColors(XmlTreeWriter xml, XLWorkbookStyles styles)
     {
         var hasMruColors = styles.MruColors.Count > 0;
-        if (!hasMruColors)
+        var indexedColors = styles.IndexedColorsArgb;
+        var hasIndexColors = indexedColors is { Count: > 0 };
+        if (!hasMruColors && !hasIndexColors)
             return;
 
         xml.WriteStartElement("colors", _ns);
 
-        xml.WriteStartElement("mruColors", _ns);
-        foreach (var mruColor in styles.MruColors)
-            xml.WriteColor("color", _ns, mruColor);
+        if (hasIndexColors)
+        {
+            xml.WriteStartElement("indexedColors", _ns);
+            foreach (var indexedColor in indexedColors!)
+            {
+                xml.WriteStartElement("rgbColor", _ns);
+                xml.WriteAttributeHex("rgb", indexedColor);
+                xml.WriteEndElement();
+            }
 
-        xml.WriteEndElement(); // mruColors
+            xml.WriteEndElement();
+        }
+
+        if (hasMruColors)
+        {
+            xml.WriteStartElement("mruColors", _ns);
+            foreach (var mruColor in styles.MruColors)
+                xml.WriteColor("color", _ns, mruColor);
+
+            xml.WriteEndElement();
+        }
 
         xml.WriteEndElement(); // colors
     }

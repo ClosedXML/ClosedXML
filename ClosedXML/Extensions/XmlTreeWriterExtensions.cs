@@ -20,6 +20,14 @@ internal static class XmlTreeWriterExtensions
         xml.WriteEndElement();
     }
 
+    /// <summary>
+    /// Write <c>ST_UnsignedIntHex</c> attribute value (8 hex digits).
+    /// </summary>
+    public static void WriteAttributeHex(this XmlTreeWriter xml, string attrName, uint value)
+    {
+        xml.WriteAttribute(attrName, value.ToString("X8"));
+    }
+
     public static void WriteAttributeDefault(this XmlTreeWriter xml, string attrName, bool value, bool defaultValue)
     {
         if (value != defaultValue)
