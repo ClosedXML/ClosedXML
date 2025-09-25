@@ -137,13 +137,18 @@ internal class StylesWriter
             if (savedId < FirstUserDefinedFormatIndex)
                 continue;
 
-            xml.WriteStartElement("numFmt", _ns);
-            xml.WriteAttribute("numFmtId", savedId);
-            xml.WriteAttribute("formatCode", format);
-            xml.WriteEndElement();
+            WriteNumFmt(xml, "numFmt", savedId, format);
         }
 
         xml.WriteEndElement(); // numFmts
+    }
+
+    private void WriteNumFmt(XmlTreeWriter xml, string elementName, int numFmtId, string format)
+    {
+        xml.WriteStartElement(elementName, _ns);
+        xml.WriteAttribute("numFmtId", numFmtId);
+        xml.WriteAttribute("formatCode", format);
+        xml.WriteEndElement();
     }
 
     private void WriteFonts(XmlTreeWriter xml, SequentialMap<int, XLFontFormatValue> idMap)
