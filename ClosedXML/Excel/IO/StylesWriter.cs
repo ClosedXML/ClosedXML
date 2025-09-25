@@ -315,23 +315,26 @@ internal class StylesWriter
         xml.WriteStartElement("borders", _ns);
         xml.WriteAttribute("count", idMap.Count);
         foreach (var (_, border) in idMap.GetActual())
-        {
-            xml.WriteStartElement("border", _ns);
-            xml.WriteAttributeDefault("diagonalUp", border.DiagonalUp, false);
-            xml.WriteAttributeDefault("diagonalDown", border.DiagonalDown, false);
-            xml.WriteAttributeDefault("outline", border.Outline, true);
+            WriteBorder(xml, "border", border);
 
-            // ISO should be "start"+"end", but Excel uses "left"+"right"
-            WriteBorderPr("left", border.Left);
-            WriteBorderPr("right", border.Right);
-            WriteBorderPr("top", border.Top);
-            WriteBorderPr("bottom", border.Bottom);
-            WriteBorderPr("diagonal", border.Diagonal);
-            WriteBorderPr("vertical", border.Vertical);
-            WriteBorderPr("horizontal", border.Horizontal);
+        xml.WriteEndElement();
+    }
 
-            xml.WriteEndElement();
-        }
+    private void WriteBorder(XmlTreeWriter xml, string elementName, XLBorderFormatValue border)
+    {
+        xml.WriteStartElement(elementName, _ns);
+        xml.WriteAttributeDefault("diagonalUp", border.DiagonalUp, false);
+        xml.WriteAttributeDefault("diagonalDown", border.DiagonalDown, false);
+        xml.WriteAttributeDefault("outline", border.Outline, true);
+
+        // ISO should be "start"+"end", but Excel uses "left"+"right"
+        WriteBorderPr("left", border.Left);
+        WriteBorderPr("right", border.Right);
+        WriteBorderPr("top", border.Top);
+        WriteBorderPr("bottom", border.Bottom);
+        WriteBorderPr("diagonal", border.Diagonal);
+        WriteBorderPr("vertical", border.Vertical);
+        WriteBorderPr("horizontal", border.Horizontal);
 
         xml.WriteEndElement();
         return;
