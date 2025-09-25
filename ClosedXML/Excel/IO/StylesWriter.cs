@@ -157,90 +157,93 @@ internal class StylesWriter
         xml.WriteAttribute("count", idMap.Count);
 
         foreach (var (_, font) in idMap.GetActual())
+            WriteFont(xml, "font", font);
+
+        xml.WriteEndElement();
+    }
+
+    private void WriteFont(XmlTreeWriter xml, string elementName, XLFontFormatValue font)
+    {
+        // MS-OI29500 dictates font elements order.
+        xml.WriteStartElement(elementName, _ns);
+
+        if (font.Bold is { } bold)
+            xml.WriteBooleanProperty("b", bold, _ns);
+
+        if (font.Italic is { } italic)
+            xml.WriteBooleanProperty("i", italic, _ns);
+
+        if (font.Strikethrough is { } strikethrough)
+            xml.WriteBooleanProperty("strike", strikethrough, _ns);
+
+        if (font.Condense is { } condense)
+            xml.WriteBooleanProperty("condense", condense, _ns);
+
+        if (font.Extend is { } extend)
+            xml.WriteBooleanProperty("extend", extend, _ns);
+
+        if (font.Outline is { } outline)
+            xml.WriteBooleanProperty("outline", outline, _ns);
+
+        if (font.Shadow is { } shadow)
+            xml.WriteBooleanProperty("shadow", shadow, _ns);
+
+        if (font.Underline is { } underline)
         {
-            // MS-OI29500 dictates font elements order.
-            xml.WriteStartElement("font", _ns);
-
-            if (font.Bold is { } bold)
-                xml.WriteBooleanProperty("b", bold, _ns);
-
-            if (font.Italic is { } italic)
-                xml.WriteBooleanProperty("i", italic, _ns);
-
-            if (font.Strikethrough is { } strikethrough)
-                xml.WriteBooleanProperty("strike", strikethrough, _ns);
-
-            if (font.Condense is { } condense)
-                xml.WriteBooleanProperty("condense", condense, _ns);
-
-            if (font.Extend is { } extend)
-                xml.WriteBooleanProperty("extend", extend, _ns);
-
-            if (font.Outline is { } outline)
-                xml.WriteBooleanProperty("outline", outline, _ns);
-
-            if (font.Shadow is { } shadow)
-                xml.WriteBooleanProperty("shadow", shadow, _ns);
-
-            if (font.Underline is { } underline)
-            {
-                xml.WriteStartElement("u", _ns);
-                xml.WriteAttributeDefault("val", underline, XLFontUnderlineValues.Single);
-                xml.WriteEndElement();
-            }
-
-            if (font.VerticalAlignment is { } verticalAlignment)
-            {
-                xml.WriteStartElement("vertAlign", _ns);
-                xml.WriteAttribute("val", verticalAlignment);
-                xml.WriteEndElement();
-            }
-
-            if (font.Size is { } size)
-            {
-                xml.WriteStartElement("sz", _ns);
-                xml.WriteAttribute("val", size.Points);
-                xml.WriteEndElement();
-            }
-
-            if (font.Color is { } color)
-            {
-                xml.WriteColor("color", _ns, color);
-            }
-
-            if (font.Name is { } name)
-            {
-                xml.WriteStartElement("name", _ns);
-                xml.WriteAttribute("val", name.Text);
-                xml.WriteEndElement();
-            }
-
-            if (font.Family is { } family)
-            {
-                xml.WriteStartElement("family", _ns);
-                xml.WriteAttribute("val", (int)family);
-                xml.WriteEndElement();
-            }
-
-            if (font.Charset is { } charset)
-            {
-                // Charset is stored as an CT_IntProperty
-                xml.WriteStartElement("charset", _ns);
-                xml.WriteAttribute("val", (int)charset);
-                xml.WriteEndElement();
-            }
-
-            if (font.Scheme is { } scheme)
-            {
-                xml.WriteStartElement("scheme", _ns);
-                xml.WriteAttribute("val", scheme);
-                xml.WriteEndElement();
-            }
-
+            xml.WriteStartElement("u", _ns);
+            xml.WriteAttributeDefault("val", underline, XLFontUnderlineValues.Single);
             xml.WriteEndElement();
         }
 
-        xml.WriteEndElement(); // fonts
+        if (font.VerticalAlignment is { } verticalAlignment)
+        {
+            xml.WriteStartElement("vertAlign", _ns);
+            xml.WriteAttribute("val", verticalAlignment);
+            xml.WriteEndElement();
+        }
+
+        if (font.Size is { } size)
+        {
+            xml.WriteStartElement("sz", _ns);
+            xml.WriteAttribute("val", size.Points);
+            xml.WriteEndElement();
+        }
+
+        if (font.Color is { } color)
+        {
+            xml.WriteColor("color", _ns, color);
+        }
+
+        if (font.Name is { } name)
+        {
+            xml.WriteStartElement("name", _ns);
+            xml.WriteAttribute("val", name.Text);
+            xml.WriteEndElement();
+        }
+
+        if (font.Family is { } family)
+        {
+            xml.WriteStartElement("family", _ns);
+            xml.WriteAttribute("val", (int)family);
+            xml.WriteEndElement();
+        }
+
+        if (font.Charset is { } charset)
+        {
+            // Charset is stored as an CT_IntProperty
+            xml.WriteStartElement("charset", _ns);
+            xml.WriteAttribute("val", (int)charset);
+            xml.WriteEndElement();
+        }
+
+        if (font.Scheme is { } scheme)
+        {
+            xml.WriteStartElement("scheme", _ns);
+            xml.WriteAttribute("val", scheme);
+            xml.WriteEndElement();
+        }
+
+        xml.WriteEndElement();
     }
 
     private void WriteFills(XmlTreeWriter xml, SequentialMap<int, XLFillFormatValue> idMap)
