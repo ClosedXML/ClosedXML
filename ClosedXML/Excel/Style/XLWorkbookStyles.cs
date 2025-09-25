@@ -70,7 +70,7 @@ internal class XLWorkbookStyles
 
     internal IReadOnlyBiDictionary<StyleId, XLCellStyleValue> CellStyles => _cellStyles;
 
-    internal IReadOnlyDictionary<int, XLDxfValue> DifferentialFormats => _differentialFormats.KeyToValue;
+    internal IReadOnlyBiDictionary<int, XLDxfValue> DifferentialFormats => _differentialFormats;
 
     internal IReadOnlyDictionary<string, XLTableTheme> TableStyles => _tableStyles;
 

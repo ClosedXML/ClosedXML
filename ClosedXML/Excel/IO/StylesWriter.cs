@@ -120,7 +120,17 @@ internal class StylesWriter
 
         WriteCellStyles(xml, cellStylesMap);
 
-        // TODO: Rest of elements dxfs and tableStyles
+        // TODO: Create dxfMap from used dxfs in tables, pivot tables and so on
+        var dxfMap = new SequentialMap<int, XLDxfValue>(styles.DifferentialFormats);
+        foreach (var dxfId in styles.DifferentialFormats.Keys)
+            dxfMap.Add(dxfId);
+
+        dxfMap.Sort();
+
+        if (dxfMap.Count > 0)
+            WriteDxfs(xml, dxfMap, numberFormatMap.Count);
+
+        // TODO: tableStyles
         WriteColors(xml, styles);
 
         xml.WriteEndElement();
@@ -387,10 +397,10 @@ internal class StylesWriter
             xml.WriteAttributeDefault("applyProtection", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.Protection), true);
 
             if (cellStyle.Alignment is { } alignment)
-                WriteAlignment(xml, alignment);
+                WriteAlignment(xml, "alignment", alignment);
 
             if (cellStyle.Protection is { } protection)
-                WriteProtection(xml, protection);
+                WriteProtection(xml, "protection", protection);
 
             // TODO: extLst
             xml.WriteEndElement();
@@ -444,10 +454,10 @@ internal class StylesWriter
             xml.WriteAttributeDefault("applyProtection", cellXf.CustomFormat.HasFlag(CellFormatComponents.Protection), false);
 
             if (cellXf.Alignment is { } alignment)
-                WriteAlignment(xml, alignment);
+                WriteAlignment(xml, "alignment", alignment);
 
             if (cellXf.Protection is { } protection)
-                WriteProtection(xml, protection);
+                WriteProtection(xml, "protection", protection);
 
             // TODO: extLst
             xml.WriteEndElement();
@@ -456,9 +466,9 @@ internal class StylesWriter
         xml.WriteEndElement();
     }
 
-    private void WriteAlignment(XmlTreeWriter xml, XLAlignmentFormatValue alignment)
+    private void WriteAlignment(XmlTreeWriter xml, string elementName, XLAlignmentFormatValue alignment)
     {
-        xml.WriteStartElement("alignment", _ns);
+        xml.WriteStartElement(elementName, _ns);
         xml.WriteAttributeDefault("horizontal", alignment.Horizontal, XLAlignmentHorizontalValues.General);
         xml.WriteAttributeDefault("vertical", alignment.Vertical, XLAlignmentVerticalValues.Bottom);
         xml.WriteAttributeDefault("textRotation", alignment.TextRotation.GetIso(), 0);
@@ -471,9 +481,9 @@ internal class StylesWriter
         xml.WriteEndElement();
     }
 
-    private void WriteProtection(XmlTreeWriter xml, XLProtectionFormatValue protection)
+    private void WriteProtection(XmlTreeWriter xml, string elementName, XLProtectionFormatValue protection)
     {
-        xml.WriteStartElement("protection", _ns);
+        xml.WriteStartElement(elementName, _ns);
         xml.WriteAttributeDefault("locked", protection.Locked, true);
         xml.WriteAttributeDefault("hidden", protection.Hidden, false);
         xml.WriteEndElement();
@@ -513,6 +523,42 @@ internal class StylesWriter
             // Hidden + flag are optional per schema, but basically it's a bool with default
             xml.WriteAttributeDefault("hidden", cellStyle.Hidden, false);
             xml.WriteAttributeDefault("customBuiltin", cellStyle.BuiltInStyle is not null, true);
+            xml.WriteEndElement();
+        }
+
+        xml.WriteEndElement();
+    }
+
+    private void WriteDxfs(XmlTreeWriter xml, SequentialMap<int, XLDxfValue> differentialFormats, int lastNumFmtId)
+    {
+        xml.WriteStartElement("dxfs", _ns);
+        xml.WriteAttribute("count", differentialFormats.Count);
+        foreach (var (_, dxf) in differentialFormats.GetActual())
+        {
+            xml.WriteStartElement("dxf", _ns);
+
+            if (dxf.Font is { } font)
+                WriteFont(xml, "font", font);
+
+            if (dxf.NumberFormat is { } numberFormat)
+            {
+                // numFmtId doesn't matter in dxf, but keep them unique (Excel-like behavior)
+                WriteNumFmt(xml, "numFmt", ++lastNumFmtId, numberFormat);
+            }
+
+            if (dxf.Fill is { } fill)
+                WriteFill(xml, "fill", fill);
+
+            if (dxf.Alignment is { } alignment)
+                WriteAlignment(xml, "alignment", alignment);
+
+            if (dxf.Border is { } border)
+                WriteBorder(xml, "border", border);
+
+            if (dxf.Protection is { } protection)
+                WriteProtection(xml, "protection", protection);
+
+            // TODO: extLst
             xml.WriteEndElement();
         }
 
