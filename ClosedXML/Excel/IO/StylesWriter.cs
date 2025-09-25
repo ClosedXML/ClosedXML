@@ -252,41 +252,44 @@ internal class StylesWriter
         xml.WriteAttribute("count", idMap.Count);
 
         foreach (var (_, fill) in idMap.GetActual())
+            WriteFill(xml, "fill", fill);
+
+        xml.WriteEndElement();
+    }
+
+    private void WriteFill(XmlTreeWriter xml, string elementName, XLFillFormatValue fill)
+    {
+        xml.WriteStartElement(elementName, _ns);
+
+        // A fill element with no pattern/gradient is a valid state per XML
+        if (fill.Pattern is { } patternFill)
         {
-            xml.WriteStartElement("fill", _ns);
+            xml.WriteStartElement("patternFill", _ns);
+            xml.WriteAttribute("patternType", patternFill.PatternType);
+            xml.WriteColor("fgColor", _ns, patternFill.PatternColor);
+            xml.WriteColor("bgColor", _ns, patternFill.BackgroundColor);
+            xml.WriteEndElement();
+        }
+        else if (fill.LinearGradient is { } linearGradient)
+        {
+            // Linear is the default type, so no need to write it
+            xml.WriteStartElement("gradientFill", _ns);
+            xml.WriteAttributeDefault("degree", linearGradient.Degrees, 0);
 
-            // A fill element with no pattern/gradient is a valid state per XML
-            if (fill.Pattern is { } patternFill)
-            {
-                xml.WriteStartElement("patternFill", _ns);
-                xml.WriteAttribute("patternType", patternFill.PatternType);
-                xml.WriteColor("fgColor", _ns, patternFill.PatternColor);
-                xml.WriteColor("bgColor", _ns, patternFill.BackgroundColor);
-                xml.WriteEndElement();
-            }
-            else if (fill.LinearGradient is { } linearGradient)
-            {
-                // Linear is the default type, so no need to write it
-                xml.WriteStartElement("gradientFill", _ns);
-                xml.WriteAttributeDefault("degree", linearGradient.Degrees, 0);
+            WriteStops(linearGradient.Stops);
 
-                WriteStops(linearGradient.Stops);
+            xml.WriteEndElement();
+        }
+        else if (fill.PathGradient is { } pathGradient)
+        {
+            xml.WriteStartElement("gradientFill", _ns);
+            xml.WriteAttribute("type", "path");
+            xml.WriteAttributeDefault("left", pathGradient.InnerLeft.Value, 0);
+            xml.WriteAttributeDefault("right", pathGradient.InnerRight.Value, 0);
+            xml.WriteAttributeDefault("top", pathGradient.InnerTop.Value, 0);
+            xml.WriteAttributeDefault("bottom", pathGradient.InnerBottom.Value, 0);
 
-                xml.WriteEndElement();
-            }
-            else if (fill.PathGradient is { } pathGradient)
-            {
-                xml.WriteStartElement("gradientFill", _ns);
-                xml.WriteAttribute("type", "path");
-                xml.WriteAttributeDefault("left", pathGradient.InnerLeft.Value, 0);
-                xml.WriteAttributeDefault("right", pathGradient.InnerRight.Value, 0);
-                xml.WriteAttributeDefault("top", pathGradient.InnerTop.Value, 0);
-                xml.WriteAttributeDefault("bottom", pathGradient.InnerBottom.Value, 0);
-
-                WriteStops(pathGradient.Stops);
-
-                xml.WriteEndElement();
-            }
+            WriteStops(pathGradient.Stops);
 
             xml.WriteEndElement();
         }
