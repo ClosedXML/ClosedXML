@@ -299,12 +299,12 @@ internal class StylesWriter
         xml.WriteAttribute("count", idMap.Count);
 
         foreach (var (_, fill) in idMap.GetActual())
-            WriteFill(xml, "fill", fill);
+            WriteFill(xml, "fill", fill, false);
 
         xml.WriteEndElement();
     }
 
-    private void WriteFill(XmlTreeWriter xml, string elementName, XLFillFormatValue fill)
+    private void WriteFill(XmlTreeWriter xml, string elementName, XLFillFormatValue fill, bool isDxf)
     {
         xml.WriteStartElement(elementName, _ns);
 
@@ -313,8 +313,22 @@ internal class StylesWriter
         {
             xml.WriteStartElement("patternFill", _ns);
             xml.WriteAttribute("patternType", patternFill.PatternType);
-            xml.WriteColor("fgColor", _ns, patternFill.PatternColor);
-            xml.WriteColor("bgColor", _ns, patternFill.BackgroundColor);
+
+            var patternColor = patternFill.PatternColor;
+            var bgColor = patternFill.BackgroundColor;
+
+            // Fix solid pattern discrepancy for dxf
+            if (isDxf && patternFill.PatternType == XLFillPatternValues.Solid)
+            {
+                (patternColor, bgColor) = (bgColor, patternColor);
+            }
+
+            if (patternColor.HasValue)
+                xml.WriteColor("fgColor", _ns, patternColor);
+
+            if (bgColor.HasValue)
+                xml.WriteColor("bgColor", _ns, bgColor);
+
             xml.WriteEndElement();
         }
         else if (fill.LinearGradient is { } linearGradient)
@@ -584,7 +598,7 @@ internal class StylesWriter
             }
 
             if (dxf.Fill is { } fill)
-                WriteFill(xml, "fill", fill);
+                WriteFill(xml, "fill", fill, true);
 
             if (dxf.Alignment is { } alignment)
                 WriteAlignment(xml, "alignment", alignment);
