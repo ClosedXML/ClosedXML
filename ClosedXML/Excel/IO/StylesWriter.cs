@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,12 +10,47 @@ using ClosedXML.IO;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Packaging;
 using static ClosedXML.Excel.IO.OpenXmlConst;
+using PivotRegion = ClosedXML.Excel.Formatting.XLPivotStyleRegionValues;
+using TableRegion = ClosedXML.Excel.Formatting.XLTableStyleRegionValues;
 
 namespace ClosedXML.Excel.IO;
 
 internal class StylesWriter
 {
     private const int FirstUserDefinedFormatIndex = 164;
+
+    private static readonly List<(string Type, TableRegion? TableRegion, PivotRegion? PivotRegion)> TableRegionsMap = new()
+    {
+        ("wholeTable", TableRegion.WholeTable, PivotRegion.WholeTable),
+        ("headerRow", TableRegion.HeaderRow, PivotRegion.HeaderRow),
+        ("totalRow", TableRegion.TotalRow, PivotRegion.GrandTotalRow),
+        ("firstColumn", TableRegion.FirstColumn, PivotRegion.FirstColumn),
+        ("lastColumn", TableRegion.LastColumn, PivotRegion.GrandTotalColumn),
+        ("firstRowStripe", TableRegion.FirstRowStripe, PivotRegion.FirstRowStripe),
+        ("secondRowStripe", TableRegion.SecondRowStripe, PivotRegion.SecondRowStripe),
+        ("firstColumnStripe", TableRegion.FirstColumnStripe, PivotRegion.FirstColumnStripe),
+        ("secondColumnStripe", TableRegion.SecondColumnStripe, PivotRegion.SecondColumnStripe),
+        ("firstHeaderCell", TableRegion.FirstHeaderCell, PivotRegion.FirstHeaderCell),
+        ("lastHeaderCell", TableRegion.LastHeaderCell, null),
+        ("firstTotalCell", TableRegion.FirstTotalCell, null),
+        ("lastTotalCell", TableRegion.LastTotalCell, null),
+        ("firstSubtotalColumn", null, PivotRegion.SubtotalColumn1),
+        ("secondSubtotalColumn", null, PivotRegion.SubtotalColumn2),
+        ("thirdSubtotalColumn", null, PivotRegion.SubtotalColumn3),
+        ("firstSubtotalRow", null, PivotRegion.SubtotalRow1),
+        ("secondSubtotalRow", null, PivotRegion.SubtotalRow2),
+        ("thirdSubtotalRow", null, PivotRegion.SubtotalRow3),
+        ("blankRow", null, PivotRegion.BlankRow),
+        ("firstColumnSubheading", null, PivotRegion.ColumnSubheading1),
+        ("secondColumnSubheading", null, PivotRegion.ColumnSubheading2),
+        ("thirdColumnSubheading", null, PivotRegion.ColumnSubheading3),
+        ("firstRowSubheading", null, PivotRegion.RowSubheading1),
+        ("secondRowSubheading", null, PivotRegion.RowSubheading2),
+        ("thirdRowSubheading", null, PivotRegion.RowSubheading3),
+        ("pageFieldLabels", null, PivotRegion.PageFieldLabels),
+        ("pageFieldValues", null, PivotRegion.PageFieldValues),
+    };
+
     private readonly string _ns = Main2006SsNs;
 
     internal void WriteContent(WorkbookStylesPart stylesPart, IEnumMapper mapper, XLWorkbookStyles styles, XLWorkbook.SaveContext context)
@@ -130,7 +166,8 @@ internal class StylesWriter
         if (dxfMap.Count > 0)
             WriteDxfs(xml, dxfMap, numberFormatMap.Count);
 
-        // TODO: tableStyles
+        WriteTableStyles(xml, dxfMap, styles);
+
         WriteColors(xml, styles);
 
         xml.WriteEndElement();
@@ -563,6 +600,108 @@ internal class StylesWriter
         }
 
         xml.WriteEndElement();
+    }
+
+    private void WriteTableStyles(XmlTreeWriter xml, SequentialMap<int, XLDxfValue> dxfMap, XLWorkbookStyles styles)
+    {
+        var allStyleNames = styles.TableStyles.Keys.Concat(styles.PivotStyles.Keys).Distinct(XLHelper.NameComparer).ToList();
+        allStyleNames.Sort();
+
+        xml.WriteStartElement("tableStyles", _ns);
+        xml.WriteAttribute("count", allStyleNames.Count);
+        if (styles.DefaultTableStyle is { } defaultTableStyle)
+            xml.WriteAttribute("defaultTableStyle", defaultTableStyle);
+
+        if (styles.DefaultPivotStyle is { } defaultPivotStyle)
+            xml.WriteAttribute("defaultPivotStyle", defaultPivotStyle);
+
+        foreach (var styleName in allStyleNames)
+            WriteTableStyle(xml, styleName, dxfMap, styles);
+
+        xml.WriteEndElement();
+    }
+
+    private void WriteTableStyle(XmlTreeWriter xml, string styleName, SequentialMap<int, XLDxfValue> dxfMap, XLWorkbookStyles styles)
+    {
+        xml.WriteStartElement("tableStyle", _ns);
+        xml.WriteAttribute("name", styleName);
+
+        var hasPivotStyle = styles.PivotStyles.TryGetValue(styleName, out var pivotStyle);
+        xml.WriteAttributeDefault("pivot", hasPivotStyle, true);
+
+        var hasTableStyle = styles.TableStyles.TryGetValue(styleName, out var tableStyle);
+        xml.WriteAttributeDefault("table", hasTableStyle, true);
+
+        var styledRegions = new List<(string Type, int Size, int DxfId)>(TableRegionsMap.Count);
+        foreach (var (type, tableRegion, pivotRegion) in TableRegionsMap)
+        {
+            var tableRegionStyle = TryGetTableRegion(tableStyle, tableRegion);
+            var pivotRegionStyle = TryGetPivotRegion(pivotStyle, pivotRegion);
+            if (tableRegionStyle is var (tableSize, tableDxf) &&
+                pivotRegionStyle is var (pivotSize, pivotDxf) &&
+                (tableSize != pivotSize || tableDxf != pivotDxf))
+            {
+                // This should never happen. The table/pivot shared style have same band size and
+                // dxf on load and we don't provide API to modify table/pivot styles.
+                // Sidenote: Excel GUI will refuse to create table style that conflicts with a pivot
+                // style and vice versa. It will show an alert 'This style name already exists.'
+                throw new InvalidOperationException($"Table and pivot table style '{styleName}' that has different formatting for {tableRegion}/{pivotRegion}.");
+            }
+
+            if ((tableRegionStyle ?? pivotRegionStyle) is var (bandSize, dxf))
+                styledRegions.Add((type, bandSize, dxfMap.GetSavedId(dxf)));
+        }
+
+        xml.WriteAttribute("count", styledRegions.Count);
+        foreach (var (type, bandSize, dxfId) in styledRegions)
+        {
+            xml.WriteStartElement("tableStyleElement", _ns);
+            xml.WriteAttribute("type", type);
+            xml.WriteAttributeDefault("size", bandSize, 1);
+            xml.WriteAttribute("dxfId", dxfId);
+            xml.WriteEndElement();
+        }
+
+        xml.WriteEndElement();
+        return;
+
+        static (int Size, XLDxfValue Dxf)? TryGetTableRegion(XLTableTheme? tableStyle, TableRegion? tableRegion)
+        {
+            if (tableStyle is null || tableRegion is null)
+                return null;
+
+            if (!tableStyle.RegionFormats.TryGetValue(tableRegion.Value, out var dxf))
+                return null;
+
+            var bandSize = tableRegion switch
+            {
+                TableRegion.FirstRowStripe => tableStyle.RowStripe1BandSize,
+                TableRegion.SecondRowStripe => tableStyle.RowStripe2BandSize,
+                TableRegion.FirstColumnStripe => tableStyle.ColumnStripe1BandSize,
+                TableRegion.SecondColumnStripe => tableStyle.ColumnStripe2BandSize,
+                _ => 1
+            };
+            return (bandSize, dxf);
+        }
+
+        static (int Size, XLDxfValue Dxf)? TryGetPivotRegion(XLPivotTableStyle? pivotStyle, PivotRegion? region)
+        {
+            if (pivotStyle is null || region is null)
+                return null;
+
+            if (!pivotStyle.RegionFormats.TryGetValue(region.Value, out var dxf))
+                return null;
+
+            var bandSize = region switch
+            {
+                PivotRegion.FirstRowStripe => pivotStyle.RowStripe1BandSize,
+                PivotRegion.SecondRowStripe => pivotStyle.RowStripe2BandSize,
+                PivotRegion.FirstColumnStripe => pivotStyle.ColumnStripe1BandSize,
+                PivotRegion.SecondColumnStripe => pivotStyle.ColumnStripe2BandSize,
+                _ => 1
+            };
+            return (bandSize, dxf);
+        }
     }
 
     private void WriteColors(XmlTreeWriter xml, XLWorkbookStyles styles)
