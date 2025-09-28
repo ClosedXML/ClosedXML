@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = ((XLStyle)cf.Style).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
+                conditionalFormattingRule.FormatId = context.GetDxfId(cfStyle);
 
             var formula = new Formula { Text = "ISERROR(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + ")" };
 

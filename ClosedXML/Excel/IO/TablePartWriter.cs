@@ -1,4 +1,3 @@
-﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
@@ -87,8 +86,8 @@ namespace ClosedXML.Excel.IO
                         .First()
                         .Style).Value;
 
-                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.TryGetValue(style, out Int32 id))
-                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(id));
+                    if (!DefaultStyleValue.Equals(style) && context.TryGetDxfId(style, out var dxfId))
+                        tableColumn.DataFormatId = dxfId;
                 }
                 else
                     tableColumn.DataFormatId = null;

@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
                 PivotSourceCacheId = 0;
             }
 
-            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
+            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
 
@@ -81,6 +81,23 @@ namespace ClosedXML.Excel
                     return null;
 
                 return SavedNumberFormats[numberFormat.Format];
+            }
+
+            internal UInt32 GetDxfId(XLStyleValue dxf)
+            {
+                return (UInt32)DifferentialFormats[dxf];
+            }
+
+            internal bool TryGetDxfId(XLStyleValue dxf, out uint dxfId)
+            {
+                if (DifferentialFormats.TryGetValue(dxf, out var differentialFormatId))
+                {
+                    dxfId = (uint)differentialFormatId;
+                    return true;
+                }
+
+                dxfId = default;
+                return false;
             }
 
             internal void AddSharedStyle(XLStyleValue style, StyleInfo info)
