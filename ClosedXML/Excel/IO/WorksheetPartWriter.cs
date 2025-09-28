@@ -360,7 +360,7 @@ namespace ClosedXML.Excel.IO
 
             #region Columns
 
-            var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
+            var worksheetStyleId = context.GetStyleId(xlWorksheet.StyleValue);
             if (xlWorksheet.Internals.CellsCollection.IsEmpty &&
                 xlWorksheet.Internals.ColumnsCollection.Count == 0
                 && worksheetStyleId == 0)
@@ -421,7 +421,7 @@ namespace ClosedXML.Excel.IO
                     var outlineLevel = 0;
                     if (xlWorksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn col))
                     {
-                        styleId = context.SharedStyles[col.StyleValue].StyleId;
+                        styleId = context.GetStyleId(col.StyleValue);
                         columnWidth = GetColumnWidth(col.Width).SaveRound();
                         isHidden = col.IsHidden;
                         collapsed = col.Collapsed;
@@ -429,7 +429,7 @@ namespace ClosedXML.Excel.IO
                     }
                     else
                     {
-                        styleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
+                        styleId = context.GetStyleId(xlWorksheet.StyleValue);
                         columnWidth = worksheetColumnWidth;
                     }
 
@@ -2060,7 +2060,7 @@ namespace ClosedXML.Excel.IO
                     if (xlWorksheet.Internals.RowsCollection.TryGetValue(currentRowNumber, out var row))
                     {
                         rowPropIndex++;
-                        rowStyleId = context.SharedStyles[row.StyleValue].StyleId;
+                        rowStyleId = context.GetStyleId(row.StyleValue);
                     }
                     else
                     {
@@ -2141,7 +2141,7 @@ namespace ClosedXML.Excel.IO
 
                 if (xlRow.StyleValue != xlRow.Worksheet.StyleValue)
                 {
-                    var styleIndex = context.SharedStyles[xlRow.StyleValue].StyleId;
+                    var styleIndex = context.GetStyleId(xlRow.StyleValue);
                     w.WriteAttribute("s", styleIndex);
                     w.WriteAttributeString("customFormat", TrueValue);
                 }
@@ -2198,7 +2198,7 @@ namespace ClosedXML.Excel.IO
 
             static void WriteCell(XmlWriter xml, XLCell xlCell, char[] cellRef, SaveContext context, SaveOptions options, HashSet<IXLAddress> tableTotalCells, uint rowStyleId)
             {
-                var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
+                var styleId = context.GetStyleId(xlCell.StyleValue);
 
                 Span<Char> cellRefSpan = cellRef;
                 var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);

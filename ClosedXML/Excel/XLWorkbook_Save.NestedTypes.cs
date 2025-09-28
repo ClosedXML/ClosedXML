@@ -14,13 +14,15 @@ namespace ClosedXML.Excel
 
         internal sealed class SaveContext
         {
+            private readonly Dictionary<XLStyleValue, StyleInfo> _sharedStyles;
+
             public SaveContext()
             {
                 DifferentialFormats = new Dictionary<XLStyleValue, int>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
                 SavedNumberFormats = new Dictionary<string, int>();
-                SharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
+                _sharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
                 PivotSourceCacheId = 0;
@@ -37,7 +39,8 @@ namespace ClosedXML.Excel
             /// </summary>
             public Dictionary<string, int> SavedNumberFormats { get; }
 
-            public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
+            public IReadOnlyDictionary<XLStyleValue, StyleInfo> SharedStyles => _sharedStyles;
+
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
 
@@ -79,7 +82,22 @@ namespace ClosedXML.Excel
 
                 return SavedNumberFormats[numberFormat.Format];
             }
-            #nullable disable
+
+            internal void AddSharedStyle(XLStyleValue style, StyleInfo info)
+            {
+                _sharedStyles.Add(style, info);
+            }
+
+            internal UInt32 GetStyleId(XLStyleValue style)
+            {
+                return _sharedStyles[style].StyleId;
+            }
+
+            internal void ClearSharedStyles()
+            {
+                _sharedStyles.Clear();
+            }
+#nullable disable
         }
 
         #endregion Nested type: SaveContext

@@ -44,7 +44,7 @@ namespace ClosedXML.Excel.IO
             else
                 defaultFormatId = 0;
 
-            context.SharedStyles.Add(defaultStyle,
+            context.AddSharedStyle(defaultStyle,
                 new StyleInfo
                 {
                     StyleId = defaultFormatId,
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel.IO
                 var numberFormatId = context.SavedNumberFormats[xlStyle.NumberFormat.Format];
 
                 if (!context.SharedStyles.ContainsKey(xlStyle))
-                    context.SharedStyles.Add(xlStyle,
+                    context.AddSharedStyle(xlStyle,
                         new StyleInfo
                         {
                             StyleId = styleCount++,
@@ -158,8 +158,8 @@ namespace ClosedXML.Excel.IO
                 si.StyleId = (UInt32)styleId;
                 newSharedStyles.Add(ss.Key, si);
             }
-            context.SharedStyles.Clear();
-            newSharedStyles.ForEach(kp => context.SharedStyles.Add(kp.Key, kp.Value));
+            context.ClearSharedStyles();
+            newSharedStyles.ForEach(kp => context.AddSharedStyle(kp.Key, kp.Value));
 
             AddDifferentialFormats(workbookStylesPart, workbook, context);
         }
