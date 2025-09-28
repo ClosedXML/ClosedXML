@@ -165,13 +165,16 @@ internal class StylesWriter
         foreach (var styleId in styles.CellStyles.Keys)
             cellStylesMap.Add(styleId);
 
-        WriteCellStyleXfs(xml, cellStylesMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
+        if (cellStylesMap.Count > 0)
+            WriteCellStyleXfs(xml, cellStylesMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
 
         // TODO: Ensure the normal style cellXfs has index 0
         var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats);
-        WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap, cellStylesMap);
+        if (cellXfsMap.Count > 0)
+            WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap, cellStylesMap);
 
-        WriteCellStyles(xml, cellStylesMap);
+        if (cellStylesMap.Count > 0)
+            WriteCellStyles(xml, cellStylesMap);
 
         // TODO: Create dxfMap from used dxfs in tables, pivot tables and so on
         var dxfMap = new SequentialMap<int, XLDxfValue>(styles.DifferentialFormats);
@@ -183,7 +186,8 @@ internal class StylesWriter
         if (dxfMap.Count > 0)
             WriteDxfs(xml, dxfMap, numberFormatMap.Count);
 
-        WriteTableStyles(xml, dxfMap, styles);
+        if (styles.TableStyles.Count > 0 || styles.PivotStyles.Count > 0)
+            WriteTableStyles(xml, dxfMap, styles);
 
         WriteColors(xml, styles);
 
