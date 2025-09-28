@@ -10,4 +10,9 @@ internal interface IReadOnlyBiDictionary<TKey, TValue> : IReadOnlyDictionary<TKe
     /// In case of duplicates, the earliest added entry will be returned.
     /// </summary>
     TKey this[TValue value] { get; }
+
+    /// <summary>
+    /// Does the dictionary contain the value?
+    /// </summary>
+    bool ContainsValue(TValue value);
 }

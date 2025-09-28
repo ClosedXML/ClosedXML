@@ -19,6 +19,20 @@ internal class StylesWriter
 {
     private const int FirstUserDefinedFormatIndex = 164;
 
+    private static readonly XLFillFormatValue FillNone = new(new XLPatternFill
+    {
+        PatternType = XLFillPatternValues.None,
+        BackgroundColor = XLColor.NoColor,
+        PatternColor = XLColor.NoColor
+    });
+
+    private static readonly XLFillFormatValue FillGray125 = new(new XLPatternFill
+    {
+        PatternType = XLFillPatternValues.Gray125,
+        BackgroundColor = XLColor.NoColor,
+        PatternColor = XLColor.NoColor
+    });
+
     private static readonly List<(string Type, TableRegion? TableRegion, PivotRegion? PivotRegion)> TableRegionsMap = new()
     {
         ("wholeTable", TableRegion.WholeTable, PivotRegion.WholeTable),
@@ -132,10 +146,13 @@ internal class StylesWriter
         if (fontFormatsMap.Count > 0)
             WriteFonts(xml, fontFormatsMap);
 
-        // TODO: Add the fixed fills (none+gray125) at the start
-        var fillsFormatsMap = SequentialMap<int, XLFillFormatValue>.Create(usedFills, styles.Fills);
-        if (fillsFormatsMap.Count > 0)
-            WriteFills(xml, fillsFormatsMap);
+        // Fill 0 must be None and fill 1 must be Gray125, that is just an immutable fact of the universe.
+        // Excel will ignore fills at 0/1 and will use None/Gray125. Write both fills whether they are used
+        // or not.
+        AddFillAsUsed(FillNone);
+        AddFillAsUsed(FillGray125);
+        var fillsFormatsMap = SequentialMap<int, XLFillFormatValue>.Create(usedFills, styles.Fills, 0, FillNone, FillGray125);
+        WriteFills(xml, fillsFormatsMap);
 
         var borderFormatsMap = SequentialMap<int, XLBorderFormatValue>.Create(usedBorders, styles.Borders);
         if (borderFormatsMap.Count > 0)
@@ -171,6 +188,15 @@ internal class StylesWriter
         WriteColors(xml, styles);
 
         xml.WriteEndElement();
+        return;
+
+        void AddFillAsUsed(XLFillFormatValue format)
+        {
+            if (!styles.Fills.ContainsValue(format))
+                styles.AddFillFormat(format);
+
+            usedFills.Add(format);
+        }
     }
 
     private void WriteNumberFormats(XmlTreeWriter xml, SequentialMap<int, string> idMap)
@@ -776,11 +802,20 @@ internal class StylesWriter
         /// </summary>
         public int Count => _savedIdToActualId.Count;
 
-        internal static SequentialMap<TKey, T> Create(HashSet<T> usedValues, IReadOnlyBiDictionary<TKey, T> allValuesMap, int offset = 0)
+        internal static SequentialMap<TKey, T> Create(HashSet<T> usedValues, IReadOnlyBiDictionary<TKey, T> allValuesMap, int offset = 0, params T[] firstValues)
         {
             var map = new SequentialMap<TKey, T>(allValuesMap, offset);
+            foreach (var firstValue in firstValues)
+            {
+                var actualId = allValuesMap[firstValue];
+                map.Add(actualId);
+            }
+
             foreach (var (actualId, value) in allValuesMap)
             {
+                if (firstValues.Contains(value))
+                    continue;
+
                 if (!usedValues.Contains(value))
                     continue;
 

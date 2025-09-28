@@ -65,6 +65,11 @@ internal class BiDictionary<TKey, TValue> : IReadOnlyBiDictionary<TKey, TValue>
         return _keyToValue.ContainsKey(key);
     }
 
+    public bool ContainsValue(TValue value)
+    {
+        return _entryToKey.ContainsKey(value);
+    }
+
     internal IReadOnlyDictionary<TKey, TValue> KeyToValue => _keyToValue;
 
     internal IReadOnlyDictionary<TValue, TKey> ValueToKey => _entryToKey;
