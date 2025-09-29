@@ -244,35 +244,22 @@ internal class StylesWriter
         // MS-OI29500 dictates font elements order.
         xml.WriteStartElement(elementName, _ns);
 
-        if (font.Bold is { } bold)
-            xml.WriteBooleanProperty("b", bold, _ns);
+        WriteFlag("b", font.Bold);
+        WriteFlag("i", font.Italic);
+        WriteFlag("strike", font.Strikethrough);
+        WriteFlag("condense", font.Condense);
+        WriteFlag("extend", font.Extend);
+        WriteFlag("outline", font.Outline);
+        WriteFlag("shadow", font.Shadow);
 
-        if (font.Italic is { } italic)
-            xml.WriteBooleanProperty("i", italic, _ns);
-
-        if (font.Strikethrough is { } strikethrough)
-            xml.WriteBooleanProperty("strike", strikethrough, _ns);
-
-        if (font.Condense is { } condense)
-            xml.WriteBooleanProperty("condense", condense, _ns);
-
-        if (font.Extend is { } extend)
-            xml.WriteBooleanProperty("extend", extend, _ns);
-
-        if (font.Outline is { } outline)
-            xml.WriteBooleanProperty("outline", outline, _ns);
-
-        if (font.Shadow is { } shadow)
-            xml.WriteBooleanProperty("shadow", shadow, _ns);
-
-        if (font.Underline is { } underline)
+        if (font.Underline is { } underline && underline != XLFontUnderlineValues.None)
         {
             xml.WriteStartElement("u", _ns);
             xml.WriteAttributeDefault("val", underline, XLFontUnderlineValues.Single);
             xml.WriteEndElement();
         }
 
-        if (font.VerticalAlignment is { } verticalAlignment)
+        if (font.VerticalAlignment is { } verticalAlignment && verticalAlignment != XLFontVerticalTextAlignmentValues.Baseline)
         {
             xml.WriteStartElement("vertAlign", _ns);
             xml.WriteAttribute("val", verticalAlignment);
@@ -298,14 +285,14 @@ internal class StylesWriter
             xml.WriteEndElement();
         }
 
-        if (font.Family is { } family)
+        if (font.Family is { } family && family != XLFontFamilyNumberingValues.NotApplicable)
         {
             xml.WriteStartElement("family", _ns);
             xml.WriteAttribute("val", (int)family);
             xml.WriteEndElement();
         }
 
-        if (font.Charset is { } charset)
+        if (font.Charset is { } charset && charset != XLFontCharSet.Ansi)
         {
             // Charset is stored as an CT_IntProperty
             xml.WriteStartElement("charset", _ns);
@@ -313,7 +300,7 @@ internal class StylesWriter
             xml.WriteEndElement();
         }
 
-        if (font.Scheme is { } scheme)
+        if (font.Scheme is { } scheme && scheme != XLFontScheme.None)
         {
             xml.WriteStartElement("scheme", _ns);
             xml.WriteAttribute("val", scheme);
@@ -321,6 +308,13 @@ internal class StylesWriter
         }
 
         xml.WriteEndElement();
+        return;
+
+        void WriteFlag(string flagName, bool? flag)
+        {
+            if (flag == true)
+                xml.WriteBooleanProperty(flagName, true, _ns);
+        }
     }
 
     private void WriteFills(XmlTreeWriter xml, SequentialMap<int, XLFillFormatValue> idMap)
