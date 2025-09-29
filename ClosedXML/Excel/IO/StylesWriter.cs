@@ -417,7 +417,9 @@ internal class StylesWriter
 
             xml.WriteStartElement(name, _ns);
             xml.WriteAttributeDefault("style", borderLine.Value.Style, XLBorderStyleValues.None);
-            xml.WriteColor("color", _ns, borderLine.Value.Color);
+            if (borderLine.Value.Style != XLBorderStyleValues.None)
+                xml.WriteColor("color", _ns, borderLine.Value.Color);
+
             xml.WriteEndElement();
         }
     }
