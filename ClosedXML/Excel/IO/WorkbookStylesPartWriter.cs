@@ -1,3 +1,4 @@
+#if !STYLES_REWORK
 #nullable disable
 
 using ClosedXML.Utils;
@@ -931,3 +932,4 @@ namespace ClosedXML.Excel.IO
         }
     }
 }
+#endif

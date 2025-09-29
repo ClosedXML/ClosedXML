@@ -194,7 +194,11 @@ namespace ClosedXML.Excel
                                      workbookPart.AddNewPart<WorkbookStylesPart>(
                                          context.RelIdGenerator.GetNext(RelType.Workbook));
 
+#if STYLES_REWORK
+            new StylesWriter().WriteContent(workbookStylesPart, XmlToEnumMapper.Instance, Styles, context);
+#else
             WorkbookStylesPartWriter.GenerateContent(workbookStylesPart, this, context);
+#endif
 
             var cacheRelIds = PivotCachesInternal
                   .Select<XLPivotCache, String>(ps => ps.WorkbookCacheRelId)
@@ -463,7 +467,7 @@ namespace ClosedXML.Excel
                 {
                     orphanPart.DeletePart(orphanPart.PivotTableCacheRecordsPart);
                     workbookPart.DeletePart(orphanPart);
-                };
+                }
 
                 // Remove deleted pivot cache parts
                 if (workbookPart.Workbook.PivotCaches is not null)

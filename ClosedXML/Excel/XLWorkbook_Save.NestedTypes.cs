@@ -14,21 +14,24 @@ namespace ClosedXML.Excel
 
         internal sealed class SaveContext
         {
+#if !STYLES_REWORK
             private readonly Dictionary<XLStyleValue, StyleInfo> _sharedStyles;
+#endif
 
             public SaveContext()
             {
-                DifferentialFormats = new Dictionary<XLStyleValue, int>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
                 SavedNumberFormats = new Dictionary<string, int>();
+#if !STYLES_REWORK
+                DifferentialFormats = new Dictionary<XLStyleValue, int>();
                 _sharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
+#endif
                 TableId = 0;
                 TableNames = new HashSet<String>();
                 PivotSourceCacheId = 0;
             }
 
-            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
 
@@ -39,7 +42,11 @@ namespace ClosedXML.Excel
             /// </summary>
             public Dictionary<string, int> SavedNumberFormats { get; }
 
+#if !STYLES_REWORK
             public IReadOnlyDictionary<XLStyleValue, StyleInfo> SharedStyles => _sharedStyles;
+
+            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; }
+#endif
 
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -85,11 +92,18 @@ namespace ClosedXML.Excel
 
             internal UInt32 GetDxfId(XLStyleValue dxf)
             {
+#if STYLES_REWORK
+                throw new NotImplementedException();
+#else
                 return (UInt32)DifferentialFormats[dxf];
+#endif
             }
 
             internal bool TryGetDxfId(XLStyleValue dxf, out uint dxfId)
             {
+#if STYLES_REWORK
+                throw new NotImplementedException();
+#else
                 if (DifferentialFormats.TryGetValue(dxf, out var differentialFormatId))
                 {
                     dxfId = (uint)differentialFormatId;
@@ -98,22 +112,29 @@ namespace ClosedXML.Excel
 
                 dxfId = default;
                 return false;
-            }
-
-            internal void AddSharedStyle(XLStyleValue style, StyleInfo info)
-            {
-                _sharedStyles.Add(style, info);
+#endif
             }
 
             internal UInt32 GetStyleId(XLStyleValue style)
             {
+#if STYLES_REWORK
+                return 0; // TODO: Map to real format id
+#else
                 return _sharedStyles[style].StyleId;
+#endif
+            }
+
+#if !STYLES_REWORK
+            internal void AddSharedStyle(XLStyleValue style, StyleInfo info)
+            {
+                _sharedStyles.Add(style, info);
             }
 
             internal void ClearSharedStyles()
             {
                 _sharedStyles.Clear();
             }
+#endif
 #nullable disable
         }
 
@@ -207,6 +228,7 @@ namespace ClosedXML.Excel
 
         #endregion Nested type: FontInfo
 
+#if !STYLES_REWORK
         #region Nested type: FillInfo
 
         internal struct FillInfo
@@ -241,5 +263,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Nested type: StyleInfo
+#endif
     }
 }
