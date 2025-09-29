@@ -45,6 +45,63 @@ internal class XLWorkbookStyles
 
     private List<XLColor> _mruColors = new();
 
+    /// <summary>
+    /// A normal style that is used for newly create workbooks or loaded workbooks without a normal style.
+    /// </summary>
+    private static readonly XLCellStyleValue DefaultNormalStyle = new()
+    {
+        Name = "Normal",
+        BuiltInStyle = BuiltInStyleValues.Normal,
+        Hidden = false,
+        Alignment = new XLAlignmentFormatValue
+        {
+            Horizontal = XLAlignmentHorizontalValues.General,
+            Vertical = XLAlignmentVerticalValues.Center,
+            TextRotation = TextRotation.None,
+            WrapText = false,
+            Indent = 0,
+            RelativeIndent = 0,
+            JustifyLastLine = false,
+            ShrinkToFit = false,
+            ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent
+        },
+        Protection = new XLProtectionFormatValue
+        {
+            Locked = true,
+            Hidden = false,
+        },
+        NumberFormat = XLPredefinedFormat.FormatCodes[XLPredefinedFormat.General],
+        Font = new XLFontFormatValue
+        {
+            Name = "Calibri",
+            Charset = XLFontCharSet.ShiftJIS,
+            Family = XLFontFamilyNumberingValues.Swiss,
+            Bold = false,
+            Italic = false,
+            Strikethrough = false,
+            Outline = false,
+            Shadow = false,
+            Condense = false,
+            Extend = false,
+            Color = XLColor.FromArgb(0x00000000),
+            Size = XLFontSize.FromPoints(11),
+            Underline = XLFontUnderlineValues.None,
+            VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+            Scheme = XLFontScheme.None
+        },
+        Fill = XLFillFormatValue.None,
+        Border = XLBorderFormatValue.None,
+        IncludedComponents = CellFormatComponents.All
+    };
+
+    /// <summary>
+    /// A cell format that is used when an element doesn't explicitly define formatting. This
+    /// format must be saved at index 0 in a file. The likely reason is that when an element
+    /// (e.g., a cell) in a XML doesn't explicitly define index of a format, the default value
+    /// is 0 = this format.
+    /// </summary>
+    internal XLCellFormatValue DefaultCellFormat => _cellFormats[0];
+
     internal XLWorkbookStyles()
     {
         _numberFormats = new BiDictionary<int, string>();
@@ -250,5 +307,30 @@ internal class XLWorkbookStyles
     internal T GetDefaultFormat<T>(Func<XLCellFormatValue, T?> selector)
     {
         return selector(DefaultFormat) ?? throw new UnreachableException("Default value doesn't contain a format property.");
+    }
+
+    /// <summary>
+    /// Create a workbook styles component suitable for a new workbook.
+    /// </summary>
+    internal static XLWorkbookStyles CreateInitialized()
+    {
+        var styles = new XLWorkbookStyles
+        {
+            DefaultTableStyle = XLTableTheme.TableStyleMedium2.ToString(),
+            DefaultPivotStyle = XLPivotTableTheme.PivotStyleLight16.ToString()
+        };
+
+        foreach (var (numFmtId, formatCode) in XLPredefinedFormat.FormatCodes)
+            styles.AddNumberFormat(numFmtId, formatCode);
+
+        var normalStyle = DefaultNormalStyle;
+        styles.AddFontFormat(normalStyle.Font!);
+        styles.AddFillFormat(XLFillFormatValue.None);
+        styles.AddFillFormat(XLFillFormatValue.Gray125);
+        styles.AddBorderFormat(XLBorderFormatValue.None);
+        styles.AddCellStyle(0, normalStyle);
+        styles.AddFormat(XLCellFormatValue.FromStyle(0, normalStyle));
+
+        return styles;
     }
 }

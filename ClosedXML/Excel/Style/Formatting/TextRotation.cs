@@ -7,6 +7,8 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal readonly record struct TextRotation
 {
+    public static readonly TextRotation None = new(0);
+
     public static readonly TextRotation VerticalText = new(255);
 
     public TextRotation(int value)

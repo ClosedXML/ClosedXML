@@ -5,6 +5,20 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal record XLBorderFormatValue
 {
+    internal static readonly XLBorderFormatValue None = new()
+    {
+        Left = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Right = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Top = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Bottom = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Diagonal = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Vertical = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        Horizontal = new XLBorderLine(XLColor.NoColor, XLBorderStyleValues.None),
+        DiagonalUp = false,
+        DiagonalDown = false,
+        Outline = false
+    };
+
     public required XLBorderLine? Left { get; init; }
 
     public required XLBorderLine? Right { get; init; }
