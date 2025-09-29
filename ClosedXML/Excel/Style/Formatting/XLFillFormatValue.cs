@@ -5,7 +5,21 @@ namespace ClosedXML.Excel.Formatting;
 /// </summary>
 internal record XLFillFormatValue
 {
-    public static readonly XLFillFormatValue Empty = new(null, null, null);
+    internal static readonly XLFillFormatValue Empty = new(null, null, null);
+
+    internal static readonly XLFillFormatValue None = new(new XLPatternFill
+    {
+        PatternType = XLFillPatternValues.None,
+        BackgroundColor = XLColor.NoColor,
+        PatternColor = XLColor.NoColor
+    });
+
+    internal static readonly XLFillFormatValue Gray125 = new(new XLPatternFill
+    {
+        PatternType = XLFillPatternValues.Gray125,
+        BackgroundColor = XLColor.NoColor,
+        PatternColor = XLColor.NoColor
+    });
 
     public XLFillFormatValue(XLPatternFill pattern)
         : this(pattern, null, null)

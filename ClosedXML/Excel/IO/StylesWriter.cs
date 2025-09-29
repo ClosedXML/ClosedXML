@@ -19,20 +19,6 @@ internal class StylesWriter
 {
     private const int FirstUserDefinedFormatIndex = 164;
 
-    private static readonly XLFillFormatValue FillNone = new(new XLPatternFill
-    {
-        PatternType = XLFillPatternValues.None,
-        BackgroundColor = XLColor.NoColor,
-        PatternColor = XLColor.NoColor
-    });
-
-    private static readonly XLFillFormatValue FillGray125 = new(new XLPatternFill
-    {
-        PatternType = XLFillPatternValues.Gray125,
-        BackgroundColor = XLColor.NoColor,
-        PatternColor = XLColor.NoColor
-    });
-
     private static readonly List<(string Type, TableRegion? TableRegion, PivotRegion? PivotRegion)> TableRegionsMap = new()
     {
         ("wholeTable", TableRegion.WholeTable, PivotRegion.WholeTable),
@@ -149,9 +135,9 @@ internal class StylesWriter
         // Fill 0 must be None and fill 1 must be Gray125, that is just an immutable fact of the universe.
         // Excel will ignore fills at 0/1 and will use None/Gray125. Write both fills whether they are used
         // or not.
-        AddFillAsUsed(FillNone);
-        AddFillAsUsed(FillGray125);
-        var fillsFormatsMap = SequentialMap<int, XLFillFormatValue>.Create(usedFills, styles.Fills, 0, FillNone, FillGray125);
+        AddFillAsUsed(XLFillFormatValue.None);
+        AddFillAsUsed(XLFillFormatValue.Gray125);
+        var fillsFormatsMap = SequentialMap<int, XLFillFormatValue>.Create(usedFills, styles.Fills, 0, XLFillFormatValue.None, XLFillFormatValue.Gray125);
         WriteFills(xml, fillsFormatsMap);
 
         var borderFormatsMap = SequentialMap<int, XLBorderFormatValue>.Create(usedBorders, styles.Borders);
