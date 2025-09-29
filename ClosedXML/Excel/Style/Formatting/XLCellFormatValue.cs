@@ -70,4 +70,21 @@ internal record XLCellFormatValue
     /// </para>
     /// </summary>
     public required CellFormatComponents CustomFormat { get; init; }
+
+    internal static XLCellFormatValue FromStyle(StyleId styleId, XLCellStyleValue style)
+    {
+        return new XLCellFormatValue
+        {
+            NumberFormat = style.NumberFormat,
+            Alignment = style.Alignment,
+            Protection = style.Protection,
+            Font = style.Font,
+            Fill = style.Fill,
+            Border = style.Border,
+            CellStyleId = styleId,
+            IncludeQuotePrefix = false,
+            PivotButton = false,
+            CustomFormat = CellFormatComponents.None
+        };
+    }
 }

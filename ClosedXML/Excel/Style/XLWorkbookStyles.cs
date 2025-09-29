@@ -1,7 +1,7 @@
 using System;
-using ClosedXML.Excel.Formatting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ClosedXML.Excel.Formatting;
 using ClosedXML.Utils;
 
 namespace ClosedXML.Excel;

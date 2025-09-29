@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
 
         internal SharedStringTable SharedStringTable { get; } = new();
 
-        internal XLWorkbookStyles Styles { get; set; } = new();
+        internal XLWorkbookStyles Styles { get; }
 
         #region Nested Type : XLLoadSource
 
@@ -741,6 +741,7 @@ namespace ClosedXML.Excel
         internal XLWorkbook(String file, Boolean asTemplate)
             : this(new LoadOptions())
         {
+            Styles = new XLWorkbookStyles();
             LoadSheetsFromTemplate(file);
         }
 
@@ -759,6 +760,7 @@ namespace ClosedXML.Excel
             _loadSource = XLLoadSource.File;
             _originalFile = file;
             _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
+            Styles = new XLWorkbookStyles();
             Load(file);
 
             if (loadOptions.RecalculateAllFormulas)
@@ -779,6 +781,7 @@ namespace ClosedXML.Excel
         {
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
+            Styles = new XLWorkbookStyles();
             Load(stream);
 
             if (loadOptions.RecalculateAllFormulas)
@@ -797,6 +800,7 @@ namespace ClosedXML.Excel
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
+            Styles = XLWorkbookStyles.CreateInitialized();
             Style = new XLStyle(null, DefaultStyle);
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
