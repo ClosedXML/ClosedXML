@@ -265,7 +265,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, s, worksheetPart, sharedStrings, context);
+                worksheetPartReader.LoadWorksheet(ws, worksheetPart, sharedStrings, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 

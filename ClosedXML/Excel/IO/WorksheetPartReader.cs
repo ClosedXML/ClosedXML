@@ -29,7 +29,7 @@ internal class WorksheetPartReader
     private Int32 _lastRow;
     private Int32 _lastColumnNumber;
 
-    internal void LoadWorksheet(XLWorksheet ws, Stylesheet s, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, LoadContext context)
+    internal void LoadWorksheet(XLWorksheet ws, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, LoadContext context)
     {
         var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
