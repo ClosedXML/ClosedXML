@@ -550,6 +550,9 @@ internal class StylesWriter
 
     private void WriteProtection(XmlTreeWriter xml, string elementName, XLProtectionFormatValue protection)
     {
+        if (protection.Locked && !protection.Hidden)
+            return;
+
         xml.WriteStartElement(elementName, _ns);
         xml.WriteAttributeDefault("locked", protection.Locked, true);
         xml.WriteAttributeDefault("hidden", protection.Hidden, false);
