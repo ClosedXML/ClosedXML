@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLTableRows : XLStylizedBase, IXLTableRows, IXLStylized
+    internal class XLTableRows : XLStylizedBase, IXLTableRows
     {
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
 

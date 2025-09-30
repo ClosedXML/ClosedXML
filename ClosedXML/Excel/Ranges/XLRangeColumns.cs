@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns, IXLStylized
+    internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns
     {
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
 

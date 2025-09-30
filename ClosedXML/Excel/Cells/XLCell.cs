@@ -19,7 +19,7 @@ using ClosedXML.Excel.Formatting;
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
-    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLStylized, IXLFormatContainer
+    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLFormatContainer, IXLStylized
     {
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word

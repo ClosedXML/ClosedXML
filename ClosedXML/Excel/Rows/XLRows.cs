@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRows : XLStylizedBase, IXLRows, IXLStylized
+    internal class XLRows : XLStylizedBase, IXLRows
     {
         private readonly List<XLRow> _rowsCollection = new List<XLRow>();
         private readonly XLWorksheet? _worksheet;

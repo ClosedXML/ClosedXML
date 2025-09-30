@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    internal class XLStylizedEmpty : XLStylizedBase, IXLStylized
+    internal class XLStylizedEmpty : XLStylizedBase
     {
         public XLStylizedEmpty(IXLStyle? defaultStyle)
             : base((defaultStyle as XLStyle)?.Value)

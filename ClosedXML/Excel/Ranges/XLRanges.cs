@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRanges : XLStylizedBase, IXLRanges, IXLStylized
+    internal class XLRanges : XLStylizedBase, IXLRanges
     {
         /// <summary>
         /// Normally, XLRanges collection includes ranges from a single worksheet, but not necessarily.

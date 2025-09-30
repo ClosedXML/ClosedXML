@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Linq;
 
-    internal class XLCells : XLStylizedBase, IXLCells, IXLStylized, IEnumerable<XLCell>
+    internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
     {
         #region Fields
 

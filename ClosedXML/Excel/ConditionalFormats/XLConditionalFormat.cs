@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLConditionalFormat : XLStylizedBase, IXLConditionalFormat, IXLStylized
+    internal class XLConditionalFormat : XLStylizedBase, IXLConditionalFormat
     {
         private sealed class FullEqualityComparer : IEqualityComparer<IXLConditionalFormat>
         {
