@@ -169,8 +169,7 @@ internal class StylesWriter
 
         dxfMap.Sort();
 
-        if (dxfMap.Count > 0)
-            WriteDxfs(xml, dxfMap, numberFormatMap.Count);
+        WriteDxfs(xml, dxfMap, numberFormatMap.Count);
 
         var hasTableStyles = styles.TableStyles.Count > 0 ||
                              styles.PivotStyles.Count > 0 ||
