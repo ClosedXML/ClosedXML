@@ -390,17 +390,20 @@ internal class StylesWriter
         xml.WriteStartElement("borders", _ns);
         xml.WriteAttribute("count", idMap.Count);
         foreach (var (_, border) in idMap.GetActual())
-            WriteBorder(xml, "border", border);
+            WriteBorder(xml, "border", border, false);
 
         xml.WriteEndElement();
     }
 
-    private void WriteBorder(XmlTreeWriter xml, string elementName, XLBorderFormatValue border)
+    private void WriteBorder(XmlTreeWriter xml, string elementName, XLBorderFormatValue border, bool isDxf)
     {
         xml.WriteStartElement(elementName, _ns);
         xml.WriteAttributeDefault("diagonalUp", border.DiagonalUp, false);
         xml.WriteAttributeDefault("diagonalDown", border.DiagonalDown, false);
-        xml.WriteAttributeDefault("outline", border.Outline, true);
+
+        // Outline has no meaning for cell styles, it is only for dxf - tables and such.
+        if (isDxf)
+            xml.WriteAttributeDefault("outline", border.Outline, true);
 
         // ISO should be "start"+"end", but Excel uses "left"+"right"
         WriteBorderPr("left", border.Left);
@@ -623,7 +626,7 @@ internal class StylesWriter
                 WriteAlignment(xml, "alignment", alignment);
 
             if (dxf.Border is { } border)
-                WriteBorder(xml, "border", border);
+                WriteBorder(xml, "border", border, true);
 
             if (dxf.Protection is { } protection)
                 WriteProtection(xml, "protection", protection);
