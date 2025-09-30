@@ -172,7 +172,11 @@ internal class StylesWriter
         if (dxfMap.Count > 0)
             WriteDxfs(xml, dxfMap, numberFormatMap.Count);
 
-        if (styles.TableStyles.Count > 0 || styles.PivotStyles.Count > 0)
+        var hasTableStyles = styles.TableStyles.Count > 0 ||
+                             styles.PivotStyles.Count > 0 ||
+                             styles.DefaultTableStyle is not null ||
+                             styles.DefaultPivotStyle is not null;
+        if (hasTableStyles)
             WriteTableStyles(xml, dxfMap, styles);
 
         WriteColors(xml, styles);
