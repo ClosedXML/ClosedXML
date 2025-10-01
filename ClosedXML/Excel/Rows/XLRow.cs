@@ -7,18 +7,12 @@ namespace ClosedXML.Excel
 {
     internal sealed class XLRow : XLRangeBase, IXLRow
     {
-        #region Private fields
-
         /// <summary>
         /// Don't use directly, use properties.
         /// </summary>
         private XlRowFlags _flags;
         private Double _height;
         private Int32 _outlineLevel;
-
-        #endregion Private fields
-
-        #region Constructor
 
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
@@ -30,8 +24,6 @@ namespace ClosedXML.Excel
 
             _height = worksheet.RowHeight;
         }
-
-        #endregion Constructor
 
         public override XLRangeType RangeType
         {
@@ -228,7 +220,7 @@ namespace ClosedXML.Excel
 
         public override XLCells Cells(String cellsInRow)
         {
-            var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var retVal = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
@@ -491,7 +483,7 @@ namespace ClosedXML.Excel
             var newRow = (XLRow)row;
             newRow._height = _height;
             newRow.HeightChanged = HeightChanged;
-            newRow.InnerStyle = GetStyle();
+            newRow.InnerStyle = Style;
             newRow.IsHidden = IsHidden;
 
             AsRange().CopyTo(row);
@@ -511,7 +503,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows(String rows)
         {
-            var retVal = new XLRangeRows();
+            var retVal = new XLRangeRows(Worksheet);
             var rowPairs = rows.Split(',');
             foreach (string pair in rowPairs)
                 AsRange().Rows(pair.Trim()).ForEach(retVal.Add);

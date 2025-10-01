@@ -794,7 +794,7 @@ internal class WorksheetPartReader
         {
             var ranges = conditionalFormatting.SequenceOfReferences.Items
                 .Select(sor => ws.Range(sor.Value));
-            var conditionalFormat = new XLConditionalFormat(ranges);
+            var conditionalFormat = new XLConditionalFormat(ws, ranges);
 
             conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
 

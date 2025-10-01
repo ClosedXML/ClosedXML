@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
         private XLDataValidation(XLWorksheet worksheet)
         {
             _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
-            _ranges = new XLRanges();
+            _ranges = new XLRanges(worksheet);
             Initialize();
         }
 

@@ -47,7 +47,8 @@ internal abstract class XLPivotStyleFormatBase : IXLPivotStyleFormat, IXLStylize
             StyleValue = XLStyleValue.FromKey(ref styleKey);
         }
     }
-    public IXLRanges RangesUsed { get; } = new XLRanges();
+
+    public IEnumerable<IXLRange> RangesUsed => Array.Empty<IXLRange>();
 
     public XLStyleValue StyleValue
     {

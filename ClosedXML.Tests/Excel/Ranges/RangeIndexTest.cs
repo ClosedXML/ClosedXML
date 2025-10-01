@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using ClosedXML.Excel.Patterns;
 using ClosedXML.Excel.Ranges.Index;
 using NUnit.Framework;
@@ -230,7 +230,7 @@ namespace ClosedXML.Tests.Excel.Ranges
                 var range2 = ws.Range("A2:B3");
                 var range3 = ws.Range("A1:B2"); // same as range1
 
-                var ranges = new XLRanges();
+                var ranges = new XLRanges(wb);
                 ranges.Add(range1);
                 Assert.AreEqual(1, ranges.Count);
                 ranges.Add(range2);

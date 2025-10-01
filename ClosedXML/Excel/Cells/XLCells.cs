@@ -8,27 +8,26 @@ namespace ClosedXML.Excel
 
     internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
     {
-        #region Fields
-
+        private readonly XLWorkbook _workbook;
         private readonly List<XLRangeAddress> _rangeAddresses = new List<XLRangeAddress>();
         private readonly bool _usedCellsOnly;
         private readonly Func<IXLCell, Boolean> _predicate;
         private readonly XLCellsUsedOptions _options;
         private bool _styleInitialized = false;
 
-        #endregion Fields
+        public XLCells(XLWorksheet worksheet, bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
+            : this(worksheet.Workbook, usedCellsOnly, options, predicate)
+        {
+        }
 
-        #region Constructor
-
-        public XLCells(bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
+        public XLCells(XLWorkbook workbook, bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
             : base(XLStyle.Default.Value)
         {
+            _workbook = workbook;
             _usedCellsOnly = usedCellsOnly;
             _options = options;
             _predicate = predicate ?? (_ => true);
         }
-
-        #endregion Constructor
 
         #region IEnumerable<XLCell> Members
 
@@ -222,11 +221,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges();
+                var retVal = new XLRanges(_workbook);
                 this.ForEach<XLCell>(c => retVal.Add(c.AsRange()));
                 return retVal;
             }

@@ -7,13 +7,7 @@ namespace ClosedXML.Excel
 {
     internal class XLColumn : XLRangeBase, IXLColumn
     {
-        #region Private fields
-
         private int _outlineLevel;
-
-        #endregion Private fields
-
-        #region Constructor
 
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
@@ -25,8 +19,6 @@ namespace ClosedXML.Excel
 
             Width = worksheet.ColumnWidth;
         }
-
-        #endregion Constructor
 
         public override XLRangeType RangeType
         {
@@ -73,7 +65,7 @@ namespace ClosedXML.Excel
 
         public override XLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(false, XLCellsUsedOptions.All);
+            var retVal = new XLCells(Worksheet, false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
@@ -432,7 +424,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumns Columns(String columns)
         {
-            var retVal = new XLRangeColumns();
+            var retVal = new XLRangeColumns(Worksheet);
             var columnPairs = columns.Split(',');
             foreach (string pair in columnPairs)
                 AsRange().Columns(pair.Trim()).ForEach(retVal.Add);

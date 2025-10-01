@@ -9,10 +9,12 @@ namespace ClosedXML.Excel
 
     internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns
     {
+        private readonly XLWorksheet _worksheet;
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
 
-        public XLRangeColumns() : base(XLWorkbook.DefaultStyleValue)
+        public XLRangeColumns(XLWorksheet worksheet) : base(XLWorkbook.DefaultStyleValue)
         {
+            _worksheet = worksheet;
         }
 
         #region IXLRangeColumns Members
@@ -49,7 +51,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(usedCellsOnly: false, options: XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, usedCellsOnly: false, options: XLCellsUsedOptions.AllContents);
             foreach (XLRangeColumn container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -57,7 +59,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(usedCellsOnly: true, options: XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, usedCellsOnly: true, options: XLCellsUsedOptions.AllContents);
             foreach (XLRangeColumn container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -66,7 +68,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(usedCellsOnly: true, options: options);
+            var cells = new XLCells(_worksheet, usedCellsOnly: true, options: options);
             foreach (XLRangeColumn container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -85,11 +87,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges();
+                var retVal = new XLRanges(_worksheet);
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }

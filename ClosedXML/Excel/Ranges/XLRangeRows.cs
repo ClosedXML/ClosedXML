@@ -9,10 +9,12 @@ namespace ClosedXML.Excel
 
     internal class XLRangeRows : XLStylizedBase, IXLRangeRows
     {
+        private readonly XLWorksheet _worksheet;
         private readonly List<XLRangeRow> _ranges = new List<XLRangeRow>();
 
-        public XLRangeRows() : base(XLStyle.Default.Value)
+        public XLRangeRows(XLWorksheet worksheet) : base(XLStyle.Default.Value)
         {
+            _worksheet = worksheet;
         }
 
         #region IXLRangeRows Members
@@ -49,7 +51,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, false, XLCellsUsedOptions.AllContents);
             foreach (XLRangeRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -57,7 +59,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, true, XLCellsUsedOptions.AllContents);
             foreach (XLRangeRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -66,7 +68,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(true, options);
+            var cells = new XLCells(_worksheet, true, options);
             foreach (XLRangeRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -86,11 +88,11 @@ namespace ClosedXML.Excel
         }
 
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges();
+                var retVal = new XLRanges(_worksheet);
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }

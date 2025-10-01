@@ -8,14 +8,10 @@ namespace ClosedXML.Excel
 {
     internal class XLRange : XLRangeBase, IXLRange
     {
-        #region Constructor
-
         public XLRange(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
         {
         }
-
-        #endregion Constructor
 
         public override XLRangeType RangeType
         {
@@ -41,7 +37,7 @@ namespace ClosedXML.Excel
 
         public virtual IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null)
         {
-            var retVal = new XLRangeColumns();
+            var retVal = new XLRangeColumns(Worksheet);
             Int32 columnCount = ColumnCount();
             for (Int32 c = 1; c <= columnCount; c++)
             {
@@ -54,7 +50,7 @@ namespace ClosedXML.Excel
 
         public virtual IXLRangeColumns Columns(Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new XLRangeColumns();
+            var retVal = new XLRangeColumns(Worksheet);
 
             for (int co = firstColumn; co <= lastColumn; co++)
                 retVal.Add(Column(co));
@@ -69,7 +65,7 @@ namespace ClosedXML.Excel
 
         public virtual IXLRangeColumns Columns(String columns)
         {
-            var retVal = new XLRangeColumns();
+            var retVal = new XLRangeColumns(Worksheet);
             var columnPairs = columns.Split(',');
             foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
             {
@@ -156,7 +152,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null)
         {
-            var retVal = new XLRangeRows();
+            var retVal = new XLRangeRows(Worksheet);
             Int32 rowCount = RowCount();
             for (Int32 r = 1; r <= rowCount; r++)
             {
@@ -169,7 +165,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows(Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new XLRangeRows();
+            var retVal = new XLRangeRows(Worksheet);
 
             for (int ro = firstRow; ro <= lastRow; ro++)
                 retVal.Add(Row(ro));
@@ -178,7 +174,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows(String rows)
         {
-            var retVal = new XLRangeRows();
+            var retVal = new XLRangeRows(Worksheet);
             var rowPairs = rows.Split(',');
             foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
@@ -588,7 +584,7 @@ namespace ClosedXML.Excel
 
         internal XLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null)
         {
-            XLRangeRows rows = new XLRangeRows();
+            XLRangeRows rows = new XLRangeRows(Worksheet);
             Int32 rowCount = RowCount(options);
 
             for (Int32 ro = 1; ro <= rowCount; ro++)
@@ -618,7 +614,7 @@ namespace ClosedXML.Excel
 
         internal virtual XLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null)
         {
-            XLRangeColumns columns = new XLRangeColumns();
+            XLRangeColumns columns = new XLRangeColumns(Worksheet);
             Int32 columnCount = ColumnCount(options);
 
             for (Int32 co = 1; co <= columnCount; co++)

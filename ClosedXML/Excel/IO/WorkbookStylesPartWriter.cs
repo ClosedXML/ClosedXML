@@ -248,7 +248,6 @@ namespace ClosedXML.Excel.IO
             {
                 var emptyContainer = new XLStylizedEmpty(DefaultStyle);
 
-                var style = new XLStyle(emptyContainer, DefaultStyle);
                 OpenXmlHelper.LoadFont(df.Font, emptyContainer.Style.Font);
                 OpenXmlHelper.LoadBorder(df.Border, emptyContainer.Style.Border);
                 OpenXmlHelper.LoadNumberFormat(df.NumberingFormat, emptyContainer.Style.NumberFormat);

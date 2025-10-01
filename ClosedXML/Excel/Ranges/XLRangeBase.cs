@@ -11,20 +11,8 @@ namespace ClosedXML.Excel
 {
     internal abstract class XLRangeBase : XLStylizedBase, IXLRangeBase, IXLStylized
     {
-        #region Fields
-
         private XLSortElements _sortRows;
         private XLSortElements _sortColumns;
-
-        #endregion Fields
-
-        protected IXLStyle GetStyle()
-        {
-            return Style;
-        }
-
-        #region Constructor
-
         private static Int32 IdCounter = 0;
         private readonly Int32 Id;
 
@@ -35,8 +23,6 @@ namespace ClosedXML.Excel
 
             _rangeAddress = rangeAddress;
         }
-
-        #endregion Constructor
 
         protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
@@ -179,14 +165,7 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public override IXLRanges RangesUsed
-        {
-            get
-            {
-                var retVal = new XLRanges { AsRange() };
-                return retVal;
-            }
-        }
+        public override IEnumerable<IXLRange> RangesUsed => new XLRanges(Worksheet) { AsRange() };
 
         protected override IEnumerable<XLStylizedBase> Children
         {
@@ -271,7 +250,7 @@ namespace ClosedXML.Excel
 
         public XLCells Cells(Boolean usedCellsOnly, XLCellsUsedOptions options)
         {
-            var cells = new XLCells(usedCellsOnly, options) { RangeAddress };
+            var cells = new XLCells(Worksheet, usedCellsOnly, options) { RangeAddress };
             return cells;
         }
 
@@ -282,7 +261,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
+            var cells = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
             return cells;
         }
 
@@ -917,7 +896,7 @@ namespace ClosedXML.Excel
 
         public virtual XLRanges Ranges(String ranges)
         {
-            var retVal = new XLRanges();
+            var retVal = new XLRanges(Worksheet);
             var rangePairs = ranges.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()));
@@ -926,7 +905,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges(params String[] ranges)
         {
-            var retVal = new XLRanges();
+            var retVal = new XLRanges(Worksheet);
             foreach (string pair in ranges)
                 retVal.Add(Range(pair));
             return retVal;
@@ -948,19 +927,19 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(true, options) { RangeAddress };
+            var cells = new XLCells(Worksheet,true, options) { RangeAddress };
             return cells;
         }
 
         public IXLCells CellsUsed(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(true, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
+            var cells = new XLCells(Worksheet,true, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
             return cells;
         }
 
         public IXLCells CellsUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(true, options, predicate) { RangeAddress };
+            var cells = new XLCells(Worksheet, true, options, predicate) { RangeAddress };
             return cells;
         }
 
@@ -1785,15 +1764,7 @@ namespace ClosedXML.Excel
 
         public IXLConditionalFormat AddConditionalFormat()
         {
-            var cf = new XLConditionalFormat(AsRange());
-            Worksheet.ConditionalFormats.Add(cf);
-            return cf;
-        }
-
-        internal IXLConditionalFormat AddConditionalFormat(IXLConditionalFormat source)
-        {
-            var cf = new XLConditionalFormat(AsRange());
-            cf.CopyFrom(source);
+            var cf = new XLConditionalFormat(Worksheet, AsRange());
             Worksheet.ConditionalFormats.Add(cf);
             return cf;
         }
@@ -1877,7 +1848,7 @@ namespace ClosedXML.Excel
 
         public IXLCells SurroundingCells(Func<IXLCell, Boolean> predicate = null)
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents, predicate);
+            var cells = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents, predicate);
             this.Grow().Cells(c => !this.Contains(c)).ForEach(c => cells.Add(c as XLCell));
             return cells;
         }
@@ -1887,7 +1858,7 @@ namespace ClosedXML.Excel
             if (otherRange == null)
                 return this.Cells(thisRangePredicate);
 
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents);
             if (!this.Worksheet.Equals(otherRange.Worksheet))
                 return cells;
 
@@ -1903,7 +1874,7 @@ namespace ClosedXML.Excel
             if (otherRange == null)
                 return this.Cells(thisRangePredicate);
 
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents);
             if (!this.Worksheet.Equals(otherRange.Worksheet))
                 return cells;
 

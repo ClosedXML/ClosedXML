@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
     /// </summary>
     internal class XLConditionalFormats : IXLConditionalFormats
     {
+        private readonly XLWorksheet _worksheet;
         private readonly List<IXLConditionalFormat> _conditionalFormats = new();
 
         private static readonly List<XLConditionalFormatType> CFTypesExcludedFromConsolidation = new()
@@ -23,6 +24,11 @@ namespace ClosedXML.Excel
             XLConditionalFormatType.IsDuplicate,
             XLConditionalFormatType.IsUnique
         };
+
+        public XLConditionalFormats(XLWorksheet worksheet)
+        {
+            _worksheet = worksheet;
+        }
 
         public void Add(IXLConditionalFormat conditionalFormat)
         {
@@ -60,10 +66,10 @@ namespace ClosedXML.Excel
 
                 if (!CFTypesExcludedFromConsolidation.Contains(item.ConditionalFormatType))
                 {
-                    var rangesToJoin = new XLRanges();
+                    var rangesToJoin = new XLRanges(_worksheet);
                     item.Ranges.ForEach(r => rangesToJoin.Add(r));
                     var firstRange = item.Ranges.First();
-                    var skippedRanges = new XLRanges();
+                    var skippedRanges = new XLRanges(_worksheet);
                     Func<IXLConditionalFormat, bool> IsSameFormat = f =>
                         f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
                         XLConditionalFormat.NoRangeComparer.Equals(f, item);

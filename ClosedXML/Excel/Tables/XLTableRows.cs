@@ -7,10 +7,12 @@ namespace ClosedXML.Excel
 {
     internal class XLTableRows : XLStylizedBase, IXLTableRows
     {
+        private readonly XLWorksheet _worksheet;
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
 
-        public XLTableRows(IXLStyle defaultStyle) : base(((XLStyle)defaultStyle).Value)
+        public XLTableRows(XLWorksheet worksheet) : base(((XLStyle)worksheet.Style).Value)
         {
+            _worksheet = worksheet;
         }
 
         #region IXLStylized Members
@@ -26,11 +28,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges();
+                var retVal = new XLRanges(_worksheet);
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }
@@ -71,7 +73,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, false, XLCellsUsedOptions.AllContents);
             foreach (XLTableRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -79,7 +81,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_worksheet, true, XLCellsUsedOptions.AllContents);
             foreach (XLTableRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -94,7 +96,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(false, options);
+            var cells = new XLCells(_worksheet, false, options);
             foreach (XLTableRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;

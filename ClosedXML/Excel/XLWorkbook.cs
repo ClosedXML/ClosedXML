@@ -670,7 +670,7 @@ namespace ClosedXML.Excel
 
         public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(this, false, XLCellsUsedOptions.AllContents);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
                 foreach (XLCell cell in ws.CellsUsed(XLCellsUsedOptions.All))
@@ -684,7 +684,7 @@ namespace ClosedXML.Excel
 
         public IXLRows FindRows(Func<IXLRow, Boolean> predicate)
         {
-            var rows = new XLRows(worksheet: null);
+            var rows = new XLRows(this, worksheet: null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
                 foreach (IXLRow row in ws.Rows().Where(predicate))
@@ -866,7 +866,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges(String ranges)
         {
-            var retVal = new XLRanges();
+            var retVal = new XLRanges(this);
             var rangePairs = ranges.Split(',');
             foreach (var range in rangePairs.Select(r => Range(r.Trim())).Where(range => range != null))
             {

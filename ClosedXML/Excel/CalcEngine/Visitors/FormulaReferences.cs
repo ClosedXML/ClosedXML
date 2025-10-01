@@ -1,4 +1,4 @@
-﻿using ClosedXML.Parser;
+using ClosedXML.Parser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +49,7 @@ internal class FormulaReferences
 
     internal XLRanges GetExternalRanges(XLWorkbook workbook, XLSheetPoint anchor)
     {
-        var list = new XLRanges();
+        var list = new XLRanges(workbook);
         foreach (var reference in SheetReferences)
         {
             if (workbook.TryGetWorksheet(reference.Sheet, out XLWorksheet sheet))

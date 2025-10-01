@@ -32,7 +32,6 @@ namespace ClosedXML.Excel
         internal XLPivotTable(XLWorksheet worksheet, XLPivotCache cache)
         {
             _worksheet = worksheet;
-
             Filters = new XLPivotTableFilters(this);
             RowAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisRow);
             ColumnAxis = new XLPivotTableAxis(this, XLPivotAxis.AxisCol);
@@ -234,7 +233,7 @@ namespace ClosedXML.Excel
 
                 var oldname = _name ?? string.Empty;
 
-                if (!XLHelper.ValidateName("pivot table", value, oldname, Worksheet.PivotTables.Select(pvt => pvt.Name), out String message))
+                if (!XLHelper.ValidateName("pivot table", value, oldname, _worksheet.PivotTables.Select<XLPivotTable, string>(pvt => pvt.Name), out var message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;

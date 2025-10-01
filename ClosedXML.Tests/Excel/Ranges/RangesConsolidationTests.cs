@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Linq;
 
@@ -10,9 +10,9 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateRangesSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws.Range("A1:E3"));
             ranges.Add(ws.Range("A4:B10"));
             ranges.Add(ws.Range("E2:F12"));
@@ -37,9 +37,9 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateWideRangesSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws.Row(5));
             ranges.Add(ws.Row(7));
             ranges.Add(ws.Row(6));
@@ -62,10 +62,10 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateRangesDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws1.Range("A1:E3"));
             ranges.Add(ws1.Range("A4:B10"));
             ranges.Add(ws1.Range("E2:F12"));
@@ -106,9 +106,9 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateSparsedRanges()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws.Range("A1:C1"));
             ranges.Add(ws.Range("E1:G1"));
             ranges.Add(ws.Range("A3:C3"));

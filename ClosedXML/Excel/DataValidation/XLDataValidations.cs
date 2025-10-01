@@ -197,7 +197,7 @@ namespace ClosedXML.Excel
                 var consRule = similarRules.First();
                 var ranges = similarRules.SelectMany(dv => dv.Ranges).ToList();
 
-                IXLRanges consolidatedRanges = new XLRanges();
+                IXLRanges consolidatedRanges = new XLRanges(_worksheet);
                 ranges.ForEach(r => consolidatedRanges.Add(r));
                 consolidatedRanges = consolidatedRanges.Consolidate();
 

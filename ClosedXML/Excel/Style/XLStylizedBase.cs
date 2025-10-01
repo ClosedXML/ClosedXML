@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
         /// </summary>
         protected abstract IEnumerable<XLStylizedBase> Children { get; }
 
-        public abstract IXLRanges RangesUsed { get; }
+        public abstract IEnumerable<IXLRange> RangesUsed { get; }
 
         #endregion Properties
 

@@ -12,18 +12,14 @@ namespace ClosedXML.Excel
     /// </summary>
     internal class XLRangeConsolidationEngine
     {
-        #region Public Constructors
+        private readonly XLWorkbook _workbook;
+        private readonly XLRanges _allRanges;
 
-        public XLRangeConsolidationEngine(IXLRanges ranges)
+        public XLRangeConsolidationEngine(XLWorkbook workbook, XLRanges ranges)
         {
-            if (ranges == null)
-                throw new ArgumentNullException(nameof(ranges));
-            _allRanges = ranges;
+            _workbook = workbook;
+            _allRanges = ranges ?? throw new ArgumentNullException(nameof(ranges));
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public IXLRanges Consolidate()
         {
@@ -32,7 +28,7 @@ namespace ClosedXML.Excel
 
             var worksheets = _allRanges.Select(r => r.Worksheet).Distinct().OrderBy(ws => ws.Position);
 
-            IXLRanges retVal = new XLRanges();
+            IXLRanges retVal = new XLRanges(_workbook);
             foreach (var ws in worksheets)
             {
                 var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where(r => r.Worksheet == ws).ToList());
@@ -45,14 +41,6 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
-
-        #endregion Public Methods
-
-        #region Private Fields
-
-        private readonly IXLRanges _allRanges;
-
-        #endregion Private Fields
 
         #region Private Classes
 

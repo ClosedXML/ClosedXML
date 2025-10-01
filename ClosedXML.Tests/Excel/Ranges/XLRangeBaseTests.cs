@@ -399,8 +399,9 @@ namespace ClosedXML.Tests
         [Test]
         public void RangesRemoveAllWithoutDispose()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var ranges = new XLRanges(wb);
             ranges.Add(ws.Range("A1:A2"));
             ranges.Add(ws.Range("B1:B2"));
             var rangesCopy = ranges.ToList();
@@ -417,8 +418,9 @@ namespace ClosedXML.Tests
         [Test]
         public void RangesRemoveAllByCriteria()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var ranges = new XLRanges(wb);
             ranges.Add(ws.Range("A1:A2"));
             ranges.Add(ws.Range("B1:B3"));
             ranges.Add(ws.Range("C1:C4"));
@@ -433,11 +435,11 @@ namespace ClosedXML.Tests
         [Test]
         public void XLRangesReturnsRangesInDeterministicOrder()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Another sheet");
 
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws2.Range("F1:F12"));
             ranges.Add(ws1.Range("F12:F16"));
             ranges.Add(ws1.Range("B1:F2"));

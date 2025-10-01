@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Linq;
 
@@ -155,7 +155,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
-            var cf = new XLConditionalFormat(ranges);
+            var cf = new XLConditionalFormat((XLWorksheet)ws, ranges);
             cf.Values.Add(new XLFormula("=A3=$D3"));
             cf.Style.Fill.SetBackgroundColor(XLColor.Red);
             ws.ConditionalFormats.Add(cf);
@@ -176,13 +176,13 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             {
                 var ws = wb.Worksheets.Add("Sheet");
 
-                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
-                var cf1 = new XLConditionalFormat(ranges);
+                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>().ToList();
+                var cf1 = new XLConditionalFormat((XLWorksheet)ws, ranges);
                 cf1.ColorScale()
                     .LowestValue(XLColor.Red)
                     .HighestValue(XLColor.Green);
 
-                var cf2 = new XLConditionalFormat(ranges);
+                var cf2 = new XLConditionalFormat((XLWorksheet)ws, ranges);
                 cf2.ColorScale()
                     .LowestValue(XLColor.Red)
                     .HighestValue(XLColor.Green);

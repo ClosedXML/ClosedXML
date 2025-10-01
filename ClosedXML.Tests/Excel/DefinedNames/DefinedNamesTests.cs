@@ -76,7 +76,7 @@ namespace ClosedXML.Tests.Excel
                 ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
                 ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
                 ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
-                wb.DefinedNames.Add("Named range 5", new XLRanges
+                wb.DefinedNames.Add("Named range 5", new XLRanges(wb)
                 {
                     ws1.Range("A5:D5"),
                     ws3.Range("A5:D5")
@@ -179,10 +179,10 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyNamedRangeDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
-            var ranges = new XLRanges();
+            var ranges = new XLRanges(wb);
             ranges.Add(ws1.Range("B2:E6"));
             ranges.Add(ws2.Range("D1:E2"));
             var original = ws1.DefinedNames.Add("Named range", ranges);
@@ -392,7 +392,7 @@ namespace ClosedXML.Tests.Excel
                 {
                     var ws = wb.Worksheets.Add("Sheet 1");
 
-                    wb.DefinedNames.Add("Multirange named range", new XLRanges
+                    wb.DefinedNames.Add("Multirange named range", new XLRanges(wb)
                     {
                         ws.Range("A5:D5"),
                         ws.Range("A15:D15")
@@ -429,7 +429,7 @@ namespace ClosedXML.Tests.Excel
                 ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
                 ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
                 ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
-                wb.DefinedNames.Add("Named range 5", new XLRanges
+                wb.DefinedNames.Add("Named range 5", new XLRanges(wb)
                 {
                     ws1.Range("A5:D5"),
                     ws3.Range("A5:D5")
@@ -540,7 +540,7 @@ namespace ClosedXML.Tests.Excel
                     ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
                     ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
                     ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
-                    wb.DefinedNames.Add("Named range 5", new XLRanges
+                    wb.DefinedNames.Add("Named range 5", new XLRanges(wb)
                     {
                         ws1.Range("A5:D5"),
                         ws3.Range("A5:D5")

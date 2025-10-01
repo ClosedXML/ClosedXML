@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -33,7 +34,7 @@ namespace ClosedXML.Excel
         /// <see cref="XLCells"/>, it should return range for each element in the collection.
         /// </para>
         /// </summary>
-        IXLRanges RangesUsed { get; }
+        IEnumerable<IXLRange> RangesUsed { get; }
 
         /// <summary>
         /// Style value representing the current style of the stylized element.

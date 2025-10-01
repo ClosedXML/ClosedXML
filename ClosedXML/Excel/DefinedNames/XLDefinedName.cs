@@ -156,7 +156,7 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
         var rng = byExclamation[1];
         var rangeToAdd = _container.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
 
-        var ranges = new XLRanges { rangeToAdd };
+        var ranges = new XLRanges(_container.Workbook) { rangeToAdd };
         RefersTo = _formula + "," + string.Join(",", ranges.Select(RangeToFixed));
     }
 

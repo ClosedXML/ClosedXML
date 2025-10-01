@@ -5,8 +5,6 @@ namespace ClosedXML.Excel
 
     internal class XLRangeRow : XLRangeBase, IXLRangeRow
     {
-        #region Constructor
-
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
@@ -14,8 +12,6 @@ namespace ClosedXML.Excel
             : base(rangeParameters.RangeAddress, ((XLStyle)rangeParameters.DefaultStyle).Value)
         {
         }
-
-        #endregion Constructor
 
         #region IXLRangeRow Members
 
@@ -63,7 +59,7 @@ namespace ClosedXML.Excel
 
         public override XLCells Cells(string cellsInRow)
         {
-            var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var retVal = new XLCells(Worksheet, false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
@@ -146,7 +142,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows(string rows)
         {
-            var retVal = new XLRangeRows();
+            var retVal = new XLRangeRows(Worksheet);
             var columnPairs = rows.Split(',');
             foreach (string trimmedPair in columnPairs.Select(pair => pair.Trim()))
             {

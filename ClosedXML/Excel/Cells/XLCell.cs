@@ -1111,11 +1111,11 @@ namespace ClosedXML.Excel
             get { yield break; }
         }
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges { AsRange() };
+                var retVal = new XLRanges(Worksheet) { AsRange() };
                 return retVal;
             }
         }
@@ -1310,7 +1310,7 @@ namespace ClosedXML.Excel
                     .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
                     .ToList();
 
-                var c = new XLConditionalFormat(fmtRanges, true);
+                var c = new XLConditionalFormat(Worksheet, fmtRanges, true);
                 c.CopyFrom(cf);
                 c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), fmtRanges.First().FirstCell());
 

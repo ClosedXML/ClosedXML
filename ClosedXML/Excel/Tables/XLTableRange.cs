@@ -145,7 +145,7 @@ namespace ClosedXML.Excel
 
         public IXLTableRows Rows(Func<IXLTableRow, Boolean> predicate = null)
         {
-            var retVal = new XLTableRows(Worksheet.Style);
+            var retVal = new XLTableRows(Worksheet);
             Int32 rowCount = _range.RowCount();
 
             for (int r = 1; r <= rowCount; r++)
@@ -159,7 +159,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(int firstRow, int lastRow)
         {
-            var retVal = new XLTableRows(Worksheet.Style);
+            var retVal = new XLTableRows(Worksheet);
 
             for (int rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
                 retVal.Add(Row(rowNumber));
@@ -169,7 +169,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(string rows)
         {
-            var retVal = new XLTableRows(Worksheet.Style);
+            var retVal = new XLTableRows(Worksheet);
             var rowPairs = rows.Split(',');
             foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
@@ -200,7 +200,7 @@ namespace ClosedXML.Excel
 
         internal XLTableRows RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null)
         {
-            var rows = new XLTableRows(Worksheet.Style);
+            var rows = new XLTableRows(Worksheet);
             Int32 rowCount = RowCount();
 
             for (Int32 ro = 1; ro <= rowCount; ro++)

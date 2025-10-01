@@ -68,10 +68,10 @@ namespace ClosedXML.Excel
             PivotTables = new XLPivotTables(this);
             _protection = new XLSheetProtection(DefaultProtectionAlgorithm);
             AutoFilter = new XLAutoFilter();
-            ConditionalFormats = new XLConditionalFormats();
+            ConditionalFormats = new XLConditionalFormats(this);
             SparklineGroupsInternal = new XLSparklineGroups(this);
             Internals = new XLWorksheetInternals(new XLCellsCollection(this), new XLColumnsCollection(),
-                                                 new XLRowsCollection(), new XLRanges());
+                                                 new XLRowsCollection(), new XLRanges(this));
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             _columnWidth = workbook.ColumnWidth;
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
             ShowZeros = workbook.ShowZeros;
             RightToLeft = workbook.RightToLeft;
             TabColor = XLColor.NoColor;
-            _selectedRanges = new XLRanges();
+            _selectedRanges = new XLRanges(this);
 
             Author = workbook.Author;
         }
@@ -190,7 +190,7 @@ namespace ClosedXML.Excel
 
         #region IXLWorksheet Members
 
-        public XLWorkbook Workbook { get; private set; }
+        public XLWorkbook Workbook { get; }
 
         public Double ColumnWidth
         {
@@ -383,13 +383,13 @@ namespace ClosedXML.Excel
             rowMap.UnionWith(Internals.CellsCollection.RowsUsedKeys);
             rowMap.UnionWith(Internals.RowsCollection.Keys);
 
-            var retVal = new XLRows(this, StyleValue, rowMap.Select(Row));
+            var retVal = new XLRows(Workbook, this, StyleValue, rowMap.Select(Row));
             return retVal;
         }
 
         public IXLRows Rows(String rows)
         {
-            var retVal = new XLRows(null, StyleValue);
+            var retVal = new XLRows(Workbook, null, StyleValue);
             var rowPairs = rows.Split(',');
             foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
@@ -415,7 +415,7 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows(Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new XLRows(null, StyleValue);
+            var retVal = new XLRows(Workbook, null, StyleValue);
 
             for (int ro = firstRow; ro <= lastRow; ro++)
                 retVal.Add(Row(ro));
@@ -933,7 +933,7 @@ namespace ClosedXML.Excel
 
         public override XLRanges Ranges(String ranges)
         {
-            var retVal = new XLRanges();
+            var retVal = new XLRanges(Workbook);
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
             {
                 if (rangeAddressStr.StartsWith("#REF!"))
@@ -964,7 +964,7 @@ namespace ClosedXML.Excel
 
         public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean>? predicate = null)
         {
-            var rows = new XLRows(worksheet: null, StyleValue);
+            var rows = new XLRows(Workbook, worksheet: null, StyleValue);
             var rowsUsed = new HashSet<Int32>();
             foreach (var rowNum in Internals.RowsCollection.Keys.Concat(Internals.CellsCollection.RowsUsedKeys))
             {

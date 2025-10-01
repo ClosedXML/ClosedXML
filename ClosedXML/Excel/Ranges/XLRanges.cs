@@ -9,6 +9,8 @@ namespace ClosedXML.Excel
 
     internal class XLRanges : XLStylizedBase, IXLRanges
     {
+        private readonly XLWorkbook _workbook;
+
         /// <summary>
         /// Normally, XLRanges collection includes ranges from a single worksheet, but not necessarily.
         /// </summary>
@@ -27,8 +29,15 @@ namespace ClosedXML.Excel
             return rangeIndex;
         }
 
-        public XLRanges() : base(XLWorkbook.DefaultStyleValue)
+        public XLRanges(XLWorksheet worksheet)
+            : this(worksheet.Workbook)
         {
+        }
+
+        public XLRanges(XLWorkbook workbook)
+            : base(XLWorkbook.DefaultStyleValue)
+        {
+            _workbook = workbook;
             _indexes = new Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>>();
         }
 
@@ -193,7 +202,7 @@ namespace ClosedXML.Excel
 
         public XLCells Cells()
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_workbook, false, XLCellsUsedOptions.AllContents);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -201,7 +210,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
+            var cells = new XLCells(_workbook, true, XLCellsUsedOptions.AllContents);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -209,7 +218,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(true, options);
+            var cells = new XLCells(_workbook, true, options);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -219,19 +228,9 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        protected override IEnumerable<XLStylizedBase> Children
-        {
-            get
-            {
-                foreach (XLRange rng in Ranges)
-                    yield return rng;
-            }
-        }
+        protected override IEnumerable<XLStylizedBase> Children => Ranges;
 
-        public override IXLRanges RangesUsed
-        {
-            get { return this; }
-        }
+        public override IEnumerable<IXLRange> RangesUsed => this;
 
         #endregion IXLStylized Members
 
@@ -288,7 +287,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges Consolidate()
         {
-            var engine = new XLRangeConsolidationEngine(this);
+            var engine = new XLRangeConsolidationEngine(_workbook, this);
             return engine.Consolidate();
         }
     }

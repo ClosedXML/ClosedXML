@@ -183,7 +183,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, XLCellsUsedOptions.All);
+            var cells = new XLCells(_workbook, false, XLCellsUsedOptions.All);
             foreach (XLColumn container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -191,7 +191,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, XLCellsUsedOptions.All);
+            var cells = new XLCells(_workbook, true, XLCellsUsedOptions.All);
             foreach (XLColumn container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -206,7 +206,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(true, options);
+            var cells = new XLCells(_workbook, true, options);
             foreach (XLColumn container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -240,11 +240,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
+        public override IEnumerable<IXLRange> RangesUsed
         {
             get
             {
-                var retVal = new XLRanges();
+                var retVal = new XLRanges(_workbook);
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }

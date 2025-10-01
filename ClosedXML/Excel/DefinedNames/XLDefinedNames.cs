@@ -14,9 +14,9 @@ namespace ClosedXML.Excel
     {
         private readonly Dictionary<String, XLDefinedName> _namedRanges = new(XLHelper.NameComparer);
 
-        internal XLWorkbook Workbook { get; set; }
+        internal XLWorkbook Workbook { get; }
 
-        internal XLWorksheet? Worksheet { get; set; }
+        internal XLWorksheet? Worksheet { get; }
 
         internal XLNamedRangeScope Scope { get; }
 
@@ -120,7 +120,7 @@ namespace ClosedXML.Excel
 
         public IXLDefinedName Add(String name, IXLRange range, String? comment)
         {
-            var ranges = new XLRanges { range };
+            var ranges = new XLRanges(Workbook) { range };
             return Add(name, ranges, comment);
         }
 

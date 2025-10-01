@@ -258,7 +258,7 @@ namespace ClosedXML.Excel
                                                              Boolean expandTable)
         {
             var ws = tableRange.Worksheet;
-            var rows = new XLTableRows(ws.Style);
+            var rows = new XLTableRows(ws);
             var inserted = insertFunc(numberOfRows, false);
             inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, (XLRangeRow)r)));
 

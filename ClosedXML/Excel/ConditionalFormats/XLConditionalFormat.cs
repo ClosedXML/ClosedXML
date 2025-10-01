@@ -8,6 +8,8 @@ namespace ClosedXML.Excel
 {
     internal class XLConditionalFormat : XLStylizedBase, IXLConditionalFormat
     {
+        private readonly XLWorksheet _worksheet;
+
         private sealed class FullEqualityComparer : IEqualityComparer<IXLConditionalFormat>
         {
             private readonly bool _compareRange;
@@ -121,34 +123,35 @@ namespace ClosedXML.Excel
 
         #region Constructors
 
-        private XLConditionalFormat(XLStyleValue style)
+        private XLConditionalFormat(XLWorksheet worksheet)
             : base(XLStyle.Default.Value)
         {
+            _worksheet = worksheet;
             Id = Guid.NewGuid();
-            Ranges = new XLRanges();
+            Ranges = new XLRanges(worksheet);
             Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
-            : this(XLStyle.Default.Value)
+        public XLConditionalFormat(XLWorksheet worksheet, XLRange range, Boolean copyDefaultModify = false)
+            : this(worksheet)
         {
             if (range != null)
                 Ranges.Add(range);
             CopyDefaultModify = copyDefaultModify;
         }
 
-        public XLConditionalFormat(IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
-            : this(XLStyle.Default.Value)
+        public XLConditionalFormat(XLWorksheet worksheet, IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
+            : this(worksheet)
         {
             ranges?.ForEach(range => Ranges.Add(range));
             CopyDefaultModify = copyDefaultModify;
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IEnumerable<IXLRange> targetRanges)
-            : this(conditionalFormat.StyleValue)
+            : this(conditionalFormat._worksheet)
         {
             targetRanges?.ForEach(range => Ranges.Add(range));
             CopyFrom(conditionalFormat);
@@ -171,10 +174,7 @@ namespace ClosedXML.Excel
             get { yield break; }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get { return new XLRanges(); }
-        }
+        public override IEnumerable<IXLRange> RangesUsed => Array.Empty<IXLRange>();
 
         public XLDictionary<XLFormula> Values { get; private set; }
 
