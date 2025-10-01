@@ -1,18 +1,26 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLColumns : XLStylizedBase, IXLColumns
     {
         private readonly List<XLColumn> _columnsCollection = new List<XLColumn>();
         private readonly XLWorksheet? _worksheet;
+
+        /// <summary>
+        /// This object represents all columns of the worksheet, even non-materialized ones.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(_worksheet))]
+        private bool AllColumnsOfSheet => _worksheet is not null;
+
         private bool IsMaterialized => _lazyEnumerable == null;
 
         private IEnumerable<XLColumn>? _lazyEnumerable;
+
         private IEnumerable<XLColumn> Columns => _lazyEnumerable ?? _columnsCollection.AsEnumerable();
 
         /// <summary>
@@ -47,7 +55,7 @@ namespace ClosedXML.Excel
             {
                 Columns.ForEach(c => c.Width = value);
 
-                if (_worksheet == null) return;
+                if (!AllColumnsOfSheet) return;
 
                 _worksheet.ColumnWidth = value;
                 _worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
@@ -56,7 +64,7 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            if (_worksheet != null)
+            if (AllColumnsOfSheet)
             {
                 _worksheet.Internals.ColumnsCollection.Clear();
                 _worksheet.Internals.CellsCollection.Clear();
@@ -218,7 +226,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (_worksheet != null)
+                if (AllColumnsOfSheet)
                     yield return _worksheet;
                 else
                 {
