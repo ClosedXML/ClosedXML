@@ -1,15 +1,21 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRows : XLStylizedBase, IXLRows
     {
         private readonly List<XLRow> _rowsCollection = new List<XLRow>();
         private readonly XLWorksheet? _worksheet;
+
+        /// <summary>
+        /// This object represents all rows of the worksheet, even non-materialized ones.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(_worksheet))]
+        private bool AllRowsOfSheet => _worksheet is not null;
 
         private bool IsMaterialized => _lazyEnumerable == null;
 
@@ -47,7 +53,9 @@ namespace ClosedXML.Excel
             set
             {
                 Rows.ForEach(c => c.Height = value);
-                if (_worksheet == null) return;
+                if (!AllRowsOfSheet)
+                    return;
+
                 _worksheet.RowHeight = value;
                 _worksheet.Internals.RowsCollection.ForEach(r => r.Value.Height = value);
             }
@@ -55,7 +63,7 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            if (_worksheet != null)
+            if (AllRowsOfSheet)
             {
                 _worksheet.Internals.RowsCollection.Clear();
                 _worksheet.Internals.CellsCollection.Clear();
@@ -207,7 +215,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (_worksheet != null)
+                if (AllRowsOfSheet)
                     yield return _worksheet;
                 else
                 {
