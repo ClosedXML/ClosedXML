@@ -695,7 +695,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate)
         {
-            var columns = new XLColumns(worksheet: null);
+            var columns = new XLColumns(this, worksheet: null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
                 foreach (IXLColumn column in ws.Columns().Where(predicate))

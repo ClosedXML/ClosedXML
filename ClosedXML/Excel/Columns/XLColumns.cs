@@ -9,6 +9,8 @@ namespace ClosedXML.Excel
     internal class XLColumns : XLStylizedBase, IXLColumns
     {
         private readonly List<XLColumn> _columnsCollection = new List<XLColumn>();
+
+        private readonly XLWorkbook _workbook;
         private readonly XLWorksheet? _worksheet;
 
         /// <summary>
@@ -26,13 +28,15 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Create a new instance of <see cref="XLColumns"/>.
         /// </summary>
+        /// <param name="workbook">Workbook to which all columns belong.</param>
         /// <param name="worksheet">If worksheet is specified it means that the created instance represents
         /// all columns on a worksheet so changing its width will affect all columns.</param>
         /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLColumn"/> to support lazy initialization.</param>
-        public XLColumns(XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLColumn>? lazyEnumerable = null)
+        public XLColumns(XLWorkbook workbook, XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLColumn>? lazyEnumerable = null)
             : base(defaultStyle)
         {
+            _workbook = workbook;
             _worksheet = worksheet;
             _lazyEnumerable = lazyEnumerable;
         }

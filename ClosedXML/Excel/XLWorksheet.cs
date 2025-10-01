@@ -323,13 +323,13 @@ namespace ClosedXML.Excel
             columnMap.UnionWith(Internals.CellsCollection.ColumnsUsedKeys);
             columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
-            var retVal = new XLColumns(this, StyleValue, columnMap.Select(Column));
+            var retVal = new XLColumns(Workbook, this, StyleValue, columnMap.Select(Column));
             return retVal;
         }
 
         public IXLColumns Columns(String columns)
         {
-            var retVal = new XLColumns(null, StyleValue);
+            var retVal = new XLColumns(Workbook, null, StyleValue);
             var columnPairs = columns.Split(',');
             foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
             {
@@ -369,7 +369,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns(Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new XLColumns(null, StyleValue);
+            var retVal = new XLColumns(Workbook, null, StyleValue);
 
             for (int co = firstColumn; co <= lastColumn; co++)
                 retVal.Add(Column(co));
@@ -986,7 +986,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean>? predicate = null)
         {
-            var columns = new XLColumns(worksheet: null, StyleValue);
+            var columns = new XLColumns(Workbook, worksheet: null, StyleValue);
             var columnsUsed = new HashSet<Int32>();
             Internals.ColumnsCollection.Keys.ForEach(r => columnsUsed.Add(r));
             Internals.CellsCollection.ColumnsUsedKeys.ForEach(r => columnsUsed.Add(r));
