@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.Caching
             int key = 12345;
             var entity1 = new SampleEntity(key);
             var entity2 = new SampleEntity(key);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             var storedEntity1 = sampleRepository.Store(ref key, entity1);
@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel.Caching
 #if !DEBUG
             // Arrange
             var key = 12345;
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             // In net8, JIT could make a hidden temporary variable for created object that would prevent
@@ -147,8 +147,8 @@ namespace ClosedXML.Tests.Excel.Caching
 
             // Act
             sampleRepository.Replace(ref key1, ref key2);
-            bool containsOld = sampleRepository.ContainsKey(ref key1, out var _);
-            bool containsNew = sampleRepository.ContainsKey(ref key2, out var _);
+            bool containsOld = sampleRepository.ContainsKey(ref key1);
+            bool containsNew = sampleRepository.ContainsKey(ref key2);
             var storedEntity2 = sampleRepository.GetOrCreate(ref key2);
 
             // Assert

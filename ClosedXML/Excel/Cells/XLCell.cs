@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal UInt32? CellMetaIndex
+        internal uint? CellMetaIndex
         {
             get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].CellMetaIndex;
             set
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal UInt32? ValueMetaIndex
+        internal uint? ValueMetaIndex
         {
             get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].ValueMetaIndex;
             set
@@ -290,9 +290,9 @@ namespace ClosedXML.Excel
             SetOnlyValue(value);
         }
 
-        public Boolean GetBoolean() => Value.GetBoolean();
+        public bool GetBoolean() => Value.GetBoolean();
 
-        public Double GetDouble() => Value.GetNumber();
+        public double GetDouble() => Value.GetNumber();
 
         public string GetText() => Value.GetText();
 
@@ -302,7 +302,7 @@ namespace ClosedXML.Excel
 
         public TimeSpan GetTimeSpan() => Value.GetTimeSpan();
 
-        public Boolean TryGetValue<T>(out T value)
+        public bool TryGetValue<T>(out T value)
         {
             XLCellValue currentValue;
             try
@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
                 return true;
             }
 
-            if (underlyingType == typeof(Boolean) && currentValue.TryConvert(out Boolean boolean))
+            if (underlyingType == typeof(bool) && currentValue.TryConvert(out bool boolean))
             {
                 value = (T)(object)boolean;
                 return true;
@@ -377,17 +377,17 @@ namespace ClosedXML.Excel
             // T is a floating point numbers
             if (typeCode >= TypeCode.Single && typeCode <= TypeCode.Decimal)
             {
-                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                if (!currentValue.TryConvert(out double doubleValue, culture))
                     return false;
 
-                if (typeCode == TypeCode.Single && doubleValue is < Single.MinValue or > Single.MaxValue)
+                if (typeCode == TypeCode.Single && doubleValue is < float.MinValue or > float.MaxValue)
                     return false;
 
                 value = typeCode switch
                 {
-                    TypeCode.Single => (T)(object)(Single)doubleValue,
+                    TypeCode.Single => (T)(object)(float)doubleValue,
                     TypeCode.Double => (T)(object)doubleValue,
-                    TypeCode.Decimal => (T)(object)(Decimal)doubleValue,
+                    TypeCode.Decimal => (T)(object)(decimal)doubleValue,
                     _ => throw new NotSupportedException()
                 };
                 return true;
@@ -396,7 +396,7 @@ namespace ClosedXML.Excel
             // T is an integer
             if (typeCode >= TypeCode.SByte && typeCode <= TypeCode.UInt64)
             {
-                if (!currentValue.TryConvert(out Double doubleValue, culture))
+                if (!currentValue.TryConvert(out double doubleValue, culture))
                     return false;
 
                 if (!doubleValue.Equals(Math.Truncate(doubleValue)))
@@ -404,14 +404,14 @@ namespace ClosedXML.Excel
 
                 var valueIsWithinBounds = typeCode switch
                 {
-                    TypeCode.SByte => doubleValue >= SByte.MinValue && doubleValue <= SByte.MaxValue,
-                    TypeCode.Byte => doubleValue >= Byte.MinValue && doubleValue <= Byte.MaxValue,
-                    TypeCode.Int16 => doubleValue >= Int16.MinValue && doubleValue <= Int16.MaxValue,
-                    TypeCode.UInt16 => doubleValue >= UInt16.MinValue && doubleValue <= UInt16.MaxValue,
-                    TypeCode.Int32 => doubleValue >= Int32.MinValue && doubleValue <= Int32.MaxValue,
-                    TypeCode.UInt32 => doubleValue >= UInt32.MinValue && doubleValue <= UInt32.MaxValue,
-                    TypeCode.Int64 => doubleValue >= Int64.MinValue && doubleValue <= Int64.MaxValue,
-                    TypeCode.UInt64 => doubleValue >= UInt64.MinValue && doubleValue <= UInt64.MaxValue,
+                    TypeCode.SByte => doubleValue >= sbyte.MinValue && doubleValue <= sbyte.MaxValue,
+                    TypeCode.Byte => doubleValue >= byte.MinValue && doubleValue <= byte.MaxValue,
+                    TypeCode.Int16 => doubleValue >= short.MinValue && doubleValue <= short.MaxValue,
+                    TypeCode.UInt16 => doubleValue >= ushort.MinValue && doubleValue <= ushort.MaxValue,
+                    TypeCode.Int32 => doubleValue >= int.MinValue && doubleValue <= int.MaxValue,
+                    TypeCode.UInt32 => doubleValue >= uint.MinValue && doubleValue <= uint.MaxValue,
+                    TypeCode.Int64 => doubleValue >= long.MinValue && doubleValue <= long.MaxValue,
+                    TypeCode.UInt64 => doubleValue >= ulong.MinValue && doubleValue <= ulong.MaxValue,
                     _ => throw new NotSupportedException()
                 };
                 if (!valueIsWithinBounds)
@@ -419,14 +419,14 @@ namespace ClosedXML.Excel
 
                 value = typeCode switch
                 {
-                    TypeCode.SByte => (T)(object)(SByte)doubleValue,
-                    TypeCode.Byte => (T)(object)(Byte)doubleValue,
-                    TypeCode.Int16 => (T)(object)(Int16)doubleValue,
-                    TypeCode.UInt16 => (T)(object)(UInt16)doubleValue,
-                    TypeCode.Int32 => (T)(object)(Int32)doubleValue,
-                    TypeCode.UInt32 => (T)(object)(UInt32)doubleValue,
-                    TypeCode.Int64 => (T)(object)(Int64)doubleValue,
-                    TypeCode.UInt64 => (T)(object)(UInt64)doubleValue,
+                    TypeCode.SByte => (T)(object)(sbyte)doubleValue,
+                    TypeCode.Byte => (T)(object)(byte)doubleValue,
+                    TypeCode.Int16 => (T)(object)(short)doubleValue,
+                    TypeCode.UInt16 => (T)(object)(ushort)doubleValue,
+                    TypeCode.Int32 => (T)(object)(int)doubleValue,
+                    TypeCode.UInt32 => (T)(object)(uint)doubleValue,
+                    TypeCode.Int64 => (T)(object)(long)doubleValue,
+                    TypeCode.UInt64 => (T)(object)(ulong)doubleValue,
                     _ => throw new NotSupportedException()
                 };
                 return true;
@@ -437,7 +437,7 @@ namespace ClosedXML.Excel
 
         private static bool TryGetStringValue<T>(out T value, XLCellValue currentValue)
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 var s = currentValue.ToString(CultureInfo.CurrentCulture);
                 var matches = utfPattern.Matches(s);
@@ -480,7 +480,7 @@ namespace ClosedXML.Excel
             throw new InvalidCastException($"Cannot convert {Address.ToStringRelative(true)}'s value to " + typeof(T));
         }
 
-        public String GetString() => Value.ToString(CultureInfo.CurrentCulture);
+        public string GetString() => Value.ToString(CultureInfo.CurrentCulture);
 
         public string GetFormattedString(CultureInfo culture = null)
         {
@@ -525,7 +525,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
-        public void Evaluate(Boolean force)
+        public void Evaluate(bool force)
         {
             if (Formula is null)
             {
@@ -602,12 +602,12 @@ namespace ClosedXML.Excel
             return InsertTable(data, tableName, true);
         }
 
-        public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
             return InsertTable(data, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable, bool addHeadings, bool transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
             return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
@@ -618,17 +618,17 @@ namespace ClosedXML.Excel
             return InsertTable(data, null, true);
         }
 
-        public IXLTable InsertTable(DataTable data, Boolean createTable)
+        public IXLTable InsertTable(DataTable data, bool createTable)
         {
             return InsertTable(data, null, createTable);
         }
 
-        public IXLTable InsertTable(DataTable data, String tableName)
+        public IXLTable InsertTable(DataTable data, string tableName)
         {
             return InsertTable(data, tableName, true);
         }
 
-        public IXLTable InsertTable(DataTable data, String tableName, Boolean createTable)
+        public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
         {
             if (data == null || data.Columns.Count == 0)
                 return null;
@@ -656,15 +656,15 @@ namespace ClosedXML.Excel
 
         public IXLRange InsertData(IEnumerable data)
         {
-            if (data == null || data is String)
+            if (data == null || data is string)
                 return null;
 
             return InsertData(data, transpose: false);
         }
 
-        public IXLRange InsertData(IEnumerable data, Boolean transpose)
+        public IXLRange InsertData(IEnumerable data, bool transpose)
         {
-            if (data == null || data is String)
+            if (data == null || data is string)
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
@@ -703,7 +703,7 @@ namespace ClosedXML.Excel
                 {
                     SetHyperlink(null);
                     SliceCellValue = Blank.Value;
-                    FormulaA1 = String.Empty;
+                    FormulaA1 = string.Empty;
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.NormalFormats))
@@ -744,7 +744,7 @@ namespace ClosedXML.Excel
 
         public string FormulaA1
         {
-            get => Formula?.A1 ?? String.Empty;
+            get => Formula?.A1 ?? string.Empty;
 
             set
             {
@@ -752,7 +752,7 @@ namespace ClosedXML.Excel
                     return;
 
                 var formula = value?.TrimFormulaEqual();
-                if (!String.IsNullOrWhiteSpace(formula))
+                if (!string.IsNullOrWhiteSpace(formula))
                 {
                     var fixedFunctionsFormula = FormulaTransformation.FixFutureFunctions(formula, Worksheet.Name, SheetPoint);
                     Formula = XLCellFormula.NormalA1(fixedFunctionsFormula);
@@ -768,7 +768,7 @@ namespace ClosedXML.Excel
 
         public string FormulaR1C1
         {
-            get => Formula?.GetFormulaR1C1(SheetPoint) ?? String.Empty;
+            get => Formula?.GetFormulaR1C1(SheetPoint) ?? string.Empty;
 
             set
             {
@@ -776,7 +776,7 @@ namespace ClosedXML.Excel
                     return;
 
                 var formula = value?.TrimFormulaEqual();
-                if (!String.IsNullOrWhiteSpace(formula))
+                if (!string.IsNullOrWhiteSpace(formula))
                 {
                     var formulaA1 = FormulaConverter.ToA1(formula, _rowNumber, _columnNumber);
                     var fixedFunctionsFormulaA1 = FormulaTransformation.FixFutureFunctions(formulaA1, Worksheet.Name, SheetPoint);
@@ -894,7 +894,7 @@ namespace ClosedXML.Excel
             return CreateComment(shapeId: null);
         }
 
-        public Boolean IsMerged()
+        public bool IsMerged()
         {
             return Worksheet.Internals.MergedRanges.Contains(this);
         }
@@ -908,12 +908,12 @@ namespace ClosedXML.Excel
                 .FirstOrDefault();
         }
 
-        public Boolean IsEmpty()
+        public bool IsEmpty()
         {
             return IsEmpty(XLCellsUsedOptions.AllContents);
         }
 
-        public Boolean IsEmpty(XLCellsUsedOptions options)
+        public bool IsEmpty(XLCellsUsedOptions options)
         {
             var isValueEmpty = SliceCellValue.Type switch
             {
@@ -978,7 +978,7 @@ namespace ClosedXML.Excel
             return target;
         }
 
-        public IXLCell CopyTo(String target)
+        public IXLCell CopyTo(string target)
         {
             return CopyTo(GetTargetCell(target, Worksheet));
         }
@@ -988,24 +988,24 @@ namespace ClosedXML.Excel
             return CopyFrom(otherCell as XLCell, XLCellCopyOptions.All);
         }
 
-        public IXLCell CopyFrom(String otherCell)
+        public IXLCell CopyFrom(string otherCell)
         {
             return CopyFrom(GetTargetCell(otherCell, Worksheet));
         }
 
-        public IXLCell SetFormulaA1(String formula)
+        public IXLCell SetFormulaA1(string formula)
         {
             FormulaA1 = formula;
             return this;
         }
 
-        public IXLCell SetFormulaR1C1(String formula)
+        public IXLCell SetFormulaR1C1(string formula)
         {
             FormulaR1C1 = formula;
             return this;
         }
 
-        public Boolean HasSparkline => Sparkline != null;
+        public bool HasSparkline => Sparkline != null;
 
         /// <summary> The sparkline assigned to the cell </summary>
         public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
@@ -1015,7 +1015,7 @@ namespace ClosedXML.Excel
             return FindDataValidation() ?? CreateDataValidation();
         }
 
-        public Boolean HasDataValidation
+        public bool HasDataValidation
         {
             get { return FindDataValidation() != null; }
         }
@@ -1059,7 +1059,7 @@ namespace ClosedXML.Excel
             return AsRange().AddConditionalFormat();
         }
 
-        public Boolean Active
+        public bool Active
         {
             get => Worksheet.ActiveCell == SheetPoint;
             set
@@ -1071,16 +1071,16 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell SetActive(Boolean value = true)
+        public IXLCell SetActive(bool value = true)
         {
             Active = value;
             return this;
         }
 
-        public Boolean HasHyperlink => Worksheet.Hyperlinks.TryGet(SheetPoint, out _);
+        public bool HasHyperlink => Worksheet.Hyperlinks.TryGet(SheetPoint, out _);
 
         /// <inheritdoc />
-        public Boolean ShowPhonetic
+        public bool ShowPhonetic
         {
             get => _cellsCollection.MiscSlice[_rowNumber, _columnNumber].HasPhonetic;
             set
@@ -1147,7 +1147,7 @@ namespace ClosedXML.Excel
             Style = styleToUse;
         }
 
-        public Boolean IsDefaultWorksheetStyle()
+        public bool IsDefaultWorksheetStyle()
         {
             return StyleValue == Worksheet.StyleValue;
         }
@@ -1167,7 +1167,7 @@ namespace ClosedXML.Excel
         private string GetFormat()
         {
             var style = GetStyleForRead();
-            if (String.IsNullOrWhiteSpace(style.NumberFormat.Format))
+            if (string.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = XLPredefinedFormat.FormatCodes;
                 if (formatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string format))
@@ -1192,8 +1192,8 @@ namespace ClosedXML.Excel
             var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
 
             var targetRange = Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn);
-
-            if (!(asRange is XLRow || asRange is XLColumn))
+            
+            if (asRange is not (XLRow or XLColumn))
             {
                 targetRange.Clear();
             }
@@ -1215,27 +1215,20 @@ namespace ClosedXML.Excel
                         & ~XLCellCopyOptions.DataValidations); //Conditional formats and data validation are copied separately
             }
 
-            var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
-                .Where(mr => asRange.Contains(mr))
-                .Select(mr =>
-                {
-                    var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
-                    var firstColumn = _columnNumber + (mr.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
-                    return (IXLRange)Worksheet.Range
-                    (
-                        firstRow,
-                        firstColumn,
-                        firstRow + mr.RowCount() - 1,
-                        firstColumn + mr.ColumnCount() - 1
-                    );
-                })
-                .ToList();
+            foreach (var mergedRange in asRange.Worksheet.Internals.MergedRanges)
+            {
+                if (!asRange.Contains(mergedRange))
+                    continue;
 
-            rangesToMerge.ForEach(r => r.Merge(false));
+                var firstRow = _rowNumber + (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                var firstColumn = _columnNumber + (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+
+                Worksheet.Range(firstRow, firstColumn, firstRow + mergedRange.RowCount() - 1, firstColumn + mergedRange.ColumnCount() - 1)
+                    .Merge(false);
+            }
 
             var dataValidations = asRange.Worksheet.DataValidations
-                .GetAllInRange(asRange.RangeAddress)
-                .ToList();
+                .GetAllInRange(asRange.RangeAddress);
 
             foreach (var dataValidation in dataValidations)
             {
@@ -1264,7 +1257,7 @@ namespace ClosedXML.Excel
                 .Worksheet
                 .ConditionalFormats
                 .Where(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
-                .ToList();
+                .ToArray();
 
             foreach (var cf in conditionalFormats)
             {
@@ -1303,12 +1296,12 @@ namespace ClosedXML.Excel
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
             var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
 
-            foreach (var cf in formats.ToList())
+            foreach (var cf in formats.ToArray())
             {
                 var fmtRanges = cf.Ranges
                     .GetIntersectedRanges(fromRange.RangeAddress)
                     .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
-                    .ToList();
+                    .ToArray();
 
                 var c = new XLConditionalFormat(Worksheet, fmtRanges, true);
                 c.CopyFrom(cf);
@@ -1318,26 +1311,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        private bool SetDataTable(object o)
-        {
-            if (o is DataTable dataTable)
-                return InsertData(dataTable) != null;
-            else
-                return false;
-        }
-
-        private bool SetEnumerable(object collectionObject)
-        {
-            // IXLRichText implements IEnumerable, but we don't want to handle this here.
-            if (collectionObject is IXLRichText) return false;
-
-            var asEnumerable = collectionObject as IEnumerable;
-            return InsertData(asEnumerable) != null;
-        }
-
         private void ClearMerged()
         {
-            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
+            var mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToArray();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
@@ -1370,7 +1346,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)
+        private IXLCell GetTargetCell(string target, XLWorksheet defaultWorksheet)
         {
             var pair = target.Split('!');
             if (pair.Length == 1)
@@ -1468,10 +1444,10 @@ namespace ClosedXML.Excel
             FormulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
         }
 
-        internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+        internal static string ShiftFormulaRows(string formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                 int rowsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(formulaA1)) return string.Empty;
 
             var value = formulaA1;
 
@@ -1501,7 +1477,7 @@ namespace ClosedXML.Excel
                     else
                         sheetName = worksheetInAction.Name;
 
-                    if (String.Compare(sheetName, shiftedWsName, true) == 0)
+                    if (string.Compare(sheetName, shiftedWsName, true) == 0)
                     {
                         var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
@@ -1526,19 +1502,19 @@ namespace ClosedXML.Excel
                                     if (row1String[0] == '$')
                                     {
                                         row1 = "$" +
-                                                (XLHelper.TrimRowNumber(Int32.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                (XLHelper.TrimRowNumber(int.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row1 = (XLHelper.TrimRowNumber(Int32.Parse(row1String) + rowsShifted)).ToInvariantString();
+                                        row1 = (XLHelper.TrimRowNumber(int.Parse(row1String) + rowsShifted)).ToInvariantString();
 
                                     string row2;
                                     if (row2String[0] == '$')
                                     {
                                         row2 = "$" +
-                                                (XLHelper.TrimRowNumber(Int32.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                (XLHelper.TrimRowNumber(int.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
+                                        row2 = (XLHelper.TrimRowNumber(int.Parse(row2String) + rowsShifted)).ToInvariantString();
 
                                     sb.Append(row1);
                                     sb.Append(':');
@@ -1615,10 +1591,10 @@ namespace ClosedXML.Excel
             FormulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
         }
 
-        internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+        internal static string ShiftFormulaColumns(string formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                    int columnsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(formulaA1)) return string.Empty;
 
             var value = formulaA1;
 
@@ -1647,7 +1623,7 @@ namespace ClosedXML.Excel
                     else
                         sheetName = worksheetInAction.Name;
 
-                    if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
+                    if (string.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
                     {
                         var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1RowRegex.IsMatch(rangeAddress))
@@ -1775,7 +1751,7 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
-        private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
+        private XLCell CellShift(int rowsToShift, int columnsToShift)
         {
             return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
@@ -1787,7 +1763,7 @@ namespace ClosedXML.Excel
             return CellAbove();
         }
 
-        IXLCell IXLCell.CellAbove(Int32 step)
+        IXLCell IXLCell.CellAbove(int step)
         {
             return CellAbove(step);
         }
@@ -1797,7 +1773,7 @@ namespace ClosedXML.Excel
             return CellAbove(1);
         }
 
-        public XLCell CellAbove(Int32 step)
+        public XLCell CellAbove(int step)
         {
             return CellShift(step * -1, 0);
         }
@@ -1811,7 +1787,7 @@ namespace ClosedXML.Excel
             return CellBelow();
         }
 
-        IXLCell IXLCell.CellBelow(Int32 step)
+        IXLCell IXLCell.CellBelow(int step)
         {
             return CellBelow(step);
         }
@@ -1821,7 +1797,7 @@ namespace ClosedXML.Excel
             return CellBelow(1);
         }
 
-        public XLCell CellBelow(Int32 step)
+        public XLCell CellBelow(int step)
         {
             return CellShift(step, 0);
         }
@@ -1835,7 +1811,7 @@ namespace ClosedXML.Excel
             return CellLeft();
         }
 
-        IXLCell IXLCell.CellLeft(Int32 step)
+        IXLCell IXLCell.CellLeft(int step)
         {
             return CellLeft(step);
         }
@@ -1845,7 +1821,7 @@ namespace ClosedXML.Excel
             return CellLeft(1);
         }
 
-        public XLCell CellLeft(Int32 step)
+        public XLCell CellLeft(int step)
         {
             return CellShift(0, step * -1);
         }
@@ -1859,7 +1835,7 @@ namespace ClosedXML.Excel
             return CellRight();
         }
 
-        IXLCell IXLCell.CellRight(Int32 step)
+        IXLCell IXLCell.CellRight(int step)
         {
             return CellRight(step);
         }
@@ -1869,16 +1845,16 @@ namespace ClosedXML.Excel
             return CellRight(1);
         }
 
-        public XLCell CellRight(Int32 step)
+        public XLCell CellRight(int step)
         {
             return CellShift(0, step);
         }
 
         #endregion XLCell Right
 
-        public Boolean HasFormula => Formula is not null;
+        public bool HasFormula => Formula is not null;
 
-        public Boolean HasArrayFormula => Formula?.Type == FormulaType.Array;
+        public bool HasArrayFormula => Formula?.Type == FormulaType.Array;
 
         public IXLRangeAddress FormulaReference
         {

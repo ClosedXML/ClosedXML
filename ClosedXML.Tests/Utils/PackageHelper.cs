@@ -19,23 +19,19 @@ namespace ClosedXML.Tests
                 package.DeletePart(uri);
             }
             PackagePart part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
-            {
-                serializer.Serialize(stream, content);
-            }
+            using Stream stream = part.GetStream();
+            serializer.Serialize(stream, content);
         }
 
         public static object ReadXmlPart(Package package, Uri uri, XmlSerializer serializer)
         {
             if (!package.PartExists(uri))
             {
-                throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
+                throw new ApplicationException($"Package part '{uri.OriginalString}' doesn't exists!");
             }
             PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                return serializer.Deserialize(stream);
-            }
+            using Stream stream = part.GetStream();
+            return serializer.Deserialize(stream);
         }
 
         public static void WriteBinaryPart(Package package, Uri uri, Stream content)
@@ -45,10 +41,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(uri);
             }
             PackagePart part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
-            {
-                StreamHelper.StreamToStreamAppend(content, stream);
-            }
+            using Stream stream = part.GetStream();
+            StreamHelper.StreamToStreamAppend(content, stream);
         }
 
         /// <summary>
@@ -77,15 +71,15 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(uri, null))
             {
-                throw new ArgumentNullException("uri");
+                throw new ArgumentNullException(nameof(uri));
             }
             if (ReferenceEquals(source, null))
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
             if (ReferenceEquals(dest, null))
             {
-                throw new ArgumentNullException("dest");
+                throw new ArgumentNullException(nameof(dest));
             }
 
             #endregion Check
@@ -94,7 +88,7 @@ namespace ClosedXML.Tests
             {
                 if (!overwrite)
                 {
-                    throw new ArgumentException("Specified part already exists", "uri");
+                    throw new ArgumentException("Specified part already exists", nameof(uri));
                 }
                 dest.DeletePart(uri);
             }
@@ -102,13 +96,9 @@ namespace ClosedXML.Tests
             PackagePart sourcePart = source.GetPart(uri);
             PackagePart destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
 
-            using (Stream sourceStream = sourcePart.GetStream())
-            {
-                using (Stream destStream = destPart.GetStream())
-                {
-                    StreamHelper.StreamToStreamAppend(sourceStream, destStream);
-                }
-            }
+            using var sourceStream = sourcePart.GetStream();
+            using var destStream = destPart.GetStream();
+            StreamHelper.StreamToStreamAppend(sourceStream, destStream);
         }
 
         public static void WritePart<T>(Package package, PackagePartDescriptor descriptor, T content,
@@ -118,15 +108,15 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(package, null))
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
             if (ReferenceEquals(descriptor, null))
             {
-                throw new ArgumentNullException("descriptor");
+                throw new ArgumentNullException(nameof(descriptor));
             }
             if (ReferenceEquals(serializeAction, null))
             {
-                throw new ArgumentNullException("serializeAction");
+                throw new ArgumentNullException(nameof(serializeAction));
             }
 
             #endregion Check
@@ -136,10 +126,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(descriptor.Uri);
             }
             PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
-            {
-                serializeAction(stream, content);
-            }
+            using Stream stream = part.GetStream();
+            serializeAction(stream, content);
         }
 
         public static void WritePart(Package package, PackagePartDescriptor descriptor, Action<Stream> serializeAction)
@@ -148,15 +136,15 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(package, null))
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
             if (ReferenceEquals(descriptor, null))
             {
-                throw new ArgumentNullException("descriptor");
+                throw new ArgumentNullException(nameof(descriptor));
             }
             if (ReferenceEquals(serializeAction, null))
             {
-                throw new ArgumentNullException("serializeAction");
+                throw new ArgumentNullException(nameof(serializeAction));
             }
 
             #endregion Check
@@ -166,10 +154,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(descriptor.Uri);
             }
             PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
-            {
-                serializeAction(stream);
-            }
+            using var stream = part.GetStream();
+            serializeAction(stream);
         }
 
         public static T ReadPart<T>(Package package, Uri uri, Func<Stream, T> deserializeFunc)
@@ -178,28 +164,26 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(package, null))
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
             if (ReferenceEquals(uri, null))
             {
-                throw new ArgumentNullException("uri");
+                throw new ArgumentNullException(nameof(uri));
             }
             if (ReferenceEquals(deserializeFunc, null))
             {
-                throw new ArgumentNullException("deserializeFunc");
+                throw new ArgumentNullException(nameof(deserializeFunc));
             }
 
             #endregion Check
 
             if (!package.PartExists(uri))
             {
-                throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
+                throw new ApplicationException($"Package part '{uri.OriginalString}' doesn't exists!");
             }
             PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                return deserializeFunc(stream);
-            }
+            using var stream = part.GetStream();
+            return deserializeFunc(stream);
         }
 
         public static void ReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
@@ -208,28 +192,26 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(package, null))
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
             if (ReferenceEquals(uri, null))
             {
-                throw new ArgumentNullException("uri");
+                throw new ArgumentNullException(nameof(uri));
             }
             if (ReferenceEquals(deserializeAction, null))
             {
-                throw new ArgumentNullException("deserializeAction");
+                throw new ArgumentNullException(nameof(deserializeAction));
             }
 
             #endregion Check
 
             if (!package.PartExists(uri))
             {
-                throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
+                throw new ApplicationException($"Package part '{uri.OriginalString}' doesn't exists!");
             }
             PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                deserializeAction(stream);
-            }
+            using var stream = part.GetStream();
+            deserializeAction(stream);
         }
 
         public static bool TryReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
@@ -238,15 +220,15 @@ namespace ClosedXML.Tests
 
             if (ReferenceEquals(package, null))
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
             if (ReferenceEquals(uri, null))
             {
-                throw new ArgumentNullException("uri");
+                throw new ArgumentNullException(nameof(uri));
             }
             if (ReferenceEquals(deserializeAction, null))
             {
-                throw new ArgumentNullException("deserializeAction");
+                throw new ArgumentNullException(nameof(deserializeAction));
             }
 
             #endregion Check
@@ -256,10 +238,8 @@ namespace ClosedXML.Tests
                 return false;
             }
             PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                deserializeAction(stream);
-            }
+            using var stream = part.GetStream();
+            deserializeAction(stream);
             return true;
         }
 
@@ -291,11 +271,11 @@ namespace ClosedXML.Tests
 
             if (left == null)
             {
-                throw new ArgumentNullException("left");
+                throw new ArgumentNullException(nameof(left));
             }
             if (right == null)
             {
-                throw new ArgumentNullException("right");
+                throw new ArgumentNullException(nameof(right));
             }
 
             #endregion Check
@@ -342,36 +322,34 @@ namespace ClosedXML.Tests
                 }
                 var leftPart = left.GetPart(pair.Uri);
                 var rightPart = right.GetPart(pair.Uri);
-                using (Stream leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (Stream rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (var leftMemoryStream = new MemoryStream())
-                using (var rightMemoryStream = new MemoryStream())
+                using Stream leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read);
+                using Stream rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read);
+                using var leftMemoryStream = new MemoryStream();
+                using var rightMemoryStream = new MemoryStream();
+                leftPackagePartStream.CopyTo(leftMemoryStream);
+                rightPackagePartStream.CopyTo(rightMemoryStream);
+
+                leftMemoryStream.Seek(0, SeekOrigin.Begin);
+                rightMemoryStream.Seek(0, SeekOrigin.Begin);
+
+                bool stripColumnWidthsFromSheet = TestHelper.StripColumnWidths &&
+                                                  leftPart.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
+                                                  rightPart.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
+
+                var tuple1 = (leftPart.ContentType, Stream: leftMemoryStream);
+                var tuple2 = (rightPart.ContentType, Stream: rightMemoryStream);
+
+                if (!StreamHelper.Compare(tuple1, tuple2, pair.Uri, stripColumnWidthsFromSheet))
                 {
-                    leftPackagePartStream.CopyTo(leftMemoryStream);
-                    rightPackagePartStream.CopyTo(rightMemoryStream);
-
-                    leftMemoryStream.Seek(0, SeekOrigin.Begin);
-                    rightMemoryStream.Seek(0, SeekOrigin.Begin);
-
-                    bool stripColumnWidthsFromSheet = TestHelper.StripColumnWidths &&
-                        leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
-                        rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
-
-                    var tuple1 = (leftPart.ContentType, Stream: leftMemoryStream);
-                    var tuple2 = (rightPart.ContentType, Stream: rightMemoryStream);
-
-                    if (!StreamHelper.Compare(tuple1, tuple2, pair.Uri, stripColumnWidthsFromSheet))
+                    pair.Status = CompareStatus.NonEqual;
+                    if (compareToFirstDifference)
                     {
-                        pair.Status = CompareStatus.NonEqual;
-                        if (compareToFirstDifference)
-                        {
-                            goto EXIT;
-                        }
+                        goto EXIT;
                     }
                 }
             }
 
-        EXIT:
+            EXIT:
             List<PartPair> sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
@@ -381,7 +359,8 @@ namespace ClosedXML.Tests
                 {
                     continue;
                 }
-                sbuilder.AppendFormat("{0} :{1}", pair.Uri, pair.Status);
+
+                sbuilder.Append($"{pair.Uri} :{pair.Status}");
                 sbuilder.AppendLine();
             }
             message = sbuilder.ToString();
@@ -419,11 +398,11 @@ namespace ClosedXML.Tests
 
                 if (ReferenceEquals(uri, null))
                 {
-                    throw new ArgumentNullException("uri");
+                    throw new ArgumentNullException(nameof(uri));
                 }
                 if (string.IsNullOrEmpty(contentType))
                 {
-                    throw new ArgumentNullException("contentType");
+                    throw new ArgumentNullException(nameof(contentType));
                 }
 
                 #endregion Check
@@ -461,7 +440,7 @@ namespace ClosedXML.Tests
 
             public override string ToString()
             {
-                return string.Format("Uri:{0} ContentType: {1}, Compression: {2}", _uri, _contentType, _compressOption);
+                return $"Uri:{_uri} ContentType: {_contentType}, Compression: {_compressOption}";
             }
 
             #endregion Public methods

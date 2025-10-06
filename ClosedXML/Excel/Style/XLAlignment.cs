@@ -99,7 +99,7 @@ namespace ClosedXML.Excel
             set { Modify(k => k with { Vertical = value }); }
         }
 
-        public Int32 Indent
+        public int Indent
         {
             get { return Key.Indent; }
             set
@@ -303,8 +303,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLAlignment? other)
         {
-            var otherA = other as XLAlignment;
-            if (otherA == null)
+            if (other is not XLAlignment otherA)
                 return false;
 
             return Key == otherA.Key;

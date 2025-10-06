@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
             {
                 if (_container == null) return;
 
-                if (_container is XLWorksheet || _container is XLConditionalFormat)
+                if (_container is XLWorksheet or XLConditionalFormat)
                 {
                     Modify(k => k with
                     {
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (IXLRange r in _container.RangesUsed)
+                    foreach (var r in _container.RangesUsed)
                     {
                         r.FirstColumn().Style.Border.LeftBorder = value;
                         r.LastColumn().Style.Border.RightBorder = value;

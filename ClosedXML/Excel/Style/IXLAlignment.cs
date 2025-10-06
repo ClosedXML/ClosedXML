@@ -91,20 +91,20 @@ namespace ClosedXML.Excel
 
         IXLStyle SetVertical(XLAlignmentVerticalValues value);
 
-        IXLStyle SetIndent(Int32 value);
+        IXLStyle SetIndent(int value);
 
-        IXLStyle SetJustifyLastLine(); IXLStyle SetJustifyLastLine(Boolean value);
+        IXLStyle SetJustifyLastLine(); IXLStyle SetJustifyLastLine(bool value);
 
         IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value);
 
-        IXLStyle SetRelativeIndent(Int32 value);
+        IXLStyle SetRelativeIndent(int value);
 
-        IXLStyle SetShrinkToFit(); IXLStyle SetShrinkToFit(Boolean value);
+        IXLStyle SetShrinkToFit(); IXLStyle SetShrinkToFit(bool value);
 
-        IXLStyle SetTextRotation(Int32 value);
+        IXLStyle SetTextRotation(int value);
 
-        IXLStyle SetWrapText(); IXLStyle SetWrapText(Boolean value);
+        IXLStyle SetWrapText(); IXLStyle SetWrapText(bool value);
 
-        IXLStyle SetTopToBottom(); IXLStyle SetTopToBottom(Boolean value);
+        IXLStyle SetTopToBottom(); IXLStyle SetTopToBottom(bool value);
     }
 }

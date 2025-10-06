@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel;
 
 internal readonly record struct XLStyleKey
@@ -12,7 +10,7 @@ internal readonly record struct XLStyleKey
 
     public required XLFontKey Font { get; init; }
 
-    public required Boolean IncludeQuotePrefix { get; init; }
+    public required bool IncludeQuotePrefix { get; init; }
 
     public required XLNumberFormatKey NumberFormat { get; init; }
 
@@ -37,7 +35,7 @@ internal readonly record struct XLStyleKey
         out XLBorderKey border,
         out XLFillKey fill,
         out XLFontKey font,
-        out Boolean includeQuotePrefix,
+        out bool includeQuotePrefix,
         out XLNumberFormatKey numberFormat,
         out XLProtectionKey protection)
     {
