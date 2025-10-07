@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ClosedXML.Excel.Formatting;
 using ClosedXML.Utils;
 
@@ -11,6 +12,11 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class XLWorkbookStyles
 {
+    /// <summary>
+    /// First user-defined numFmtId.
+    /// </summary>
+    public const int FirstUserDefinedNumberFormatIndex = 164;
+
     private readonly BiDictionary<int, string> _numberFormats;
 
     private readonly BiDictionary<int, XLFontFormatValue> _fontFormats;
@@ -48,7 +54,7 @@ internal class XLWorkbookStyles
     /// <summary>
     /// A normal style that is used for newly create workbooks or loaded workbooks without a normal style.
     /// </summary>
-    private static readonly XLCellStyleValue DefaultNormalStyle = new()
+    internal readonly XLCellStyleValue DefaultNormalStyle = new()
     {
         Name = "Normal",
         BuiltInStyle = BuiltInStyleValues.Normal,
@@ -56,7 +62,7 @@ internal class XLWorkbookStyles
         Alignment = new XLAlignmentFormatValue
         {
             Horizontal = XLAlignmentHorizontalValues.General,
-            Vertical = XLAlignmentVerticalValues.Center,
+            Vertical = XLAlignmentVerticalValues.Bottom,
             TextRotation = TextRotation.None,
             WrapText = false,
             Indent = 0,
@@ -186,12 +192,26 @@ internal class XLWorkbookStyles
             VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
             Scheme = XLFontScheme.None
         },
-        // TODO: Add all default values, not just font
-        NumberFormat = null,
-        Alignment = null,
-        Protection = null,
-        Fill = null,
-        Border = null,
+        NumberFormat = "",
+        Alignment = new XLAlignmentFormatValue()
+        {
+            Horizontal = XLAlignmentHorizontalValues.General,
+            Vertical = XLAlignmentVerticalValues.Bottom,
+            TextRotation = TextRotation.None,
+            WrapText = false,
+            Indent = 0,
+            RelativeIndent = 0,
+            JustifyLastLine = false,
+            ShrinkToFit = false,
+            ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent
+        },
+        Protection = new XLProtectionFormatValue
+        {
+            Locked = true,
+            Hidden = false,
+        },
+        Fill = XLFillFormatValue.None,
+        Border = XLBorderFormatValue.None,
         CellStyleId = null,
         IncludeQuotePrefix = false,
         PivotButton = false,
@@ -210,6 +230,15 @@ internal class XLWorkbookStyles
 
     internal void AddNumberFormat(int numFmtId, string formatCode)
     {
+        _numberFormats.Add(numFmtId, formatCode);
+    }
+
+    internal void AddUserDefinedNumberFormat(string formatCode)
+    {
+        var numFmtId = FirstUserDefinedNumberFormatIndex;
+        if (_numberFormats.Count > 0)
+            numFmtId = Math.Max(_numberFormats.Keys.Max() + 1, numFmtId);
+        
         _numberFormats.Add(numFmtId, formatCode);
     }
 
@@ -323,7 +352,7 @@ internal class XLWorkbookStyles
         foreach (var (numFmtId, formatCode) in XLPredefinedFormat.FormatCodes)
             styles.AddNumberFormat(numFmtId, formatCode);
 
-        var normalStyle = DefaultNormalStyle;
+        var normalStyle = styles.DefaultNormalStyle;
         styles.AddFontFormat(normalStyle.Font!);
         styles.AddFillFormat(XLFillFormatValue.None);
         styles.AddFillFormat(XLFillFormatValue.Gray125);

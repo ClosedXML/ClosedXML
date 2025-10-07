@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel;
@@ -75,51 +74,11 @@ internal class XLCellFormat
     internal T Resolve<T>(Func<XLCellFormatValue, T?> selector)
         where T : struct
     {
-        var defaultFormat = _styles.DefaultFormat;
-        var format = GetFormatOrInherited(defaultFormat);
-        return GetFormatProperty(selector, format, defaultFormat);
-    }
-
-    private XLCellFormatValue GetFormatOrInherited(XLCellFormatValue defaultFormat)
-    {
-        // Get the format in hierarchy that is closest to the actual container.
-        if (_container.FormatValue is { } containerFormat)
-            return containerFormat;
-
-        if (_row?.FormatValue is { } rowFormat)
-            return rowFormat;
-
-        if (_column?.FormatValue is { } columnFormat)
-            return columnFormat;
-
-        if (_normal.FormatValue is { } normalFormat)
-            return normalFormat;
-
-        // We should never get here, but if workbook doesn't specify normal style (technically not
-        // required by the spec), let's go with the default format.
-        return defaultFormat;
-    }
-
-    private T GetFormatProperty<T>(Func<XLCellFormatValue, T?> selector, XLCellFormatValue format, XLCellFormatValue defaultFormat)
-        where T : struct
-    {
-        var formatPropertyValue = selector(format);
-        if (formatPropertyValue is not null)
-            return formatPropertyValue.Value;
-
-        var defaultPropertyValue = selector(defaultFormat);
-        if (defaultPropertyValue is not null)
-            return defaultPropertyValue.Value;
-
-        throw new UnreachableException("Default format is missing a value.");
+        throw new NotImplementedException();
     }
 
     internal void ModifyFont<TProperty>(Func<XLFontFormatValue, TProperty, XLFontFormatValue> modifyFont, TProperty value)
     {
-        var format = _container.FormatValue ?? GetFormatOrInherited(_styles.DefaultFormat);
-        var font = format.Font ?? _styles.GetDefaultFormat(static x => x.Font);
-        var modifiedFont = _styles.GetRegisteredFontFormat(font, f => modifyFont(f, value));
-        var modifiedFormat = _styles.GetRegisteredCellFormat(format, f => f with { Font = modifiedFont });
-        _container.FormatValue = modifiedFormat;
+        throw new NotImplementedException();
     }
 }

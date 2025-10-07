@@ -33,7 +33,7 @@ internal class StylesReaderTests
         // Empty font is valid, it will just inherit everything
         AssertFonts("<font/>", styles =>
         {
-            var font = styles.Fonts.Single().Value;
+            var font = styles.Fonts[0];
             Assert.Null(font.Name);
             Assert.Null(font.Charset);
             Assert.Null(font.Family);
@@ -76,7 +76,7 @@ internal class StylesReaderTests
             </font>
             """, styles =>
         {
-            var font = styles.Fonts.Single().Value;
+            var font = styles.Fonts[0];
             Assert.AreEqual("Calibri", font.Name);
             Assert.AreEqual(XLFontCharSet.ShiftJIS, font.Charset);
             Assert.AreEqual(XLFontFamilyNumberingValues.Swiss, font.Family);
@@ -110,7 +110,7 @@ internal class StylesReaderTests
             </font>
             """, styles =>
             {
-                var font = styles.Fonts.Single().Value;
+                var font = styles.Fonts[0];
                 Assert.AreEqual(XLFontFamilyNumberingValues.NotApplicable, font.Family);
             });
     }
@@ -129,7 +129,7 @@ internal class StylesReaderTests
             </font>
             """, styles =>
             {
-                var font = styles.Fonts.Single().Value;
+                var font = styles.Fonts[0];
                 Assert.AreEqual("Second Font", font.Name);
                 Assert.IsFalse(font.Bold);
             });
@@ -140,7 +140,7 @@ internal class StylesReaderTests
     {
         AssertFills("<fill/>", styles =>
         {
-            var fill = styles.Fills.Single().Value;
+            var fill = styles.Fills[0];
             Assert.Null(fill.Pattern);
             Assert.Null(fill.LinearGradient);
             Assert.Null(fill.PathGradient);
@@ -160,7 +160,7 @@ internal class StylesReaderTests
             """,
             styles =>
         {
-            var fill = styles.Fills.Single().Value;
+            var fill = styles.Fills[0];
             Assert.NotNull(fill.Pattern);
             Assert.AreEqual(XLFillPatternValues.LightGrid, fill.Pattern.PatternType);
             Assert.AreEqual(XLColor.NoColor, fill.Pattern.PatternColor);
@@ -186,7 +186,7 @@ internal class StylesReaderTests
             """,
             styles =>
             {
-                var linearGradient = styles.Fills.Single().Value.LinearGradient;
+                var linearGradient = styles.Fills[0].LinearGradient;
                 Assert.NotNull(linearGradient);
                 Assert.AreEqual(90, linearGradient.Degrees);
                 Assert.That(linearGradient.Stops, Is.EquivalentTo(new Dictionary<FractionOfOne, XLColor>
@@ -215,7 +215,7 @@ internal class StylesReaderTests
             """,
             styles =>
             {
-                var pathGradient = styles.Fills.Single().Value.PathGradient;
+                var pathGradient = styles.Fills[0].PathGradient;
                 Assert.NotNull(pathGradient);
                 Assert.AreEqual(0.5, pathGradient.InnerLeft);
                 Assert.AreEqual(0.25, pathGradient.InnerRight);
@@ -384,13 +384,13 @@ internal class StylesReaderTests
             Assert.AreEqual("0.00", style.NumberFormat);
 
             Assert.AreSame(styles.Fonts[1], style.Font);
-            Assert.AreEqual(15.0, style.Font?.Size);
+            Assert.AreEqual(15.0, style.Font.Size);
 
             Assert.AreSame(styles.Fills[1], style.Fill);
-            Assert.AreEqual(XLFillPatternValues.LightGrid, style.Fill?.Pattern?.PatternType);
+            Assert.AreEqual(XLFillPatternValues.LightGrid, style.Fill.Pattern?.PatternType);
 
             Assert.AreSame(styles.Borders[0], style.Border);
-            Assert.AreEqual(XLBorderStyleValues.Double, style.Border?.Bottom?.Style);
+            Assert.AreEqual(XLBorderStyleValues.Double, style.Border.Bottom?.Style);
 
             // All apply* are true or default (true) -> everything should be overwritten
             Assert.AreEqual(CellFormatComponents.All, style.IncludedComponents);
@@ -447,7 +447,6 @@ internal class StylesReaderTests
             """;
         AssertFormat(styles =>
         {
-            Assert.AreEqual(3, styles.CellStyles.Count);
             Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
             Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
             Assert.AreEqual("Style 3", styles.CellStyles[2].Name);
@@ -481,12 +480,11 @@ internal class StylesReaderTests
             """;
         AssertFormat(styles =>
         {
-            Assert.AreEqual(2, styles.CellStyles.Count);
             Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
-            Assert.AreEqual(15.0, styles.CellStyles[0].Font?.Size);
+            Assert.AreEqual(15.0, styles.CellStyles[0].Font.Size);
 
             Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
-            Assert.AreEqual(15.0, styles.CellStyles[1].Font?.Size);
+            Assert.AreEqual(15.0, styles.CellStyles[1].Font.Size);
 
             Assert.AreEqual(1, styles.CellFormats.Count);
             Assert.AreEqual(0, styles.CellFormats[0].CellStyleId);
@@ -518,16 +516,17 @@ internal class StylesReaderTests
             """;
         AssertFormat(styles =>
         {
-            Assert.AreEqual(3, styles.CellStyles.Count);
             Assert.AreEqual("Style 1", styles.CellStyles[0].Name);
-            Assert.AreEqual(15.0, styles.CellStyles[0].Font?.Size);
+            Assert.AreEqual(15.0, styles.CellStyles[0].Font.Size);
 
             Assert.AreEqual("Style 2", styles.CellStyles[1].Name);
-            Assert.AreEqual(10.0, styles.CellStyles[1].Font?.Size);
+            Assert.AreEqual(10.0, styles.CellStyles[1].Font.Size);
 
             // Created style from last formatting record without a cellStyle element
             Assert.AreEqual("Style 3", styles.CellStyles[2].Name);
-            Assert.IsNull(styles.CellStyles[2].Font);
+
+            // If font is not specified, use the first one
+            Assert.AreEqual(15.0, styles.CellStyles[2].Font.Size);
         }, xml);
     }
 
@@ -958,9 +957,8 @@ internal class StylesReaderTests
     {
         // This is Excel specific behavior.
         // Each format property has a default value that is used when format doesn't specify
-        // the property. Most of the default format values are fixed, but font name and size
-        // are taken from normal style on load. Other format properties, e.g. bold, are not
-        // changed in default format regardless of values in normal style.
+        // the property. Most of the default format values are fixed, but fonts are taken from
+        // normal style.
         var xml =
             """
             <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
@@ -978,10 +976,105 @@ internal class StylesReaderTests
             """;
         AssertFormat(styles =>
         {
-            Assert.AreEqual("Arial", styles.DefaultFormat.Font?.Name);
-            Assert.AreEqual(15.0, styles.DefaultFormat.Font?.Size);
+            Assert.AreEqual("Arial", styles.DefaultCellFormat.Font.Name);
+            Assert.AreEqual(15.0, styles.DefaultCellFormat.Font.Size);
+            Assert.IsTrue(styles.DefaultCellFormat.Font.Bold);
+        }, xml);
+    }
 
-            Assert.IsFalse(styles.DefaultFormat.Font?.Bold);
+    [Test]
+    public void Cell_style_will_use_default_format_components_for_missing_components()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <numFmts>
+                <numFmt numFmtId="164" formatCode="0.00"/>
+              </numFmts>  
+              <fonts>
+                <font><name val="Wingdings"/><sz val="5"/></font>
+              </fonts>
+              <fills>
+                <fill>
+                  <patternFill patternType="solid">
+                    <fgColor rgb="FF00FF00"/>
+                    <bgColor rgb="FF800000"/>
+                  </patternFill>
+                </fill>
+              </fills>  
+              <borders>
+                <border><bottom style="double"><color rgb="FF801040"/></bottom></border>
+              </borders>
+              <cellStyleXfs>
+                <xf/>
+              </cellStyleXfs>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            var style = styles.CellStyles[0];
+
+            Assert.AreSame(XLPredefinedFormat.FormatCodes[XLPredefinedFormat.General], style.NumberFormat);
+            Assert.AreSame(XLPredefinedFormat.FormatCodes[XLPredefinedFormat.General], styles.NumberFormats[0]);
+
+            Assert.AreSame(styles.Fonts[0], style.Font);
+
+            Assert.AreSame(XLFillFormatValue.None, style.Fill);
+            Assert.AreSame(XLFillFormatValue.None, styles.Fills[1]);
+
+            Assert.AreSame(XLBorderFormatValue.None, style.Border);
+            Assert.AreSame(XLBorderFormatValue.None, styles.Borders[1]);
+
+            Assert.AreSame(styles.DefaultNormalStyle.Alignment, style.Alignment);
+            Assert.AreSame(styles.DefaultNormalStyle.Protection, style.Protection);
+        }, xml);
+    }
+
+    [Test]
+    public void Cell_format_will_use_default_format_components_for_missing_components()
+    {
+        var xml =
+            """
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <numFmts>
+                <numFmt numFmtId="164" formatCode="0.00"/>
+              </numFmts>  
+              <fonts>
+                <font><name val="Wingdings"/><sz val="5"/></font>
+              </fonts>
+              <fills>
+                <fill>
+                  <patternFill patternType="solid">
+                    <fgColor rgb="FF00FF00"/>
+                    <bgColor rgb="FF800000"/>
+                  </patternFill>
+                </fill>
+              </fills>  
+              <borders>
+                <border><bottom style="double"><color rgb="FF801040"/></bottom></border>
+              </borders>
+              <cellXfs>
+                <xf/>
+              </cellXfs>
+            </styleSheet>
+            """;
+        AssertFormat(styles =>
+        {
+            var format = styles.CellFormats[0];
+
+            Assert.AreSame(XLPredefinedFormat.FormatCodes[XLPredefinedFormat.General], format.NumberFormat);
+            Assert.AreSame(XLPredefinedFormat.FormatCodes[XLPredefinedFormat.General], styles.NumberFormats[0]);
+
+            Assert.AreSame(styles.Fonts[0], format.Font);
+
+            Assert.AreSame(XLFillFormatValue.None, format.Fill);
+            Assert.AreSame(XLFillFormatValue.None, styles.Fills[1]);
+
+            Assert.AreSame(XLBorderFormatValue.None, format.Border);
+            Assert.AreSame(XLBorderFormatValue.None, styles.Borders[1]);
+
+            Assert.AreSame(styles.DefaultNormalStyle.Alignment, format.Alignment);
+            Assert.AreSame(styles.DefaultNormalStyle.Protection, format.Protection);
         }, xml);
     }
 

@@ -25,17 +25,17 @@ internal class XLCellStyleValue
     /// </summary>
     public required bool Hidden { get; init; }
 
-    public required string? NumberFormat { get; init; }
+    public required string NumberFormat { get; init; }
 
-    public required XLAlignmentFormatValue? Alignment { get; init; }
+    public required XLAlignmentFormatValue Alignment { get; init; }
 
-    public required XLProtectionFormatValue? Protection { get; init; }
+    public required XLProtectionFormatValue Protection { get; init; }
 
-    public required XLFontFormatValue? Font { get; init; }
+    public required XLFontFormatValue Font { get; init; }
 
-    public required XLFillFormatValue? Fill { get; init; }
+    public required XLFillFormatValue Fill { get; init; }
 
-    public required XLBorderFormatValue? Border { get; init; }
+    public required XLBorderFormatValue Border { get; init; }
 
     /// <summary>
     /// Format components that are decided by the style. Specified components should have

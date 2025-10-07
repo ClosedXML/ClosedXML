@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +16,7 @@ namespace ClosedXML.Excel.IO;
 
 internal class StylesWriter
 {
-    private const int FirstUserDefinedFormatIndex = 164;
+    private const int FirstUserDefinedFormatIndex = XLWorkbookStyles.FirstUserDefinedNumberFormatIndex;
 
     private static readonly List<(string Type, TableRegion? TableRegion, PivotRegion? PivotRegion)> TableRegionsMap = new()
     {
