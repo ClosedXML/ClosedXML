@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
@@ -85,12 +85,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
-
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {
             var children = GetChildrenRecursively(this)
-                .GroupBy(child => child.StyleValue, _comparer);
+                .GroupBy(child => child.StyleValue, ReferenceEqualityComparer<XLStyleValue>.Instance);
 
             foreach (var group in children)
             {
@@ -121,16 +119,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion Private methods
-
-        #region Nested classes
-
-        public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class
-        {
-            public bool Equals(T x, T y) => ReferenceEquals(x, y);
-
-            public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
-        }
-
-        #endregion Nested classes
     }
 }
