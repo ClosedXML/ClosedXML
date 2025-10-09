@@ -73,6 +73,12 @@ namespace ClosedXML.Excel
             return new XLBookArea(Name, intersectionRange.Value);
         }
 
+        public void Deconstruct(out string sheetName, out XLSheetRange area)
+        {
+            sheetName = Name;
+            area = Area;
+        }
+
         public override string ToString()
         {
             return $"{Name}!{Area}";

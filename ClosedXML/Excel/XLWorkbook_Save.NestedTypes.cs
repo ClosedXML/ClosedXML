@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
@@ -46,7 +47,9 @@ namespace ClosedXML.Excel
             public IReadOnlyDictionary<XLStyleValue, StyleInfo> SharedStyles => _sharedStyles;
 
             public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; }
+
 #endif
+            public Dictionary<XLCellFormatValue, uint> FormatMap = new();
 
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -119,6 +122,15 @@ namespace ClosedXML.Excel
             {
 #if STYLES_REWORK
                 return 0; // TODO: Map to real format id
+#else
+                return _sharedStyles[style].StyleId;
+#endif
+            }
+
+            internal uint GetStyleId(XLStyleValue style, XLCellFormatValue? format)
+            {
+#if STYLES_REWORK
+                return format is not null ? FormatMap[format] : 0;
 #else
                 return _sharedStyles[style].StyleId;
 #endif

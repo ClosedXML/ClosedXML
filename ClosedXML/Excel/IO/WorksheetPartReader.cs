@@ -280,8 +280,6 @@ internal class WorksheetPartReader
 
         var attributes = reader.Attributes;
 
-        var styleIndex = attributes.GetIntAttribute("s") ?? 0;
-
         var cellAddress = attributes.GetCellRefAttribute("r") ?? new XLSheetPoint(rowIndex, _lastColumnNumber + 1);
         _lastColumnNumber = cellAddress.Column;
 
@@ -299,6 +297,9 @@ internal class WorksheetPartReader
         };
 
         var xlCell = ws.Cell(cellAddress.Row, cellAddress.Column);
+
+        var styleIndex = attributes.GetIntAttribute("s") ?? 0;
+        xlCell.FormatValue = ws.Workbook.Styles.CellFormats[styleIndex];
 
         if (styleList.TryGetValue(styleIndex, out IXLStyle style))
         {

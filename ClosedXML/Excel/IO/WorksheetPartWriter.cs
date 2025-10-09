@@ -2198,7 +2198,7 @@ namespace ClosedXML.Excel.IO
 
             static void WriteCell(XmlWriter xml, XLCell xlCell, char[] cellRef, SaveContext context, SaveOptions options, HashSet<IXLAddress> tableTotalCells, uint rowStyleId)
             {
-                var styleId = context.GetStyleId(xlCell.StyleValue);
+                var styleId = context.GetStyleId(xlCell.StyleValue, xlCell.FormatValue);
 
                 Span<Char> cellRefSpan = cellRef;
                 var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);

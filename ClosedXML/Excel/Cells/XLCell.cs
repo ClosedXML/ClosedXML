@@ -189,7 +189,7 @@ namespace ClosedXML.Excel
 
         #region IXLFormatContainer
 #nullable enable
-        XLCellFormatValue? IXLFormatContainer.FormatValue
+        public XLCellFormatValue? FormatValue
         {
             get => _cellsCollection.FormatSlice.GetFormat(SheetPoint);
             set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
@@ -197,8 +197,10 @@ namespace ClosedXML.Excel
 #nullable disable
         #endregion
 
-        // TODO: Add format inheritance
-        internal XLCellFormat Format => XLCellFormat.ForCell(Worksheet.Workbook.Styles, this, null, null, Worksheet.Workbook);
+        internal XLCellFormat Format => new XLCellFormat(Worksheet.Workbook)
+        {
+            Areas = new[] { new XLBookArea(Worksheet.Name, new XLSheetRange(SheetPoint)) }
+        };
 
         internal XLComment GetComment()
         {

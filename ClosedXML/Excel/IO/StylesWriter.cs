@@ -180,6 +180,14 @@ internal class StylesWriter
         WriteColors(xml, styles);
 
         xml.WriteEndElement();
+
+        // Fill the map used in other parts to determine format id
+        foreach (var (xfId, format) in cellXfsMap.GetActual())
+        {
+            if (!context.FormatMap.ContainsKey(format))
+                context.FormatMap.Add(format, (uint)xfId);
+        }
+
         return;
 
         void AddFillAsUsed(XLFillFormatValue format)
