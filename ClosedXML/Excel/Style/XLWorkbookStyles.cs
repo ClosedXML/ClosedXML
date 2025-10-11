@@ -333,11 +333,6 @@ internal class XLWorkbookStyles
         return modified;
     }
 
-    internal T GetDefaultFormat<T>(Func<XLCellFormatValue, T?> selector)
-    {
-        return selector(DefaultFormat) ?? throw new UnreachableException("Default value doesn't contain a format property.");
-    }
-
     /// <summary>
     /// Create a workbook styles component suitable for a new workbook.
     /// </summary>
