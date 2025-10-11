@@ -46,4 +46,14 @@ internal class XLColumnAreaTests
         var columnArea = column.Area;
         Assert.AreEqual(columnArea, new XLBookArea("name", new XLSheetRange(1, 4, XLHelper.MaxRowNumber, 4)));
     }
+
+    [TestCase("name", 4, "name!D:D")]
+    [TestCase("some name", 26, "'some name'!Z:Z")]
+    [TestCase("Joe's", 27, "'Joe''s'!AA:AA")]
+    [TestCase("Joe", XLHelper.MaxColumnNumber, "Joe!XFD:XFD")]
+    public void ToString_returns_readable_reference(string name, int columnNumber, string expected)
+    {
+        var columnArea = new XLColumnArea(name, columnNumber);
+        Assert.AreEqual(expected, columnArea.ToString());
+    }
 }

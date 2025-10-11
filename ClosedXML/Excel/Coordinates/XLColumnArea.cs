@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel;
 
@@ -42,5 +44,14 @@ internal readonly record struct XLColumnArea
         {
             return (XLHelper.SheetComparer.GetHashCode(Name) * 397) ^ ColumNumber.GetHashCode();
         }
+    }
+
+    public override string ToString()
+    {
+        var name = NameUtils.ShouldQuote(Name.AsSpan()) ? Name.AlwaysEscapeSheetName() : Name;
+        var column = XLHelper.GetColumnLetterFromNumber(ColumNumber);
+        return new StringBuilder(name.Length + 2 + 2 * column.Length)
+            .Append(name).Append('!').Append(column).Append(':').Append(column)
+            .ToString();
     }
 }
