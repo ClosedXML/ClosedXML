@@ -1246,11 +1246,17 @@ internal class WorksheetPartReader
         // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
         if (xlStylized is IXLColumns columns)
         {
-            columns.Cast<XLColumn>().ForEach(col => col.InnerStyle = new XLStyle(col, xlStyleKey));
+            columns.Cast<XLColumn>().ForEach(col =>
+            {
+                col.InnerStyle = new XLStyle(col, xlStyleKey);
+                col.FormatValue = styles.CellFormats[styleIndex];
+            });
         }
         else
         {
             xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyleKey);
+            if (xlStylized is IXLFormatContainer formatContainer)
+                formatContainer.FormatValue = styles.CellFormats[styleIndex];
         }
     }
 }
