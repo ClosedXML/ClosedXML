@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
 using ClosedXML.Excel.InsertData;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
-    internal class XLWorksheet : XLRangeBase, IXLWorksheet
+    internal class XLWorksheet : XLRangeBase, IXLWorksheet, IXLFormatContainer
     {
         #region Fields
 
@@ -187,6 +188,20 @@ namespace ClosedXML.Excel
         public XLAutoFilter AutoFilter { get; private set; }
 
         public bool IsDeleted { get; private set; }
+
+        #region IXLFormatContainer
+
+        /// <remarks>
+        /// Format of a worksheet or <c>null</c> if worksheet has no format. In OOXML, worksheet
+        /// doesn't actually has a format by itself, so this mostly virtual. During load, it
+        /// represents a style of largest group of columns that are empty other than a style
+        /// (assuming all columns have a style). In most cases it will remainder of columns,
+        /// e.g. <c><![CDATA[<col min="7" max="16384" style="5"/>]]></c>.
+        /// </remarks>
+        /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
+        public XLCellFormatValue? FormatValue { get; set; } // TODO Styles: Set during load
+
+        #endregion
 
         #region IXLWorksheet Members
 

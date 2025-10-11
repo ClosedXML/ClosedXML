@@ -81,29 +81,5 @@ internal class FormatSlice : ISlice
         return _slice[point].Format;
     }
 
-    /// <summary>
-    /// Apply a deterministic format change. Deterministic = when inputs are equal, outputs must
-    /// also be equal. That is needed to cache format modifications. This method doesn't register
-    /// formats in the workbook styles, it only sets values in the slice.
-    /// </summary>
-    /// <param name="area">Area that should be modified.</param>
-    /// <param name="modification">A deterministic modification.</param>
-    /// <param name="resolver">A provider of format for non-materialized cells (e.g. column has a format and thus non-materialized cells should use column format).</param>
-    internal void ApplyDeterministic(XLSheetRange area, Func<XLCellFormatValue, XLCellFormatValue> modification, Func<XLSheetPoint, XLCellFormatValue> resolver)
-    {
-        var cache = new Dictionary<XLCellFormatValue, XLCellFormatValue>(ReferenceEqualityComparer<XLCellFormatValue>.Instance);
-        foreach (var point in area)
-        {
-            var format = GetFormat(point) ?? resolver(point);
-            if (!cache.TryGetValue(format, out var modifiedFormat))
-            {
-                modifiedFormat = modification(format);
-                cache.Add(format, modifiedFormat);
-            }
-
-            Set(point, modifiedFormat);
-        }
-    }
-
     private readonly record struct SliceValue(XLStyleValue? StyleValue, XLCellFormatValue? Format);
 }

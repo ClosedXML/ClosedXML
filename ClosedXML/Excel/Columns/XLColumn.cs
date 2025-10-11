@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Graphics;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumn : XLRangeBase, IXLColumn
+    internal class XLColumn : XLRangeBase, IXLColumn, IXLFormatContainer
     {
         private int _outlineLevel;
 
@@ -19,6 +20,11 @@ namespace ClosedXML.Excel
 
             Width = worksheet.ColumnWidth;
         }
+
+        /// <summary>
+        /// Get area of this column.
+        /// </summary>
+        internal XLColumnArea Area => new(Worksheet.Name, ColumnNumber());
 
         public override XLRangeType RangeType
         {
@@ -447,6 +453,18 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLColumn Members
+
+        #region IXLFormatContainer
+
+        /// <remarks>
+        /// Format of the column or <c>null</c> for default format.
+        /// </remarks>
+        /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
+        public XLCellFormatValue? FormatValue { get; set; }
+
+        public XLCellFormat Format => XLCellFormat.ForColumn(this);
+
+        #endregion
 
         public override XLRange AsRange()
         {

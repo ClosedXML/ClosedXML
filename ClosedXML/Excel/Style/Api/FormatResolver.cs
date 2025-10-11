@@ -9,11 +9,13 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal class FormatResolver
 {
-    private readonly XLCellFormatValue _workbookFormat;
+    private readonly XLCellFormatValue _defaultFormat;
+    private readonly XLColumnsCollection _columns;
 
     public FormatResolver(XLWorksheet worksheet)
     {
-        _workbookFormat = worksheet.Workbook.Styles.DefaultFormat;
+        _defaultFormat = worksheet.Workbook.Styles.DefaultFormat;
+        _columns = worksheet.Internals.ColumnsCollection;
     }
 
     /// <summary>
@@ -23,7 +25,13 @@ internal class FormatResolver
     /// <returns>A format that is already registered in the styles.</returns>
     public XLCellFormatValue Resolve(XLSheetPoint point)
     {
-        // TODO: Add resolve from worksheet, columns and rows
-        return _workbookFormat;
+        // TODO: Add resolve from worksheet and rows
+        if (_columns.TryGetValue(point.Column, out var column) &&
+            column.FormatValue is { } columnFormat)
+        {
+            return columnFormat;
+        }
+
+        return _defaultFormat;
     }
 }

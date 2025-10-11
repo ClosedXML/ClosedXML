@@ -26,7 +26,28 @@ internal class XLCellFormat
     /// </summary>
     internal IReadOnlyList<XLBookArea> Areas { get; init; } = Array.Empty<XLBookArea>();
 
+    /// <summary>
+    /// Formatting is updated for used cells within these areas. Unused cells are ignored.
+    /// </summary>
+    internal IReadOnlyList<XLBookArea> UsedAreas { get; init; } = Array.Empty<XLBookArea>();
+
+    /// <summary>
+    /// Formatting is updated for these columns. This doesn't update cells within the columns, only
+    /// the columns themselves.
+    /// </summary>
+    internal IReadOnlyList<XLColumnArea> Columns { get; init; } = Array.Empty<XLColumnArea>();
+
     internal XLFontCellFormat Font => new(this);
+
+    internal static XLCellFormat ForColumn(XLColumn column)
+    {
+        var columnArea = column.Area;
+        return new XLCellFormat(column.Worksheet.Workbook)
+        {
+            UsedAreas = new[] { columnArea.Area },
+            Columns = new[] { columnArea }
+        };
+    }
 
     internal T Resolve<T>(Func<XLCellFormatValue, T?> selector)
         where T : struct
@@ -36,23 +57,47 @@ internal class XLCellFormat
 
     internal void ModifyFont<TProperty>(Func<XLFontFormatValue, TProperty, XLFontFormatValue> modifyFont, TProperty value)
     {
+        // TODO Styles: Apply to containers and deal with cross points
         var styles = _workbook.Styles;
-        foreach (var (sheetName, area) in Areas)
+        foreach (var columnArea in Columns)
         {
-            // Worksheet could have been deleted -> skip
+            if (!_workbook.TryGetWorksheet(columnArea.Name, out XLWorksheet worksheet))
+                continue;
+
+            var column = worksheet.Column(columnArea.ColumNumber);
+            if (column.FormatValue is not { } originalFormat)
+                originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
+
+            column.FormatValue = ModifyFormat(originalFormat);
+        }
+
+        foreach (var (sheetName, area) in UsedAreas)
+        {
             if (!_workbook.TryGetWorksheet(sheetName, out XLWorksheet worksheet))
                 continue;
 
             var formatResolver = new FormatResolver(worksheet);
-            var formatSlice = worksheet.Internals.CellsCollection.FormatSlice;
-            formatSlice.ApplyDeterministic(area, format =>
-            {
-                var modifiedFont = styles.GetRegisteredFontFormat(format.Font, font => modifyFont(font, value));
-                var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Font = modifiedFont });
-                return modifiedFormat;
-            }, formatResolver.Resolve);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+            cellsCollection.ApplyFormatOnUsed(area, ModifyFormat, formatResolver.Resolve);
         }
 
-        // TODO: Apply to used areas, containers and deal with cross points
+        foreach (var (sheetName, area) in Areas)
+        {
+            if (!_workbook.TryGetWorksheet(sheetName, out XLWorksheet worksheet))
+                continue;
+
+            var formatResolver = new FormatResolver(worksheet);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+            cellsCollection.ApplyFormatOnAll(area, ModifyFormat, formatResolver.Resolve);
+        }
+
+        return;
+
+        XLCellFormatValue ModifyFormat(XLCellFormatValue format)
+        {
+            var modifiedFont = styles.GetRegisteredFontFormat(format.Font, font => modifyFont(font, value));
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Font = modifiedFont });
+            return modifiedFormat;
+        }
     }
 }
