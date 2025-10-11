@@ -929,6 +929,19 @@ namespace ClosedXML.Excel
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
+#if STYLES_REWORK
+                if (FormatValue is { } format)
+                {
+                    if (format.IncludeQuotePrefix)
+                        return false;
+
+                    // TODO Styles: Think about empty detection. Original is pretty suss, document if necessary
+                    var defaultFormat = Worksheet.Workbook.Styles.DefaultFormat;
+                    if (defaultFormat != format)
+                        return false;
+                }
+#else
+
                 if (StyleValue.IncludeQuotePrefix)
                     return false;
 
@@ -943,6 +956,7 @@ namespace ClosedXML.Excel
                     if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out XLColumn column) && !column.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
                 }
+#endif
             }
 
             if (options.HasFlag(XLCellsUsedOptions.MergedRanges) && IsMerged())
