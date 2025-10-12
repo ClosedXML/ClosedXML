@@ -152,11 +152,16 @@ internal class WorksheetPartReader
         if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
             ws.ColumnWidth = wsDefaultColumn.Width - XLConstants.ColumnWidthOffset;
 
-        Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
-                                      ? Int32.Parse(wsDefaultColumn.Style.InnerText)
-                                      : -1;
-        if (styleIndexDefault >= 0)
-            ApplyStyle(ws, styleIndexDefault, ws.Workbook.Styles);
+        // Sheet doesn't have a format, only column spans have format. When whole sheet is selected
+        // to change format, Excel will mark all cols spans as having a particular format. Format
+        // is considered a sheet format when all columns have a format and it's in the last column.
+        var colSpanFormats = columns.Elements<Column>().Select(c => (MinColumn: c.Min?.Value, MaxColumn: c.Max?.Value, XfId: c.Style?.Value ?? 0)).ToArray();
+        var allColsHaveFormat = colSpanFormats.Sum(x => x.MaxColumn - x.MinColumn + 1) == XLHelper.MaxColumnNumber;
+        if (allColsHaveFormat)
+        {
+            var lastColumnXfId = colSpanFormats.Single(x => x.MaxColumn == XLHelper.MaxColumnNumber).XfId;
+            ApplyStyle(ws, checked((int)lastColumnXfId), ws.Workbook.Styles);
+        }
 
         foreach (Column col in columns.Elements<Column>())
         {

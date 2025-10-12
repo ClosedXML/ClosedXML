@@ -43,6 +43,12 @@ internal class XLCellFormat
     /// </summary>
     internal IReadOnlyList<XLRowArea> Rows { get; init; } = Array.Empty<XLRowArea>();
 
+    /// <summary>
+    /// Formatting is updated for these worksheets. This doesn't update cells within the sheets, only
+    /// the sheets and materialized rows and columns of the sheets.
+    /// </summary>
+    internal IReadOnlyList<string> Worksheets { get; init; } = Array.Empty<string>();
+
     internal XLFontCellFormat Font => new(this);
 
     internal static XLCellFormat ForColumn(XLColumn column)
@@ -65,6 +71,15 @@ internal class XLCellFormat
         };
     }
 
+    internal static XLCellFormat ForWorksheet(XLWorksheet worksheet)
+    {
+        return new XLCellFormat(worksheet.Workbook)
+        {
+            UsedAreas = new[] { worksheet.Area },
+            Worksheets = new[] { worksheet.Name }
+        };
+    }
+
     internal T Resolve<T>(Func<XLCellFormatValue, T?> selector)
         where T : struct
     {
@@ -75,16 +90,32 @@ internal class XLCellFormat
     {
         // TODO Styles: Apply to containers and deal with cross points
         var styles = _workbook.Styles;
+
+        foreach (var sheetName in Worksheets)
+        {
+            if (!_workbook.TryGetWorksheet(sheetName, out XLWorksheet worksheet))
+                continue;
+
+            var originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
+            var modifiedFormat = ModifyFormat(originalFormat);
+            worksheet.FormatValue = modifiedFormat;
+
+            var columns = worksheet.Internals.ColumnsCollection.Values;
+            foreach (var column in columns)
+                ApplyColRowFormat(column, worksheet);
+
+            var rows = worksheet.Internals.RowsCollection.Values;
+            foreach (var row in rows)
+                ApplyColRowFormat(row, worksheet);
+        }
+
         foreach (var columnArea in Columns)
         {
             if (!_workbook.TryGetWorksheet(columnArea.Name, out XLWorksheet worksheet))
                 continue;
 
             var column = worksheet.Column(columnArea.ColumNumber);
-            if (column.FormatValue is not { } originalFormat)
-                originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
-
-            column.FormatValue = ModifyFormat(originalFormat);
+            ApplyColRowFormat(column, worksheet);
         }
 
         foreach (var rowArea in Rows)
@@ -93,10 +124,7 @@ internal class XLCellFormat
                 continue;
 
             var row = worksheet.Row(rowArea.RowNumber);
-            if (row.FormatValue is not { } originalFormat)
-                originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
-
-            row.FormatValue = ModifyFormat(originalFormat);
+            ApplyColRowFormat(row, worksheet);
         }
 
         foreach (var (sheetName, area) in UsedAreas)
@@ -126,6 +154,14 @@ internal class XLCellFormat
             var modifiedFont = styles.GetRegisteredFontFormat(format.Font, font => modifyFont(font, value));
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Font = modifiedFont });
             return modifiedFormat;
+        }
+
+        void ApplyColRowFormat(IXLFormatContainer rowOrCol, XLWorksheet worksheet)
+        {
+            if (rowOrCol.FormatValue is not { } originalFormat)
+                originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
+
+            rowOrCol.FormatValue = ModifyFormat(originalFormat);
         }
     }
 }

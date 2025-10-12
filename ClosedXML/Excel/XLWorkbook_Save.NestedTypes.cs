@@ -118,15 +118,6 @@ namespace ClosedXML.Excel
 #endif
             }
 
-            internal UInt32 GetStyleId(XLStyleValue style)
-            {
-#if STYLES_REWORK
-                return 0; // TODO: Map to real format id
-#else
-                return _sharedStyles[style].StyleId;
-#endif
-            }
-
             internal uint GetStyleId(XLStyleValue style, XLCellFormatValue? format)
             {
 #if STYLES_REWORK

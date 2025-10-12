@@ -98,6 +98,8 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
+        internal XLBookArea Area => new(Name, XLSheetRange.Full);
+
         [Obsolete($"Use {nameof(DefinedNames)} instead.")]
         IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
 
@@ -193,13 +195,13 @@ namespace ClosedXML.Excel
 
         /// <remarks>
         /// Format of a worksheet or <c>null</c> if worksheet has no format. In OOXML, worksheet
-        /// doesn't actually has a format by itself, so this mostly virtual. During load, it
-        /// represents a style of largest group of columns that are empty other than a style
-        /// (assuming all columns have a style). In most cases it will remainder of columns,
-        /// e.g. <c><![CDATA[<col min="7" max="16384" style="5"/>]]></c>.
+        /// doesn't actually has a format by itself, so this is mostly virtual. If all columns have
+        /// format during the load, it is set to the format of the last column in a sheet (XFD).
         /// </remarks>
         /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
-        public XLCellFormatValue? FormatValue { get; set; } // TODO Styles: Set during load
+        public XLCellFormatValue? FormatValue { get; set; }
+
+        public XLCellFormat Format => XLCellFormat.ForWorksheet(this);
 
         #endregion
 

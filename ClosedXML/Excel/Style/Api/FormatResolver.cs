@@ -10,12 +10,14 @@ namespace ClosedXML.Excel;
 internal class FormatResolver
 {
     private readonly XLCellFormatValue _defaultFormat;
+    private readonly XLWorksheet _worksheet;
     private readonly XLColumnsCollection _columns;
     private readonly XLRowsCollection _rows;
 
     public FormatResolver(XLWorksheet worksheet)
     {
         _defaultFormat = worksheet.Workbook.Styles.DefaultFormat;
+        _worksheet = worksheet;
         _columns = worksheet.Internals.ColumnsCollection;
         _rows = worksheet.Internals.RowsCollection;
     }
@@ -39,6 +41,9 @@ internal class FormatResolver
         {
             return columnFormat;
         }
+
+        if (_worksheet.FormatValue is { } worksheetFormat)
+            return worksheetFormat;
 
         return _defaultFormat;
     }

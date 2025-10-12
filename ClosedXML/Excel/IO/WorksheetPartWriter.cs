@@ -360,7 +360,7 @@ namespace ClosedXML.Excel.IO
 
             #region Columns
 
-            var worksheetStyleId = context.GetStyleId(xlWorksheet.StyleValue);
+            var worksheetStyleId = context.GetStyleId(xlWorksheet.StyleValue, xlWorksheet.FormatValue);
             if (xlWorksheet.Internals.CellsCollection.IsEmpty &&
                 xlWorksheet.Internals.ColumnsCollection.Count == 0
                 && worksheetStyleId == 0)
@@ -429,7 +429,7 @@ namespace ClosedXML.Excel.IO
                     }
                     else
                     {
-                        styleId = context.GetStyleId(xlWorksheet.StyleValue);
+                        styleId = worksheetStyleId;
                         columnWidth = worksheetColumnWidth;
                     }
 
