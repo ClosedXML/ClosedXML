@@ -11,11 +11,13 @@ internal class FormatResolver
 {
     private readonly XLCellFormatValue _defaultFormat;
     private readonly XLColumnsCollection _columns;
+    private readonly XLRowsCollection _rows;
 
     public FormatResolver(XLWorksheet worksheet)
     {
         _defaultFormat = worksheet.Workbook.Styles.DefaultFormat;
         _columns = worksheet.Internals.ColumnsCollection;
+        _rows = worksheet.Internals.RowsCollection;
     }
 
     /// <summary>
@@ -25,7 +27,13 @@ internal class FormatResolver
     /// <returns>A format that is already registered in the styles.</returns>
     public XLCellFormatValue Resolve(XLSheetPoint point)
     {
-        // TODO: Add resolve from worksheet and rows
+        // TODO: Add resolve from worksheet
+        if (_rows.TryGetValue(point.Row, out var row) &&
+            row.FormatValue is { } rowFormat)
+        {
+            return rowFormat;
+        }
+
         if (_columns.TryGetValue(point.Column, out var column) &&
             column.FormatValue is { } columnFormat)
         {

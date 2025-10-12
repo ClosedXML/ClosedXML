@@ -37,6 +37,12 @@ internal class XLCellFormat
     /// </summary>
     internal IReadOnlyList<XLColumnArea> Columns { get; init; } = Array.Empty<XLColumnArea>();
 
+    /// <summary>
+    /// Formatting is updated for these rows. This doesn't update cells within the rows, only
+    /// the rows themselves.
+    /// </summary>
+    internal IReadOnlyList<XLRowArea> Rows { get; init; } = Array.Empty<XLRowArea>();
+
     internal XLFontCellFormat Font => new(this);
 
     internal static XLCellFormat ForColumn(XLColumn column)
@@ -46,6 +52,16 @@ internal class XLCellFormat
         {
             UsedAreas = new[] { columnArea.Area },
             Columns = new[] { columnArea }
+        };
+    }
+
+    internal static XLCellFormat ForRow(XLRow row)
+    {
+        var rowArea = row.Area;
+        return new XLCellFormat(row.Worksheet.Workbook)
+        {
+            UsedAreas = new[] { rowArea.Area },
+            Rows = new[] { rowArea }
         };
     }
 
@@ -69,6 +85,18 @@ internal class XLCellFormat
                 originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
 
             column.FormatValue = ModifyFormat(originalFormat);
+        }
+
+        foreach (var rowArea in Rows)
+        {
+            if (!_workbook.TryGetWorksheet(rowArea.Name, out XLWorksheet worksheet))
+                continue;
+
+            var row = worksheet.Row(rowArea.RowNumber);
+            if (row.FormatValue is not { } originalFormat)
+                originalFormat = worksheet.FormatValue ?? styles.DefaultFormat;
+
+            row.FormatValue = ModifyFormat(originalFormat);
         }
 
         foreach (var (sheetName, area) in UsedAreas)

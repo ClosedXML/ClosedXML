@@ -2,10 +2,11 @@ using ClosedXML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
-    internal sealed class XLRow : XLRangeBase, IXLRow
+    internal sealed class XLRow : XLRangeBase, IXLRow, IXLFormatContainer
     {
         /// <summary>
         /// Don't use directly, use properties.
@@ -24,6 +25,8 @@ namespace ClosedXML.Excel
 
             _height = worksheet.RowHeight;
         }
+
+        internal XLRowArea Area => new XLRowArea(Worksheet.Name, RowNumber());
 
         public override XLRangeType RangeType
         {
@@ -524,6 +527,19 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRow Members
+
+
+        #region IXLFormatContainer
+
+        /// <remarks>
+        /// Format of a row or <c>null</c> for not defined format.
+        /// </remarks>
+        /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
+        public XLCellFormatValue? FormatValue { get; set; }
+
+        public XLCellFormat Format => XLCellFormat.ForRow(this);
+
+        #endregion
 
         public override XLRange AsRange()
         {
