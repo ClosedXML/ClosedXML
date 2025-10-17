@@ -289,6 +289,13 @@ namespace ClosedXML.Excel
                 || (colorKey.ColorType == XLColorType.Indexed && colorKey.Indexed == 64);
         }
 
+        /// <summary>
+        /// Automatic color. The color is selected by the Excel depending on a context of usage.
+        /// Example: black for font color, white for background and black for pattern in a pattern
+        /// fill.
+        /// </summary>
+        internal static XLColor Auto => NoColor;
+
         public static XLColor NoColor { get; } = new XLColor();
 
         public static XLColor AliceBlue { get { return FromColor(Color.AliceBlue); } }

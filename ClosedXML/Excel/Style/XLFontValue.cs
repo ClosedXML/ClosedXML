@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
             FontColor = XLColor.FromArgb(0, 0, 0).Key,
             FontName = "Calibri",
             FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss,
-            FontCharSet = XLFontCharSet.Default,
+            FontCharSet = XLFontCharSet.Ansi,
             FontScheme = XLFontScheme.None
         };
         internal static readonly XLFontValue Default = FromKey(ref DefaultKey);

@@ -2,6 +2,7 @@
 
 using System;
 using System.Xml;
+using ClosedXML.Excel.Formatting;
 using ClosedXML.Extensions;
 using static ClosedXML.Excel.XLWorkbook;
 using static ClosedXML.Excel.IO.OpenXmlConst;
@@ -67,6 +68,7 @@ namespace ClosedXML.Excel.IO
 
         private static void WriteRun(XmlWriter w, string text, XLFontValue font)
         {
+            var defaultFont = XLFontFormatValue.Default;
             w.WriteStartElement("r", Main2006SsNs);
             w.WriteStartElement("rPr", Main2006SsNs);
 
@@ -88,7 +90,7 @@ namespace ClosedXML.Excel.IO
             if (font.Shadow)
                 w.WriteEmptyElement("shadow");
 
-            if (font.Underline != XLFontUnderlineValues.None)
+            if (font.Underline != defaultFont.Underline)
                 WriteRunProperty(w, "u", font.Underline.ToOpenXmlString());
 
             WriteRunProperty(w, @"vertAlign", font.VerticalAlignment.ToOpenXmlString());
@@ -97,10 +99,10 @@ namespace ClosedXML.Excel.IO
             WriteRunProperty(w, "rFont", font.FontName);
             WriteRunProperty(w, "family", (Int32)font.FontFamilyNumbering);
 
-            if (font.FontCharSet != XLFontCharSet.Default)
+            if (font.FontCharSet != defaultFont.Charset)
                 WriteRunProperty(w, "charset", (int)font.FontCharSet);
 
-            if (font.FontScheme != XLFontScheme.None)
+            if (font.FontScheme != defaultFont.Scheme)
                 WriteRunProperty(w, "scheme", font.FontScheme.ToOpenXml());
 
             w.WriteEndElement(); // rPr

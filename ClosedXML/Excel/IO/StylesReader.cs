@@ -5,8 +5,8 @@ using System.Linq;
 using ClosedXML.Excel.Formatting;
 using ClosedXML.IO;
 using ClosedXML.Utils;
-using TS = ClosedXML.Excel.Formatting.XLTableStyleRegionValues;
 using PTS = ClosedXML.Excel.Formatting.XLPivotStyleRegionValues;
+using TS = ClosedXML.Excel.Formatting.XLTableStyleRegionValues;
 
 namespace ClosedXML.Excel.IO;
 
@@ -82,8 +82,13 @@ internal partial class StylesReader
         }
 
         // Ensure there is a default format.
-        if (_styles.CellFormats.Count == 0)
-            _styles.AddFormat(XLCellFormatValue.FromStyle(styleId, normalStyle));
+        if (!_styles.CellFormats.TryGetValue(0, out var defaultFormat))
+        {
+            defaultFormat = XLCellFormatValue.FromStyle(styleId, normalStyle);
+            _styles.AddFormat(defaultFormat);
+        }
+
+        _styles.DefaultFormat = defaultFormat;
     }
 
     private void ParseStylesheet(string elementName)
@@ -257,7 +262,7 @@ internal partial class StylesReader
         }
     }
 
-    private XLFontFormatValue ParseFont(string elementName)
+    private XLDifferentialFontValue ParseFont(string elementName)
     {
         // Font is mostly buggy specification. Excel basically chokes on anything but a sequence,
         // but standard requires an unbound choice where elements can repeat.
@@ -351,7 +356,7 @@ internal partial class StylesReader
             }
         }
 
-        var fontFormat = new XLFontFormatValue
+        var fontFormat = new XLDifferentialFontValue
         {
             Name = fontName,
             Charset = fontCharset,
@@ -369,8 +374,49 @@ internal partial class StylesReader
             VerticalAlignment = fontVerticalAlignment,
             Scheme = fontScheme,
         };
-        _styles.AddFontFormat(fontFormat);
         return fontFormat;
+    }
+
+    // ParseFont is shared between <fonts> table and <dxf> elements. Once the <fonts> table is read,
+    // register collected fonts to the workbook styles.
+    partial void OnFontsParsed(List<XLDifferentialFontValue> font, uint? count)
+    {
+        var defaultFont = XLFontFormatValue.Default;
+
+        // Excel probably screwed up. Default name and size should likely be font of default
+        // format, but it is always taken from font zero (if font zero defines name/size).
+        if (font.Count > 0)
+        {
+            var fontZero = font[0];
+            defaultFont = defaultFont with
+            {
+                Name = fontZero.Name ?? defaultFont.Name,
+                Size = fontZero.Size ?? defaultFont.Size,
+            };
+        }
+
+        foreach (var fontProps in font)
+        {
+            var fontFormat = new XLFontFormatValue
+            {
+                Name = fontProps.Name ?? defaultFont.Name,
+                Size = fontProps.Size ?? defaultFont.Size,
+                Charset = fontProps.Charset ?? defaultFont.Charset,
+                Family = fontProps.Family ?? defaultFont.Family,
+                Bold = fontProps.Bold ?? defaultFont.Bold,
+                Italic = fontProps.Italic ?? defaultFont.Italic,
+                Strikethrough = fontProps.Strikethrough ?? defaultFont.Strikethrough,
+                Outline = fontProps.Outline ?? defaultFont.Outline,
+                Shadow = fontProps.Shadow ?? defaultFont.Shadow,
+                Condense = fontProps.Condense ?? defaultFont.Condense,
+                Extend = fontProps.Extend ?? defaultFont.Extend,
+                Color = fontProps.Color ?? defaultFont.Color,
+                Underline = fontProps.Underline ?? defaultFont.Underline,
+                VerticalAlignment = fontProps.VerticalAlignment ?? defaultFont.VerticalAlignment,
+                Scheme = fontProps.Scheme ?? defaultFont.Scheme,
+            };
+            _styles.AddFontFormat(fontFormat);
+        }
     }
 
     private XLFillFormatValue OnFillParsed(XLFillFormatValue? patternFill, XLFillFormatValue? gradientFill)
@@ -649,7 +695,7 @@ internal partial class StylesReader
         };
     }
 
-    partial void OnDxfParsed(XLFontFormatValue? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormatValue? fill, XLAlignmentFormatValue? alignment, XLBorderFormatValue? border, XLProtectionFormatValue? protection)
+    partial void OnDxfParsed(XLDifferentialFontValue? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormatValue? fill, XLAlignmentFormatValue? alignment, XLBorderFormatValue? border, XLProtectionFormatValue? protection)
     {
         var dxf = new XLDxfValue
         {

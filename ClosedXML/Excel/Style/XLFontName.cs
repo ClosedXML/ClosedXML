@@ -39,6 +39,5 @@ internal readonly record struct XLFontName : IEquatable<string>
         return Equals(other.Text);
     }
 
-    [return: NotNullIfNotNull(nameof(text))]
-    public static implicit operator XLFontName?(string? text) => !string.IsNullOrWhiteSpace(text) ? new XLFontName(text) : null;
+    public static implicit operator XLFontName(string text) => new(text);
 }

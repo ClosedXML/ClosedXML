@@ -29,7 +29,6 @@ internal class FormatResolver
     /// <returns>A format that is already registered in the styles.</returns>
     public XLCellFormatValue Resolve(XLSheetPoint point)
     {
-        // TODO: Add resolve from worksheet
         if (_rows.TryGetValue(point.Row, out var row) &&
             row.FormatValue is { } rowFormat)
         {

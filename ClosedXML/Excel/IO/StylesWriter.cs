@@ -126,8 +126,8 @@ internal class StylesWriter
         if (numberFormatMap.Count > FirstUserDefinedFormatIndex)
             WriteNumberFormats(xml, numberFormatMap);
 
-        // Fonts
-        var fontFormatsMap = SequentialMap<int, XLFontFormatValue>.Create(usedFonts, styles.Fonts);
+        // Fonts. Register default format font as font zero. The font zero is used for font name and size.
+        var fontFormatsMap = SequentialMap<int, XLFontFormatValue>.Create(usedFonts, styles.Fonts, 0, styles.DefaultFormat.Font);
         if (fontFormatsMap.Count > 0)
             WriteFonts(xml, fontFormatsMap);
 
@@ -153,8 +153,7 @@ internal class StylesWriter
         if (cellStylesMap.Count > 0)
             WriteCellStyleXfs(xml, cellStylesMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
 
-        // TODO: Ensure the normal style cellXfs has index 0
-        var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats);
+        var cellXfsMap = SequentialMap<int, XLCellFormatValue>.Create(usedCellFormats, styles.CellFormats, 0, styles.DefaultFormat);
         if (cellXfsMap.Count > 0)
             WriteCellXfs(xml, cellXfsMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap, cellStylesMap);
 
@@ -236,6 +235,30 @@ internal class StylesWriter
     }
 
     private void WriteFont(XmlTreeWriter xml, string elementName, XLFontFormatValue font)
+    {
+        // Font table and dxf use same XML type, use adapter.
+        var dxfAdapter = new XLDifferentialFontValue
+        {
+            Name = font.Name,
+            Size = font.Size,
+            Charset = font.Charset,
+            Family = font.Family,
+            Bold = font.Bold,
+            Italic = font.Italic,
+            Strikethrough = font.Strikethrough,
+            Outline = font.Outline,
+            Shadow = font.Shadow,
+            Condense = font.Condense,
+            Extend = font.Extend,
+            Color = font.Color,
+            Underline = font.Underline,
+            VerticalAlignment = font.VerticalAlignment,
+            Scheme = font.Scheme,
+        };
+        WriteFont(xml, elementName, dxfAdapter);
+    }
+
+    private void WriteFont(XmlTreeWriter xml, string elementName, XLDifferentialFontValue font)
     {
         // MS-OI29500 dictates font elements order.
         xml.WriteStartElement(elementName, _ns);
@@ -793,6 +816,12 @@ internal class StylesWriter
 
         private readonly IReadOnlyBiDictionary<TKey, T> _fullMap;
 
+        /// <summary>
+        /// A table that will be saved to file. Contains used and necessary entries along with
+        /// the id under which the entry can be retrieved.
+        /// </summary>
+        private List<(int SaveId, T Actual)>? _saveTable;
+
         public SequentialMap(IReadOnlyBiDictionary<TKey, T> fullMap, int offset = 0)
         {
             _fullMap = fullMap;
@@ -835,12 +864,15 @@ internal class StylesWriter
 
         public void Sort()
         {
-            _savedIdToActualId.Sort();
+            _saveTable = _savedIdToActualId
+                .Select((actualId, saveId) => (saveId + _offset, _fullMap[actualId]))
+                .OrderBy(x => x.Item1)
+                .ToList();
         }
 
         public IEnumerable<(int SaveId, T Actual)> GetActual()
         {
-            return _savedIdToActualId.Select((value, index) => (index + _offset, _fullMap[value]));
+            return _saveTable!;
         }
 
         public int GetSavedId(T item)

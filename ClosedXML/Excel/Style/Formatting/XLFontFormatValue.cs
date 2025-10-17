@@ -1,98 +1,103 @@
 namespace ClosedXML.Excel.Formatting;
 
 /// <summary>
-/// A formatting record for <see cref="XLCellFormatValue"/>. Unlike <see cref="XLFontKey"/>, attributes are optional.
+/// A formatting record for <see cref="XLCellFormatValue"/>.
 /// </summary>
 internal record XLFontFormatValue
 {
-    public static readonly XLFontFormatValue Empty = new()
+    /// <summary>
+    /// <para>
+    /// A default font values.
+    /// <list type="bullet">
+    ///   <item>
+    ///   When a font is loaded from the styles part, unspecified props use these values. The values
+    ///   are essentially reinterpreted <em>zero</em> (other than name and size that can't be zero).
+    ///   </item>
+    ///   <item>
+    ///   When font property has this value, it is omitted from being saved to font element (other
+    ///   than font and size). Font element is pretty buggy, but these are roughly XSD default values.
+    ///   </item>
+    /// </list>
+    /// The default values are different from normal style. Normal style is what should default
+    /// format look like for user when a new workbook is created. The default font is about loading and
+    /// saving.
+    /// </para>
+    /// <para>
+    /// The font name and size are special, but the values in the property are the default fallback
+    /// when even default format doesn't contain font name and size.
+    /// </para>
+    /// </summary>
+    public static readonly XLFontFormatValue Default = new()
     {
-        Name = null,
-        Charset = null,
-        Family = null,
-        Bold = null,
-        Italic = null,
-        Strikethrough = null,
-        Outline = null,
-        Shadow = null,
-        Condense = null,
-        Extend = null,
-        Color = null,
-        Size = null,
-        Underline = null,
-        VerticalAlignment = null,
-        Scheme = null
+        Name = "Calibri",
+        Charset = XLFontCharSet.Ansi,
+        Family = XLFontFamilyNumberingValues.NotApplicable,
+        Bold = false,
+        Italic = false,
+        Strikethrough = false,
+        Outline = false,
+        Shadow = false,
+        Condense = false,
+        Extend = false,
+        Color = XLColor.Auto,
+        Size = XLFontSize.FromPoints(11),
+        Underline = XLFontUnderlineValues.None,
+        VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+        Scheme = XLFontScheme.None
     };
 
-    public required XLFontName? Name { get; init; }
+    public required XLFontName Name { get; init; }
 
-    public required XLFontCharSet? Charset { get; init; }
+    public required XLFontCharSet Charset { get; init; }
 
-    public required XLFontFamilyNumberingValues? Family { get; init; }
+    public required XLFontFamilyNumberingValues Family { get; init; }
 
-    public required bool? Bold { get; init; }
+    public required bool Bold { get; init; }
 
-    public required bool? Italic { get; init; }
+    public required bool Italic { get; init; }
 
-    public required bool? Strikethrough { get; init; }
+    public required bool Strikethrough { get; init; }
 
-    public required bool? Outline { get; init; }
+    public required bool Outline { get; init; }
 
-    public required bool? Shadow { get; init; }
+    public required bool Shadow { get; init; }
 
-    public required bool? Condense { get; init; }
+    public required bool Condense { get; init; }
 
-    public required bool? Extend { get; init; }
+    public required bool Extend { get; init; }
 
-    public required XLColor? Color { get; init; }
+    public required XLColor Color { get; init; }
 
-    public required XLFontSize? Size { get; init; }
+    public required XLFontSize Size { get; init; }
 
-    public required XLFontUnderlineValues? Underline { get; init; }
+    public required XLFontUnderlineValues Underline { get; init; }
 
-    public required XLFontVerticalTextAlignmentValues? VerticalAlignment { get; init; }
+    public required XLFontVerticalTextAlignmentValues VerticalAlignment { get; init; }
 
-    public required XLFontScheme? Scheme { get; init; }
+    public required XLFontScheme Scheme { get; init; }
 
-    internal XLFontKey ApplyTo(XLFontKey nf)
+    internal XLFontKey GetFontKey()
     {
-        // No Outline, Condense or Extend
-        if (Name is not null)
-            nf = nf with { FontName = Name.Value.Text };
+        // XLFontKey doesn't contain outline, condense or extend
+        return new XLFontKey
+        {
+            FontName = Name.Text,
+            FontCharSet = Charset,
+            FontFamilyNumbering = Family,
+            Bold = Bold,
+            Italic = Italic,
+            Strikethrough = Strikethrough,
+            Shadow = Shadow,
 
-        if (Charset is not null)
-            nf = nf with { FontCharSet = Charset.Value };
-
-        if (Family is not null)
-            nf = nf with { FontFamilyNumbering = Family.Value };
-
-        if (Bold is not null)
-            nf = nf with { Bold = Bold.Value };
-
-        if (Italic is not null)
-            nf = nf with { Italic = Italic.Value };
-
-        if (Strikethrough is not null)
-            nf = nf with { Strikethrough = Strikethrough.Value };
-
-        if (Shadow is not null)
-            nf = nf with { Shadow = Shadow.Value };
-
-        if (Color is not null)
-            nf = nf with { FontColor = Color.Key };
-
-        if (Size is not null)
-            nf = nf with { FontSize = Size.Value.Points };
-
-        if (Underline is not null)
-            nf = nf with { Underline = Underline.Value };
-
-        if (VerticalAlignment is not null)
-            nf = nf with { VerticalAlignment = VerticalAlignment.Value };
-
-        if (Scheme is not null)
-            nf = nf with { FontScheme = Scheme.Value };
-
-        return nf;
+            // TODO Styles: Incorrect default value for old XLFontValue.Color
+            // The correct color is auto, but XLFontValue uses black (0xFF000000).
+            // Changes few test workbooks, don't fix now. Fix it in bulk, when
+            // switching to new styles infra.
+            FontColor = Color == XLColor.Auto ? XLColor.FromArgb(0, 0, 0).Key : Color.Key,
+            FontSize = Size.Points,
+            Underline = Underline,
+            VerticalAlignment = VerticalAlignment,
+            FontScheme = Scheme
+        };
     }
 }

@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel.Formatting;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
@@ -44,7 +43,7 @@ namespace ClosedXML.Excel
         Simple = 1,
     }
 
-    public partial class XLWorkbook : IXLWorkbook, IXLFormatContainer
+    public partial class XLWorkbook : IXLWorkbook
     {
         #region Static
 
@@ -1144,6 +1143,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        XLCellFormatValue IXLFormatContainer.FormatValue { get; set; }
+        internal XLCellFormat Format => XLCellFormat.ForWorkbook(this);
     }
 }

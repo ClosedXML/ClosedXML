@@ -122,7 +122,7 @@ public class Program
             })
             .AddComplexTypeMapping("CT_Color", "XLColor")
             .AddComplexTypeMapping("CT_GradientStop", "(FractionOfOne Value, XLColor Color)")
-            .AddComplexTypeMapping("CT_Font", "XLFontFormatValue")
+            .AddComplexTypeMapping("CT_Font", "XLDifferentialFontValue")
             .AddComplexTypeMapping("CT_Fill", "XLFillFormatValue")
             .AddComplexTypeMapping("CT_Border", "XLBorderFormatValue")
             .AddComplexTypeMapping("CT_BorderPr", "XLBorderLine")

@@ -30,25 +30,27 @@ internal class StylesReaderTests
     [Test]
     public void Can_read_empty_font()
     {
-        // Empty font is valid, it will just inherit everything
+        // Empty font is valid, it will just use default font values
         AssertFonts("<font/>", styles =>
         {
             var font = styles.Fonts[0];
-            Assert.Null(font.Name);
-            Assert.Null(font.Charset);
-            Assert.Null(font.Family);
-            Assert.Null(font.Bold);
-            Assert.Null(font.Italic);
-            Assert.Null(font.Strikethrough);
-            Assert.Null(font.Outline);
-            Assert.Null(font.Shadow);
-            Assert.Null(font.Condense);
-            Assert.Null(font.Extend);
-            Assert.Null(font.Color);
-            Assert.Null(font.Size);
-            Assert.Null(font.Underline);
-            Assert.Null(font.VerticalAlignment);
-            Assert.Null(font.Scheme);
+            var defaultFont = XLFontFormatValue.Default;
+            Assert.AreNotSame(defaultFont, font);
+            Assert.AreEqual(defaultFont.Name, font.Name);
+            Assert.AreEqual(defaultFont.Charset, font.Charset);
+            Assert.AreEqual(defaultFont.Family, font.Family);
+            Assert.AreEqual(defaultFont.Bold, font.Bold);
+            Assert.AreEqual(defaultFont.Italic, font.Italic);
+            Assert.AreEqual(defaultFont.Strikethrough, font.Strikethrough);
+            Assert.AreEqual(defaultFont.Outline, font.Outline);
+            Assert.AreEqual(defaultFont.Shadow, font.Shadow);
+            Assert.AreEqual(defaultFont.Condense, font.Condense);
+            Assert.AreEqual(defaultFont.Extend, font.Extend);
+            Assert.AreEqual(defaultFont.Color, font.Color);
+            Assert.AreEqual(defaultFont.Size, font.Size);
+            Assert.AreEqual(defaultFont.Underline, font.Underline);
+            Assert.AreEqual(defaultFont.VerticalAlignment, font.VerticalAlignment);
+            Assert.AreEqual(defaultFont.Scheme, font.Scheme);
         });
     }
 

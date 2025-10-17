@@ -1166,39 +1166,23 @@ namespace ClosedXML.Excel
         internal static void LoadStyle(ref XLStyleKey xlStyle, Int32 styleIndex, XLWorkbookStyles styles)
         {
             var xlCellFormat = styles.CellFormats[styleIndex];
-            xlStyle = xlStyle with { IncludeQuotePrefix = xlCellFormat.IncludeQuotePrefix };
 
-            if (xlCellFormat.Alignment is not null)
+            var numberFormatKey = XLNumberFormatKey.ForFormat(xlCellFormat.NumberFormat);
+            var fontKey = xlCellFormat.Font.GetFontKey();
+            var fillKey = xlCellFormat.Fill.ApplyTo(xlStyle.Fill);
+            var borderKey = xlCellFormat.Border.ApplyTo(xlStyle.Border);
+            var alignmentKey = xlCellFormat.Alignment.ApplyTo(xlStyle.Alignment);
+            var protectionKey = xlCellFormat.Protection.ApplyTo(xlStyle.Protection);
+            xlStyle = new XLStyleKey
             {
-                var alignmentKey = xlCellFormat.Alignment.ApplyTo(xlStyle.Alignment);
-                xlStyle = xlStyle with { Alignment = alignmentKey };
-            }
-
-            if (xlCellFormat.Protection is not null)
-            {
-                var protectionKey = xlCellFormat.Protection.ApplyTo(xlStyle.Protection);
-                xlStyle = xlStyle with { Protection = protectionKey };
-            }
-
-            if (xlCellFormat.NumberFormat is not null)
-            {
-                xlStyle = xlStyle with { NumberFormat = XLNumberFormatKey.ForFormat(xlCellFormat.NumberFormat) };
-            }
-
-            if (xlCellFormat.Font is not null)
-            {
-                xlStyle = xlStyle with { Font = xlCellFormat.Font.ApplyTo(xlStyle.Font) };
-            }
-
-            if (xlCellFormat.Fill is not null)
-            {
-                xlStyle = xlStyle with { Fill = xlCellFormat.Fill.ApplyTo(xlStyle.Fill) };
-            }
-
-            if (xlCellFormat.Border is not null)
-            {
-                xlStyle = xlStyle with { Border = xlCellFormat.Border.ApplyTo(xlStyle.Border) };
-            }
+                NumberFormat = numberFormatKey,
+                Font = fontKey,
+                Fill = fillKey,
+                Border = borderKey,
+                Alignment = alignmentKey,
+                Protection = protectionKey,
+                IncludeQuotePrefix = xlCellFormat.IncludeQuotePrefix
+            };
         }
 
         private XmlTreeReader CreateTreeReader(OpenXmlPart openXmlPart)

@@ -33,7 +33,7 @@ internal partial class StylesReader
     private void ParseFonts(string elementName)
     {
         var count = _reader.GetOptionalUInt("count");
-        var font = new List<XLFontFormatValue>();
+        var font = new List<XLDifferentialFontValue>();
         while (_reader.TryOpen("font", _ns))
         {
             font.Add(ParseFont("font"));
@@ -42,7 +42,7 @@ internal partial class StylesReader
         OnFontsParsed(font, count);
     }
 
-    partial void OnFontsParsed(List<XLFontFormatValue> font, uint? count);
+    partial void OnFontsParsed(List<XLDifferentialFontValue> font, uint? count);
 
     private void ParseFills(string elementName)
     {
@@ -318,7 +318,7 @@ internal partial class StylesReader
 
     private void ParseDxf(string elementName)
     {
-        XLFontFormatValue? font = default;
+        XLDifferentialFontValue? font = default;
         if (_reader.TryOpen("font", _ns))
         {
             font = ParseFont("font");
@@ -356,7 +356,7 @@ internal partial class StylesReader
         OnDxfParsed(font, numFmt, fill, alignment, border, protection);
     }
 
-    partial void OnDxfParsed(XLFontFormatValue? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormatValue? fill, XLAlignmentFormatValue? alignment, XLBorderFormatValue? border, XLProtectionFormatValue? protection);
+    partial void OnDxfParsed(XLDifferentialFontValue? font, (int NumFmtId, string FormatCode)? numFmt, XLFillFormatValue? fill, XLAlignmentFormatValue? alignment, XLBorderFormatValue? border, XLProtectionFormatValue? protection);
 
     private void ParseTableStyles(string elementName)
     {

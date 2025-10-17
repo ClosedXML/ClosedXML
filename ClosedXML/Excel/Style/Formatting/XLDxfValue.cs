@@ -17,7 +17,7 @@ internal record XLDxfValue
 
     public required string? NumberFormat { get; init; }
 
-    public required XLFontFormatValue? Font { get; init; }
+    public required XLDifferentialFontValue? Font { get; init; }
 
     public required XLFillFormatValue? Fill { get; init; }
 

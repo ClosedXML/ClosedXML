@@ -1,13 +1,14 @@
 #if !STYLES_REWORK
 #nullable disable
 
-using ClosedXML.Utils;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
+using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using static ClosedXML.Excel.XLWorkbook;
 
 namespace ClosedXML.Excel.IO
@@ -800,7 +801,7 @@ namespace ClosedXML.Excel.IO
                 ? new FontFamilyNumbering { Val = (Int32)fontInfo.Font.FontFamilyNumbering }
                 : null;
 
-            var fontCharSet = (fontInfo.Font.FontCharSet != XLFontValue.Default.FontCharSet || ignoreMod) && fontInfo.Font.FontCharSet != XLFontCharSet.Default
+            var fontCharSet = (fontInfo.Font.FontCharSet != XLFontValue.Default.FontCharSet || ignoreMod) && fontInfo.Font.FontCharSet != XLFontFormatValue.Default.Charset
                 ? new FontCharSet { Val = (Int32)fontInfo.Font.FontCharSet }
                 : null;
 
