@@ -13,7 +13,7 @@ internal class XLCellFormat
 {
     private readonly XLWorkbook _workbook;
 
-    public XLCellFormat(XLWorkbook workbook)
+    private XLCellFormat(XLWorkbook workbook)
     {
         _workbook = workbook;
     }
@@ -56,6 +56,14 @@ internal class XLCellFormat
     internal bool DefaultFormat { get; init; }
 
     internal XLFontCellFormat Font => new(this);
+
+    internal static XLCellFormat ForCell(XLCell cell)
+    {
+        return new XLCellFormat(cell.Worksheet.Workbook)
+        {
+            Areas = new[] { new XLBookArea(cell.Worksheet.Name, new XLSheetRange(cell.SheetPoint)) }
+        };
+    }
 
     internal static XLCellFormat ForColumn(XLColumn column)
     {

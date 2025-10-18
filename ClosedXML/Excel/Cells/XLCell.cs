@@ -197,10 +197,7 @@ namespace ClosedXML.Excel
 #nullable disable
         #endregion
 
-        internal XLCellFormat Format => new XLCellFormat(Worksheet.Workbook)
-        {
-            Areas = new[] { new XLBookArea(Worksheet.Name, new XLSheetRange(SheetPoint)) }
-        };
+        internal XLCellFormat Format => XLCellFormat.ForCell(this);
 
         internal XLComment GetComment()
         {
