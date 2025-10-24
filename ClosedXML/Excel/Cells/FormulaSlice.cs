@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
 
             // Remove first, so calc chain doesn't choke on two formulas
             // in one cell when changing a formula of a cell.
-            var bookPoint = new XLBookPoint(_sheet.SheetId, point);
+            var bookPoint = new XLBookPoint(_sheet.Name, point);
             if (original is not null)
                 _engine.RemoveFormula(bookPoint, original);
 
@@ -117,7 +117,7 @@ namespace ClosedXML.Excel
                     // (number of cells formula affects doesn't matter) and also
                     // removes point from the calc chain. Therefore, it works for
                     // array and normal formulas.
-                    var bookPoint = new XLBookPoint(_sheet.SheetId, point);
+                    var bookPoint = new XLBookPoint(_sheet.Name, point);
                     if (original is not null)
                         _engine.RemoveFormula(bookPoint, original);
                 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
@@ -152,7 +152,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.That(() => _ = ws.Cell("A2").Value,
                 Throws.TypeOf<InvalidOperationException>()
-                    .With.Message.EqualTo("Formula in a cell '$Sheet1'!$A1 is part of a cycle."));
+                    .With.Message.EqualTo("Formula in a cell Sheet1!A1 is part of a cycle."));
         }
     }
 }

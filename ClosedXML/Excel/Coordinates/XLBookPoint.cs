@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
@@ -9,24 +10,24 @@ namespace ClosedXML.Excel
     /// </summary>
     internal readonly struct XLBookPoint : IEquatable<XLBookPoint>
     {
-        internal XLBookPoint(XLWorksheet sheet, XLSheetPoint point)
-            : this(sheet.SheetId, point)
+        internal XLBookPoint(string sheetName, int row, int col)
+            : this(sheetName, new XLSheetPoint(row, col))
         {
         }
 
-        internal XLBookPoint(uint sheetId, XLSheetPoint point)
+        internal XLBookPoint(string sheetName, XLSheetPoint point)
         {
-            SheetId = sheetId;
+            if (string.IsNullOrEmpty(sheetName))
+                throw new ArgumentException(nameof(sheetName));
+
+            SheetName = sheetName;
             Point = point;
         }
 
-        /// TODO: SheetId doesn't work nicely with renames, but will in the future.
         /// <summary>
-        /// A sheet id of a point. Id of a sheet never changes during workbook
-        /// lifecycle (<see cref="XLWorksheet.SheetId"/>), but the sheet may be
-        /// deleted, making the sheetId and thus book point invalid.
+        /// Name of the sheet. The sheet may be deleted.
         /// </summary>
-        public uint SheetId { get; }
+        public string SheetName { get; }
 
         /// <inheritdoc cref="XLSheetPoint.Row"/>
         public int Row => Point.Column;
@@ -45,7 +46,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLBookPoint other)
         {
-            return SheetId == other.SheetId && Point.Equals(other.Point);
+            return Point.Equals(other.Point) && XLHelper.SheetComparer.Equals(SheetName, other.SheetName);
         }
 
         public override bool Equals(object? obj)
@@ -57,13 +58,16 @@ namespace ClosedXML.Excel
         {
             unchecked
             {
-                return ((int)SheetId * 397) ^ Point.GetHashCode();
+                return (XLHelper.SheetComparer.GetHashCode(SheetName) * 397) ^ Point.GetHashCode();
             }
         }
 
         public override string ToString()
         {
-            return $"[{SheetId}]{Point}";
+            var name = NameUtils.ShouldQuote(SheetName.AsSpan())
+                ? SheetName.AlwaysEscapeSheetName()
+                : SheetName;
+            return $"{name}!{Point}";
         }
     }
 }

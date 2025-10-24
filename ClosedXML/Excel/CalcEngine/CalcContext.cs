@@ -69,9 +69,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         /// <summary>
         /// Sheet that is being recalculated. If set, formula can read dirty
-        /// values from other sheets, but not from this sheetId.
+        /// values from other sheets, but not from this sheet.
         /// </summary>
-        public uint? RecalculateSheetId { get; set; }
+        public string? RecalculateSheetName { get; set; }
 
         internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
 
@@ -109,7 +109,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return valueSlice.GetCellValue(point);
 
             // Used when only one sheet should be recalculated, leaving other sheets with their data.
-            if (RecalculateSheetId is not null && sheet.SheetId != RecalculateSheetId.Value)
+            if (RecalculateSheetName is not null && !XLHelper.SheetComparer.Equals(sheet.Name, RecalculateSheetName))
                 return valueSlice.GetCellValue(point);
 
             // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return cell?.Value ?? Blank.Value;
             }
 
-            throw new GettingDataException(new XLBookPoint(sheet.SheetId, new XLSheetPoint(rowNumber, columnNumber)));
+            throw new GettingDataException(new XLBookPoint(sheet.Name, new XLSheetPoint(rowNumber, columnNumber)));
         }
 
         /// <summary>

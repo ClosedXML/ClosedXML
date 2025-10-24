@@ -1,11 +1,13 @@
-﻿using System;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
     /// <summary>
     /// A specification of an area (rectangular range) of a sheet.
     /// </summary>
-    internal readonly struct XLBookArea : IEquatable<XLBookArea>
+    internal readonly struct XLBookArea : IEquatable<XLBookArea>, IEnumerable<XLBookPoint>
     {
         /// <summary>
         /// Name of the sheet. Sheet may exist or not (e.g. deleted). Never null.
@@ -29,6 +31,22 @@ namespace ClosedXML.Excel
         public static bool operator ==(XLBookArea lhs, XLBookArea rhs) => lhs.Equals(rhs);
 
         public static bool operator !=(XLBookArea lhs, XLBookArea rhs) => !(lhs == rhs);
+
+        public IEnumerator<XLBookPoint> GetEnumerator()
+        {
+            for (var row = Area.TopRow; row <= Area.BottomRow; ++row)
+            {
+                for (var col = Area.LeftColumn; col <= Area.RightColumn; ++col)
+                {
+                    yield return new XLBookPoint(Name, row, col);
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         internal static XLBookArea From(IXLRange range)
         {

@@ -1744,7 +1744,7 @@ namespace ClosedXML.Excel
         public void RecalculateAllFormulas()
         {
             Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
-            Workbook.CalcEngine.Recalculate(Workbook, SheetId);
+            Workbook.CalcEngine.Recalculate(Workbook, Name);
         }
 
         public String Author { get; set; }

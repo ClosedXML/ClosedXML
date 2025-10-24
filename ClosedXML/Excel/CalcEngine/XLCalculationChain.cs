@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var formulaSlice = sheet.Internals.CellsCollection.FormulaSlice;
                 using var e = formulaSlice.GetForwardEnumerator(XLSheetRange.Full);
                 while (e.MoveNext())
-                    chain.AddLast(new XLBookPoint(sheet.SheetId, e.Point));
+                    chain.AddLast(new XLBookPoint(sheet.Name, e.Point));
             }
 
             return chain;
@@ -111,16 +111,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add all cells from the area to the end of the chain.
         /// </summary>
-        /// <exception cref="ArgumentException">If chain already contains a cell from the area.</exception>
-        internal void AppendArea(uint sheetId, XLSheetRange range)
+        internal void AppendArea(XLBookArea area)
         {
-            for (var row = range.TopRow; row <= range.BottomRow; ++row)
-            {
-                for (var col = range.LeftColumn; col <= range.RightColumn; ++col)
-                {
-                    AddLast(new XLBookPoint(sheetId, new XLSheetPoint(row, col)));
-                }
-            }
+            foreach (var point in area)
+                AddLast(point);
         }
 
         /// <summary>
