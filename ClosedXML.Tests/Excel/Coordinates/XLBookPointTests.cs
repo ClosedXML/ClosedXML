@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.Coordinates;
 
-internal class XLBookPointTest
+internal class XLBookPointTests
 {
     [TestCase(null)]
     [TestCase("")]
