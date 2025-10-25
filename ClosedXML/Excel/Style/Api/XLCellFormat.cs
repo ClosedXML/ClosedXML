@@ -18,6 +18,8 @@ internal class XLCellFormat
         _workbook = workbook;
     }
 
+    internal XLFontCellFormat Font => new XLFontCellFormat(this);
+
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
@@ -54,8 +56,6 @@ internal class XLCellFormat
     /// formats below, containers and areas).
     /// </summary>
     private bool DefaultFormat { get; init; }
-
-    internal XLFontCellFormat Font => new(this);
 
     internal static XLCellFormat ForCell(XLCell cell)
     {
