@@ -24,36 +24,36 @@ internal class XLCellFormat
     /// an area, so we can satisfy the <see cref="IXLBorder.OutsideBorder"/> and
     /// <see cref="IXLBorder.InsideBorder"/> property setters.
     /// </summary>
-    internal IReadOnlyList<XLBookArea> Areas { get; init; } = Array.Empty<XLBookArea>();
+    private IReadOnlyList<XLBookArea> Areas { get; init; } = Array.Empty<XLBookArea>();
 
     /// <summary>
     /// Formatting is updated for used cells within these areas. Unused cells are ignored.
     /// </summary>
-    internal IReadOnlyList<XLBookArea> UsedAreas { get; init; } = Array.Empty<XLBookArea>();
+    private IReadOnlyList<XLBookArea> UsedAreas { get; init; } = Array.Empty<XLBookArea>();
 
     /// <summary>
     /// Formatting is updated for these columns. This doesn't update cells within the columns, only
     /// the columns themselves.
     /// </summary>
-    internal IReadOnlyList<XLColumnArea> Columns { get; init; } = Array.Empty<XLColumnArea>();
+    private IReadOnlyList<XLColumnArea> Columns { get; init; } = Array.Empty<XLColumnArea>();
 
     /// <summary>
     /// Formatting is updated for these rows. This doesn't update cells within the rows, only
     /// the rows themselves.
     /// </summary>
-    internal IReadOnlyList<XLRowArea> Rows { get; init; } = Array.Empty<XLRowArea>();
+    private IReadOnlyList<XLRowArea> Rows { get; init; } = Array.Empty<XLRowArea>();
 
     /// <summary>
     /// Formatting is updated for these worksheets. This doesn't update cells within the sheets, only
     /// the sheets and materialized rows and columns of the sheets.
     /// </summary>
-    internal IReadOnlyList<string> Worksheets { get; init; } = Array.Empty<string>();
+    private IReadOnlyList<string> Worksheets { get; init; } = Array.Empty<string>();
 
     /// <summary>
     /// Should the formatting be updated for the default format of a workbook (plus cascade to all
     /// formats below, containers and areas).
     /// </summary>
-    internal bool DefaultFormat { get; init; }
+    private bool DefaultFormat { get; init; }
 
     internal XLFontCellFormat Font => new(this);
 
