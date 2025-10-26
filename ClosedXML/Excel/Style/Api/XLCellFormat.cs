@@ -12,10 +12,12 @@ namespace ClosedXML.Excel;
 internal class XLCellFormat
 {
     private readonly XLWorkbook _workbook;
+    private readonly Hierarchy _formatValue;
 
-    private XLCellFormat(XLWorkbook workbook)
+    private XLCellFormat(XLWorkbook workbook, Hierarchy formatValue)
     {
         _workbook = workbook;
+        _formatValue = formatValue;
     }
 
     internal XLFontCellFormat Font => new XLFontCellFormat(this);
@@ -59,16 +61,22 @@ internal class XLCellFormat
 
     internal static XLCellFormat ForCell(XLCell cell)
     {
-        return new XLCellFormat(cell.Worksheet.Workbook)
+        var workbook = cell.Worksheet.Workbook;
+        var sheetName = cell.Worksheet.Name;
+        var cellPoint = cell.SheetPoint;
+        var formatValue = new Hierarchy(workbook, sheetName, cellPoint.Column, cellPoint.Row, cellPoint);
+        return new XLCellFormat(workbook, formatValue)
         {
-            Areas = new[] { new XLBookArea(cell.Worksheet.Name, new XLSheetRange(cell.SheetPoint)) }
+            Areas = new[] { new XLBookArea(sheetName, new XLSheetRange(cellPoint)) }
         };
     }
 
     internal static XLCellFormat ForColumn(XLColumn column)
     {
+        var workbook = column.Worksheet.Workbook;
         var columnArea = column.Area;
-        return new XLCellFormat(column.Worksheet.Workbook)
+        var formatValue = new Hierarchy(workbook, columnArea.Name, columnArea.ColumNumber, null, null);
+        return new XLCellFormat(workbook, formatValue)
         {
             UsedAreas = new[] { columnArea.Area },
             Columns = new[] { columnArea }
@@ -77,8 +85,10 @@ internal class XLCellFormat
 
     internal static XLCellFormat ForRow(XLRow row)
     {
+        var workbook = row.Worksheet.Workbook;
         var rowArea = row.Area;
-        return new XLCellFormat(row.Worksheet.Workbook)
+        var formatValue = new Hierarchy(workbook, rowArea.Name, null, rowArea.RowNumber, null);
+        return new XLCellFormat(workbook, formatValue)
         {
             UsedAreas = new[] { rowArea.Area },
             Rows = new[] { rowArea }
@@ -87,7 +97,9 @@ internal class XLCellFormat
 
     internal static XLCellFormat ForWorksheet(XLWorksheet worksheet)
     {
-        return new XLCellFormat(worksheet.Workbook)
+        var workbook = worksheet.Workbook;
+        var formatValue = new Hierarchy(workbook, worksheet.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
         {
             UsedAreas = new[] { worksheet.Area },
             Worksheets = new[] { worksheet.Name }
@@ -96,16 +108,17 @@ internal class XLCellFormat
 
     internal static XLCellFormat ForWorkbook(XLWorkbook workbook)
     {
-        return new XLCellFormat(workbook)
+        var formatValue = new Hierarchy(workbook, null, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
         {
             DefaultFormat = true
         };
     }
 
-    internal T Resolve<T>(Func<XLCellFormatValue, T?> selector)
-        where T : struct
+    internal T Resolve<T>(Func<XLCellFormatValue, T> selector)
     {
-        throw new NotImplementedException();
+        var format = _formatValue.Resolve();
+        return selector(format);
     }
 
     internal void ModifyFont<TProperty>(Func<XLFontFormatValue, TProperty, XLFontFormatValue> modifyFont, TProperty value)
@@ -208,5 +221,73 @@ internal class XLCellFormat
         var formatResolver = new FormatResolver(worksheet);
         var cellsCollection = worksheet.Internals.CellsCollection;
         cellsCollection.ApplyFormatOnAll(area, modifyFormat, formatResolver.Resolve);
+    }
+
+    /// <summary>
+    /// A format value resolution hierarchy for a range API object. Each range API type needs
+    /// to set proper fallbacks through ctor.
+    /// </summary>
+    private readonly record struct Hierarchy
+    {
+        private readonly XLWorkbook _workbook;
+        private readonly string? _sheetName;
+        private readonly int? _columnNumber;
+        private readonly int? _rowNumber;
+        private readonly XLSheetPoint? _point;
+
+        public Hierarchy(XLWorkbook workbook, string? sheetName, int? columnNumber, int? rowNumber, XLSheetPoint? point)
+        {
+            _workbook = workbook;
+            _sheetName = sheetName;
+            _columnNumber = columnNumber;
+            _rowNumber = rowNumber;
+            _point = point;
+        }
+
+        private XLCellFormatValue DefaultFormat => _workbook.Styles.DefaultCellFormat;
+
+        internal XLCellFormatValue Resolve()
+        {
+            var isForWorkbook = _sheetName is null;
+            if (isForWorkbook)
+                return DefaultFormat;
+
+            // First, make sure the sheet exists
+            if (!_workbook.TryGetWorksheet(_sheetName, out XLWorksheet sheet))
+                return DefaultFormat;
+
+            if (_point is { } point)
+            {
+                var formatSlice = sheet.Internals.CellsCollection.FormatSlice;
+                var cellFormat = formatSlice.GetFormat(point);
+                if (cellFormat is not null)
+                    return cellFormat;
+            }
+
+            if (_rowNumber is { } rowNumber)
+            {
+                var rowsCollection = sheet.Internals.RowsCollection;
+                if (rowsCollection.TryGetValue(rowNumber, out var row) &&
+                    row.FormatValue is { } rowFormat)
+                {
+                    return rowFormat;
+                }
+            }
+
+            if (_columnNumber is { } columnNumber)
+            {
+                var columnsCollection = sheet.Internals.ColumnsCollection;
+                if (columnsCollection.TryGetValue(columnNumber, out var column) &&
+                    column.FormatValue is { } columnFormat)
+                {
+                    return columnFormat;
+                }
+            }
+
+            if (sheet.FormatValue is { } sheetFormat)
+                return sheetFormat;
+
+            return DefaultFormat;
+        }
     }
 }

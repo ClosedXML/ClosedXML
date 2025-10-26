@@ -17,19 +17,19 @@ internal class XLFontCellFormat
 
     public XLFontName Name
     {
-        get => Resolve(static x => x.Font?.Name);
+        get => Resolve(static x => x.Font.Name);
         set => Modify(static (font, fontName) => font with { Name = fontName }, value);
     }
 
     public bool Bold
     {
-        get => Resolve(static x => x.Font?.Bold);
+        get => Resolve(static x => x.Font.Bold);
         set => Modify(static (font, bold) => font with { Bold = bold }, value);
     }
 
     public bool Italic
     {
-        get => Resolve(static x => x.Font?.Italic);
+        get => Resolve(static x => x.Font.Italic);
         set => Modify(static (font, italic) => font with { Italic = italic }, value);
     }
 
@@ -38,12 +38,11 @@ internal class XLFontCellFormat
     /// </summary>
     public double Size
     {
-        get => Resolve(static x => x.Font?.Size).Points;
+        get => Resolve(static x => x.Font.Size).Points;
         set => Modify(static (font, size) => font with { Size = size }, XLFontSize.FromPoints(value));
     }
 
-    private T Resolve<T>(Func<XLCellFormatValue, T?> selector)
-        where T : struct
+    private T Resolve<T>(Func<XLCellFormatValue, T> selector)
     {
         return _parent.Resolve(selector);
     }
