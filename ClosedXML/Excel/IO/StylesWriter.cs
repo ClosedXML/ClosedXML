@@ -150,6 +150,7 @@ internal class StylesWriter
         foreach (var styleId in styles.CellStyles.Keys)
             cellStylesMap.Add(styleId);
 
+        cellStylesMap.Sort();
         if (cellStylesMap.Count > 0)
             WriteCellStyleXfs(xml, cellStylesMap, numberFormatMap, fontFormatsMap, fillsFormatsMap, borderFormatsMap);
 
