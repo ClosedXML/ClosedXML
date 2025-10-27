@@ -102,28 +102,12 @@ internal class StylesWriter
         xml.WriteStartDocument("styleSheet", _ns);
 
         // Number formats
-        var numberFormatMap = new SequentialMap<int, string>(styles.NumberFormats);
+        // The map has predefined formats from index 0 and the user defined ones from 164 onward.
+        // There is a gap between predefined formats.
+        var predefinedNumberFormats = XLPredefinedFormat.FormatCodes.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
+        var numberFormatMap = SequentialMap<int, string>.Create(usedNumberFormats, styles.NumberFormats, FirstUserDefinedFormatIndex, predefinedNumberFormats);
 
-        // Add identity map for predefined formats. That way they can be always be mapped. If there
-        // is a workbook that uses predefined ids for a different format (e.g., numId=0 with format
-        // "0.00"), it should be dealt in the loading code.
-        for (var i = 0; i < FirstUserDefinedFormatIndex; ++i)
-            numberFormatMap.Add(i);
-
-        foreach (var (actualId, format) in styles.NumberFormats)
-        {
-            if (!usedNumberFormats.Contains(format))
-                continue;
-
-            // Predefined formats were already added in the identity map and don't need to be written.
-            if (XLPredefinedFormat.NumberFormatIds.ContainsKey(format))
-                continue;
-
-            numberFormatMap.Add(actualId);
-        }
-
-        numberFormatMap.Sort();
-        if (numberFormatMap.Count > FirstUserDefinedFormatIndex)
+        if (numberFormatMap.Count > predefinedNumberFormats.Length)
             WriteNumberFormats(xml, numberFormatMap);
 
         // Fonts. Register default format font as font zero. The font zero is used for font name and size.
@@ -143,7 +127,7 @@ internal class StylesWriter
         if (borderFormatsMap.Count > 0)
             WriteBorders(xml, borderFormatsMap);
 
-        // TODO: Ensure normal style is written, though that should be done during initialization/loading
+        // TODO Styles: Ensure normal style is written, though that should be done during initialization/loading
         var cellStylesMap = new SequentialMap<StyleId, XLCellStyleValue>(styles.CellStyles);
 
         // All cell styles, regardless if they are used or not should be written to the file
@@ -476,17 +460,10 @@ internal class StylesWriter
         foreach (var (_, cellStyle) in cellStylesMap.GetActual())
         {
             xml.WriteStartElement("xf", _ns);
-            if (cellStyle.NumberFormat is not null)
-                xml.WriteAttributeOptional("numFmtId", numFmtIdMap.GetSavedId(cellStyle.NumberFormat));
-
-            if (cellStyle.Font is not null)
-                xml.WriteAttributeOptional("fontId", fontIdMap.GetSavedId(cellStyle.Font));
-
-            if (cellStyle.Fill is not null)
-                xml.WriteAttributeOptional("fillId", fillIdMap.GetSavedId(cellStyle.Fill));
-
-            if (cellStyle.Border is not null)
-                xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellStyle.Border));
+            xml.WriteAttributeOptional("numFmtId", numFmtIdMap.GetSavedId(cellStyle.NumberFormat));
+            xml.WriteAttributeOptional("fontId", fontIdMap.GetSavedId(cellStyle.Font));
+            xml.WriteAttributeOptional("fillId", fillIdMap.GetSavedId(cellStyle.Fill));
+            xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellStyle.Border));
 
             // cellStyleXf doesn't use quote, pivot button or xfId -> skip those attributes
             xml.WriteAttributeDefault("applyNumberFormat", cellStyle.IncludedComponents.HasFlag(CellFormatComponents.NumberFormat), true);
@@ -524,22 +501,10 @@ internal class StylesWriter
         {
             xml.WriteStartElement("xf", _ns);
 
-            if (cellXf.NumberFormat is not null)
-            {
-                if (!XLPredefinedFormat.NumberFormatIds.TryGetValue(cellXf.NumberFormat, out var numFmtId))
-                    numFmtId = numFmtIdMap.GetSavedId(cellXf.NumberFormat);
-
-                xml.WriteAttributeOptional("numFmtId", numFmtId);
-            }
-
-            if (cellXf.Font is not null)
-                xml.WriteAttributeOptional("fontId", fontIdMap.GetSavedId(cellXf.Font));
-
-            if (cellXf.Fill is not null)
-                xml.WriteAttributeOptional("fillId", fillIdMap.GetSavedId(cellXf.Fill));
-
-            if (cellXf.Border is not null)
-                xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellXf.Border));
+            xml.WriteAttributeOptional("numFmtId", numFmtIdMap.GetSavedId(cellXf.NumberFormat));
+            xml.WriteAttributeOptional("fontId", fontIdMap.GetSavedId(cellXf.Font));
+            xml.WriteAttributeOptional("fillId", fillIdMap.GetSavedId(cellXf.Fill));
+            xml.WriteAttributeOptional("borderId", borderIdMap.GetSavedId(cellXf.Border));
 
             if (cellXf.CellStyleId is not null)
                 xml.WriteAttributeDefault("xfId", cellStyleIdMap.GetSavedId(cellXf.CellStyleId.Value), 0);
@@ -811,9 +776,7 @@ internal class StylesWriter
         /// <summary>
         /// The index is the one that is used to save the <typeparamref name="T"/> while value is an index to the <c>_fullMap</c>.
         /// </summary>
-        private readonly List<TKey> _savedIdToActualId = new();
-
-        private readonly int _offset;
+        private readonly Dictionary<int, TKey> _savedIdToActualId = new();
 
         private readonly IReadOnlyBiDictionary<TKey, T> _fullMap;
 
@@ -823,10 +786,9 @@ internal class StylesWriter
         /// </summary>
         private List<(int SaveId, T Actual)>? _saveTable;
 
-        public SequentialMap(IReadOnlyBiDictionary<TKey, T> fullMap, int offset = 0)
+        public SequentialMap(IReadOnlyBiDictionary<TKey, T> fullMap)
         {
             _fullMap = fullMap;
-            _offset = offset;
         }
 
         /// <summary>
@@ -834,15 +796,19 @@ internal class StylesWriter
         /// </summary>
         public int Count => _savedIdToActualId.Count;
 
-        internal static SequentialMap<TKey, T> Create(HashSet<T> usedValues, IReadOnlyBiDictionary<TKey, T> allValuesMap, int offset = 0, params T[] firstValues)
+        internal static SequentialMap<TKey, T> Create(HashSet<T> usedValues, IReadOnlyBiDictionary<TKey, T> allValuesMap, int usedStart = 0, params T[] firstValues)
         {
-            var map = new SequentialMap<TKey, T>(allValuesMap, offset);
+            var map = new SequentialMap<TKey, T>(allValuesMap);
             foreach (var firstValue in firstValues)
             {
                 var actualId = allValuesMap[firstValue];
                 map.Add(actualId);
             }
 
+            // This is here basically for number formats. It ensures that user defined number
+            // formats start at 164 and the 0-164 is reserved for predefined formats.
+            // Number formats is the only table that can have gaps in the ids.
+            var usedSaveId = Math.Max(map.Count, usedStart);
             foreach (var (actualId, value) in allValuesMap)
             {
                 if (firstValues.Contains(value))
@@ -851,7 +817,7 @@ internal class StylesWriter
                 if (!usedValues.Contains(value))
                     continue;
 
-                map.Add(actualId);
+                map.Add(actualId, usedSaveId++);
             }
 
             map.Sort();
@@ -860,13 +826,18 @@ internal class StylesWriter
 
         public void Add(TKey actualId)
         {
-            _savedIdToActualId.Add(actualId);
+            _savedIdToActualId.Add(_savedIdToActualId.Count, actualId);
+        }
+
+        private void Add(TKey actualId, int saveId)
+        {
+            _savedIdToActualId.Add(saveId, actualId);
         }
 
         public void Sort()
         {
             _saveTable = _savedIdToActualId
-                .Select((actualId, saveId) => (saveId + _offset, _fullMap[actualId]))
+                .Select(x => (x.Key, _fullMap[x.Value]))
                 .OrderBy(x => x.Item1)
                 .ToList();
         }
@@ -884,8 +855,14 @@ internal class StylesWriter
 
         public int GetSavedId(TKey actualId)
         {
-            // TODO: make another identity map, plus this returns -1 on error
-            return _savedIdToActualId.IndexOf(actualId);
+            // TODO Styles: Use a better better internal structure
+            foreach (var (mapSaveId, mapActualId) in _savedIdToActualId)
+            {
+                if (mapActualId.Equals(actualId))
+                    return mapSaveId;
+            }
+
+            throw new InvalidOperationException($"Unable to find saveId for {actualId} of {typeof(T).Name}.");
         }
     }
 }
