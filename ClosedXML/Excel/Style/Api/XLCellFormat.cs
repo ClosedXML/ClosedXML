@@ -9,7 +9,7 @@ namespace ClosedXML.Excel;
 /// Unlike the <see cref="XLStyle"/>, the <see cref="XLCellFormat"/> one modifies formatting
 /// in a <see cref="XLWorkbookStyles"/>.
 /// </summary>
-internal class XLCellFormat
+internal partial class XLCellFormat
 {
     private readonly XLWorkbook _workbook;
     private readonly Hierarchy _formatValue;
@@ -112,6 +112,15 @@ internal class XLCellFormat
         return new XLCellFormat(workbook, formatValue)
         {
             DefaultFormat = true
+        };
+    }
+
+    internal static XLCellFormat ForCells(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
+    {
+        var formatValue = new Hierarchy(workbook, sheet?.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Areas = areas
         };
     }
 

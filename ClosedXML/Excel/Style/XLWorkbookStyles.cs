@@ -353,7 +353,10 @@ internal class XLWorkbookStyles
         styles.AddFillFormat(XLFillFormatValue.Gray125);
         styles.AddBorderFormat(XLBorderFormatValue.None);
         styles.AddCellStyle(0, normalStyle);
-        styles.AddFormat(XLCellFormatValue.FromStyle(0, normalStyle));
+
+        var defaultFormat = XLCellFormatValue.FromStyle(0, normalStyle);
+        styles.AddFormat(defaultFormat);
+        styles.DefaultFormat = defaultFormat;
 
         return styles;
     }

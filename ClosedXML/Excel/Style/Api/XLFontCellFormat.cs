@@ -6,7 +6,7 @@ namespace ClosedXML.Excel;
 /// <summary>
 /// API object to modify font properties of a cell format of a <see cref="IXLFormatContainer"/>.
 /// </summary>
-internal class XLFontCellFormat
+internal partial class XLFontCellFormat
 {
     private readonly XLCellFormat _parent;
 
@@ -33,13 +33,10 @@ internal class XLFontCellFormat
         set => Modify(static (font, italic) => font with { Italic = italic }, value);
     }
 
-    /// <summary>
-    /// Size in points.
-    /// </summary>
-    public double Size
+    public XLFontSize Size
     {
-        get => Resolve(static x => x.Font.Size).Points;
-        set => Modify(static (font, size) => font with { Size = size }, XLFontSize.FromPoints(value));
+        get => Resolve(static x => x.Font.Size);
+        set => Modify(static (font, size) => font with { Size = size }, value);
     }
 
     private T Resolve<T>(Func<XLCellFormatValue, T> selector)

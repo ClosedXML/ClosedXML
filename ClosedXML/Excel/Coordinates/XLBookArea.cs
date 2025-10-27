@@ -56,6 +56,14 @@ namespace ClosedXML.Excel
             return new XLBookArea(range.Worksheet.Name, XLSheetRange.FromRangeAddress(range.RangeAddress));
         }
 
+        internal static XLBookArea From(XLRangeAddress address)
+        {
+            if (address.Worksheet is null)
+                throw new ArgumentException("Range doesn't contain sheet.", nameof(address));
+
+            return new XLBookArea(address.Worksheet.Name, XLSheetRange.FromRangeAddress(address));
+        }
+
         public bool Equals(XLBookArea other)
         {
             return Area == other.Area && XLHelper.SheetComparer.Equals(Name, other.Name);

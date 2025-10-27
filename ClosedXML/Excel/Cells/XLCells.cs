@@ -5,14 +5,20 @@ using System.Linq;
 
 namespace ClosedXML.Excel;
 
-internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
+internal class XLCells :
+#if !STYLES_REWORK
+    XLStylizedBase,
+#endif
+    IXLCells, IEnumerable<XLCell>
 {
     private readonly XLWorkbook _workbook;
     private readonly List<XLRangeAddress> _rangeAddresses = new();
     private readonly bool _usedCellsOnly;
     private readonly Func<IXLCell, Boolean> _predicate;
     private readonly XLCellsUsedOptions _options;
+#if !STYLES_REWORK
     private bool _styleInitialized = false;
+#endif
 
     public XLCells(XLWorksheet worksheet, bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
         : this(worksheet.Workbook, usedCellsOnly, options, predicate)
@@ -20,7 +26,9 @@ internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
     }
 
     public XLCells(XLWorkbook workbook, bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean>? predicate = null)
+#if !STYLES_REWORK
         : base(XLStyle.Default.Value)
+#endif
     {
         _workbook = workbook;
         _usedCellsOnly = usedCellsOnly;
@@ -207,8 +215,28 @@ internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
         set { this.ForEach<XLCell>(c => c.FormulaR1C1 = value); }
     }
 
-    #endregion IXLCells Members
+#if STYLES_REWORK
+    public IXLStyle Style
+    {
+        get => Format;
+        set => Format.SetStyle(value);
+    }
 
+#endif
+    internal XLCellFormat Format
+    {
+        get
+        {
+            // For backwards compatibility, the sheet is considered the inner style. A terrible
+            // choice, but it is what it is.
+            var sheet = _rangeAddresses.Select(x => x.Worksheet).FirstOrDefault(x => x is not null);
+            var areas = _rangeAddresses.Select(XLBookArea.From).ToArray();
+            return XLCellFormat.ForCells(_workbook, areas, sheet);
+        }
+    }
+#endregion IXLCells Members
+
+#if !STYLES_REWORK
     #region IXLStylized Members
 
     protected override IEnumerable<XLStylizedBase> Children
@@ -231,11 +259,12 @@ internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
     }
 
     #endregion IXLStylized Members
-
+#endif
     public void Add(XLRangeAddress rangeAddress)
     {
         _rangeAddresses.Add(rangeAddress);
 
+#if !STYLES_REWORK
         if (_styleInitialized)
             return;
 
@@ -245,6 +274,7 @@ internal class XLCells : XLStylizedBase, IXLCells, IEnumerable<XLCell>
 
         InnerStyle = worksheetStyle;
         _styleInitialized = true;
+#endif
     }
 
     public void Add(XLCell cell)
