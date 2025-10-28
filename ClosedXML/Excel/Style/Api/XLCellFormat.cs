@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel;
@@ -83,6 +84,16 @@ internal partial class XLCellFormat
         };
     }
 
+    public static XLCellFormat ForColumns(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLColumnArea> columns)
+    {
+        var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Columns = columns,
+            UsedAreas = columns.Select(x => x.Area).ToArray()
+        };
+    }
+
     internal static XLCellFormat ForRow(XLRow row)
     {
         var workbook = row.Worksheet.Workbook;
@@ -92,6 +103,16 @@ internal partial class XLCellFormat
         {
             UsedAreas = new[] { rowArea.Area },
             Rows = new[] { rowArea }
+        };
+    }
+
+    public static XLCellFormat ForRows(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLRowArea> rows)
+    {
+        var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Rows = rows,
+            UsedAreas = rows.Select(x => x.Area).ToArray()
         };
     }
 

@@ -1243,25 +1243,26 @@ internal class WorksheetPartReader
         }
     }
 
-    private static void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, XLWorkbookStyles styles)
+    private static void ApplyStyle<T>(T container, Int32 styleIndex, XLWorkbookStyles styles)
+        where T : IXLStylized, IXLFormatContainer
+    {
+        var xlStyleKey = XLStyle.Default.Key;
+        XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
+
+        container.InnerStyle = new XLStyle(container, xlStyleKey);
+        container.FormatValue = styles.CellFormats[styleIndex];
+    }
+
+    private static void ApplyStyle(XLColumns columns, Int32 styleIndex, XLWorkbookStyles styles)
     {
         var xlStyleKey = XLStyle.Default.Key;
         XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
 
         // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
-        if (xlStylized is IXLColumns columns)
+        columns.Cast<XLColumn>().ForEach(col =>
         {
-            columns.Cast<XLColumn>().ForEach(col =>
-            {
-                col.InnerStyle = new XLStyle(col, xlStyleKey);
-                col.FormatValue = styles.CellFormats[styleIndex];
-            });
-        }
-        else
-        {
-            xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyleKey);
-            if (xlStylized is IXLFormatContainer formatContainer)
-                formatContainer.FormatValue = styles.CellFormats[styleIndex];
-        }
+            col.InnerStyle = new XLStyle(col, xlStyleKey);
+            col.FormatValue = styles.CellFormats[styleIndex];
+        });
     }
 }

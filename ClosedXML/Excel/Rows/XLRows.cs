@@ -6,11 +6,16 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRows : XLStylizedBase, IXLRows
+    internal class XLRows :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLRows
     {
         private readonly List<XLRow> _rowsCollection = new List<XLRow>();
         private readonly XLWorkbook _workbook;
         private readonly XLWorksheet? _worksheet;
+        private readonly XLWorksheet? _defaultStyleSheet;
 
         /// <summary>
         /// This object represents all rows of the worksheet, even non-materialized ones.
@@ -32,10 +37,13 @@ namespace ClosedXML.Excel
         /// <param name="defaultStyleSheet">A sheet with a default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLRow"/> to support lazy initialization.</param>
         public XLRows(XLWorkbook workbook, XLWorksheet? worksheet, XLWorksheet? defaultStyleSheet = null, IEnumerable<XLRow>? lazyEnumerable = null)
+#if !STYLES_REWORK
             : base(defaultStyleSheet?.StyleValue)
+#endif
         {
             _workbook = workbook;
             _worksheet = worksheet;
+            _defaultStyleSheet = defaultStyleSheet;
             _lazyEnumerable = lazyEnumerable;
         }
 
@@ -210,8 +218,32 @@ namespace ClosedXML.Excel
             return this;
         }
 
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
+
+        internal XLCellFormat Format
+        {
+            get
+            {
+                if (AllRowsOfSheet)
+                {
+                    return XLCellFormat.ForWorksheet(_worksheet);
+                }
+
+                var rows = Rows.Select(x => x.Area).ToArray();
+                return XLCellFormat.ForRows(_workbook, _defaultStyleSheet, rows);
+
+            }
+        }
+
         #endregion IXLRows Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         protected override IEnumerable<XLStylizedBase> Children
@@ -239,6 +271,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+#endif
 
         public void Add(XLRow row)
         {

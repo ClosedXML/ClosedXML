@@ -6,12 +6,17 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumns : XLStylizedBase, IXLColumns
+    internal class XLColumns :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLColumns
     {
         private readonly List<XLColumn> _columnsCollection = new List<XLColumn>();
 
         private readonly XLWorkbook _workbook;
         private readonly XLWorksheet? _worksheet;
+        private readonly XLWorksheet? _defaultStyleSheet;
 
         /// <summary>
         /// This object represents all columns of the worksheet, even non-materialized ones.
@@ -34,10 +39,13 @@ namespace ClosedXML.Excel
         /// <param name="defaultStyleSheet">A sheet with a default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLColumn"/> to support lazy initialization.</param>
         public XLColumns(XLWorkbook workbook, XLWorksheet? worksheet, XLWorksheet? defaultStyleSheet = null, IEnumerable<XLColumn>? lazyEnumerable = null)
+#if !STYLES_REWORK
             : base(defaultStyleSheet?.StyleValue)
+#endif
         {
             _workbook = workbook;
             _worksheet = worksheet;
+            _defaultStyleSheet = defaultStyleSheet;
             _lazyEnumerable = lazyEnumerable;
         }
 
@@ -222,8 +230,31 @@ namespace ClosedXML.Excel
             return this;
         }
 
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
+
+        internal XLCellFormat Format
+        {
+            get
+            {
+                if (AllColumnsOfSheet)
+                {
+                    return XLCellFormat.ForWorksheet(_worksheet);
+                }
+
+                var columns = Columns.Select(x => x.Area).ToArray();
+                return XLCellFormat.ForColumns(_workbook, _defaultStyleSheet, columns);
+            }
+        }
+
         #endregion IXLColumns Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         protected override IEnumerable<XLStylizedBase> Children
@@ -251,7 +282,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
-
+#endif
         public void Add(XLColumn column)
         {
             Materialize();
