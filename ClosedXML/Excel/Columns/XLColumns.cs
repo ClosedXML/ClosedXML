@@ -31,10 +31,10 @@ namespace ClosedXML.Excel
         /// <param name="workbook">Workbook to which all columns belong.</param>
         /// <param name="worksheet">If worksheet is specified it means that the created instance represents
         /// all columns on a worksheet so changing its width will affect all columns.</param>
-        /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
+        /// <param name="defaultStyleSheet">A sheet with a default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLColumn"/> to support lazy initialization.</param>
-        public XLColumns(XLWorkbook workbook, XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLColumn>? lazyEnumerable = null)
-            : base(defaultStyle)
+        public XLColumns(XLWorkbook workbook, XLWorksheet? worksheet, XLWorksheet? defaultStyleSheet = null, IEnumerable<XLColumn>? lazyEnumerable = null)
+            : base(defaultStyleSheet?.StyleValue)
         {
             _workbook = workbook;
             _worksheet = worksheet;

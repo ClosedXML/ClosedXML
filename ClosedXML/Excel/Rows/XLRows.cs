@@ -29,10 +29,10 @@ namespace ClosedXML.Excel
         /// <param name="workbook">Workbook of the rows.</param>
         /// <param name="worksheet">If worksheet is specified it means that the created instance represents
         /// all rows on a worksheet so changing its height will affect all rows.</param>
-        /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
+        /// <param name="defaultStyleSheet">A sheet with a default style to use when initializing child entries.</param>
         /// <param name="lazyEnumerable">A predefined enumerator of <see cref="XLRow"/> to support lazy initialization.</param>
-        public XLRows(XLWorkbook workbook, XLWorksheet? worksheet, XLStyleValue? defaultStyle = null, IEnumerable<XLRow>? lazyEnumerable = null)
-            : base(defaultStyle)
+        public XLRows(XLWorkbook workbook, XLWorksheet? worksheet, XLWorksheet? defaultStyleSheet = null, IEnumerable<XLRow>? lazyEnumerable = null)
+            : base(defaultStyleSheet?.StyleValue)
         {
             _workbook = workbook;
             _worksheet = worksheet;
