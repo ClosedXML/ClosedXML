@@ -1,23 +1,46 @@
 #nullable disable
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
-    internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns
+    internal class XLRangeColumns :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLRangeColumns
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
 
-        public XLRangeColumns(XLWorksheet worksheet) : base(XLWorkbook.DefaultStyleValue)
+        public XLRangeColumns(XLWorksheet worksheet)
+#if !STYLES_REWORK
+            : base(XLWorkbook.DefaultStyleValue)
+#endif
         {
             _worksheet = worksheet;
         }
 
+        internal XLCellFormat Format
+        {
+            get
+            {
+                var columns = _ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
+                return XLCellFormat.ForCells(_worksheet.Workbook, columns, null);
+            }
+        }
+
         #region IXLRangeColumns Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
@@ -82,8 +105,9 @@ namespace ClosedXML.Excel
 
         #endregion IXLRangeColumns Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
-        
+
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -104,5 +128,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+#endif
     }
 }
