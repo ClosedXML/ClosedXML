@@ -74,6 +74,12 @@ namespace ClosedXML.Excel
             return cells;
         }
 
+        public void Select()
+        {
+            foreach (var range in this)
+                range.Select();
+        }
+
         #endregion IXLRangeColumns Members
 
         #region IXLStylized Members
@@ -98,11 +104,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
-
-        public void Select()
-        {
-            foreach (var range in this)
-                range.Select();
-        }
     }
 }
