@@ -1,23 +1,46 @@
 #nullable disable
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
-    internal class XLRangeRows : XLStylizedBase, IXLRangeRows
+    internal class XLRangeRows :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLRangeRows
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLRangeRow> _ranges = new List<XLRangeRow>();
 
-        public XLRangeRows(XLWorksheet worksheet) : base(XLStyle.Default.Value)
+        public XLRangeRows(XLWorksheet worksheet)
+#if !STYLES_REWORK
+            : base(XLStyle.Default.Value)
+#endif
         {
             _worksheet = worksheet;
         }
 
+        internal XLCellFormat Format
+        {
+            get
+            {
+                var areas = _ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
+                return XLCellFormat.ForCells(_worksheet.Workbook, areas, null);
+            }
+        }
+
         #region IXLRangeRows Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
@@ -82,6 +105,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLRangeRows Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         protected override IEnumerable<XLStylizedBase> Children
@@ -92,7 +116,6 @@ namespace ClosedXML.Excel
                     yield return range;
             }
         }
-
 
         public override IEnumerable<IXLRange> RangesUsed
         {
@@ -105,5 +128,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+#endif
     }
 }
