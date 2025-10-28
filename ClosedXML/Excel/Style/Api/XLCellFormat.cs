@@ -145,6 +145,16 @@ internal partial class XLCellFormat
         };
     }
 
+    internal static XLCellFormat ForTableRows(XLWorksheet sheet, XLBookArea[] rowAreas)
+    {
+        var workbook = sheet.Workbook;
+        var formatValue = new Hierarchy(workbook, sheet.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Areas = rowAreas
+        };
+    }
+
     internal T Resolve<T>(Func<XLCellFormatValue, T> selector)
     {
         var format = _formatValue.Resolve();

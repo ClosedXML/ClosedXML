@@ -5,16 +5,24 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLTableRows : XLStylizedBase, IXLTableRows
+    internal class XLTableRows :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLTableRows
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
 
-        public XLTableRows(XLWorksheet worksheet) : base(((XLStyle)worksheet.Style).Value)
+        public XLTableRows(XLWorksheet worksheet)
+#if !STYLES_REWORK
+            : base(((XLStyle)worksheet.Style).Value)
+#endif
         {
             _worksheet = worksheet;
         }
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         protected override IEnumerable<XLStylizedBase> Children
@@ -39,8 +47,17 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+#endif
 
         #region IXLTableRows Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         public IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
@@ -102,12 +119,21 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        #endregion IXLTableRows Members
-
         public void Select()
         {
             foreach (var range in this)
                 range.Select();
+        }
+
+        #endregion IXLTableRows Members
+
+        internal XLCellFormat Format
+        {
+            get
+            {
+                var rowAreas = _ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
+                return XLCellFormat.ForTableRows(_worksheet, rowAreas);
+            }
         }
     }
 }
