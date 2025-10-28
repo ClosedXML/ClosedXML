@@ -18,6 +18,14 @@ namespace ClosedXML.Excel
 
         Boolean Shadow { get; set; }
 
+        /// <summary>
+        /// Get or set font size in points.
+        /// </summary>
+        /// <value>
+        /// Font size is defined in twips and the passed value is rounded to nearest twips. Allowed
+        /// values are from 1pt to 409.55pt.
+        /// </value>
+        /// <exception cref="ArgumentOutOfRangeException">Value is outside of allowed values 1pt to 409.55pt.</exception>
         Double FontSize { get; set; }
 
         XLColor FontColor { get; set; }

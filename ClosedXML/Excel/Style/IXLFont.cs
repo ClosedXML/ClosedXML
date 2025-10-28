@@ -193,6 +193,10 @@ namespace ClosedXML.Excel
 
         IXLStyle SetShadow(); IXLStyle SetShadow(Boolean value);
 
+        /// <summary>
+        /// Set font size in points.
+        /// </summary>
+        /// <inheritdoc cref="IXLFontBase.FontSize"/>
         IXLStyle SetFontSize(Double value);
 
         IXLStyle SetFontColor(XLColor value);
