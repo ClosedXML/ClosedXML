@@ -84,7 +84,7 @@ internal partial class XLCellFormat
         };
     }
 
-    public static XLCellFormat ForColumns(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLColumnArea> columns)
+    internal static XLCellFormat ForColumns(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLColumnArea> columns)
     {
         var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
@@ -106,7 +106,7 @@ internal partial class XLCellFormat
         };
     }
 
-    public static XLCellFormat ForRows(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLRowArea> rows)
+    internal static XLCellFormat ForRows(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLRowArea> rows)
     {
         var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
