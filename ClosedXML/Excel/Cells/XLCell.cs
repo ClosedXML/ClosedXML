@@ -1160,11 +1160,6 @@ namespace ClosedXML.Excel
             Style = styleToUse;
         }
 
-        public Boolean IsDefaultWorksheetStyle()
-        {
-            return StyleValue == Worksheet.StyleValue;
-        }
-
         #endregion Styles
 
         public void DeleteComment()
