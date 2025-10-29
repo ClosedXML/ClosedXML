@@ -593,15 +593,6 @@ namespace ClosedXML.Excel
             return AdjustToContents(1);
         }
 
-        internal void SetStyleNoColumns(IXLStyle value)
-        {
-            InnerStyle = value;
-
-            int row = RowNumber();
-            foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
-                c.InnerStyle = value;
-        }
-
         private XLRow RowShift(Int32 rowsToShift)
         {
             return Worksheet.Row(RowNumber() + rowsToShift);
