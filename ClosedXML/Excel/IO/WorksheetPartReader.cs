@@ -1243,15 +1243,39 @@ internal class WorksheetPartReader
         }
     }
 
-    private static void ApplyStyle<T>(T container, Int32 styleIndex, XLWorkbookStyles styles)
-        where T : IXLStylized, IXLFormatContainer
+    private static void ApplyStyle(XLWorksheet sheet, Int32 styleIndex, XLWorkbookStyles styles)
+    {
+        ApplyStyle(styleValue =>
+        {
+            sheet.StyleValue = styleValue;
+            sheet.FormatValue = styles.CellFormats[styleIndex];
+        }, styleIndex, styles);
+    }
+    
+    private static void ApplyStyle(XLRow row, Int32 styleIndex, XLWorkbookStyles styles)
+    {
+        ApplyStyle(styleValue =>
+        {
+            row.StyleValue = styleValue;
+            row.FormatValue = styles.CellFormats[styleIndex];
+        }, styleIndex, styles);
+    }
+
+    private static void ApplyStyle(XLCell cell, Int32 styleIndex, XLWorkbookStyles styles)
+    {
+        ApplyStyle(styleValue =>
+        {
+            cell.StyleValue = styleValue;
+            cell.FormatValue = styles.CellFormats[styleIndex];
+        }, styleIndex, styles);
+    }
+
+    private static void ApplyStyle(Action<XLStyleValue> setStyle, Int32 styleIndex, XLWorkbookStyles styles)
     {
         var xlStyleKey = XLStyle.Default.Key;
         XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
-
         var styleValue = XLStyleValue.FromKey(ref xlStyleKey);
-        container.StyleValue = styleValue;
-        container.FormatValue = styles.CellFormats[styleIndex];
+        setStyle(styleValue);
     }
 
     private static void ApplyStyle(XLColumns columns, Int32 styleIndex, XLWorkbookStyles styles)
