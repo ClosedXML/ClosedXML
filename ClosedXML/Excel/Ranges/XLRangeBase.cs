@@ -822,9 +822,9 @@ namespace ClosedXML.Excel
             }
 
             if (newFirstCellAddress.Worksheet != null)
-                return newFirstCellAddress.Worksheet.GetOrCreateRange(newRangeAddress, Style);
+                return newFirstCellAddress.Worksheet.GetOrCreateRange(newRangeAddress, StyleValue);
             else if (Worksheet != null)
-                return Worksheet.GetOrCreateRange(newRangeAddress, Style);
+                return Worksheet.GetOrCreateRange(newRangeAddress, StyleValue);
             else
                 return new XLRange(newRangeAddress, Style);
         }
