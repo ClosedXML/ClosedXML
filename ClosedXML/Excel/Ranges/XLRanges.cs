@@ -1,13 +1,16 @@
-using ClosedXML.Excel.Ranges.Index;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
-    internal class XLRanges : XLStylizedBase, IXLRanges
+    internal class XLRanges :
+#if !STYLES_REWORK
+        XLStylizedBase,
+#endif
+        IXLRanges
     {
         private readonly XLWorkbook _workbook;
 
@@ -16,7 +19,10 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
         private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll());
+
+#if !STYLES_REWORK
         private bool _styleInitialized = false;
+#endif
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
@@ -35,13 +41,33 @@ namespace ClosedXML.Excel
         }
 
         public XLRanges(XLWorkbook workbook)
+#if !STYLES_REWORK
             : base(XLWorkbook.DefaultStyleValue)
+#endif
         {
             _workbook = workbook;
             _indexes = new Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>>();
         }
 
+        internal XLCellFormat Format
+        {
+            get
+            {
+                var sheet = Ranges.FirstOrDefault()?.Worksheet;
+                var areas = Ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
+                return XLCellFormat.ForCells(_workbook, areas, sheet);
+            }
+        }
+
         #region IXLRanges Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         IXLCells IXLRanges.Cells() => Cells();
 
@@ -56,6 +82,7 @@ namespace ClosedXML.Excel
             if (GetRangeIndex(range.Worksheet).Add(range))
                 Count++;
 
+#if !STYLES_REWORK
             if (_styleInitialized)
                 return;
 
@@ -65,6 +92,7 @@ namespace ClosedXML.Excel
 
             InnerStyle = worksheetStyle;
             _styleInitialized = true;
+#endif
         }
 
         public void Add(IXLRangeBase range)
@@ -226,6 +254,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLRanges Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         protected override IEnumerable<XLStylizedBase> Children => Ranges;
@@ -233,6 +262,7 @@ namespace ClosedXML.Excel
         public override IEnumerable<IXLRange> RangesUsed => this;
 
         #endregion IXLStylized Members
+#endif
 
         public override string ToString()
         {
