@@ -22,8 +22,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
-        public XLTable(XLRangeParameters xlRangeParameters)
-            : base(xlRangeParameters)
+        public XLTable(XLRangeAddress tableArea, IXLStyle defaultStyle)
+            : base(tableArea, defaultStyle)
         {
             InitializeValues(false);
         }

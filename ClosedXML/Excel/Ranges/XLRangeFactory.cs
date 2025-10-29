@@ -43,8 +43,7 @@ namespace ClosedXML.Excel
 
         public XLRange CreateRange(XLRangeAddress rangeAddress)
         {
-            var xlRangeParameters = new XLRangeParameters(rangeAddress, _worksheet.Style);
-            return new XLRange(xlRangeParameters);
+            return new XLRange(rangeAddress, _worksheet.Style);
         }
 
         public XLColumn CreateColumn(int columnNumber)
@@ -59,19 +58,17 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn CreateRangeColumn(XLRangeAddress rangeAddress)
         {
-            var xlRangeParameters = new XLRangeParameters(rangeAddress, _worksheet.Style);
-            return new XLRangeColumn(xlRangeParameters);
+            return new XLRangeColumn(rangeAddress, _worksheet.Style);
         }
 
         public XLRangeRow CreateRangeRow(XLRangeAddress rangeAddress)
         {
-            var xlRangeParameters = new XLRangeParameters(rangeAddress, _worksheet.Style);
-            return new XLRangeRow(xlRangeParameters);
+            return new XLRangeRow(rangeAddress, _worksheet.Style);
         }
 
         public XLTable CreateTable(XLRangeAddress rangeAddress)
         {
-            return new XLTable(new XLRangeParameters(rangeAddress, _worksheet.Style));
+            return new XLTable(rangeAddress, _worksheet.Style);
         }
 
         #endregion Methods

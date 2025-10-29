@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
         private readonly XLTableRange _tableRange;
 
         public XLTableRow(XLTableRange tableRange, XLRangeRow rangeRow)
-            : base(new XLRangeParameters(rangeRow.RangeAddress, rangeRow.Style))
+            : base(rangeRow.RangeAddress, rangeRow.Style)
         {
             _tableRange = tableRange;
         }

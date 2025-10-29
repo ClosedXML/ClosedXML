@@ -1950,12 +1950,12 @@ namespace ClosedXML.Excel
             return Worksheet.Internals.CellsCollection.GetUsedCell(point);
         }
 
-        public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
+        public XLRange GetOrCreateRange(XLRangeAddress rangeAddress, IXLStyle? defaultStyle)
         {
-            var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);
+            var rangeKey = new XLRangeKey(XLRangeType.Range, rangeAddress);
             var range = _rangeRepository.GetOrCreate(ref rangeKey);
-            if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
-                range.InnerStyle = xlRangeParameters.DefaultStyle;
+            if (defaultStyle != null && range.StyleValue == StyleValue)
+                range.InnerStyle = defaultStyle;
 
             return (XLRange)range;
         }

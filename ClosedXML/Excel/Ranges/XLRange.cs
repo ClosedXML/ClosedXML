@@ -8,8 +8,8 @@ namespace ClosedXML.Excel
 {
     internal class XLRange : XLRangeBase, IXLRange
     {
-        public XLRange(XLRangeParameters xlRangeParameters)
-            : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
+        public XLRange(XLRangeAddress rangeAddress, IXLStyle defaultStyle)
+            : base(rangeAddress, ((XLStyle)defaultStyle).Value)
         {
         }
 

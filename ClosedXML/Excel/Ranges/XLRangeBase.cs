@@ -805,7 +805,6 @@ namespace ClosedXML.Excel
                 throw new ArgumentException("The address refers to a different worksheet.", nameof(newLastCellAddress));
 
             var newRangeAddress = new XLRangeAddress(newFirstCellAddress, newLastCellAddress);
-            var xlRangeParameters = new XLRangeParameters(newRangeAddress, Style);
             if (
                 newFirstCellAddress.RowNumber < RangeAddress.FirstAddress.RowNumber
                 || newFirstCellAddress.RowNumber > RangeAddress.LastAddress.RowNumber
@@ -823,11 +822,11 @@ namespace ClosedXML.Excel
             }
 
             if (newFirstCellAddress.Worksheet != null)
-                return newFirstCellAddress.Worksheet.GetOrCreateRange(xlRangeParameters);
+                return newFirstCellAddress.Worksheet.GetOrCreateRange(newRangeAddress, Style);
             else if (Worksheet != null)
-                return Worksheet.GetOrCreateRange(xlRangeParameters);
+                return Worksheet.GetOrCreateRange(newRangeAddress, Style);
             else
-                return new XLRange(xlRangeParameters);
+                return new XLRange(newRangeAddress, Style);
         }
 
         public XLRange Range(String firstCellAddress, String lastCellAddress)
@@ -927,13 +926,13 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
-            var cells = new XLCells(Worksheet,true, options) { RangeAddress };
+            var cells = new XLCells(Worksheet, true, options) { RangeAddress };
             return cells;
         }
 
         public IXLCells CellsUsed(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(Worksheet,true, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
+            var cells = new XLCells(Worksheet, true, XLCellsUsedOptions.AllContents, predicate) { RangeAddress };
             return cells;
         }
 
