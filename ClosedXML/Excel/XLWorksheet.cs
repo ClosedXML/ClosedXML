@@ -1964,16 +1964,11 @@ namespace ClosedXML.Excel
         /// Get a range row from the shared repository or create a new one.
         /// </summary>
         /// <param name="address">Address of range row.</param>
-        /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
         /// <returns>Range row with the specified address.</returns>
-        public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle? defaultStyle = null)
+        public XLRangeRow RangeRow(XLRangeAddress address)
         {
             var rangeKey = new XLRangeKey(XLRangeType.RangeRow, address);
             var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(ref rangeKey);
-
-            if (defaultStyle != null && rangeRow.StyleValue == StyleValue)
-                rangeRow.InnerStyle = defaultStyle;
-
             return rangeRow;
         }
 
@@ -1981,16 +1976,11 @@ namespace ClosedXML.Excel
         /// Get a range column from the shared repository or create a new one.
         /// </summary>
         /// <param name="address">Address of range column.</param>
-        /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
         /// <returns>Range column with the specified address.</returns>
-        public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle? defaultStyle = null)
+        public XLRangeColumn RangeColumn(XLRangeAddress address)
         {
             var rangeKey = new XLRangeKey(XLRangeType.RangeColumn, address);
             var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(ref rangeKey);
-
-            if (defaultStyle != null && rangeColumn.StyleValue == StyleValue)
-                rangeColumn.InnerStyle = defaultStyle;
-
             return rangeColumn;
         }
 
