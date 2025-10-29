@@ -1249,7 +1249,8 @@ internal class WorksheetPartReader
         var xlStyleKey = XLStyle.Default.Key;
         XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
 
-        container.InnerStyle = new XLStyle(container, xlStyleKey);
+        var styleValue = XLStyleValue.FromKey(ref xlStyleKey);
+        container.StyleValue = styleValue;
         container.FormatValue = styles.CellFormats[styleIndex];
     }
 
@@ -1259,9 +1260,10 @@ internal class WorksheetPartReader
         XLWorkbook.LoadStyle(ref xlStyleKey, styleIndex, styles);
 
         // When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
+        var styleValue = XLStyleValue.FromKey(ref xlStyleKey);
         columns.Cast<XLColumn>().ForEach(col =>
         {
-            col.InnerStyle = new XLStyle(col, xlStyleKey);
+            col.StyleValue = styleValue;
             col.FormatValue = styles.CellFormats[styleIndex];
         });
     }

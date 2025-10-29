@@ -17,12 +17,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Read-only style property.
         /// </summary>
-        internal virtual XLStyleValue StyleValue { get; private protected set; }
+        public virtual XLStyleValue StyleValue { get; set; }
 
         /// <inheritdoc cref="IXLStylized.StyleValue"/>
         XLStyleValue IXLStylized.StyleValue
         {
-            get { return StyleValue; }
+            get => StyleValue;
+            set => StyleValue = value;
         }
 
         /// <inheritdoc cref="IXLStylized.Style"/>

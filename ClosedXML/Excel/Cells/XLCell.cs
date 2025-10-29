@@ -95,10 +95,10 @@ namespace ClosedXML.Excel
         /// Overriden <see cref="XLStylizedBase.StyleValue"/>, because we can't store the value
         /// in the cell.
         /// </summary>
-        internal override XLStyleValue StyleValue
+        public override XLStyleValue StyleValue
         {
             get => Worksheet.GetStyleValue(SheetPoint);
-            private protected set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
+            set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
         }
 
         internal int MemorySstId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
@@ -1396,7 +1396,7 @@ namespace ClosedXML.Excel
                 CopyValuesFrom(otherCell);
 
             if (options.HasFlag(XLCellCopyOptions.Styles))
-                InnerStyle = otherCell.InnerStyle;
+                StyleValue = otherCell.StyleValue;
 
             if (options.HasFlag(XLCellCopyOptions.Sparklines))
                 CopySparklineFrom(otherCell);

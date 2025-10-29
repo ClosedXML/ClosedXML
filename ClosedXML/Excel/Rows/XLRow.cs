@@ -165,7 +165,7 @@ namespace ClosedXML.Excel
             {
                 var internalRow = Worksheet.Internals.RowsCollection[newRow.RowNumber()];
                 internalRow._height = Height;
-                internalRow.InnerStyle = InnerStyle;
+                internalRow.StyleValue = StyleValue;
                 internalRow.Collapsed = Collapsed;
                 internalRow.IsHidden = IsHidden;
                 internalRow._outlineLevel = OutlineLevel;
@@ -486,7 +486,7 @@ namespace ClosedXML.Excel
             var newRow = (XLRow)row;
             newRow._height = _height;
             newRow.HeightChanged = HeightChanged;
-            newRow.InnerStyle = Style;
+            newRow.StyleValue = StyleValue;
             newRow.IsHidden = IsHidden;
 
             AsRange().CopyTo(row);

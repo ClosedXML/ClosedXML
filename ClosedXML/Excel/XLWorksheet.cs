@@ -638,7 +638,7 @@ namespace ClosedXML.Excel
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;
             targetSheet.RowHeight = RowHeight;
             targetSheet.RowHeightChanged = RowHeightChanged;
-            targetSheet.InnerStyle = InnerStyle;
+            targetSheet.StyleValue = StyleValue;
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
             ((XLHeaderFooter)targetSheet.PageSetup.Header).Changed = true;
             ((XLHeaderFooter)targetSheet.PageSetup.Footer).Changed = true;

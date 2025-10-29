@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
             {
                 var internalColumn = Worksheet.Internals.ColumnsCollection[newColumn.ColumnNumber()];
                 internalColumn.Width = Width;
-                internalColumn.InnerStyle = InnerStyle;
+                internalColumn.StyleValue = StyleValue;
                 internalColumn.Collapsed = Collapsed;
                 internalColumn.IsHidden = IsHidden;
                 internalColumn._outlineLevel = OutlineLevel;
@@ -410,7 +410,7 @@ namespace ClosedXML.Excel
             column.Clear();
             var newColumn = (XLColumn)column;
             newColumn.Width = Width;
-            newColumn.InnerStyle = InnerStyle;
+            newColumn.StyleValue = StyleValue;
             newColumn.IsHidden = IsHidden;
 
             (this as XLRangeBase).CopyTo(column);

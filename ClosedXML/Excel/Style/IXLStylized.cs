@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         /// The value is updated when style is modified (<see cref="XLStyleValue"/>
         /// is immutable).
         /// </summary>
-        XLStyleValue StyleValue { get; }
+        XLStyleValue StyleValue { get; set; }
 
         /// <summary>
         /// A callback method called when <see cref="Style"/> is changed. It should update
