@@ -2000,9 +2000,6 @@ namespace ClosedXML.Excel
 
         public void RelocateRange(XLRangeType rangeType, XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
-            if (_rangeRepository == null)
-                return;
-
             var oldKey = new XLRangeKey(rangeType, oldAddress);
             var newKey = new XLRangeKey(rangeType, newAddress);
             var range = _rangeRepository.Replace(ref oldKey, ref newKey);
