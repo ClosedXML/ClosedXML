@@ -2,31 +2,42 @@ using System;
 
 namespace ClosedXML.Excel;
 
-internal partial class XLFontCellFormat : IXLFont
+internal sealed partial class XLFontCellFormat : IXLFont
 {
-    // TODO Styles: Implement remaining format properties by using IXLFont contract
+    bool IXLFontBase.Bold
+    {
+        get => Bold;
+        set => Bold = value;
+    }
+
+    bool IXLFontBase.Italic
+    {
+        get => Italic;
+        set => Italic = value;
+    }
+
     XLFontUnderlineValues IXLFontBase.Underline
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Underline;
+        set => Underline = value;
     }
 
     bool IXLFontBase.Strikethrough
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Strikethrough;
+        set => Strikethrough = value;
     }
 
     XLFontVerticalTextAlignmentValues IXLFontBase.VerticalAlignment
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => VerticalAlignment;
+        set => VerticalAlignment = value;
     }
 
     bool IXLFontBase.Shadow
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Shadow;
+        set => Shadow = value;
     }
 
     double IXLFontBase.FontSize
@@ -37,8 +48,8 @@ internal partial class XLFontCellFormat : IXLFont
 
     XLColor IXLFontBase.FontColor
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Color;
+        set => Color = value;
     }
 
     string IXLFontBase.FontName
@@ -49,30 +60,31 @@ internal partial class XLFontCellFormat : IXLFont
 
     XLFontFamilyNumberingValues IXLFontBase.FontFamilyNumbering
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Family;
+        set => Family = value;
     }
 
     XLFontCharSet IXLFontBase.FontCharSet
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Charset;
+        set => Charset = value;
     }
 
     XLFontScheme IXLFontBase.FontScheme
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Scheme;
+        set => Scheme = value;
     }
 
     bool IEquatable<IXLFont>.Equals(IXLFont? other)
     {
+        // TODO Styles: Implement remaining format properties by using IXLFont contract. Deal somehow with Extend and Condense.
         throw new NotImplementedException();
     }
 
     IXLStyle IXLFont.SetBold()
     {
-        return ((IXLFont)this).SetBold(true);
+        return (this as IXLFont).SetBold(true);
     }
 
     IXLStyle IXLFont.SetBold(bool value)
@@ -83,7 +95,7 @@ internal partial class XLFontCellFormat : IXLFont
 
     IXLStyle IXLFont.SetItalic()
     {
-        return ((IXLFont)this).SetItalic(true);
+        return (this as IXLFont).SetItalic(true);
     }
 
     IXLStyle IXLFont.SetItalic(bool value)
@@ -94,48 +106,53 @@ internal partial class XLFontCellFormat : IXLFont
 
     IXLStyle IXLFont.SetUnderline()
     {
-        throw new NotImplementedException();
+        return (this as IXLFont).SetUnderline(XLFontUnderlineValues.Single);
     }
 
     IXLStyle IXLFont.SetUnderline(XLFontUnderlineValues value)
     {
-        throw new NotImplementedException();
+        Underline = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetStrikethrough()
     {
-        throw new NotImplementedException();
+        return (this as IXLFont).SetStrikethrough(true);
     }
 
     IXLStyle IXLFont.SetStrikethrough(bool value)
     {
-        throw new NotImplementedException();
+        Strikethrough = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetVerticalAlignment(XLFontVerticalTextAlignmentValues value)
     {
-        throw new NotImplementedException();
+        VerticalAlignment = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetShadow()
     {
-        throw new NotImplementedException();
+        return (this as IXLFont).SetShadow(true);
     }
 
     IXLStyle IXLFont.SetShadow(bool value)
     {
-        throw new NotImplementedException();
+        Shadow = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetFontSize(double value)
     {
-        ((IXLFont)this).FontSize = value;
+        (this as IXLFont).FontSize = value;
         return _parent;
     }
 
     IXLStyle IXLFont.SetFontColor(XLColor value)
     {
-        throw new NotImplementedException();
+        Color = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetFontName(string value)
@@ -146,17 +163,20 @@ internal partial class XLFontCellFormat : IXLFont
 
     IXLStyle IXLFont.SetFontFamilyNumbering(XLFontFamilyNumberingValues value)
     {
-        throw new NotImplementedException();
+        Family = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetFontCharSet(XLFontCharSet value)
     {
-        throw new NotImplementedException();
+        Charset = value;
+        return _parent;
     }
 
     IXLStyle IXLFont.SetFontScheme(XLFontScheme value)
     {
-        throw new NotImplementedException();
+        Scheme = value;
+        return _parent;
     }
 
     /// <summary>
@@ -164,6 +184,7 @@ internal partial class XLFontCellFormat : IXLFont
     /// </summary>
     internal void SetFont(IXLFont value)
     {
+        // TODO Styles: Implement remaining format properties by using IXLFont contract. Remember outline and extend
         throw new NotImplementedException();
     }
 }
