@@ -102,4 +102,26 @@ internal sealed partial class XLFontCellFormat
     {
         _parent.ModifyFont(modifyFont, value);
     }
+
+    /// <summary>
+    /// A helper method to set all font properties at once (e.g, <c>someStyle.Font = otherStyle.Font</c>).
+    /// </summary>
+    internal void SetFont(IXLFont value)
+    {
+        _parent.ModifyFont(static (font, value) => font with
+        {
+            Bold = value.Bold,
+            Italic = value.Italic,
+            Underline = value.Underline,
+            Strikethrough = value.Strikethrough,
+            VerticalAlignment = value.VerticalAlignment,
+            Shadow = value.Shadow,
+            Size = XLFontSize.FromPoints(value.FontSize),
+            Color = value.FontColor,
+            Name = value.FontName,
+            Family = value.FontFamilyNumbering,
+            Charset = value.FontCharSet,
+            Scheme = value.FontScheme
+        }, value);
+    }
 }

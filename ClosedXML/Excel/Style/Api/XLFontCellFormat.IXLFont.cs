@@ -178,13 +178,4 @@ internal sealed partial class XLFontCellFormat : IXLFont
         Scheme = value;
         return _parent;
     }
-
-    /// <summary>
-    /// A helper method to set all font properties at once (e.g, <c>someStyle.Font = otherStyle.Font</c>).
-    /// </summary>
-    internal void SetFont(IXLFont value)
-    {
-        // TODO Styles: Implement remaining format properties by using IXLFont contract. Remember outline and extend
-        throw new NotImplementedException();
-    }
 }

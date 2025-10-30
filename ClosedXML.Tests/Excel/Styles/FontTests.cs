@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel.Styles
 
         [Test]
         [TestCaseSource(nameof(FontProperties))]
-        public void Font_property_can_be_set(IFormatTestCase<IXLFont> testCase)
+        public void Font_property_can_be_individually_set(IFormatTestCase<IXLFont> testCase)
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -47,6 +47,45 @@ namespace ClosedXML.Tests.Excel.Styles
                 var setValue = testCase.GetPropertyValue(cellFormat.Font);
                 Assert.AreEqual(testValue, setValue);
             }
+        }
+
+        [Test]
+        public void Font_can_be_set_by_assigning_font()
+        {
+            // Arrange
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Style
+                .Font.SetBold()
+                .Font.SetItalic()
+                .Font.SetUnderline(XLFontUnderlineValues.DoubleAccounting)
+                .Font.SetStrikethrough()
+                .Font.SetVerticalAlignment(XLFontVerticalTextAlignmentValues.Superscript)
+                .Font.SetShadow()
+                .Font.SetFontSize(25)
+                .Font.SetFontColor(XLColor.Red)
+                .Font.SetFontName("Arial")
+                .Font.SetFontFamilyNumbering(XLFontFamilyNumberingValues.Decorative)
+                .Font.SetFontCharSet(XLFontCharSet.Hangul)
+                .Font.SetFontScheme(XLFontScheme.Minor);
+
+            // Act
+            ws.Cell("A2").Style.Font = ws.Cell("A1").Style.Font;
+
+            // Assert
+            var copiedFont = ws.Cell("A2").Style.Font;
+            Assert.IsTrue(copiedFont.Bold);
+            Assert.IsTrue(copiedFont.Italic);
+            Assert.AreEqual(XLFontUnderlineValues.DoubleAccounting, copiedFont.Underline);
+            Assert.IsTrue(copiedFont.Strikethrough);
+            Assert.AreEqual(XLFontVerticalTextAlignmentValues.Superscript, copiedFont.VerticalAlignment);
+            Assert.IsTrue(copiedFont.Shadow);
+            Assert.AreEqual(25, copiedFont.FontSize);
+            Assert.AreEqual(XLColor.Red, copiedFont.FontColor);
+            Assert.AreEqual("Arial", copiedFont.FontName);
+            Assert.AreEqual(XLFontFamilyNumberingValues.Decorative, copiedFont.FontFamilyNumbering);
+            Assert.AreEqual(XLFontCharSet.Hangul, copiedFont.FontCharSet);
+            Assert.AreEqual(XLFontScheme.Minor, copiedFont.FontScheme);
         }
 
         private static IEnumerable<object> FontProperties()
