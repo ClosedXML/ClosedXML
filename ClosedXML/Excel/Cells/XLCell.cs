@@ -19,7 +19,11 @@ using ClosedXML.Excel.Formatting;
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
-    internal sealed class XLCell : XLStylizedBase, IXLCell, IXLFormatContainer, IXLStylized
+    internal sealed class XLCell :
+#if !STYLES_REWORK
+        XLStylizedBase, IXLStylized,
+#endif
+        IXLCell, IXLFormatContainer
     {
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -95,7 +99,11 @@ namespace ClosedXML.Excel
         /// Overriden <see cref="XLStylizedBase.StyleValue"/>, because we can't store the value
         /// in the cell.
         /// </summary>
+#if STYLES_REWORK
+        public XLStyleValue StyleValue
+#else
         public override XLStyleValue StyleValue
+#endif
         {
             get => Worksheet.GetStyleValue(SheetPoint);
             set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
@@ -231,6 +239,14 @@ namespace ClosedXML.Excel
         }
 
         #region IXLCell Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         IXLWorksheet IXLCell.Worksheet
         {
@@ -1112,6 +1128,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLCell Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
@@ -1136,6 +1153,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+#endif
 
         /// <summary>
         /// Ensure the cell has style set directly on the cell, not inherited from column/row/worksheet styles.

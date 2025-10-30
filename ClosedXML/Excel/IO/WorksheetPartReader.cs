@@ -31,7 +31,7 @@ internal class WorksheetPartReader
 
     internal void LoadWorksheet(XLWorksheet ws, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, LoadContext context)
     {
-        var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
+        var styleList = new Dictionary<int, XLStyleValue>();// {{0, ws.Style}};
         PageSetupProperties pageSetupProperties = null;
 
         _lastRow = 0;
@@ -203,7 +203,7 @@ internal class WorksheetPartReader
     }
 
     private void LoadRow(XLWorksheet ws, SharedStringItem[] sharedStrings,
-                          Dictionary<Int32, IXLStyle> styleList,
+                          Dictionary<Int32, XLStyleValue> styleList,
                           OpenXmlPartReader reader)
     {
         Debug.Assert(reader.LocalName == "row");
@@ -279,7 +279,7 @@ internal class WorksheetPartReader
     }
 
     private void LoadCell(SharedStringItem[] sharedStrings,
-                          XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, OpenXmlPartReader reader, Int32 rowIndex)
+                          XLWorksheet ws, Dictionary<Int32, XLStyleValue> styleList, OpenXmlPartReader reader, Int32 rowIndex)
     {
         Debug.Assert(reader.LocalName == "c" && reader.IsStartElement);
 
@@ -306,9 +306,9 @@ internal class WorksheetPartReader
         var styleIndex = attributes.GetIntAttribute("s") ?? 0;
         xlCell.FormatValue = ws.Workbook.Styles.CellFormats[styleIndex];
 
-        if (styleList.TryGetValue(styleIndex, out IXLStyle style))
+        if (styleList.TryGetValue(styleIndex, out var styleValue))
         {
-            xlCell.InnerStyle = style;
+            xlCell.StyleValue = styleValue;
         }
         else
         {
@@ -403,7 +403,7 @@ internal class WorksheetPartReader
         }
 
         if (!styleList.ContainsKey(styleIndex))
-            styleList.Add(styleIndex, xlCell.Style);
+            styleList.Add(styleIndex, xlCell.StyleValue);
     }
 
     private XLCellFormula SetCellFormula(XLWorksheet ws, XLSheetPoint cellAddress, OpenXmlPartReader reader)
