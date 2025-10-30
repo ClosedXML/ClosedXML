@@ -810,10 +810,12 @@ namespace ClosedXML.Excel
 
             Worksheet.Hyperlinks.Add(SheetPoint, hyperlink);
 
-            if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
+            var cellFont = GetStyleForRead().Font;
+            var sheetFont = Worksheet.StyleValue.Font;
+            if (cellFont.FontColor.Equals(sheetFont.FontColor))
                 Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-            if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
+            if (cellFont.Underline == sheetFont.Underline)
                 Style.Font.Underline = XLFontUnderlineValues.Single;
         }
 
