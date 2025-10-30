@@ -608,9 +608,9 @@ namespace ClosedXML.Excel
         // TODO Styles: Replace with FormatValue during cut-over
         internal XLStyleValue StyleValue
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+            get;
+            set;
+        } = null!;
 #endif
     }
 }

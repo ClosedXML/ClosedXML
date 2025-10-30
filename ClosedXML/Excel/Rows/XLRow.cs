@@ -678,11 +678,11 @@ namespace ClosedXML.Excel
 
 #if STYLES_REWORK
         // TODO Styles: Replace with FormatValue during cut-over
-        public XLStyleValue StyleValue
+        internal XLStyleValue StyleValue
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+            get;
+            set;
+        } = null!;
 #endif
 
         /// <summary>
