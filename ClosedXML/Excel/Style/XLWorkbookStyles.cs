@@ -293,6 +293,15 @@ internal class XLWorkbookStyles
         _mruColors = mruColors;
     }
 
+    internal string GetRegisteredNumberFormat(string numberFormat)
+    {
+        if (_numberFormats.TryGetValue(numberFormat, out var existingFormat))
+            return existingFormat;
+
+        AddUserDefinedNumberFormat(numberFormat);
+        return numberFormat;
+    }
+
     /// <summary>
     /// Get a font format that is stored in the internal structures of the styles class. The font
     /// format is created by modification of existing font format. This is essential for saving,

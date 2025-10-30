@@ -21,7 +21,9 @@ internal partial class XLCellFormat
         _formatValue = formatValue;
     }
 
-    internal XLFontCellFormat Font => new XLFontCellFormat(this);
+    internal XLNumberCellFormat NumberFormat => new(this);
+
+    internal XLFontCellFormat Font => new(this);
 
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
@@ -171,17 +173,32 @@ internal partial class XLCellFormat
         return selector(format);
     }
 
+    internal void ModifyNumberFormat(string numberFormat)
+    {
+        var styles = _workbook.Styles;
+        Modify(format =>
+        {
+            var modifiedNumberFormat = styles.GetRegisteredNumberFormat(numberFormat);
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { NumberFormat = modifiedNumberFormat });
+            return modifiedFormat;
+        });
+    }
+
     internal void ModifyFont<TProperty>(Func<XLFontFormatValue, TProperty, XLFontFormatValue> modifyFont, TProperty value)
     {
-        // TODO Styles: Deal with cross points
         var styles = _workbook.Styles;
-        var modifyFormat = (XLCellFormatValue format) =>
+        Modify(format =>
         {
             var modifiedFont = styles.GetRegisteredFontFormat(format.Font, font => modifyFont(font, value));
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Font = modifiedFont });
             return modifiedFormat;
-        };
+        });
+    }
 
+    private void Modify(Func<XLCellFormatValue, XLCellFormatValue> modifyFormat)
+    {
+        // TODO Styles: Deal with cross points
+        var styles = _workbook.Styles;
         if (DefaultFormat)
         {
             styles.DefaultFormat = modifyFormat(styles.DefaultFormat);

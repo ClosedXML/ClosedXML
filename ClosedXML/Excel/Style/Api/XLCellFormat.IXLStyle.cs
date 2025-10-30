@@ -43,8 +43,8 @@ internal partial class XLCellFormat : IXLStyle
 
     IXLNumberFormat IXLStyle.NumberFormat
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => NumberFormat;
+        set => NumberFormat.SetNumberFormat(value.Format);
     }
 
     IXLProtection IXLStyle.Protection

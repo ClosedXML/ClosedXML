@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     public class NumberFormatTests
     {
@@ -126,6 +126,65 @@ namespace ClosedXML.Tests.Excel
                     return wb;
                 }, @"Other\NumberFormats\NonSequentialNumberFormatsIds-Output.xlsx");
             }
+        }
+
+        [Test]
+        public void NumberFormatId_sets_format_to_predefined_format()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cellFormat = ws.Cell("A1").Style;
+            const int predefinedFormatId = (int)XLPredefinedFormat.Number.Precision2;
+
+            cellFormat.NumberFormat.NumberFormatId = predefinedFormatId;
+
+            Assert.AreEqual(predefinedFormatId, cellFormat.NumberFormat.NumberFormatId);
+            Assert.AreEqual("0.00", cellFormat.NumberFormat.Format);
+        }
+
+        [Test]
+        public void NumberFormatId_throws_on_non_predefined_formats()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => ws.Cell("A1").Style.NumberFormat.NumberFormatId = 160);
+        }
+
+        [TestCase("0.000000 Cute", -1)]
+        [TestCase("0.00", XLPredefinedFormat.Number.Precision2)]
+        public void Format_sets_number_format(string numberFormat, int numFmtId)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            ws.Cell("A1").Style.NumberFormat.Format = numberFormat;
+
+            Assert.AreEqual(numberFormat, ws.Cell("A1").Style.NumberFormat.Format);
+            Assert.AreEqual(numFmtId, ws.Cell("A1").Style.NumberFormat.NumberFormatId);
+        }
+
+        [Test]
+        public void Number_format_can_be_set_by_assigning()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Style.NumberFormat.Format = "0.000";
+
+            ws.Cell("A2").Style.NumberFormat = ws.Cell("A1").Style.NumberFormat;
+
+            Assert.AreEqual("0.000", ws.Cell("A2").Style.NumberFormat.Format);
+        }
+
+        [Test]
+        public void Equal_compares_formats()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Style.NumberFormat.Format = "0.000";
+            ws.Cell("A2").Style.NumberFormat.Format = "0.000";
+
+            Assert.AreEqual(ws.Cell("A2").Style.NumberFormat, ws.Cell("A1").Style.NumberFormat);
         }
     }
 }
