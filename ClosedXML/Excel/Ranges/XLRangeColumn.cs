@@ -11,9 +11,15 @@ namespace ClosedXML.Excel
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLRangeColumn(XLRangeAddress rangeAddress, IXLStyle defaultStyle)
+#if STYLES_REWORK
+            : base(rangeAddress)
+#else
             : base(rangeAddress, ((XLStyle)defaultStyle).Value)
+#endif
         {
         }
+
+        internal override XLCellFormat Format => XLCellFormat.ForRange(Worksheet, RangeAddress);
 
         #region IXLRangeColumn Members
 

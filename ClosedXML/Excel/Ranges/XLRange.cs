@@ -9,9 +9,15 @@ namespace ClosedXML.Excel
     internal class XLRange : XLRangeBase, IXLRange
     {
         public XLRange(XLRangeAddress rangeAddress, IXLStyle defaultStyle)
+#if STYLES_REWORK
+            : base(rangeAddress)
+#else
             : base(rangeAddress, ((XLStyle)defaultStyle).Value)
+#endif
         {
         }
+
+        internal override XLCellFormat Format => XLCellFormat.ForRange(Worksheet, RangeAddress);
 
         public override XLRangeType RangeType
         {

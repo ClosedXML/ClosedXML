@@ -145,6 +145,16 @@ internal partial class XLCellFormat
         };
     }
 
+    internal static XLCellFormat ForRange(XLWorksheet sheet, XLRangeAddress rangeAddress)
+    {
+        var workbook = sheet.Workbook;
+        var formatValue = new Hierarchy(workbook, sheet.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Areas = new[] { XLBookArea.From(rangeAddress) }
+        };
+    }
+
     internal static XLCellFormat ForTableRows(XLWorksheet sheet, XLBookArea[] rowAreas)
     {
         var workbook = sheet.Workbook;

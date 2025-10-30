@@ -9,20 +9,33 @@ using ClosedXML.Excel.CalcEngine.Visitors;
 
 namespace ClosedXML.Excel
 {
-    internal abstract class XLRangeBase : XLStylizedBase, IXLRangeBase, IXLStylized
+    internal abstract class XLRangeBase :
+#if !STYLES_REWORK
+        XLStylizedBase, IXLStylized,
+#endif
+        IXLRangeBase
     {
         private XLSortElements _sortRows;
         private XLSortElements _sortColumns;
         private static Int32 IdCounter = 0;
         private readonly Int32 Id;
 
+#if STYLES_REWORK
+        protected XLRangeBase(XLRangeAddress rangeAddress)
+#else
         protected XLRangeBase(XLRangeAddress rangeAddress, XLStyleValue styleValue)
             : base(styleValue)
+#endif
         {
             Id = ++IdCounter;
 
             _rangeAddress = rangeAddress;
         }
+
+        /// <summary>
+        /// Get format API object tailored to the range type.
+        /// </summary>
+        internal abstract XLCellFormat Format { get; }
 
         protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
@@ -78,6 +91,14 @@ namespace ClosedXML.Excel
         }
 
         #region IXLRangeBase Members
+
+#if STYLES_REWORK
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetStyle(value);
+        }
+#endif
 
         IXLRangeAddress IXLAddressable.RangeAddress
         {
@@ -163,6 +184,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLRangeBase Members
 
+#if !STYLES_REWORK
         #region IXLStylized Members
 
         public override IEnumerable<IXLRange> RangesUsed => new XLRanges(Worksheet) { AsRange() };
@@ -177,7 +199,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
-
+#endif
         #endregion Public properties
 
         #region IXLRangeBase Members
@@ -822,9 +844,9 @@ namespace ClosedXML.Excel
             }
 
             if (newFirstCellAddress.Worksheet != null)
-                return newFirstCellAddress.Worksheet.GetOrCreateRange(newRangeAddress, StyleValue);
+                return newFirstCellAddress.Worksheet.GetOrCreateRange(newRangeAddress);
             else if (Worksheet != null)
-                return Worksheet.GetOrCreateRange(newRangeAddress, StyleValue);
+                return Worksheet.GetOrCreateRange(newRangeAddress);
             else
                 return new XLRange(newRangeAddress, Style);
         }

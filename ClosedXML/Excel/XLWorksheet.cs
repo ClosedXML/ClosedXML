@@ -44,8 +44,13 @@ namespace ClosedXML.Excel
             : base(
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
-                    new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)),
+                    new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false))
+#if STYLES_REWORK
+                )
+#else
+                ,
                 ((XLStyle)workbook.Style).Value)
+#endif
         {
             Workbook = workbook;
             SheetId = sheetId;
@@ -129,6 +134,7 @@ namespace ClosedXML.Excel
             get { return _rangeFactory; }
         }
 
+#if !STYLES_REWORK
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -150,6 +156,7 @@ namespace ClosedXML.Excel
                     yield return Row(row);
             }
         }
+#endif
 
         internal Boolean RowHeightChanged { get; set; }
 
@@ -201,7 +208,7 @@ namespace ClosedXML.Excel
         /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
         public XLCellFormatValue? FormatValue { get; set; }
 
-        public XLCellFormat Format => XLCellFormat.ForWorksheet(this);
+        internal override XLCellFormat Format => XLCellFormat.ForWorksheet(this);
 
         #endregion
 
@@ -1950,12 +1957,10 @@ namespace ClosedXML.Excel
             return Worksheet.Internals.CellsCollection.GetUsedCell(point);
         }
 
-        public XLRange GetOrCreateRange(XLRangeAddress rangeAddress, XLStyleValue defaultStyle)
+        public XLRange GetOrCreateRange(XLRangeAddress rangeAddress)
         {
             var rangeKey = new XLRangeKey(XLRangeType.Range, rangeAddress);
             var range = _rangeRepository.GetOrCreate(ref rangeKey);
-            if (range.StyleValue == StyleValue)
-                range.StyleValue = defaultStyle;
 
             return (XLRange)range;
         }
@@ -2132,5 +2137,14 @@ namespace ClosedXML.Excel
 
             return null;
         }
+
+#if STYLES_REWORK
+        // TODO Styles: Replace with FormatValue during cut-over
+        internal XLStyleValue StyleValue
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+#endif
     }
 }

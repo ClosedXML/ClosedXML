@@ -1,8 +1,8 @@
-using ClosedXML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Excel.Formatting;
+using ClosedXML.Graphics;
 
 namespace ClosedXML.Excel
 {
@@ -19,7 +19,11 @@ namespace ClosedXML.Excel
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLRow(XLWorksheet worksheet, Int32 row)
+#if STYLES_REWORK
+            : base(XLRangeAddress.EntireRow(worksheet, row))
+#else
             : base(XLRangeAddress.EntireRow(worksheet, row), worksheet.StyleValue)
+#endif
         {
             SetRowNumber(row);
 
@@ -33,6 +37,7 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Row; }
         }
 
+#if !STYLES_REWORK
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -43,6 +48,7 @@ namespace ClosedXML.Excel
                     yield return cell;
             }
         }
+#endif
 
         public Boolean Collapsed
         {
@@ -537,7 +543,7 @@ namespace ClosedXML.Excel
         /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
         public XLCellFormatValue? FormatValue { get; set; }
 
-        public XLCellFormat Format => XLCellFormat.ForRow(this);
+        internal override XLCellFormat Format => XLCellFormat.ForRow(this);
 
         #endregion
 
@@ -669,6 +675,15 @@ namespace ClosedXML.Excel
         {
             return false;
         }
+
+#if STYLES_REWORK
+        // TODO Styles: Replace with FormatValue during cut-over
+        public XLStyleValue StyleValue
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+#endif
 
         /// <summary>
         /// Flag enum to save space, instead of wasting byte for each flag.

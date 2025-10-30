@@ -14,7 +14,11 @@ namespace ClosedXML.Excel
         /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLColumn(XLWorksheet worksheet, Int32 column)
+#if STYLES_REWORK
+            : base(XLRangeAddress.EntireColumn(worksheet, column))
+#else
             : base(XLRangeAddress.EntireColumn(worksheet, column), worksheet.StyleValue)
+#endif
         {
             SetColumnNumber(column);
 
@@ -31,6 +35,7 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Column; }
         }
 
+#if !STYLES_REWORK
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -40,6 +45,7 @@ namespace ClosedXML.Excel
                     yield return cell;
             }
         }
+#endif
 
         public Boolean Collapsed { get; set; }
 
@@ -462,7 +468,7 @@ namespace ClosedXML.Excel
         /// <inheritdoc cref="IXLFormatContainer.FormatValue"/>
         public XLCellFormatValue? FormatValue { get; set; }
 
-        public XLCellFormat Format => XLCellFormat.ForColumn(this);
+        internal override XLCellFormat Format => XLCellFormat.ForColumn(this);
 
         #endregion
 
@@ -597,5 +603,14 @@ namespace ClosedXML.Excel
         {
             return true;
         }
+
+#if STYLES_REWORK
+        // TODO Styles: Replace with FormatValue during cut-over
+        internal XLStyleValue StyleValue
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+#endif
     }
 }
