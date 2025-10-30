@@ -78,8 +78,46 @@ internal sealed partial class XLFontCellFormat : IXLFont
 
     bool IEquatable<IXLFont>.Equals(IXLFont? other)
     {
-        // TODO Styles: Implement remaining format properties by using IXLFont contract. Deal somehow with Extend and Condense.
-        throw new NotImplementedException();
+        if (other is null)
+            return false;
+
+        if (Bold != other.Bold)
+            return false;
+
+        if (Italic != other.Italic)
+            return false;
+
+        if (Underline != other.Underline)
+            return false;
+
+        if (Strikethrough != other.Strikethrough)
+            return false;
+
+        if (VerticalAlignment != other.VerticalAlignment)
+            return false;
+
+        if (Shadow != other.Shadow)
+            return false;
+
+        if (!Size.Points.Equals(other.FontSize))
+            return false;
+
+        if (Color != other.FontColor)
+            return false;
+
+        if (Name != other.FontName)
+            return false;
+
+        if (Family != other.FontFamilyNumbering)
+            return false;
+
+        if (Charset != other.FontCharSet)
+            return false;
+
+        if (Scheme != other.FontScheme)
+            return false;
+
+        return true;
     }
 
     IXLStyle IXLFont.SetBold()

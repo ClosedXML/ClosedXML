@@ -88,6 +88,39 @@ namespace ClosedXML.Tests.Excel.Styles
             Assert.AreEqual(XLFontScheme.Minor, copiedFont.FontScheme);
         }
 
+        [Test]
+        public void Font_can_be_checked_for_equality()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var testFont = ws.Cell("A1").Style.Font;
+            var equalFont = ws.Cell("A2").Style.Font;
+
+            Assert.AreEqual(testFont, equalFont);
+            var makeDifferentFont = new Action<IXLFont>[]
+            {
+                x => x.Bold = !x.Bold,
+                x => x.Italic = !x.Italic,
+                x => x.Underline = XLFontUnderlineValues.DoubleAccounting,
+                x => x.Strikethrough = !x.Strikethrough,
+                x => x.VerticalAlignment = XLFontVerticalTextAlignmentValues.Superscript,
+                x => x.Shadow = !x.Shadow,
+                x => x.FontSize = 25,
+                x => x.FontColor = XLColor.Blue,
+                x => x.FontName = "Arial",
+                x => x.FontFamilyNumbering = XLFontFamilyNumberingValues.Decorative,
+                x => x.FontCharSet = XLFontCharSet.Arabic,
+                x => x.FontScheme = XLFontScheme.Minor,
+            };
+            var cell = ws.Cell("A3");
+            foreach (var modify in makeDifferentFont)
+            {
+                modify(cell.Style.Font);
+                Assert.AreNotEqual(testFont, cell.Style.Font);
+                cell = cell.CellRight();
+            }
+        }
+
         private static IEnumerable<object> FontProperties()
         {
             yield return new FontTestCase<bool>(font => font.Bold, (font, value) => font.Bold = value, true, false);
