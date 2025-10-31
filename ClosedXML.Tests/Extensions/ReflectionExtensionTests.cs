@@ -15,9 +15,13 @@ namespace ClosedXML.Tests.Extensions
             }
 
             public static int StaticProperty { get; set; }
-            public static int StaticField;
+            public static int StaticField = 0;
 
-            public static event EventHandler<EventArgs> StaticEvent;
+            public static event EventHandler<EventArgs> StaticEvent
+            {
+                add => _ = value;
+                remove => _ = value;
+            }
 
             public static void StaticMethod()
             {
@@ -25,14 +29,14 @@ namespace ClosedXML.Tests.Extensions
 
             public const int Const = 100;
 
-            public TestClass()
-            {
-            }
-
             public int InstanceProperty { get; set; }
-            public int InstanceField;
+            public int InstanceField = 0;
 
-            public event EventHandler<EventArgs> InstanceEvent;
+            public event EventHandler<EventArgs> InstanceEvent
+            {
+                add => _ = value;
+                remove => _ = value;
+            }
 
             public void InstanceMethod()
             {
