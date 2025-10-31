@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using Path = System.IO.Path;
 
@@ -31,7 +32,7 @@ namespace ClosedXML.Tests
 
         private const bool CompareWithResources = true;
 
-        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(".Resource.");
+        private static readonly ResourceFileExtractor _extractor = new(Assembly.GetExecutingAssembly(), ".Resource.");
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
