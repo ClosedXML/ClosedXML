@@ -28,6 +28,8 @@ namespace ClosedXML.Excel
 
     public partial class XLColor : IEquatable<XLColor>
     {
+        internal Boolean IsAuto => !HasValue;
+
         public Boolean HasValue { get; private set; }
 
         public XLColorType ColorType

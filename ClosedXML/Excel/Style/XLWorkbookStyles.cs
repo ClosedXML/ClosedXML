@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Excel.Formatting;
 using ClosedXML.Utils;
@@ -314,6 +313,16 @@ internal class XLWorkbookStyles
             return existingFont;
 
         AddFontFormat(modified);
+        return modified;
+    }
+
+    internal XLFillFormatValue GetRegisteredFillFormat(XLFillFormatValue original, Func<XLFillFormatValue, XLFillFormatValue> modify)
+    {
+        var modified = modify(original);
+        if (_fillFormats.TryGetValue(modified, out var existingFill))
+            return existingFill;
+
+        AddFillFormat(modified);
         return modified;
     }
 

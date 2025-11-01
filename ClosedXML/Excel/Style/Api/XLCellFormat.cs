@@ -25,6 +25,8 @@ internal partial class XLCellFormat
 
     internal XLFontCellFormat Font => new(this);
 
+    internal XLFillCellFormat Fill => new(this);
+    
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
@@ -191,6 +193,17 @@ internal partial class XLCellFormat
         {
             var modifiedFont = styles.GetRegisteredFontFormat(format.Font, font => modifyFont(font, value));
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Font = modifiedFont });
+            return modifiedFormat;
+        });
+    }
+
+    internal void ModifyFill<TProperty>(Func<XLFillFormatValue, TProperty, XLFillFormatValue> modifyFill, TProperty value)
+    {
+        var styles = _workbook.Styles;
+        Modify(format =>
+        {
+            var modifiedFill = styles.GetRegisteredFillFormat(format.Fill, fill => modifyFill(fill, value));
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Fill = modifiedFill });
             return modifiedFormat;
         });
     }

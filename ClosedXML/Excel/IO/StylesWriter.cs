@@ -345,8 +345,12 @@ internal class StylesWriter
             var patternColor = patternFill.PatternColor;
             var bgColor = patternFill.BackgroundColor;
 
-            // Fix solid pattern discrepancy for dxf
-            if (isDxf && patternFill.PatternType == XLFillPatternValues.Solid)
+            // Fix solid pattern discrepancy. The GUI shows solid fill color in the background
+            // color picker, so it would be expected that it is stored in bgColor.
+            // * internal structures store solid fill color in the 'IXLFill.BackgroundColor'
+            // * For cell format, the 'patternFill' element stores it in the *fgColor*, not bgColor
+            // * For dxf, the 'patternFill' stores it in the *bgColor*
+            if (!isDxf && patternFill.PatternType == XLFillPatternValues.Solid)
             {
                 (patternColor, bgColor) = (bgColor, patternColor);
             }

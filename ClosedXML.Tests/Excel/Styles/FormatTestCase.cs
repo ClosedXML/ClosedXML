@@ -23,6 +23,11 @@ public class FormatTestCase<TApi>
         return new FormatTestCase<IXLFont>(font => getter(font), (font, value) => setter(font, (T)value), testValues.Cast<object>().ToArray());
     }
 
+    public static FormatTestCase<IXLFill> ForFill<T>(Func<IXLFill, T> getter, Action<IXLFill, T> setter, params T[] testValues)
+    {
+        return new FormatTestCase<IXLFill>(fill => getter(fill), (fill, value) => setter(fill, (T)value), testValues.Cast<object>().ToArray());
+    }
+
     public IEnumerable<object> Values => _testValues;
 
     public object GetPropertyValue(TApi font)

@@ -1,11 +1,49 @@
 using ClosedXML.Excel;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
+using System.Collections.Generic;
+using ClosedXML.Tests.Excel.Styles;
 
 namespace ClosedXML.Tests.Excel
 {
     [TestFixture]
     public class XLFillTests
     {
+        [Test]
+        [TestCaseSource(nameof(FillApiSetters))]
+        public void Fill_property_can_be_individually_set(FormatTestCase<IXLFill> testCase)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Set two-color pattern, so setting individual property doesn't trigger special logic
+            var cellFormat = ws.Cell("B2").Style
+                    .Fill.SetPatternType(XLFillPatternValues.LightGrid)
+                    .Fill.SetBackgroundColor(XLColor.Aqua)
+                    .Fill.SetPatternColor(XLColor.Lemon);
+
+            foreach (var testValue in testCase.Values)
+            {
+                testCase.SetPropertyValue(cellFormat.Fill, testValue);
+                var setValue = testCase.GetPropertyValue(cellFormat.Fill);
+                Assert.AreEqual(testValue, setValue);
+            }
+        }
+
+        private static IEnumerable<FormatTestCase<IXLFill>> FillApiSetters()
+        {
+            var patternValues = EnumPolyfill.GetValues<XLFillPatternValues>();
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.PatternType, (fill, value) => fill.PatternType = value, patternValues);
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.PatternType, (fill, value) => fill.SetPatternType(value), patternValues);
+
+            var colors = new[] { XLColor.Black, XLColor.Red, XLColor.Auto, XLColor.Transparent };
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.BackgroundColor, (fill, value) => fill.BackgroundColor = value, colors);
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.BackgroundColor, (fill, value) => fill.SetBackgroundColor(value), colors);
+
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.PatternColor, (fill, value) => fill.PatternColor = value, colors);
+            yield return FormatTestCase<IXLFill>.ForFill(fill => fill.PatternColor, (fill, value) => fill.SetPatternColor(value), colors);
+        }
+
         [Test]
         public void BackgroundColor_keeps_pattern_on_two_color_patterns()
         {
@@ -21,7 +59,7 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
-        public void BackgroundColor_sets_pattern_to_solid_on_pattern_none()
+        public void BackgroundColor_sets_pattern_to_solid_when_original_pattern_was_none()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -42,7 +80,7 @@ namespace ClosedXML.Tests.Excel
             fill.BackgroundColor = XLColor.Red;
             Assert.AreEqual(XLFillPatternValues.Solid, fill.PatternType);
 
-            fill.BackgroundColor = XLColor.Auto;
+            fill.BackgroundColor = XLColor.NoColor;
 
             Assert.AreEqual(XLFillPatternValues.None, fill.PatternType);
         }
