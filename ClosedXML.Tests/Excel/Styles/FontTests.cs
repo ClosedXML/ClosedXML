@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ClosedXML.Excel;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.Styles
@@ -131,7 +131,7 @@ namespace ClosedXML.Tests.Excel.Styles
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Italic, (font, value) => font.SetItalic(value), true, false);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Italic, (font, _) => font.SetItalic(), true);
 
-            var underlineValues = GetEnumValues<XLFontUnderlineValues>();
+            var underlineValues = EnumPolyfill.GetValues<XLFontUnderlineValues>();
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Underline, (font, value) => font.Underline = value, underlineValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Underline, (font, value) => font.SetUnderline(value), underlineValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Underline, (font, _) => font.SetUnderline(), XLFontUnderlineValues.Single);
@@ -140,7 +140,7 @@ namespace ClosedXML.Tests.Excel.Styles
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Strikethrough, (font, value) => font.SetStrikethrough(value), true, false);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.Strikethrough, (font, _) => font.SetStrikethrough(), true);
 
-            var valignValues = GetEnumValues<XLFontVerticalTextAlignmentValues>();
+            var valignValues = EnumPolyfill.GetValues<XLFontVerticalTextAlignmentValues>();
             yield return FormatTestCase<IXLFont>.ForFont(font => font.VerticalAlignment, (font, value) => font.VerticalAlignment = value, valignValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.VerticalAlignment, (font, value) => font.SetVerticalAlignment(value), valignValues);
 
@@ -157,24 +157,17 @@ namespace ClosedXML.Tests.Excel.Styles
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontName, (font, value) => font.FontName = value, "Calibri", "Arial", "Consolas");
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontName, (font, value) => font.SetFontName(value), "Calibri", "Arial", "Consolas");
 
-            var familyValues = GetEnumValues<XLFontFamilyNumberingValues>();
+            var familyValues = EnumPolyfill.GetValues<XLFontFamilyNumberingValues>();
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontFamilyNumbering, (font, value) => font.FontFamilyNumbering = value, familyValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontFamilyNumbering, (font, value) => font.SetFontFamilyNumbering(value), familyValues);
 
-            var charsetValues = GetEnumValues<XLFontCharSet>();
+            var charsetValues = EnumPolyfill.GetValues<XLFontCharSet>();
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontCharSet, (font, value) => font.FontCharSet = value, charsetValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontCharSet, (font, value) => font.SetFontCharSet(value), charsetValues);
 
-            var schemeValues = GetEnumValues<XLFontScheme>();
+            var schemeValues = EnumPolyfill.GetValues<XLFontScheme>();
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontScheme, (font, value) => font.FontScheme = value, schemeValues);
             yield return FormatTestCase<IXLFont>.ForFont(font => font.FontScheme, (font, value) => font.SetFontScheme(value), schemeValues);
-        }
-
-        // TODO: Replace with EnumPolyfill once Polyfill is updated
-        private static T[] GetEnumValues<T>()
-            where T : struct, Enum
-        {
-            return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
         }
     }
 }
