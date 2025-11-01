@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System.IO;
 
 namespace ClosedXML.Tests.Excel
 {
@@ -8,16 +7,43 @@ namespace ClosedXML.Tests.Excel
     public class XLFillTests
     {
         [Test]
-        public void BackgroundColorSetsPattern()
+        public void BackgroundColor_keeps_pattern_on_two_color_patterns()
         {
-            var fill = new XLFill { BackgroundColor = XLColor.Blue };
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var fill = ws.Cell("A1").Style.Fill;
+            fill.PatternType = XLFillPatternValues.LightGrid;
+            Assert.AreEqual(XLFillPatternValues.LightGrid, fill.PatternType);
+
+            fill.BackgroundColor = XLColor.Blue;
+
+            Assert.AreEqual(XLFillPatternValues.LightGrid, fill.PatternType);
+        }
+
+        [Test]
+        public void BackgroundColor_sets_pattern_to_solid_on_pattern_none()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var fill = ws.Cell("A1").Style.Fill;
+            Assert.AreEqual(XLFillPatternValues.None, fill.PatternType);
+
+            fill.BackgroundColor = XLColor.Blue;
+
             Assert.AreEqual(XLFillPatternValues.Solid, fill.PatternType);
         }
 
         [Test]
-        public void BackgroundNoColorSetsPatternNone()
+        public void BackgroundColor_set_to_transparent_color_sets_pattern_to_none()
         {
-            var fill = new XLFill { BackgroundColor = XLColor.NoColor };
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var fill = ws.Cell("A1").Style.Fill;
+            fill.BackgroundColor = XLColor.Red;
+            Assert.AreEqual(XLFillPatternValues.Solid, fill.PatternType);
+
+            fill.BackgroundColor = XLColor.Auto;
+
             Assert.AreEqual(XLFillPatternValues.None, fill.PatternType);
         }
 
@@ -102,16 +128,9 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void LoadAndSaveTransparentBackgroundFill()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
-            {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
-                    return wb;
-                }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
-            }
+            TestHelper.LoadSaveAndCompare(
+                @"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx",
+                @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
         }
 
         [Test]
