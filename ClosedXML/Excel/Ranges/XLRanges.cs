@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
             {
                 var sheet = Ranges.FirstOrDefault()?.Worksheet;
                 var areas = Ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
-                return XLCellFormat.ForCells(_workbook, areas, sheet);
+                return XLCellFormat.ForAreas(_workbook, areas, sheet);
             }
         }
 

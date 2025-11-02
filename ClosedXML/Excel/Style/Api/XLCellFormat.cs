@@ -66,6 +66,11 @@ internal partial class XLCellFormat
     /// </summary>
     private bool DefaultFormat { get; init; }
 
+    /// <summary>
+    /// A flag indicating API object is for XLCells. It has custom outside/inside borders behavior.
+    /// </summary>
+    private bool IsCells { get; init; }
+
     internal static XLCellFormat ForCell(XLCell cell)
     {
         var workbook = cell.Worksheet.Workbook;
@@ -142,12 +147,22 @@ internal partial class XLCellFormat
         };
     }
 
-    internal static XLCellFormat ForCells(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
+    internal static XLCellFormat ForAreas(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
     {
         var formatValue = new Hierarchy(workbook, sheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
         {
             Areas = areas
+        };
+    }
+
+    internal static XLCellFormat ForCells(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
+    {
+        var formatValue = new Hierarchy(workbook, sheet?.Name, null, null, null);
+        return new XLCellFormat(workbook, formatValue)
+        {
+            Areas = areas,
+            IsCells = true
         };
     }
 
@@ -223,9 +238,29 @@ internal partial class XLCellFormat
 
     internal void ModifyOuterBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
     {
+        var styles = _workbook.Styles;
+        if (IsCells)
+        {
+            var setAll = GetModifyBorderFunc(border => border with
+            {
+                Left = modify(border.Left, value),
+                Top = modify(border.Top, value),
+                Right = modify(border.Right, value),
+                Bottom = modify(border.Bottom, value),
+            }, styles);
+            foreach (var (sheetName, area) in Areas)
+            {
+                if (!_workbook.TryGetWorksheet(sheetName, out XLWorksheet worksheet))
+                    continue;
+
+                ApplyToAll(area, setAll, worksheet);
+            }
+
+            return;
+        }
+
         // Change only top and bottom border of a row. The style is used by non-materialized cells
         // in a row and will be used by non-materialized cells in a row. Same applies to columns.
-        var styles = _workbook.Styles;
         var setTopAndBottom = GetModifyBorderFunc(border => border with
         {
             Top = modify(border.Top, value),
@@ -240,8 +275,8 @@ internal partial class XLCellFormat
         }, styles);
         ModifyColumnsBorder(setLeftAndRight);
 
-        // Set outer border to areas. Don't use UsedAreas, they are for columns/rows. Worksheet
-        // doesn't have outer border.
+        // A normal path for range API object (except XLCells). Set outer border to areas.
+        // Don't use UsedAreas, they are for columns/rows. Worksheet doesn't have outer border.
         var setLeft = GetModifyBorderFunc(border => border with { Left = modify(border.Left, value) }, styles);
         var setTop = GetModifyBorderFunc(border => border with { Top = modify(border.Top, value) }, styles);
         var setRight = GetModifyBorderFunc(border => border with { Right = modify(border.Right, value) }, styles);
@@ -274,6 +309,10 @@ internal partial class XLCellFormat
 
     internal void ModifyInnerBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
     {
+        // Shortcut for XLCells - it has no inner borders
+        if (IsCells)
+            return;
+
         var styles = _workbook.Styles;
         var setLeftAndRight = GetModifyBorderFunc(border => border with
         {

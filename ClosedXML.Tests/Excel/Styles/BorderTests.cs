@@ -31,7 +31,7 @@ namespace ClosedXML.Tests.Excel.Styles
             ws.Range("B2:C2").Style.Border.SetInsideBorder(XLBorderStyleValues.None);
 
             AssertCellBorder(ws, "B2", Left | Top | Bottom, XLBorderStyleValues.Thin);
-            AssertCellBorder(ws, "C2", Right| Top | Bottom, XLBorderStyleValues.Thin);
+            AssertCellBorder(ws, "C2", Right | Top | Bottom, XLBorderStyleValues.Thin);
             Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("B2").Style.Border.LeftBorderColor.ThemeColor);
             Assert.AreEqual(XLThemeColor.Accent1, ws.Cell("C2").Style.Border.RightBorderColor.ThemeColor);
         }

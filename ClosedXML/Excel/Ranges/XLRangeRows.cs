@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
             get
             {
                 var areas = _ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
-                return XLCellFormat.ForCells(_worksheet.Workbook, areas, null);
+                return XLCellFormat.ForAreas(_worksheet.Workbook, areas, null);
             }
         }
 
