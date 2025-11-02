@@ -17,8 +17,8 @@ internal partial class XLCellFormat : IXLStyle
 
     IXLBorder IXLStyle.Border
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Border;
+        set => Border.SetValue(value);
     }
 
     IXLNumberFormat IXLStyle.DateFormat => throw new NotImplementedException();

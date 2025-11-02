@@ -26,7 +26,9 @@ internal partial class XLCellFormat
     internal XLFontCellFormat Font => new(this);
 
     internal XLFillCellFormat Fill => new(this);
-    
+
+    internal XLBorderCellFormat Border => new(this);
+
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
@@ -206,6 +208,158 @@ internal partial class XLCellFormat
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Fill = modifiedFill });
             return modifiedFormat;
         });
+    }
+
+    internal void ModifyBorder<TProperty>(Func<XLBorderFormatValue, TProperty, XLBorderFormatValue> modifyBorder, TProperty value)
+    {
+        var styles = _workbook.Styles;
+        Modify(format =>
+        {
+            var modifiedBorder = styles.GetRegisteredBorderFormat(format.Border, border => modifyBorder(border, value));
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Border = modifiedBorder });
+            return modifiedFormat;
+        });
+    }
+
+    internal void ModifyOuterBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
+    {
+        // Change only top and bottom border of a row. The style is used by non-materialized cells
+        // in a row and will be used by non-materialized cells in a row. Same applies to columns.
+        var styles = _workbook.Styles;
+        var setTopAndBottom = GetModifyBorderFunc(border => border with
+        {
+            Top = modify(border.Top, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+        ModifyRowsBorder(setTopAndBottom);
+
+        var setLeftAndRight = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Right = modify(border.Right, value),
+        }, styles);
+        ModifyColumnsBorder(setLeftAndRight);
+
+        // Set outer border to areas. Don't use UsedAreas, they are for columns/rows. Worksheet
+        // doesn't have outer border.
+        var setLeft = GetModifyBorderFunc(border => border with { Left = modify(border.Left, value) }, styles);
+        var setTop = GetModifyBorderFunc(border => border with { Top = modify(border.Top, value) }, styles);
+        var setRight = GetModifyBorderFunc(border => border with { Right = modify(border.Right, value) }, styles);
+        var setBottom = GetModifyBorderFunc(border => border with { Bottom = modify(border.Bottom, value) }, styles);
+        foreach (var area in Areas)
+        {
+            if (!_workbook.TryGetWorksheet(area.Name, out XLWorksheet worksheet))
+                continue;
+
+            var formatResolver = new FormatResolver(worksheet);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+
+            // Left side
+            var left = area.Area.SliceFromLeft(1);
+            cellsCollection.ApplyFormatOnAll(left, setLeft, formatResolver.Resolve);
+
+            // Top side
+            var top = area.Area.SliceFromTop(1);
+            cellsCollection.ApplyFormatOnAll(top, setTop, formatResolver.Resolve);
+
+            // Right side
+            var right = area.Area.SliceFromRight(1);
+            cellsCollection.ApplyFormatOnAll(right, setRight, formatResolver.Resolve);
+
+            // Bottom side
+            var bottom = area.Area.SliceFromBottom(1);
+            cellsCollection.ApplyFormatOnAll(bottom, setBottom, formatResolver.Resolve);
+        }
+    }
+
+    internal void ModifyInnerBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
+    {
+        var styles = _workbook.Styles;
+        var setLeftAndRight = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Right = modify(border.Right, value),
+        }, styles);
+        ModifyRowsBorder(setLeftAndRight);
+
+        var setTopAndBottom = GetModifyBorderFunc(border => border with
+        {
+            Top = modify(border.Top, value),
+            Bottom = modify(border.Bottom, value)
+        }, styles);
+        ModifyColumnsBorder(setTopAndBottom);
+
+        var setLeft = GetModifyBorderFunc(border => border with { Left = modify(border.Left, value) }, styles);
+        var setTop = GetModifyBorderFunc(border => border with { Top = modify(border.Top, value) }, styles);
+        var setRight = GetModifyBorderFunc(border => border with { Right = modify(border.Right, value) }, styles);
+        var setBottom = GetModifyBorderFunc(border => border with { Bottom = modify(border.Bottom, value) }, styles);
+        foreach (var (sheetName, area) in Areas)
+        {
+            if (!_workbook.TryGetWorksheet(sheetName, out XLWorksheet worksheet))
+                continue;
+
+            var formatResolver = new FormatResolver(worksheet);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+
+            // Setting line from both sides is not super useful, but keeps internal state consistent.
+            if (area.Width > 1)
+            {
+                cellsCollection.ApplyFormatOnAll(area.SliceFromLeft(area.Width - 1), setRight, formatResolver.Resolve);
+                cellsCollection.ApplyFormatOnAll(area.SliceFromRight(area.Width - 1), setLeft, formatResolver.Resolve);
+            }
+
+            if (area.Height > 1)
+            {
+                cellsCollection.ApplyFormatOnAll(area.SliceFromTop(area.Height - 1), setBottom, formatResolver.Resolve);
+                cellsCollection.ApplyFormatOnAll(area.SliceFromBottom(area.Height - 1), setTop, formatResolver.Resolve);
+            }
+        }
+    }
+
+    private static Func<XLCellFormatValue, XLCellFormatValue> GetModifyBorderFunc(Func<XLBorderFormatValue, XLBorderFormatValue> modifyBorder, XLWorkbookStyles styles)
+    {
+        return format =>
+        {
+            var modifiedBorder = styles.GetRegisteredBorderFormat(format.Border, modifyBorder);
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Border = modifiedBorder });
+            return modifiedFormat;
+        };
+    }
+
+    private void ModifyRowsBorder(Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    {
+        foreach (var rowArea in Rows)
+        {
+            if (!_workbook.TryGetWorksheet(rowArea.Name, out XLWorksheet worksheet))
+                continue;
+
+            // Row style is used by non-materialized cells in a row...
+            var row = worksheet.Row(rowArea.RowNumber);
+            ApplyColRowFormat(row, modifyBorder, worksheet);
+
+            // ... and materialized cells in a row have format explicitly set.
+            var formatResolver = new FormatResolver(worksheet);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+            cellsCollection.ApplyFormatOnUsed(rowArea.Area.Area, modifyBorder, formatResolver.Resolve);
+        }
+    }
+
+    private void ModifyColumnsBorder(Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    {
+        foreach (var columnArea in Columns)
+        {
+            if (!_workbook.TryGetWorksheet(columnArea.Name, out XLWorksheet worksheet))
+                continue;
+
+            // Column style is used by non-materialized cells in a column...
+            var column = worksheet.Column(columnArea.ColumNumber);
+            ApplyColRowFormat(column, modifyBorder, worksheet);
+
+            // ... and materialized cells in a column have format explicitly set.
+            var formatResolver = new FormatResolver(worksheet);
+            var cellsCollection = worksheet.Internals.CellsCollection;
+            cellsCollection.ApplyFormatOnUsed(columnArea.Area.Area, modifyBorder, formatResolver.Resolve);
+        }
     }
 
     private void Modify(Func<XLCellFormatValue, XLCellFormatValue> modifyFormat)

@@ -228,9 +228,15 @@ internal class XLCells :
         get
         {
             // For backwards compatibility, the sheet is considered the inner style. A terrible
-            // choice, but it is what it is.
+            // choice, but it is what it is. We have to deal with individual cells, only because
+            // of borders. Original code considered each cell as an individual region and
+            // outside/inside borders should treat it as such.
+            // TODO Styles: Make a custom factory and adjust Inside/OutsideBorder code
             var sheet = _rangeAddresses.Select(x => x.Worksheet).FirstOrDefault(x => x is not null);
-            var areas = _rangeAddresses.Select(XLBookArea.From).ToArray();
+            var areas = _rangeAddresses.Select(XLBookArea.From)
+                .SelectMany(x => x)
+                .Select(point => new XLBookArea(point.SheetName, new XLSheetRange(point.Point)))
+                .ToArray();
             return XLCellFormat.ForCells(_workbook, areas, sheet);
         }
     }

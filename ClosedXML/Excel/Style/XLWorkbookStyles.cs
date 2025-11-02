@@ -326,6 +326,16 @@ internal class XLWorkbookStyles
         return modified;
     }
 
+    internal XLBorderFormatValue GetRegisteredBorderFormat(XLBorderFormatValue original, Func<XLBorderFormatValue, XLBorderFormatValue> modify)
+    {
+        var modified = modify(original);
+        if (_borderFormats.TryGetValue(modified, out var existingFill))
+            return existingFill;
+
+        AddBorderFormat(modified);
+        return modified;
+    }
+
     internal XLCellFormatValue GetRegisteredCellFormat(XLCellFormatValue original, Func<XLCellFormatValue, XLCellFormatValue> modify)
     {
         var modified = modify(original);
