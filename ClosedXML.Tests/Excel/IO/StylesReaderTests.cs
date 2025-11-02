@@ -392,7 +392,7 @@ internal class StylesReaderTests
             Assert.AreEqual(XLFillPatternValues.LightGrid, style.Fill.Pattern?.PatternType);
 
             Assert.AreSame(styles.Borders[0], style.Border);
-            Assert.AreEqual(XLBorderStyleValues.Double, style.Border.Bottom?.Style);
+            Assert.AreEqual(XLBorderStyleValues.Double, style.Border.Bottom.Style);
 
             // All apply* are true or default (true) -> everything should be overwritten
             Assert.AreEqual(CellFormatComponents.All, style.IncludedComponents);
@@ -564,11 +564,11 @@ internal class StylesReaderTests
                 Assert.AreEqual(XLFillPatternValues.LightGrid, dxf.Fill?.Pattern?.PatternType);
                 Assert.AreEqual(XLColor.FromRgb(0x0000FF), dxf.Fill.Pattern.PatternColor);
                 Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Fill.Pattern.BackgroundColor);
-                Assert.AreEqual(XLBorderStyleValues.Thin, dxf.Border?.Right?.Style);
-                Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Border?.Right?.Color);
-                Assert.IsNull(dxf.Border.Left);
-                Assert.IsNull(dxf.Border.Top);
-                Assert.IsNull(dxf.Border.Bottom);
+                Assert.AreEqual(XLBorderStyleValues.Thin, dxf.Border?.Right.Style);
+                Assert.AreEqual(XLColor.FromRgb(0x00FF00), dxf.Border?.Right.Color);
+                Assert.AreEqual(XLBorderLine.None, dxf.Border.Left);
+                Assert.AreEqual(XLBorderLine.None, dxf.Border.Top);
+                Assert.AreEqual(XLBorderLine.None, dxf.Border.Bottom);
             });
     }
 

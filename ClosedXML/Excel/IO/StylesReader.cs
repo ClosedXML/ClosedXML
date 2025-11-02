@@ -509,13 +509,13 @@ internal partial class StylesReader
     {
         var borderFormat = new XLBorderFormatValue
         {
-            Left = left,
-            Right = right,
-            Top = top,
-            Bottom = bottom,
-            Diagonal = diagonal,
-            Vertical = vertical,
-            Horizontal = horizontal,
+            Left = left ?? XLBorderLine.None,
+            Right = right ?? XLBorderLine.None,
+            Top = top ?? XLBorderLine.None,
+            Bottom = bottom ?? XLBorderLine.None,
+            Diagonal = diagonal ?? XLBorderLine.None,
+            Vertical = vertical ?? XLBorderLine.None,
+            Horizontal = horizontal ?? XLBorderLine.None,
             DiagonalUp = diagonalUp ?? false, // OI-29500: Excel uses false as default value
             DiagonalDown = diagonalDown ?? false, // OI-29500: Excel uses false as default value
             Outline = outline
