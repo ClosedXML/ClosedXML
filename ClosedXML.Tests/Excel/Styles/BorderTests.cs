@@ -109,6 +109,7 @@ namespace ClosedXML.Tests.Excel.Styles
         }
 
         [Test, Ignore("Performance reasons")] // TODO Styles: Enable after switch
+        [Timeout(100)]
         public void OutsideBorder_for_columns()
         {
             using var wb = new XLWorkbook();
@@ -138,6 +139,7 @@ namespace ClosedXML.Tests.Excel.Styles
         }
 
         [Test, Ignore("Performance reasons")] // TODO Styles: Enable after switch
+        [Timeout(100)]
         public void InsideBorder_for_columns()
         {
             using var wb = new XLWorkbook();
