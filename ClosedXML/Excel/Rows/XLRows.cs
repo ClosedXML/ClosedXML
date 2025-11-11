@@ -235,8 +235,7 @@ namespace ClosedXML.Excel
                     return XLCellFormat.ForWorksheet(_worksheet);
                 }
 
-                var rows = Rows.Select(x => x.Area).ToArray();
-                return XLCellFormat.ForRows(_workbook, _defaultStyleSheet, rows);
+                return XLCellFormat.ForRows(_workbook, _defaultStyleSheet, Rows);
 
             }
         }

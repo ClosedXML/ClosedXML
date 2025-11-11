@@ -110,7 +110,7 @@ namespace ClosedXML.Tests.Excel.Styles
 
         [Test, Ignore("Performance reasons")] // TODO Styles: Enable after switch
         [Timeout(100)]
-        public void OutsideBorder_for_columns()
+        public void OutsideBorder_for_column()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -140,7 +140,7 @@ namespace ClosedXML.Tests.Excel.Styles
 
         [Test, Ignore("Performance reasons")] // TODO Styles: Enable after switch
         [Timeout(100)]
-        public void InsideBorder_for_columns()
+        public void InsideBorder_for_one_column()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -200,7 +200,7 @@ namespace ClosedXML.Tests.Excel.Styles
         }
 
         [Test]
-        public void InsideBorder_for_rows()
+        public void InsideBorder_for_one_row()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -228,6 +228,35 @@ namespace ClosedXML.Tests.Excel.Styles
             // TODO Styles: Enable after switch, repository makes a mess with equality
             // AssertCellBorder(ws, "A2", Left | Right, XLBorderStyleValues.Thick, XLColor.Red);
             // AssertCellBorder(ws, "C2", Left | Right, XLBorderStyleValues.Thick, XLColor.Red);
+        }
+
+        [Test, Ignore("Fixes #2517 in styles rework")] // TODO Styles: Enable after style rework switch
+        public void InsideBorder_for_multirow_rowspans()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Reordered 2-3,5-7 - It can be in any order, duplicates are allowed in row specification string
+            ws.Rows("6,2,7,6,3,5,7").Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+
+            AssertInsideBorderTopRow(2);
+            AssertInsideBorderBottomRow(3);
+
+            AssertInsideBorderTopRow(5);
+            AssertInsideBorderCenterRow(6);
+            AssertInsideBorderBottomRow(7);
+            return;
+
+            void AssertInsideBorderTopRow(int row) => AssertRow(row, Left | Bottom | Right);
+            void AssertInsideBorderCenterRow(int row) => AssertRow(row, All);
+            void AssertInsideBorderBottomRow(int row) => AssertRow(row, Left | Top | Right);
+
+            void AssertRow(int row, int sides)
+            {
+                AssertCellBorder(ws, $"A{row}", sides, XLBorderStyleValues.Thin);
+                AssertCellBorder(ws, $"B{row}", sides, XLBorderStyleValues.Thin);
+                AssertCellBorder(ws, $"Z{row}", sides, XLBorderStyleValues.Thin);
+            }
         }
 
         [Test]

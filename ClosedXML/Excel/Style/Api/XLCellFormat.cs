@@ -50,9 +50,9 @@ internal partial class XLCellFormat
 
     /// <summary>
     /// Formatting is updated for these rows. This doesn't update cells within the rows, only
-    /// the rows themselves.
+    /// the rows themselves. The values are unique rows, sorted by row number in ascending order.
     /// </summary>
-    private IReadOnlyList<XLRowArea> Rows { get; init; } = Array.Empty<XLRowArea>();
+    private XLRowArea[] Rows { get; init; } = Array.Empty<XLRowArea>();
 
     /// <summary>
     /// Formatting is updated for these worksheets. This doesn't update cells within the sheets, only
@@ -118,13 +118,14 @@ internal partial class XLCellFormat
         };
     }
 
-    internal static XLCellFormat ForRows(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLRowArea> rows)
+    internal static XLCellFormat ForRows(XLWorkbook workbook, XLWorksheet? formatValueSheet, IEnumerable<XLRow> rows)
     {
+        var rowAreas = rows.Select(x => x.Area).Distinct().OrderBy(x => x.RowNumber).ToArray();
         var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
         {
-            Rows = rows,
-            UsedAreas = rows.Select(x => x.Area).ToArray()
+            Rows = rowAreas,
+            UsedAreas = rowAreas.Select(x => x.Area).ToArray()
         };
     }
 
@@ -267,7 +268,7 @@ internal partial class XLCellFormat
             Top = modify(border.Top, value),
             Bottom = modify(border.Bottom, value),
         }, styles);
-        ModifyRowsBorder(setTopAndBottom);
+        ModifyRowsBorder(Rows, setTopAndBottom);
 
         var setLeftAndRight = GetModifyBorderFunc(border => border with
         {
@@ -315,12 +316,7 @@ internal partial class XLCellFormat
             return;
 
         var styles = _workbook.Styles;
-        var setLeftAndRight = GetModifyBorderFunc(border => border with
-        {
-            Left = modify(border.Left, value),
-            Right = modify(border.Right, value),
-        }, styles);
-        ModifyRowsBorder(setLeftAndRight);
+        ModifyInsideBordersOfRows(styles, modify, value);
 
         var setTopAndBottom = GetModifyBorderFunc(border => border with
         {
@@ -366,9 +362,70 @@ internal partial class XLCellFormat
         };
     }
 
-    private void ModifyRowsBorder(Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    private void ModifyInsideBordersOfRows<TProperty>(XLWorkbookStyles styles, Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
     {
-        foreach (var rowArea in Rows)
+        // For a single row, only the left are right border are counted as "inside". The top and bottom border touch the outside.
+        var setLeftAndRight = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Right = modify(border.Right, value),
+        }, styles);
+
+        // For multi-row rowspan, there are three different patterns:
+        // Multi-row rowspan - top row
+        var setLeftRightBottom = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Right = modify(border.Right, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+
+        // Multi-row rowspan - center rows. There isn't a center row in 2-row rowspan
+        var setAll = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Top = modify(border.Top, value),
+            Right = modify(border.Right, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+
+        // Multi-row rowspan - bottom row
+        var setLeftTopRight = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Top = modify(border.Top, value),
+            Right = modify(border.Right, value),
+        }, styles);
+
+        // Set border for each rowspan
+        for (var i = 0; i < Rows.Length; ++i)
+        {
+            // Find rowspan as a sequence of consecutive rows 
+            var startIndex = i;
+            var endIndex = i;
+            while (endIndex + 1 < Rows.Length && Rows[endIndex + 1].RowNumber == Rows[endIndex].RowNumber + 1)
+            {
+                endIndex += 1;
+            }
+
+            i = endIndex;
+            var rowSpanHeight = endIndex - startIndex + 1;
+            if (rowSpanHeight > 1)
+            {
+                ModifyRowsBorder(Rows.AsSpan(startIndex, 1), setLeftRightBottom);
+                ModifyRowsBorder(Rows.AsSpan(startIndex + 1, rowSpanHeight - 2), setAll);
+                ModifyRowsBorder(Rows.AsSpan(endIndex, 1), setLeftTopRight);
+            }
+            else
+            {
+                ModifyRowsBorder(Rows.AsSpan(startIndex, 1), setLeftAndRight);
+            }
+        }
+    }
+
+    private void ModifyRowsBorder(ReadOnlySpan<XLRowArea> rows, Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    {
+        foreach (var rowArea in rows)
         {
             if (!_workbook.TryGetWorksheet(rowArea.Name, out XLWorksheet worksheet))
                 continue;
