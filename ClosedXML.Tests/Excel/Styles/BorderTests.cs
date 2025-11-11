@@ -168,6 +168,35 @@ namespace ClosedXML.Tests.Excel.Styles
             AssertCellBorder(ws, "B3", Top | Bottom, XLBorderStyleValues.Thick, XLColor.Red);
         }
 
+        [Test, Ignore("Fixes #2517 in styles rework")] // TODO Styles: Enable after style rework switch
+        public void InsideBorder_for_multicolumn_colspans()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Reordered B-C,E-G - It can be in any order, duplicates are allowed in column specification string
+            ws.Columns("E,G,C,F,B,E,C").Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+
+            AssertInsideBorderLeftColumn('B');
+            AssertInsideBorderRightColumn('C');
+
+            AssertInsideBorderLeftColumn('E');
+            AssertInsideBorderCenterColumns('F');
+            AssertInsideBorderRightColumn('G');
+            return;
+
+            void AssertInsideBorderLeftColumn(char column) => AssertColumn(column, Top | Right | Bottom);
+            void AssertInsideBorderCenterColumns(char column) => AssertColumn(column, All);
+            void AssertInsideBorderRightColumn(char column) => AssertColumn(column, Left | Top | Bottom);
+
+            void AssertColumn(char column, int sides)
+            {
+                AssertCellBorder(ws, $"{column}1", sides, XLBorderStyleValues.Thin);
+                AssertCellBorder(ws, $"{column}2", sides, XLBorderStyleValues.Thin);
+                AssertCellBorder(ws, $"{column}10", sides, XLBorderStyleValues.Thin);
+            }
+        }
+
         [Test]
         public void OutsideBorder_for_rows()
         {

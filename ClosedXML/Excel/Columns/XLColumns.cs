@@ -247,8 +247,7 @@ namespace ClosedXML.Excel
                     return XLCellFormat.ForWorksheet(_worksheet);
                 }
 
-                var columns = Columns.Select(x => x.Area).ToArray();
-                return XLCellFormat.ForColumns(_workbook, _defaultStyleSheet, columns);
+                return XLCellFormat.ForColumns(_workbook, _defaultStyleSheet, Columns);
             }
         }
 

@@ -44,9 +44,10 @@ internal partial class XLCellFormat
 
     /// <summary>
     /// Formatting is updated for these columns. This doesn't update cells within the columns, only
-    /// the columns themselves.
+    /// the columns themselves. The values are unique columns, sorted by column number in ascending
+    /// order.
     /// </summary>
-    private IReadOnlyList<XLColumnArea> Columns { get; init; } = Array.Empty<XLColumnArea>();
+    private XLColumnArea[] Columns { get; init; } = Array.Empty<XLColumnArea>();
 
     /// <summary>
     /// Formatting is updated for these rows. This doesn't update cells within the rows, only
@@ -96,13 +97,14 @@ internal partial class XLCellFormat
         };
     }
 
-    internal static XLCellFormat ForColumns(XLWorkbook workbook, XLWorksheet? formatValueSheet, IReadOnlyList<XLColumnArea> columns)
+    internal static XLCellFormat ForColumns(XLWorkbook workbook, XLWorksheet? formatValueSheet, IEnumerable<XLColumn> columns)
     {
+        var columnAreas = columns.Select(x => x.Area).Distinct().OrderBy(x => x.ColumNumber).ToArray();
         var formatValue = new Hierarchy(workbook, formatValueSheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
         {
-            Columns = columns,
-            UsedAreas = columns.Select(x => x.Area).ToArray()
+            Columns = columnAreas,
+            UsedAreas = columnAreas.Select(x => x.Area).ToArray()
         };
     }
 
@@ -275,7 +277,7 @@ internal partial class XLCellFormat
             Left = modify(border.Left, value),
             Right = modify(border.Right, value),
         }, styles);
-        ModifyColumnsBorder(setLeftAndRight);
+        ModifyColumnsBorder(Columns, setLeftAndRight);
 
         // A normal path for range API object (except XLCells). Set outer border to areas.
         // Don't use UsedAreas, they are for columns/rows. Worksheet doesn't have an outer border.
@@ -317,13 +319,7 @@ internal partial class XLCellFormat
 
         var styles = _workbook.Styles;
         ModifyInsideBordersOfRows(styles, modify, value);
-
-        var setTopAndBottom = GetModifyBorderFunc(border => border with
-        {
-            Top = modify(border.Top, value),
-            Bottom = modify(border.Bottom, value)
-        }, styles);
-        ModifyColumnsBorder(setTopAndBottom);
+        ModifyInsideBordersOfColumns(styles, modify, value);
 
         var setLeft = GetModifyBorderFunc(border => border with { Left = modify(border.Left, value) }, styles);
         var setTop = GetModifyBorderFunc(border => border with { Top = modify(border.Top, value) }, styles);
@@ -441,9 +437,70 @@ internal partial class XLCellFormat
         }
     }
 
-    private void ModifyColumnsBorder(Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    private void ModifyInsideBordersOfColumns<TProperty>(XLWorkbookStyles styles, Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
     {
-        foreach (var columnArea in Columns)
+        // For a single column, only the top are bottom border are counted as "inside". The left and right border touch the outside.
+        var setTopAndBottom = GetModifyBorderFunc(border => border with
+        {
+            Top = modify(border.Top, value),
+            Bottom = modify(border.Bottom, value)
+        }, styles);
+
+        // For multi-column colspan, there are three different patterns:
+        // Multi-column colspan - left column
+        var setTopRightBottom = GetModifyBorderFunc(border => border with
+        {
+            Top = modify(border.Top, value),
+            Right = modify(border.Right, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+
+        // Multi-column colspan - center columns. There isn't a center column in 2-column colspan
+        var setAll = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Top = modify(border.Top, value),
+            Right = modify(border.Right, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+
+        // Multi-column colspan - right column
+        var setLeftTopBottom = GetModifyBorderFunc(border => border with
+        {
+            Left = modify(border.Left, value),
+            Top = modify(border.Top, value),
+            Bottom = modify(border.Bottom, value),
+        }, styles);
+
+        // Set border for each colspan
+        for (var i = 0; i < Columns.Length; ++i)
+        {
+            // Find colspan as a sequence of consecutive columns 
+            var startIndex = i;
+            var endIndex = i;
+            while (endIndex + 1 < Columns.Length && Columns[endIndex + 1].ColumNumber == Columns[endIndex].ColumNumber + 1)
+            {
+                endIndex += 1;
+            }
+
+            i = endIndex;
+            var colspanWidth = endIndex - startIndex + 1;
+            if (colspanWidth > 1)
+            {
+                ModifyColumnsBorder(Columns.AsSpan(startIndex, 1), setTopRightBottom);
+                ModifyColumnsBorder(Columns.AsSpan(startIndex + 1, colspanWidth - 2), setAll);
+                ModifyColumnsBorder(Columns.AsSpan(endIndex, 1), setLeftTopBottom);
+            }
+            else
+            {
+                ModifyColumnsBorder(Columns.AsSpan(startIndex, 1), setTopAndBottom);
+            }
+        }
+    }
+
+    private void ModifyColumnsBorder(ReadOnlySpan<XLColumnArea> columns, Func<XLCellFormatValue, XLCellFormatValue> modifyBorder)
+    {
+        foreach (var columnArea in columns)
         {
             if (!_workbook.TryGetWorksheet(columnArea.Name, out XLWorksheet worksheet))
                 continue;
