@@ -67,7 +67,8 @@ internal partial class XLCellFormat
     private bool DefaultFormat { get; init; }
 
     /// <summary>
-    /// A flag indicating API object is for XLCells. It has custom outside/inside borders behavior.
+    /// A flag indicating API object is for XLCells. Unlike other range API objects, the XLCells
+    /// has a non-standard outside/inside borders behavior.
     /// </summary>
     private bool IsCells { get; init; }
 
@@ -276,7 +277,7 @@ internal partial class XLCellFormat
         ModifyColumnsBorder(setLeftAndRight);
 
         // A normal path for range API object (except XLCells). Set outer border to areas.
-        // Don't use UsedAreas, they are for columns/rows. Worksheet doesn't have outer border.
+        // Don't use UsedAreas, they are for columns/rows. Worksheet doesn't have an outer border.
         var setLeft = GetModifyBorderFunc(border => border with { Left = modify(border.Left, value) }, styles);
         var setTop = GetModifyBorderFunc(border => border with { Top = modify(border.Top, value) }, styles);
         var setRight = GetModifyBorderFunc(border => border with { Right = modify(border.Right, value) }, styles);

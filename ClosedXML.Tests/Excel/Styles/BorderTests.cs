@@ -15,7 +15,7 @@ namespace ClosedXML.Tests.Excel.Styles
         private const int All = Left | Top | Right | Bottom;
 
         [Test]
-        public void InsideBorders_preserves_outside_borders()
+        public void InsideBorders_preserve_outside_borders()
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
@@ -279,7 +279,7 @@ namespace ClosedXML.Tests.Excel.Styles
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.BottomBorder, (border, value) => border.SetOutsideBorder(value), styleValues);
 
             // Outside border color - check that once set, all outer borders are set to the color
-            // Because of hash key adn repos, we must first set style other than none
+            // Because of hash key and repos, we must first set style other than none
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.LeftBorderColor, (border, value) => border.SetOutsideBorder(XLBorderStyleValues.Thin).Border.OutsideBorderColor = value, colors);
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.RightBorderColor, (border, value) => border.SetOutsideBorder(XLBorderStyleValues.Thin).Border.OutsideBorderColor = value, colors);
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.TopBorderColor, (border, value) => border.SetOutsideBorder(XLBorderStyleValues.Thin).Border.OutsideBorderColor = value, colors);
