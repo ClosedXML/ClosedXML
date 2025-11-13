@@ -232,12 +232,7 @@ internal partial class XLCellFormat
     internal void ModifyBorder<TProperty>(Func<XLBorderFormatValue, TProperty, XLBorderFormatValue> modifyBorder, TProperty value)
     {
         var styles = _workbook.Styles;
-        Modify(format =>
-        {
-            var modifiedBorder = styles.GetRegisteredBorderFormat(format.Border, border => modifyBorder(border, value));
-            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Border = modifiedBorder });
-            return modifiedFormat;
-        });
+        Modify(GetModifyBorderFunc(border => modifyBorder(border, value), styles));
     }
 
     internal void ModifyOuterBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)
@@ -352,7 +347,32 @@ internal partial class XLCellFormat
     {
         return format =>
         {
-            var modifiedBorder = styles.GetRegisteredBorderFormat(format.Border, modifyBorder);
+            var modifiedBorder = styles.GetRegisteredBorderFormat(format.Border, border =>
+            {
+                var modified = modifyBorder(border);
+
+                // Per original behavior, the non-visible border can't hold color state, e.g. when
+                // a border is set to from Thin to None and later changed back to Thick, it
+                // shouldn't remember the original color.
+                // That is not how Excel behaves and it makes everything harder (e.g. user can't
+                // set the border color first and then border style), but it is what it is.
+                if (!modified.Left.IsVisible)
+                    modified = modified with { Left = XLBorderLine.None };
+
+                if (!modified.Top.IsVisible)
+                    modified = modified with { Top = XLBorderLine.None };
+
+                if (!modified.Right.IsVisible)
+                    modified = modified with { Right = XLBorderLine.None };
+
+                if (!modified.Bottom.IsVisible)
+                    modified = modified with { Bottom = XLBorderLine.None };
+
+                if (!modified.Diagonal.IsVisible)
+                    modified = modified with { Diagonal = XLBorderLine.None };
+
+                return modified;
+            });
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Border = modifiedBorder });
             return modifiedFormat;
         };

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ClosedXML.Excel;
 using ClosedXML.Tests.Utils;
@@ -305,6 +306,47 @@ namespace ClosedXML.Tests.Excel.Styles
             }
         }
 
+        [TestCaseSource(nameof(BorderColorSetters))]
+        public void Color_is_set_only_when_border_is_visible(Func<IXLBorder, XLColor> getColor, Action<IXLBorder, XLColor> setColor, Action<IXLBorder, XLBorderStyleValues> setStyle)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var cell = ws.Cell("A1");
+            var defaultBorderColor = getColor(cell.Style.Border);
+            var color = XLColor.Red;
+
+            // Try and fail to set color, when border style is None.
+            setStyle(cell.Style.Border, XLBorderStyleValues.None);
+            setColor(cell.Style.Border, color);
+            Assert.AreEqual(defaultBorderColor, getColor(cell.Style.Border));
+
+            // Set color, when border style is visible.
+            setStyle(cell.Style.Border, XLBorderStyleValues.Thin);
+            setColor(cell.Style.Border, color);
+            Assert.AreEqual(color, getColor(cell.Style.Border));
+        }
+
+        [TestCaseSource(nameof(BorderColorSetters))]
+        public void Making_border_hidden_resets_the_color_to_default(Func<IXLBorder, XLColor> getColor, Action<IXLBorder, XLColor> setColor, Action<IXLBorder, XLBorderStyleValues> setStyle)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var cell = ws.Cell("A1");
+            var defaultBorderColor = getColor(cell.Style.Border);
+            var color = XLColor.Red;
+
+            // Set the color of visible border
+            setStyle(cell.Style.Border, XLBorderStyleValues.Thin);
+            setColor(cell.Style.Border, color);
+            Assert.AreEqual(color, getColor(cell.Style.Border));
+
+            // When the border is hidden, the color is reset to default border color
+            setStyle(cell.Style.Border, XLBorderStyleValues.None);
+            Assert.AreEqual(defaultBorderColor, getColor(cell.Style.Border));
+        }
+
         private static void AssertCellBorder(IXLWorksheet ws, string cell, int sides, XLBorderStyleValues style = XLBorderStyleValues.Thick, XLColor color = null)
         {
             var border = ws.Cell(cell).Style.Border;
@@ -389,6 +431,21 @@ namespace ClosedXML.Tests.Excel.Styles
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.DiagonalBorder, (border, value) => border.SetDiagonalBorder(value), styleValues);
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.DiagonalBorderColor, (border, value) => border.SetDiagonalBorder(XLBorderStyleValues.Thin).Border.DiagonalBorderColor = value, colors);
             yield return FormatTestCase<IXLBorder>.ForBorder(border => border.DiagonalBorderColor, (border, value) => border.SetDiagonalBorder(XLBorderStyleValues.Thin).Border.SetDiagonalBorderColor(value), colors);
+        }
+
+        private static IEnumerable<object> BorderColorSetters()
+        {
+            yield return MakeTestCase(border => border.LeftBorderColor, (border, value) => border.LeftBorderColor = value, (border, style) => border.LeftBorder = style);
+            yield return MakeTestCase(border => border.TopBorderColor, (border, value) => border.TopBorderColor = value, (border, style) => border.TopBorder = style);
+            yield return MakeTestCase(border => border.RightBorderColor, (border, value) => border.RightBorderColor = value, (border, style) => border.RightBorder = style);
+            yield return MakeTestCase(border => border.BottomBorderColor, (border, value) => border.BottomBorderColor = value, (border, style) => border.BottomBorder = style);
+            yield return MakeTestCase(border => border.DiagonalBorderColor, (border, value) => border.DiagonalBorderColor = value, (border, style) => border.DiagonalBorder = style);
+            yield break;
+
+            static TestCaseData MakeTestCase(Func<IXLBorder, XLColor> getColor, Action<IXLBorder, XLColor> setColor, Action<IXLBorder, XLBorderStyleValues> setStyle)
+            {
+                return new TestCaseData(getColor, setColor, setStyle);
+            }
         }
     }
 }
