@@ -61,7 +61,32 @@ internal partial class XLCellFormat : IXLStyle
 
     bool IEquatable<IXLStyle>.Equals(IXLStyle? other)
     {
-        throw new NotImplementedException();
+        if (other is null)
+            return false;
+
+        // The API object for each component implement IEquitable<IXL..>
+        if (!NumberFormat.Equals(other.NumberFormat))
+            return false;
+
+        if (!Font.Equals(other.Font))
+            return false;
+
+        if (!IncludeQuotePrefix.Equals(other.IncludeQuotePrefix))
+            return false;
+
+        if (!Fill.Equals(other.Fill))
+            return false;
+
+        if (!Border.Equals(other.Border))
+            return false;
+
+        if (!Alignment.Equals(other.Alignment))
+            return false;
+
+        if (!Protection.Equals(other.Protection))
+            return false;
+
+        return true;
     }
 
     /// <summary>

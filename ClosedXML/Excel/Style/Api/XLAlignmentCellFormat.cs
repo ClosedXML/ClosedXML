@@ -12,6 +12,16 @@ internal partial class XLAlignmentCellFormat
         _parent = parent;
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLAlignment other && (this as IEquatable<IXLAlignment>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
     internal void SetValue(IXLAlignment value)
     {
         Modify(static (alignment, other) => alignment with

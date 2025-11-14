@@ -34,6 +34,16 @@ internal sealed partial class XLNumberCellFormat
         set => _parent.ModifyNumberFormat(value);
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLNumberFormatBase other && (this as IEquatable<IXLNumberFormatBase>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
     internal void SetNumberFormat(string numberFormat)
     {
         Format = numberFormat;

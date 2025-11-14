@@ -1,3 +1,4 @@
+using System;
 using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel;
@@ -81,6 +82,16 @@ internal sealed partial class XLBorderCellFormat
     {
         get => _parent.Resolve(static x => x.Border.Diagonal.Color);
         set => _parent.ModifyBorder(static (border, diagonalColor) => border with { Diagonal = border.Diagonal with { Color = diagonalColor } }, value);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLBorder other && (this as IEquatable<IXLBorder>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
     }
 
     internal void SetValue(IXLBorder value)

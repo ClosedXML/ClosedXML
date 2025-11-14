@@ -93,6 +93,16 @@ internal sealed partial class XLFontCellFormat
         set => Modify(static (font, scheme) => font with { Scheme = scheme }, value);
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLFont other && (this as IEquatable<IXLFont>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
     private T Resolve<T>(Func<XLCellFormatValue, T> selector)
     {
         return _parent.Resolve(selector);

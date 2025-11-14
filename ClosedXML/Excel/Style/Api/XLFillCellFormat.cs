@@ -1,3 +1,4 @@
+using System;
 using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel;
@@ -86,6 +87,16 @@ internal sealed partial class XLFillCellFormat
 
             return new XLFillFormatValue(pattern with { PatternType = patternType });
         }, value);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLFill other && (this as IEquatable<IXLFill>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
     }
 
     internal void SetValue(IXLFill value)

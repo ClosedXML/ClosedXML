@@ -1,9 +1,9 @@
-﻿using ClosedXML.Excel;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel;
+using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel
 {
@@ -169,6 +169,33 @@ namespace ClosedXML.Tests.Excel
 
             var colCellStyle = ws.Cell(5, 2).Style;
             Assert.AreEqual(colStyle, colCellStyle);
+        }
+
+        [Test]
+        public void Style_has_equality_comparison()
+        {
+            Action<IXLStyle>[] changePropertyToNonDefault =
+            {
+                x => x.NumberFormat.SetFormat("0.00"),
+                x => x.Font.SetFontSize(15),
+                x => x.SetIncludeQuotePrefix(),
+                x => x.Fill.SetPatternType(XLFillPatternValues.DarkGrid),
+                x => x.Border.SetBottomBorder(XLBorderStyleValues.Thick),
+                x => x.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right),
+                x => x.Protection.SetHidden(),
+            };
+
+            using var wb = new XLWorkbook();
+            foreach (var changeProperty in changePropertyToNonDefault)
+            {
+                var ws = wb.AddWorksheet();
+                var lhs = ws.Cell("A1").Style;
+                var rhs = ws.Cell("A2").Style;
+
+                Assert.AreEqual(lhs, rhs);
+                changeProperty(lhs);
+                Assert.AreNotEqual(lhs, rhs);
+            }
         }
 
         private static IEnumerable<TestCaseData> StylizedEntities

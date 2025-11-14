@@ -12,6 +12,15 @@ internal sealed partial class XLProtectionCellFormat
         _parent = parent;
     }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLProtection other && (this as IEquatable<IXLProtection>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
 
     internal void SetValue(IXLProtection value)
     {

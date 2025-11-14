@@ -83,6 +83,16 @@ internal partial class XLCellFormat
     /// </summary>
     private bool IsCells { get; init; }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is IXLStyle other && (this as IEquatable<IXLStyle>).Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
     internal static XLCellFormat ForCell(XLCell cell)
     {
         var workbook = cell.Worksheet.Workbook;
