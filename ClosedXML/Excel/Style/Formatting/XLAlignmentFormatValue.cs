@@ -1,7 +1,11 @@
+using System;
+
 namespace ClosedXML.Excel.Formatting;
 
 internal record XLAlignmentFormatValue
 {
+    private readonly int _indent;
+
     public required XLAlignmentHorizontalValues Horizontal { get; init; }
 
     public required XLAlignmentVerticalValues Vertical { get; init; }
@@ -16,7 +20,17 @@ internal record XLAlignmentFormatValue
     /// <summary>
     /// Indicates number of 3*spaces (of the normal style font) of indentation for text in a cell.
     /// </summary>
-    public required int Indent { get; init; }
+    public required int Indent
+    {
+        get => _indent;
+        init
+        {
+            if (value is < 0 or > 255)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Indent must be between 0 and 255.");
+
+            _indent = value;
+        }
+    }
 
     /// <summary>
     /// Relative indentation for dxf. Indicates number of spaces to indent text in a cell.

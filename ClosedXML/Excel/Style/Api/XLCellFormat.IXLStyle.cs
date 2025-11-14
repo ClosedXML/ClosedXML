@@ -11,8 +11,8 @@ internal partial class XLCellFormat : IXLStyle
     // TODO Styles: Implement remaining format properties by using IXLStyle contract
     IXLAlignment IXLStyle.Alignment
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Alignment;
+        set => Alignment.SetValue(value);
     }
 
     IXLBorder IXLStyle.Border

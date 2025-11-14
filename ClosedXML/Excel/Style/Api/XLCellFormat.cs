@@ -29,6 +29,8 @@ internal partial class XLCellFormat
 
     internal XLBorderCellFormat Border => new(this);
 
+    internal XLAlignmentCellFormat Alignment => new(this);
+
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
@@ -233,6 +235,17 @@ internal partial class XLCellFormat
     {
         var styles = _workbook.Styles;
         Modify(GetModifyBorderFunc(border => modifyBorder(border, value), styles));
+    }
+
+    internal void ModifyAlignment<TProperty>(Func<XLAlignmentFormatValue, TProperty, XLAlignmentFormatValue> modifyAlignment, TProperty value)
+    {
+        var styles = _workbook.Styles;
+        Modify(format =>
+        {
+            var modifiedAlignment = modifyAlignment(format.Alignment, value);
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Alignment = modifiedAlignment });
+            return modifiedFormat;
+        });
     }
 
     internal void ModifyOuterBorder<TProperty>(Func<XLBorderLine, TProperty, XLBorderLine> modify, TProperty value)

@@ -14,7 +14,7 @@ internal readonly record struct TextRotation
     public TextRotation(int value)
     {
         if (value is not (>= -90 and <= 90 or 255))
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(value), value, "Rotation must be between [-90,90] or 255 for vertical text.");
 
         Value = value;
     }

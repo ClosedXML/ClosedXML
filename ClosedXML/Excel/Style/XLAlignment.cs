@@ -104,6 +104,9 @@ namespace ClosedXML.Excel
             get { return Key.Indent; }
             set
             {
+                if (value is < 0 or > 255)
+                    throw new ArgumentOutOfRangeException();
+
                 if (Indent != value)
                 {
                     if (Horizontal == XLAlignmentHorizontalValues.General)
@@ -155,7 +158,7 @@ namespace ClosedXML.Excel
                 Int32 rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 90))
-                    throw new ArgumentException("TextRotation must be between -90 and 90 degrees, or 255.");
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "TextRotation must be between -90 and 90 degrees, or 255.");
 
                 Modify(k => k with { TextRotation = rotation });
             }

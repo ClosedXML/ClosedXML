@@ -18,29 +18,34 @@ public class FormatTestCase<TApi>
         _testValues = testValues;
     }
 
-    public static FormatTestCase<IXLFont> ForFont<T>(Func<IXLFont, T> getter, Action<IXLFont, T> setter, params T[] testValues)
+    internal static FormatTestCase<IXLFont> ForFont<T>(Func<IXLFont, T> getter, Action<IXLFont, T> setter, params T[] testValues)
     {
         return new FormatTestCase<IXLFont>(font => getter(font), (font, value) => setter(font, (T)value), testValues.Cast<object>().ToArray());
     }
 
-    public static FormatTestCase<IXLFill> ForFill<T>(Func<IXLFill, T> getter, Action<IXLFill, T> setter, params T[] testValues)
+    internal static FormatTestCase<IXLFill> ForFill<T>(Func<IXLFill, T> getter, Action<IXLFill, T> setter, params T[] testValues)
     {
         return new FormatTestCase<IXLFill>(fill => getter(fill), (fill, value) => setter(fill, (T)value), testValues.Cast<object>().ToArray());
     }
 
-    public static FormatTestCase<IXLBorder> ForBorder<T>(Func<IXLBorder, T> getter, Action<IXLBorder, T> setter, params T[] testValues)
+    internal static FormatTestCase<IXLBorder> ForBorder<T>(Func<IXLBorder, T> getter, Action<IXLBorder, T> setter, params T[] testValues)
     {
         return new FormatTestCase<IXLBorder>(border => getter(border), (border, value) => setter(border, (T)value), testValues.Cast<object>().ToArray());
     }
 
-    public IEnumerable<object> Values => _testValues;
+    internal static FormatTestCase<IXLAlignment> ForAlignment<T>(Func<IXLAlignment, T> getter, Action<IXLAlignment, T> setter, params T[] testValues)
+    {
+        return new FormatTestCase<IXLAlignment>(align => getter(align), (align, value) => setter(align, (T)value), testValues.Cast<object>().ToArray());
+    }
 
-    public object GetPropertyValue(TApi font)
+    internal IEnumerable<object> Values => _testValues;
+
+    internal object GetPropertyValue(TApi font)
     {
         return _getter(font);
     }
 
-    public void SetPropertyValue(TApi font, object value)
+    internal void SetPropertyValue(TApi font, object value)
     {
         _setter(font, value);
     }
