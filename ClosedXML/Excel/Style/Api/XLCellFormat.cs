@@ -31,6 +31,8 @@ internal partial class XLCellFormat
 
     internal XLAlignmentCellFormat Alignment => new(this);
 
+    internal XLProtectionCellFormat Protection => new(this);
+
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
@@ -244,6 +246,17 @@ internal partial class XLCellFormat
         {
             var modifiedAlignment = modifyAlignment(format.Alignment, value);
             var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Alignment = modifiedAlignment });
+            return modifiedFormat;
+        });
+    }
+
+    internal void ModifyProtection<TProperty>(Func<XLProtectionFormatValue, TProperty, XLProtectionFormatValue> modifyProtection, TProperty value)
+    {
+        var styles = _workbook.Styles;
+        Modify(format =>
+        {
+            var modifiedProtection = modifyProtection(format.Protection, value);
+            var modifiedFormat = styles.GetRegisteredCellFormat(format, cellFormat => cellFormat with { Protection = modifiedProtection });
             return modifiedFormat;
         });
     }

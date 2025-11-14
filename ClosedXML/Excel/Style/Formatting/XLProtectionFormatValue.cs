@@ -1,6 +1,6 @@
 namespace ClosedXML.Excel.Formatting;
 
-internal class XLProtectionFormatValue
+internal record XLProtectionFormatValue
 {
     public required bool Locked { get; init; }
 

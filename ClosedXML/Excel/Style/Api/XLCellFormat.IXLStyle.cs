@@ -49,8 +49,8 @@ internal partial class XLCellFormat : IXLStyle
 
     IXLProtection IXLStyle.Protection
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Protection;
+        set => Protection.SetValue(value);
     }
 
     IXLStyle IXLStyle.SetIncludeQuotePrefix(bool includeQuotePrefix)

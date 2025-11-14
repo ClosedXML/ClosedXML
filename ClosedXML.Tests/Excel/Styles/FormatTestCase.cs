@@ -38,6 +38,11 @@ public class FormatTestCase<TApi>
         return new FormatTestCase<IXLAlignment>(align => getter(align), (align, value) => setter(align, (T)value), testValues.Cast<object>().ToArray());
     }
 
+    internal static FormatTestCase<IXLProtection> ForProtection<T>(Func<IXLProtection, T> getter, Action<IXLProtection, T> setter, params T[] testValues)
+    {
+        return new FormatTestCase<IXLProtection>(protection => getter(protection), (protection, value) => setter(protection, (T)value), testValues.Cast<object>().ToArray());
+    }
+
     internal IEnumerable<object> Values => _testValues;
 
     internal object GetPropertyValue(TApi font)
