@@ -21,7 +21,7 @@ internal partial class XLCellFormat : IXLStyle
         set => Border.SetValue(value);
     }
 
-    IXLNumberFormat IXLStyle.DateFormat => throw new NotImplementedException();
+    IXLNumberFormat IXLStyle.DateFormat => NumberFormat;
 
     IXLFill IXLStyle.Fill
     {
@@ -37,8 +37,8 @@ internal partial class XLCellFormat : IXLStyle
 
     bool IXLStyle.IncludeQuotePrefix
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => IncludeQuotePrefix;
+        set => IncludeQuotePrefix = value;
     }
 
     IXLNumberFormat IXLStyle.NumberFormat
@@ -55,7 +55,8 @@ internal partial class XLCellFormat : IXLStyle
 
     IXLStyle IXLStyle.SetIncludeQuotePrefix(bool includeQuotePrefix)
     {
-        throw new NotImplementedException();
+        IncludeQuotePrefix = includeQuotePrefix;
+        return this;
     }
 
     bool IEquatable<IXLStyle>.Equals(IXLStyle? other)

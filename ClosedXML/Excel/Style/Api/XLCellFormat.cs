@@ -33,6 +33,12 @@ internal partial class XLCellFormat
 
     internal XLProtectionCellFormat Protection => new(this);
 
+    internal bool IncludeQuotePrefix
+    {
+        get => Resolve(static format => format.IncludeQuotePrefix);
+        set => Modify(format => format with { IncludeQuotePrefix = value });
+    }
+
     /// <summary>
     /// Cell areas in a workbook that should be updated when format is changed, e.g. when we have
     /// a format API object for a row container, the area are all cells of the row. It must be
