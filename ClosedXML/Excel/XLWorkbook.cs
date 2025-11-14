@@ -452,12 +452,15 @@ namespace ClosedXML.Excel
             var directoryName = Path.GetDirectoryName(file);
             if (!string.IsNullOrWhiteSpace(directoryName)) Directory.CreateDirectory(directoryName);
 
+            // Prefer an explicit document type if caller provided one; otherwise derive from destination extension
+            var documentType = options.DocumentType ?? GetSpreadsheetDocumentType(file);
+
             if (_loadSource == XLLoadSource.New)
             {
                 if (File.Exists(file))
                     File.Delete(file);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), options);
+                CreatePackage(file, documentType, options);
             }
             else if (_loadSource == XLLoadSource.File)
             {
@@ -467,7 +470,7 @@ namespace ClosedXML.Excel
                     File.SetAttributes(file, FileAttributes.Normal);
                 }
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), options);
+                CreatePackage(file, documentType, options);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -476,7 +479,7 @@ namespace ClosedXML.Excel
                 using (var fileStream = File.Create(file))
                 {
                     CopyStream(_originalStream, fileStream);
-                    CreatePackage(fileStream, false, _spreadsheetDocumentType, options);
+                    CreatePackage(fileStream, false, documentType, options);
                 }
             }
 
@@ -545,6 +548,10 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream, SaveOptions options)
         {
             checkForWorksheetsPresent();
+
+            // Prefer an explicit document type if caller provided one; otherwise use type derived at load
+            var documentType = options.DocumentType ?? _spreadsheetDocumentType;
+
             if (_loadSource == XLLoadSource.New)
             {
                 // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
@@ -554,14 +561,14 @@ namespace ClosedXML.Excel
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
                     // all is fine the package can be created in a direct way
-                    CreatePackage(stream, true, _spreadsheetDocumentType, options);
+                    CreatePackage(stream, true, documentType, options);
                 }
                 else
                 {
                     // the harder way
                     using (var ms = new MemoryStream())
                     {
-                        CreatePackage(ms, true, _spreadsheetDocumentType, options);
+                        CreatePackage(ms, true, documentType, options);
                         // not really necessary, because I changed CopyStream too.
                         // but for better understanding and if somebody in the future
                         // provide an changed version of CopyStream
@@ -576,7 +583,7 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(fileStream, stream);
                 }
-                CreatePackage(stream, false, _spreadsheetDocumentType, options);
+                CreatePackage(stream, false, documentType, options);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -584,7 +591,7 @@ namespace ClosedXML.Excel
                 if (_originalStream != stream)
                     CopyStream(_originalStream, stream);
 
-                CreatePackage(stream, false, _spreadsheetDocumentType, options);
+                CreatePackage(stream, false, documentType, options);
             }
 
             _loadSource = XLLoadSource.Stream;

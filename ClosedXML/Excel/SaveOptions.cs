@@ -1,6 +1,7 @@
 #nullable disable
 
 // Keep this file CodeMaid organised and cleaned
+using DocumentFormat.OpenXml;
 using System;
 
 namespace ClosedXML.Excel
@@ -40,5 +41,11 @@ namespace ClosedXML.Excel
 
         public Boolean GenerateCalculationChain { get; set; } = true;
         public Boolean ValidatePackage { get; set; }
+
+        /// <summary>
+        /// If set, forces the Open XML spreadsheet document type used during save
+        /// (e.g. <see cref="SpreadsheetDocumentType.Workbook"/>, <see cref="SpreadsheetDocumentType.Template"/>)
+        /// </summary>
+        public SpreadsheetDocumentType? DocumentType { get; set; }
     }
 }
