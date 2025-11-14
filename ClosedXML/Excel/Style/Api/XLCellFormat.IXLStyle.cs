@@ -8,7 +8,6 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal partial class XLCellFormat : IXLStyle
 {
-    // TODO Styles: Implement remaining format properties by using IXLStyle contract
     IXLAlignment IXLStyle.Alignment
     {
         get => Alignment;
@@ -95,6 +94,12 @@ internal partial class XLCellFormat : IXLStyle
     /// </summary>
     internal void SetStyle(IXLStyle value)
     {
-        throw new NotImplementedException();
+        NumberFormat.SetNumberFormat(value.NumberFormat.Format);
+        Font.SetFont(value.Font);
+        IncludeQuotePrefix = value.IncludeQuotePrefix;
+        Fill.SetValue(value.Fill);
+        Border.SetValue(value.Border);
+        Alignment.SetValue(value.Alignment);
+        Protection.SetValue(value.Protection);
     }
 }

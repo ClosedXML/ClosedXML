@@ -198,6 +198,38 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
+        [Test]
+        public void Style_can_be_copied()
+        {
+            Action<IXLStyle>[] changePropertyToNonDefault =
+            {
+                x => x.NumberFormat.SetFormat("0.00"),
+                x => x.Font.SetFontSize(15),
+                x => x.SetIncludeQuotePrefix(),
+                x => x.Fill.SetPatternType(XLFillPatternValues.DarkGrid),
+                x => x.Border.SetBottomBorder(XLBorderStyleValues.Thick),
+                x => x.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right),
+                x => x.Protection.SetHidden(),
+            };
+
+            using var wb = new XLWorkbook();
+            foreach (var changeProperty in changePropertyToNonDefault)
+            {
+                var ws = wb.AddWorksheet();
+                var source = ws.Cell("A1").Style;
+                var target = ws.Cell("A2").Style;
+
+                Assert.AreEqual(source, target);
+                changeProperty(source);
+                Assert.AreNotEqual(source, target);
+
+                // Copy style
+                target = source;
+
+                Assert.AreEqual(source, target);
+            }
+        }
+
         private static IEnumerable<TestCaseData> StylizedEntities
         {
             get
