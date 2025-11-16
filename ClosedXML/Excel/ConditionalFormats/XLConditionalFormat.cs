@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     {
         private readonly XLWorksheet _worksheet;
 
-        private sealed class FullEqualityComparer : IEqualityComparer<IXLConditionalFormat>
+        private sealed class FullEqualityComparer : IEqualityComparer<XLConditionalFormat>
         {
             private readonly bool _compareRange;
             private readonly DictionaryComparer<int, XLColor> _colorsComparer = new DictionaryComparer<int, XLColor>();
@@ -23,10 +23,8 @@ namespace ClosedXML.Excel
                 _compareRange = compareRange;
             }
 
-            public bool Equals(IXLConditionalFormat x, IXLConditionalFormat y)
+            public bool Equals(XLConditionalFormat xx, XLConditionalFormat yy)
             {
-                var xx = (XLConditionalFormat)x;
-                var yy = (XLConditionalFormat)y;
                 if (ReferenceEquals(xx, yy)) return true;
                 if (ReferenceEquals(xx, null)) return false;
                 if (ReferenceEquals(yy, null)) return false;
@@ -34,8 +32,8 @@ namespace ClosedXML.Excel
 
                 var xxValues = xx.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
                 var yyValues = yy.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
-                var xxFormulas = x.Ranges.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)x.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
-                var yyFormulas = y.Ranges.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)y.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var xxFormulas = xx.Ranges.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)xx.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var yyFormulas = yy.Ranges.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)yy.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
 
                 var xStyle = xx.StyleValue;
                 var yStyle = yy.StyleValue;
@@ -60,7 +58,7 @@ namespace ClosedXML.Excel
                     && (!_compareRange || XLRanges.Equals(xx.Ranges, yy.Ranges));
             }
 
-            public int GetHashCode(IXLConditionalFormat obj)
+            public int GetHashCode(XLConditionalFormat obj)
             {
                 var xx = (XLConditionalFormat)obj;
                 var xStyle = ((XLStyle)obj.Style).Value;
@@ -107,9 +105,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static readonly IEqualityComparer<IXLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
+        private static readonly IEqualityComparer<XLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
 
-        public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer
+        public static IEqualityComparer<XLConditionalFormat> NoRangeComparer
         {
             get { return NoRangeComparerInstance; }
         }

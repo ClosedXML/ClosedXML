@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
     internal class XLConditionalFormats : IXLConditionalFormats
     {
         private readonly XLWorksheet _worksheet;
-        private readonly List<IXLConditionalFormat> _conditionalFormats = new();
+        private readonly List<XLConditionalFormat> _conditionalFormats = new();
 
         private static readonly List<XLConditionalFormatType> CFTypesExcludedFromConsolidation = new()
         {
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
         public void Add(IXLConditionalFormat conditionalFormat)
         {
-            _conditionalFormats.Add(conditionalFormat);
+            _conditionalFormats.Add((XLConditionalFormat)conditionalFormat);
         }
 
         public IEnumerator<IXLConditionalFormat> GetEnumerator()
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
                     item.Ranges.ForEach(r => rangesToJoin.Add(r));
                     var firstRange = item.Ranges.First();
                     var skippedRanges = new XLRanges(_worksheet);
-                    Func<IXLConditionalFormat, bool> IsSameFormat = f =>
+                    Func<XLConditionalFormat, bool> IsSameFormat = f =>
                         f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
                         XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
 
                     int i = 1;
                     bool stop = false;
-                    List<IXLConditionalFormat> similarFormats = new List<IXLConditionalFormat>();
+                    var similarFormats = new List<XLConditionalFormat>();
                     do
                     {
                         stop = (i >= formats.Count);
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
                     consRanges.ForEach(r => item.Ranges.Add(r));
 
                     var targetCell = item.Ranges.First().FirstCell() as XLCell;
-                    ((XLConditionalFormat)item).AdjustFormulas(baseCell, targetCell);
+                    item.AdjustFormulas(baseCell, targetCell);
 
                     similarFormats.ForEach(cf => formats.Remove(cf));
                 }
@@ -141,7 +141,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void ReorderAccordingToOriginalPriority()
         {
-            var reorderedFormats = _conditionalFormats.OrderBy(cf => ((XLConditionalFormat)cf).Priority).ToList();
+            var reorderedFormats = _conditionalFormats.OrderBy(cf => cf.Priority).ToList();
             _conditionalFormats.Clear();
             _conditionalFormats.AddRange(reorderedFormats);
         }
