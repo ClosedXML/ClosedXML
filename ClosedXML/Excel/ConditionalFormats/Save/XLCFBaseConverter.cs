@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal static class XLCFBaseConverter
     {
-        public static ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority)
+        public static ConditionalFormattingRule Convert(XLConditionalFormat cf, int priority)
         {
             return new ConditionalFormattingRule
             {

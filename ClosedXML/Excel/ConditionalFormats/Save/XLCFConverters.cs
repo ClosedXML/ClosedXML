@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
             };
         }
 
-        public static ConditionalFormattingRule Convert(IXLConditionalFormat conditionalFormat, Int32 priority, XLWorkbook.SaveContext context)
+        public static ConditionalFormattingRule Convert(XLConditionalFormat conditionalFormat, Int32 priority, XLWorkbook.SaveContext context)
         {
             if (!Converters.TryGetValue(conditionalFormat.ConditionalFormatType, out var converter))
                 throw new NotImplementedException(string.Format("Conditional formatting rule '{0}' hasn't been implemented", conditionalFormat.ConditionalFormatType));
