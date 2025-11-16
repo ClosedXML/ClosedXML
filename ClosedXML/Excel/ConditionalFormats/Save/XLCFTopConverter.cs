@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLCFTopConverter : IXLCFConverter
     {
-        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
+        public ConditionalFormattingRule Convert(XLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             UInt32 val = UInt32.Parse(cf.Values[1].Value);
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);

@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     internal class XLCFDataBarConverter : IXLCFConverter
     {
-        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)
+        public ConditionalFormattingRule Convert(XLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 

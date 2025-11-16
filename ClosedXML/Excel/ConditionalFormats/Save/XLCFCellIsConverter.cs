@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLCFCellIsConverter : IXLCFConverter
     {
-        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
+        public ConditionalFormattingRule Convert(XLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             String val = GetQuoted(cf.Values[1]);
 

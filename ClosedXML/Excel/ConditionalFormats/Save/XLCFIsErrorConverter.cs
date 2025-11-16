@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLCFIsErrorConverter : IXLCFConverter
     {
-        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
+        public ConditionalFormattingRule Convert(XLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = ((XLStyle)cf.Style).Value;
