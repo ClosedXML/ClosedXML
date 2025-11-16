@@ -700,7 +700,7 @@ internal partial class StylesReader
         var dxf = new XLDxfValue
         {
             NumberFormat = numFmt?.FormatCode,
-            Font = font,
+            Font = font ?? XLDifferentialFontValue.Empty,
             Fill = fill,
             Alignment = alignment,
             Border = border,

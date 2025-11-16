@@ -3,10 +3,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Formatting;
 
 namespace ClosedXML.Excel
 {
-    internal class XLConditionalFormat : XLStylizedBase, IXLConditionalFormat
+    internal class XLConditionalFormat :
+#if STYLES_REWORK
+        IXLDxfContainer,
+#else
+        XLStylizedBase,
+#endif
+        IXLConditionalFormat
     {
         private readonly XLWorksheet _worksheet;
 
@@ -34,10 +41,13 @@ namespace ClosedXML.Excel
                 var yyValues = yy.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
                 var xxFormulas = xx.Ranges.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)xx.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
                 var yyFormulas = yy.Ranges.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)yy.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
-
+#if STYLES_REWORK
+                var xStyle = xx.Format;
+                var yStyle = yy.Format;
+#else
                 var xStyle = xx.StyleValue;
                 var yStyle = yy.StyleValue;
-
+#endif
                 return Equals(xStyle, yStyle)
                     && xx.CopyDefaultModify == yy.CopyDefaultModify
                     && xx.ConditionalFormatType == yy.ConditionalFormatType
@@ -60,7 +70,7 @@ namespace ClosedXML.Excel
 
             public int GetHashCode(XLConditionalFormat obj)
             {
-                var xx = (XLConditionalFormat)obj;
+                var xx = obj;
                 var xStyle = ((XLStyle)obj.Style).Value;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
                 if (obj.Ranges.Count > 0)
@@ -70,7 +80,6 @@ namespace ClosedXML.Excel
                 unchecked
                 {
                     var hashCode = xStyle.GetHashCode();
-                    hashCode = (hashCode * 397) ^ xx.StyleValue.GetHashCode();
                     hashCode = (hashCode * 397) ^ xx.CopyDefaultModify.GetHashCode();
                     hashCode = (hashCode * 397) ^ xValues.GetHashCode();
                     hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
@@ -115,7 +124,9 @@ namespace ClosedXML.Excel
         #region Constructors
 
         private XLConditionalFormat(XLWorksheet worksheet)
+#if !STYLES_REWORK
             : base(XLStyle.Default.Value)
+#endif
         {
             _worksheet = worksheet;
             Id = Guid.NewGuid();
@@ -160,12 +171,24 @@ namespace ClosedXML.Excel
 
         public Boolean CopyDefaultModify { get; set; }
 
+#if STYLES_REWORK
+        public XLDxfValue FormatValue { get; set; }
+
+        internal XLDxFormat Format => new(_worksheet.Workbook.Styles, this);
+
+        public IXLStyle Style
+        {
+            get => Format;
+            set => Format.SetValue(value);
+        }
+#else
         protected override IEnumerable<XLStylizedBase> Children
         {
             get { yield break; }
         }
 
         public override IEnumerable<IXLRange> RangesUsed => Array.Empty<IXLRange>();
+#endif
 
         public XLDictionary<XLFormula> Values { get; private set; }
 
@@ -230,7 +253,14 @@ namespace ClosedXML.Excel
 
         public void CopyFrom(IXLConditionalFormat other)
         {
+#if STYLES_REWORK
+            var otherDxf = ((XLConditionalFormat)other).FormatValue;
+            FormatValue = otherDxf is not null
+                ? _worksheet.Workbook.Styles.GetRegisteredDxFormat(otherDxf, static x => x)
+                : null;
+#else
             InnerStyle = other.Style;
+#endif
             ConditionalFormatType = other.ConditionalFormatType;
             TimePeriod = other.TimePeriod;
             IconSetStyle = other.IconSetStyle;

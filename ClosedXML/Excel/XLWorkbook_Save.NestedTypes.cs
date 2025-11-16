@@ -1,11 +1,11 @@
 #nullable disable
 
-using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ClosedXML.Excel.Formatting;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML.Excel
 {
@@ -49,7 +49,9 @@ namespace ClosedXML.Excel
             public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; }
 
 #endif
-            public Dictionary<XLCellFormatValue, uint> FormatMap = new();
+            internal Dictionary<XLCellFormatValue, uint> FormatMap = new();
+
+            internal Dictionary<XLDxfValue, uint> DxfMap = new();
 
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -100,6 +102,14 @@ namespace ClosedXML.Excel
 #else
                 return (UInt32)DifferentialFormats[dxf];
 #endif
+            }
+
+            internal uint? GetDxfId(XLDxfValue? dxf)
+            {
+                if (dxf is null)
+                    return null;
+
+                return DxfMap[dxf];
             }
 
             internal bool TryGetDxfId(XLStyleValue dxf, out uint dxfId)

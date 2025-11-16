@@ -559,7 +559,7 @@ internal class StylesReaderTests
             {
                 var (dxfId, dxf) = styles.DifferentialFormats.Single();
                 Assert.AreEqual(0, dxfId);
-                Assert.IsTrue(dxf.Font?.Bold);
+                Assert.IsTrue(dxf.Font.Bold);
                 Assert.AreEqual("0.00", dxf.NumberFormat);
                 Assert.AreEqual(XLFillPatternValues.LightGrid, dxf.Fill?.Pattern?.PatternType);
                 Assert.AreEqual(XLColor.FromRgb(0x0000FF), dxf.Fill.Pattern.PatternColor);
@@ -580,7 +580,7 @@ internal class StylesReaderTests
             styles =>
             {
                 var dxf = styles.DifferentialFormats.Single().Value;
-                Assert.IsNull(dxf.Font);
+                Assert.IsTrue(dxf.Font.IsEmpty());
                 Assert.IsNull(dxf.NumberFormat);
                 Assert.IsNull(dxf.Fill);
                 Assert.IsNull(dxf.Border);

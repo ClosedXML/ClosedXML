@@ -10,9 +10,14 @@ namespace ClosedXML.Excel
             String val = GetQuoted(cf.Values[1]);
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
+#if STYLES_REWORK
+            var dxf = ((XLConditionalFormat)cf).FormatValue;
+            conditionalFormattingRule.FormatId = context.GetDxfId(dxf);
+#else
             var cfStyle = ((XLStyle)cf.Style).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
                 conditionalFormattingRule.FormatId = context.GetDxfId(cfStyle);
+#endif
 
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 

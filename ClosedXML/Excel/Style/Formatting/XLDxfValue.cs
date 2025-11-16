@@ -8,7 +8,7 @@ internal record XLDxfValue
     internal static readonly XLDxfValue Empty = new()
     {
         NumberFormat = null,
-        Font = null,
+        Font = XLDifferentialFontValue.Empty,
         Fill = null,
         Alignment = null,
         Border = null,
@@ -17,7 +17,7 @@ internal record XLDxfValue
 
     public required string? NumberFormat { get; init; }
 
-    public required XLDifferentialFontValue? Font { get; init; }
+    public required XLDifferentialFontValue Font { get; init; }
 
     public required XLFillFormatValue? Fill { get; init; }
 

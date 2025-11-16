@@ -172,6 +172,11 @@ internal class StylesWriter
                 context.FormatMap.Add(format, (uint)xfId);
         }
 
+        foreach (var (dxfId, dxf) in dxfMap.GetActual())
+        {
+            if (!context.DxfMap.ContainsKey(dxf))
+                context.DxfMap.Add(dxf, (uint)dxfId);
+        }
         return;
 
         void AddFillAsUsed(XLFillFormatValue format)
