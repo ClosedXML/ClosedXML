@@ -11,8 +11,7 @@ namespace ClosedXML.Excel
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 #if STYLES_REWORK
-            var dxf = ((XLConditionalFormat)cf).FormatValue;
-            conditionalFormattingRule.FormatId = context.GetDxfId(dxf);
+            conditionalFormattingRule.FormatId = context.GetDxfId(cf.FormatValue);
 #else
             var cfStyle = ((XLStyle)cf.Style).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
