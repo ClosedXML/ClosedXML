@@ -50,6 +50,22 @@ namespace ClosedXML.Tests.Excel.Styles
         }
 
         [Test]
+        [TestCaseSource(nameof(FontApiSetters))]
+        public void Dxf_font_property_can_be_individually_set(FormatTestCase<IXLFont> testCase)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var cf = ws.AddConditionalFormat();
+
+            foreach (var testValue in testCase.Values)
+            {
+                testCase.SetPropertyValue(cf.Style.Font, testValue);
+                var setValue = testCase.GetPropertyValue(cf.Style.Font);
+                Assert.AreEqual(testValue, setValue);
+            }
+        }
+
+        [Test]
         public void Font_can_be_set_by_assigning_font()
         {
             // Arrange
