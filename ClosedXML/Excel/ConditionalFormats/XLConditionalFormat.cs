@@ -107,13 +107,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
-
-        public static IEqualityComparer<IXLConditionalFormat> FullComparer
-        {
-            get { return FullComparerInstance; }
-        }
-
         private static readonly IEqualityComparer<IXLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
 
         public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer
