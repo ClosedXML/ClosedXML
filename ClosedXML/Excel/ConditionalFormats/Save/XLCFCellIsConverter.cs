@@ -9,15 +9,7 @@ namespace ClosedXML.Excel
         {
             String val = GetQuoted(cf.Values[1]);
 
-            var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-#if STYLES_REWORK
-            conditionalFormattingRule.FormatId = context.GetDxfId(cf.FormatValue);
-#else
-            var cfStyle = ((XLStyle)cf.Style).Value;
-            if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = context.GetDxfId(cfStyle);
-#endif
-
+            var conditionalFormattingRule = XLCFBaseConverter.ConvertWithDxf(cf, priority, context);
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 
             var formula = new Formula(val);
