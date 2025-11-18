@@ -1068,18 +1068,6 @@ namespace ClosedXML.Excel
             return validation;
         }
 
-        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
-        public IXLDataValidation SetDataValidation()
-        {
-            var validation = GetDataValidation();
-            if (validation == null)
-            {
-                validation = new XLDataValidation(AsRange());
-                Worksheet.DataValidations.Add(validation);
-            }
-            return validation;
-        }
-
         public void Select()
         {
             AsRange().Select();

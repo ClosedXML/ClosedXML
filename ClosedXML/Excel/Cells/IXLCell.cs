@@ -505,9 +505,6 @@ namespace ClosedXML.Excel
 
         IXLCell SetActive(Boolean value = true);
 
-        [Obsolete("Use GetDataValidation to access the existing rule, or CreateDataValidation() to create a new one.")]
-        IXLDataValidation SetDataValidation();
-
         IXLCell SetFormulaA1(String formula);
 
         IXLCell SetFormulaR1C1(String formula);

@@ -52,3 +52,10 @@ IXLRangeBase
 
 An obsolete method ``IXLRangeBase.SetDataValidation`` has been removed. Use ``GetDataValidation()``
 to access the existing rule, or ``CreateDataValidation()`` to create a new one.
+
+*******
+IXLCell
+*******
+
+An obsolete method ``IXLRangeBase.SetDataValidation`` has been removed. Use ``GetDataValidation()``
+to access the existing rule, or ``CreateDataValidation()`` to create a new one.
