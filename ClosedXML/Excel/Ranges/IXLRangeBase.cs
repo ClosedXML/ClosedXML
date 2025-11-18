@@ -299,9 +299,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLDataValidation CreateDataValidation();
 
-        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
-        IXLDataValidation SetDataValidation();
-
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();
