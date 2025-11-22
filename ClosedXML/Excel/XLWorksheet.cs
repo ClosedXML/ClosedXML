@@ -1222,7 +1222,6 @@ namespace ClosedXML.Excel
             }
 
             ShiftConditionalFormattingColumns(range, columnsShifted);
-            ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
             RemoveInvalidSparklines();
 
@@ -1231,6 +1230,7 @@ namespace ClosedXML.Excel
                 Workbook.CalcEngine,
                 Hyperlinks,
                 Workbook.DefinedNamesInternal,
+                DataValidations,
             };
 
             foreach (var worksheet in Workbook.WorksheetsInternal)
@@ -1311,54 +1311,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
-        {
-            if (!DataValidations.Any<XLDataValidation>())
-                return;
-
-            Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstCol == 1) return;
-
-            int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
-            var model = Column(colNum).AsRange();
-
-            foreach (var dv in DataValidations.ToList<XLDataValidation>())
-            {
-                var dvRanges = dv.Ranges.ToList();
-                dv.ClearRanges();
-
-                foreach (var dvRange in dvRanges)
-                {
-                    var dvAddress = dvRange.RangeAddress;
-                    IXLRange newRange;
-                    if (dvRange.Intersects(model))
-                    {
-                        newRange = Range(dvAddress.FirstAddress.RowNumber,
-                                         dvAddress.FirstAddress.ColumnNumber,
-                                         dvAddress.LastAddress.RowNumber,
-                                         Math.Min(XLHelper.MaxColumnNumber, dvAddress.LastAddress.ColumnNumber + columnsShifted));
-                    }
-                    else if (dvAddress.FirstAddress.ColumnNumber >= firstCol)
-                    {
-                        newRange = Range(dvAddress.FirstAddress.RowNumber,
-                                         Math.Max(dvAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
-                                         dvAddress.LastAddress.RowNumber,
-                                         Math.Min(XLHelper.MaxColumnNumber, dvAddress.LastAddress.ColumnNumber + columnsShifted));
-                    }
-                    else
-                        newRange = dvRange;
-
-                    if (newRange.RangeAddress.IsValid &&
-                        newRange.RangeAddress.FirstAddress.ColumnNumber <=
-                        newRange.RangeAddress.LastAddress.ColumnNumber)
-                        dv.AddRange(newRange);
-                }
-
-                if (!dv.Ranges.Any())
-                    DataValidations.Delete(v => v == dv);
-            }
-        }
-
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (!range.IsEntireRow())
@@ -1378,7 +1330,6 @@ namespace ClosedXML.Excel
             }
 
             ShiftConditionalFormattingRows(range, rowsShifted);
-            ShiftDataValidationRows(range, rowsShifted);
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
 
@@ -1387,6 +1338,7 @@ namespace ClosedXML.Excel
                 Workbook.CalcEngine,
                 Hyperlinks,
                 Workbook.DefinedNamesInternal,
+                DataValidations
             };
             foreach (var worksheet in Workbook.WorksheetsInternal)
                 sheetListeners.Add(worksheet.DefinedNames);
@@ -1462,53 +1414,6 @@ namespace ClosedXML.Excel
 
                 if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
-            }
-        }
-
-        private void ShiftDataValidationRows(XLRange range, int rowsShifted)
-        {
-            if (!DataValidations.Any<XLDataValidation>())
-                return;
-
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            if (firstRow == 1) return;
-
-            int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
-            var model = Row(rowNum).AsRange();
-
-            foreach (var dv in DataValidations.ToList<XLDataValidation>())
-            {
-                var dvRanges = dv.Ranges.ToList();
-                dv.ClearRanges();
-
-                foreach (var dvRange in dvRanges)
-                {
-                    var dvAddress = dvRange.RangeAddress;
-                    IXLRange newRange;
-                    if (dvRange.Intersects(model))
-                    {
-                        newRange = Range(dvAddress.FirstAddress.RowNumber,
-                                         dvAddress.FirstAddress.ColumnNumber,
-                                         Math.Min(XLHelper.MaxRowNumber, dvAddress.LastAddress.RowNumber + rowsShifted),
-                                         dvAddress.LastAddress.ColumnNumber);
-                    }
-                    else if (dvAddress.FirstAddress.RowNumber >= firstRow)
-                    {
-                        newRange = Range(Math.Max(dvAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
-                                         dvAddress.FirstAddress.ColumnNumber,
-                                         Math.Min(XLHelper.MaxRowNumber, dvAddress.LastAddress.RowNumber + rowsShifted),
-                                         dvAddress.LastAddress.ColumnNumber);
-                    }
-                    else
-                        newRange = dvRange;
-
-                    if (newRange.RangeAddress.IsValid &&
-                        newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
-                        dv.AddRange(newRange);
-                }
-
-                if (!dv.Ranges.Any())
-                    DataValidations.Delete(v => v == dv);
             }
         }
 

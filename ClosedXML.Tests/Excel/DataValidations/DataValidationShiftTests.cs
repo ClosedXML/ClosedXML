@@ -1,6 +1,7 @@
-﻿using ClosedXML.Excel;
-using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel;
+using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.DataValidations
 {
@@ -105,6 +106,46 @@ namespace ClosedXML.Tests.Excel.DataValidations
             }
         }
 
+        [TestCase(new[] { "A10:A11" }, "1-2", new[] { "A8:A9" })]
+        [TestCase(new[] { "A10,A11" }, "1-2", new[] { "A8:A8 A9:A9" })]
+        [TestCase(new[] { "A10", "A11" }, "1-2", new[] { "A8:A8", "A9:A9" })]
+        public void Data_validations_are_shifted_when_rows_above_are_deleted(string[] initialDvs, string rowsToDelete, string[] shiftedDvs)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            foreach (var initialDv in initialDvs)
+                ws.Ranges(initialDv).CreateDataValidation();
+
+            ws.Rows(rowsToDelete).Delete();
+
+            var resultDvs = ws.DataValidations.Select(dv => ToSpaceList(dv.Ranges));
+            Assert.AreEqual(shiftedDvs, resultDvs);
+        }
+
+        [Test]
+        public void Data_validations_is_removed_when_its_area_is_deleted()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Range("A10").CreateDataValidation();
+
+            ws.Range("A10").Delete(XLShiftDeletedCells.ShiftCellsUp);
+
+            Assert.IsEmpty(ws.DataValidations);
+        }
+
+        [Test]
+        public void Data_validations_can_split_its_area_when_inserted_or_deleted_area_intersects_its_area()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Range("A10:C12").CreateDataValidation();
+
+            ws.Range("B12").Delete(XLShiftDeletedCells.ShiftCellsUp);
+
+            Assert.AreEqual("A10:A12 B10:B11 C10:C12", ToSpaceList(ws.DataValidations.Single().Ranges));
+        }
+
         [Test]
         public void DataValidationShiftedTruncateRange()
         {
@@ -122,6 +163,11 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
                 Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
             }
+        }
+
+        private static string ToSpaceList(IEnumerable<IXLRange> ranges)
+        {
+            return string.Join(" ", ranges.Select(r => r.RangeAddress.ToString(XLReferenceStyle.A1, false)));
         }
     }
 }

@@ -193,6 +193,15 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
         return new XLAreaList(result);
     }
 
+    internal XLAreaList DeleteWithoutShift(XLSheetRange deletedArea)
+    {
+        var result = new List<XLSheetRange>(_areas.Count);
+        foreach (var originalArea in _areas)
+            originalArea.Exclude(deletedArea, result);
+
+        return new XLAreaList(result);
+    }
+
     public IEnumerator<XLSheetRange> GetEnumerator()
     {
         return _areas.GetEnumerator();

@@ -248,6 +248,14 @@ namespace ClosedXML.Excel
                 point.Column >= FirstPoint.Column && point.Column <= LastPoint.Column;
         }
 
+        internal bool Covers(XLSheetRange otherArea)
+        {
+            return LeftColumn <= otherArea.LeftColumn &&
+                   TopRow <= otherArea.TopRow &&
+                   RightColumn >= otherArea.RightColumn &&
+                   BottomRow >= otherArea.BottomRow;
+        }
+
         /// <summary>
         /// Create a new range from this one by taking a number of rows from the bottom row up.
         /// </summary>

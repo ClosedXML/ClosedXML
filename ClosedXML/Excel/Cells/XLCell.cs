@@ -1468,7 +1468,7 @@ namespace ClosedXML.Excel
                 CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
-                Worksheet.DataValidations.Delete(AsRange());
+                Worksheet.DataValidations.Delete(new XLBookArea(Worksheet.Name, SheetPoint));
             }
         }
 
