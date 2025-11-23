@@ -24,7 +24,7 @@ internal readonly record struct XLFontName : IEquatable<string>
 
     public string Text { get; }
 
-    public bool Equals(string other)
+    public bool Equals(string? other)
     {
         return string.Equals(Text, other, Comparison);
     }

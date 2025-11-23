@@ -8,7 +8,7 @@ namespace ClosedXML.Excel;
 /// </summary>
 internal sealed class XLPivotSourceScenario : IXLPivotSource
 {
-    public bool Equals(IXLPivotSource other)
+    public bool Equals(IXLPivotSource? other)
     {
         return other is XLPivotSourceScenario;
     }

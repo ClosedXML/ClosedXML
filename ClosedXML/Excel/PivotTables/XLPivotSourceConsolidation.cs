@@ -37,7 +37,7 @@ internal sealed class XLPivotSourceConsolidation : IXLPivotSource
     /// </summary>
     public IReadOnlyList<XLPivotCacheSourceConsolidationRangeSet> RangeSets { get; init; } = Array.Empty<XLPivotCacheSourceConsolidationRangeSet>();
 
-    public bool Equals(IXLPivotSource otherSource)
+    public bool Equals(IXLPivotSource? otherSource)
     {
         var other = otherSource as XLPivotSourceConsolidation;
         if (other is null)

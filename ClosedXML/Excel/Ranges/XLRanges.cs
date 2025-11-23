@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
-            if (!_indexes.TryGetValue(worksheet, out IXLRangeIndex<XLRange> rangeIndex))
+            if (!_indexes.TryGetValue(worksheet, out IXLRangeIndex<XLRange>? rangeIndex))
             {
                 rangeIndex = new XLRangeIndex<XLRange>(worksheet);
                 _indexes.Add(worksheet, rangeIndex);
@@ -271,7 +271,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as XLRanges);
         }

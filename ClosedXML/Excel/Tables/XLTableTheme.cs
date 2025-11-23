@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
         {
             return (allThemes ?? (allThemes = typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(fi => fi.FieldType.Equals(typeof(XLTableTheme)))
-                .Select(fi => (XLTableTheme)fi.GetValue(null))
+                .Select(fi => (XLTableTheme)fi.GetValue(null)!)
                 .ToArray()));
         }
 

@@ -158,7 +158,7 @@ namespace ClosedXML.Excel
             internal readonly object? Value;
 
             /// <summary>
-            /// Must be as flag for inline string, so the default value is false => ShareString is true by default 
+            /// Must be as flag for inline string, so the default value is false => ShareString is true by default
             /// </summary>
             internal readonly bool Inline;
 
@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
                 Inline = inline;
             }
 
-            public override bool Equals(object obj) => obj is Text other && Equals(other);
+            public override bool Equals(object? obj) => obj is Text other && Equals(other);
 
             public bool Equals(Text other) => Equals(Value, other.Value) && Inline == other.Inline;
 

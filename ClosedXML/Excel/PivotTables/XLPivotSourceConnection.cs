@@ -15,7 +15,7 @@ internal sealed class XLPivotSourceConnection : IXLPivotSource
 
     public uint ConnectionId { get; }
 
-    public bool Equals(IXLPivotSource otherSource)
+    public bool Equals(IXLPivotSource? otherSource)
     {
         var other = otherSource as XLPivotSourceConnection;
         if (other is null)

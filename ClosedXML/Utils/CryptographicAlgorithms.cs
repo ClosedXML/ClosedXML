@@ -44,7 +44,9 @@ namespace ClosedXML.Utils
 
         public static string GetSalt(int length = 32)
         {
+#pragma warning disable SYSLIB0023
             using (var random = new RNGCryptoServiceProvider())
+#pragma warning restore SYSLIB0023
             {
                 var salt = new byte[length];
                 random.GetNonZeroBytes(salt);
@@ -108,7 +110,9 @@ namespace ClosedXML.Utils
             var bytes = saltBytes.Concat(passwordBytes).ToArray();
 
             byte[] hashedBytes;
+#pragma warning disable SYSLIB0021
             using (var hash = new SHA512Managed())
+#pragma warning restore SYSLIB0021
             {
                 hashedBytes = hash.ComputeHash(bytes);
 

@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="cell">The cell to find the sparkline for</param>
         /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
-        public IXLSparkline GetSparkline(IXLCell cell)
+        public IXLSparkline? GetSparkline(IXLCell cell)
         {
             return _sparklineGroups
                 .Select(g => g.GetSparkline(cell))

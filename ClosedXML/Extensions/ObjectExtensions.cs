@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
             return (T)Convert.ChangeType(o, typeof(T));
         }
 
-        public static string ToInvariantString<T>(this T value) where T : struct
+        public static string? ToInvariantString<T>(this T value) where T : struct
         {
             return value switch
             {

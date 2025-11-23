@@ -377,7 +377,7 @@ namespace ClosedXML.Excel
                 return ToStringRelative(includeSheet);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is XLRangeAddress))
             {
@@ -395,7 +395,7 @@ namespace ClosedXML.Excel
             var hashCode = -778064135;
             hashCode = hashCode * -1521134295 + FirstAddress.GetHashCode();
             hashCode = hashCode * -1521134295 + LastAddress.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet?>.Default.GetHashCode(Worksheet);
+            hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet?>.Default.GetHashCode(Worksheet!);
             return hashCode;
         }
 

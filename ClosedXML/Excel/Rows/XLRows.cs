@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
                 var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
                 foreach (XLRow r in Rows)
                 {
-                    if (!toDelete.TryGetValue(r.Worksheet, out List<Int32> list))
+                    if (!toDelete.TryGetValue(r.Worksheet, out List<Int32>? list))
                     {
                         list = new List<Int32>();
                         toDelete.Add(r.Worksheet, list);

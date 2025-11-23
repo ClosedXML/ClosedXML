@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal string? Name { get; }
 
-        public bool Equals(IXLPivotSource otherSource)
+        public bool Equals(IXLPivotSource? otherSource)
         {
             var other = otherSource as XLPivotSourceReference;
             if (other is null)

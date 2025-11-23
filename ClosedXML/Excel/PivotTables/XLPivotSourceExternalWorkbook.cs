@@ -47,7 +47,7 @@ internal sealed class XLPivotSourceExternalWorkbook : IXLPivotSource
         throw new NotImplementedException("External workbook source is not supported.");
     }
 
-    public bool Equals(IXLPivotSource otherSource)
+    public bool Equals(IXLPivotSource? otherSource)
     {
         var other = otherSource as XLPivotSourceExternalWorkbook;
         if (other is null)

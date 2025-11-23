@@ -208,7 +208,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (text is null)
                 return Blank;
-            if (text == String.Empty)
+            if (text.Length == 0)
                 return Blank;
             if (StringComparer.OrdinalIgnoreCase.Equals("TRUE", text))
                 return true;

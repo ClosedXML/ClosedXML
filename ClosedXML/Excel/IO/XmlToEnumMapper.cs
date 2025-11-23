@@ -36,7 +36,7 @@ internal sealed class XmlToEnumMapper : IEnumMapper
         where TEnum : struct, Enum
     {
         var enumMap = GetEnumMap<TEnum>();
-        return enumMap.ValueToKey.TryGetValue(enumValue, out text);
+        return enumMap.ValueToKey.TryGetValue(enumValue, out text!);
     }
 
     private BiDictionary<string, TEnum> GetEnumMap<TEnum>()

@@ -200,7 +200,7 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out XLWorksheet ws)) return;
+            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out XLWorksheet? ws)) return;
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.ContainsKey(newSheetName))

@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.IO
                 {
                     var vTDouble1 = new VTDouble
                     {
-                        Text = p.GetValue<Double>().ToInvariantString()
+                        Text = p.GetValue<Double>().ToInvariantString()!
                     };
                     customDocumentProperty.AppendChild(vTDouble1);
                 }

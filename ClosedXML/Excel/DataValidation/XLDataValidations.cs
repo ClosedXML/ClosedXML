@@ -207,12 +207,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void OnRangeAdded(object sender, RangeEventArgs e)
+        private void OnRangeAdded(object? sender, RangeEventArgs e)
         {
-            ProcessRangeAdded(e.Range, (XLDataValidation) sender, skipIntersectionCheck: false);
+            ProcessRangeAdded(e.Range, (XLDataValidation) sender!, skipIntersectionCheck: false);
         }
 
-        private void OnRangeRemoved(object sender, RangeEventArgs e)
+        private void OnRangeRemoved(object? sender, RangeEventArgs e)
         {
             ProcessRangeRemoved(e.Range);
         }

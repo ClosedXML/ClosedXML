@@ -40,7 +40,7 @@ internal sealed partial class XLFillCellFormat : IXLFill
         return _parent;
     }
 
-    bool IEquatable<IXLFill>.Equals(IXLFill other)
+    bool IEquatable<IXLFill>.Equals(IXLFill? other)
     {
         // This is a "business" equality, i.e. will both fills look the same.
         // This is gradient fill, other can only represent pattern, regardless of what it actually is.
@@ -48,10 +48,10 @@ internal sealed partial class XLFillCellFormat : IXLFill
         if (!isPatternFill)
             return false;
 
-        if (!HasFill(this) && !HasFill(other))
+        if (!HasFill(this) && !HasFill(other!))
             return true;
 
-        if (PatternType != other.PatternType)
+        if (PatternType != other!.PatternType)
             return false;
 
         if (BackgroundColor != other.BackgroundColor)

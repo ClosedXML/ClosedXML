@@ -57,7 +57,7 @@ internal class BiDictionary<TKey, TValue> : IReadOnlyBiDictionary<TKey, TValue>
 
     public bool TryGetValue(TKey key, out TValue value)
     {
-        return _keyToValue.TryGetValue(key, out value);
+        return _keyToValue.TryGetValue(key, out value!);
     }
 
     public bool ContainsKey(TKey key)

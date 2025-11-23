@@ -524,7 +524,7 @@ internal class PivotTableDefinitionPartWriter2
         xml.WriteAttributeDefault("cacheIndex", pivotArea.CacheIndex, false);
         xml.WriteAttributeDefault("outline", pivotArea.Outline, true);
         if (pivotArea.Offset is not null)
-            xml.WriteAttribute("offset", pivotArea.Offset.ToString());
+            xml.WriteAttribute("offset", pivotArea.Offset.ToString()!);
 
         xml.WriteAttributeDefault("collapsedLevelsAreSubtotals", pivotArea.CollapsedLevelsAreSubtotals, false);
         if (pivotArea.Axis is not null)

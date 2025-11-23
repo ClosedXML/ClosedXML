@@ -74,7 +74,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
 
             _hyperlinks.Remove(hyperlinkArea, out var hyperlink);
             if (newHlArea is not null)
-                _hyperlinks.Add(newHlArea.Value, hyperlink);
+                _hyperlinks.Add(newHlArea.Value, hyperlink!);
         }
     }
 
@@ -123,7 +123,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
     /// <inheritdoc />
     public bool TryGet(IXLAddress address, out XLHyperlink hyperlink)
     {
-        return _hyperlinks.TryGetValue(XLSheetPoint.FromAddress(address), out hyperlink);
+        return _hyperlinks.TryGetValue(XLSheetPoint.FromAddress(address), out hyperlink!);
     }
 
     /// <summary>

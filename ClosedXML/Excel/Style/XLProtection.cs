@@ -118,12 +118,12 @@ namespace ClosedXML.Excel
 
         #region Overridden
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            return Equals((IXLProtection)obj);
+            return Equals((IXLProtection?)obj);
         }
 
-        public bool Equals(IXLProtection other)
+        public bool Equals(IXLProtection? other)
         {
             var otherP = other as XLProtection;
             if (otherP == null)
