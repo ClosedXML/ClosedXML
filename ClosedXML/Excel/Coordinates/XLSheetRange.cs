@@ -69,6 +69,16 @@ namespace ClosedXML.Excel
         /// </summary>
         public int BottomRow => LastPoint.Row;
 
+        /// <summary>
+        /// Does area span from first to last column?
+        /// </summary>
+        internal bool HasFullRowWidth => LeftColumn == XLHelper.MinColumnNumber && RightColumn == XLHelper.MaxColumnNumber;
+
+        /// <summary>
+        /// Does area span from first to last row?
+        /// </summary>
+        internal bool HasFullColumnHeight => TopRow == XLHelper.MinRowNumber && BottomRow == XLHelper.MaxRowNumber;
+
         public override bool Equals(object? obj)
         {
             return obj is XLSheetRange range && Equals(range);
@@ -379,6 +389,28 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Return a new range that has been shifted in vertical direction by <paramref name="rowShift"/>.
+        /// If the shifted area is out of sheet bounds, clip part that is out.
+        /// </summary>
+        /// <param name="rowShift">How many rows to shift.</param>
+        /// <returns>Shifted clipped area or <c>null</c> if area was shifted completely out of a sheet.</returns>
+        internal XLSheetRange? ShiftRowsAndClip(int rowShift)
+        {
+            var shiftedTop = TopRow + rowShift;
+            if (shiftedTop > XLHelper.MaxRowNumber)
+                return null;
+
+            var shiftedBottom = BottomRow + rowShift;
+            if (shiftedBottom < XLHelper.MinRowNumber)
+                return null;
+
+            var clippedTop = Math.Max(shiftedTop, XLHelper.MinRowNumber);
+            var clippedBottom = Math.Min(shiftedBottom, XLHelper.MaxRowNumber);
+
+            return new XLSheetRange(clippedTop, LeftColumn, clippedBottom, RightColumn);
+        }
+
+        /// <summary>
         /// Return a new range that has been shifted in horizontal direction by <paramref name="columnShift"/>.
         /// </summary>
         /// <param name="columnShift">By how much to shift the range, positive - rightward, negative - leftward.</param>
@@ -388,6 +420,28 @@ namespace ClosedXML.Excel
             var topLeftCorner = FirstPoint.ShiftColumn(columnShift);
             var bottomRightCorner = LastPoint.ShiftColumn(columnShift);
             return new XLSheetRange(topLeftCorner, bottomRightCorner);
+        }
+
+        /// <summary>
+        /// Return a new range that has been shifted in horizontal direction by <paramref name="columnShift"/>.
+        /// If the shifted area is out of sheet bounds, clip part that is out.
+        /// </summary>
+        /// <param name="columnShift">How many columns to shift.</param>
+        /// <returns>Shifted clipped area or <c>null</c> if area was shifted completely out of a sheet.</returns>
+        internal XLSheetRange? ShiftColumnsAndClip(int columnShift)
+        {
+            var shiftedLeft = LeftColumn + columnShift;
+            if (shiftedLeft > XLHelper.MaxColumnNumber)
+                return null;
+
+            var shiftedRight = RightColumn + columnShift;
+            if (shiftedRight < XLHelper.MinColumnNumber)
+                return null;
+
+            var clippedLeft = Math.Max(shiftedLeft, XLHelper.MinColumnNumber);
+            var clippedRight = Math.Min(shiftedRight, XLHelper.MaxColumnNumber);
+
+            return new XLSheetRange(TopRow, clippedLeft, BottomRow, clippedRight);
         }
 
         public IEnumerator<XLSheetPoint> GetEnumerator()
@@ -710,6 +764,158 @@ namespace ClosedXML.Excel
 
             result = repositioned;
             return true;
+        }
+
+        /// <summary>
+        /// Determine a areas that contain all cells of this area without <paramref name="range"/>
+        /// and add them to the <paramref name="nonExcludedAreas"/>.
+        /// </summary>
+        /// <param name="range">Range to exclude from this one.</param>
+        /// <param name="nonExcludedAreas">A list to which add remaining (non-excluded) areas.</param>
+        /// <returns>If an area was excluded, the excluded area.</returns>
+        internal XLSheetRange? Exclude(XLSheetRange range, List<XLSheetRange> nonExcludedAreas)
+        {
+            if (Intersect(range) is not { } intersection)
+            {
+                nonExcludedAreas.Add(this);
+                return null;
+            }
+
+            // left
+            if (LeftColumn < intersection.LeftColumn)
+                nonExcludedAreas.Add(new XLSheetRange(TopRow, LeftColumn, BottomRow, intersection.LeftColumn - 1));
+
+            // top
+            if (TopRow < intersection.TopRow)
+                nonExcludedAreas.Add(new XLSheetRange(TopRow, intersection.LeftColumn, intersection.TopRow - 1, intersection.RightColumn));
+
+            // bottom
+            if (BottomRow > intersection.BottomRow)
+                nonExcludedAreas.Add(new XLSheetRange(intersection.BottomRow + 1, intersection.LeftColumn, BottomRow, intersection.RightColumn));
+
+            // right
+            if (RightColumn > intersection.RightColumn)
+                nonExcludedAreas.Add(new XLSheetRange(TopRow, intersection.RightColumn + 1, BottomRow, RightColumn));
+
+            return intersection;
+        }
+
+        /// <summary>
+        /// Return an area that has dimensions as if columns were inserted at <paramref name="insertedLeftColumn"/>.
+        /// Mimics Excel behavior.
+        /// </summary>
+        /// <param name="insertedLeftColumn">A position where columns are inserted.</param>
+        /// <param name="insertedWidth">How many columns were inserted.</param>
+        internal XLSheetRange? ShiftOrExtendRight(int insertedLeftColumn, int insertedWidth)
+        {
+            Debug.Assert(insertedWidth >= 0);
+
+            // Area inserted at the right edge extends - that is the reason for - 1
+            if (RightColumn < insertedLeftColumn - 1)
+            {
+                // inserted is to the right of area -> no shift
+                return this;
+            }
+
+            if (LeftColumn >= insertedLeftColumn)
+            {
+                // Inserted is to the left of affected area -> shift
+                return ShiftColumnsAndClip(insertedWidth);
+            }
+
+            // inserted is in the middle of affected: affectedLeft < insertedLeft <= affectedRight
+            return ExtendRight(insertedWidth);
+        }
+
+        /// <summary>
+        /// Return an area that has dimensions as if a rows were inserted at <paramref name="insertedTopRow"/>.
+        /// Mimics Excel behavior.
+        /// </summary>
+        /// <param name="insertedTopRow">A position where rows are inserted.</param>
+        /// <param name="insertedHeight">How many rows were inserted.</param>
+        internal XLSheetRange? ShiftOrExtendDown(int insertedTopRow, int insertedHeight)
+        {
+            Debug.Assert(insertedHeight >= 0);
+
+            // Area inserted at the bottom edge extends - that is the reason for - 1
+            if (BottomRow < insertedTopRow - 1)
+            {
+                // inserted is below the area -> no shift
+                return this;
+            }
+
+            if (TopRow >= insertedTopRow)
+            {
+                // Inserted is above the area -> shift
+                return ShiftRowsAndClip(insertedHeight);
+            }
+
+            // inserted is in the middle of affected: affectedTop < insertedTop <= affectedBottom
+            return ExtendBelow(insertedHeight);
+        }
+
+        /// <summary>
+        /// Return an area that has dimensions as if a rows were deleted from <paramref name="deletedTopRow"/>.
+        /// Mimics Excel behavior.
+        /// </summary>
+        /// <param name="deletedTopRow">A position from which where rows are deleted.</param>
+        /// <param name="deletedHeight">How many rows were deleted.</param>
+        internal XLSheetRange? ShiftOrShrinkUp(int deletedTopRow, int deletedHeight)
+        {
+            Debug.Assert(deletedHeight >= 0);
+            if (BottomRow < deletedTopRow || deletedHeight == 0)
+            {
+                // deleted is below the area -> no shift or shrink
+                return this;
+            }
+
+            var deletedBottomRow = deletedTopRow + deletedHeight - 1;
+            if (deletedBottomRow < TopRow)
+            {
+                // Deleted area is completely above the area -> only shift
+                return ShiftRows(-deletedHeight);
+            }
+
+            // Shrink by how much deletedArea and area overlap
+            var shrink = Math.Min(BottomRow, deletedBottomRow) - Math.Max(TopRow, deletedTopRow) + 1;
+            if (shrink == Height)
+                return null;
+
+            var shift = Math.Max(TopRow - deletedTopRow, 0);
+            var shifted = ShiftRows(-shift);
+            return new XLSheetRange(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow - shrink, shifted.RightColumn);
+        }
+
+        /// <summary>
+        /// Return an area that has dimensions as if a column were deleted from <paramref name="deletedLeftColumn"/>.
+        /// Mimics Excel behavior.
+        /// </summary>
+        /// <param name="deletedLeftColumn">A position from which where columns are deleted.</param>
+        /// <param name="deletedWidth">How many columns were deleted.</param>
+        internal XLSheetRange? ShiftOrShrinkLeft(int deletedLeftColumn, int deletedWidth)
+        {
+            Debug.Assert(deletedWidth >= 0);
+            if (RightColumn < deletedLeftColumn || deletedWidth == 0)
+            {
+                // deleted is to the right of area -> no shift or shrink
+                return this;
+            }
+
+            var deletedRightColumn = deletedLeftColumn + deletedWidth - 1;
+            if (deletedRightColumn < LeftColumn)
+            {
+                // Deleted area is completely to left of area -> only shift
+                return ShiftColumns(-deletedWidth);
+            }
+
+            // Shrink by how much deletedArea and area overlap
+            var shrink = Math.Min(RightColumn, deletedRightColumn) - Math.Max(LeftColumn, deletedLeftColumn) + 1;
+            if (shrink == Width)
+                return null;
+
+            var shift = Math.Max(LeftColumn - deletedLeftColumn, 0);
+            var shifted = ShiftColumns(-shift);
+            return new XLSheetRange(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow, shifted.RightColumn - shrink);
         }
     }
 }
