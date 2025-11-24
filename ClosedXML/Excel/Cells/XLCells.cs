@@ -151,7 +151,7 @@ internal class XLCells :
 
         if (_options.HasFlag(XLCellsUsedOptions.DataValidation))
             candidates = candidates.Union(
-                worksheet.DataValidations.SelectMany(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+                worksheet.DataValidations.SelectMany<XLDataValidation, XLSheetPoint>(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
 
         if (_options.HasFlag(XLCellsUsedOptions.Sparklines))
             candidates = candidates.Union(

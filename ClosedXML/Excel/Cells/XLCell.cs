@@ -1061,7 +1061,9 @@ namespace ClosedXML.Excel
             return dataValidation;
         }
 
-        public IXLDataValidation CreateDataValidation()
+        IXLDataValidation IXLCell.CreateDataValidation() => CreateDataValidation();
+
+        internal XLDataValidation CreateDataValidation()
         {
             var validation = new XLDataValidation(AsRange());
             Worksheet.DataValidations.Add(validation);
@@ -1262,7 +1264,7 @@ namespace ClosedXML.Excel
                     var dvTargetRange = Worksheet.Range(dvTargetAddress);
                     if (newDataValidation == null)
                     {
-                        newDataValidation = dvTargetRange.CreateDataValidation() as XLDataValidation;
+                        newDataValidation = dvTargetRange.CreateDataValidation();
                         newDataValidation.CopyFrom(dataValidation);
                     }
                     else

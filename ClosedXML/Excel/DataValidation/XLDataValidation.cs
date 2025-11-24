@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
             AddRange(range);
         }
 
-        public XLDataValidation(IXLDataValidation dataValidation, XLWorksheet worksheet)
+        public XLDataValidation(XLDataValidation dataValidation, XLWorksheet worksheet)
             : this(worksheet)
         {
             _worksheet = worksheet;

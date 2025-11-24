@@ -76,7 +76,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLDataValidation CreateDataValidation()
+        IXLDataValidation IXLRangeBase.CreateDataValidation()
+        {
+            return CreateDataValidation();
+        }
+
+        internal XLDataValidation CreateDataValidation()
         {
             var newRange = AsRange();
             var dataValidation = new XLDataValidation(newRange);

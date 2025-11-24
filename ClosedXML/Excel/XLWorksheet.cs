@@ -639,7 +639,11 @@ namespace ClosedXML.Excel
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
             Internals.RowsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Row(kp.Key)));
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, XLCellCopyOptions.Values | XLCellCopyOptions.Styles));
-            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv, this)));
+            foreach (var dataValidation in DataValidations)
+            {
+                targetSheet.DataValidations.Add(new XLDataValidation(dataValidation, this));
+            }
+
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;
@@ -1309,14 +1313,16 @@ namespace ClosedXML.Excel
 
         private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
         {
-            if (!DataValidations.Any()) return;
+            if (!DataValidations.Any<XLDataValidation>())
+                return;
+
             Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
             int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
 
-            foreach (var dv in DataValidations.ToList())
+            foreach (var dv in DataValidations.ToList<XLDataValidation>())
             {
                 var dvRanges = dv.Ranges.ToList();
                 dv.ClearRanges();
@@ -1461,14 +1467,16 @@ namespace ClosedXML.Excel
 
         private void ShiftDataValidationRows(XLRange range, int rowsShifted)
         {
-            if (!DataValidations.Any()) return;
+            if (!DataValidations.Any<XLDataValidation>())
+                return;
+
             Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
-            foreach (var dv in DataValidations.ToList())
+            foreach (var dv in DataValidations.ToList<XLDataValidation>())
             {
                 var dvRanges = dv.Ranges.ToList();
                 dv.ClearRanges();
