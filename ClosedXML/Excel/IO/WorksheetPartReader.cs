@@ -26,6 +26,10 @@ internal class WorksheetPartReader
     };
 
     private readonly Dictionary<UInt32, String> _sharedFormulasR1C1 = new();
+
+    /// <summary>
+    /// Row number of last read <c>row</c> element.
+    /// </summary>
     private Int32 _lastRow;
     private Int32 _lastColumnNumber;
 
@@ -210,7 +214,10 @@ internal class WorksheetPartReader
 
         var attributes = reader.Attributes;
         var rowIndexAttr = attributes.GetAttribute("r");
+        
+        // Row number is an optional attribute. If not specified, it should be a next row from the last read row.
         var rowIndex = string.IsNullOrEmpty(rowIndexAttr) ? ++_lastRow : int.Parse(rowIndexAttr);
+        _lastRow = rowIndex;
 
         var xlRow = ws.Row(rowIndex, false);
 
