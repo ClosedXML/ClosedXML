@@ -293,12 +293,6 @@ namespace ClosedXML.Tests.Excel.DataValidations
         }
 
         [Test]
-        public void CannotCreateDataValidationWithoutRange()
-        {
-            Assert.Throws<ArgumentNullException>(() => new XLDataValidation(null));
-        }
-
-        [Test]
         public void DataValidationHasWorksheetAndRangesWhenCreated()
         {
             using (var wb = new XLWorkbook())
@@ -306,9 +300,9 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var ws = wb.AddWorksheet();
                 var range = ws.Range("A1:A3");
 
-                var dv = new XLDataValidation(range);
+                var dv = range.CreateDataValidation();
 
-                Assert.AreSame(ws, dv.Worksheet);
+                Assert.AreSame(ws, ((XLDataValidation)dv).Worksheet);
                 Assert.AreSame(range, dv.Ranges.Single());
             }
         }
@@ -322,7 +316,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var range1 = ws.Range("A1:A3");
                 var range2 = ws.Range("C1:C3");
                 var ranges3 = ws.Ranges("D1:D3,F1:F3");
-                var dv = new XLDataValidation(range1);
+                var dv = range1.CreateDataValidation();
 
                 dv.AddRange(range2);
                 dv.AddRanges(ranges3);
@@ -343,7 +337,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var ws2 = wb.AddWorksheet();
                 var range1 = ws1.Range("A1:A3");
                 var range2 = ws2.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
+                var dv = range1.CreateDataValidation();
 
                 dv.AddRange(range2);
 
@@ -360,7 +354,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var range1 = ws.Range("A1:A3");
                 var range2 = ws.Range("C1:C3");
                 var ranges3 = ws.Ranges("D1:D3,F1:F3");
-                var dv = new XLDataValidation(range1);
+                var dv = range1.CreateDataValidation();
                 dv.AddRange(range2);
                 dv.AddRanges(ranges3);
 
@@ -379,7 +373,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var range1 = ws.Range("A1:A3");
                 var range2 = ws.Range("C1:C3");
 
-                var dv = new XLDataValidation(range1);
+                var dv = range1.CreateDataValidation();
                 dv.AddRange(range2);
 
                 dv.RemoveRange(range1);
@@ -397,7 +391,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var range1 = ws.Range("A1:A3");
                 var range2 = ws.Range("C1:C3");
 
-                var dv = new XLDataValidation(range1);
+                var dv = range1.CreateDataValidation();
 
                 dv.RemoveRange(range2);
                 dv.RemoveRange(null);

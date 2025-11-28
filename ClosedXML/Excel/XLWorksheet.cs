@@ -641,7 +641,7 @@ namespace ClosedXML.Excel
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, XLCellCopyOptions.Values | XLCellCopyOptions.Styles));
             foreach (var dataValidation in DataValidations)
             {
-                targetSheet.DataValidations.Add(new XLDataValidation(dataValidation, this));
+                targetSheet.DataValidations.CopyFrom(dataValidation);
             }
 
             targetSheet.Visibility = Visibility;

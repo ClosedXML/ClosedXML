@@ -11,24 +11,9 @@ namespace ClosedXML.Excel
     {
         private readonly XLWorksheet _worksheet;
 
-        public XLDataValidation(IXLRange range)
-            : this(range?.Worksheet as XLWorksheet)
-        {
-            if (range == null) throw new ArgumentNullException(nameof(range));
-
-            AddRange(range);
-        }
-
-        public XLDataValidation(XLDataValidation dataValidation, XLWorksheet worksheet)
-            : this(worksheet)
+        internal XLDataValidation(XLWorksheet worksheet)
         {
             _worksheet = worksheet;
-            CopyFrom(dataValidation);
-        }
-
-        private XLDataValidation(XLWorksheet worksheet)
-        {
-            _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
             Initialize();
         }
 
@@ -41,7 +26,7 @@ namespace ClosedXML.Excel
             Initialize();
         }
 
-        public void CopyFrom(IXLDataValidation dataValidation)
+        internal void CopyFrom(IXLDataValidation dataValidation)
         {
             if (dataValidation == this) return;
 
@@ -186,12 +171,17 @@ namespace ClosedXML.Excel
         /// <param name="range">A range to add.</param>
         public void AddRange(IXLRange range)
         {
-            if (range == null) throw new ArgumentNullException(nameof(range));
+            if (range == null)
+                throw new ArgumentNullException(nameof(range));
 
-            if (range.Worksheet != Worksheet)
-                range = Worksheet.Range(((XLRangeAddress)range.RangeAddress).WithoutWorksheet());
+            // Do not add area if the DV has been detached (e.g. consolidation).
+            var isDetached = !_worksheet.DataValidations.Contains(this);
+            if (isDetached)
+                return;
 
-            Areas = Areas.With(XLBookArea.From(range).Area);
+            // Ignore sheet of a range
+            var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+            _worksheet.DataValidations.AddArea(this, area);
         }
 
         /// <summary>

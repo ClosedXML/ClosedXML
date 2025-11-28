@@ -25,7 +25,24 @@ namespace ClosedXML.Excel
             if (dataValidation == null)
                 throw new ArgumentNullException(nameof(dataValidation));
 
-            return Add((XLDataValidation)dataValidation);
+            var dv = (XLDataValidation)dataValidation;
+            if (dv.Worksheet != _worksheet)
+                return CopyFrom(dv);
+
+            // It's possible that it was detached and while detached, it had added some areas?
+            // I have a very hard time understanding the use case and intended behavior. This
+            // API should be scrapped.
+            if (!_dataValidations.Contains(dv))
+            {
+                // Adding a range can split current one -> clear existing DVs so new one can be
+                // added and "one DV per cell" is kept.
+                foreach (var area in dv.Areas)
+                    AdjustDataValidationAreas(_worksheet, area, static (dataValidationAreas, areaOfNewValidation) => dataValidationAreas.DeleteWithoutShift(areaOfNewValidation));
+
+                _dataValidations.Add(dv);
+            }
+
+            return dv;
         }
 
         public Boolean ContainsSingle(IXLRange range)
@@ -53,16 +70,15 @@ namespace ClosedXML.Excel
         /// </summary>
         public IEnumerable<IXLDataValidation> GetAllInRange(IXLRangeAddress rangeAddress)
         {
-            if (rangeAddress == null || !rangeAddress.IsValid)
+            if (rangeAddress is null || !rangeAddress.IsValid)
+                yield break;
+
+            if (rangeAddress.Worksheet != _worksheet)
                 yield break;
 
             var intersectingArea = XLSheetRange.FromRangeAddress(rangeAddress);
-
             foreach (var dataValidation in _dataValidations)
             {
-                if (rangeAddress.Worksheet != dataValidation.Worksheet)
-                    continue;
-
                 foreach (var area in dataValidation.Areas)
                 {
                     if (intersectingArea.Intersects(area))
@@ -100,19 +116,15 @@ namespace ClosedXML.Excel
         /// <returns>True is the data validation rule was found, false otherwise.</returns>
         public bool TryGet(IXLRangeAddress rangeAddress, [NotNullWhen(true)] out IXLDataValidation? foundDataValidation)
         {
-            if (rangeAddress == null || !rangeAddress.IsValid)
+            if (rangeAddress is null || !rangeAddress.IsValid || rangeAddress.Worksheet != _worksheet)
             {
                 foundDataValidation = null;
                 return false;
             }
 
             var coveredArea = XLSheetRange.FromRangeAddress(rangeAddress);
-
             foreach (var dataValidation in _dataValidations)
             {
-                if (rangeAddress.Worksheet != dataValidation.Worksheet)
-                    continue;
-
                 foreach (var area in dataValidation.Areas)
                 {
                     if (area.Covers(coveredArea))
@@ -129,42 +141,36 @@ namespace ClosedXML.Excel
 
         #endregion IXLDataValidations Members
 
-        internal XLDataValidation Add(XLDataValidation dataValidation)
+        /// <summary>
+        /// Create a new DV with an initial area.
+        /// </summary>
+        internal XLDataValidation Create(XLSheetRange area)
         {
-            return Add(dataValidation, skipIntersectionsCheck: false);
+            var dv = new XLDataValidation(_worksheet);
+            _dataValidations.Add(dv);
+            AddArea(dv, area);
+            return dv;
         }
 
-        internal XLDataValidation Add(XLDataValidation dataValidation, bool skipIntersectionsCheck)
+        /// <summary>
+        /// Create a new DV that is created from another DV from different sheet.
+        /// </summary>
+        internal XLDataValidation CopyFrom(XLDataValidation original)
         {
-            XLDataValidation xlDataValidation;
-            if (dataValidation.Ranges.Any(r => r.Worksheet != _worksheet))
-            {
-                xlDataValidation = new XLDataValidation(dataValidation, _worksheet);
-            }
-            else
-            {
-                xlDataValidation = dataValidation;
-            }
-
-            // Adding a range can split current one
-            foreach (var area in dataValidation.Areas)
-                AdjustDataValidationAreas(_worksheet, area, static (dataValidationAreas, areaOfNewValidation) => dataValidationAreas.DeleteWithoutShift(areaOfNewValidation));
-
-            _dataValidations.Add(xlDataValidation);
-            return xlDataValidation;
+            var dv = new XLDataValidation(_worksheet);
+            _dataValidations.Add(dv);
+            dv.CopyFrom(original);
+            return dv;
         }
 
-        internal void Delete(XLBookArea bookArea)
+        internal void Delete(XLSheetRange areaToDelete)
         {
             for (var i = _dataValidations.Count - 1; i >= 0; --i)
             {
                 var dataValidation = _dataValidations[i];
-                if (!XLHelper.SheetComparer.Equals(dataValidation.Worksheet.Name, bookArea.Name))
-                    continue;
-
-                foreach (var area in dataValidation.Areas)
+                foreach (var dataValidationArea in dataValidation.Areas)
                 {
-                    if (area.Intersects(bookArea.Area))
+                    if (dataValidationArea.Intersects(areaToDelete))
                     {
                         _dataValidations.RemoveAt(i);
                         break;
@@ -200,24 +206,58 @@ namespace ClosedXML.Excel
             };
 
             var rules = _dataValidations.ToList();
-            rules.ForEach(Delete);
+            _dataValidations.Clear();
 
             while (rules.Any())
             {
-                var similarRules = rules.Where(r => areEqual(rules.First(), r)).ToList();
+                var consRule = rules.First();
+                _dataValidations.Add(consRule);
+                var similarRules = rules.Where(r => areEqual(consRule, r)).ToList();
                 similarRules.ForEach(r => rules.Remove(r));
 
-                var consRule = similarRules.First();
-                var ranges = similarRules.SelectMany(dv => dv.Ranges).ToList();
-
                 IXLRanges consolidatedRanges = new XLRanges(_worksheet);
-                ranges.ForEach(r => consolidatedRanges.Add(r));
+                foreach (var similarRuleArea in similarRules.SelectMany(dv => dv.Areas))
+                    consolidatedRanges.Add(_worksheet.Range(XLRangeAddress.FromSheetRange(_worksheet, similarRuleArea)));
+
                 consolidatedRanges = consolidatedRanges.Consolidate();
 
                 consRule.ClearRanges();
                 consRule.AddRanges(consolidatedRanges);
-                Add(consRule);
             }
+        }
+
+        internal void AddArea(XLDataValidation modifiedDataValidation, XLSheetRange addedArea)
+        {
+            // Add an area to modifiedDV. This must be done carefully, because there can be only
+            // one DV per cell. Due to this problem, the correspondence area-DV should be managed
+            // by the DV collection and this method should be private. Change to private would
+            // require change of DV to a nested class + separation of API object, so the method is
+            // internal + exception.
+            if (!_dataValidations.Contains(modifiedDataValidation))
+                throw new ArgumentException("Data validation is not a data validation of this sheet.", nameof(modifiedDataValidation));
+
+            // There can be only one DV per cell. Remove DVs from cells that should now belong
+            // to the area and remove DVs without any cells.
+            for (var i = _dataValidations.Count - 1; i >= 0; --i)
+            {
+                var dataValidation = _dataValidations[i];
+
+                // Area could cover whole modifiedDataValidation and could remove the modifiedDV
+                // before the addedArea could be added to the modifiedDV. To avoid this, it is not
+                // cleared.
+                if (dataValidation == modifiedDataValidation)
+                    continue;
+
+                dataValidation.Areas = dataValidation.Areas.DeleteWithoutShift(addedArea);
+                if (dataValidation.Areas.Count == 0)
+                {
+                    _dataValidations.RemoveAt(i);
+                }
+            }
+
+            // Ensure the modifiedDV area list contains only disjunct areas to ensure
+            // the "one DV per cell" invariant.
+            modifiedDataValidation.Areas = modifiedDataValidation.Areas.DeleteWithoutShift(addedArea).With(addedArea);
         }
 
         void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange area)

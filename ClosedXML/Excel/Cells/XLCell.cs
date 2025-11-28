@@ -1065,9 +1065,7 @@ namespace ClosedXML.Excel
 
         internal XLDataValidation CreateDataValidation()
         {
-            var validation = new XLDataValidation(AsRange());
-            Worksheet.DataValidations.Add(validation);
-            return validation;
+            return Worksheet.DataValidations.Create(new XLSheetRange(SheetPoint));
         }
 
         public void Select()
@@ -1468,7 +1466,7 @@ namespace ClosedXML.Excel
                 CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
-                Worksheet.DataValidations.Delete(new XLBookArea(Worksheet.Name, SheetPoint));
+                Worksheet.DataValidations.Delete(new XLSheetRange(SheetPoint));
             }
         }
 

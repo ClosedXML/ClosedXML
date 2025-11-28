@@ -83,10 +83,7 @@ namespace ClosedXML.Excel
 
         internal XLDataValidation CreateDataValidation()
         {
-            var newRange = AsRange();
-            var dataValidation = new XLDataValidation(newRange);
-            Worksheet.DataValidations.Add(dataValidation);
-            return dataValidation;
+            return Worksheet.DataValidations.Create(SheetRange);
         }
 
         public IXLDataValidation GetDataValidation()

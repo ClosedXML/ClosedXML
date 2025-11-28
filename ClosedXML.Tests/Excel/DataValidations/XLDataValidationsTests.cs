@@ -1,18 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
-using System.Linq;
 
 namespace ClosedXML.Tests.Excel.DataValidations
 {
     public class XLDataValidationsTests
     {
-        [Test]
-        public void CannotCreateWithoutWorksheet()
-        {
-            Assert.Throws<ArgumentNullException>(() => new XLDataValidations(null));
-        }
-
         [Test]
         public void AddedRangesAreTransferredToTargetSheet()
         {
@@ -34,6 +28,83 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 Assert.AreSame(ws1, dv1.Ranges.Single().Worksheet);
                 Assert.AreSame(ws2, dv2.Ranges.Single().Worksheet);
             }
+        }
+
+        [Test]
+        [Description("Ensure one-dv-per-cell invariant")]
+        public void AddRange_replaces_intersecting_areas_of_validation()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var dv = ws.Range("A1:C3").CreateDataValidation();
+            dv.MinValue = "10";
+
+            dv.AddRange(ws.Range("B1:D4"));
+
+            Assert.AreEqual("A1:A3 B1:D4", ToSpaceList(dv.Ranges));
+            Assert.AreEqual("10", dv.MinValue);
+        }
+
+        [Test]
+        public void AddRange_keeps_validation_settings_even_when_it_completely_covers_original()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var dv = ws.Range("B2:C3").CreateDataValidation();
+            dv.MinValue = "10";
+
+            dv.AddRange(ws.Range("A1:D4"));
+
+            Assert.AreEqual("A1:D4", ToSpaceList(dv.Ranges));
+            Assert.AreEqual("10", dv.MinValue);
+        }
+
+        [Test]
+        [Description("Ensure one-dv-per-cell invariant")]
+        public void AddRange_replaces_area_of_other_validations()
+        {
+            // Arrange
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var dv1 = ws.Range("A1:A3").CreateDataValidation();
+            dv1.WholeNumber.Between(1, 5);
+
+            var dv2 = ws.Range("B2:D4").CreateDataValidation();
+            dv1.MaxValue = "10";
+
+            // Act
+            dv1.AddRange(ws.Range("B1:D3"));
+
+            // Assert
+            Assert.AreEqual("A1:A3 B1:D3", ToSpaceList(dv1.Ranges));
+            Assert.AreEqual("B4:D4", ToSpaceList(dv2.Ranges));
+        }
+
+        [Test]
+        public void AddRange_deletes_other_validations_that_are_not_used_by_any_cell()
+        {
+            // Arrange
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var dv1 = ws.Range("A1:A3").CreateDataValidation();
+            dv1.WholeNumber.Between(1, 5);
+
+            var dv2 = ws.Range("B1:B3").CreateDataValidation();
+            dv1.MaxValue = "10";
+
+            // Act
+            dv1.AddRange(ws.Range("B1:B3"));
+
+            // Assert
+            Assert.AreEqual(1, ws.DataValidations.Count());
+
+            Assert.IsTrue(ws.DataValidations.Contains(dv1));
+            Assert.AreEqual("A1:A3 B1:B3", ToSpaceList(dv1.Ranges));
+
+            Assert.IsFalse(ws.DataValidations.Contains(dv2));
+            Assert.IsEmpty(ToSpaceList(dv2.Ranges));
         }
 
         [TestCase("A1:A1", true)]
@@ -137,7 +208,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 var dv2 = ws.Range("B1:B3").CreateDataValidation();
                 dv2.MinValue = "100";
 
-                (ws.DataValidations as XLDataValidations).Consolidate();
+                ((XLDataValidations)ws.DataValidations).Consolidate();
                 dv1.AddRange(ws.Range("C1:C3"));
                 dv2.AddRange(ws.Range("D1:D3"));
 
@@ -146,6 +217,11 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 Assert.True(ws.Cell("C1").HasDataValidation);
                 Assert.False(ws.Cell("D1").HasDataValidation);
             }
+        }
+
+        private static string ToSpaceList(IEnumerable<IXLRange> ranges)
+        {
+            return string.Join(" ", ranges.Select(x => x.RangeAddress.ToStringRelative()));
         }
     }
 }

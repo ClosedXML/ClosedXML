@@ -293,13 +293,12 @@ namespace ClosedXML.Excel
         public IXLDataValidation CreateDataValidation()
         {
             var firstRange = Ranges.First();
-            var dataValidation = new XLDataValidation(firstRange);
+             var dataValidation = firstRange.Worksheet.DataValidations.Create(firstRange.SheetRange);
             foreach (var range in Ranges.Skip(1))
             {
                 dataValidation.AddRange(range);
             }
 
-            firstRange.Worksheet.DataValidations.Add(dataValidation);
             return dataValidation;
         }
 
