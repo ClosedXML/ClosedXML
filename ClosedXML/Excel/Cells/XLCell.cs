@@ -818,13 +818,9 @@ namespace ClosedXML.Excel
         /// <inheritdoc />
         public void SetHyperlink(XLHyperlink? hyperlink)
         {
-            if (Worksheet.Hyperlinks.TryGet(SheetPoint, out var existingHyperlink))
-                Worksheet.Hyperlinks.Delete(existingHyperlink);
-
+            Worksheet.Hyperlinks.SetCellHyperlink(SheetPoint, hyperlink);
             if (hyperlink is null)
                 return;
-
-            Worksheet.Hyperlinks.Add(SheetPoint, hyperlink);
 
             var cellFont = GetStyleForRead().Font;
             var sheetFont = Worksheet.StyleValue.Font;
@@ -837,15 +833,15 @@ namespace ClosedXML.Excel
 
         internal void SetCellHyperlink(XLHyperlink hyperlink)
         {
-            Worksheet.Hyperlinks.Clear(SheetPoint);
-            Worksheet.Hyperlinks.Add(SheetPoint, hyperlink);
+            Worksheet.Hyperlinks.SetCellHyperlink(SheetPoint, hyperlink);
         }
 #nullable disable
 
         public XLHyperlink CreateHyperlink()
         {
-            SetHyperlink(new XLHyperlink());
-            return GetHyperlink();
+            var link = new XLHyperlink();
+            SetHyperlink(link);
+            return link;
         }
 
         public IXLCells InsertCellsAbove(int numberOfRows)
@@ -1096,7 +1092,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean HasHyperlink => Worksheet.Hyperlinks.TryGet(SheetPoint, out _);
+        public Boolean HasHyperlink => Worksheet.Hyperlinks.HasHyperlink(SheetPoint);
 
         /// <inheritdoc />
         public Boolean ShowPhonetic

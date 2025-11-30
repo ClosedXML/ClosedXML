@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel;
 
-public interface IXLHyperlinks: IEnumerable<XLHyperlink>
+public interface IXLHyperlinks : IEnumerable<XLHyperlink>
 {
     /// <summary>
     /// Remove the hyperlink from a worksheet. Doesn't throw if hyperlinks is
@@ -47,5 +48,5 @@ public interface IXLHyperlinks: IEnumerable<XLHyperlink>
     /// <param name="address">Address of the cell.</param>
     /// <param name="hyperlink">Found hyperlink.</param>
     /// <returns><c>true</c> if there was a hyperlink for <paramref name="address"/>, <c>false</c> otherwise.</returns>
-    bool TryGet(IXLAddress address, out XLHyperlink hyperlink);
+    bool TryGet(IXLAddress address, [NotNullWhen(true)] out XLHyperlink? hyperlink);
 }
