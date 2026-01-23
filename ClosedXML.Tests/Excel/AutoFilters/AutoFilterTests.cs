@@ -373,5 +373,36 @@ namespace ClosedXML.Tests
                 }
             }
         }
+
+        [Test]
+        public void ShouldCreateColorFilter()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Test");
+
+                var cell = ws.Cell("A1");
+                cell.Style.Fill.BackgroundColor = XLColor.Red;
+                cell.SetValue(1);
+
+                var cell2 = ws.Cell("A2");
+                cell2.Style.Fill.BackgroundColor = XLColor.Green;
+                cell2.SetValue(2);
+
+                var cell3 = ws.Cell("A3");
+                cell3.Style.Fill.BackgroundColor = XLColor.Black;
+                cell3.SetValue(3);
+
+                var cell4 = ws.Cell("A4");
+                cell4.Style.Fill.BackgroundColor = XLColor.Green;
+                cell4.SetValue(4);
+
+                var autoFilter = ws.RangeUsed().SetAutoFilter();
+                autoFilter.Column(1)
+                    .AddBackgroundColorFilter(XLColor.Green);
+
+                wb.SaveAs("C:\\testfilter2.xlsx");
+            }
+        }
     }
 }

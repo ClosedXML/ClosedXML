@@ -1,4 +1,5 @@
-﻿using ClosedXML.Utils;
+using ClosedXML.Utils;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Globalization;
@@ -16,11 +17,11 @@ internal class AutoFilterReader
             ws.Range(af.Reference.Value).SetAutoFilter();
             var autoFilter = ws.AutoFilter;
             LoadAutoFilterSort(af, ws, autoFilter);
-            LoadAutoFilterColumns(af, autoFilter);
+            LoadAutoFilterColumns(af, autoFilter, ws);
         }
     }
 
-    internal static void LoadAutoFilterColumns(AutoFilter af, XLAutoFilter autoFilter)
+    internal static void LoadAutoFilterColumns(AutoFilter af, XLAutoFilter autoFilter, XLWorksheet ws)
     {
         foreach (var filterColumn in af.Elements<FilterColumn>())
         {
@@ -162,6 +163,34 @@ internal class AutoFilterReader
                 xlFilterColumn.DynamicType = dynamicType;
                 xlFilterColumn.DynamicValue = dynamicValue;
                 xlFilterColumn.AddFilter(XLFilter.CreateAverage(dynamicValue, dynamicType == XLFilterDynamicType.AboveAverage));
+            }
+            else if (filterColumn.ColorFilter is { } colorFilter)
+            {
+                xlFilterColumn.FilterType = XLFilterType.ColorFilter;
+
+                if (colorFilter?.FormatId != null)
+                {
+                    int dxfid = Convert.ToInt32(colorFilter.FormatId.Value);
+
+                    if (ws.Workbook.Styles.DifferentialFormats.TryGetValue(dxfid, out var value))
+                    {
+                        //filter by fill color
+                        if (OpenXmlHelper.GetBooleanValueAsBool(colorFilter.CellColor, true))
+                        {
+                            if (value.Fill?.Pattern != null)
+                            {
+                                var bgColor = value.Fill.Pattern.BackgroundColor;
+                                if (bgColor != null)
+                                    xlFilterColumn.AddFilter(XLFilter.CreateColorFilter(true, bgColor));
+                            }
+                        }
+                        else
+                        {
+                            if (value.Font.Color != null)
+                                xlFilterColumn.AddFilter(XLFilter.CreateColorFilter(false, value.Font.Color));
+                        }
+                    }
+                }
             }
         }
     }

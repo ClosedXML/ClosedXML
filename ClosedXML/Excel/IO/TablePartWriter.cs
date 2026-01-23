@@ -152,7 +152,7 @@ namespace ClosedXML.Excel.IO
                 else
                     xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
 
-                WorksheetPartWriter.PopulateAutoFilter(xlTable.AutoFilter, autoFilter1);
+                WorksheetPartWriter.PopulateAutoFilter(xlTable.AutoFilter, autoFilter1, context);
 
                 table.AppendChild(autoFilter1);
             }

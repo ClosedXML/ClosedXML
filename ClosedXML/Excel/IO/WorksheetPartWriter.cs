@@ -13,6 +13,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
+using static ClosedXML.Excel.IO.OpenXmlConst;
+using static ClosedXML.Excel.XLWorkbook;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
 using Column = DocumentFormat.OpenXml.Spreadsheet.Column;
 using Columns = DocumentFormat.OpenXml.Spreadsheet.Columns;
@@ -21,10 +25,6 @@ using Hyperlink = DocumentFormat.OpenXml.Spreadsheet.Hyperlink;
 using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-using System.Reflection;
-using System.Xml;
-using static ClosedXML.Excel.XLWorkbook;
-using static ClosedXML.Excel.IO.OpenXmlConst;
 
 namespace ClosedXML.Excel.IO
 {
@@ -52,6 +52,8 @@ namespace ClosedXML.Excel.IO
             {
                 xlWorksheet.ConditionalFormats.Consolidate();
             }
+
+
 
             #region Worksheet
 
@@ -580,7 +582,7 @@ namespace ClosedXML.Excel.IO
                 var autoFilter = worksheet.Elements<AutoFilter>().First();
                 cm.SetElement(XLWorksheetContents.AutoFilter, autoFilter);
 
-                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
+                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter, context);
             }
             else
             {
@@ -1482,7 +1484,7 @@ namespace ClosedXML.Excel.IO
             }
         }
 
-        internal static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
+        internal static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter, SaveContext context)
         {
             var filterRange = xlAutoFilter.Range;
             autoFilter.Reference = filterRange.RangeAddress.ToString();
@@ -1534,6 +1536,68 @@ namespace ClosedXML.Excel.IO
                         filterColumn.Append(dynamicFilter);
                         break;
 
+
+                    case XLFilterType.ColorFilter:
+                        int index = context.DifferentialFormats.Count;
+
+                        foreach (var filter in xlFilterColumn)
+                        {
+                            if (filter.Value is XLColor color)
+                            {
+                                if (color.HasValue)
+                                {
+                                    var newDxf = new DifferentialFormat();
+                                    if (xlFilterColumn.ColorFilterType == XLColorFilterType.CellColor)
+                                    {
+                                        newDxf.Fill = new DocumentFormat.OpenXml.Spreadsheet.Fill()
+                                        {
+                                            PatternFill = new DocumentFormat.OpenXml.Spreadsheet.PatternFill()
+                                            {
+                                                BackgroundColor = new DocumentFormat.OpenXml.Spreadsheet.BackgroundColor()
+                                                {
+                                                    Rgb = new HexBinaryValue(color.Color.ToHex())
+                                                }
+                                            }
+                                        };
+                                    }
+                                    else
+                                    {
+                                        newDxf.Font = new Font()
+                                        {
+                                            Color = new Color()
+                                            {
+                                                Rgb = new HexBinaryValue(color.Color.ToHex())
+                                            }
+                                        };
+                                    }
+
+                                    var emptyContainer = new XLStylizedEmpty(DefaultStyle);
+
+                                    if (xlFilterColumn.ColorFilterType == XLColorFilterType.CellColor)
+                                        OpenXmlHelper.LoadFill(newDxf.Fill, emptyContainer.Style.Fill, differentialFillFormat: true);
+                                    else
+                                        OpenXmlHelper.LoadFont(newDxf.Font, emptyContainer.Style.Font);
+
+                                    if (!context.DifferentialFormats.ContainsKey(emptyContainer.StyleValue))
+                                    {
+                                        context.DifferentialFormats.Add(emptyContainer.StyleValue, index);
+
+                                        var colorFilter = new ColorFilter
+                                        {
+                                            FormatId = (uint)index,
+                                            CellColor = xlFilterColumn.ColorFilterType == XLColorFilterType.CellColor
+                                        };
+
+                                        filterColumn.Append(colorFilter);
+
+                                        index++;
+                                    }
+                                }
+                            }
+                        }
+
+                        break;
+
                     case XLFilterType.Regular:
                         var filters = new Filters();
                         foreach (var filter in xlFilterColumn)
@@ -1544,9 +1608,8 @@ namespace ClosedXML.Excel.IO
 
                         foreach (var filter in xlFilterColumn)
                         {
-                            if (filter.Value is DateTime)
+                            if (filter.Value is DateTime d)
                             {
-                                var d = (DateTime)filter.Value;
                                 var dgi = new DateGroupItem
                                 {
                                     Year = (UInt16)d.Year,

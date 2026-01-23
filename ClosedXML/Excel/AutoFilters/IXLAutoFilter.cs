@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
 {
     public enum XLFilterDynamicType { AboveAverage, BelowAverage }
 
-    public enum XLFilterType { None, Regular, Custom, TopBottom, Dynamic }
+    public enum XLFilterType { None, Regular, Custom, TopBottom, Dynamic, ColorFilter }
 
     public enum XLTopBottomPart { Top, Bottom }
 
