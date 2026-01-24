@@ -18,6 +18,9 @@ namespace ClosedXML.Graphics
         private static readonly byte[] APP0Identifer = Encoding.ASCII.GetBytes("JFIF\0");
         private static readonly byte[] APP1Identifer = Encoding.ASCII.GetBytes("Exif\0\0");
         private static readonly byte[] APP14Identifer = Encoding.ASCII.GetBytes("Adobe\0");
+        private static readonly byte[] APP19UIdentifer = Encoding.ASCII.GetBytes("http://ns.adobe.com/xap/1.0/\0");
+        private static readonly byte[] APPXICCIdentifer = Encoding.ASCII.GetBytes("ICC_PROFILE");
+        //
 
         protected override bool CheckHeader(Stream stream)
         {
@@ -30,11 +33,15 @@ namespace ClosedXML.Graphics
                 switch (marker)
                 {
                     case Marker.APP0:
-                        return IsIdentifier(stream, APP0Identifer);
-                    case Marker.APP1:
-                        return IsIdentifier(stream, APP1Identifer);
+                        return IsIdentifier(stream,4, APP0Identifer) || IsIdentifier(stream, 4+2, APP0Identifer);
+                    case Marker.APP1: 
+                        return IsIdentifier(stream,4, APP1Identifer) || IsIdentifier(stream, 4+2, APP1Identifer) || IsIdentifier(stream, 4 +2, APP19UIdentifer);
                     case Marker.APP14:
-                        return IsIdentifier(stream, APP14Identifer);
+                        return IsIdentifier(stream, 4, APP14Identifer) || IsIdentifier(stream, 4 + 2, APP14Identifer);
+                    case Marker.XICC:
+                        return IsIdentifier(stream, 4+2, APPXICCIdentifer);
+                    case Marker.DQT:
+                        return true;
                     default:
                         stream.Position += length;
                         break;
@@ -43,15 +50,15 @@ namespace ClosedXML.Graphics
 
             return false;
 
-            static bool IsIdentifier(Stream stream, byte[] identifer)
+            static bool IsIdentifier(Stream stream, long offset,byte[] identifer)
             {
+                stream.Seek(offset, SeekOrigin.Begin);
                 for (var i = 0; i < identifer.Length; ++i)
                 {
                     var b = stream.ReadByte();
                     if (b == -1 || (byte)b != identifer[i])
                         return false;
                 }
-
                 return true;
             }
         }
@@ -126,7 +133,9 @@ namespace ClosedXML.Graphics
             public const ushort SOI = 0xFFD8;
             public const ushort APP0 = 0xFFE0;
             public const ushort APP1 = 0xFFE1;
+            public const ushort XICC = 0xFFE2;
             public const ushort APP14 = 0xFFEE;
+            public const ushort DQT = 0xFFDB;
             public static readonly ushort[] SOFx = new ushort[] { 0xFFC0, 0xFFC1, 0xFFC2, 0xFFC3, 0xFFC5, 0xFFC6, 0xFFC7, 0xFFC9, 0xFFCA, 0xFFCB, 0xFFCD, 0xFFCE, 0xFFCF };
         }
 
