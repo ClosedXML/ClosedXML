@@ -146,7 +146,6 @@ namespace ClosedXML.Graphics
                 if (imageReader.TryGetInfo(stream, out var dimensions))
                     return dimensions;
             }
-            SaveStreamToFile(stream,"d:\\jpeg.jpg");
             throw new ArgumentException("Unable to determine the format of the image.");
         }
         public void SaveStreamToFile(Stream stream, string filePath)
