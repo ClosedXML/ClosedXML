@@ -18,9 +18,8 @@ namespace ClosedXML.Graphics
         private static readonly byte[] APP0Identifer = Encoding.ASCII.GetBytes("JFIF\0");
         private static readonly byte[] APP1Identifer = Encoding.ASCII.GetBytes("Exif\0\0");
         private static readonly byte[] APP14Identifer = Encoding.ASCII.GetBytes("Adobe\0");
-        private static readonly byte[] APP19UIdentifer = Encoding.ASCII.GetBytes("http://ns.adobe.com/xap/1.0/\0");
+        private static readonly byte[] App1XmpIdentifier = Encoding.ASCII.GetBytes("http://ns.adobe.com/xap/1.0/\0");
         private static readonly byte[] APPXICCIdentifer = Encoding.ASCII.GetBytes("ICC_PROFILE");
-        //
 
         protected override bool CheckHeader(Stream stream)
         {
@@ -35,7 +34,7 @@ namespace ClosedXML.Graphics
                     case Marker.APP0:
                         return IsIdentifier(stream,4, APP0Identifer) || IsIdentifier(stream, 4+2, APP0Identifer);
                     case Marker.APP1: 
-                        return IsIdentifier(stream,4, APP1Identifer) || IsIdentifier(stream, 4+2, APP1Identifer) || IsIdentifier(stream, 4 +2, APP19UIdentifer);
+                        return IsIdentifier(stream,4, APP1Identifer) || IsIdentifier(stream, 4+2, APP1Identifer) || IsIdentifier(stream, 4 +2, App1XmpIdentifier);
                     case Marker.APP14:
                         return IsIdentifier(stream, 4, APP14Identifer) || IsIdentifier(stream, 4 + 2, APP14Identifer);
                     case Marker.XICC:
