@@ -933,7 +933,7 @@ namespace ClosedXML.Excel.IO
                         ShowDropDown = !dv.InCellDropdown,
                         ShowInputMessage = dv.ShowInputMessage,
                         ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                        Operator = dv.Operator.ToOpenXml(),
+                        Operator = dv.AllowedValues is XLAllowedValues.List or XLAllowedValues.Custom or XLAllowedValues.AnyValue ? null : dv.Operator.ToOpenXml(),
                         SequenceOfReferences = new ListValue<StringValue> { InnerText = sequence }
                     };
 
@@ -1011,7 +1011,7 @@ namespace ClosedXML.Excel.IO
                         ShowDropDown = !dv.InCellDropdown,
                         ShowInputMessage = dv.ShowInputMessage,
                         ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                        Operator = dv.Operator.ToOpenXml(),
+                        Operator = dv.AllowedValues is XLAllowedValues.List or XLAllowedValues.Custom or XLAllowedValues.AnyValue ? null : dv.Operator.ToOpenXml(),
                         ReferenceSequence = new OfficeExcel.ReferenceSequence() { Text = sequence }
                     };
                     extensionDataValidations.AppendChild(dataValidation);
