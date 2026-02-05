@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
@@ -451,6 +452,38 @@ namespace ClosedXML.Tests.Excel.DataValidations
             dv.List("LocalRange");
 
             Assert.AreEqual("LocalRange", dv.Value);
+        }
+
+        [Test]
+        public void Issue1711_ListWithPreQuotedString_AndAutoFilter()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Set up headers
+            ws.Cell("A1").Value = "User";
+            ws.Cell("B1").Value = "Date";
+            ws.Cell("C1").Value = "Error";
+            ws.Cell("D1").Value = "Is Issue";
+
+            // Add data rows
+            for (var row = 2; row <= 11; row++)
+            {
+                ws.Cell(row, 4).Value = row <= 6 ? "Is Issue" : "No Issue";
+            }
+
+            // Set up AutoFilter on column 4 with "Is Issue" filter
+            ws.RangeUsed().SetAutoFilter().Column(4).AddFilter("Is Issue");
+
+            // User passes a pre-quoted string with comma-separated values
+            var errorList = new List<string> { "New", "Backdated", "Old", "Other" };
+            var errors = $"\"{string.Join(",", errorList)}\"";
+
+            var dv = ws.Range("C2:C11").CreateDataValidation();
+            dv.List(errors, true);
+
+            // Pre-quoted string should be stored verbatim
+            Assert.AreEqual("\"New,Backdated,Old,Other\"", dv.Value);
         }
     }
 }
