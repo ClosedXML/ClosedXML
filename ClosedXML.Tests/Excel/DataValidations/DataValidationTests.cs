@@ -399,5 +399,58 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 Assert.AreSame(range1, dv.Ranges.Single());
             }
         }
+
+        [Test]
+        [TestCase("$F$2:$F$8", "$F$2:$F$8", Description = "Cell reference stored verbatim")]
+        [TestCase("Sheet1!$A$1:$A$10", "Sheet1!$A$1:$A$10", Description = "Sheet-qualified reference stored verbatim")]
+        [TestCase("\"foobar\"", "\"foobar\"", Description = "Already quoted string stored verbatim")]
+        [TestCase("\"foo,bar,baz\"", "\"foo,bar,baz\"", Description = "Already quoted CSV stored verbatim")]
+        [TestCase("=YesNo", "=YesNo", Description = "Formula reference stored verbatim")]
+        [TestCase("=Sheet1!$A$1:$A$10", "=Sheet1!$A$1:$A$10", Description = "Formula with sheet reference stored verbatim")]
+        [TestCase("foobar", "\"foobar\"", Description = "Literal string gets quoted")]
+        [TestCase("foo,bar,baz", "\"foo,bar,baz\"", Description = "Literal CSV list gets quoted")]
+        [TestCase("123abc", "\"123abc\"", Description = "String starting with number gets quoted")]
+        [TestCase("MyNamedRange", "\"MyNamedRange\"", Description = "Non-existent named range gets quoted")]
+        public void List_String_AutoQuotesLiteralStrings(string input, string expectedValue)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var dv = ws.Cell("A1").CreateDataValidation();
+
+            dv.List(input);
+
+            Assert.AreEqual(XLAllowedValues.List, dv.AllowedValues);
+            Assert.AreEqual(expectedValue, dv.Value);
+        }
+
+        [Test]
+        public void List_String_ExistingNamedRangeStoredVerbatim()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Create a workbook-scoped named range
+            wb.DefinedNames.Add("MyNamedRange", ws.Range("E1:E5"));
+
+            var dv = ws.Cell("A1").CreateDataValidation();
+            dv.List("MyNamedRange");
+
+            Assert.AreEqual("MyNamedRange", dv.Value);
+        }
+
+        [Test]
+        public void List_String_WorksheetScopedNamedRangeStoredVerbatim()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            // Create a worksheet-scoped named range
+            ws.DefinedNames.Add("LocalRange", ws.Range("E1:E5"));
+
+            var dv = ws.Cell("A1").CreateDataValidation();
+            dv.List("LocalRange");
+
+            Assert.AreEqual("LocalRange", dv.Value);
+        }
     }
 }
