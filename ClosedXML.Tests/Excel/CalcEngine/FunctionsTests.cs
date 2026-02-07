@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Threading;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -214,6 +215,36 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").FormulaA1 = "$B$4(5)";
 
             Assert.AreEqual(XLError.CellReference, ws.Cell("A1").Value);
+        }
+
+        [TestCase("BASE(1E15,30)", "MathTrig.Base")]
+        [TestCase("COMBIN(1000,500)", "MathTrig.Combin")]
+        [TestCase("COMBINA(100,500)", "MathTrig.CombinA")]
+        [TestCase("DECIMAL(\"ZZZ\",26)", "MathTrig.Decimal")]
+        [TestCase("GCD(123456,54124)", "MathTrig.Gcd")]
+        [TestCase("LCM(123456,54124)", "MathTrig.Lcm")]
+        [TestCase("MDETERM({1,2;3,4})", "MathTrig.MDeterm")]
+        [TestCase("MINVERSE({1,2;3,4})", "MathTrig.MInverse")]
+        [TestCase("MMULT({1},{2})", "MathTrig.MMult")]
+        [TestCase("MULTINOMIAL(2,3,4)", "MathTrig.Multinomial")]
+        [TestCase("PRODUCT(2,3,{4,5,6})", "MathTrig.Product")]
+        [TestCase("SERIESSUM(2,1,2,{1,2,3})", "MathTrig.SeriesSum")]
+        [TestCase("SUM(2,1,2,{1,2,3})", "MathTrig.Sum")]
+        [TestCase("SUMIF(B1:B4,\"=5\")", "MathTrig.SumIf")]
+        [TestCase("SUMIFS(B1:B4,C1:C4,\">0\")", "MathTrig.SumIfs")]
+        [TestCase("SUMPRODUCT({2,3},{4,5})", "MathTrig.SumProduct")]
+        [TestCase("SUMSQ(5,4)", "MathTrig.SumSq")]
+        public void Can_cancel_function_execution(string formula, string expectedStackTrace)
+        {
+            var cts = new CancellationTokenSource();
+            using var wb = new XLWorkbook(new LoadOptions { CancellationToken = cts.Token });
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").FormulaA1 = formula;
+
+            cts.Cancel();
+            var ex = Assert.Throws<OperationCanceledException>(() => _ = ws.Cell("A1").Value);
+
+            StringAssert.Contains(expectedStackTrace + "(", ex?.StackTrace);
         }
     }
 }

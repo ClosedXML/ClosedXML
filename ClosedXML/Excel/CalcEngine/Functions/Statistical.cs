@@ -123,7 +123,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Average(ctx, args, TallyAll.WithArrayText);
         }
 
-        private static AnyValue BinomDist(double numberSuccesses, double numberTrials, double successProbability, bool cumulativeFlag)
+        private static AnyValue BinomDist(CalcContext ctx, double numberSuccesses, double numberTrials, double successProbability, bool cumulativeFlag)
         {
             if (successProbability is < 0 or > 1)
                 return XLError.NumberInvalid;
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var cdf = 0d;
                 for (var y = 0; y <= numberSuccesses; ++y)
                 {
-                    var result = BinomDist(y, numberTrials, successProbability);
+                    var result = BinomDist(ctx, y, numberTrials, successProbability);
                     if (!result.TryPickT0(out var pf, out var error))
                         return error;
 
@@ -147,7 +147,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             else
             {
-                var result = BinomDist(numberSuccesses, numberTrials, successProbability);
+                var result = BinomDist(ctx, numberSuccesses, numberTrials, successProbability);
                 if (!result.TryPickT0(out var binomDist, out var error))
                     return error;
 
@@ -155,9 +155,9 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static OneOf<double, XLError> BinomDist(double x, double n, double p)
+        private static OneOf<double, XLError> BinomDist(CalcContext ctx, double x, double n, double p)
         {
-            if (!XLMath.CombinChecked(n, x).TryPickT0(out var combinations, out var error))
+            if (!XLMath.CombinChecked(ctx, n, x).TryPickT0(out var combinations, out var error))
                 return error;
 
             x = Math.Floor(x);

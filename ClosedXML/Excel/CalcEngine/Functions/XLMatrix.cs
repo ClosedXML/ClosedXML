@@ -9,20 +9,22 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public XLMatrix L;
         public XLMatrix U;
         public int cols;
+        private readonly CalcContext _ctx;
         private double detOfP = 1;
         public double[,] mat;
         private int[] pi;
         public int rows;
 
-        public XLMatrix(int iRows, int iCols) // XLMatrix Class constructor
+        private XLMatrix(int iRows, int iCols, CalcContext ctx) // XLMatrix Class constructor
         {
             rows = iRows;
             cols = iCols;
+            _ctx = ctx;
             mat = new double[rows, cols];
         }
 
-        public XLMatrix(Double[,] arr)
-            : this(arr.GetLength(0), arr.GetLength(1))
+        public XLMatrix(Double[,] arr, CalcContext ctx)
+            : this(arr.GetLength(0), arr.GetLength(1), ctx)
         {
             var roCount = arr.GetLength(0);
             var coCount = arr.GetLength(1);
@@ -47,6 +49,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 for (var col = 0; col < cols; col++)
                 {
+                    _ctx.ThrowIfCancelled();
                     var element = mat[row, col];
                     if (double.IsNaN(element) || double.IsInfinity(element))
                         return true;
@@ -73,7 +76,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             U = Duplicate();
 
             pi = new int[rows];
-            for (var i = 0; i < rows; i++) pi[i] = i;
+            for (var i = 0; i < rows; i++)
+            {
+                _ctx.ThrowIfCancelled();
+                pi[i] = i;
+            }
 
             var k0 = 0;
 
@@ -82,6 +89,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 double p = 0;
                 for (var i = k; i < rows; i++) // find the row with the biggest pivot
                 {
+                    _ctx.ThrowIfCancelled();
                     if (Math.Abs(U[i, k]) > p)
                     {
                         p = Math.Abs(U[i, k]);
@@ -98,6 +106,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 double pom2;
                 for (var i = 0; i < k; i++)
                 {
+                    _ctx.ThrowIfCancelled();
                     pom2 = L[k, i];
                     L[k, i] = L[k0, i];
                     L[k0, i] = pom2;
@@ -107,6 +116,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 for (var i = 0; i < cols; i++) // Switch rows in U
                 {
+                    _ctx.ThrowIfCancelled();
                     pom2 = U[k, i];
                     U[k, i] = U[k0, i];
                     U[k0, i] = pom2;
@@ -116,7 +126,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 {
                     L[i, k] = U[i, k] / U[k, k];
                     for (var j = k; j < cols; j++)
+                    {
+                        _ctx.ThrowIfCancelled();
                         U[i, j] = U[i, j] - L[i, k] * U[k, j];
+                    }
                 }
             }
         }
@@ -127,8 +140,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (rows != v.rows) throw new ArgumentException("Wrong number of results in solution vector!");
             if (L == null) MakeLU();
 
-            var b = new XLMatrix(rows, 1);
-            for (var i = 0; i < rows; i++) b[i, 0] = v[pi[i], 0]; // switch two items in "v" due to permutation matrix
+            var b = new XLMatrix(rows, 1, _ctx);
+            for (var i = 0; i < rows; i++)
+            {
+                _ctx.ThrowIfCancelled();
+                b[i, 0] = v[pi[i], 0]; // switch two items in "v" due to permutation matrix
+            }
 
             var z = SubsForth(L, b);
             var x = SubsBack(U, z);
@@ -140,7 +157,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             if (L == null) MakeLU();
 
-            var inv = new XLMatrix(rows, cols);
+            var inv = new XLMatrix(rows, cols, _ctx);
 
             for (var i = 0; i < rows; i++)
             {
@@ -162,38 +179,52 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public XLMatrix Duplicate() // Function returns the copy of this matrix
         {
-            var matrix = new XLMatrix(rows, cols);
+            var matrix = new XLMatrix(rows, cols, _ctx);
             for (var i = 0; i < rows; i++)
+            {
                 for (var j = 0; j < cols; j++)
+                {
+                    _ctx.ThrowIfCancelled();
                     matrix[i, j] = mat[i, j];
+                }
+            }
+
             return matrix;
         }
 
-        public static XLMatrix SubsForth(XLMatrix A, XLMatrix b) // Function solves Ax = b for A as a lower triangular matrix
+        public XLMatrix SubsForth(XLMatrix A, XLMatrix b) // Function solves Ax = b for A as a lower triangular matrix
         {
             if (A.L == null) A.MakeLU();
             var n = A.rows;
-            var x = new XLMatrix(n, 1);
+            var x = new XLMatrix(n, 1, _ctx);
 
             for (var i = 0; i < n; i++)
             {
                 x[i, 0] = b[i, 0];
-                for (var j = 0; j < i; j++) x[i, 0] -= A[i, j] * x[j, 0];
+                for (var j = 0; j < i; j++)
+                {
+                    _ctx.ThrowIfCancelled();
+                    x[i, 0] -= A[i, j] * x[j, 0];
+                }
                 x[i, 0] = x[i, 0] / A[i, i];
             }
             return x;
         }
 
-        public static XLMatrix SubsBack(XLMatrix A, XLMatrix b) // Function solves Ax = b for A as an upper triangular matrix
+        public XLMatrix SubsBack(XLMatrix A, XLMatrix b) // Function solves Ax = b for A as an upper triangular matrix
         {
             if (A.L == null) A.MakeLU();
             var n = A.rows;
-            var x = new XLMatrix(n, 1);
+            var x = new XLMatrix(n, 1, _ctx);
 
             for (var i = n - 1; i > -1; i--)
             {
                 x[i, 0] = b[i, 0];
-                for (var j = n - 1; j > i; j--) x[i, 0] -= A[i, j] * x[j, 0];
+                for (var j = n - 1; j > i; j--)
+                {
+                    _ctx.ThrowIfCancelled();
+                    x[i, 0] -= A[i, j] * x[j, 0];
+                }
                 x[i, 0] = x[i, 0] / A[i, i];
             }
             return x;
@@ -201,11 +232,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public XLMatrix ZeroMatrix(int iRows, int iCols) // Function generates the zero matrix
         {
-            var matrix = new XLMatrix(iRows, iCols);
+            var matrix = new XLMatrix(iRows, iCols, _ctx);
             for (var i = 0; i < iRows; i++)
             {
                 for (var j = 0; j < iCols; j++)
                 {
+                    _ctx.ThrowIfCancelled();
                     matrix[i, j] = 0;
                 }
             }
@@ -218,6 +250,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var matrix = ZeroMatrix(iRows, iCols);
             for (var i = 0; i < Math.Min(iRows, iCols); i++)
             {
+                _ctx.ThrowIfCancelled();
                 matrix[i, i] = 1;
             }
 

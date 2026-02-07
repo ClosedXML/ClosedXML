@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organized and cleaned
 using System;
 using System.Drawing;
+using System.Threading;
 using ClosedXML.Graphics;
 
 namespace ClosedXML.Excel
@@ -67,5 +68,12 @@ namespace ClosedXML.Excel
         /// OpenXML SDK are not affected. Also, fix an OOXML producer that does this stuff.
         /// </remarks>
         public bool StrictAttributeParsing { get; set; } = true;
+
+        /// <summary>
+        /// A cancellation token to cancel recalculation. Recalculation may be triggered during
+        /// various calls, e.g. <c>IXLCell.Value</c> can start recalculation of a workbook, but
+        /// doesn't have a way to pass token.
+        /// </summary>
+        public CancellationToken CancellationToken { get; set; }
     }
 }

@@ -367,7 +367,7 @@ namespace ClosedXML.Excel.CalcEngine
             return sb.ToString();
         }
 
-        private static ScalarValue Rept(string text, double replicationCount)
+        private static ScalarValue Rept(CalcContext ctx, string text, double replicationCount)
         {
             if (replicationCount is < 0 or >= int.MaxValue + 1d)
                 return XLError.IncompatibleValue;
