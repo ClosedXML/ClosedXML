@@ -234,6 +234,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("SUMIFS(B1:B4,C1:C4,\">0\")", "MathTrig.SumIfs")]
         [TestCase("SUMPRODUCT({2,3},{4,5})", "MathTrig.SumProduct")]
         [TestCase("SUMSQ(5,4)", "MathTrig.SumSq")]
+        [TestCase("NETWORKDAYS(10,100,{20,50})", "DateAndTime.NetWorkDays")]
+        [TestCase("WORKDAY(10,100,{20,50})", "DateAndTime.Workday")]
+        [TestCase("YEARFRAC(1,10000,1)", "DateAndTime.YearFrac")]
         public void Can_cancel_function_execution(string formula, string expectedStackTrace)
         {
             var cts = new CancellationTokenSource();

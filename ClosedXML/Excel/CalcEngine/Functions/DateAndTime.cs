@@ -41,10 +41,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("YEARFRAC", 2, 3, AdaptLastOptional(YearFrac, 0), FunctionFlags.Scalar); // Returns the year fraction representing the number of whole days between start_date and end_date
         }
 
-        private static int BusinessDaysUntil(int firstDay, int lastDay, ICollection<int> distinctHolidays)
+        private static int BusinessDaysUntil(CalcContext ctx, int firstDay, int lastDay, ICollection<int> distinctHolidays)
         {
             if (firstDay > lastDay)
-                return -BusinessDaysUntil(lastDay, firstDay, distinctHolidays);
+                return -BusinessDaysUntil(ctx, lastDay, firstDay, distinctHolidays);
 
             var workDays = lastDay - firstDay + 1;
             var fullWeekCount = Math.DivRem(workDays, 7, out var remainingDays);
@@ -62,6 +62,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // subtract the number of bank holidays during the time interval
             foreach (var holidayDate in distinctHolidays)
             {
+                ctx.ThrowIfCancelled();
                 if (firstDay <= holidayDate && holidayDate <= lastDay)
                 {
                     if (!IsWeekend(holidayDate))
@@ -365,13 +366,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var allHolidays = new HashSet<int>();
             foreach (var holidayValue in ctx.GetNonBlankValues(holidays))
             {
+                ctx.ThrowIfCancelled();
                 if (!TryGetDate(ctx, holidayValue, out var holidayDate, out var error))
                     return error;
 
                 allHolidays.Add(holidayDate);
             }
 
-            return BusinessDaysUntil(startSerialDate, endSerialDate, allHolidays);
+            return BusinessDaysUntil(ctx, startSerialDate, endSerialDate, allHolidays);
         }
 
         private static ScalarValue Now()
@@ -568,6 +570,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var startIsHoliday = orderedHolidays.Count > 0 && orderedHolidays[0] == startDate;
             for (var i = startIsHoliday ? 1 : 0; i < orderedHolidays.Count; ++i)
             {
+                ctx.ThrowIfCancelled();
                 var holidayDate = orderedHolidays[i];
 
                 // Because workdays up to and including lastDateSoFar has already been counted, we add + 1.
@@ -578,7 +581,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 // if two holidays were next to each other, the `holidayDate-1` might be *before* `lastDateSoFar+1`.
                 // When days are same, BusinessDaysUntil returns 1 regardless of direction, so add a condition.
                 var segmentWorkdays = lastDateSoFar + oneDay != holidayDate
-                    ? BusinessDaysUntil(lastDateSoFar + oneDay, holidayDate, System.Array.Empty<int>())
+                    ? BusinessDaysUntil(ctx, lastDateSoFar + oneDay, holidayDate, System.Array.Empty<int>())
                     : oneDay;
 
                 if (cmp.Compare(workdaysSoFar + segmentWorkdays, dayOffset) > 0)
@@ -624,6 +627,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var distinctHolidays = new HashSet<int>();
                 foreach (var holidayValue in ctx.GetNonBlankValues(holidays))
                 {
+                    ctx.ThrowIfCancelled();
                     if (!TryGetDate(ctx, holidayValue, out var holidayDate, out var error))
                         return error;
 
@@ -681,6 +685,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var totalDays = 0;
                 for (var year = startYear; year <= endYear; year++)
                 {
+                    ctx.ThrowIfCancelled();
+
                     // For purposes of average year, 1900 is not counted as a leap year
                     totalDays += DateTime.IsLeapYear(year) ? 366 : 365;
                 }
