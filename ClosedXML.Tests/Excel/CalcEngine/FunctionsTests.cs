@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Init()
         {
             // Make sure tests run on a deterministic culture
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
         }
 
         [Test]
@@ -237,6 +237,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("NETWORKDAYS(10,100,{20,50})", "DateAndTime.NetWorkDays")]
         [TestCase("WORKDAY(10,100,{20,50})", "DateAndTime.Workday")]
         [TestCase("YEARFRAC(1,10000,1)", "DateAndTime.YearFrac")]
+        [TestCase("AND(TRUE,TRUE)", "Logical.And")]
+        [TestCase("OR(TRUE,TRUE)", "Logical.Or")]
+        [TestCase("COLUMN(D:Z)", "Lookup.Column")]
+        [TestCase("HLOOKUP(2,{0,1,2,3},1)", "Lookup.Hlookup")]
+        [TestCase("MATCH(5,{1,7})", "Lookup.Match")]
+        [TestCase("ROW(2:5)", "Lookup.Row")]
+        [TestCase("VLOOKUP(2,{0;1;2;3},1)", "Lookup.Vlookup")]
         public void Can_cancel_function_execution(string formula, string expectedStackTrace)
         {
             var cts = new CancellationTokenSource();

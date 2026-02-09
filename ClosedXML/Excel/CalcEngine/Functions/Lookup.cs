@@ -50,7 +50,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var span = lastColumn - firstColumn + 1;
             var array = new ScalarValue[1, span];
             for (var col = firstColumn; col <= lastColumn; col++)
+            {
+                ctx.ThrowIfCancelled();
                 array[0, col - firstColumn] = col;
+            }
 
             return new ConstArray(array);
         }
@@ -92,7 +95,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
                 var transposedArray = new TransposedArray(array);
-                var foundColumn = Bisection(transposedArray, lookupValue);
+                var foundColumn = Bisection(ctx, transposedArray, lookupValue);
                 if (foundColumn == -1)
                     return XLError.NoValueAvailable;
 
@@ -103,6 +106,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 // TODO: Implement wildcard search
                 for (var columnIndex = 0; columnIndex < array.Width; columnIndex++)
                 {
+                    ctx.ThrowIfCancelled();
                     var currentValue = array[0, columnIndex];
 
                     // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
@@ -250,9 +254,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             var index = matchType switch
             {
-                < 0 => MatchDescending(target, array, ScalarValueComparer.SortIgnoreCase),
-                0 => MatchUnsorted(target, array, ctx),
-                > 0 => MatchAscending(target, array, ScalarValueComparer.SortIgnoreCase),
+                < 0 => MatchDescending(ctx, target, array, ScalarValueComparer.SortIgnoreCase),
+                0 => MatchUnsorted(ctx, target, array),
+                > 0 => MatchAscending(ctx, target, array, ScalarValueComparer.SortIgnoreCase),
             };
 
             if (index < 0)
@@ -260,9 +264,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             return index + 1;
 
-            static int MatchAscending(ScalarValue target, Array data, IComparer<ScalarValue> comparer)
+            static int MatchAscending(CalcContext ctx, ScalarValue target, Array data, IComparer<ScalarValue> comparer)
             {
-                var index = Bisection(target, data, comparer);
+                var index = Bisection(ctx, target, data, comparer);
                 if (index == -1)
                     return index;
 
@@ -273,11 +277,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return index;
             }
 
-            static int MatchUnsorted(ScalarValue target, Array data, CalcContext ctx)
+            static int MatchUnsorted(CalcContext ctx, ScalarValue target, Array data)
             {
                 var criteria = Criteria.Create(target, ctx.Culture);
                 for (var i = 0; i < data.Height; ++i)
                 {
+                    ctx.ThrowIfCancelled();
                     var value = data[i, 0];
                     if (target.HaveSameType(value) && criteria.Match(value))
                         return i;
@@ -286,12 +291,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return -1;
             }
 
-            static int MatchDescending(ScalarValue target, Array data, IComparer<ScalarValue> comparer)
+            static int MatchDescending(CalcContext ctx, ScalarValue target, Array data, IComparer<ScalarValue> comparer)
             {
                 // Data should be in ascending order, but Excel doesn't use bisection.
                 var found = -1;
                 for (var i = 0; i < data.Height; ++i)
                 {
+                    ctx.ThrowIfCancelled();
+
                     // Skip elements with different type
                     var value = data[i, 0];
                     while (!value.HaveSameType(target))
@@ -320,19 +327,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         /// <summary>
         /// Find index of the greatest element smaller or equal to the <paramref name="target"/>.
         /// </summary>
+        /// <param name="ctx">Context to cancel bisection.</param>
         /// <param name="target">Value to look for.</param>
         /// <param name="data">Data in ascending order.</param>
         /// <param name="comparer">A comparator for comparing two values.</param>
         /// <returns>Index of found element. If the <paramref name="data"/> contains
         ///   a sequence of <paramref name="target"/> values, it can be index of any of them.
         /// </returns>
-        private static int Bisection(ScalarValue target, Array data, IComparer<ScalarValue> comparer)
+        private static int Bisection(CalcContext ctx, ScalarValue target, Array data, IComparer<ScalarValue> comparer)
         {
             // This should match Excel logic perfectly. Make sure to do some fuzzy testing when changing the code.
             var low = 0;
             var high = data.Height - 1;
             while (low < high)
             {
+                ctx.ThrowIfCancelled();
                 var (middle, compare) = FindMiddleAbove(low, high, target, data, comparer);
 
                 if (compare == 0)
@@ -392,7 +401,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var span = lastRow - firstRow + 1;
             var array = new ScalarValue[span, 1];
             for (var row = firstRow; row <= lastRow; row++)
+            {
+                ctx.ThrowIfCancelled();
                 array[row - firstRow, 0] = row;
+            }
 
             return new ConstArray(array);
         }
@@ -441,7 +453,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (approximateSearchFlag)
             {
                 // Bisection in Excel and here differs, so we return different values for unsorted ranges, but same values for sorted ranges.
-                var foundRow = Bisection(array, lookupValue);
+                var foundRow = Bisection(ctx, array, lookupValue);
                 if (foundRow == -1)
                     return XLError.NoValueAvailable;
 
@@ -452,6 +464,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 // TODO: Implement wildcard search
                 for (var rowIndex = 0; rowIndex < array.Height; rowIndex++)
                 {
+                    ctx.ThrowIfCancelled();
                     var currentValue = array[rowIndex, 0];
 
                     // Because lookup value can't be an error, it doesn't matter that sort treats all errors as equal.
@@ -464,7 +477,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
         }
 
-        private static int Bisection(Array range, ScalarValue lookupValue)
+        private static int Bisection(CalcContext ctx, Array range, ScalarValue lookupValue)
         {
             // Bisection is predicated on a fact that values of the same type are sorted.
             // If they are not, results are unpredictable.
@@ -505,6 +518,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // Now we have two borders with actual values and we know the lookup value is less than high and greater/equal to lower
             while (true)
             {
+                ctx.ThrowIfCancelled();
+
                 // The FindMiddle method returns only values [lowRow, highRow)
                 // so in each loop it decreases the interval. The lowRow value is
                 // the last one checked during search of a middle.
