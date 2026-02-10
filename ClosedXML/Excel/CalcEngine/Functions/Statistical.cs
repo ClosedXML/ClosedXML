@@ -11,8 +11,8 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
-            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, FunctionFlags.Range, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
-            ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("AVERAGE", 1, 255, Average, FunctionFlags.Range, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
+            ce.RegisterFunction("AVERAGEA", 1, 255, AverageA, FunctionFlags.Range, AllowRange.All);
             //BETADIST	Returns the beta cumulative distribution function
             //BETAINV   Returns the inverse of the cumulative distribution function for a specified beta distribution
             ce.RegisterFunction("BINOMDIST", 4, 4, Adapt(BinomDist), FunctionFlags.Scalar); //BINOMDIST	Returns the individual term binomial distribution probability
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
             //CHITEST	Returns the test for independence
             //CONFIDENCE	Returns the confidence interval for a population mean
             //CORREL	Returns the correlation coefficient between two data sets
-            ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("COUNT", 1, 255, Count, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTA", 1, 255, CountA, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTBLANK", 1, 1, Adapt(CountBlank), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("COUNTIF", 2, 2, Adapt((Func<CalcContext, AnyValue, ScalarValue, AnyValue>)CountIf), FunctionFlags.Range, AllowRange.Only, 0);
@@ -54,10 +54,10 @@ namespace ClosedXML.Excel.CalcEngine
             //LOGINV	Returns the inverse of the lognormal distribution
             //LOGNORMDIST	Returns the cumulative lognormal distribution
             ce.RegisterFunction("MAX", 1, 255, Max, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MIN", 1, int.MaxValue, Min, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("MAXA", 1, 255, MaxA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("MEDIAN", 1, 255, Median, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("MIN", 1, 255, Min, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("MINA", 1, 255, MinA, FunctionFlags.Range, AllowRange.All);
             //MODE	Returns the most common value in a data set
             //NEGBINOMDIST	Returns the negative binomial distribution
             //NORMDIST	Returns the normal cumulative distribution
@@ -77,24 +77,24 @@ namespace ClosedXML.Excel.CalcEngine
             //SLOPE	Returns the slope of the linear regression line
             //SMALL	Returns the k-th smallest value in a data set
             //STANDARDIZE	Returns a normalized value
-            ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEV", 1, 255, StDev, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEVA", 1, 255, StDevA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEVP", 1, 255, StDevP, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEVPA", 1, 255, StDevPA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEV.S", 1, 255, StDev, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("STDEV.P", 1, 255, StDevP, FunctionFlags.Range, AllowRange.All);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
             //TDIST	Returns the Student's t-distribution
             //TINV	Returns the inverse of the Student's t-distribution
             //TREND	Returns values along a linear trend
             //TRIMMEAN	Returns the mean of the interior of a data set
             //TTEST	Returns the probability associated with a Student's t-test
-            ce.RegisterFunction("VAR", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VARA", 1, int.MaxValue, VarA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var, FunctionFlags.Range, AllowRange.All);
-            ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VAR", 1, 255, Var, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VARA", 1, 255, VarA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VARP", 1, 255, VarP, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VARPA", 1, 255, VarPA, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VAR.S", 1, 255, Var, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("VAR.P", 1, 255, VarP, FunctionFlags.Range, AllowRange.All);
             //WEIBULL	Returns the Weibull distribution
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
@@ -198,9 +198,13 @@ namespace ClosedXML.Excel.CalcEngine
 
             // To be efficient for cases like whole sheet with only few values, calculate
             // the blank count as number of total area size without non-blank cells.
-            var nonBlankCount = ctx.GetNonBlankValues(new Reference(area))
-                .Where(static value => !value.IsBlank && !(value.IsText && value.GetText().Length == 0))
-                .LongCount();
+            var nonBlankCount = 0L;
+            foreach (var value in ctx.GetNonBlankValues(new Reference(area)))
+            {
+                ctx.ThrowIfCancelled();
+                if (!value.IsBlank && !(value.IsText && value.GetText().Length == 0))
+                    nonBlankCount++;
+            }
 
             return area.Size - nonBlankCount;
         }
@@ -476,6 +480,7 @@ namespace ClosedXML.Excel.CalcEngine
             var total = new List<double>(size);
             foreach (var value in values)
             {
+                ctx.ThrowIfCancelled();
                 if (value.IsError)
                     return value.GetError();
 

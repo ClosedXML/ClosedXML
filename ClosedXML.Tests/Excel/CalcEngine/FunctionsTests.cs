@@ -244,11 +244,41 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("MATCH(5,{1,7})", "Lookup.Match")]
         [TestCase("ROW(2:5)", "Lookup.Row")]
         [TestCase("VLOOKUP(2,{0;1;2;3},1)", "Lookup.Vlookup")]
+        [TestCase("AVERAGE({1,2;3,4})", "Statistical.Average")]
+        [TestCase("AVERAGEA({1,2;3,4})", "Statistical.AverageA")]
+        [TestCase("BINOMDIST(6,10,0.5,TRUE)", "Statistical.BinomDist")]
+        [TestCase("BINOM.DIST(6,10,0.5,TRUE)", "Statistical.BinomDist")]
+        [TestCase("COUNT({1,2})", "Statistical.Count")]
+        [TestCase("COUNTA({1,2})", "Statistical.Count")]
+        [TestCase("COUNTBLANK(D1:D7)", "Statistical.CountBlank")]
+        [TestCase("COUNTIF(D1:D7,\">0\")", "Statistical.CountIf")]
+        [TestCase("COUNTIFS(D1:D7,\">0\")", "Statistical.CountIfs")]
+        [TestCase("DEVSQ({1,2})", "Statistical.DevSq")]
+        [TestCase("GEOMEAN({1,2})", "Statistical.GeoMean")]
+        [TestCase("LARGE({10,11,12},2)", "Statistical.Large")]
+        [TestCase("MAX({1,5})", "Statistical.Max")]
+        [TestCase("MAXA({1,5})", "Statistical.MaxA")]
+        [TestCase("MEDIAN({1,5,7})", "Statistical.Median")]
+        [TestCase("MIN({1,5})", "Statistical.Min")]
+        [TestCase("MINA({1,5})", "Statistical.MinA")]
+        [TestCase("STDEV({1,5})", "Statistical.StDev")]
+        [TestCase("STDEVA({1,5})", "Statistical.StDevA")]
+        [TestCase("STDEVP({1,5})", "Statistical.StDevP")]
+        [TestCase("STDEVPA({1,5})", "Statistical.StDevPA")]
+        [TestCase("STDEV.S({1,5})", "Statistical.StDev")]
+        [TestCase("STDEV.P({1,5})", "Statistical.StDevP")]
+        [TestCase("VAR({1,5})", "Statistical.Var")]
+        [TestCase("VARA({1,5})", "Statistical.VarA")]
+        [TestCase("VARP({1,5})", "Statistical.VarP")]
+        [TestCase("VARPA({1,5})", "Statistical.VarPA")]
+        [TestCase("VAR.S({1,5})", "Statistical.Var")]
+        [TestCase("VAR.P({1,5})", "Statistical.VarP")]
         public void Can_cancel_function_execution(string formula, string expectedStackTrace)
         {
             var cts = new CancellationTokenSource();
             using var wb = new XLWorkbook(new LoadOptions { CancellationToken = cts.Token });
             var ws = wb.AddWorksheet();
+            ws.Cell("D1").Value = 4; // Need a non-blank cell for COUNTBLANK check
             ws.Cell("A1").FormulaA1 = formula;
 
             cts.Cancel();

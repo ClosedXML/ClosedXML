@@ -68,6 +68,8 @@ internal class TallyAll : ITally
         {
             if (arg.TryPickScalar(out var scalar, out var collection))
             {
+                ctx.ThrowIfCancelled();
+
                 // Scalars are converted to number.
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
                 {
@@ -96,6 +98,8 @@ internal class TallyAll : ITally
                 }
                 foreach (var value in valuesIterator)
                 {
+                    ctx.ThrowIfCancelled();
+
                     // Blank lines are ignored. Logical are counted in reference, but not in array.
                     if (!isArray && value.TryPickLogical(out var logical))
                     {
