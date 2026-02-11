@@ -273,6 +273,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("VARPA({1,5})", "Statistical.VarPA")]
         [TestCase("VAR.S({1,5})", "Statistical.Var")]
         [TestCase("VAR.P({1,5})", "Statistical.VarP")]
+        [TestCase("ASC(\"A\")", "Text.Asc")]
+        [TestCase("CLEAN(\"A\")", "Text.Clean")]
+        [TestCase("CONCAT(\"A\",\"B\")", "Text.Concat")]
+        [TestCase("CONCATENATE(\"A\",\"B\")", "Text.Concatenate")]
+        [TestCase("LEFT(\"AB\",1)", "Text.Left")]
+        [TestCase("LOWER(\"A\")", "Text.Lower")]
+        [TestCase("NUMBERVALUE(\"1\")", "Text.NumberValue")]
+        [TestCase("PROPER(\"hello\")", "Text.Proper")]
+        [TestCase("REPT(\"A\",10)", "Text.Rept")]
+        [TestCase("RIGHT(\"AB\",1)", "Text.Right")]
+        [TestCase("T({100})", "Text.T")]
+        [TestCase("TEXTJOIN(\"-\",TRUE,\"A\",\"B\")", "Text.TextJoin")]
+        [TestCase("TRIM(\"ABC\")", "Text.Trim")]
         public void Can_cancel_function_execution(string formula, string expectedStackTrace)
         {
             var cts = new CancellationTokenSource();

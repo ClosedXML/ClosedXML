@@ -78,7 +78,10 @@ namespace ClosedXML.Excel.CalcEngine
             // Because fullwidth code points are in base multilingual plane, I just skip over surrogates.
             var sb = new StringBuilder(text.Length);
             foreach (int c in text)
+            {
+                ctx.ThrowIfCancelled();
                 sb.Append((char)ToHalfForm(c));
+            }
 
             return sb.ToString();
 
@@ -149,6 +152,7 @@ namespace ClosedXML.Excel.CalcEngine
             var result = new StringBuilder(text.Length);
             foreach (char c in text)
             {
+                ctx.ThrowIfCancelled();
                 int codePoint = c;
                 if (codePoint is >= 0 and <= 0x1F)
                     continue;
@@ -200,6 +204,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder(totalLength);
             foreach (var text in texts)
             {
+                ctx.ThrowIfCancelled();
                 sb.Append(text);
                 if (sb.Length > 32767)
                     return XLError.IncompatibleValue;
@@ -261,6 +266,8 @@ namespace ClosedXML.Excel.CalcEngine
             var i = 0;
             while (numChars > 0 && i < text.Length)
             {
+                ctx.ThrowIfCancelled();
+
                 // Most C# text API will happily ignore invalid surrogate pairs, so do we
                 i += char.IsSurrogatePair(text, i) ? 2 : 1;
                 numChars--;
@@ -284,6 +291,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder(text.Length);
             for (var i = 0; i < text.Length; ++i)
             {
+                ctx.ThrowIfCancelled();
                 var c = text[i];
                 char lowercase;
                 if (i == text.Length - 1 && c == 'Σ')
@@ -331,6 +339,7 @@ namespace ClosedXML.Excel.CalcEngine
             var prevWasLetter = false;
             foreach (var c in text)
             {
+                ctx.ThrowIfCancelled();
                 var casedChar = prevWasLetter
                     ? char.ToLower(c, culture)
                     : char.ToUpper(c, culture);
@@ -383,7 +392,10 @@ namespace ClosedXML.Excel.CalcEngine
 
             var sb = new StringBuilder(resultLength);
             for (var i = 0; i < count; ++i)
+            {
+                ctx.ThrowIfCancelled();
                 sb.Append(text);
+            }
 
             return sb.ToString();
         }
@@ -401,6 +413,7 @@ namespace ClosedXML.Excel.CalcEngine
             var i = text.Length;
             while (numChars > 0 && i > 0)
             {
+                ctx.ThrowIfCancelled();
                 i -= i > 1 && char.IsSurrogatePair(text[i - 2], text[i - 1]) ? 2 : 1;
                 numChars--;
             }
@@ -577,11 +590,15 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder(span.Length);
             for (var i = 0; i < span.Length; ++i)
             {
+                ctx.ThrowIfCancelled();
                 sb.Append(span[i]);
                 if (span[i] == space)
                 {
                     while (i < span.Length - 1 && span[i + 1] == space)
+                    {
+                        ctx.ThrowIfCancelled();
                         i++;
+                    }
                 }
             }
 
@@ -663,6 +680,7 @@ namespace ClosedXML.Excel.CalcEngine
             var decimalSeen = false;
             foreach (var c in text)
             {
+                ctx.ThrowIfCancelled();
                 if (c == decimalSep)
                 {
                     // Only first decimal separator should be replaced by '.'

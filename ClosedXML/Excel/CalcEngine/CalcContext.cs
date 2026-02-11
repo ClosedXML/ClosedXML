@@ -10,7 +10,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal class CalcContext
+    internal sealed class CalcContext
     {
         private readonly XLCalcEngine _calcEngine;
         private readonly XLWorkbook? _workbook;
