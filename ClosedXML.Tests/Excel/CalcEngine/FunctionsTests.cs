@@ -6,15 +6,9 @@ using System.Threading;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class FunctionsTests
     {
-        [SetUp]
-        public void Init()
-        {
-            // Make sure tests run on a deterministic culture
-            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-        }
-
         [Test]
         public void Asc()
         {
