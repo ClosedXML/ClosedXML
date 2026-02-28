@@ -104,10 +104,10 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SQRT", 1, 1, Adapt(Sqrt), FunctionFlags.Scalar);
             ce.RegisterFunction("SQRTPI", 1, 1, Adapt(SqrtPi), FunctionFlags.Scalar);
             ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range, AllowRange.Except, 0);
-            ce.RegisterFunction("SUM", 1, int.MaxValue, Sum, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("SUM", 1, 255, Sum, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMIF", 2, 3, AdaptLastOptional(SumIf), FunctionFlags.Range, AllowRange.Only, 0, 2);
             ce.RegisterFunction("SUMIFS", 3, 255, AdaptIfs(SumIfs), FunctionFlags.Range, AllowRange.Only, new[] { 0 }.Concat(Enumerable.Range(0, 128).Select(x => x * 2 + 1)).ToArray());
-            ce.RegisterFunction("SUMPRODUCT", 1, 30, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("SUMPRODUCT", 1, 255, Adapt(SumProduct), FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq, FunctionFlags.Range, AllowRange.All);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
@@ -274,7 +274,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ATanh(number);
         }
 
-        private static ScalarValue Base(double number, double radix, double minLength)
+        private static ScalarValue Base(CalcContext ctx, double number, double radix, double minLength)
         {
             number = Math.Truncate(number);
             radix = Math.Truncate(radix);
@@ -285,6 +285,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder();
             while (number > 0)
             {
+                ctx.ThrowIfCancelled();
                 var digit = (int)(number % radix);
                 number = Math.Floor(number / radix);
 
@@ -329,7 +330,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue Combin(CalcContext ctx, double number, double numberChosen)
         {
-            var combinationsResult = XLMath.CombinChecked(number, numberChosen);
+            var combinationsResult = XLMath.CombinChecked(ctx, number, numberChosen);
             if (!combinationsResult.TryPickT0(out var combinations, out var error))
                 return error;
 
@@ -354,7 +355,7 @@ namespace ClosedXML.Excel.CalcEngine
             var k = number - 1;
             return chosen == 0 || k == 0
                 ? 1
-                : XLMath.Combin(n, k);
+                : XLMath.Combin(ctx, n, k);
         }
 
         private static ScalarValue Cos(double number)
@@ -404,7 +405,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Sinh(angle);
         }
 
-        private static ScalarValue Decimal(string text, double radix)
+        private static ScalarValue Decimal(CalcContext ctx, string text, double radix)
         {
             radix = Math.Truncate(radix);
             if (radix is < 2 or > 36)
@@ -416,6 +417,7 @@ namespace ClosedXML.Excel.CalcEngine
             var result = 0d;
             foreach (var digit in text.AsSpan().TrimStart())
             {
+                ctx.ThrowIfCancelled();
                 var digitNumber = digit switch
                 {
                     >= '0' and <= '9' => digit - '0',
@@ -650,7 +652,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!isSquare)
                 return XLError.IncompatibleValue;
 
-            var matrix = new XLMatrix(array);
+            var matrix = new XLMatrix(array, ctx);
             return matrix.Determinant();
         }
 
@@ -663,7 +665,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!isSquare)
                 return XLError.IncompatibleValue;
 
-            var matrix = new XLMatrix(array);
+            var matrix = new XLMatrix(array, ctx);
             var inverse = matrix.Invert();
             if (inverse.IsSingular())
                 return XLError.NumberInvalid;
@@ -689,6 +691,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     for (var k = 0; k < matrixA.GetLength(1); k++)
                     {
+                        ctx.ThrowIfCancelled();
                         matrixC[i, j] += matrixA[i, k] * matrixB[k, j];
                     }
                 }
@@ -1044,7 +1047,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Sum(ctx, new[] { sumRange }, tally);
         }
 
-        private static AnyValue SumProduct(CalcContext _, Array[] areas)
+        private static AnyValue SumProduct(CalcContext ctx, Array[] areas)
         {
             if (areas.Length < 1)
                 return XLError.IncompatibleValue;
@@ -1082,6 +1085,7 @@ namespace ClosedXML.Excel.CalcEngine
                     var product = 1.0;
                     foreach (var area in areas)
                     {
+                        ctx.ThrowIfCancelled();
                         var scalar = area[rowIdx, colIdx];
 
                         if (scalar.TryPickError(out var error))

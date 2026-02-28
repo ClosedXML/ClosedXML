@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using ClosedXML.Excel.CalcEngine.Functions;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
@@ -10,12 +8,12 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("AND", 1, int.MaxValue, And, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("AND", 1, 255, And, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("FALSE", 0, 0, Adapt(False), FunctionFlags.Scalar);
             ce.RegisterFunction("IF", 2, 3, AdaptLastOptional(If, false), FunctionFlags.Range, AllowRange.Only, 1, 2);
             ce.RegisterFunction("IFERROR", 2, 2, Adapt(IfError), FunctionFlags.Scalar);
             ce.RegisterFunction("NOT", 1, 1, AdaptCoerced(Not), FunctionFlags.Scalar);
-            ce.RegisterFunction("OR", 1, int.MaxValue, Or, FunctionFlags.Range, AllowRange.All);
+            ce.RegisterFunction("OR", 1, 255, Or, FunctionFlags.Range, AllowRange.All);
             ce.RegisterFunction("TRUE", 0, 0, Adapt(True), FunctionFlags.Scalar);
         }
 

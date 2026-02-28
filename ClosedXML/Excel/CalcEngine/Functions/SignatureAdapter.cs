@@ -124,7 +124,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<double, double, double, bool, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<CalcContext, double, double, double, bool, AnyValue> f)
         {
             return (ctx, args) =>
             {
@@ -144,7 +144,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg3Converted.TryPickT0(out var arg3, out var err3))
                     return err3;
 
-                return f(arg0, arg1, arg2, arg3);
+                return f(ctx, arg0, arg1, arg2, arg3);
             };
         }
 
@@ -176,7 +176,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             };
         }
 
-        public static CalcEngineFunction Adapt(Func<string, double, ScalarValue> f)
+        public static CalcEngineFunction Adapt(Func<CalcContext, string, double, ScalarValue> f)
         {
             return (ctx, args) =>
             {
@@ -188,7 +188,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 if (!arg1Converted.TryPickT0(out var arg1, out var err1))
                     return err1;
 
-                return f(arg0, arg1).ToAnyValue();
+                return f(ctx, arg0, arg1).ToAnyValue();
             };
         }
 

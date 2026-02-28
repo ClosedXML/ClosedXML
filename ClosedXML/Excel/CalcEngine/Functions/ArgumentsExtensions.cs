@@ -58,6 +58,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 if (arg.TryPickScalar(out var scalar, out var collection))
                 {
+                    ctx.ThrowIfCancelled();
                     var conversionResult = convert(scalar, ctx);
                     if (!conversionResult.TryPickT0(out var elementValue, out var elementError))
                         return elementError;
@@ -72,6 +73,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                         : reference!.GetCellsValues(ctx);
                     foreach (var value in valuesIterator)
                     {
+                        ctx.ThrowIfCancelled();
                         if (collectionFilter is not null && !collectionFilter(value))
                             continue;
 

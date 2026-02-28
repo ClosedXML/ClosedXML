@@ -10,7 +10,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal class CalcContext
+    internal sealed class CalcContext
     {
         private readonly XLCalcEngine _calcEngine;
         private readonly XLWorkbook? _workbook;
@@ -31,6 +31,7 @@ namespace ClosedXML.Excel.CalcEngine
             _formulaAddress = formulaAddress;
             _recursive = recursive;
             Culture = culture;
+            CancellationToken = workbook?.CancellationToken ?? CancellationToken.None;
         }
 
         // LEGACY: Remove once legacy functions are migrated
@@ -85,7 +86,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         internal double DateSystemUpperLimit => Use1904DateSystem ? XLHelper.Calendar1904UpperLimit : XLHelper.Calendar1900UpperLimit;
 
-        internal CancellationToken CancellationToken { get; init; } = CancellationToken.None;
+        internal CancellationToken CancellationToken { get; }
 
         /// <summary>
         /// A helper method to check is user cancelled the calculation in function loops.

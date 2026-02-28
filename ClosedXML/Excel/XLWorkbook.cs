@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
@@ -128,6 +129,8 @@ namespace ClosedXML.Excel
 
         /// <inheritdoc cref="LoadOptions.StrictAttributeParsing"/>
         internal bool StrictAttributeParsing { get; }
+
+        internal CancellationToken CancellationToken { get; }
 
         internal XLPivotCaches PivotCachesInternal { get; }
 
@@ -796,6 +799,7 @@ namespace ClosedXML.Excel
             DpiY = loadOptions.Dpi.Y;
             StrictAttributeParsing = loadOptions.StrictAttributeParsing;
             GraphicEngine = loadOptions.GraphicEngine ?? LoadOptions.DefaultGraphicEngine ?? DefaultGraphicEngine.Instance.Value;
+            CancellationToken = loadOptions.CancellationToken;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;

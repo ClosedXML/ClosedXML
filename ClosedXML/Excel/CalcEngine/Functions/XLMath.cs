@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (1.0 / Math.Sinh(x));
         }
 
-        internal static OneOf<double, XLError> CombinChecked(double number, double numberChosen)
+        internal static OneOf<double, XLError> CombinChecked(CalcContext ctx, double number, double numberChosen)
         {
             if (number < 0 || numberChosen < 0)
                 return XLError.NumberInvalid;
@@ -39,14 +39,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (n < k)
                 return XLError.NumberInvalid;
 
-            var combinations = Combin(n, k);
+            var combinations = Combin(ctx, n, k);
             if (double.IsInfinity(combinations) || double.IsNaN(combinations))
                 return XLError.NumberInvalid;
 
             return combinations;
         }
 
-        internal static double Combin(double n, double k)
+        internal static double Combin(CalcContext ctx, double n, double k)
         {
             if (k == 0) return 1;
 
@@ -55,6 +55,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             double result = 1;
             for (var i = 1; i <= k; i++, n--)
             {
+                ctx.ThrowIfCancelled();
                 result *= n;
                 result /= i;
             }

@@ -48,6 +48,7 @@ internal class TallyCriteria : ITally
         var talliedAreas = new List<XLRangeAddress>(args.Length);
         foreach (var arg in args)
         {
+            ctx.ThrowIfCancelled();
             if (!arg.TryPickArea(out var tallyArea, out var error))
                 return error;
 
@@ -72,6 +73,7 @@ internal class TallyCriteria : ITally
         {
             foreach (var area in talliedAreas)
             {
+                ctx.ThrowIfCancelled();
                 var origin = area.FirstAddress;
                 var shifted = new XLSheetPoint(origin.RowNumber + rowOfs, origin.ColumnNumber + colOfs);
                 var cellValue = ctx.GetCellValue(area.Worksheet, shifted.Row, shifted.Column);

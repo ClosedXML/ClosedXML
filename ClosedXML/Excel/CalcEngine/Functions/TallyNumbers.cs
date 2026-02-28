@@ -53,6 +53,7 @@ internal class TallyNumbers : ITally
         {
             if (arg.TryPickScalar(out var scalar, out var collection))
             {
+                ctx.ThrowIfCancelled();
                 if (_ignoreScalarBlank && scalar.IsBlank)
                     continue;
 
@@ -74,6 +75,7 @@ internal class TallyNumbers : ITally
                     : array;
                 foreach (var value in valuesIterator)
                 {
+                    ctx.ThrowIfCancelled();
                     if (value.TryPickError(out var error))
                     {
                         if (_ignoreErrors)
