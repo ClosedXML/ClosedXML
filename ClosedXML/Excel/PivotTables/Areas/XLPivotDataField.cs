@@ -147,8 +147,8 @@ internal class XLPivotDataField : IXLPivotValue
             if (_baseField == BaseItemDefaultValue)
                 throw new InvalidOperationException("Base field not specified for the field.");
 
-            var field = _pivotTable.PivotFields[_baseField];
-            var fieldItem = field.GetOrAddItem(value);
+            var _field = _pivotTable.PivotFields[_baseField];
+            var fieldItem = _field.GetOrAddItem(value);
             var itemIndex = fieldItem.ItemIndex ?? BaseFieldDefaultValue;
             _baseItem = checked((uint)itemIndex);
         }

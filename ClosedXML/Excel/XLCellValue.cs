@@ -263,7 +263,7 @@ namespace ClosedXML.Excel
             // should deal with any weird formats.
             if (text is null)
                 return Blank.Value;
-            if (text == String.Empty)
+            if (string.IsNullOrEmpty(text))
                 return Blank.Value;
             if (StringComparer.OrdinalIgnoreCase.Equals("TRUE", text))
                 return true;
