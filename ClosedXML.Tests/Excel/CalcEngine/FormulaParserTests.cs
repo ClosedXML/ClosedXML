@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
@@ -184,7 +184,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=PMT(0,1,1000,,1)", -1000)]
         public void Empty_arguments_are_passed_to_function(string formula, object expectedValue)
         {
-            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion

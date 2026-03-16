@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 
@@ -125,7 +125,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1^4", 0.0)]
         public void Exponentiation_CanWorkWithScalars(string formula, object expectedValue)
         {
-            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion
@@ -148,7 +148,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("A1*10", 0.0)]
         public void Multiplication_CanWorkWithScalars(string formula, object expectedValue)
         {
-            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
+            Assert.That(Evaluate(formula), Is.EqualTo(expectedValue));
         }
 
         #endregion

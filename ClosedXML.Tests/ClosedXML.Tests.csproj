@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>14.0</LangVersion>
     <TargetFrameworks>net8.0;net462</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -19,8 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="NUnit" Version="4.5.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
@@ -31,6 +31,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\ClosedXML.Examples\ClosedXML.Examples.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <!-- Custom global usings added in the csproj file -->
+    <Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
 
   <ItemGroup>
