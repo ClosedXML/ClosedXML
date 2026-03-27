@@ -14,7 +14,6 @@ namespace ClosedXML.Excel.Drawings
     [DebuggerDisplay("{Name}")]
     internal class XLPicture : IXLPicture
     {
-        private const String InvalidNameChars = @":\/?*[]";
         private Int32 _height;
         private Int32 _id;
         private String _name = string.Empty;
@@ -338,14 +337,8 @@ namespace ClosedXML.Excel.Drawings
 
         internal void SetName(string value)
         {
-            if (String.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Picture names cannot be empty");
-
-            if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
-                throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
-
-            if (value.Length > 31)
-                throw new ArgumentException("Picture names cannot be more than 31 characters");
+            if (String.IsNullOrEmpty(value))
+                throw new ArgumentException("Picture names cannot be null or empty.");
 
             _name = value;
         }

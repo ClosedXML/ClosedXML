@@ -33,6 +33,10 @@ namespace ClosedXML.Excel.Drawings
 
         Int32 Left { get; set; }
 
+        /// <summary>
+        /// Set the name of a picture.
+        /// </summary>
+        /// <exception cref="ArgumentException">Name is already used in the sheet, is null or empty.</exception>
         String Name { get; set; }
 
         /// <summary>

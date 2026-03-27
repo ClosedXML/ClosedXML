@@ -480,5 +480,63 @@ namespace ClosedXML.Tests
                 () => new XLWorkbook(stream),
                 @"Other\Pictures\ImageShapeZOrder-Output.xlsx");
         }
+
+        [TestCase("@")]
+        [TestCase(":")]
+        [TestCase("\\")]
+        [TestCase("/")]
+        [TestCase("?")]
+        [TestCase("*")]
+        [TestCase("[]")]
+        [TestCase(" ")] // Whitespace name is allowed, but can't be empty
+        [TestCase("C:\\Images\\pic.jpg")] // Path with multiple forbidden chars
+        [TestCase("http://example.com/image.jpg")] // URL with multiple forbidden chars
+        [TestCase("Picture@01\\QPosted@")] // A name from a problematic workbook
+        public void PictureCanHaveUnusualCharactersInName(string nameWithUnusualCharacter)
+        {
+            // The name of a picture couldn't contain certain characters in some ancient version of Excel. Verify that
+            // it is no longer the case through the whole lifecycle (add picture, change name, save, load).
+            AssertPictureNameAllowed(nameWithUnusualCharacter);
+        }
+
+        [Test]
+        public void PictureNameCanBeLong()
+        {
+            // Picture name was originally limited to 31 characters. Verify that it is no longer the case.
+            var longName = new string('a', 100_000);
+            AssertPictureNameAllowed(longName);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void PictureNameCantBeNullOrEmpty(string invalidName)
+        {
+            // Picture name is a required attribute, though Excel generates a name if it isn't specified instead of failing.
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            using var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png");
+            var picture = ws.AddPicture(imageStream);
+            Assert.Throws<ArgumentException>(() => picture.Name = invalidName);
+        }
+
+        private static void AssertPictureNameAllowed(string testedName)
+        {
+            TestHelper.CreateSaveLoadAssert(
+                wb =>
+                {
+                    using var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png");
+                    var ws1 = wb.AddWorksheet("AddPicture");
+                    ws1.AddPicture(imageStream, testedName);
+
+                    var ws2 = wb.AddWorksheet("Setter");
+                    var picture = ws2.AddPicture(imageStream);
+                    picture.Name = testedName;
+                }, wb =>
+                {
+                    Assert.AreEqual(testedName, wb.Worksheet("AddPicture").Pictures.Single().Name);
+                    Assert.AreEqual(testedName, wb.Worksheet("Setter").Pictures.Single().Name);
+                });
+        }
     }
 }

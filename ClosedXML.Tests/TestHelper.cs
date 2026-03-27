@@ -279,5 +279,24 @@ namespace ClosedXML.Tests
                 assertLoadedWorkbook(wb, ws);
             }
         }
+
+        /// <summary>
+        /// Test if some aspect of a workbook can survive through save and load cycle.
+        /// </summary>
+        public static void CreateSaveLoadAssert(Action<XLWorkbook> createWorksheet, Action<XLWorkbook> assertLoadedWorkbook, bool validate = true, bool evaluateFormulas = false)
+        {
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                createWorksheet(wb);
+                wb.SaveAs(ms, validate, evaluateFormulas);
+            }
+
+            ms.Position = 0;
+            using (var wb = new XLWorkbook(ms))
+            {
+                assertLoadedWorkbook(wb);
+            }
+        }
     }
 }
