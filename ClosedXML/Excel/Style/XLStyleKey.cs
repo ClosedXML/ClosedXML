@@ -49,4 +49,30 @@ internal readonly record struct XLStyleKey
         numberFormat = NumberFormat;
         protection = Protection;
     }
+    
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hash = Alignment.GetHashCode();
+            hash = (hash * 397) ^ Border.GetHashCode();
+            hash = (hash * 397) ^ Fill.GetHashCode();
+            hash = (hash * 397) ^ Font.GetHashCode();
+            hash = (hash * 397) ^ IncludeQuotePrefix.GetHashCode();
+            hash = (hash * 397) ^ NumberFormat.GetHashCode();
+            hash = (hash * 397) ^ Protection.GetHashCode();
+            return hash;
+        }
+    }
+
+    public bool Equals(XLStyleKey other)
+    {
+        return Alignment.Equals(other.Alignment)
+               && Border.Equals(other.Border)
+               && Fill.Equals(other.Fill)
+               && Font.Equals(other.Font)
+               && IncludeQuotePrefix == other.IncludeQuotePrefix
+               && NumberFormat.Equals(other.NumberFormat)
+               && Protection.Equals(other.Protection);
+    }
 }

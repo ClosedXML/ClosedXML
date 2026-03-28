@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel;
 
 internal readonly record struct XLBorderKey
@@ -30,27 +28,28 @@ internal readonly record struct XLBorderKey
 
     public override int GetHashCode()
     {
-        var hash = new HashCode();
-        hash.Add(LeftBorder);
-        hash.Add(RightBorder);
-        hash.Add(TopBorder);
-        hash.Add(BottomBorder);
-        hash.Add(DiagonalBorder);
-        hash.Add(DiagonalUp);
-        hash.Add(DiagonalDown);
+        unchecked
+        {
+            var hash = (int)LeftBorder;
+            hash = (hash * 397) ^ (LeftBorder != XLBorderStyleValues.None ? LeftBorderColor.GetHashCode() : 0);
 
-        if (LeftBorder != XLBorderStyleValues.None)
-            hash.Add(LeftBorderColor);
-        if (RightBorder != XLBorderStyleValues.None)
-            hash.Add(RightBorderColor);
-        if (TopBorder != XLBorderStyleValues.None)
-            hash.Add(TopBorderColor);
-        if (BottomBorder != XLBorderStyleValues.None)
-            hash.Add(BottomBorderColor);
-        if (DiagonalBorder != XLBorderStyleValues.None)
-            hash.Add(DiagonalBorderColor);
+            hash = (hash * 397) ^ (int)RightBorder;
+            hash = (hash * 397) ^ (RightBorder != XLBorderStyleValues.None ? RightBorderColor.GetHashCode() : 0);
 
-        return hash.ToHashCode();
+            hash = (hash * 397) ^ (int)TopBorder;
+            hash = (hash * 397) ^ (TopBorder != XLBorderStyleValues.None ? TopBorderColor.GetHashCode() : 0);
+
+            hash = (hash * 397) ^ (int)BottomBorder;
+            hash = (hash * 397) ^ (BottomBorder != XLBorderStyleValues.None ? BottomBorderColor.GetHashCode() : 0);
+
+            hash = (hash * 397) ^ (int)DiagonalBorder;
+            hash = (hash * 397) ^ (DiagonalBorder != XLBorderStyleValues.None ? DiagonalBorderColor.GetHashCode() : 0);
+
+            hash = (hash * 397) ^ (DiagonalUp ? 1 : 0);
+            hash = (hash * 397) ^ (DiagonalDown ? 1 : 0);
+
+            return hash;
+        }
     }
 
     public bool Equals(XLBorderKey other)
@@ -65,7 +64,7 @@ internal readonly record struct XLBorderKey
             && DiagonalDown == other.DiagonalDown;
     }
 
-    private bool AreEquivalent(
+    private static bool AreEquivalent(
         XLBorderStyleValues borderStyle1, XLColorKey color1,
         XLBorderStyleValues borderStyle2, XLColorKey color2)
     {

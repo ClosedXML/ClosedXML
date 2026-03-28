@@ -44,23 +44,33 @@ internal readonly record struct XLFontKey
             && FontScheme == other.FontScheme
             && string.Equals(FontName, other.FontName, StringComparison.OrdinalIgnoreCase);
     }
-
+    
     public override int GetHashCode()
     {
-        var hash = new HashCode();
-        hash.Add(Bold);
-        hash.Add(Italic);
-        hash.Add(Underline);
-        hash.Add(Strikethrough);
-        hash.Add(VerticalAlignment);
-        hash.Add(Shadow);
-        hash.Add(FontSize);
-        hash.Add(FontColor);
-        hash.Add(FontName, StringComparer.OrdinalIgnoreCase);
-        hash.Add(FontFamilyNumbering);
-        hash.Add(FontCharSet);
-        hash.Add(FontScheme);
-        return hash.ToHashCode();
+        unchecked
+        {
+            var hash = Bold ? 1 : 0;
+            hash = (hash * 397) ^ (Italic ? 1 : 0);
+            hash = (hash * 397) ^ (int)Underline;
+            hash = (hash * 397) ^ (Strikethrough ? 1 : 0);
+            hash = (hash * 397) ^ (int)VerticalAlignment;
+            hash = (hash * 397) ^ (Shadow ? 1 : 0);
+
+            // FontSize as long bits (BitConverter ensures stable bit pattern)
+            hash = (hash * 397) ^ BitConverter.DoubleToInt64Bits(FontSize).GetHashCode();
+
+            hash = (hash * 397) ^ FontColor.GetHashCode();
+
+            // FontName with OrdinalIgnoreCase hash
+            if (!string.IsNullOrEmpty(FontName))
+                hash = (hash * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(FontName);
+
+            hash = (hash * 397) ^ (int)FontFamilyNumbering;
+            hash = (hash * 397) ^ (int)FontCharSet;
+            hash = (hash * 397) ^ (int)FontScheme;
+
+            return hash;
+        }
     }
 
     public override string ToString()
