@@ -1,0 +1,71 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ develop ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Determine version
+        id: versioning
+        shell: pwsh
+        run: |
+          $repoTag = "${{ github.ref_type }}" -eq "tag"
+          $tagName = "${{ github.ref_name }}"
+          $runNumber = "${{ github.run_number }}"
+          if ($repoTag -eq $true) {
+            $fileVersion = $tagName -replace '(\d+)\.(\d+)\.(\d+)(-.+)?', '$1.$2.$3'
+            if ($fileVersion -eq $tagName) { $fileVersion = "$fileVersion.0" }
+            else { $fileVersion = "$fileVersion.$runNumber" }
+            $productVersion = $tagName
+          } else {
+            $fileVersion = "0.106.999.$runNumber"
+            # Use -ci to mark version as non-stable one. Non-stable versions can depend on preview
+            # packages (e.g. ClosedXMl.Parser) during development of new version.
+            $productVersion = "0.106.999-ci.$runNumber"
+          }
+          Add-Content -Path $env:GITHUB_ENV -Value "fileVersion=$fileVersion"
+          Add-Content -Path $env:GITHUB_ENV -Value "productVersion=$productVersion"
+         
+          Write-Host "Determined FileVersion: $fileVersion"
+          Write-Host "Determined ProductVersion: $productVersion"
+
+      - name: Restore dependencies
+        run: dotnet restore ClosedXML.sln
+
+      - name: Build
+        run: |
+          dotnet build ClosedXML.sln --configuration Release --no-restore `
+            -p:AssemblyVersion="${{ env.fileVersion }}" `
+            -p:FileVersion="${{ env.fileVersion }}" `
+            -p:Version="${{ env.productVersion }}" `
+            -p:InformationalVersion="${{ env.productVersion }}"
+
+      - name: Test
+        # GitHub build image doesn't have installed Access OLEDB driver
+        run: dotnet test ClosedXML.sln --configuration Release --no-build `
+               --filter "TestCategory!=OLEDB"
+
+      - name: Upload NuGet Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: NuGet-Packages
+          path: |
+            ClosedXML/bin/Release/*.nupkg
+            ClosedXML/bin/Release/*.snupkg
