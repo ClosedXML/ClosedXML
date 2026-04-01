@@ -1,4 +1,4 @@
-﻿#if !APPVEYOR && NETFRAMEWORK
+#if NETFRAMEWORK
 using ClosedXML.Excel;
 using ClosedXML.Tests.Utils;
 using NUnit.Framework;
@@ -15,6 +15,7 @@ namespace ClosedXML.Tests.OleDb
     public class OleDbTests
     {
         [Test]
+        [Category("OLEDB")]
         public void TestOleDbValues()
         {
             using (var tf = new TemporaryFile(CreateTestFile()))
