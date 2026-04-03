@@ -223,7 +223,45 @@ namespace ClosedXML.Excel
         {
             AllowedValues = XLAllowedValues.List;
             InCellDropdown = inCellDropdown;
-            Value = list;
+            Value = NormalizeListValue(list);
+        }
+
+        private string NormalizeListValue(string list)
+        {
+            if (string.IsNullOrEmpty(list))
+                return list;
+
+            // Already quoted - store verbatim
+            if (list.StartsWith("\"") && list.EndsWith("\""))
+                return list;
+
+            // Formula reference (e.g., =YesNo, =Sheet1!A1:A10) - store verbatim
+            if (list.StartsWith("="))
+                return list;
+
+            // Valid range address (e.g., $F$2:$F$8, Sheet1!A1:A10) - store verbatim
+            if (XLHelper.IsValidRangeAddress(list))
+                return list;
+
+            // Check if it's an existing defined name in worksheet or workbook scope
+            if (IsExistingDefinedName(list))
+                return list;
+
+            // Literal string - wrap in quotes
+            return $"\"{list}\"";
+        }
+
+        private bool IsExistingDefinedName(string name)
+        {
+            // Check worksheet-scoped defined names
+            if (_worksheet.DefinedNames.Contains(name))
+                return true;
+
+            // Check workbook-scoped defined names
+            if (_worksheet.Workbook.DefinedNames.Contains(name))
+                return true;
+
+            return false;
         }
 
         public void List(IXLRange range)
