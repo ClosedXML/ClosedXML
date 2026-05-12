@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
     internal class XLSparklineGroups : IXLSparklineGroups
     {
         private readonly XLWorksheet _worksheet;
+        private readonly List<IXLSparklineGroup> _sparklineGroups = new();
 
         public XLSparklineGroups(XLWorksheet worksheet)
         {
@@ -15,8 +16,6 @@ namespace ClosedXML.Excel
         }
 
         public IXLWorksheet Worksheet => _worksheet;
-
-        #region Public Methods
 
         /// <summary>
         /// Add empty sparkline group.
@@ -159,14 +158,6 @@ namespace ClosedXML.Excel
         {
             _sparklineGroups.Clear();
         }
-
-        #endregion Public Methods
-
-        #region Private Fields
-
-        private readonly List<IXLSparklineGroup> _sparklineGroups = new List<IXLSparklineGroup>();
-
-        #endregion Private Fields
 
         /// <summary>
         /// Shift address of all sparklines to reflect inserted columns before a range.

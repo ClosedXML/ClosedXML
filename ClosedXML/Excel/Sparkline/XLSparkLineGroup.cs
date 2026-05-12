@@ -10,7 +10,8 @@ namespace ClosedXML.Excel
 {
     internal class XLSparklineGroup : IXLSparklineGroup
     {
-        private XLWorksheet _worksheet;
+        private readonly XLWorksheet _worksheet;
+        private readonly Dictionary<IXLCell, IXLSparkline> _sparklines = new();
         private IXLRange _dateRange;
         private IXLSparklineStyle _style;
 
@@ -315,12 +316,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Public Methods
-
-        #region Private Fields
-
-        private readonly Dictionary<IXLCell, IXLSparkline> _sparklines = new Dictionary<IXLCell, IXLSparkline>();
-
-        #endregion Private Fields
 
         #region Private Constructors
 
