@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
 
         public XLSparklineMarkers ShowMarkers { get; set; }
 
-        private IXLSparklineGroups SparklineGroups => Worksheet.SparklineGroups;
+        private XLSparklineGroups SparklineGroups => _worksheet.SparklineGroupsInternal;
 
         public IXLSparklineStyle Style
         {
