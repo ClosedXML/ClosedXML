@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     internal class XLSparklineGroup : IXLSparklineGroup
     {
         private readonly XLWorksheet _worksheet;
-        private readonly Dictionary<IXLCell, IXLSparkline> _sparklines = new();
+        private readonly Dictionary<IXLCell, XLSparkline> _sparklines = new();
         private IXLRange _dateRange;
         private IXLSparklineStyle _style;
 
@@ -219,7 +219,7 @@ namespace ClosedXML.Excel
 
         public IXLSparkline GetSparkline(IXLCell cell)
         {
-            return _sparklines.TryGetValue(cell, out IXLSparkline sparkline) ? sparkline : null;
+            return _sparklines.TryGetValue(cell, out XLSparkline sparkline) ? sparkline : null;
         }
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
@@ -305,14 +305,13 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal IXLSparkline Add(IXLSparkline sparkline)
+        internal void Add(XLSparkline sparkline)
         {
             if (sparkline.Location.Worksheet != Worksheet)
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
 
             SparklineGroups.Remove(sparkline.Location);
             _sparklines[sparkline.Location] = sparkline;
-            return sparkline;
         }
 
         #endregion Public Methods

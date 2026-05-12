@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal class XLSparklineGroups : IXLSparklineGroups
     {
         private readonly XLWorksheet _worksheet;
-        private readonly List<IXLSparklineGroup> _sparklineGroups = new();
+        private readonly List<XLSparklineGroup> _sparklineGroups = new();
 
         public XLSparklineGroups(XLWorksheet worksheet)
         {
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
             if (sparklineGroup.Worksheet != Worksheet)
                 throw new ArgumentException("The specified sparkline group belongs to the different worksheet");
 
-            _sparklineGroups.Add(sparklineGroup);
+            _sparklineGroups.Add((XLSparklineGroup)sparklineGroup);
             return sparklineGroup;
         }
 
@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
         /// <param name="sparklineGroup">The sparkline group to remove</param>
         public void Remove(IXLSparklineGroup sparklineGroup)
         {
-            _sparklineGroups.Remove(sparklineGroup);
+            _sparklineGroups.Remove((XLSparklineGroup)sparklineGroup);
         }
 
         /// <summary>
