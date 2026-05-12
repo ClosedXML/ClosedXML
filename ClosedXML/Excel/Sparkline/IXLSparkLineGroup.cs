@@ -42,8 +42,6 @@ namespace ClosedXML.Excel
 
     public interface IXLSparklineGroup : IEnumerable<IXLSparkline>
     {
-        #region Public Properties
-
         IXLRange DateRange { get; set; }
 
         XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
@@ -63,10 +61,6 @@ namespace ClosedXML.Excel
         IXLSparklineVerticalAxis VerticalAxis { get; }
 
         IXLWorksheet Worksheet { get; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         IXLSparkline Add(IXLCell location, IXLRange sourceData);
 
@@ -105,7 +99,5 @@ namespace ClosedXML.Excel
         IXLSparklineGroup SetStyle(IXLSparklineStyle value);
 
         IXLSparklineGroup SetType(XLSparklineType value);
-
-        #endregion Public Methods
     }
 }

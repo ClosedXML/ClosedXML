@@ -7,14 +7,8 @@ namespace ClosedXML.Excel
 {
     internal class XLSparkline : IXLSparkline
     {
-        #region Private Fields
-
         private IXLCell _location;
         private IXLRange _sourceData;
-
-        #endregion Private Fields
-
-        #region Public Properties
 
         public bool IsValid =>
             Location != null &&
@@ -35,10 +29,6 @@ namespace ClosedXML.Excel
         }
 
         public IXLSparklineGroup SparklineGroup { get; }
-
-        #endregion Public Properties
-
-        #region Public Constructors
 
         /// <summary>
         /// Create a new sparkline
@@ -62,10 +52,6 @@ namespace ClosedXML.Excel
             SourceData = sourceData;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public IXLSparkline SetLocation(IXLCell cell)
         {
             if (cell != null && cell.Worksheet != SparklineGroup.Worksheet)
@@ -87,7 +73,5 @@ namespace ClosedXML.Excel
             _sourceData = range;
             return this;
         }
-
-        #endregion Public Methods
     }
 }
