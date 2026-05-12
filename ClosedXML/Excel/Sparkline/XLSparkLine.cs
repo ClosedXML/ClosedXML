@@ -7,6 +7,7 @@ namespace ClosedXML.Excel
 {
     internal class XLSparkline : IXLSparkline
     {
+        public XLSparklineGroup _sparklineGroup;
         private IXLCell _location;
         private IXLRange _sourceData;
 
@@ -28,7 +29,7 @@ namespace ClosedXML.Excel
             set => SetSourceData(value);
         }
 
-        public IXLSparklineGroup SparklineGroup { get; }
+        public IXLSparklineGroup SparklineGroup => _sparklineGroup;
 
         /// <summary>
         /// Create a new sparkline
@@ -36,7 +37,7 @@ namespace ClosedXML.Excel
         /// <param name="sparklineGroup">The sparkline group to add the sparkline to</param>
         /// <param name="cell">The cell to place the sparkline in</param>
         /// <param name="sourceData">The range the sparkline gets data from</param>
-        public XLSparkline(IXLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
+        internal XLSparkline(XLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
         {
             if (sparklineGroup == null)
                 throw new ArgumentNullException(nameof(sparklineGroup));
@@ -47,7 +48,7 @@ namespace ClosedXML.Excel
             if (sparklineGroup.Worksheet != cell.Worksheet)
                 throw new InvalidOperationException("Cell must belong to the same worksheet as the sparkline group");
 
-            SparklineGroup = sparklineGroup;
+            _sparklineGroup = sparklineGroup;
             Location = cell;
             SourceData = sourceData;
         }
@@ -61,7 +62,7 @@ namespace ClosedXML.Excel
                 SparklineGroup.Remove(_location);
 
             _location = cell;
-            ((XLSparklineGroup) SparklineGroup).Add(this);
+            _sparklineGroup.Add(this);
             return this;
         }
 
