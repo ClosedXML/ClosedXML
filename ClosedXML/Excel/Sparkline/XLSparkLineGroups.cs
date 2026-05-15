@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLSparklineGroups : IXLSparklineGroups
+    internal class XLSparklineGroups : IXLSparklineGroups, IEnumerable<XLSparklineGroup>
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLSparklineGroup> _sparklineGroups = new();
@@ -41,16 +41,31 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroup Add(string locationAddress, string sourceDataAddress)
         {
+            if (locationAddress is null)
+                throw new ArgumentNullException(nameof(locationAddress));
+
+            if (sourceDataAddress is null)
+                throw new ArgumentNullException(nameof(sourceDataAddress));
+
             return Add(new XLSparklineGroup(Worksheet, locationAddress, sourceDataAddress));
         }
 
         public IXLSparklineGroup Add(IXLCell location, IXLRange sourceData)
         {
+            if (location is null)
+                throw new ArgumentNullException(nameof(location));
+
             return Add(new XLSparklineGroup(location, sourceData));
         }
 
         public IXLSparklineGroup Add(IXLRange locationRange, IXLRange sourceDataRange)
         {
+            if (locationRange is null)
+                throw new ArgumentNullException(nameof(locationRange));
+
+            if (sourceDataRange is null)
+                throw new ArgumentNullException(nameof(sourceDataRange));
+
             return Add(new XLSparklineGroup(locationRange, sourceDataRange));
         }
 
@@ -75,7 +90,7 @@ namespace ClosedXML.Excel
         {
             foreach (var slg in this)
             {
-                slg.CopyTo(targetSheet);
+                slg.CopyTo((XLWorksheet)targetSheet);
             }
         }
 
@@ -84,11 +99,19 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="cell">The cell to find the sparkline for</param>
         /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
-        public IXLSparkline GetSparkline(IXLCell cell)
+        public IXLSparkline? GetSparkline(IXLCell cell)
         {
-            return _sparklineGroups
-                .Select(g => g.GetSparkline(cell))
-                .FirstOrDefault(s => s != null);
+            if (cell.Worksheet != _worksheet)
+                return null;
+
+            var location = XLSheetPoint.FromCell(cell);
+            foreach (var sparklineGroup in _sparklineGroups)
+            {
+                if (sparklineGroup.TryGetSparkline(location, out var sparkline))
+                    return sparkline;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -102,9 +125,14 @@ namespace ClosedXML.Excel
                 .SelectMany(g => g.GetSparklines(searchRange));
         }
 
-        public IEnumerator<IXLSparklineGroup> GetEnumerator()
+        public IEnumerator<XLSparklineGroup> GetEnumerator()
         {
             return _sparklineGroups.GetEnumerator();
+        }
+
+        IEnumerator<IXLSparklineGroup> IEnumerable<IXLSparklineGroup>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -140,6 +168,11 @@ namespace ClosedXML.Excel
         public void Remove(IXLSparklineGroup sparklineGroup)
         {
             _sparklineGroups.Remove((XLSparklineGroup)sparklineGroup);
+        }
+
+        internal void Remove(XLSheetPoint location)
+        {
+            _sparklineGroups.ForEach(g => g.Remove(location));
         }
 
         /// <summary>

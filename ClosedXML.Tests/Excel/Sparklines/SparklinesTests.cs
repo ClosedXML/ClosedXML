@@ -27,29 +27,20 @@ namespace ClosedXML.Tests.Excel.Sparklines
         }
 
         [Test]
-        public void CannotCreateSparklineWithoutGroup()
-        {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
-            TestDelegate action = () => new XLSparkline(null, ws.Cell("A1"), ws.Range("A2:A5"));
-            Assert.Throws<ArgumentNullException>(action);
-        }
-
-        [Test]
         public void CannotCreateSparklineWithoutLocation()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1");
-            var group = new XLSparklineGroup(ws);
-            TestDelegate action = () => new XLSparkline(group, null, ws.Range("A2:A5"));
+            TestDelegate action = () => ws.SparklineGroups.Add((IXLCell)null, ws.Range("A2:A5"));
             Assert.Throws<ArgumentNullException>(action);
         }
 
         [Test]
         public void CanCreateInvalidSparklineWithoutSourceData()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
-            var group = new XLSparklineGroup(ws);
-            var sparkline = new XLSparkline(group, ws.FirstCell(), null);
-            Assert.IsFalse(sparkline.IsValid);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var sparkline = ws.SparklineGroups.Add(ws.FirstCell(), null);
+            Assert.IsNull(sparkline.Single().SourceData);
         }
 
         [Test]
@@ -631,7 +622,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             Assert.AreEqual("A1", group.First().Location.Address.ToString());
             Assert.AreEqual("C2:C6", group.First().SourceData.RangeAddress.ToString());
             Assert.AreEqual("B1", group.Last().Location.Address.ToString());
-            Assert.IsFalse(group.Last().SourceData.RangeAddress.IsValid);
+            Assert.IsNull(group.Last().SourceData);
         }
 
         #endregion Change sparklines
@@ -852,9 +843,8 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanSaveAndLoadSparklineWithInvalidRange()
         {
-            using (var ms = new MemoryStream())
-            {
-                using (var wb = new XLWorkbook())
+            TestHelper.CreateSaveLoadAssert(
+                wb =>
                 {
                     var ws1 = wb.AddWorksheet("Sheet 1");
                     var ws2 = wb.AddWorksheet("Sheet 2");
@@ -864,19 +854,16 @@ namespace ClosedXML.Tests.Excel.Sparklines
                         .SetDateRange(ws2.Range("A1:E1"));
 
                     ws2.Delete();
-                    wb.SaveAs(ms);
-                }
-
-                using (var wb = new XLWorkbook(ms))
+                },
+                wb =>
                 {
                     var ws = wb.Worksheets.Single();
 
                     Assert.AreEqual(2, ws.SparklineGroups.Count());
-                    Assert.IsFalse(ws.Cell("A2").Sparkline.IsValid);
+                    Assert.IsNull(ws.Cell("A2").Sparkline.SourceData);
                     Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
                     Assert.IsNull(ws.Cell("A5").Sparkline.SparklineGroup.DateRange);
-                }
-            }
+                });
         }
 
         #endregion Load and save sparkline groups

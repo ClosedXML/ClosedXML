@@ -183,8 +183,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Create a sheet point from the address. Workbook is ignored.
         /// </summary>
-        public static XLSheetPoint FromAddress(IXLAddress address)
+        internal static XLSheetPoint FromAddress(IXLAddress address)
             => new(address.RowNumber, address.ColumnNumber);
+
+        internal static XLSheetPoint FromCell(IXLCell cell)
+        {
+            return ((XLCell)cell).SheetPoint;
+        }
 
         public int CompareTo(XLSheetPoint other)
         {

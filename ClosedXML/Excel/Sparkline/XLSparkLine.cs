@@ -1,77 +1,54 @@
-#nullable disable
-
-// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// An API object for a sparkline. It doesn't contain any data, only a link to the point of
+    /// the sparkline and does operations through <see cref="XLSparklineGroup"/>. It uses the
+    /// cell location as an anchor and if it is no longer valid, the group should throw.
+    /// </summary>
     internal class XLSparkline : IXLSparkline
     {
-        public XLSparklineGroup _sparklineGroup;
-        private IXLCell _location;
-        private IXLRange _sourceData;
+        private readonly XLSparklineGroup _sparklineGroup;
+        private XLSheetPoint _location;
 
-        public bool IsValid =>
-            Location != null &&
-            SourceData != null &&
-            ((XLAddress)Location.Address).IsValid &&
-            ((XLRangeAddress)SourceData.RangeAddress).IsValid;
+        internal XLSparkline(XLSparklineGroup sparklineGroup, XLSheetPoint location)
+        {
+            _sparklineGroup = sparklineGroup;
+            _location = location;
+        }
 
         public IXLCell Location
         {
-            get => _location;
+            get => _sparklineGroup.GetLocation(_location);
             set => SetLocation(value);
         }
 
-        public IXLRange SourceData
+        public IXLRange? SourceData
         {
-            get => _sourceData;
+            get => _sparklineGroup.GetSparklineSourceData(_location);
             set => SetSourceData(value);
         }
 
         public IXLSparklineGroup SparklineGroup => _sparklineGroup;
 
-        /// <summary>
-        /// Create a new sparkline
-        /// </summary>
-        /// <param name="sparklineGroup">The sparkline group to add the sparkline to</param>
-        /// <param name="cell">The cell to place the sparkline in</param>
-        /// <param name="sourceData">The range the sparkline gets data from</param>
-        internal XLSparkline(XLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
+        public IXLSparkline SetLocation(IXLCell newLocation)
         {
-            if (sparklineGroup == null)
-                throw new ArgumentNullException(nameof(sparklineGroup));
+            if (newLocation is null)
+                throw new ArgumentNullException(nameof(newLocation));
 
-            if (cell == null)
-                throw new ArgumentNullException(nameof(cell));
-
-            if (sparklineGroup.Worksheet != cell.Worksheet)
-                throw new InvalidOperationException("Cell must belong to the same worksheet as the sparkline group");
-
-            _sparklineGroup = sparklineGroup;
-            Location = cell;
-            SourceData = sourceData;
-        }
-
-        public IXLSparkline SetLocation(IXLCell cell)
-        {
-            if (cell != null && cell.Worksheet != SparklineGroup.Worksheet)
+            if (newLocation.Worksheet != SparklineGroup.Worksheet)
                 throw new InvalidOperationException("Cannot move the sparkline to a different worksheet");
 
-            if (_location != null)
-                SparklineGroup.Remove(_location);
-
-            _location = cell;
-            _sparklineGroup.Add(this);
+            var destination = XLSheetPoint.FromCell(newLocation);
+            _sparklineGroup.MoveSparkline(_location, destination);
+            _location = destination;
             return this;
         }
 
-        public IXLSparkline SetSourceData(IXLRange range)
+        public IXLSparkline SetSourceData(IXLRange? sourceDataRange)
         {
-            if (range != null && range.RowCount() != 1 && range.ColumnCount() != 1)
-                throw new ArgumentException("SourceData range must have either a single row or a single column");
-
-            _sourceData = range;
+            _sparklineGroup.SetSparklineSourceData(_location, sourceDataRange);
             return this;
         }
     }

@@ -781,7 +781,7 @@ namespace ClosedXML.Excel.IO
                     sparklineGroups.RemoveAllChildren();
                 }
 
-                foreach (var xlSparklineGroup in xlWorksheet.SparklineGroups)
+                foreach (var xlSparklineGroup in xlWorksheet.SparklineGroupsInternal)
                 {
                     // Do not create an empty Sparkline group
                     if (!xlSparklineGroup.Any())
@@ -829,7 +829,8 @@ namespace ClosedXML.Excel.IO
                     var sparklines = new X14.Sparklines(xlSparklineGroup
                         .Select(xlSparkline => new X14.Sparkline
                         {
-                            Formula = new OfficeExcel.Formula(xlSparkline.SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true)),
+                            // When sparkline source data area is deleted, Excel shows it as #REF! and is saved in file as an empty string
+                            Formula = new OfficeExcel.Formula(xlSparkline.SourceData?.RangeAddress.ToString(XLReferenceStyle.A1, true) ?? string.Empty),
                             ReferenceSequence =
                                     new OfficeExcel.ReferenceSequence(xlSparkline.Location.Address.ToString())
                         })

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
@@ -47,9 +48,16 @@ namespace ClosedXML.Excel
                 return sheetName;
         }
 
-        public static string AlwaysEscapeSheetName(this string sheetName)
+        internal static string AlwaysEscapeSheetName(this string sheetName)
         {
             return String.Concat('\'', sheetName.Replace("'", "''"), '\'');
+        }
+
+        internal static string GetSheetDefinedName(this string name, string sheet)
+        {
+            var shouldEscape = NameUtils.ShouldQuote(sheet.AsSpan());
+            var escapedSheetName = shouldEscape ? sheet.AlwaysEscapeSheetName() : sheet;
+            return escapedSheetName + '!' + name;
         }
 
         internal static String FixNewLines(this String value)

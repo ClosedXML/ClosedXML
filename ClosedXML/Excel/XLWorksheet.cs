@@ -1232,6 +1232,7 @@ namespace ClosedXML.Excel
                 Workbook.DefinedNamesInternal,
                 DataValidations,
             };
+            sheetListeners.AddRange(SparklineGroupsInternal);
 
             foreach (var worksheet in Workbook.WorksheetsInternal)
                 sheetListeners.Add(worksheet.DefinedNames);
@@ -1340,6 +1341,8 @@ namespace ClosedXML.Excel
                 Workbook.DefinedNamesInternal,
                 DataValidations
             };
+            sheetListeners.AddRange(SparklineGroupsInternal);
+
             foreach (var worksheet in Workbook.WorksheetsInternal)
                 sheetListeners.Add(worksheet.DefinedNames);
 

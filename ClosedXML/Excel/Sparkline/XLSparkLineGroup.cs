@@ -1,23 +1,28 @@
 #nullable disable
+#nullable enable annotations
 
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Extensions;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
-    internal class XLSparklineGroup : IXLSparklineGroup
+    internal class XLSparklineGroup : IXLSparklineGroup, ISheetListener
     {
         private readonly XLWorksheet _worksheet;
-        private readonly Dictionary<IXLCell, XLSparkline> _sparklines = new();
-        private IXLRange _dateRange;
+        private readonly Dictionary<XLSheetPoint, SparklineFormula?> _sparklines = new();
+        private IXLRange? _dateRange;
         private IXLSparklineStyle _style;
 
         #region Public Properties
 
-        public IXLRange DateRange
+        public IXLRange? DateRange
         {
             get => _dateRange;
             set => SetDateRange(value);
@@ -33,8 +38,6 @@ namespace ClosedXML.Excel
 
         public XLSparklineMarkers ShowMarkers { get; set; }
 
-        private XLSparklineGroups SparklineGroups => _worksheet.SparklineGroupsInternal;
-
         public IXLSparklineStyle Style
         {
             get => _style;
@@ -45,9 +48,6 @@ namespace ClosedXML.Excel
 
         public IXLSparklineVerticalAxis VerticalAxis { get; }
 
-        /// <summary>
-        /// The worksheet this sparkline group is associated with
-        /// </summary>
         public IXLWorksheet Worksheet => _worksheet;
 
         #endregion Public Properties
@@ -144,10 +144,14 @@ namespace ClosedXML.Excel
         /// <returns>A newly created sparkline.</returns>
         public IXLSparkline Add(IXLCell location, IXLRange sourceData)
         {
-            if (location.Worksheet != Worksheet)
+            if (location.Worksheet != _worksheet)
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
 
-            return new XLSparkline(this, location, sourceData);
+            // Keep invariant that each cell can have at most one sparkline
+            _worksheet.SparklineGroupsInternal.Remove(location);
+            var point = XLSheetPoint.FromCell(location);
+            AddSparkline(point, sourceData);
+            return new XLSparkline(this, point);
         }
 
         public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
@@ -187,29 +191,31 @@ namespace ClosedXML.Excel
             return CopyTo((XLWorksheet)targetSheet);
         }
 
-        /// <inheritdoc cref="IXLSparklineGroup.CopyTo(IXLWorksheet)"/>
-        internal IXLSparklineGroup CopyTo(XLWorksheet targetSheet)
+        internal XLSparklineGroup CopyTo(XLWorksheet targetSheet)
         {
-            if (targetSheet == Worksheet)
-                throw new InvalidOperationException(
-                    "Cannot copy the sparkline group to the same worksheet it belongs to");
+            if (targetSheet == _worksheet)
+                throw new InvalidOperationException("Cannot copy the sparkline group to the same worksheet it belongs to");
 
-            var copy = targetSheet.SparklineGroups.Add(new XLSparklineGroup(targetSheet, this));
-            foreach (var sparkline in _sparklines.Values)
+            var groupCopy = new XLSparklineGroup(targetSheet, this);
+            targetSheet.SparklineGroupsInternal.Add(groupCopy);
+            foreach (var (sparklineLocation, sourceData) in _sparklines)
             {
-                var location = targetSheet.Cell(((XLAddress)sparkline.Location.Address).WithoutWorksheet());
-                var sourceData = sparkline.SourceData.Worksheet == Worksheet
-                    ? targetSheet.Range(sparkline.SourceData.RangeAddress.ToString())
-                    : sparkline.SourceData;
-
-                copy.Add(location, sourceData);
+                var copiedSourceData = sourceData?.CopyFromTo(_worksheet, targetSheet);
+                groupCopy._sparklines.Add(sparklineLocation, copiedSourceData);
             }
-            return copy;
+
+            return groupCopy;
         }
 
-        public IEnumerator<IXLSparkline> GetEnumerator()
+        public IEnumerator<XLSparkline> GetEnumerator()
         {
-            return _sparklines.Values.GetEnumerator();
+            foreach (var sparklinePoint in _sparklines.Keys)
+                yield return new XLSparkline(this, sparklinePoint);
+        }
+
+        IEnumerator<IXLSparkline> IEnumerable<IXLSparkline>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -217,16 +223,27 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public IXLSparkline GetSparkline(IXLCell cell)
+        public IXLSparkline? GetSparkline(IXLCell cell)
         {
-            return _sparklines.TryGetValue(cell, out XLSparkline sparkline) ? sparkline : null;
+            if (cell.Worksheet != _worksheet)
+                return null;
+
+            var location = XLSheetPoint.FromCell(cell);
+            if (!_sparklines.ContainsKey(location))
+                return null;
+
+            return new XLSparkline(this, location);
         }
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
         {
-            foreach (var key in _sparklines.Keys.Where(searchRange.Contains))
+            if (searchRange.Worksheet != _worksheet)
+                yield break;
+
+            var searchArea = XLSheetRange.FromRangeAddress(searchRange.RangeAddress);
+            foreach (var location in _sparklines.Keys.Where(searchArea.Contains))
             {
-                yield return GetSparkline(key);
+                yield return new XLSparkline(this, location);
             }
         }
 
@@ -236,8 +253,10 @@ namespace ClosedXML.Excel
         /// <param name="cell">The cell to remove sparklines from</param>
         public void Remove(IXLCell cell)
         {
-            if (_sparklines.ContainsKey(cell))
-                _sparklines.Remove(cell);
+            if (cell.Worksheet != _worksheet)
+                return;
+
+            Remove(XLSheetPoint.FromCell(cell));
         }
 
         /// <summary>
@@ -305,16 +324,71 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal void Add(XLSparkline sparkline)
-        {
-            if (sparkline.Location.Worksheet != Worksheet)
-                throw new ArgumentException("The specified sparkline belongs to the different worksheet");
+        #endregion Public Methods
 
-            SparklineGroups.Remove(sparkline.Location);
-            _sparklines[sparkline.Location] = sparkline;
+        internal void Remove(XLSheetPoint location)
+        {
+            _sparklines.Remove(location);
         }
 
-        #endregion Public Methods
+        internal void MoveSparkline(XLSheetPoint originalLocation, XLSheetPoint sparklineDestination)
+        {
+            if (!_sparklines.TryGetValue(originalLocation, out var sourceData))
+                throw new InvalidOperationException($"No sparkline at the source cell {originalLocation}.");
+
+            // Target can contain sparkline from different group, ensure invariant that only one sparkline per cell
+            _worksheet.SparklineGroupsInternal.Remove(sparklineDestination);
+            _sparklines.Remove(originalLocation);
+            _sparklines[sparklineDestination] = sourceData;
+        }
+
+        internal bool TryGetSparkline(XLSheetPoint location, [NotNullWhen(true)] out XLSparkline? sparkline)
+        {
+            if (!_sparklines.ContainsKey(location))
+            {
+                sparkline = null;
+                return false;
+            }
+
+            sparkline = new XLSparkline(this, location);
+            return true;
+        }
+
+        internal IXLRange? GetSparklineSourceData(XLSheetPoint sparklineLocation)
+        {
+            if (!_sparklines.TryGetValue(sparklineLocation, out var sourceData))
+                throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
+
+            // Sparkline formula is always specified with a sheet (or a global name), it doesn't need current worksheet.
+            return sourceData is not null ? _worksheet.Workbook.Range(sourceData.Value.Text) : null;
+        }
+
+        internal void SetSparklineSourceData(XLSheetPoint sparklineLocation, IXLRange? sourceDataRange)
+        {
+            if (!_sparklines.Remove(sparklineLocation))
+                throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
+
+            AddSparkline(sparklineLocation, sourceDataRange);
+        }
+
+        internal IXLCell GetLocation(XLSheetPoint sparklineLocation)
+        {
+            if (!_sparklines.ContainsKey(sparklineLocation))
+                throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
+
+            return _worksheet.Cell(sparklineLocation);
+        }
+
+        private void AddSparkline(XLSheetPoint location, IXLRange? sourceData)
+        {
+            if (sourceData is not null && sourceData.Worksheet.Workbook != _worksheet.Workbook)
+                throw new ArgumentException("Range is from different workbook.");
+
+            if (sourceData is not null && sourceData.RowCount() != 1 && sourceData.ColumnCount() != 1)
+                throw new ArgumentException("SourceData range must have either a single row or a single column");
+
+            _sparklines.Add(location, SparklineFormula.From(sourceData));
+        }
 
         #region Private Constructors
 
@@ -334,5 +408,101 @@ namespace ClosedXML.Excel
         }
 
         #endregion Private Constructors
+
+        #region ISheetListner
+
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, true);
+            AdjustSourceData(refMod);
+        }
+
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, false);
+            AdjustSourceData(refMod);
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsLeft);
+            AdjustSourceData(refMod);
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsUp);
+            AdjustSourceData(refMod);
+        }
+
+        private void AdjustSourceData(CopyVisitor refMod)
+        {
+            var locationsCopy = new List<XLSheetPoint>(_sparklines.Keys);
+            foreach (var location in locationsCopy)
+            {
+                var originalSourceData = _sparklines[location];
+                if (originalSourceData is not null)
+                {
+                    var shiftedSourceData = FormulaConverter.ModifyA1(originalSourceData.Value.Text, _worksheet.Name, location.Row, location.Column, refMod);
+                    _sparklines[location] = new SparklineFormula(shiftedSourceData);
+                }
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The source data area referenced by a sparkline. The grammar is should rather limited:
+        /// <c>sparkline-formula = single-sheet-area / [single-sheet-prefix / book-prefix] name</c>.
+        /// Additionally, if a single-sheet - area is specified, that single-sheet-area MUST contain cells from either
+        /// a single row or a single column. In reality, it can be more encompassing (e.g. <c>'[1]Contract Tail YLT'!B46:E46</c>).
+        /// </summary>
+        /// <param name="Text">Text of the formula.</param>
+        private readonly record struct SparklineFormula(string Text)
+        {
+            /// <summary>
+            /// Factory method to create a formula from a reference with a sheet from the range.
+            /// </summary>
+            [return: NotNullIfNotNull(nameof(range))]
+            internal static SparklineFormula? From(IXLRange? range)
+            {
+                if (range is null)
+                    return null;
+
+                var formula = range.RangeAddress.ToStringRelative(true);
+                return new SparklineFormula(formula);
+            }
+
+            /// <summary>
+            /// A factory method used for copying worksheets. If formula is a sheet reference/name,
+            /// move the formula of <paramref name="sourceSheet"/> to the <paramref name="targetSheet"/>.
+            /// Otherwise, return the original formula.
+            /// </summary>
+            internal SparklineFormula CopyFromTo(XLWorksheet sourceSheet, XLWorksheet targetSheet)
+            {
+                // If formula is single-sheet-area, i.e. `single-sheet-prefix A1-area`
+                if (ReferenceParser.TryParseSheetA1(Text, out var formulaSheetName, out var reference) &&
+                    XLHelper.SheetComparer.Equals(formulaSheetName, sourceSheet.Name))
+                {
+                    var copiedReference = reference.GetDisplayStringA1(targetSheet.Name);
+                    return new SparklineFormula(copiedReference);
+                }
+
+                // If formula is a `single-sheet-prefix name`
+                if (ReferenceParser.TryParseSheetName(Text, out formulaSheetName, out var definedName) &&
+                    XLHelper.SheetComparer.Equals(formulaSheetName, sourceSheet.Name))
+                {
+                    var copiedName = definedName.GetSheetDefinedName(targetSheet.Name);
+                    return new SparklineFormula(copiedName);
+                }
+
+                // Either just name or from different workbook
+                return this;
+            }
+        }
     }
 }

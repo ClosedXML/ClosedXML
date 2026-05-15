@@ -1206,7 +1206,7 @@ internal class WorksheetPartReader
                      .Descendants<X14.SparklineGroups>()
                      .SelectMany(sparklineGroups => sparklineGroups.Descendants<X14.SparklineGroup>()))
         {
-            var xlSparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
+            var xlSparklineGroup = ws.SparklineGroupsInternal.Add();
 
             if (slg.Formula != null)
                 xlSparklineGroup.DateRange = ws.Workbook.Range(slg.Formula.Text);

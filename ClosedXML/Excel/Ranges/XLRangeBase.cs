@@ -702,9 +702,14 @@ namespace ClosedXML.Excel
             return Worksheet.Cell(lastRow, lastColumn);
         }
 
-        public XLCell Cell(Int32 row, Int32 column)
+        internal XLCell Cell(Int32 row, Int32 column)
         {
-            return Cell(new XLAddress(Worksheet, row, column, false, false));
+            return Cell(new XLSheetPoint(row, column));
+        }
+
+        internal XLCell Cell(XLSheetPoint point)
+        {
+            return Cell(new XLAddress(Worksheet, point.Row, point.Column, false, false));
         }
 
         public virtual XLCell Cell(String cellAddressInRange)

@@ -46,6 +46,14 @@ Defined names
 A property setter ``IXLDefinedName.RefersTo`` now throws an ``ArgumentException``
 when trying to set an empty/whitespace-only value.
 
+*************
+Sparklines
+*************
+
+Property ``IXLSparkline.IsValid`` has been removed. The ``IXLSparkline`` is now an API object and
+the sparkline data should be always valid. Reminder: API objects created before a structural
+change are no longer valid after structural change.
+
 ************
 IXLRangeBase
 ************
