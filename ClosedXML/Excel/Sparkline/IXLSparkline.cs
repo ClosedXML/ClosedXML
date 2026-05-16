@@ -25,6 +25,8 @@ public interface IXLSparkline
     /// If source data is a single sheet reference, it must contain cells from either a single
     /// row or a single column.
     /// </remarks>
+    /// <exception cref="ArgumentException">Throws when trying to set a range is from different
+    ///   worksheet than the sparkline.</exception>
     IXLRange? SourceData { get; set; }
 
     /// <summary>
@@ -37,7 +39,7 @@ public interface IXLSparkline
     /// it will be replaced.
     /// </summary>
     /// <param name="value">New location of the sparkline.</param>
-    /// <exception cref="InvalidOperationException">The <paramref name="value"/> is from different
+    /// <exception cref="ArgumentException">The <paramref name="value"/> is from different
     ///   worksheet than the sparkline.</exception>
     IXLSparkline SetLocation(IXLCell value);
 

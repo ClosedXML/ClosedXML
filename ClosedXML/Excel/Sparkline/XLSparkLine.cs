@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
                 throw new ArgumentNullException(nameof(newLocation));
 
             if (newLocation.Worksheet != SparklineGroup.Worksheet)
-                throw new InvalidOperationException("Cannot move the sparkline to a different worksheet");
+                throw new ArgumentException("Cannot move the sparkline to a different worksheet");
 
             var destination = XLSheetPoint.FromCell(newLocation);
             _sparklineGroup.MoveSparkline(_location, destination);

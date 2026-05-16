@@ -416,7 +416,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             TestDelegate action = () => group.First().SetLocation(ws2.FirstCell());
 
-            var message = Assert.Throws<InvalidOperationException>(action).Message;
+            var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("Cannot move the sparkline to a different worksheet", message);
         }
 
