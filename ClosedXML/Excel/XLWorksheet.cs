@@ -1225,17 +1225,7 @@ namespace ClosedXML.Excel
             ShiftPageBreaksColumns(range, columnsShifted);
             RemoveInvalidSparklines();
 
-            var sheetListeners = new List<ISheetListener>
-            {
-                Workbook.CalcEngine,
-                Hyperlinks,
-                Workbook.DefinedNamesInternal,
-                DataValidations,
-            };
-            sheetListeners.AddRange(SparklineGroupsInternal);
-
-            foreach (var worksheet in Workbook.WorksheetsInternal)
-                sheetListeners.Add(worksheet.DefinedNames);
+            var sheetListeners = GetSheetListeners();
 
             if (columnsShifted > 0)
             {
@@ -1334,17 +1324,7 @@ namespace ClosedXML.Excel
             RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
 
-            var sheetListeners = new List<ISheetListener>
-            {
-                Workbook.CalcEngine,
-                Hyperlinks,
-                Workbook.DefinedNamesInternal,
-                DataValidations
-            };
-            sheetListeners.AddRange(SparklineGroupsInternal);
-
-            foreach (var worksheet in Workbook.WorksheetsInternal)
-                sheetListeners.Add(worksheet.DefinedNames);
+            var sheetListeners = GetSheetListeners();
 
             if (rowsShifted > 0)
             {
@@ -1361,6 +1341,23 @@ namespace ClosedXML.Excel
                 foreach (var listener in sheetListeners)
                     listener.OnDeleteAreaAndShiftUp(range.Worksheet, area);
             }
+        }
+
+        private List<ISheetListener> GetSheetListeners()
+        {
+            var sheetListeners = new List<ISheetListener>
+            {
+                Workbook.CalcEngine,
+                Hyperlinks,
+                Workbook.DefinedNamesInternal,
+                DataValidations,
+            };
+            foreach (var worksheet in Workbook.WorksheetsInternal)
+                sheetListeners.Add(worksheet.DefinedNames);
+
+            sheetListeners.AddRange(SparklineGroupsInternal);
+
+            return sheetListeners;
         }
 
         private void ShiftPageBreaksRows(XLRange range, int rowsShifted)
