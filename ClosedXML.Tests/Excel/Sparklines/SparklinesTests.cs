@@ -728,11 +728,12 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanLoadSparklines()
         {
-            using (var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
-            using (var wb = new XLWorkbook(ms))
-            {
-                Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
-            }
+            TestHelper.LoadAndAssert(
+                wb =>
+                {
+                    Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
+                },
+                @"Other\Sparklines\SparklineThemes\inputfile.xlsx");
         }
 
         [TestCase("Accent!B1", nameof(XLSparklineTheme.Accent1))]
@@ -821,23 +822,18 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void EmptySparklineGroupsSkippedOnSaving()
         {
-            using (var ms = new MemoryStream())
-            {
-                using (var wb = new XLWorkbook())
+            TestHelper.CreateSaveLoadAssert(
+                wb =>
                 {
                     var ws = wb.AddWorksheet("Sheet 1");
                     var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
                     group.RemoveAll();
-
-                    wb.SaveAs(ms);
-                }
-
-                using (var wb = new XLWorkbook(ms))
+                },
+                wb =>
                 {
                     Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
-                }
-            }
+                });
         }
 
         [Test]
