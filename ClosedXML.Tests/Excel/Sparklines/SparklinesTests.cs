@@ -866,6 +866,16 @@ namespace ClosedXML.Tests.Excel.Sparklines
                 });
         }
 
+        [Test]
+        public void CanLoadAndSaveExternalReferences()
+        {
+            // The workbook has a sparkline with source data that are a reference to an external workbook
+            // '[1]Contract Tail YLT'!B46:E46
+            TestHelper.LoadSaveAndCompare(
+                @"Other\Sparklines\SourceDataFormulas\ExternalReference-input.xlsx",
+                @"Other\Sparklines\SourceDataFormulas\ExternalReference-output.xlsx");
+        }
+
         #endregion Load and save sparkline groups
 
         #region Change sparkline groups

@@ -20,9 +20,11 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Add empty sparkline group.
         /// </summary>
-        internal IXLSparklineGroup Add()
+        internal XLSparklineGroup Add()
         {
-            return Add(new XLSparklineGroup(Worksheet));
+            var emptyGroup = new XLSparklineGroup(Worksheet);
+            Add(emptyGroup);
+            return emptyGroup;
         }
 
         /// <summary>

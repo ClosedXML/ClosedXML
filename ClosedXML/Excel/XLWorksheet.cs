@@ -662,6 +662,11 @@ namespace ClosedXML.Excel
             DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet)); // Names must modify table references, so keep the order.
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+
+            // Sparklines were already copied during copy of columns, rows and cells, but piecemeal (e.g. multi-cell
+            // sparkline group could be split into group-per-cell). Since this is a copy of whole sheet, just remove
+            // the piecemeal copy and copy it propertly.
+            targetSheet.SparklineGroupsInternal.RemoveAll();
             SparklineGroups.CopyTo(targetSheet);
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));

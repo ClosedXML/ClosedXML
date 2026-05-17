@@ -52,6 +52,14 @@ namespace ClosedXML.Excel
 
         #endregion Public Properties
 
+        /// <summary>
+        /// A collection of sparkline locations and their formulas.
+        /// </summary>
+        internal IEnumerable<(XLSheetPoint Location, string? SourceDataFormula)> Sparklines
+        {
+            get => _sparklines.Select(static sl => (sl.Key, sl.Value?.Text));
+        }
+
         #region Public Constructors
 
         /// <summary>
@@ -325,6 +333,14 @@ namespace ClosedXML.Excel
         }
 
         #endregion Public Methods
+
+        /// <summary>
+        /// Set sparkline at the location to the specified formula.
+        /// </summary>
+        internal void SetSparkline(XLSheetPoint location, string? sourceDataFormula)
+        {
+            _sparklines[location] = !string.IsNullOrWhiteSpace(sourceDataFormula) ? new SparklineFormula(sourceDataFormula) : null;
+        }
 
         internal void Remove(XLSheetPoint location)
         {

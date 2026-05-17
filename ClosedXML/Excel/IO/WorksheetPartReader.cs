@@ -1243,8 +1243,15 @@ internal class WorksheetPartReader
             if (slg.MinAxisType != null) xlSparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
             if (slg.MaxAxisType != null) xlSparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
 
-            slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
-                .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+            foreach (var sparkline in slg.Descendants<X14.Sparklines>().SelectMany(sparklines => sparklines.Descendants<X14.Sparkline>()))
+            {
+                // The sqlref must contain exactly one ref [MS-XLSX]. Excel ignores everything after the first one.
+                var refText = (sparkline.ReferenceSequence?.Text ?? string.Empty).Trim().Split(' ')[0];
+                var location = XLSheetPoint.Parse(refText);
+
+                // Technically, there could be more than one sparkline per cell, so use Set instead of Add.
+                xlSparklineGroup.SetSparkline(location, sparkline.Formula?.Text);
+            }
         }
     }
 

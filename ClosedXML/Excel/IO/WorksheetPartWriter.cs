@@ -784,7 +784,7 @@ namespace ClosedXML.Excel.IO
                 foreach (var xlSparklineGroup in xlWorksheet.SparklineGroupsInternal)
                 {
                     // Do not create an empty Sparkline group
-                    if (!xlSparklineGroup.Any())
+                    if (!xlSparklineGroup.Sparklines.Any())
                         continue;
 
                     var sparklineGroup = new X14.SparklineGroup();
@@ -826,13 +826,12 @@ namespace ClosedXML.Excel.IO
                     if (xlSparklineGroup.VerticalAxis.MaxAxisType == XLSparklineAxisMinMax.Custom)
                         sparklineGroup.ManualMax = xlSparklineGroup.VerticalAxis.ManualMax;
 
-                    var sparklines = new X14.Sparklines(xlSparklineGroup
+                    var sparklines = new X14.Sparklines(xlSparklineGroup.Sparklines
                         .Select(xlSparkline => new X14.Sparkline
                         {
                             // When sparkline source data area is deleted, Excel shows it as #REF! and is saved in file as an empty string
-                            Formula = new OfficeExcel.Formula(xlSparkline.SourceData?.RangeAddress.ToString(XLReferenceStyle.A1, true) ?? string.Empty),
-                            ReferenceSequence =
-                                    new OfficeExcel.ReferenceSequence(xlSparkline.Location.Address.ToString())
+                            Formula = new OfficeExcel.Formula(xlSparkline.SourceDataFormula ?? string.Empty),
+                            ReferenceSequence = new OfficeExcel.ReferenceSequence(xlSparkline.Location.ToString())
                         })
                         );
 
