@@ -1074,8 +1074,6 @@ namespace ClosedXML.Excel
                     cell.ShiftFormulaColumns(AsRange(), numberOfColumns);
             }
 
-            Worksheet.SparklineGroupsInternal.ShiftColumns(XLSheetRange.FromRangeAddress(RangeAddress), numberOfColumns);
-
             // Inserting and shifting of whole columns is rather inconsistent across the codebase. In some places, the columns collection
             // is shifted before this method is called and thus the we can't shift column properties again. In others, the code relies on
             // shifting in this method.
@@ -1262,8 +1260,6 @@ namespace ClosedXML.Excel
                     cell.ShiftFormulaRows(asRange, numberOfRows);
             }
 
-            Worksheet.SparklineGroupsInternal.ShiftRows(XLSheetRange.FromRangeAddress(RangeAddress), numberOfRows);
-
             if (!onlyUsedCells)
             {
                 int lastRow = Worksheet.Internals.CellsCollection.MaxRowUsed;
@@ -1403,13 +1399,11 @@ namespace ClosedXML.Excel
             {
                 case XLShiftDeletedCells.ShiftCellsLeft:
                     Worksheet.Internals.CellsCollection.DeleteAreaAndShiftLeft(range);
-                    Worksheet.SparklineGroupsInternal.ShiftColumns(range, -numberOfColumns);
                     columnModifier = ColumnCount();
                     break;
 
                 case XLShiftDeletedCells.ShiftCellsUp:
                     Worksheet.Internals.CellsCollection.DeleteAreaAndShiftUp(range);
-                    Worksheet.SparklineGroupsInternal.ShiftRows(range, -numberOfRows);
                     rowModifier = RowCount();
                     break;
             }

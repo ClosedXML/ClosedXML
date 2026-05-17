@@ -1223,7 +1223,6 @@ namespace ClosedXML.Excel
 
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
-            RemoveInvalidSparklines();
 
             var sheetListeners = GetSheetListeners();
 
@@ -1321,7 +1320,6 @@ namespace ClosedXML.Excel
             }
 
             ShiftConditionalFormattingRows(range, rowsShifted);
-            RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
 
             var sheetListeners = GetSheetListeners();
@@ -1414,18 +1412,6 @@ namespace ClosedXML.Excel
 
                 if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
-            }
-        }
-
-        private void RemoveInvalidSparklines()
-        {
-            var invalidSparklines = SparklineGroups.SelectMany(g => g)
-                .Where(sl => !((XLAddress)sl.Location.Address).IsValid)
-                .ToList();
-
-            foreach (var sparkline in invalidSparklines)
-            {
-                Worksheet.SparklineGroups.Remove(sparkline.Location);
             }
         }
 

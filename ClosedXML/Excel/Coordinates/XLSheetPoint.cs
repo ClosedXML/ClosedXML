@@ -211,9 +211,9 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Is the point within the range or to the left of the range?
+        /// Is the point within the range or to the right of the range?
         /// </summary>
-        internal bool InRangeOrToLeft(in XLSheetRange range)
+        internal bool InRangeOrToRight(in XLSheetRange range)
         {
             return Column >= range.FirstPoint.Column &&
                    Row >= range.FirstPoint.Row &&

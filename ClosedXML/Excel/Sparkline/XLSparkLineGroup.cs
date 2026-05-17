@@ -409,11 +409,24 @@ namespace ClosedXML.Excel
 
         #endregion Private Constructors
 
+        // TODO: Sparklines locations should use ST_Sqref semantic for shifting, despite constraint "This sqref element MUST contain exactly one ref element". The code assumes it just shifts individual locations points.
         #region ISheetListner
 
         void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            ShiftLocation(insertedBookArea, static (location, insertedArea) =>
+            {
+                if (!location.InRangeOrBelow(insertedArea))
+                    return location;
+
+                var shiftedRow = location.Row + insertedArea.Height;
+                if (shiftedRow <= XLHelper.MaxRowNumber)
+                    return new XLSheetPoint(shiftedRow, location.Column);
+
+                return null;
+            });
+
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, true);
             AdjustSourceData(refMod);
         }
@@ -421,6 +434,18 @@ namespace ClosedXML.Excel
         void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            ShiftLocation(insertedBookArea, static (location, insertedArea) =>
+            {
+                if (!location.InRangeOrToRight(insertedArea))
+                    return location;
+
+                var shiftedColumn = location.Column + insertedArea.Width;
+                if (shiftedColumn <= XLHelper.MaxColumnNumber)
+                    return new XLSheetPoint(location.Row, shiftedColumn);
+
+                return null;
+            });
+
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, false);
             AdjustSourceData(refMod);
         }
@@ -428,6 +453,18 @@ namespace ClosedXML.Excel
         void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            ShiftLocation(deletedBookArea, static (location, deletedArea) =>
+            {
+                if (!location.InRangeOrToRight(deletedArea))
+                    return location;
+
+                var shiftedColumn = location.Column - deletedArea.Width;
+                if (shiftedColumn >= XLHelper.MinColumnNumber)
+                    return new XLSheetPoint(location.Row, shiftedColumn);
+
+                return null;
+            });
+
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsLeft);
             AdjustSourceData(refMod);
         }
@@ -435,12 +472,44 @@ namespace ClosedXML.Excel
         void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            ShiftLocation(deletedBookArea, static (location, deletedArea) =>
+            {
+                if (!location.InRangeOrBelow(deletedArea))
+                    return location;
+
+                var shiftedRow = location.Row - deletedArea.Height;
+                if (shiftedRow is >= XLHelper.MinRowNumber)
+                    return new XLSheetPoint(shiftedRow, location.Column);
+
+                return null;
+            });
+
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsUp);
             AdjustSourceData(refMod);
         }
 
+        private void ShiftLocation(XLBookArea shiftedRange, Func<XLSheetPoint, XLSheetRange, XLSheetPoint?> shiftLocation)
+        {
+            // If shift was on another worksheet, there is no way to affect sparklines for this worksheet of this group
+            if (!XLHelper.SheetComparer.Equals(shiftedRange.Name, _worksheet.Name))
+                return;
+
+            var sparklinesCopy = new Dictionary<XLSheetPoint, SparklineFormula?>(_sparklines);
+
+            // Clear to avoid problems during shifting (e.g. A1 and A2 have sparklines, A1 is
+            // shifted to A2, but A2 hasn't yet been shifted). Just reinsert everything.
+            _sparklines.Clear();
+            foreach (var (originalLocation, sourceData) in sparklinesCopy)
+            {
+                var shiftedLocation = shiftLocation(originalLocation, shiftedRange.Area);
+                if (shiftedLocation is not null)
+                    _sparklines.Add(shiftedLocation.Value, sourceData);
+            }
+        }
+
         private void AdjustSourceData(CopyVisitor refMod)
         {
+            // Can't modify dictionary while iterating over it, make a copy.
             var locationsCopy = new List<XLSheetPoint>(_sparklines.Keys);
             foreach (var location in locationsCopy)
             {
