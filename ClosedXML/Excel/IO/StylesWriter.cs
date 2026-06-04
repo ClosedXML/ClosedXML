@@ -127,6 +127,15 @@ internal class StylesWriter
                     usedDxf.Add(dxf);
             }
 
+            // Table styles should be retained in a workbook, even if not used in a table.
+            foreach (var tableStyle in styles.TableStyles.Values)
+            {
+                foreach(var regionDxf in tableStyle.RegionFormats.Values)
+                {
+                    usedDxf.Add(regionDxf);
+                }
+            }
+
             foreach (var table in ws.Tables)
             {
                 foreach (var field in table.Fields)
