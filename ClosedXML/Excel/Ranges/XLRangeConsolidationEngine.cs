@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,9 +46,8 @@ namespace ClosedXML.Excel
         /// </summary>
         private class XLRangeConsolidationMatrix
         {
-            private Dictionary<int, BitArray> _bitMatrix;
-            private int _maxColumn = 0;
-            private int _minColumn = XLHelper.MaxColumnNumber + 1;
+            private readonly Dictionary<int, BitArray> _bitMatrix;
+            private readonly int _minColumn;
 
             /// <summary>
             /// Constructor.
@@ -58,7 +55,7 @@ namespace ClosedXML.Excel
             /// <param name="areas">Areas to be consolidated.</param>
             internal XLRangeConsolidationMatrix(IReadOnlyCollection<XLSheetRange> areas)
             {
-                PrepareBitMatrix(areas);
+                (_bitMatrix, _minColumn) = PrepareBitMatrix(areas);
                 FillBitMatrix(areas);
             }
 
@@ -142,30 +139,35 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private void PrepareBitMatrix(IEnumerable<XLSheetRange> areas)
+            private static (Dictionary<int, BitArray> BitMatrix, int MinColumn) PrepareBitMatrix(IReadOnlyCollection<XLSheetRange> areas)
             {
-                _bitMatrix = new Dictionary<int, BitArray>();
+                var minColumn = XLHelper.MaxColumnNumber + 1;
+                var maxColumn = 0;
                 foreach (var area in areas)
                 {
-                    _minColumn = (_minColumn <= area.LeftColumn)
-                        ? _minColumn
+                    minColumn = (minColumn <= area.LeftColumn)
+                        ? minColumn
                         : area.LeftColumn;
-                    _maxColumn = (_maxColumn >= area.RightColumn)
-                        ? _maxColumn
+                    maxColumn = (maxColumn >= area.RightColumn)
+                        ? maxColumn
                         : area.RightColumn;
-
-                    if (!_bitMatrix.ContainsKey(area.TopRow))
-                        _bitMatrix.Add(area.TopRow, null);
-                    if (!_bitMatrix.ContainsKey(area.BottomRow))
-                        _bitMatrix.Add(area.BottomRow, null);
-                    if (!_bitMatrix.ContainsKey(area.BottomRow + 1))
-                        _bitMatrix.Add(area.BottomRow + 1, null);
                 }
 
-                var keys = _bitMatrix.Keys.ToList();
-                foreach (var rowNum in keys)
+                var bitMaskSize = maxColumn - minColumn + 3;
+                var bitMatrix = new Dictionary<int, BitArray>();
+                foreach (var area in areas)
                 {
-                    _bitMatrix[rowNum] = new BitArray(_maxColumn - _minColumn + 3, false);
+                    AddRowBitmask(bitMatrix, area.TopRow, bitMaskSize);
+                    AddRowBitmask(bitMatrix, area.BottomRow, bitMaskSize);
+                    AddRowBitmask(bitMatrix, area.BottomRow + 1, bitMaskSize);
+                }
+
+                return (bitMatrix, minColumn);
+
+                static void AddRowBitmask(Dictionary<int, BitArray> bitMatrix, int rowNum, int bitMaskSize)
+                {
+                    if (!bitMatrix.ContainsKey(rowNum))
+                        bitMatrix.Add(rowNum, new BitArray(bitMaskSize, false));
                 }
             }
 
