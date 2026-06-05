@@ -96,11 +96,11 @@ namespace ClosedXML.Excel
             private void AddToBitMatrix(XLSheetRange area)
             {
                 var rows = _bitMatrix.Keys
-                    .Where(k => k >= area.FirstPoint.Row &&
-                                k <= area.LastPoint.Row);
+                    .Where(k => k >= area.TopRow &&
+                                k <= area.BottomRow);
 
-                var minIndex = area.FirstPoint.Column - _minColumn + 1;
-                var maxIndex = area.LastPoint.Column - _minColumn + 1;
+                var minIndex = area.LeftColumn - _minColumn + 1;
+                var maxIndex = area.RightColumn - _minColumn + 1;
 
                 foreach (var rowNum in rows)
                 {
@@ -147,19 +147,19 @@ namespace ClosedXML.Excel
                 _bitMatrix = new Dictionary<int, BitArray>();
                 foreach (var area in areas)
                 {
-                    _minColumn = (_minColumn <= area.FirstPoint.Column)
+                    _minColumn = (_minColumn <= area.LeftColumn)
                         ? _minColumn
-                        : area.FirstPoint.Column;
-                    _maxColumn = (_maxColumn >= area.LastPoint.Column)
+                        : area.LeftColumn;
+                    _maxColumn = (_maxColumn >= area.RightColumn)
                         ? _maxColumn
-                        : area.LastPoint.Column;
+                        : area.RightColumn;
 
-                    if (!_bitMatrix.ContainsKey(area.FirstPoint.Row))
-                        _bitMatrix.Add(area.FirstPoint.Row, null);
-                    if (!_bitMatrix.ContainsKey(area.LastPoint.Row))
-                        _bitMatrix.Add(area.LastPoint.Row, null);
-                    if (!_bitMatrix.ContainsKey(area.LastPoint.Row + 1))
-                        _bitMatrix.Add(area.LastPoint.Row + 1, null);
+                    if (!_bitMatrix.ContainsKey(area.TopRow))
+                        _bitMatrix.Add(area.TopRow, null);
+                    if (!_bitMatrix.ContainsKey(area.BottomRow))
+                        _bitMatrix.Add(area.BottomRow, null);
+                    if (!_bitMatrix.ContainsKey(area.BottomRow + 1))
+                        _bitMatrix.Add(area.BottomRow + 1, null);
                 }
 
                 var keys = _bitMatrix.Keys.ToList();
