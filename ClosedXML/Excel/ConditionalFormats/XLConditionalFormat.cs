@@ -11,18 +11,12 @@ namespace ClosedXML.Excel
     {
         private readonly XLWorksheet _worksheet;
 
-        private sealed class FullEqualityComparer : IEqualityComparer<XLConditionalFormat>
+        private sealed class NoRangeCfComparer : IEqualityComparer<XLConditionalFormat>
         {
-            private readonly bool _compareRange;
             private readonly DictionaryComparer<int, XLColor> _colorsComparer = new DictionaryComparer<int, XLColor>();
             private readonly EnumerableComparer<string> _listComparer = new EnumerableComparer<string>();
             private readonly DictionaryComparer<int, XLCFContentType> _contentsTypeComparer = new DictionaryComparer<int, XLCFContentType>();
             private readonly DictionaryComparer<int, XLCFIconSetOperator> _iconSetTypeComparer = new DictionaryComparer<int, XLCFIconSetOperator>();
-
-            public FullEqualityComparer(bool compareRange)
-            {
-                _compareRange = compareRange;
-            }
 
             public bool Equals(XLConditionalFormat xx, XLConditionalFormat yy)
             {
@@ -52,8 +46,7 @@ namespace ClosedXML.Excel
                     && _listComparer.Equals(xxFormulas, yyFormulas)
                     && _colorsComparer.Equals(xx.Colors, yy.Colors)
                     && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
-                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
-                    && (!_compareRange || XLRanges.Equals(xx.Ranges, yy.Ranges));
+                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators);
             }
 
             public int GetHashCode(XLConditionalFormat obj)
@@ -72,7 +65,6 @@ namespace ClosedXML.Excel
                     hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.IconSetOperators != null ? xx.IconSetOperators.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (_compareRange && xx.Ranges != null ? xx.Ranges.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (int)xx.ConditionalFormatType;
                     hashCode = (hashCode * 397) ^ (int)xx.TimePeriod;
                     hashCode = (hashCode * 397) ^ (int)xx.IconSetStyle;
@@ -101,12 +93,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static readonly IEqualityComparer<XLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
-
-        public static IEqualityComparer<XLConditionalFormat> NoRangeComparer
-        {
-            get { return NoRangeComparerInstance; }
-        }
+        internal static IEqualityComparer<XLConditionalFormat> NoRangeComparer { get; } = new NoRangeCfComparer();
 
         #region Constructors
 
