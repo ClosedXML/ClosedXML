@@ -887,7 +887,12 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
-        public XLRange Range(Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
+        internal XLRange Range(XLSheetRange area)
+        {
+            return Range(area.TopRow, area.LeftColumn, area.BottomRow, area.RightColumn);
+        }
+
+        internal XLRange Range(Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
         {
             var rangeAddress = new XLRangeAddress
             (

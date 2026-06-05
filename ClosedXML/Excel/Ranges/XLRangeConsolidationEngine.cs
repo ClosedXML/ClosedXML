@@ -31,11 +31,11 @@ namespace ClosedXML.Excel
             var retVal = new XLRanges(_workbook);
             foreach (var ws in worksheets)
             {
-                var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where<XLRange>(r => r.Worksheet == ws).ToList());
+                var matrix = new XLRangeConsolidationMatrix(_allRanges.Where<XLRange>(r => r.Worksheet == ws).Select(r => r.SheetRange).ToList());
                 var consRanges = matrix.GetConsolidatedRanges();
-                foreach (var consRange in consRanges)
+                foreach (var consArea in consRanges)
                 {
-                    retVal.Add(consRange);
+                    retVal.Add(ws.Range(consArea));
                 }
             }
 
@@ -51,19 +51,17 @@ namespace ClosedXML.Excel
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="worksheet">Current worksheet.</param>
-            /// <param name="ranges">Ranges to be consolidated. They are expected to belong to the current worksheet, no check is performed.</param>
-            internal XLRangeConsolidationMatrix(IXLWorksheet worksheet, IReadOnlyCollection<IXLRange> ranges)
+            /// <param name="areas">Areas to be consolidated.</param>
+            internal XLRangeConsolidationMatrix(IReadOnlyCollection<XLSheetRange> areas)
             {
-                _worksheet = worksheet;
-                PrepareBitMatrix(ranges);
-                FillBitMatrix(ranges);
+                PrepareBitMatrix(areas);
+                FillBitMatrix(areas);
             }
 
             /// <summary>
             /// Get consolidated ranges equivalent to the input ones.
             /// </summary>
-            public IEnumerable<IXLRange> GetConsolidatedRanges()
+            public IEnumerable<XLSheetRange> GetConsolidatedRanges()
             {
                 var rowNumbers = _bitMatrix.Keys.OrderBy(k => k).ToArray();
                 for (int i = 0; i < rowNumbers.Length; i++)
@@ -80,7 +78,7 @@ namespace ClosedXML.Excel
                         var startColumn = starting.Item1 + _minColumn - 1;
                         var endColumn = starting.Item2 + _minColumn - 1;
 
-                        yield return _worksheet.Range(startRow, startColumn, endRow, endColumn);
+                        yield return new XLSheetRange(startRow, startColumn, endRow, endColumn);
 
                         while (j > i)
                         {
@@ -91,19 +89,18 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private readonly IXLWorksheet _worksheet;
             private Dictionary<int, BitArray> _bitMatrix;
             private int _maxColumn = 0;
             private int _minColumn = XLHelper.MaxColumnNumber + 1;
 
-            private void AddToBitMatrix(IXLRangeAddress rangeAddress)
+            private void AddToBitMatrix(XLSheetRange area)
             {
                 var rows = _bitMatrix.Keys
-                    .Where(k => k >= rangeAddress.FirstAddress.RowNumber &&
-                                k <= rangeAddress.LastAddress.RowNumber);
+                    .Where(k => k >= area.FirstPoint.Row &&
+                                k <= area.LastPoint.Row);
 
-                var minIndex = rangeAddress.FirstAddress.ColumnNumber - _minColumn + 1;
-                var maxIndex = rangeAddress.LastAddress.ColumnNumber - _minColumn + 1;
+                var minIndex = area.FirstPoint.Column - _minColumn + 1;
+                var maxIndex = area.LastPoint.Column - _minColumn + 1;
 
                 foreach (var rowNum in rows)
                 {
@@ -122,11 +119,11 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private void FillBitMatrix(IEnumerable<IXLRange> ranges)
+            private void FillBitMatrix(IEnumerable<XLSheetRange> areas)
             {
-                foreach (var range in ranges)
+                foreach (var area in areas)
                 {
-                    AddToBitMatrix(range.RangeAddress);
+                    AddToBitMatrix(area);
                 }
 
                 System.Diagnostics.Debug.Assert(
@@ -145,25 +142,24 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private void PrepareBitMatrix(IEnumerable<IXLRange> ranges)
+            private void PrepareBitMatrix(IEnumerable<XLSheetRange> areas)
             {
                 _bitMatrix = new Dictionary<int, BitArray>();
-                foreach (var range in ranges)
+                foreach (var area in areas)
                 {
-                    var address = range.RangeAddress;
-                    _minColumn = (_minColumn <= address.FirstAddress.ColumnNumber)
+                    _minColumn = (_minColumn <= area.FirstPoint.Column)
                         ? _minColumn
-                        : address.FirstAddress.ColumnNumber;
-                    _maxColumn = (_maxColumn >= address.LastAddress.ColumnNumber)
+                        : area.FirstPoint.Column;
+                    _maxColumn = (_maxColumn >= area.LastPoint.Column)
                         ? _maxColumn
-                        : address.LastAddress.ColumnNumber;
+                        : area.LastPoint.Column;
 
-                    if (!_bitMatrix.ContainsKey(address.FirstAddress.RowNumber))
-                        _bitMatrix.Add(address.FirstAddress.RowNumber, null);
-                    if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber))
-                        _bitMatrix.Add(address.LastAddress.RowNumber, null);
-                    if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber + 1))
-                        _bitMatrix.Add(address.LastAddress.RowNumber + 1, null);
+                    if (!_bitMatrix.ContainsKey(area.FirstPoint.Row))
+                        _bitMatrix.Add(area.FirstPoint.Row, null);
+                    if (!_bitMatrix.ContainsKey(area.LastPoint.Row))
+                        _bitMatrix.Add(area.LastPoint.Row, null);
+                    if (!_bitMatrix.ContainsKey(area.LastPoint.Row + 1))
+                        _bitMatrix.Add(area.LastPoint.Row + 1, null);
                 }
 
                 var keys = _bitMatrix.Keys.ToList();
