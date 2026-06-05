@@ -143,7 +143,7 @@ internal class XLCells :
 
         if (_options.HasFlag(XLCellsUsedOptions.MergedRanges))
             candidates = candidates.Union(
-                worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress)));
+                worksheet.Internals.MergedRanges.SelectMany<XLRange, XLSheetPoint>(r => GetAllCellsInRange(r.RangeAddress)));
 
         if (_options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
             candidates = candidates.Union(

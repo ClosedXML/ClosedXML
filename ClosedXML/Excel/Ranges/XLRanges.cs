@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
 #if !STYLES_REWORK
         XLStylizedBase,
 #endif
-        IXLRanges
+        IXLRanges, IEnumerable<XLRange>
     {
         private readonly XLWorkbook _workbook;
 
@@ -133,14 +133,18 @@ namespace ClosedXML.Excel
 
         public int Count { get; private set; }
 
-        public IEnumerator<IXLRange> GetEnumerator()
+        public IEnumerator<XLRange> GetEnumerator()
         {
             return Ranges
                 .OrderBy(r => r.Worksheet.Position)
                 .ThenBy(r => r.RangeAddress.FirstAddress.RowNumber)
                 .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
-                .Cast<IXLRange>()
                 .GetEnumerator();
+        }
+
+        IEnumerator<IXLRange> IEnumerable<IXLRange>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -404,7 +404,7 @@ namespace ClosedXML.Tests
             var ranges = new XLRanges(wb);
             ranges.Add(ws.Range("A1:A2"));
             ranges.Add(ws.Range("B1:B2"));
-            var rangesCopy = ranges.ToList();
+            var rangesCopy = ranges.ToList<IXLRange>();
 
             ranges.RemoveAll(null, false);
             ws.FirstColumn().InsertColumnsBefore(1);
@@ -429,7 +429,7 @@ namespace ClosedXML.Tests
             ranges.RemoveAll(r => r.Intersects(otherRange));
 
             Assert.AreEqual(1, ranges.Count);
-            Assert.AreEqual("A1:A2", ranges.Single().RangeAddress.ToString());
+            Assert.AreEqual("A1:A2", ranges.Single<IXLRange>().RangeAddress.ToString());
         }
 
         [Test]
@@ -462,7 +462,7 @@ namespace ClosedXML.Tests
                 ws2.Range("A13:B14"),
             };
 
-            var actualRanges = ranges.ToList();
+            var actualRanges = ranges.ToList<IXLRange>();
 
             Assert.AreEqual(expectedRanges.Count, actualRanges.Count);
             for (int i = 0; i < actualRanges.Count; i++)

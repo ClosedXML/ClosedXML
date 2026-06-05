@@ -157,7 +157,7 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
         var rangeToAdd = _container.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
 
         var ranges = new XLRanges(_container.Workbook) { rangeToAdd };
-        RefersTo = _formula + "," + string.Join(",", ranges.Select(RangeToFixed));
+        RefersTo = _formula + "," + string.Join(",", ranges.Select<XLRange, string>(RangeToFixed));
     }
 
     void IWorkbookListener.OnSheetRenamed(string oldSheetName, string newSheetName)

@@ -389,7 +389,7 @@ namespace ClosedXML.Excel
         {
             string tAddress = RangeAddress.ToString();
             var asRange = AsRange();
-            if (Worksheet.Internals.MergedRanges.Select(m => m.RangeAddress.ToString()).Any(mAddress => mAddress == tAddress))
+            if (Worksheet.Internals.MergedRanges.Select<XLRange, string>(m => m.RangeAddress.ToString()).Any(mAddress => mAddress == tAddress))
                 Worksheet.Internals.MergedRanges.Remove(asRange);
 
             return asRange;
@@ -1435,7 +1435,7 @@ namespace ClosedXML.Excel
                     break;
             }
 
-            var mergesToRemove = Worksheet.Internals.MergedRanges.Where(Contains).ToList();
+            var mergesToRemove = Worksheet.Internals.MergedRanges.Where<XLRange>(Contains).ToList();
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
 
             var shiftedRange = AsRange();

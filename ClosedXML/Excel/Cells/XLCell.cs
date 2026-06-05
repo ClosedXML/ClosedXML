@@ -1198,7 +1198,7 @@ namespace ClosedXML.Excel
             }
 
             var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
-                .Where(mr => asRange.Contains(mr))
+                .Where<XLRange>(mr => asRange.Contains(mr))
                 .Select(mr =>
                 {
                     var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);

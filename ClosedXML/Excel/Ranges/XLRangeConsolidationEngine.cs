@@ -21,17 +21,17 @@ namespace ClosedXML.Excel
             _allRanges = ranges ?? throw new ArgumentNullException(nameof(ranges));
         }
 
-        public IXLRanges Consolidate()
+        public XLRanges Consolidate()
         {
-            if (!_allRanges.Any())
+            if (_allRanges.Count == 0)
                 return _allRanges;
 
-            var worksheets = _allRanges.Select(r => r.Worksheet).Distinct().OrderBy(ws => ws.Position);
+            var worksheets = _allRanges.Select<XLRange, XLWorksheet>(r => r.Worksheet).Distinct().OrderBy(ws => ws.Position);
 
-            IXLRanges retVal = new XLRanges(_workbook);
+            var retVal = new XLRanges(_workbook);
             foreach (var ws in worksheets)
             {
-                var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where(r => r.Worksheet == ws).ToList());
+                var matrix = new XLRangeConsolidationMatrix(ws, _allRanges.Where<XLRange>(r => r.Worksheet == ws).ToList());
                 var consRanges = matrix.GetConsolidatedRanges();
                 foreach (var consRange in consRanges)
                 {

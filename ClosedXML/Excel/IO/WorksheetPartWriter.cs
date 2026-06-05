@@ -591,7 +591,7 @@ namespace ClosedXML.Excel.IO
 
             #region MergeCells
 
-            if ((xlWorksheet).Internals.MergedRanges.Any())
+            if (xlWorksheet.Internals.MergedRanges.Count > 0)
             {
                 if (!worksheet.Elements<MergeCells>().Any())
                 {
@@ -603,7 +603,7 @@ namespace ClosedXML.Excel.IO
                 cm.SetElement(XLWorksheetContents.MergeCells, mergeCells);
                 mergeCells.RemoveAllChildren<MergeCell>();
 
-                foreach (var mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
+                foreach (var mergeCell in xlWorksheet.Internals.MergedRanges.Select<XLRange, string>(
                     m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
                         merged => new MergeCell { Reference = merged }))
                     mergeCells.AppendChild(mergeCell);
