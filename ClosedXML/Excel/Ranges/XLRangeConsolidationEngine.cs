@@ -48,6 +48,10 @@ namespace ClosedXML.Excel
         /// </summary>
         private class XLRangeConsolidationMatrix
         {
+            private Dictionary<int, BitArray> _bitMatrix;
+            private int _maxColumn = 0;
+            private int _minColumn = XLHelper.MaxColumnNumber + 1;
+
             /// <summary>
             /// Constructor.
             /// </summary>
@@ -88,10 +92,6 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-
-            private Dictionary<int, BitArray> _bitMatrix;
-            private int _maxColumn = 0;
-            private int _minColumn = XLHelper.MaxColumnNumber + 1;
 
             private void AddToBitMatrix(XLSheetRange area)
             {
