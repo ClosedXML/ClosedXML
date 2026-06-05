@@ -42,31 +42,23 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        #region Private Classes
-
         /// <summary>
         /// Class representing the area covering ranges to be consolidated as a set of bit matrices. Does all the dirty job
         /// of ranges consolidation.
         /// </summary>
         private class XLRangeConsolidationMatrix
         {
-            #region Public Constructors
-
             /// <summary>
             /// Constructor.
             /// </summary>
             /// <param name="worksheet">Current worksheet.</param>
             /// <param name="ranges">Ranges to be consolidated. They are expected to belong to the current worksheet, no check is performed.</param>
-            public XLRangeConsolidationMatrix(IXLWorksheet worksheet, IReadOnlyCollection<IXLRange> ranges)
+            internal XLRangeConsolidationMatrix(IXLWorksheet worksheet, IReadOnlyCollection<IXLRange> ranges)
             {
                 _worksheet = worksheet;
                 PrepareBitMatrix(ranges);
                 FillBitMatrix(ranges);
             }
-
-            #endregion Public Constructors
-
-            #region Public Methods
 
             /// <summary>
             /// Get consolidated ranges equivalent to the input ones.
@@ -99,18 +91,10 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion Public Methods
-
-            #region Private Fields
-
             private readonly IXLWorksheet _worksheet;
             private Dictionary<int, BitArray> _bitMatrix;
             private int _maxColumn = 0;
             private int _minColumn = XLHelper.MaxColumnNumber + 1;
-
-            #endregion Private Fields
-
-            #region Private Methods
 
             private void AddToBitMatrix(IXLRangeAddress rangeAddress)
             {
@@ -188,6 +172,7 @@ namespace ClosedXML.Excel
                     _bitMatrix[rowNum] = new BitArray(_maxColumn - _minColumn + 3, false);
                 }
             }
+
             private bool RowIncludesRange(BitArray rowArray, Tuple<int, int> rangeBoundaries)
             {
                 for (int i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
@@ -198,10 +183,6 @@ namespace ClosedXML.Excel
 
                 return true;
             }
-
-            #endregion Private Methods
         }
-
-        #endregion Private Classes
     }
 }
