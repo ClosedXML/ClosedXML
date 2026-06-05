@@ -1292,7 +1292,7 @@ namespace ClosedXML.Excel
                     .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
                     .ToList();
 
-                var c = new XLConditionalFormat(Worksheet, fmtRanges, true);
+                var c = new XLConditionalFormat(Worksheet, fmtRanges);
                 c.CopyFrom(cf);
                 c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), fmtRanges.First().FirstCell());
 

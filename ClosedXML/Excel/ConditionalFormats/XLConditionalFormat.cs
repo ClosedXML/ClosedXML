@@ -38,7 +38,6 @@ namespace ClosedXML.Excel
                 var xStyle = xx.FormatValue;
                 var yStyle = yy.FormatValue;
                 return Equals(xStyle, yStyle)
-                    && xx.CopyDefaultModify == yy.CopyDefaultModify
                     && xx.ConditionalFormatType == yy.ConditionalFormatType
                     && xx.TimePeriod == yy.TimePeriod
                     && xx.IconSetStyle == yy.IconSetStyle
@@ -69,7 +68,6 @@ namespace ClosedXML.Excel
                 unchecked
                 {
                     var hashCode = xStyle.GetHashCode();
-                    hashCode = (hashCode * 397) ^ xx.CopyDefaultModify.GetHashCode();
                     hashCode = (hashCode * 397) ^ xValues.GetHashCode();
                     hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
@@ -126,19 +124,17 @@ namespace ClosedXML.Excel
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
 
-        public XLConditionalFormat(XLWorksheet worksheet, XLRange range, Boolean copyDefaultModify = false)
+        public XLConditionalFormat(XLWorksheet worksheet, XLRange range)
             : this(worksheet)
         {
             if (range != null)
                 Ranges.Add(range);
-            CopyDefaultModify = copyDefaultModify;
         }
 
-        public XLConditionalFormat(XLWorksheet worksheet, IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
+        public XLConditionalFormat(XLWorksheet worksheet, IEnumerable<XLRange> ranges)
             : this(worksheet)
         {
             ranges?.ForEach(range => Ranges.Add(range));
-            CopyDefaultModify = copyDefaultModify;
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IEnumerable<IXLRange> targetRanges)
@@ -157,8 +153,6 @@ namespace ClosedXML.Excel
         /// Minimum value is 1. It is basically used for ordering of CF during saving.
         /// </summary>
         internal Int32 Priority { get; set; }
-
-        public Boolean CopyDefaultModify { get; set; }
 
         public XLDxfValue? FormatValue { get; set; }
 
