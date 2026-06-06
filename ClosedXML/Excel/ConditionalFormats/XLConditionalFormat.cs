@@ -14,10 +14,6 @@ namespace ClosedXML.Excel
 
         private sealed class NoRangeCfComparer : IEqualityComparer<XLConditionalFormat>
         {
-            private readonly DictionaryComparer<int, XLColor> _colorsComparer = new DictionaryComparer<int, XLColor>();
-            private readonly DictionaryComparer<int, XLCFContentType> _contentsTypeComparer = new DictionaryComparer<int, XLCFContentType>();
-            private readonly DictionaryComparer<int, XLCFIconSetOperator> _iconSetTypeComparer = new DictionaryComparer<int, XLCFIconSetOperator>();
-
             public bool Equals(XLConditionalFormat xx, XLConditionalFormat yy)
             {
                 if (ReferenceEquals(xx, yy)) return true;
@@ -44,9 +40,9 @@ namespace ClosedXML.Excel
                     && xx.ShowBarOnly == yy.ShowBarOnly
                     && SetEquals(xxValues, yyValues)
                     && SetEquals(xxFormulas, yyFormulas)
-                    && _colorsComparer.Equals(xx.Colors, yy.Colors)
-                    && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
-                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators);
+                    && Equals(xx.Colors, yy.Colors)
+                    && Equals(xx.ContentTypes, yy.ContentTypes)
+                    && Equals(xx.IconSetOperators, yy.IconSetOperators);
             }
 
             public int GetHashCode(XLConditionalFormat obj)
@@ -83,6 +79,22 @@ namespace ClosedXML.Excel
             {
                 return new HashSet<T>(second, EqualityComparer<T>.Default)
                     .SetEquals(first);
+            }
+
+            private static bool Equals<TValue>(Dictionary<int, TValue> x, Dictionary<int, TValue> y)
+            {
+                if (x.Count != y.Count)
+                    return false;
+                if (x.Keys.Except(y.Keys).Any())
+                    return false;
+                if (y.Keys.Except(x.Keys).Any())
+                    return false;
+                var valueComparer = EqualityComparer<TValue>.Default;
+                foreach (var pair in x)
+                    if (!valueComparer.Equals(pair.Value, y[pair.Key]))
+                        return false;
+
+                return true;
             }
         }
 
@@ -534,36 +546,6 @@ namespace ClosedXML.Excel
             ReverseIconOrder = reverseIconOrder;
             ShowIconOnly = showIconOnly;
             return new XLCFIconSet(this);
-        }
-    }
-
-    internal class DictionaryComparer<TKey, TValue> :
-        IEqualityComparer<Dictionary<TKey, TValue>>
-    {
-        private readonly IEqualityComparer<TValue> _valueComparer;
-
-        public DictionaryComparer(IEqualityComparer<TValue> valueComparer = null)
-        {
-            this._valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-        }
-
-        public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
-        {
-            if (x.Count != y.Count)
-                return false;
-            if (x.Keys.Except(y.Keys).Any())
-                return false;
-            if (y.Keys.Except(x.Keys).Any())
-                return false;
-            foreach (var pair in x)
-                if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
-                    return false;
-            return true;
-        }
-
-        public int GetHashCode(Dictionary<TKey, TValue> obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }
