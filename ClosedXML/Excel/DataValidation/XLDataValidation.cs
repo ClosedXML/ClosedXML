@@ -1,8 +1,6 @@
-#nullable disable
-
-// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -58,6 +56,7 @@ namespace ClosedXML.Excel
                    (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
         }
 
+        [MemberNotNull(nameof(minValue), nameof(maxValue), nameof(InputTitle), nameof(InputMessage), nameof(ErrorTitle), nameof(ErrorMessage))]
         private void Initialize()
         {
             AllowedValues = XLAllowedValues.AnyValue;
@@ -72,8 +71,8 @@ namespace ClosedXML.Excel
             ErrorStyle = XLErrorStyle.Stop;
             Operator = XLOperator.Between;
             Value = String.Empty;
-            MinValue = String.Empty;
-            MaxValue = String.Empty;
+            minValue = String.Empty;
+            maxValue = String.Empty;
         }
 
         #region IXLDataValidation Members
