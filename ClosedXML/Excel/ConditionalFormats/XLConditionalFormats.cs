@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
                 var format = formats[0];
                 if (!CFTypesExcludedFromConsolidation.Contains(format.ConditionalFormatType))
                 {
-                    var originalAnchor = format.Areas.First().FirstPoint;
+                    var originalAnchor = format.Areas[0].FirstPoint;
 
                     var (rulesToConsolidate, areasWithSameFormat) = GetConsolidateableRules(formats);
                     var consolidatedAreas = areasWithSameFormat.GetConsolidated();
@@ -99,7 +99,7 @@ namespace ClosedXML.Excel
                     foreach (var consolidatedRuleIndex in rulesToConsolidate)
                         formats.RemoveAt(consolidatedRuleIndex);
 
-                    var consolidatedAnchor = consolidatedAreas.First().FirstPoint;
+                    var consolidatedAnchor = consolidatedAreas[0].FirstPoint;
                     consolidatedCf.AdjustFormulas(_worksheet.Cell(originalAnchor), _worksheet.Cell(consolidatedAnchor));
                     format = consolidatedCf;
                 }

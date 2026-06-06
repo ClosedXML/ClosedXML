@@ -19,6 +19,8 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
 
     internal int Count => _areas.Count;
 
+    internal XLSheetRange this[int idx] => _areas[idx];
+
     internal XLAreaList With(XLSheetRange area)
     {
         if (_areas.Contains(area))
