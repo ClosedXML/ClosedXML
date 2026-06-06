@@ -202,6 +202,11 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
         return new XLAreaList(result);
     }
 
+    internal XLAreaList GetConsolidated()
+    {
+        return XLRangeConsolidationEngine.Consolidate(this);
+    }
+
     public IEnumerator<XLSheetRange> GetEnumerator()
     {
         return _areas.GetEnumerator();

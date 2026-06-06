@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
     internal class XLConditionalFormat : IXLDxfContainer, IXLConditionalFormat
     {
         private readonly XLWorksheet _worksheet;
+        private readonly XLRanges _ranges;
 
         private sealed class NoRangeCfComparer : IEqualityComparer<XLConditionalFormat>
         {
@@ -104,7 +105,7 @@ namespace ClosedXML.Excel
         {
             _worksheet = worksheet;
             Id = Guid.NewGuid();
-            Ranges = new XLRanges(worksheet);
+            _ranges = new XLRanges(worksheet);
             Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
@@ -128,6 +129,13 @@ namespace ClosedXML.Excel
             : this(conditionalFormat._worksheet)
         {
             targetRanges?.ForEach(range => Ranges.Add(range));
+            CopyFrom(conditionalFormat);
+        }
+
+        internal XLConditionalFormat(XLConditionalFormat conditionalFormat, XLAreaList areaList)
+            : this(conditionalFormat._worksheet)
+        {
+            areaList.ForEach(range => Ranges.Add(_worksheet.Range(range)));
             CopyFrom(conditionalFormat);
         }
 
@@ -169,7 +177,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRanges Ranges { get; private set; }
+        public IXLRanges Ranges => _ranges;
 
         public XLConditionalFormatType ConditionalFormatType { get; set; }
 
@@ -190,6 +198,14 @@ namespace ClosedXML.Excel
         public Boolean ShowBarOnly { get; set; }
 
         public Boolean StopIfTrue { get; set; }
+
+        internal XLAreaList Areas
+        {
+            get
+            {
+                return new XLAreaList(_ranges.Select<XLRange, XLSheetRange>(range => range.SheetRange).ToList());
+            }
+        }
 
         public IXLConditionalFormat SetStopIfTrue()
         {

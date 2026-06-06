@@ -29,7 +29,8 @@ namespace ClosedXML.Excel
             var retVal = new XLRanges(_workbook);
             foreach (var ws in worksheets)
             {
-                var matrix = new XLRangeConsolidationMatrix(_allRanges.Where<XLRange>(r => r.Worksheet == ws).Select(r => r.SheetRange).ToList());
+                var areaList = new XLAreaList(_allRanges.Where<XLRange>(r => r.Worksheet == ws).Select(r => r.SheetRange).ToList());
+                var matrix = new XLRangeConsolidationMatrix(areaList);
                 var consRanges = matrix.GetConsolidatedRanges();
                 foreach (var consArea in consRanges)
                 {
@@ -38,6 +39,16 @@ namespace ClosedXML.Excel
             }
 
             return retVal;
+        }
+
+        internal static XLAreaList Consolidate(XLAreaList areas)
+        {
+            if (areas.Count == 0)
+                return areas;
+
+            var matrix = new XLRangeConsolidationMatrix(areas);
+            var consRanges = matrix.GetConsolidatedRanges().ToList();
+            return new XLAreaList(consRanges);
         }
 
         /// <summary>
@@ -53,7 +64,7 @@ namespace ClosedXML.Excel
             /// Constructor.
             /// </summary>
             /// <param name="areas">Areas to be consolidated.</param>
-            internal XLRangeConsolidationMatrix(IReadOnlyCollection<XLSheetRange> areas)
+            internal XLRangeConsolidationMatrix(XLAreaList areas)
             {
                 (_bitMatrix, _minColumn) = PrepareBitMatrix(areas);
                 FillBitMatrix(areas);
@@ -139,7 +150,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private static (Dictionary<int, BitArray> BitMatrix, int MinColumn) PrepareBitMatrix(IReadOnlyCollection<XLSheetRange> areas)
+            private static (Dictionary<int, BitArray> BitMatrix, int MinColumn) PrepareBitMatrix(XLAreaList areas)
             {
                 var minColumn = XLHelper.MaxColumnNumber + 1;
                 var maxColumn = 0;
