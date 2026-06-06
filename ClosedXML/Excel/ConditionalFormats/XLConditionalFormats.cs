@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     /// a collection of <see cref="XLConditionalFormat"/>. Doesn't contain pivot table formats,
     /// they are in pivot table <see cref="XLPivotTable.ConditionalFormats"/>,
     /// </summary>
-    internal class XLConditionalFormats : IXLConditionalFormats
+    internal class XLConditionalFormats : IXLConditionalFormats, IEnumerable<XLConditionalFormat>
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLConditionalFormat> _conditionalFormats = new();

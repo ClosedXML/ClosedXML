@@ -673,7 +673,7 @@ namespace ClosedXML.Excel.IO
                 }
             }
 
-            var exlst = xlWorksheet.ConditionalFormats.Where(c => c.ConditionalFormatType == XLConditionalFormatType.DataBar).ToArray();
+            var exlst = xlWorksheet.ConditionalFormats.Where<XLConditionalFormat>(c => c.ConditionalFormatType == XLConditionalFormatType.DataBar).ToArray();
             if (exlst.Any())
             {
                 if (!worksheet.Elements<WorksheetExtensionList>().Any())

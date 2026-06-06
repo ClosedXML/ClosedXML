@@ -668,7 +668,8 @@ namespace ClosedXML.Excel
             Tables.ForEach<XLTable>(t => t.CopyTo(targetSheet, false));
             DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet)); // Names must modify table references, so keep the order.
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
-            ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+            foreach (var cf in ConditionalFormats)
+                cf.CopyTo(targetSheet);
 
             // Sparklines were already copied during copy of columns, rows and cells, but piecemeal (e.g. multi-cell
             // sparkline group could be split into group-per-cell). Since this is a copy of whole sheet, just remove
@@ -1269,14 +1270,14 @@ namespace ClosedXML.Excel
 
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
-            if (!ConditionalFormats.Any()) return;
+            if (!ConditionalFormats.Any<XLConditionalFormat>()) return;
             Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
             int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
 
-            foreach (var cf in ConditionalFormats.ToList())
+            foreach (var cf in ConditionalFormats.ToList<XLConditionalFormat>())
             {
                 var cfRanges = cf.Ranges.ToList();
                 cf.Ranges.RemoveAll();
@@ -1384,14 +1385,14 @@ namespace ClosedXML.Excel
 
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
-            if (!ConditionalFormats.Any()) return;
+            if (!ConditionalFormats.Any<XLConditionalFormat>()) return;
             Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
-            foreach (var cf in ConditionalFormats.ToList())
+            foreach (var cf in ConditionalFormats.ToList<XLConditionalFormat>())
             {
                 var cfRanges = cf.Ranges.ToList();
                 cf.Ranges.RemoveAll();

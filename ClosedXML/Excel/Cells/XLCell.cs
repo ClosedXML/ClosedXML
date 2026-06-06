@@ -967,7 +967,7 @@ namespace ClosedXML.Excel
                 return false;
 
             if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats)
-                && Worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Any(range => range.Contains(this)))
+                && Worksheet.ConditionalFormats.SelectMany<XLConditionalFormat, IXLRange>(cf => cf.Ranges).Any(range => range.Contains(this)))
                 return false;
 
             if (options.HasFlag(XLCellsUsedOptions.Sparklines) && HasSparkline)
@@ -1245,7 +1245,7 @@ namespace ClosedXML.Excel
             var conditionalFormats = otherCell
                 .Worksheet
                 .ConditionalFormats
-                .Where(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
+                .Where<XLConditionalFormat>(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
                 .ToList();
 
             foreach (var cf in conditionalFormats)
@@ -1269,9 +1269,9 @@ namespace ClosedXML.Excel
             var srcSheet = fromRange.Worksheet;
             int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
             int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
-            if (srcSheet.ConditionalFormats.Any(r => r.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any()))
+            if (srcSheet.ConditionalFormats.Any<XLConditionalFormat>(r => r.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any()))
             {
-                var fs = srcSheet.ConditionalFormats.SelectMany(cf => cf.Ranges.GetIntersectedRanges(fromRange.RangeAddress)).ToArray();
+                var fs = srcSheet.ConditionalFormats.SelectMany<XLConditionalFormat, IXLRange>(cf => cf.Ranges.GetIntersectedRanges(fromRange.RangeAddress)).ToArray();
                 if (fs.Any())
                 {
                     minRo = fs.Max(r => r.RangeAddress.LastAddress.RowNumber);
@@ -1283,7 +1283,7 @@ namespace ClosedXML.Excel
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
-            var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
+            var formats = srcSheet.ConditionalFormats.Where<XLConditionalFormat>(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
 
             foreach (var cf in formats.ToList())
             {

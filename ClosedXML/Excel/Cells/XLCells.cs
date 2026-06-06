@@ -147,7 +147,7 @@ internal class XLCells :
 
         if (_options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
             candidates = candidates.Union(
-                worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+                worksheet.ConditionalFormats.SelectMany<XLConditionalFormat, XLSheetPoint>(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
 
         if (_options.HasFlag(XLCellsUsedOptions.DataValidation))
             candidates = candidates.Union(

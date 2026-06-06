@@ -445,7 +445,7 @@ namespace ClosedXML.Excel
         {
             var mf = RangeAddress.FirstAddress;
             var ml = RangeAddress.LastAddress;
-            foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Ranges.GetIntersectedRanges(RangeAddress).Any()).ToList())
+            foreach (var format in Worksheet.ConditionalFormats.Where<XLConditionalFormat>(x => x.Ranges.GetIntersectedRanges(RangeAddress).Any()).ToList())
             {
                 var cfRanges = format.Ranges.ToList();
                 format.Ranges.RemoveAll();
@@ -1940,7 +1940,7 @@ namespace ClosedXML.Excel
             {
                 cellsUsed = cellsUsed.Union(
                     Worksheet.ConditionalFormats
-                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
+                        .SelectMany<XLConditionalFormat, IXLRange>(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
                         .Select(selector)
                         .Where(predicate)
                 );
