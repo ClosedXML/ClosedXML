@@ -92,7 +92,7 @@ namespace ClosedXML.Excel
 
                     var (rulesToConsolidate, areasWithSameFormat) = GetConsolidateableRules(formats);
                     var consolidatedAreas = areasWithSameFormat.GetConsolidated();
-                    var consolidatedCf = new XLConditionalFormat(format, consolidatedAreas);
+                    var consolidatedCf = new XLConditionalFormat(_worksheet, format, consolidatedAreas);
 
                     // Remove consolidated formats
                     rulesToConsolidate.Reverse();

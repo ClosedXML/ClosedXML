@@ -142,15 +142,8 @@ namespace ClosedXML.Excel
             ranges?.ForEach(range => Ranges.Add(range));
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IEnumerable<IXLRange> targetRanges)
-            : this(conditionalFormat._worksheet)
-        {
-            targetRanges?.ForEach(range => Ranges.Add(range));
-            CopyFrom(conditionalFormat);
-        }
-
-        internal XLConditionalFormat(XLConditionalFormat conditionalFormat, XLAreaList areaList)
-            : this(conditionalFormat._worksheet)
+        internal XLConditionalFormat(XLWorksheet worksheet, XLConditionalFormat conditionalFormat, XLAreaList areaList)
+            : this(worksheet)
         {
             areaList.ForEach(range => Ranges.Add(_worksheet.Range(range)));
             CopyFrom(conditionalFormat);
@@ -239,8 +232,7 @@ namespace ClosedXML.Excel
         {
             if (targetSheet == Range?.Worksheet)
                 throw new InvalidOperationException("Cannot copy conditional format to the worksheet it already belongs to.");
-            var targetRanges = Ranges.Select(r => targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
-            var newCf = new XLConditionalFormat(this, targetRanges);
+            var newCf = new XLConditionalFormat((XLWorksheet)targetSheet, this, Areas);
             targetSheet.ConditionalFormats.Add(newCf);
             return newCf;
         }
