@@ -15,7 +15,6 @@ namespace ClosedXML.Excel
         private sealed class NoRangeCfComparer : IEqualityComparer<XLConditionalFormat>
         {
             private readonly DictionaryComparer<int, XLColor> _colorsComparer = new DictionaryComparer<int, XLColor>();
-            private readonly EnumerableComparer<string> _listComparer = new EnumerableComparer<string>();
             private readonly DictionaryComparer<int, XLCFContentType> _contentsTypeComparer = new DictionaryComparer<int, XLCFContentType>();
             private readonly DictionaryComparer<int, XLCFIconSetOperator> _iconSetTypeComparer = new DictionaryComparer<int, XLCFIconSetOperator>();
 
@@ -43,8 +42,8 @@ namespace ClosedXML.Excel
                     && xx.StopIfTrue == yy.StopIfTrue
                     && xx.ShowIconOnly == yy.ShowIconOnly
                     && xx.ShowBarOnly == yy.ShowBarOnly
-                    && _listComparer.Equals(xxValues, yyValues)
-                    && _listComparer.Equals(xxFormulas, yyFormulas)
+                    && SetEquals(xxValues, yyValues)
+                    && SetEquals(xxFormulas, yyFormulas)
                     && _colorsComparer.Equals(xx.Colors, yy.Colors)
                     && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
                     && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators);
@@ -78,6 +77,12 @@ namespace ClosedXML.Excel
                     hashCode = (hashCode * 397) ^ xx.StopIfTrue.GetHashCode();
                     return hashCode;
                 }
+            }
+
+            private static bool SetEquals<T>(IEnumerable<T> first, IEnumerable<T> second)
+            {
+                return new HashSet<T>(second, EqualityComparer<T>.Default)
+                    .SetEquals(first);
             }
         }
 
@@ -559,33 +564,6 @@ namespace ClosedXML.Excel
         public int GetHashCode(Dictionary<TKey, TValue> obj)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    internal class EnumerableComparer<T> : IEqualityComparer<IEnumerable<T>>
-    {
-        private readonly IEqualityComparer<T> _valueComparer;
-
-        public EnumerableComparer(IEqualityComparer<T> valueComparer = null)
-        {
-            this._valueComparer = valueComparer ?? EqualityComparer<T>.Default;
-        }
-
-        public bool Equals(IEnumerable<T> x, IEnumerable<T> y)
-        {
-            return SetEquals(x, y, _valueComparer);
-        }
-
-        public int GetHashCode(IEnumerable<T> obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool SetEquals(IEnumerable<T> first, IEnumerable<T> second,
-            IEqualityComparer<T> comparer)
-        {
-            return new HashSet<T>(second, comparer ?? EqualityComparer<T>.Default)
-                .SetEquals(first);
         }
     }
 }
