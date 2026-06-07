@@ -74,6 +74,30 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Clear conditional formats in the <paramref name="area"/>. Split if necessary, remove if
+        /// conditional format has no area left.
+        /// </summary>
+        internal void Clear(XLSheetRange area)
+        {
+            for (var i = _conditionalFormats.Count - 1; i >= 0; --i)
+            {
+                var conditionalFormat = _conditionalFormats[i];
+                if (!conditionalFormat.Areas.IntersectsWith(area))
+                    continue;
+
+                var remainingAreas = conditionalFormat.Areas.Excluding(area);
+                if (remainingAreas.Count > 0)
+                {
+                    conditionalFormat.Areas = remainingAreas;
+                }
+                else
+                {
+                    _conditionalFormats.RemoveAt(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// The method consolidate the same conditional formats, which are located in adjacent ranges.
         /// </summary>
         internal void Consolidate()

@@ -411,7 +411,7 @@ namespace ClosedXML.Excel
             }
 
             if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
-                ClearConditionalFormatting();
+                Worksheet.ConditionalFormats.Clear(SheetRange);
 
             if (clearOptions.HasFlag(XLClearOptions.DataValidation))
             {
@@ -439,36 +439,6 @@ namespace ClosedXML.Excel
             var xlRangeAddress = this.RangeAddress.Relative(in xlSourceBaseRangeAddress, in xlTargetBaseRangeAddress);
 
             return ((XLRangeBase)targetBaseRange).Range(in xlRangeAddress);
-        }
-
-        internal void ClearConditionalFormatting()
-        {
-            // Removal should be rare, so only allocate if necessary
-            List<XLConditionalFormat> toRemoveCfs = null;
-            var area = SheetRange;
-            foreach (var format in Worksheet.ConditionalFormats)
-            {
-                var formatAreas = format.Areas;
-                if (!formatAreas.IntersectsWith(area))
-                    continue;
-
-                var remainingAreas = formatAreas.Excluding(area);
-                if (remainingAreas.Count > 0)
-                {
-                    format.Areas = remainingAreas;
-                }
-                else
-                {
-                    toRemoveCfs ??= new List<XLConditionalFormat>();
-                    toRemoveCfs.Add(format);
-                }
-            }
-
-            if (toRemoveCfs is null)
-                return;
-
-            foreach (var toRemovedCf in toRemoveCfs)
-                Worksheet.ConditionalFormats.Remove(x => x == toRemovedCf);
         }
 
         internal void RemoveSparklines()

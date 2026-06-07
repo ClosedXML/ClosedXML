@@ -710,7 +710,7 @@ namespace ClosedXML.Excel
 
                 if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
                 {
-                    AsRange().ClearConditionalFormatting();
+                    Worksheet.ConditionalFormats.Clear(SheetPoint);
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.Comments))
