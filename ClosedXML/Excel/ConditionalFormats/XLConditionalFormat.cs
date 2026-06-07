@@ -215,6 +215,12 @@ namespace ClosedXML.Excel
             {
                 return new XLAreaList(_ranges.Select<XLRange, XLSheetRange>(range => range.SheetRange).ToList());
             }
+            set
+            {
+                Ranges.RemoveAll();
+                foreach (var area in value)
+                    Ranges.Add(_worksheet.Range(area));
+            }
         }
 
         public IXLConditionalFormat SetStopIfTrue()

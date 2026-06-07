@@ -209,6 +209,29 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
         return XLRangeConsolidationEngine.Consolidate(this);
     }
 
+    internal bool IntersectsWith(XLSheetRange otherArea)
+    {
+        foreach (var area in _areas)
+        {
+            if (area.Intersects(otherArea))
+                return true;
+        }
+
+        return false;
+    }
+
+    internal XLAreaList Excluding(XLSheetRange excludedArea)
+    {
+        if (!IntersectsWith(excludedArea))
+            return this;
+
+        var list = new List<XLSheetRange>();
+        foreach (var area in _areas)
+            area.Exclude(excludedArea, list);
+
+        return new XLAreaList(list);
+    }
+
     public IEnumerator<XLSheetRange> GetEnumerator()
     {
         return _areas.GetEnumerator();

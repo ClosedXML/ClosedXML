@@ -385,15 +385,14 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void NoClearConditionalFormattingsWhenRangePartiallySuperimposed()
+        public void ClearConditionalFormattingsWhenRangePartiallySuperimposed()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
             ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual(1, ws.ConditionalFormats.Single().Ranges.Count);
-            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToStringRelative());
+            Assert.AreEqual("E3:G4 C4:D4", ws.ConditionalFormats.Single().Ranges.ToSpaceList());
         }
 
         [Test]

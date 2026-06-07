@@ -110,7 +110,7 @@ public class DataValidationShiftTests
 
         ws.Rows(rowsToDelete).Delete();
 
-        var resultDvs = ws.DataValidations.Select(dv => ToSpaceList(dv.Ranges));
+        var resultDvs = ws.DataValidations.Select(dv => dv.Ranges.ToSpaceList());
         Assert.AreEqual(shiftedDvs, resultDvs);
     }
 
@@ -135,7 +135,7 @@ public class DataValidationShiftTests
 
         ws.Range("B12").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-        Assert.AreEqual("A10:A12 B10:B11 C10:C12", ToSpaceList(ws.DataValidations.Single().Ranges));
+        Assert.AreEqual("A10:A12 B10:B11 C10:C12", ws.DataValidations.Single().Ranges.ToSpaceList());
     }
 
     [Test]
@@ -153,10 +153,5 @@ public class DataValidationShiftTests
         ws.Column(2).InsertColumnsAfter(1);
         Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
         Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
-    }
-
-    private static string ToSpaceList(IEnumerable<IXLRange> ranges)
-    {
-        return string.Join(" ", ranges.Select(r => r.RangeAddress.ToString(XLReferenceStyle.A1, false)));
     }
 }

@@ -411,7 +411,7 @@ namespace ClosedXML.Excel
             }
 
             if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
-                RemoveConditionalFormatting();
+                ClearConditionalFormatting();
 
             if (clearOptions.HasFlag(XLClearOptions.DataValidation))
             {
@@ -441,67 +441,34 @@ namespace ClosedXML.Excel
             return ((XLRangeBase)targetBaseRange).Range(in xlRangeAddress);
         }
 
-        internal void RemoveConditionalFormatting()
+        internal void ClearConditionalFormatting()
         {
-            var mf = RangeAddress.FirstAddress;
-            var ml = RangeAddress.LastAddress;
-            foreach (var format in Worksheet.ConditionalFormats.Where<XLConditionalFormat>(x => x.Ranges.GetIntersectedRanges(RangeAddress).Any()).ToList())
+            // Removal should be rare, so only allocate if necessary
+            List<XLConditionalFormat> toRemoveCfs = null;
+            var area = SheetRange;
+            foreach (var format in Worksheet.ConditionalFormats)
             {
-                var cfRanges = format.Ranges.ToList();
-                format.Ranges.RemoveAll();
+                var formatAreas = format.Areas;
+                if (!formatAreas.IntersectsWith(area))
+                    continue;
 
-                foreach (var cfRange in cfRanges)
+                var remainingAreas = formatAreas.Excluding(area);
+                if (remainingAreas.Count > 0)
                 {
-                    if (!cfRange.Intersects(this))
-                    {
-                        format.Ranges.Add(cfRange);
-                        continue;
-                    }
-
-                    var f = cfRange.RangeAddress.FirstAddress;
-                    var l = cfRange.RangeAddress.LastAddress;
-                    bool byWidth = false, byHeight = false;
-                    XLRange rng1 = null, rng2 = null;
-                    if (mf.ColumnNumber <= f.ColumnNumber && ml.ColumnNumber >= l.ColumnNumber)
-                    {
-                        if (mf.RowNumber.Between(f.RowNumber, l.RowNumber) || ml.RowNumber.Between(f.RowNumber, l.RowNumber))
-                        {
-                            if (mf.RowNumber > f.RowNumber)
-                                rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, mf.RowNumber - 1, l.ColumnNumber);
-                            if (ml.RowNumber < l.RowNumber)
-                                rng2 = Worksheet.Range(ml.RowNumber + 1, f.ColumnNumber, l.RowNumber, l.ColumnNumber);
-                        }
-                        byWidth = true;
-                    }
-
-                    if (mf.RowNumber <= f.RowNumber && ml.RowNumber >= l.RowNumber)
-                    {
-                        if (mf.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber) || ml.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber))
-                        {
-                            if (mf.ColumnNumber > f.ColumnNumber)
-                                rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, l.RowNumber, mf.ColumnNumber - 1);
-                            if (ml.ColumnNumber < l.ColumnNumber)
-                                rng2 = Worksheet.Range(f.RowNumber, ml.ColumnNumber + 1, l.RowNumber, l.ColumnNumber);
-                        }
-                        byHeight = true;
-                    }
-
-                    if (rng1 != null)
-                    {
-                        format.Ranges.Add(rng1);
-                    }
-                    if (rng2 != null)
-                    {
-                        //TODO: reflect the formula for a new range
-                        format.Ranges.Add(rng2);
-                    }
-
-                    if (!byWidth && !byHeight)
-                        format.Ranges.Add(cfRange); // Not split, preserve original
+                    format.Areas = remainingAreas;
                 }
-                if (!format.Ranges.Any())
-                    Worksheet.ConditionalFormats.Remove(x => x == format);
+                else
+                {
+                    toRemoveCfs ??= new List<XLConditionalFormat>();
+                    toRemoveCfs.Add(format);
+                }
             }
+
+            if (toRemoveCfs is null)
+                return;
+
+            foreach (var toRemovedCf in toRemoveCfs)
+                Worksheet.ConditionalFormats.Remove(x => x == toRemovedCf);
         }
 
         internal void RemoveSparklines()

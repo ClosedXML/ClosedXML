@@ -114,4 +114,34 @@ internal class XLAreaListTests
 
         Assert.AreEqual(expected, result.ToSpaceList());
     }
+
+    [TestCase("A1", "A1", ExpectedResult = true)]
+    [TestCase("A1:C3", "B2", ExpectedResult = true)]
+    [TestCase("B2:C3", "A2", ExpectedResult = false)]
+    [TestCase("A1:C2 B3:C3", "A3", ExpectedResult = false)]
+    public bool IntersectsWith_determines_intersection_with_any_area(string areaListText, string areaText)
+    {
+        var areaList = Parse(areaListText);
+        var area = XLSheetRange.Parse(areaText);
+        return areaList.IntersectsWith(area);
+    }
+
+    [TestCase("A1", "B1", ExpectedResult = "A1")]
+    [TestCase("A1:E5", "C3:C4", ExpectedResult = "A1:B5 C1:C2 C5 D1:E5")]
+    [TestCase("B2:C5 B9 C4:D7", "C4:C5", ExpectedResult = "B2:B5 C2:C3 B9 C6:C7 D4:D7")]
+    public string Excluding_returns_area_list_without_excluded(string areaListText, string excludedAreaText)
+    {
+        var areaList = Parse(areaListText);
+        var excludedArea = XLSheetRange.Parse(excludedAreaText);
+        return areaList.Excluding(excludedArea).ToSpaceList();
+    }
+
+    private static XLAreaList Parse(string spaceList)
+    {
+        var list = new List<XLSheetRange>();
+        foreach (var reference in spaceList.Split(' '))
+            list.Add(XLSheetRange.Parse(reference));
+
+        return new XLAreaList(list);
+    }
 }

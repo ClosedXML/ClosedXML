@@ -98,3 +98,17 @@ to the default format of a workbook (e.g. ``ws.Cell("A1").Style = wb.Style``).
 
 Default color of fill and border colors ``IXLStyle`` elements is now ``XLColor.Automatic``.
 Previously, it was (``XLColor.FromIndex(64)``).
+
+****************************
+Clearing conditional formats
+****************************
+
+Partial clearing of conditional format (e.g. clearing `B2` of conditional format for area ``A1:C3``)
+now correctly splits the format of into individual remaining areas (e.g. into ``A1:A3 B1 C1:C3 B3``).
+
+Originally, the partial clearing only worked for some situations. Concretely, it only worked when
+the area was fully horizontally/vertically split, but not for corners (``A1:B2`` without a corner) or
+center (``A1:C3`` without ``B2``).
+
+Reminder: the clearing of a conditional format is done through the Clear method with appropritate
+option, e.g. ``ws.Range("A2:C5").Clear(XLClearOptions.ConditionalFormats)``.
