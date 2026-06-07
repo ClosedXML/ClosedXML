@@ -10,12 +10,12 @@ internal class XLAreaListTests
     [TestCase("A1:C3", "A1", "B1:C3 A2:A4")]
     [TestCase("A1:C3", "B1", "A1:A3 C1:C3 B2:B4")]
     [TestCase("A1:C3", "C1", "A1:B3 C2:C4")]
-    [TestCase("A1:C3", "A2", "A1 B1:C3 A3:A4")]
-    [TestCase("A1:C3", "B2", "A1:A3 B1 C1:C3 B3:B4")]
-    [TestCase("A1:C3", "C2", "A1:B3 C1 C3:C4")]
-    [TestCase("A1:C3", "A3", "A1:A2 B1:C3 A4")]
-    [TestCase("A1:C3", "B3", "A1:A3 B1:B2 C1:C3 B4")]
-    [TestCase("A1:C3", "C3", "A1:B3 C1:C2 C4")]
+    [TestCase("A1:C3", "A2", "A1:C1 B2:C3 A3:A4")]
+    [TestCase("A1:C3", "B2", "A1:C1 A2:A3 C2:C3 B3:B4")]
+    [TestCase("A1:C3", "C2", "A1:C1 A2:B3 C3:C4")]
+    [TestCase("A1:C3", "A3", "A1:C2 B3:C3 A4")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3 C3 B4")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:B3 C4")]
 
     [TestCase("B1:D3", "A1:A3", "B1:D3")] // Insert to left side - don't move
     [TestCase("A2:C4", "A1:C1", "A3:C5")] // Insert to top side - shift
@@ -38,14 +38,14 @@ internal class XLAreaListTests
     }
 
     [TestCase("A1:C3", "A1", "A2:C3 B1:D1")]
-    [TestCase("A1:C3", "B1", "A1:A3 B2:C3 C1:D1")]
-    [TestCase("A1:C3", "C1", "A1:B3 C2:C3 D1")]
+    [TestCase("A1:C3", "B1", "A2:C3 A1 C1:D1")]
+    [TestCase("A1:C3", "C1", "A2:C3 A1:B1 D1")]
     [TestCase("A1:C3", "A2", "A1:C1 A3:C3 B2:D2")]
-    [TestCase("A1:C3", "B2", "A1:A3 B1:C1 B3:C3 C2:D2")]
-    [TestCase("A1:C3", "C2", "A1:B3 C1 C3 D2")]
+    [TestCase("A1:C3", "B2", "A1:C1 A3:C3 A2 C2:D2")]
+    [TestCase("A1:C3", "C2", "A1:C1 A3:C3 A2:B2 D2")]
     [TestCase("A1:C3", "A3", "A1:C2 B3:D3")]
-    [TestCase("A1:C3", "B3", "A1:A3 B1:C2 C3:D3")]
-    [TestCase("A1:C3", "C3", "A1:B3 C1:C2 D3")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3 C3:D3")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:B3 D3")]
 
     [TestCase("A1:C3", "A1:A3", "B1:D3")] // Insert to left edge - shift, don't extend
     [TestCase("A2:C4", "A1", "A2:C4")] // Insert to top side - don't move
@@ -68,12 +68,12 @@ internal class XLAreaListTests
     [TestCase("A1:C3", "A1", "B1:C3 A1:A2")]
     [TestCase("A1:C3", "B1", "A1:A3 C1:C3 B1:B2")]
     [TestCase("A1:C3", "C1", "A1:B3 C1:C2")]
-    [TestCase("A1:C3", "A2", "A1 B1:C3 A2")]
-    [TestCase("A1:C3", "B2", "A1:A3 B1 C1:C3 B2")]
-    [TestCase("A1:C3", "C2", "A1:B3 C1 C2")]
-    [TestCase("A1:C3", "A3", "A1:A2 B1:C3")]
-    [TestCase("A1:C3", "B3", "A1:A3 B1:B2 C1:C3")]
-    [TestCase("A1:C3", "C3", "A1:B3 C1:C2")]
+    [TestCase("A1:C3", "A2", "A1:C1 B2:C3 A2")]
+    [TestCase("A1:C3", "B2", "A1:C1 A2:A3 C2:C3 B2")]
+    [TestCase("A1:C3", "C2", "A1:C1 A2:B3 C2")]
+    [TestCase("A1:C3", "A3", "A1:C2 B3:C3")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3 C3")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:B3")]
 
     [TestCase("B1:D3", "A1:A3", "B1:D3")] // Delete on the left side - don't move
     [TestCase("A2:C4", "A1:C1", "A1:C3")] // Delete on top side - shift
@@ -91,14 +91,14 @@ internal class XLAreaListTests
     }
 
     [TestCase("A1:C3", "A1", "A2:C3 A1:B1")]
-    [TestCase("A1:C3", "B1", "A1:A3 B2:C3 B1")]
-    [TestCase("A1:C3", "C1", "A1:B3 C2:C3")]
+    [TestCase("A1:C3", "B1", "A2:C3 A1 B1")]
+    [TestCase("A1:C3", "C1", "A2:C3 A1:B1")]
     [TestCase("A1:C3", "A2", "A1:C1 A3:C3 A2:B2")]
-    [TestCase("A1:C3", "B2", "A1:A3 B1:C1 B3:C3 B2")]
-    [TestCase("A1:C3", "C2", "A1:B3 C1 C3")]
+    [TestCase("A1:C3", "B2", "A1:C1 A3:C3 A2 B2")]
+    [TestCase("A1:C3", "C2", "A1:C1 A3:C3 A2:B2")]
     [TestCase("A1:C3", "A3", "A1:C2 A3:B3")]
-    [TestCase("A1:C3", "B3", "A1:A3 B1:C2 B3")]
-    [TestCase("A1:C3", "C3", "A1:B3 C1:C2")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3 B3")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:B3")]
 
     [TestCase("B1:D3", "A1:A3", "A1:C3")] // Delete on the left side - shift
     [TestCase("A2:C4", "A1", "A2:C4")] // Delete on top side - don't move
@@ -127,8 +127,8 @@ internal class XLAreaListTests
     }
 
     [TestCase("A1", "B1", ExpectedResult = "A1")]
-    [TestCase("A1:E5", "C3:C4", ExpectedResult = "A1:B5 C1:C2 C5 D1:E5")]
-    [TestCase("B2:C5 B9 C4:D7", "C4:C5", ExpectedResult = "B2:B5 C2:C3 B9 C6:C7 D4:D7")]
+    [TestCase("A1:E5", "C3:C4", ExpectedResult = "A1:E2 A5:E5 A3:B4 D3:E4")]
+    [TestCase("B2:C5 B9 C4:D7", "C4:C5", ExpectedResult = "B2:C3 B4:B5 B9 C6:D7 D4:D5")]
     public string Excluding_returns_area_list_without_excluded(string areaListText, string excludedAreaText)
     {
         var areaList = Parse(areaListText);

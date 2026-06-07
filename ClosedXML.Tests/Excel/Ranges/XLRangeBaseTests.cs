@@ -392,7 +392,7 @@ namespace ClosedXML.Tests
             ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual("E3:G4 C4:D4", ws.ConditionalFormats.Single().Ranges.ToSpaceList());
+            Assert.AreEqual("E3:G3 C4:G4", ws.ConditionalFormats.Single().Ranges.ToSpaceList());
         }
 
         [Test]

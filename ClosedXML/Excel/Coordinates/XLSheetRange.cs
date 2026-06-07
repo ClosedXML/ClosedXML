@@ -789,21 +789,21 @@ namespace ClosedXML.Excel
                 return null;
             }
 
-            // left
-            if (LeftColumn < intersection.LeftColumn)
-                nonExcludedAreas.Add(new XLSheetRange(TopRow, LeftColumn, BottomRow, intersection.LeftColumn - 1));
-
             // top
             if (TopRow < intersection.TopRow)
-                nonExcludedAreas.Add(new XLSheetRange(TopRow, intersection.LeftColumn, intersection.TopRow - 1, intersection.RightColumn));
+                nonExcludedAreas.Add(new XLSheetRange(TopRow, LeftColumn, intersection.TopRow - 1, RightColumn));
 
             // bottom
             if (BottomRow > intersection.BottomRow)
-                nonExcludedAreas.Add(new XLSheetRange(intersection.BottomRow + 1, intersection.LeftColumn, BottomRow, intersection.RightColumn));
+                nonExcludedAreas.Add(new XLSheetRange(intersection.BottomRow + 1, LeftColumn, BottomRow, RightColumn));
+
+            // left
+            if (LeftColumn < intersection.LeftColumn)
+                nonExcludedAreas.Add(new XLSheetRange(intersection.TopRow, LeftColumn, intersection.BottomRow, intersection.LeftColumn - 1));
 
             // right
             if (RightColumn > intersection.RightColumn)
-                nonExcludedAreas.Add(new XLSheetRange(TopRow, intersection.RightColumn + 1, BottomRow, RightColumn));
+                nonExcludedAreas.Add(new XLSheetRange(intersection.TopRow, intersection.RightColumn + 1, intersection.BottomRow, RightColumn));
 
             return intersection;
         }

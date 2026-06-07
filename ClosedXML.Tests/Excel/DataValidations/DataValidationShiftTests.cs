@@ -135,7 +135,7 @@ public class DataValidationShiftTests
 
         ws.Range("B12").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-        Assert.AreEqual("A10:A12 B10:B11 C10:C12", ws.DataValidations.Single().Ranges.ToSpaceList());
+        Assert.AreEqual("A10:C11 A12:A12 C12:C12", ws.DataValidations.Single().Ranges.ToSpaceList());
     }
 
     [Test]

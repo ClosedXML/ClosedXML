@@ -173,8 +173,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 dv2.MinValue = "100";
 
                 Assert.AreEqual(4, dv1.Ranges.Count());
-                Assert.AreEqual("B2:D7,E2:G3,E7:G7,C11:C13",
-                    string.Join(",", dv1.Ranges.Select(r => r.RangeAddress.ToString())));
+                Assert.AreEqual("B2:G3 B4:D6 B7:G7 C11:C13", dv1.Ranges.ToSpaceList());
             }
         }
 

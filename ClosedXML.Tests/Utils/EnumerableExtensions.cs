@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace ClosedXML.Tests;
 
-internal static class RangeExtensions
+internal static class EnumerableExtensions
 {
     public static string ToSpaceList(this IEnumerable<IXLRange> ranges)
     {
         return string.Join(" ", ranges.Select(r => r.RangeAddress.ToString(XLReferenceStyle.A1, false)));
+    }
+
+    public static string ToSpaceList(this IEnumerable<XLSheetRange> areas)
+    {
+        return string.Join(" ", areas);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -246,6 +247,49 @@ namespace ClosedXML.Tests.Excel.Coordinates
 
             Assert.False(success);
             Assert.Null(result);
+        }
+
+        [TestCase("B2:D4", "B2", "B2", ExpectedResult = "B3:D4 C2:D2")]
+        [TestCase("B2:D4", "A1:B2", "B2", ExpectedResult = "B3:D4 C2:D2")]
+        [TestCase("B2:D4", "C2", "C2", ExpectedResult = "B3:D4 B2 D2")]
+        [TestCase("B2:D4", "C1:C2", "C2", ExpectedResult = "B3:D4 B2 D2")]
+        [TestCase("B2:D4", "D2", "D2", ExpectedResult = "B3:D4 B2:C2")]
+        [TestCase("B2:D4", "D1:E2", "D2", ExpectedResult = "B3:D4 B2:C2")]
+        [TestCase("B2:D4", "B3", "B3", ExpectedResult = "B2:D2 B4:D4 C3:D3")]
+        [TestCase("B2:D4", "A3:B3", "B3", ExpectedResult = "B2:D2 B4:D4 C3:D3")]
+        [TestCase("B2:D4", "C3", "C3", ExpectedResult = "B2:D2 B4:D4 B3 D3")]
+        [TestCase("B2:D4", "D3", "D3", ExpectedResult = "B2:D2 B4:D4 B3:C3")]
+        [TestCase("B2:D4", "D3:E3", "D3", ExpectedResult = "B2:D2 B4:D4 B3:C3")]
+        [TestCase("B2:D4", "B4", "B4", ExpectedResult = "B2:D3 C4:D4")]
+        [TestCase("B2:D4", "A4:B5", "B4", ExpectedResult = "B2:D3 C4:D4")]
+        [TestCase("B2:D4", "C4", "C4", ExpectedResult = "B2:D3 B4 D4")]
+        [TestCase("B2:D4", "C4:C5", "C4", ExpectedResult = "B2:D3 B4 D4")]
+        [TestCase("B2:D4", "D4", "D4", ExpectedResult = "B2:D3 B4:C4")]
+        [TestCase("B2:D4", "D4:E5", "D4", ExpectedResult = "B2:D3 B4:C4")]
+        [TestCase("B2:D4", "B3:D3", "B3:D3", ExpectedResult = "B2:D2 B4:D4")]
+        [TestCase("B2:D4", "A3:E3", "B3:D3", ExpectedResult = "B2:D2 B4:D4")]
+        [TestCase("B2:D4", "C2:C4", "C2:C4", ExpectedResult = "B2:B4 D2:D4")]
+        [TestCase("B2:D4", "C1:C5", "C2:C4", ExpectedResult = "B2:B4 D2:D4")]
+        public string Exclude_splits_original_area_when_excluded_area_intersects(string originalAreaText, string excludingAreaText, string excludedAreaText)
+        {
+            var originalArea = XLSheetRange.Parse(originalAreaText);
+            var excludedArea = XLSheetRange.Parse(excludedAreaText);
+            var excludingArea = XLSheetRange.Parse(excludingAreaText);
+            var list = new List<XLSheetRange>();
+            Assert.AreEqual(excludedArea, originalArea.Exclude(excludingArea, list));
+            return list.ToSpaceList();
+        }
+
+        [TestCase("B2:C3", "A1")]
+        [TestCase("B2:C3", "D1:G20")]
+        [TestCase("A1", "A2:C5")]
+        public void Exclude_keeps_original_area_when_excluded_area_doesnt_intersects(string originalAreaText, string excludedAreaText)
+        {
+            var originalArea = XLSheetRange.Parse(originalAreaText);
+            var excludedArea = XLSheetRange.Parse(excludedAreaText);
+            var list = new List<XLSheetRange>();
+            Assert.IsNull(originalArea.Exclude(excludedArea, list));
+            Assert.AreEqual(originalAreaText, list.ToSpaceList());
         }
     }
 }
