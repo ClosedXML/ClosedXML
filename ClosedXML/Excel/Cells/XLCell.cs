@@ -1300,23 +1300,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private bool SetDataTable(object o)
-        {
-            if (o is DataTable dataTable)
-                return InsertData(dataTable) != null;
-            else
-                return false;
-        }
-
-        private bool SetEnumerable(object collectionObject)
-        {
-            // IXLRichText implements IEnumerable, but we don't want to handle this here.
-            if (collectionObject is IXLRichText) return false;
-
-            var asEnumerable = collectionObject as IEnumerable;
-            return InsertData(asEnumerable) != null;
-        }
-
         private void ClearMerged()
         {
             List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
@@ -1981,11 +1964,6 @@ namespace ClosedXML.Excel
         internal bool IsInferiorMergedCell()
         {
             return this.IsMerged() && !this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
-        }
-
-        internal bool IsSuperiorMergedCell()
-        {
-            return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
         }
 
         /// <summary>
