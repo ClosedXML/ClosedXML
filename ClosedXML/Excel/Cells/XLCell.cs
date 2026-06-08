@@ -1267,29 +1267,14 @@ namespace ClosedXML.Excel
         private void CopyConditionalFormatsFrom(XLRangeBase fromRange)
         {
             var srcSheet = fromRange.Worksheet;
-            int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
-            int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
-            if (srcSheet.ConditionalFormats.Any<XLConditionalFormat>(r => r.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any()))
-            {
-                var fs = srcSheet.ConditionalFormats.SelectMany<XLConditionalFormat, IXLRange>(cf => cf.Ranges.GetIntersectedRanges(fromRange.RangeAddress)).ToArray();
-                if (fs.Any())
-                {
-                    minRo = fs.Max(r => r.RangeAddress.LastAddress.RowNumber);
-                    minCo = fs.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
-                }
-            }
-            int rCnt = minRo - fromRange.RangeAddress.FirstAddress.RowNumber + 1;
-            int cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
-            rCnt = Math.Min(rCnt, fromRange.RowCount());
-            cCnt = Math.Min(cCnt, fromRange.ColumnCount());
-            var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
+            var toRangeAddress = new XLRangeAddress(Address, Address);
             var formats = srcSheet.ConditionalFormats.Where<XLConditionalFormat>(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
 
             foreach (var cf in formats.ToList())
             {
                 var fmtRanges = cf.Ranges
                     .GetIntersectedRanges(fromRange.RangeAddress)
-                    .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
+                    .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRangeAddress).AsRange() as XLRange)
                     .ToList();
 
                 var c = new XLConditionalFormat(Worksheet, fmtRanges);
