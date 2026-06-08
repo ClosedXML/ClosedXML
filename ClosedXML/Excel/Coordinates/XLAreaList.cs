@@ -220,6 +220,18 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
         return false;
     }
 
+    /// <summary>
+    /// Return areas in the list (with the original size) intersecting with the <paramref name="otherArea"/>.
+    /// </summary>
+    internal IEnumerable<XLSheetRange> IntersectingWith(XLSheetRange otherArea)
+    {
+        foreach (var area in _areas)
+        {
+            if (area.Intersects(otherArea))
+                yield return area;
+        }
+    }
+
     internal XLAreaList Excluding(XLSheetRange excludedArea)
     {
         if (!IntersectsWith(excludedArea))

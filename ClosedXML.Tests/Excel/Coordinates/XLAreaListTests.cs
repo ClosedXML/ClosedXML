@@ -126,6 +126,19 @@ internal class XLAreaListTests
         return areaList.IntersectsWith(area);
     }
 
+    [TestCase("A1", "A1", ExpectedResult = "A1")]
+    [TestCase("A1:C3", "B2", ExpectedResult = "A1:C3")]
+    [TestCase("A1:C3", "B2:D4", ExpectedResult = "A1:C3")]
+    [TestCase("A1 C1", "A1:C1", ExpectedResult = "A1 C1")]
+    [TestCase("A1 C1", "B1", ExpectedResult = "")]
+    [TestCase("A1 C1", "B1:D2", ExpectedResult = "C1")]
+    public string IntersectingWith_returns_areas_intersecting_with_the_other_area(string areaListText, string areaText)
+    {
+        var areaList = Parse(areaListText);
+        var area = XLSheetRange.Parse(areaText);
+        return areaList.IntersectingWith(area).ToSpaceList();
+    }
+
     [TestCase("A1", "B1", ExpectedResult = "A1")]
     [TestCase("A1:E5", "C3:C4", ExpectedResult = "A1:E2 A5:E5 A3:B4 D3:E4")]
     [TestCase("B2:C5 B9 C4:D7", "C4:C5", ExpectedResult = "B2:C3 B4:B5 B9 C6:D7 D4:D5")]

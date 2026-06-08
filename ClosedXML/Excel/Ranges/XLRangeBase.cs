@@ -229,6 +229,7 @@ namespace ClosedXML.Excel
         {
             return FirstCellUsed(XLCellsUsedOptions.AllContents);
         }
+
         IXLCell IXLRangeBase.FirstCellUsed(XLCellsUsedOptions options)
         {
             return FirstCellUsed(options, null);
@@ -248,6 +249,7 @@ namespace ClosedXML.Excel
         {
             return LastCellUsed(XLCellsUsedOptions.AllContents);
         }
+
         IXLCell IXLRangeBase.LastCellUsed(XLCellsUsedOptions options)
         {
             return LastCellUsed(options, null);
@@ -1861,7 +1863,7 @@ namespace ClosedXML.Excel
         {
             predicate ??= (t => true);
 
-            //To avoid unnecessary initialization of thousands cells
+            // To avoid unnecessary initialization of thousands cells to not hang on very large CFs, DVs or merged ranges.
             var opt = options
                       & ~XLCellsUsedOptions.ConditionalFormats
                       & ~XLCellsUsedOptions.DataValidation
@@ -1875,9 +1877,11 @@ namespace ClosedXML.Excel
 
             if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
             {
+                var area = SheetRange;
                 cellsUsed = cellsUsed.Union(
                     Worksheet.ConditionalFormats
-                        .SelectMany<XLConditionalFormat, IXLRange>(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
+                        .SelectMany<XLConditionalFormat, XLSheetRange>(cf => cf.Areas.IntersectingWith(area))
+                        .Select(cfArea => Worksheet.Range(cfArea))
                         .Select(selector)
                         .Where(predicate)
                 );
