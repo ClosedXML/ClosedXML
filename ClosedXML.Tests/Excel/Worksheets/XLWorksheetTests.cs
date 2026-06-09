@@ -602,7 +602,7 @@ namespace ClosedXML.Tests
                 ws1.Range("A:A").AddConditionalFormat()
                     .WhenContains("0").Fill.SetBackgroundColor(XLColor.Red);
                 var cf = ws1.Range("B1:C2").AddConditionalFormat();
-                cf.Ranges.Add(ws1.Range("D4:D5"));
+                cf.Ranges = ws1.Ranges("B1:C2,D4:D5");
                 cf.WhenEqualOrGreaterThan(100).Font.SetBold();
 
                 var ws2 = ws1.CopyTo(wb2, "Copy");
@@ -612,13 +612,7 @@ namespace ClosedXML.Tests
                 {
                     var original = ws1.ConditionalFormats.ElementAt(i);
                     var copy = ws2.ConditionalFormats.ElementAt(i);
-                    Assert.AreEqual(original.Ranges.Count, copy.Ranges.Count);
-                    for (int j = 0; j < original.Ranges.Count; j++)
-                    {
-                        Assert.AreEqual(original.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false),
-                            copy.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false));
-                    }
-
+                    Assert.AreEqual(original.Ranges.ToSpaceList(), copy.Ranges.ToSpaceList());
                     Assert.AreEqual(((XLConditionalFormat)original).FormatValue, ((XLConditionalFormat)copy).FormatValue);
                     Assert.AreEqual(original.Values.Single().Value.Value, copy.Values.Single().Value.Value);
                 }

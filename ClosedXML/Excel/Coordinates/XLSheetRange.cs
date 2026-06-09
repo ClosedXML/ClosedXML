@@ -942,5 +942,10 @@ namespace ClosedXML.Excel
             var shifted = ShiftColumns(-shift);
             return new XLSheetRange(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow, shifted.RightColumn - shrink);
         }
+
+        internal XLAreaList ToAreaList()
+        {
+            return new XLAreaList(this);
+        }
     }
 }

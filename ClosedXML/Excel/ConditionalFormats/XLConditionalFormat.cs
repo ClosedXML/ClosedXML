@@ -10,11 +10,9 @@ namespace ClosedXML.Excel
     internal class XLConditionalFormat : IXLDxfContainer, IXLConditionalFormat
     {
         private readonly XLWorksheet _worksheet;
-        private readonly XLRanges _ranges;
-
         private sealed class NoRangeCfComparer : IEqualityComparer<XLConditionalFormat>
         {
-            public bool Equals(XLConditionalFormat xx, XLConditionalFormat yy)
+            public bool Equals(XLConditionalFormat? xx, XLConditionalFormat? yy)
             {
                 if (ReferenceEquals(xx, yy)) return true;
                 if (ReferenceEquals(xx, null)) return false;
@@ -23,8 +21,8 @@ namespace ClosedXML.Excel
 
                 var xxValues = xx.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
                 var yyValues = yy.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
-                var xxFormulas = xx.Ranges.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)xx.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
-                var yyFormulas = yy.Ranges.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)yy.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var xxFormulas = xx.Areas.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)xx.Range.FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var yyFormulas = yy.Areas.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)yy.Range.FirstCell()).GetFormulaR1C1(f.Value)) : null;
                 var xStyle = xx.FormatValue;
                 var yStyle = yy.FormatValue;
                 return Equals(xStyle, yStyle)
@@ -50,9 +48,9 @@ namespace ClosedXML.Excel
                 var xx = obj;
                 var xStyle = obj.FormatValue;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
-                if (obj.Ranges.Count > 0)
+                if (obj.Areas.Count > 0)
                     xValues = xValues
-                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)));
+                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
 
                 unchecked
                 {
@@ -115,37 +113,23 @@ namespace ClosedXML.Excel
 
         #region Constructors
 
-        private XLConditionalFormat(XLWorksheet worksheet)
+        internal XLConditionalFormat(XLWorksheet worksheet, XLAreaList areaList)
 #if !STYLES_REWORK
             : base(XLStyle.Default.Value)
 #endif
         {
             _worksheet = worksheet;
             Id = Guid.NewGuid();
-            _ranges = new XLRanges(worksheet);
+            Areas = areaList;
             Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
 
-        public XLConditionalFormat(XLWorksheet worksheet, XLRange range)
-            : this(worksheet)
-        {
-            if (range != null)
-                Ranges.Add(range);
-        }
-
-        public XLConditionalFormat(XLWorksheet worksheet, IEnumerable<XLRange> ranges)
-            : this(worksheet)
-        {
-            ranges?.ForEach(range => Ranges.Add(range));
-        }
-
         internal XLConditionalFormat(XLWorksheet worksheet, XLConditionalFormat conditionalFormat, XLAreaList areaList)
-            : this(worksheet)
+            : this(worksheet, areaList)
         {
-            areaList.ForEach(range => Ranges.Add(_worksheet.Range(range)));
             CopyFrom(conditionalFormat);
 
             var sourceAnchor = _worksheet.Cell(conditionalFormat.Areas[0].FirstPoint);
@@ -183,15 +167,22 @@ namespace ClosedXML.Excel
 
         public IXLRange Range
         {
-            get { return Ranges.FirstOrDefault(); }
-            set
-            {
-                Ranges.RemoveAll();
-                Ranges.Add(value);
-            }
+            get => _worksheet.Range(Areas[0]);
+            set => Areas = XLAreaList.FromRange(_worksheet, value);
         }
 
-        public IXLRanges Ranges => _ranges;
+        public IEnumerable<IXLRange> Ranges
+        {
+            get
+            {
+                var ranges = new XLRanges(_worksheet);
+                foreach (var area in Areas)
+                    ranges.Add(_worksheet.Range(area));
+
+                return ranges;
+            }
+            set => Areas = XLAreaList.FromRanges(_worksheet, value);
+        }
 
         public XLConditionalFormatType ConditionalFormatType { get; set; }
 
@@ -213,19 +204,7 @@ namespace ClosedXML.Excel
 
         public Boolean StopIfTrue { get; set; }
 
-        internal XLAreaList Areas
-        {
-            get
-            {
-                return new XLAreaList(_ranges.Select<XLRange, XLSheetRange>(range => range.SheetRange).ToList());
-            }
-            set
-            {
-                Ranges.RemoveAll();
-                foreach (var area in value)
-                    Ranges.Add(_worksheet.Range(area));
-            }
-        }
+        internal XLAreaList Areas { get; set; }
 
         public IXLConditionalFormat SetStopIfTrue()
         {

@@ -1738,7 +1738,7 @@ namespace ClosedXML.Excel
 
         public IXLConditionalFormat AddConditionalFormat()
         {
-            var cf = new XLConditionalFormat(Worksheet, AsRange());
+            var cf = new XLConditionalFormat(Worksheet, SheetRange.ToAreaList());
             Worksheet.ConditionalFormats.Add(cf);
             return cf;
         }

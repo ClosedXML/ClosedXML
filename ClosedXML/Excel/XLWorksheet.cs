@@ -1234,7 +1234,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-            ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
 
             var sheetListeners = GetSheetListeners();
@@ -1267,53 +1266,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
-        private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
-        {
-            if (!ConditionalFormats.Any<XLConditionalFormat>()) return;
-            Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstCol == 1) return;
-
-            int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
-            var model = Column(colNum).AsRange();
-
-            foreach (var cf in ConditionalFormats.ToList<XLConditionalFormat>())
-            {
-                var cfRanges = cf.Ranges.ToList();
-                cf.Ranges.RemoveAll();
-
-                foreach (var cfRange in cfRanges)
-                {
-                    var cfAddress = cfRange.RangeAddress;
-                    IXLRange newRange;
-                    if (cfRange.Intersects(model))
-                    {
-                        newRange = Range(cfAddress.FirstAddress.RowNumber,
-                                         cfAddress.FirstAddress.ColumnNumber,
-                                         cfAddress.LastAddress.RowNumber,
-                                         Math.Min(XLHelper.MaxColumnNumber, cfAddress.LastAddress.ColumnNumber + columnsShifted));
-                    }
-                    else if (cfAddress.FirstAddress.ColumnNumber >= firstCol)
-                    {
-                        newRange = Range(cfAddress.FirstAddress.RowNumber,
-                                         Math.Max(cfAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
-                                         cfAddress.LastAddress.RowNumber,
-                                         Math.Min(XLHelper.MaxColumnNumber, cfAddress.LastAddress.ColumnNumber + columnsShifted));
-                    }
-                    else
-                        newRange = cfRange;
-
-                    if (newRange.RangeAddress.IsValid &&
-                        newRange.RangeAddress.FirstAddress.ColumnNumber <=
-                        newRange.RangeAddress.LastAddress.ColumnNumber)
-                        cf.Ranges.Add(newRange);
-                }
-
-                if (!cf.Ranges.Any())
-                    ConditionalFormats.Remove(f => f == cf);
-            }
-        }
-
+        
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (!range.IsEntireRow())
@@ -1332,7 +1285,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-            ShiftConditionalFormattingRows(range, rowsShifted);
             ShiftPageBreaksRows(range, rowsShifted);
 
             var sheetListeners = GetSheetListeners();
@@ -1368,6 +1320,10 @@ namespace ClosedXML.Excel
 
             sheetListeners.AddRange(SparklineGroupsInternal);
 
+            // CF can contain formulas for any worksheet, notify about all changes
+            foreach (var worksheet in Workbook.WorksheetsInternal)
+                sheetListeners.Add(worksheet.ConditionalFormats);
+
             return sheetListeners;
         }
 
@@ -1380,51 +1336,6 @@ namespace ClosedXML.Excel
                 {
                     PageSetup.RowBreaks[i] = br + rowsShifted;
                 }
-            }
-        }
-
-        private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
-        {
-            if (!ConditionalFormats.Any<XLConditionalFormat>()) return;
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            if (firstRow == 1) return;
-
-            int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
-            var model = Row(rowNum).AsRange();
-
-            foreach (var cf in ConditionalFormats.ToList<XLConditionalFormat>())
-            {
-                var cfRanges = cf.Ranges.ToList();
-                cf.Ranges.RemoveAll();
-
-                foreach (var cfRange in cfRanges)
-                {
-                    var cfAddress = cfRange.RangeAddress;
-                    IXLRange newRange;
-                    if (cfRange.Intersects(model))
-                    {
-                        newRange = Range(cfAddress.FirstAddress.RowNumber,
-                                         cfAddress.FirstAddress.ColumnNumber,
-                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
-                                         cfAddress.LastAddress.ColumnNumber);
-                    }
-                    else if (cfAddress.FirstAddress.RowNumber >= firstRow)
-                    {
-                        newRange = Range(Math.Max(cfAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
-                                         cfAddress.FirstAddress.ColumnNumber,
-                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
-                                         cfAddress.LastAddress.ColumnNumber);
-                    }
-                    else
-                        newRange = cfRange;
-
-                    if (newRange.RangeAddress.IsValid &&
-                        newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
-                        cf.Ranges.Add(newRange);
-                }
-
-                if (!cf.Ranges.Any())
-                    ConditionalFormats.Remove(f => f == cf);
             }
         }
 

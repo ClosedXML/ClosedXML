@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,11 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
     internal static readonly XLAreaList Empty = new(new List<XLSheetRange>());
     private readonly List<XLSheetRange> _areas;
 
+    internal XLAreaList(XLSheetRange area)
+    {
+        _areas = new List<XLSheetRange>(1) { area };
+    }
+
     internal XLAreaList(List<XLSheetRange> areas)
     {
         _areas = areas;
@@ -21,6 +27,28 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
     internal int Count => _areas.Count;
 
     internal XLSheetRange this[int idx] => _areas[idx];
+
+    internal static XLAreaList FromRange(XLWorksheet worksheet, IXLRange range)
+    {
+        ThrowOnDifferentSheet(worksheet, range);
+        return new XLAreaList(XLSheetRange.FromRangeAddress(range.RangeAddress));
+    }
+
+    /// <exception cref="ArgumentException">Sequence is empty or a range is from a different sheet.</exception>
+    internal static XLAreaList FromRanges(XLWorksheet worksheet, IEnumerable<IXLRange> value)
+    {
+        var areas = new List<XLSheetRange>();
+        foreach (var range in value)
+        {
+            ThrowOnDifferentSheet(worksheet, range);
+            areas.Add(XLSheetRange.FromRangeAddress(range.RangeAddress));
+        }
+
+        if (areas.Count == 0)
+            throw new ArgumentException("Sequence is empty. At least one range is required.");
+
+        return new XLAreaList(areas);
+    }
 
     internal XLAreaList With(XLSheetRange area)
     {
@@ -291,5 +319,11 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
     internal string ToSpaceList()
     {
         return string.Join(" ", _areas);
+    }
+
+    private static void ThrowOnDifferentSheet(XLWorksheet worksheet, IXLRange range)
+    {
+        if (range.Worksheet is not null && range.Worksheet != worksheet)
+            throw new ArgumentException($"Range {range} belongs to worksheet {range.Worksheet.Name}, but must be from worksheet {worksheet.Name}.");
     }
 }

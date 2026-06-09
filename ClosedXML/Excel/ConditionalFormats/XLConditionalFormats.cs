@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine.Visitors;
+using ClosedXML.Parser;
 
 namespace ClosedXML.Excel
 {
@@ -9,7 +11,7 @@ namespace ClosedXML.Excel
     /// a collection of <see cref="XLConditionalFormat"/>. Doesn't contain pivot table formats,
     /// they are in pivot table <see cref="XLPivotTable.ConditionalFormats"/>,
     /// </summary>
-    internal class XLConditionalFormats : IXLConditionalFormats, IEnumerable<XLConditionalFormat>
+    internal class XLConditionalFormats : IXLConditionalFormats, IEnumerable<XLConditionalFormat>, ISheetListener
     {
         private readonly XLWorksheet _worksheet;
         private readonly List<XLConditionalFormat> _conditionalFormats = new();
@@ -143,7 +145,7 @@ namespace ClosedXML.Excel
                 var format = formats[0];
                 if (!CFTypesExcludedFromConsolidation.Contains(format.ConditionalFormatType))
                 {
-                    var (rulesToConsolidate, areasWithSameFormat) = GetConsolidateableRules(formats);
+                    var (rulesToConsolidate, areasWithSameFormat) = GetConsolidatableRules(formats);
                     var consolidatedAreas = areasWithSameFormat.GetConsolidated();
                     var consolidatedCf = new XLConditionalFormat(_worksheet, format, consolidatedAreas);
 
@@ -160,7 +162,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static (List<int> RulesToConsolidate, XLAreaList AreaList) GetConsolidateableRules(List<XLConditionalFormat> conditionalFormats)
+        private static (List<int> RulesToConsolidate, XLAreaList AreaList) GetConsolidatableRules(List<XLConditionalFormat> conditionalFormats)
         {
             var rule = conditionalFormats[0];
             var sameFormatAreas = rule.Areas.ToList();
@@ -206,5 +208,80 @@ namespace ClosedXML.Excel
 
             return (rulesToConsolidate, new XLAreaList(sameFormatAreas));
         }
+
+        #region ISheetListener
+
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var inserted = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, true);
+            AdjustFormulas(refMod);
+
+            AdjustConditionalFormatAreas(sheet, inserted.Area, static (sqref, insertedArea) => sqref.InsertAndShiftDown(insertedArea));
+        }
+
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        {
+            var inserted = new XLBookArea(sheet.Name, insertedArea);
+            var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, false);
+            AdjustFormulas(refMod);
+
+            AdjustConditionalFormatAreas(sheet, inserted.Area, static (sqref, insertedArea) => sqref.InsertAndShiftRight(insertedArea));
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deleted = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsLeft);
+            AdjustFormulas(refMod);
+
+            AdjustConditionalFormatAreas(sheet, deleted.Area, static (sqref, deletedArea) => sqref.DeleteAndShiftLeft(deletedArea));
+        }
+
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        {
+            var deleted = new XLBookArea(sheet.Name, deletedArea);
+            var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsUp);
+            AdjustFormulas(refMod);
+
+            AdjustConditionalFormatAreas(sheet, deleted.Area, static (sqref, deletedArea) => sqref.DeleteAndShiftUp(deletedArea));
+        }
+
+        private void AdjustFormulas(CopyVisitor refMod)
+        {
+            foreach (var conditionalFormat in _conditionalFormats)
+            {
+                var anchor = conditionalFormat.Areas[0].FirstPoint;
+                var formulaIndexes = conditionalFormat.Values.Where(x => x.Value.IsFormula).Select(x => x.Key).ToArray();
+                foreach (var index in formulaIndexes)
+                {
+                    var originalFormula = conditionalFormat.Values[index];
+                    var shiftedFormula = FormulaConverter.ModifyA1(originalFormula.Value, _worksheet.Name, anchor.Row, anchor.Column, refMod);
+                    conditionalFormat.Values[index] = new XLFormula(shiftedFormula) { IsFormula = true };
+                }
+            }
+        }
+
+        private void AdjustConditionalFormatAreas(XLWorksheet sheet, XLSheetRange affectedRange, Func<XLAreaList, XLSheetRange, XLAreaList> adjustAreas)
+        {
+            if (sheet != _worksheet)
+                return;
+
+            for (var i = _conditionalFormats.Count - 1; i >= 0; --i)
+            {
+                var conditionalFormat = _conditionalFormats[i];
+                var modifiedAreaList = adjustAreas(conditionalFormat.Areas, affectedRange);
+                if (modifiedAreaList.Count == 0)
+                {
+                    _conditionalFormats.RemoveAt(i);
+                }
+                else
+                {
+                    conditionalFormat.Areas = modifiedAreaList;
+                }
+            }
+        }
+
+        #endregion
     }
 }

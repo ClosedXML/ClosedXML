@@ -112,3 +112,12 @@ center (``A1:C3`` without ``B2``).
 
 Reminder: the clearing of a conditional format is done through the Clear method with appropritate
 option, e.g. ``ws.Range("A2:C5").Clear(XLClearOptions.ConditionalFormats)``.
+
+***************************
+IXLConditionalFormat.Ranges
+***************************
+
+The ``IXLConditionalFormat.Ranges`` property had its type changed from ``IXLRanges`` to ``IEnumerable<IXLRange>``.
+If you need to set ranges, use a newly added setter, e.g. ``conditionalFormat.Ranges = ws.Ranges("A1:C5,G1:J5")``.
+
+All conditional formats now must apply to some range. They can't be empty (=with no range).

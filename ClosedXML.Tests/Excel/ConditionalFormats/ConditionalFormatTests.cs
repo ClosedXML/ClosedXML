@@ -1,3 +1,4 @@
+using System;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             // The input file contains duplicates of same dxf and thus the output also contains some duplicate dxf.
             TestHelper.LoadSaveAndCompare(
                 @"Other\StyleReferenceFiles\ConditionalFormattingOrder\inputfile.xlsx",
-                @"Other\StyleReferenceFiles\ConditionalFormattingOrder\ConditionalFormattingOrder.xlsx");            
+                @"Other\StyleReferenceFiles\ConditionalFormattingOrder\ConditionalFormattingOrder.xlsx");
         }
 
         [TestCase(true, 7)]
@@ -152,6 +153,44 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 Assert.AreEqual(1, cf.Values.Count);
                 CollectionAssert.AreEqual(expectedFormula, cf.Values[1].Value);
             }
+        }
+
+        [Test]
+        public void Range_setter_throws_on_range_from_different_worksheet()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            var cf = ws1.Range("A1").AddConditionalFormat();
+            var ws2 = wb.AddWorksheet();
+            var differentSheetRange = ws2.Range("B5");
+
+            Assert.Throws<ArgumentException>(() => cf.Range = differentSheetRange);
+        }
+
+        [Test]
+        public void Ranges_setter_throws_on_range_from_different_worksheet()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            var cf = ws1.Range("A1").AddConditionalFormat();
+
+            var ranges = ws1.Ranges("B1");
+            var differentSheetRange = wb.AddWorksheet().Range("C1");
+            ranges.Add(differentSheetRange);
+
+            Assert.That(() => cf.Ranges = ranges, Throws.TypeOf<ArgumentException>().With.Message.Contains("must be from worksheet"));
+        }
+
+        [Test]
+        public void Ranges_setter_throws_on_empty_ranges()
+        {
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            var cf = ws1.Range("A1").AddConditionalFormat();
+
+            var emptyRanges = ws1.Ranges("");
+
+            Assert.That(() => cf.Ranges = emptyRanges, Throws.TypeOf<ArgumentException>().With.Message.Contains("empty"));
         }
     }
 }

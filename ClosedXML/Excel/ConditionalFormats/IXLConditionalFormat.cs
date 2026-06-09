@@ -1,6 +1,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -154,7 +155,11 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRange Range { get; set; }
 
-        IXLRanges Ranges { get; }
+        /// <summary>
+        /// Get or set all ranges the conditional format applies to.
+        /// </summary>
+        /// <exception cref="ArgumentException">If sequence contains no elements or the range is from different worksheet.</exception>
+        IEnumerable<IXLRange> Ranges { get; set; }
 
         XLDictionary<XLFormula> Values { get; }
 

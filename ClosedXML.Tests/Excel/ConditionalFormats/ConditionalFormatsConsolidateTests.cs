@@ -153,7 +153,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             var cf3 = ws.ConditionalFormats.ElementAt(2);
             Assert.That(cf1, Is.EqualTo(cf3).Using(new CfFormatComaparer()));
             Assert.That(cf1, Is.Not.EqualTo(cf2).Using(new CfFormatComaparer()));
-            Assert.IsTrue(ws.ConditionalFormats.All(cf => cf.Ranges.Count == 1), "Number of ranges in consolidated conditional formats is expected to be 1");
+            Assert.IsTrue(ws.ConditionalFormats.All(cf => cf.Ranges.Count() == 1), "Number of ranges in consolidated conditional formats is expected to be 1");
             Assert.AreEqual("A1:A1", cf1.Ranges.Single().RangeAddress.ToString());
             Assert.AreEqual("A2:A3", cf2.Ranges.Single().RangeAddress.ToString());
             Assert.AreEqual("A2:A8", cf3.Ranges.Single().RangeAddress.ToString());
@@ -165,8 +165,9 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add();
 
-            var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
-            var cf = new XLConditionalFormat((XLWorksheet)ws, ranges);
+            var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8");
+            var cf = ranges.First().AddConditionalFormat();
+            cf.Ranges = ranges;
             cf.Values.Add(new XLFormula("=A3=$D3"));
             cf.Style.Fill.SetBackgroundColor(XLColor.Red);
             ws.ConditionalFormats.Add(cf);
@@ -188,17 +189,20 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             {
                 var ws = wb.Worksheets.Add("Sheet");
 
-                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>().ToList();
-                var cf1 = new XLConditionalFormat((XLWorksheet)ws, ranges);
+                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8");
+                var cf1 = ranges.First().AddConditionalFormat();
+                cf1.Ranges = ranges;
                 cf1.ColorScale()
                     .LowestValue(XLColor.Red)
                     .HighestValue(XLColor.Green);
 
-                var cf2 = new XLConditionalFormat((XLWorksheet)ws, ranges);
+                var cf2 = ranges.First().AddConditionalFormat();
+                cf2.Ranges = ranges;
                 cf2.ColorScale()
                     .LowestValue(XLColor.Red)
                     .HighestValue(XLColor.Green);
-                Assert.True(XLConditionalFormat.NoRangeComparer.Equals(cf1, cf2));
+                Assert.AreNotSame(cf1, cf2);
+                Assert.True(XLConditionalFormat.NoRangeComparer.Equals((XLConditionalFormat)cf1, (XLConditionalFormat)cf2));
             }
         }
 
