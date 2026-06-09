@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void AdjustFormulas(XLCell baseCell, XLCell targetCell)
+        private void AdjustFormulas(XLCell baseCell, XLCell targetCell)
         {
             var keys = Values.Keys.ToList();
             foreach (var key in keys)
@@ -147,6 +147,10 @@ namespace ClosedXML.Excel
         {
             areaList.ForEach(range => Ranges.Add(_worksheet.Range(range)));
             CopyFrom(conditionalFormat);
+
+            var sourceAnchor = _worksheet.Cell(conditionalFormat.Areas[0].FirstPoint);
+            var targetAnchor = _worksheet.Cell(areaList[0].FirstPoint);
+            AdjustFormulas(sourceAnchor, targetAnchor);
         }
 
         #endregion Constructors

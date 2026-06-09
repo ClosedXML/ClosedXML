@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -35,9 +35,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Cell("A1").CopyTo("B2");
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual(2, ws.ConditionalFormats.First().Ranges.Count);
-            Assert.AreEqual("A1:A1", ws.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
-            Assert.AreEqual("B2:B2", ws.ConditionalFormats.First().Ranges.Last().RangeAddress.ToString());
+            Assert.AreEqual("A1:A1 B2:B2", ws.ConditionalFormats.First().Ranges.ToSpaceList());
         }
 
         [Test]
@@ -52,8 +50,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Cell("A1").CopyTo("B2");
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual(1, ws.ConditionalFormats.First().Ranges.Count);
-            Assert.AreEqual("A1:C3", ws.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+            Assert.AreEqual("A1:C3", ws.ConditionalFormats.First().Ranges.ToSpaceList());
         }
 
         [Test]
@@ -75,8 +72,8 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             Assert.AreEqual(1, ws2.ConditionalFormats.First().Ranges.Count);
             Assert.AreEqual("Sheet1", ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name);
             Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
-            Assert.AreEqual("A1:A1", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
-            Assert.AreEqual("B2:B2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+            Assert.AreEqual("A1:A1", ws1.ConditionalFormats.First().Ranges.ToSpaceList());
+            Assert.AreEqual("B2:B2", ws2.ConditionalFormats.First().Ranges.ToSpaceList());
         }
 
         [Test]

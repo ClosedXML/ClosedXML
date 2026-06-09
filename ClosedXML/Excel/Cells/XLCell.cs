@@ -1236,53 +1236,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            CopyConditionalFormatsFrom(asRange);
+            Worksheet.ConditionalFormats.CopyFrom(asRange.Worksheet, asRange.SheetRange, SheetPoint);
             return this;
-        }
-
-        private void CopyConditionalFormatsFrom(XLCell otherCell)
-        {
-            var conditionalFormats = otherCell
-                .Worksheet
-                .ConditionalFormats
-                .Where<XLConditionalFormat>(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
-                .ToList();
-
-            foreach (var cf in conditionalFormats)
-            {
-                if (otherCell.Worksheet == Worksheet)
-                {
-                    if (!cf.Ranges.GetIntersectedRanges(this).Any())
-                    {
-                        cf.Ranges.Add(this);
-                    }
-                }
-                else
-                {
-                    CopyConditionalFormatsFrom(otherCell.AsRange());
-                }
-            }
-        }
-
-        private void CopyConditionalFormatsFrom(XLRangeBase fromRange)
-        {
-            var srcSheet = fromRange.Worksheet;
-            var toRangeAddress = new XLRangeAddress(Address, Address);
-            var formats = srcSheet.ConditionalFormats.Where<XLConditionalFormat>(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
-
-            foreach (var cf in formats.ToList())
-            {
-                var fmtRanges = cf.Ranges
-                    .GetIntersectedRanges(fromRange.RangeAddress)
-                    .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRangeAddress).AsRange() as XLRange)
-                    .ToList();
-
-                var c = new XLConditionalFormat(Worksheet, fmtRanges);
-                c.CopyFrom(cf);
-                c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), fmtRanges.First().FirstCell());
-
-                Worksheet.ConditionalFormats.Add(c);
-            }
         }
 
         private void ClearMerged()
@@ -1345,7 +1300,7 @@ namespace ClosedXML.Excel
                 CopySparklineFrom(otherCell);
 
             if (options.HasFlag(XLCellCopyOptions.ConditionalFormats))
-                CopyConditionalFormatsFrom(otherCell);
+                Worksheet.ConditionalFormats.CopyFrom(otherCell.Worksheet, otherCell.SheetPoint, SheetPoint, true);
 
             if (options.HasFlag(XLCellCopyOptions.DataValidations))
                 CopyDataValidationFrom(otherCell);

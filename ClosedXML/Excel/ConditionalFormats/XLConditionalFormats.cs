@@ -97,6 +97,37 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void CopyFrom(XLWorksheet sourceSheet, XLSheetRange sourceArea, XLSheetPoint targetPoint, bool mergeUncoveredInSameSheet = false)
+        {
+            // If source and target sheets are same, do not go over the end
+            var sourceCfCount = sourceSheet.ConditionalFormats._conditionalFormats.Count;
+            for (var i = 0; i < sourceCfCount; ++i)
+            {
+                var sourceCf = sourceSheet.ConditionalFormats._conditionalFormats[i];
+                if (!sourceCf.Areas.TryCopyAreaTo(targetPoint, sourceArea, out var targetAreas))
+                    continue;
+
+                // Legacy behavior where a copied single point was merged into CF when not covered.
+                // But only for cell copy API, nor range copy API (even if range is only 1x1).
+                if (mergeUncoveredInSameSheet && _worksheet == sourceSheet)
+                {
+                    foreach (var targetArea in targetAreas)
+                    {
+                        var isCovered = sourceCf.Areas.Any(sourceCfArea => sourceCfArea.Covers(targetArea));
+                        if (!isCovered)
+                        {
+                            sourceCf.Areas = sourceCf.Areas.With(targetArea);
+                        }
+                    }
+                }
+                else
+                {
+                    var targetCfCopy = new XLConditionalFormat(_worksheet, sourceCf, targetAreas);
+                    Add(targetCfCopy);
+                }
+            }
+        }
+
         /// <summary>
         /// The method consolidate the same conditional formats, which are located in adjacent ranges.
         /// </summary>
@@ -112,8 +143,6 @@ namespace ClosedXML.Excel
                 var format = formats[0];
                 if (!CFTypesExcludedFromConsolidation.Contains(format.ConditionalFormatType))
                 {
-                    var originalAnchor = format.Areas[0].FirstPoint;
-
                     var (rulesToConsolidate, areasWithSameFormat) = GetConsolidateableRules(formats);
                     var consolidatedAreas = areasWithSameFormat.GetConsolidated();
                     var consolidatedCf = new XLConditionalFormat(_worksheet, format, consolidatedAreas);
@@ -123,8 +152,6 @@ namespace ClosedXML.Excel
                     foreach (var consolidatedRuleIndex in rulesToConsolidate)
                         formats.RemoveAt(consolidatedRuleIndex);
 
-                    var consolidatedAnchor = consolidatedAreas[0].FirstPoint;
-                    consolidatedCf.AdjustFormulas(_worksheet.Cell(originalAnchor), _worksheet.Cell(consolidatedAnchor));
                     format = consolidatedCf;
                 }
 
@@ -155,7 +182,7 @@ namespace ClosedXML.Excel
                 var isSameFormat = XLConditionalFormat.NoRangeComparer.Equals(candidateRule, rule);
                 if (isSameFormat)
                 {
-                    // We reached a rule that has same format as the condolidated rule and doesn't interect different
+                    // We reached a rule that has same format as the consolidated rule and doesn't intersect different
                     // format areas. We can consolidate the candidate rule with the rule without potentially breaking
                     // any rule with a priority between rule and candidate rule.
                     sameFormatAreas.AddRange(candidateRule.Areas);
@@ -166,7 +193,7 @@ namespace ClosedXML.Excel
                 var intersectsSameFormatAreas = sameFormatAreas.Any(sameFormatArea => candidateRule.Areas.Any(v => v.Intersects(sameFormatArea)));
                 if (intersectsSameFormatAreas)
                 {
-                    // We reached a rule that has differnet format and intersects area to be consolidated. That means
+                    // We reached a rule that has different format and intersects area to be consolidated. That means
                     // it's not possible to consolidate any subsequent rule, because it could break this one, and
                     // consolidation must stop here.
                     break;

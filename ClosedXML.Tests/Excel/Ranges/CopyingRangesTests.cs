@@ -132,8 +132,8 @@ namespace ClosedXML.Tests
 
             Assert.AreEqual("Sheet1", ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name);
             Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
-            Assert.AreEqual("A1:J2", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
-            Assert.AreEqual("A1:A2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+            Assert.AreEqual("A1:J2", ws1.ConditionalFormats.First().Ranges.ToSpaceList());
+            Assert.AreEqual("A1:A2", ws2.ConditionalFormats.First().Ranges.ToSpaceList());
         }
 
         private static void FillRow(IXLRow row1)
