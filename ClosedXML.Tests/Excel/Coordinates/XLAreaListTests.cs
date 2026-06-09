@@ -149,6 +149,19 @@ internal class XLAreaListTests
         return areaList.Excluding(excludedArea).ToSpaceList();
     }
 
+    [TestCase("A1", "A1", "A1", ExpectedResult = "A1")] // Copy from same point to the same point
+    [TestCase("A1", "B5", "A1", ExpectedResult = "B5")] // Copy to different point
+    [TestCase("B2", "D2", "A1:C3", ExpectedResult = "E3")] // The intersected area is not in corner and shifted doesn't start at the target point
+    [TestCase("D3:G6", "A1", "E4:F5", ExpectedResult = "A1:B2")]
+    [TestCase("B2", XLHelper.LastSheetAddress, "A1:C3", ExpectedResult = null)] // Copied area is out of sheet. Rare, but can happen.
+    public string TryCopyAreaTo_return_list_of_intersecting_areas_shifted_to_target(string areaListText, string targetPointText, string areaToCopyText)
+    {
+        var areaList = Parse(areaListText);
+        var targetPoint = XLSheetPoint.Parse(targetPointText);
+        var areaToCopy = XLSheetRange.Parse(areaToCopyText);
+        return areaList.TryCopyAreaTo(targetPoint, areaToCopy, out var result) ? result.ToSpaceList() : null;
+    }
+
     private static XLAreaList Parse(string spaceList)
     {
         var list = new List<XLSheetRange>();

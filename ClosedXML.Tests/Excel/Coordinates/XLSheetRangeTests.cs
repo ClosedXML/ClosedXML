@@ -291,5 +291,21 @@ namespace ClosedXML.Tests.Excel.Coordinates
             Assert.IsNull(originalArea.Exclude(excludedArea, list));
             Assert.AreEqual(originalAreaText, list.ToSpaceList());
         }
+
+        [TestCase("A1", 0, 2, ExpectedResult = "C1")]
+        [TestCase("A1", 1, 0, ExpectedResult = "A2")]
+        [TestCase("A1", 0, -1, ExpectedResult = null)]
+        [TestCase("A1", -1, 0, ExpectedResult = null)]
+        [TestCase(XLHelper.LastSheetAddress, 0, 1, ExpectedResult = null)]
+        [TestCase(XLHelper.LastSheetAddress, 1, 0, ExpectedResult = null)]
+        [TestCase("B2:D3", 2, 3, ExpectedResult = "E4:G5")]
+        [TestCase("B2:D3", -2, -3, ExpectedResult = "A1")]
+        [TestCase("XFA1048574:XFC1048575", 2, 3, ExpectedResult = "XFD1048576")]
+        public string ShiftAndClip_shifts_and_clips_area(string areaText, int rowShift, int columnShift)
+        {
+            var area = XLSheetRange.Parse(areaText);
+            var shifted = area.ShiftAndClip(rowShift, columnShift);
+            return shifted is not null ? shifted.ToString() : null;
+        }
     }
 }

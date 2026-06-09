@@ -385,6 +385,23 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
+        /// Return a new range that has been shifted in vertical direction by <paramref name="rowShift"/> and in horizontal direction by <paramref name="columnShift"/>.
+        /// </summary>
+        /// <param name="rowShift">By how much to shift the range.</param>
+        /// <param name="columnShift">By how many columns to shift the range.</param>
+        /// <returns>Newly created area.</returns>
+        internal XLSheetRange? ShiftAndClip(int rowShift, int columnShift)
+        {
+            if (ShiftRowsAndClip(rowShift) is not { } rowShifted)
+                return null;
+
+            if (rowShifted.ShiftColumnsAndClip(columnShift) is not { } rowAndColumnShifted)
+                return null;
+
+            return rowAndColumnShifted;
+        }
+
+        /// <summary>
         /// Return a new range that has been shifted in vertical direction by <paramref name="rowShift"/>.
         /// </summary>
         /// <param name="rowShift">By how much to shift the range, positive - downwards, negative - upwards.</param>

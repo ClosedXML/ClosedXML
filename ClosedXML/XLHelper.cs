@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
         public const String MaxColumnLetter = "XFD";
+        public const string LastSheetAddress = "XFD1048576";
         public const Double Epsilon = 1e-10;
 
         internal const string RefError = "#REF!";

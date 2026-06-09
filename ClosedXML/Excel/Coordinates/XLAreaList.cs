@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel;
 
@@ -230,6 +231,39 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
             if (area.Intersects(otherArea))
                 yield return area;
         }
+    }
+
+    /// <summary>
+    /// A helper function used mostly in copy&amp;paste functionality. It takes the areas,
+    /// intersects them with the <paramref name="areaToCopy"/> and shifts it to the <paramref name="target"/>.
+    /// If there are areas, return it in the <paramref name="result"/>.
+    /// </summary>
+    internal bool TryCopyAreaTo(XLSheetPoint target, XLSheetRange areaToCopy, [NotNullWhen(true)] out XLAreaList? result)
+    {
+        var rowShift = target.Row - areaToCopy.FirstPoint.Row;
+        var columnShift = target.Column - areaToCopy.FirstPoint.Column;
+        List<XLSheetRange>? copyList = null;
+        foreach (var area in _areas)
+        {
+            if (area.Intersect(areaToCopy) is not { } intersection)
+                continue;
+
+            // End can but cut off, but the area will always have at least 1x1 so it is valid
+            if (intersection.ShiftAndClip(rowShift, columnShift) is not { } shiftedArea)
+                continue;
+
+            copyList ??= new List<XLSheetRange>();
+            copyList.Add(shiftedArea);
+        }
+
+        if (copyList is not null)
+        {
+            result = new XLAreaList(copyList);
+            return true;
+        }
+
+        result = null;
+        return false;
     }
 
     internal XLAreaList Excluding(XLSheetRange excludedArea)
