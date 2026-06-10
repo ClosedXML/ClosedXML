@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.Cells
@@ -231,6 +231,48 @@ namespace ClosedXML.Tests.Excel.Cells
             Assert.AreEqual(1, slice[leftAddress]);
             Assert.AreEqual(4, slice[belowAddress]);
             Assert.AreEqual(6, slice[aboveAddress]);
+        }
+
+        [Test]
+        public void DeleteAreaAndShiftUp_for_full_row_deletion_deletes_the_row_and_updates_column_usage()
+        {
+            // Test that a fast path for deletion of a area with full sheet width works the same
+            // way as deletion of any area.
+            var slice = new Slice<int>();
+
+            slice.Set(new XLSheetPoint(1, 3), 1);
+            slice.Set(new XLSheetPoint(1, 7), 1);
+            slice.Set(new XLSheetPoint(2, 4), 1);
+            slice.Set(new XLSheetPoint(3, 6), 1);
+            slice.Set(new XLSheetPoint(5, 4), 1);
+
+            Assert.That(slice.MaxColumn, Is.EqualTo(7));
+            Assert.That(slice.UsedColumns, Is.EquivalentTo([3, 4, 6, 7]));
+
+            // Delete row with values at [3, 7]
+            DeleteTopRow(6, [4, 6]);
+
+            // Delete row with values at [4], but that is also used in the last row, so no change
+            DeleteTopRow(6, [4, 6]);
+
+            // Delete row with values at [6]
+            DeleteTopRow(4, [4]);
+
+            // Delete blank row, no change
+            DeleteTopRow(4, [4]);
+
+            // Delete last row [4], leaving the slice empty
+            DeleteTopRow(0, []);
+            return;
+
+            void DeleteTopRow(int maxColumn, int[] columnUsage)
+            {
+                var fullFirstRow = XLSheetRange.Full.SliceFromTop(1);
+                slice.DeleteAreaAndShiftUp(fullFirstRow);
+
+                Assert.That(slice.MaxColumn, Is.EqualTo(maxColumn));
+                Assert.That(slice.UsedColumns, Is.EquivalentTo(columnUsage));
+            }
         }
     }
 }

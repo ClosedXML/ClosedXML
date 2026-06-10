@@ -127,6 +127,25 @@ namespace ClosedXML.Excel
 
             var shiftDistance = rangeToDelete.Height;
             var shiftRange = rangeToDelete.BelowRange();
+
+            // Fast path for deleting full rows
+            if (rangeToDelete.HasFullRowWidth)
+            {
+                // Shifting full rows up to an empty space doesn't change column usage or max column and
+                // is thus safe to only move row lookup tables to the new position. Start from top to not
+                // overwrite not-yet moved rows.
+                var rowEnumerator = new Lut<Lut<TElement>>.LutEnumerator(_data, shiftRange.TopRow - 1, shiftRange.BottomRow - 1);
+                while (rowEnumerator.MoveNext())
+                {
+                    // Enumerator is essentially a wrapped index and MoveNext() looks for the next
+                    // used index from current state of LUT, so it's fine to set the values like this.
+                    _data.Set(rowEnumerator.Index - shiftDistance, rowEnumerator.Current);
+                    _data.Set(rowEnumerator.Index, null);
+                }
+
+                return;
+            }
+
             var cellEnumerator = new Enumerator(this, shiftRange);
             while (cellEnumerator.MoveNext())
             {

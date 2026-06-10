@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -228,13 +228,14 @@ namespace ClosedXML.Excel
                 /// <param name="endIdx">Last desired index, included.</param>
                 internal LutEnumerator(Lut<T> lut, int startIdx, int endIdx)
                 {
+                    Debug.Assert(lut is not null);
                     Debug.Assert(startIdx <= endIdx);
                     _lut = lut;
                     _idx = startIdx - 1;
                     _endIdx = endIdx;
                 }
 
-                public ref T Current => ref _lut._buckets[_idx >> BottomLutBits].Nodes[_idx & BottomLutMask];
+                public readonly ref T Current => ref _lut._buckets[_idx >> BottomLutBits].Nodes[_idx & BottomLutMask];
 
                 /// <summary>
                 /// Index of current element in the LUT. Only valid, if enumerator is valid.
