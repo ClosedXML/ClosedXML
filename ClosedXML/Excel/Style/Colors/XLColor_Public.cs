@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -53,12 +54,9 @@ namespace ClosedXML.Excel
     {
         internal Boolean IsAuto => !HasValue;
 
-        public Boolean HasValue { get; private set; }
+        public Boolean HasValue { get; }
 
-        public XLColorType ColorType
-        {
-            get { return Key.ColorType; }
-        }
+        public XLColorType ColorType => Key.ColorType;
 
         public Color Color
         {
@@ -139,7 +137,10 @@ namespace ClosedXML.Excel
                 return Color.ToHex();
 
             if (ColorType == XLColorType.Theme)
-                return String.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
+                return $"Color Theme: {ThemeColor}, Tint: {ThemeTint.ToString(CultureInfo.InvariantCulture)}";
+
+            if (ColorType == XLColorType.Automatic)
+                return "Automatic";
 
             return "Color Index: " + Indexed;
         }

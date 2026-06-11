@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using ClosedXML.Excel;
@@ -185,6 +186,20 @@ namespace ClosedXML.Tests.Excel
             Thread.CurrentThread.CurrentCulture = culture;
             var color = XLColor.FromHtml("#FF008000");
             Assert.AreEqual(XLColor.Green, color);
+        }
+
+        [TestCaseSource(nameof(ToStringTestCases))]
+        public void ToString_works_for_all_color_types(XLColor colorType, string expectedString)
+        {
+            Assert.AreEqual(expectedString, colorType.ToString());
+        }
+
+        private static IEnumerable<TestCaseData<XLColor, string>> ToStringTestCases()
+        {
+            yield return new TestCaseData<XLColor, string>(XLColor.FromArgb(0xFF804010), "FF804010");
+            yield return new TestCaseData<XLColor, string>(XLColor.FromTheme(XLThemeColor.Text1, 0.25), "Color Theme: Text1, Tint: 0.25");
+            yield return new TestCaseData<XLColor, string>(XLColor.FromIndex(14), "Color Index: 14");
+            yield return new TestCaseData<XLColor, string>(XLColor.Automatic, "Automatic");
         }
     }
 }
