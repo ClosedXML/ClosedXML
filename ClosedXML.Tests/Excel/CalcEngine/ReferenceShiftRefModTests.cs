@@ -30,7 +30,7 @@ public class ReferenceShiftRefModTests
     {
         // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.
         Assert.True(ReferenceParser.TryParseSheetA1(insertedArea, out var insertedSheet, out var insertedReference));
-        var inserted = new XLBookArea(insertedSheet, insertedReference.ToSheetRangeA1());
+        var inserted = new SheetArea(insertedSheet, insertedReference.ToSheetRangeA1());
 
         var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnInsertRefModVisitor(inserted, true));
 
@@ -64,7 +64,7 @@ public class ReferenceShiftRefModTests
     {
         // TODO: Once incorporated into area insertion, replace with a public API test case through SUM(reference) in a cell.
         Assert.True(ReferenceParser.TryParseSheetA1(insertedArea, out var insertedSheet, out var insertedReference));
-        var inserted = new XLBookArea(insertedSheet, insertedReference.ToSheetRangeA1());
+        var inserted = new SheetArea(insertedSheet, insertedReference.ToSheetRangeA1());
 
         var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnInsertRefModVisitor(inserted, false));
 
@@ -123,7 +123,7 @@ public class ReferenceShiftRefModTests
     {
         // TODO: Once incorporated into cell deletion, replace with a public API test case through SUM(reference) in a cell.
         Assert.True(ReferenceParser.TryParseSheetA1(deletedArea, out var deletedSheet, out var deletedReference));
-        var deleted = new XLBookArea(deletedSheet, deletedReference.ToSheetRangeA1());
+        var deleted = new SheetArea(deletedSheet, deletedReference.ToSheetRangeA1());
 
         var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsUp));
 
@@ -182,7 +182,7 @@ public class ReferenceShiftRefModTests
     {
         // TODO: Once incorporated into cell deletion, replace with a public API test case through SUM(reference) in a cell.
         Assert.True(ReferenceParser.TryParseSheetA1(deletedArea, out var deletedSheet, out var deletedReference));
-        var deleted = new XLBookArea(deletedSheet, deletedReference.ToSheetRangeA1());
+        var deleted = new SheetArea(deletedSheet, deletedReference.ToSheetRangeA1());
 
         var result = FormulaConverter.ModifyA1(formula, "Sheet", 1, 1, new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsLeft));
 

@@ -8,10 +8,10 @@ namespace ClosedXML.Excel.CalcEngine.Visitors;
 /// </summary>
 internal class ReferenceShiftOnInsertRefModVisitor : CopyVisitor
 {
-    private readonly XLBookArea _insertedBookArea;
+    private readonly SheetArea _insertedBookArea;
     private readonly bool _shiftDown;
 
-    internal ReferenceShiftOnInsertRefModVisitor(XLBookArea insertedBookArea, bool shiftDown)
+    internal ReferenceShiftOnInsertRefModVisitor(SheetArea insertedBookArea, bool shiftDown)
     {
         _insertedBookArea = insertedBookArea;
         _shiftDown = shiftDown;

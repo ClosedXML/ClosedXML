@@ -31,7 +31,7 @@ internal readonly record struct XLColumnArea
     /// </summary>
     public int ColumNumber { get; }
 
-    public XLBookArea Area => new(Name, new Area(XLHelper.MinRowNumber, ColumNumber, XLHelper.MaxRowNumber, ColumNumber));
+    public SheetArea Area => new(Name, new Area(XLHelper.MinRowNumber, ColumNumber, XLHelper.MaxRowNumber, ColumNumber));
 
     public bool Equals(XLColumnArea other)
     {

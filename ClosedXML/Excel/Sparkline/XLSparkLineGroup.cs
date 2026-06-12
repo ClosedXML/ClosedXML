@@ -430,7 +430,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
-            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var insertedBookArea = new SheetArea(sheet.Name, insertedArea);
             ShiftLocation(insertedBookArea, static (location, insertedArea) =>
             {
                 if (!location.InRangeOrBelow(insertedArea))
@@ -449,7 +449,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
-            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var insertedBookArea = new SheetArea(sheet.Name, insertedArea);
             ShiftLocation(insertedBookArea, static (location, insertedArea) =>
             {
                 if (!location.InRangeOrToRight(insertedArea))
@@ -468,7 +468,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
-            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var deletedBookArea = new SheetArea(sheet.Name, deletedArea);
             ShiftLocation(deletedBookArea, static (location, deletedArea) =>
             {
                 if (!location.InRangeOrToRight(deletedArea))
@@ -487,7 +487,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
-            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var deletedBookArea = new SheetArea(sheet.Name, deletedArea);
             ShiftLocation(deletedBookArea, static (location, deletedArea) =>
             {
                 if (!location.InRangeOrBelow(deletedArea))
@@ -504,7 +504,7 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        private void ShiftLocation(XLBookArea shiftedRange, Func<Point, Area, Point?> shiftLocation)
+        private void ShiftLocation(SheetArea shiftedRange, Func<Point, Area, Point?> shiftLocation)
         {
             // If shift was on another worksheet, there is no way to affect sparklines for this worksheet of this group
             if (!XLHelper.SheetComparer.Equals(shiftedRange.Name, _worksheet.Name))

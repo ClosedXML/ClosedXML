@@ -230,7 +230,7 @@ internal class XLCells :
             // For backwards compatibility, the sheet is considered the inner style. A terrible
             // choice, but it is what it is.
             var sheet = _rangeAddresses.Select(x => x.Worksheet).FirstOrDefault(x => x is not null);
-            var areas = _rangeAddresses.Select(XLBookArea.From).ToArray();
+            var areas = _rangeAddresses.Select(SheetArea.From).ToArray();
             return XLCellFormat.ForCells(_workbook, areas, sheet);
         }
     }

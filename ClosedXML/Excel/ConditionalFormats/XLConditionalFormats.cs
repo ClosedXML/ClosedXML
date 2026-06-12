@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
-            var inserted = new XLBookArea(sheet.Name, insertedArea);
+            var inserted = new SheetArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, true);
             AdjustFormulas(refMod);
 
@@ -222,7 +222,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
-            var inserted = new XLBookArea(sheet.Name, insertedArea);
+            var inserted = new SheetArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, false);
             AdjustFormulas(refMod);
 
@@ -231,7 +231,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
-            var deleted = new XLBookArea(sheet.Name, deletedArea);
+            var deleted = new SheetArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsLeft);
             AdjustFormulas(refMod);
 
@@ -240,7 +240,7 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
-            var deleted = new XLBookArea(sheet.Name, deletedArea);
+            var deleted = new SheetArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsUp);
             AdjustFormulas(refMod);
 

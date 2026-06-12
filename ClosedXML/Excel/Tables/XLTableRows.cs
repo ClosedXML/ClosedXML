@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var rowAreas = _ranges.Select(x => XLBookArea.From(x.RangeAddress)).ToArray();
+                var rowAreas = _ranges.Select(x => SheetArea.From(x.RangeAddress)).ToArray();
                 return XLCellFormat.ForTableRows(_worksheet, rowAreas);
             }
         }

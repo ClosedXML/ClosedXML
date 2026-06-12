@@ -234,28 +234,28 @@ namespace ClosedXML.Excel
 
         void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
-            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var insertedBookArea = new SheetArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, true);
             ShiftReferences(refMod);
         }
 
         void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
-            var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
+            var insertedBookArea = new SheetArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, false);
             ShiftReferences(refMod);
         }
 
         void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
-            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var deletedBookArea = new SheetArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsLeft);
             ShiftReferences(refMod);
         }
 
         void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
-            var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
+            var deletedBookArea = new SheetArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsUp);
             ShiftReferences(refMod);
         }

@@ -44,7 +44,7 @@ internal class XLColumnAreaTests
     {
         var column = new XLColumnArea("name", 4);
         var columnArea = column.Area;
-        Assert.AreEqual(columnArea, new XLBookArea("name", new Area(1, 4, XLHelper.MaxRowNumber, 4)));
+        Assert.AreEqual(columnArea, new SheetArea("name", new Area(1, 4, XLHelper.MaxRowNumber, 4)));
     }
 
     [TestCase("name", 4, "name!D:D")]

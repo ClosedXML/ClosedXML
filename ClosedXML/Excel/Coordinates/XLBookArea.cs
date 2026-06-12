@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A specification of an area (rectangular range) of a sheet.
     /// </summary>
-    internal readonly struct XLBookArea : IEquatable<XLBookArea>, IEnumerable<SheetPoint>
+    internal readonly struct SheetArea : IEquatable<SheetArea>, IEnumerable<SheetPoint>
     {
         /// <summary>
         /// Name of the sheet. Sheet may exist or not (e.g. deleted). Never null.
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public readonly Area Area;
 
-        public XLBookArea(String name, Area area)
+        public SheetArea(String name, Area area)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException(nameof(name));
@@ -28,9 +28,9 @@ namespace ClosedXML.Excel
             Area = area;
         }
 
-        public static bool operator ==(XLBookArea lhs, XLBookArea rhs) => lhs.Equals(rhs);
+        public static bool operator ==(SheetArea lhs, SheetArea rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XLBookArea lhs, XLBookArea rhs) => !(lhs == rhs);
+        public static bool operator !=(SheetArea lhs, SheetArea rhs) => !(lhs == rhs);
 
         public IEnumerator<SheetPoint> GetEnumerator()
         {
@@ -48,30 +48,30 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        internal static XLBookArea From(IXLRange range)
+        internal static SheetArea From(IXLRange range)
         {
             if (range.Worksheet is null)
                 throw new ArgumentException("Range doesn't contain sheet.", nameof(range));
 
-            return new XLBookArea(range.Worksheet.Name, Area.FromRangeAddress(range.RangeAddress));
+            return new SheetArea(range.Worksheet.Name, Area.FromRangeAddress(range.RangeAddress));
         }
 
-        internal static XLBookArea From(XLRangeAddress address)
+        internal static SheetArea From(XLRangeAddress address)
         {
             if (address.Worksheet is null)
                 throw new ArgumentException("Range doesn't contain sheet.", nameof(address));
 
-            return new XLBookArea(address.Worksheet.Name, Area.FromRangeAddress(address));
+            return new SheetArea(address.Worksheet.Name, Area.FromRangeAddress(address));
         }
 
-        public bool Equals(XLBookArea other)
+        public bool Equals(SheetArea other)
         {
             return Area == other.Area && XLHelper.SheetComparer.Equals(Name, other.Name);
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is XLBookArea other && Equals(other);
+            return obj is SheetArea other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="other">The area that is being intersected with this one.</param>
         /// <returns>The intersection (=same sheet and has non-empty intersection) or null if intersection isn't possible.</returns>
-        public XLBookArea? Intersect(XLBookArea other)
+        public SheetArea? Intersect(SheetArea other)
         {
             if (!XLHelper.SheetComparer.Equals(Name, other.Name))
                 return null;
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
             if (intersectionRange is null)
                 return null;
 
-            return new XLBookArea(Name, intersectionRange.Value);
+            return new SheetArea(Name, intersectionRange.Value);
         }
 
         public void Deconstruct(out string sheetName, out Area area)

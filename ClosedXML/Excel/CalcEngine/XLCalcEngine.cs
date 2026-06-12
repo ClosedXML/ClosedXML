@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_chain is not null && _dependencyTree is not null)
             {
-                var area = new XLBookArea(sheet.Name, range);
+                var area = new SheetArea(sheet.Name, range);
                 _dependencyTree.AddFormula(area, arrayFormula, sheet.Workbook);
                 _chain.AppendArea(area);
             }
@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_chain is not null && _dependencyTree is not null)
             {
-                var pointArea = new XLBookArea(sheetName, new Area(point.Point, point.Point));
+                var pointArea = new SheetArea(sheetName, new Area(point.Point, point.Point));
                 _dependencyTree.AddFormula(pointArea, formula, workbook);
                 _chain.AddLast(point);
             }
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_dependencyTree is not null)
             {
-                var bookArea = new XLBookArea(sheet.Name, area);
+                var bookArea = new SheetArea(sheet.Name, area);
                 _dependencyTree.MarkDirty(bookArea);
             }
         }

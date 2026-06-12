@@ -616,7 +616,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Try to find a table that covers same area as the <paramref name="area"/> in a workbook.
         /// </summary>
-        internal bool TryGetTable(XLBookArea area, out XLTable foundTable)
+        internal bool TryGetTable(SheetArea area, out XLTable foundTable)
         {
             foreach (var sheet in WorksheetsInternal)
             {

@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
-            var area = XLBookArea.From(range);
+            var area = SheetArea.From(range);
             var pivotCaches = Worksheet.Workbook.PivotCachesInternal;
             var existingPivotCache = pivotCaches.Find(area);
             var pivotCache = existingPivotCache ?? pivotCaches.Add(area);

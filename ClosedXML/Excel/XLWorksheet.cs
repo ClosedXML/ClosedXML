@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        internal XLBookArea Area => new(Name, Excel.Area.Full);
+        internal SheetArea Area => new(Name, Excel.Area.Full);
 
         [Obsolete($"Use {nameof(DefinedNames)} instead.")]
         IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;

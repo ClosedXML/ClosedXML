@@ -45,12 +45,12 @@ internal partial class XLCellFormat
     /// an area, so we can satisfy the <see cref="IXLBorder.OutsideBorder"/> and
     /// <see cref="IXLBorder.InsideBorder"/> property setters.
     /// </summary>
-    private IReadOnlyList<XLBookArea> Areas { get; init; } = Array.Empty<XLBookArea>();
+    private IReadOnlyList<SheetArea> Areas { get; init; } = Array.Empty<SheetArea>();
 
     /// <summary>
     /// Formatting is updated for used cells within these areas. Unused cells are ignored.
     /// </summary>
-    private IReadOnlyList<XLBookArea> UsedAreas { get; init; } = Array.Empty<XLBookArea>();
+    private IReadOnlyList<SheetArea> UsedAreas { get; init; } = Array.Empty<SheetArea>();
 
     /// <summary>
     /// Formatting is updated for these columns. This doesn't update cells within the columns, only
@@ -101,7 +101,7 @@ internal partial class XLCellFormat
         var formatValue = new Hierarchy(workbook, sheetName, cellPoint.Column, cellPoint.Row, cellPoint);
         return new XLCellFormat(workbook, formatValue)
         {
-            Areas = new[] { new XLBookArea(sheetName, new Area(cellPoint)) }
+            Areas = new[] { new SheetArea(sheetName, new Area(cellPoint)) }
         };
     }
 
@@ -171,7 +171,7 @@ internal partial class XLCellFormat
         };
     }
 
-    internal static XLCellFormat ForAreas(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
+    internal static XLCellFormat ForAreas(XLWorkbook workbook, IReadOnlyList<SheetArea> areas, XLWorksheet? sheet)
     {
         var formatValue = new Hierarchy(workbook, sheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
@@ -180,7 +180,7 @@ internal partial class XLCellFormat
         };
     }
 
-    internal static XLCellFormat ForCells(XLWorkbook workbook, IReadOnlyList<XLBookArea> areas, XLWorksheet? sheet)
+    internal static XLCellFormat ForCells(XLWorkbook workbook, IReadOnlyList<SheetArea> areas, XLWorksheet? sheet)
     {
         var formatValue = new Hierarchy(workbook, sheet?.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
@@ -196,11 +196,11 @@ internal partial class XLCellFormat
         var formatValue = new Hierarchy(workbook, sheet.Name, null, null, null);
         return new XLCellFormat(workbook, formatValue)
         {
-            Areas = new[] { XLBookArea.From(rangeAddress) }
+            Areas = new[] { SheetArea.From(rangeAddress) }
         };
     }
 
-    internal static XLCellFormat ForTableRows(XLWorksheet sheet, XLBookArea[] rowAreas)
+    internal static XLCellFormat ForTableRows(XLWorksheet sheet, SheetArea[] rowAreas)
     {
         var workbook = sheet.Workbook;
         var formatValue = new Hierarchy(workbook, sheet.Name, null, null, null);

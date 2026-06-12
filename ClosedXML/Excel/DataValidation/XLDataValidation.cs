@@ -244,7 +244,7 @@ namespace ClosedXML.Excel
             if (range == null)
                 return false;
 
-            var areaToDelete = XLBookArea.From(range).Area;
+            var areaToDelete = SheetArea.From(range).Area;
             var originalAreas = Areas;
             Areas = Areas.Without(areaToDelete);
             var deleted = originalAreas.Count > Areas.Count;

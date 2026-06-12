@@ -28,9 +28,9 @@ internal sealed class XLPivotSourceExternalWorkbook : IXLPivotSource
     /// <summary>
     /// An area in an external workbook that contains source data.
     /// </summary>
-    internal XLBookArea? Area { get; }
+    internal SheetArea? Area { get; }
 
-    internal XLPivotSourceExternalWorkbook(string relId, XLBookArea area)
+    internal XLPivotSourceExternalWorkbook(string relId, SheetArea area)
     {
         RelId = relId;
         Area = area;

@@ -27,5 +27,5 @@ internal class XLPivotCacheSourceConsolidationRangeSet
 
     internal string? TableOrName { get; init; }
 
-    internal XLBookArea? Area { get; init; }
+    internal SheetArea? Area { get; init; }
 }

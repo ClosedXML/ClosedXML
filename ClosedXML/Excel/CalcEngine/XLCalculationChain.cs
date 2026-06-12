@@ -111,7 +111,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add all cells from the area to the end of the chain.
         /// </summary>
-        internal void AppendArea(XLBookArea area)
+        internal void AppendArea(SheetArea area)
         {
             foreach (var point in area)
                 AddLast(point);

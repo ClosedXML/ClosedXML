@@ -8,10 +8,10 @@ namespace ClosedXML.Excel.CalcEngine.Visitors;
 /// </summary>
 internal class ReferenceShiftOnDeleteRefModVisitor : CopyVisitor
 {
-    private readonly XLBookArea _deletedBookArea;
+    private readonly SheetArea _deletedBookArea;
     private readonly XLShiftDeletedCells _shift;
 
-    public ReferenceShiftOnDeleteRefModVisitor(XLBookArea deletedBookArea, XLShiftDeletedCells shift)
+    public ReferenceShiftOnDeleteRefModVisitor(SheetArea deletedBookArea, XLShiftDeletedCells shift)
     {
         _deletedBookArea = deletedBookArea;
         _shift = shift;
