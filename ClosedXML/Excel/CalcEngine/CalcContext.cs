@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return cell?.Value ?? Blank.Value;
             }
 
-            throw new GettingDataException(new XLBookPoint(sheet.Name, new Point(rowNumber, columnNumber)));
+            throw new GettingDataException(new SheetPoint(sheet.Name, new Point(rowNumber, columnNumber)));
         }
 
         /// <summary>

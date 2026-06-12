@@ -8,11 +8,11 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// </summary>
     internal class GettingDataException : Exception
     {
-        public GettingDataException(XLBookPoint point)
+        public GettingDataException(SheetPoint point)
         {
             Point = point;
         }
 
-        public XLBookPoint Point { get; }
+        public SheetPoint Point { get; }
     }
 }

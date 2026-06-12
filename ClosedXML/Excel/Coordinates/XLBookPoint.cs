@@ -8,14 +8,14 @@ namespace ClosedXML.Excel
     /// worksheet, so it might be invalid. Make sure it is checked when
     /// determining the properties of the actual data of the point.
     /// </summary>
-    internal readonly struct XLBookPoint : IEquatable<XLBookPoint>
+    internal readonly struct SheetPoint : IEquatable<SheetPoint>
     {
-        internal XLBookPoint(string sheetName, int row, int col)
+        internal SheetPoint(string sheetName, int row, int col)
             : this(sheetName, new Point(row, col))
         {
         }
 
-        internal XLBookPoint(string sheetName, Point point)
+        internal SheetPoint(string sheetName, Point point)
         {
             if (string.IsNullOrEmpty(sheetName))
                 throw new ArgumentException(nameof(sheetName));
@@ -40,18 +40,18 @@ namespace ClosedXML.Excel
         /// </summary>
         public Point Point { get; }
 
-        public static bool operator ==(XLBookPoint lhs, XLBookPoint rhs) => lhs.Equals(rhs);
+        public static bool operator ==(SheetPoint lhs, SheetPoint rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XLBookPoint lhs, XLBookPoint rhs) => !(lhs == rhs);
+        public static bool operator !=(SheetPoint lhs, SheetPoint rhs) => !(lhs == rhs);
 
-        public bool Equals(XLBookPoint other)
+        public bool Equals(SheetPoint other)
         {
             return Point.Equals(other.Point) && XLHelper.SheetComparer.Equals(SheetName, other.SheetName);
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is XLBookPoint other && Equals(other);
+            return obj is SheetPoint other && Equals(other);
         }
 
         public override int GetHashCode()

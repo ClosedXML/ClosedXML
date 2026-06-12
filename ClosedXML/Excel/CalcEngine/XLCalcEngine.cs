@@ -58,7 +58,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add a formula to the calc engine to manage dirty tracking and evaluation.
         /// </summary>
-        internal void AddNormalFormula(XLBookPoint point, string sheetName, XLCellFormula formula, XLWorkbook workbook)
+        internal void AddNormalFormula(SheetPoint point, string sheetName, XLCellFormula formula, XLWorkbook workbook)
         {
             if (_chain is not null && _dependencyTree is not null)
             {
@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// it is fully removed from dependency tree, but each cells referencing
         /// the formula must be removed individually from calc chain.
         /// </summary>
-        internal void RemoveFormula(XLBookPoint point, XLCellFormula formula)
+        internal void RemoveFormula(SheetPoint point, XLCellFormula formula)
         {
             if (_chain is not null && _dependencyTree is not null)
             {

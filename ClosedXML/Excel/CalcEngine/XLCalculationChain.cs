@@ -32,28 +32,28 @@ namespace ClosedXML.Excel.CalcEngine
         /// Key to the <see cref="_nodeMap"/> that is the head of the chain.
         /// Null, when chain is empty.
         /// </summary>
-        private XLBookPoint? _head;
+        private SheetPoint? _head;
 
         /// <summary>
         /// Key to the <see cref="_nodeMap"/> that is the tail of the chain.
         /// Null, when chain is empty.
         /// </summary>
-        private XLBookPoint? _tail;
+        private SheetPoint? _tail;
 
         /// <summary>
         /// <para>
         /// Doubly circular linked list containing all points with value
         /// calculated by a formula. The chain is "looped", so it doesn't
-        /// have to deal with nulls for <see cref="XLBookPoint"/>.
+        /// have to deal with nulls for <see cref="SheetPoint"/>.
         /// </para>
         /// <para>
         /// There is always exactly one loop, no cycles. The formulas might
         /// cause cycles due to dependencies, but that is manifested by
         /// constantly switching the links in a loop.</para>
         /// </summary>
-        private readonly Dictionary<XLBookPoint, Link> _nodeMap = new();
+        private readonly Dictionary<SheetPoint, Link> _nodeMap = new();
 
-        private XLBookPoint? _current;
+        private SheetPoint? _current;
 
         /// <summary>
         /// 1 based position of <see cref="_current"/>, if there is a traversal
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// The address of a current of the chain.
         /// </summary>
-        internal XLBookPoint Current => _current!.Value;
+        internal SheetPoint Current => _current!.Value;
 
         /// <summary>
         /// Is there a cycle in the chain? Detected when a link has appeared
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var formulaSlice = sheet.Internals.CellsCollection.FormulaSlice;
                 using var e = formulaSlice.GetForwardEnumerator(XLSheetRange.Full);
                 while (e.MoveNext())
-                    chain.AddLast(new XLBookPoint(sheet.Name, e.Point));
+                    chain.AddLast(new SheetPoint(sheet.Name, e.Point));
             }
 
             return chain;
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add a new link at the beginning of a chain.
         /// </summary>
-        private void AddFirst(XLBookPoint point, int lastPosition)
+        private void AddFirst(SheetPoint point, int lastPosition)
         {
             if (_head is null || _tail is null)
             {
@@ -105,8 +105,8 @@ namespace ClosedXML.Excel.CalcEngine
             _head = point;
         }
 
-        /// <inheritdoc cref="AddLast(XLBookPoint,int)"/>
-        internal void AddLast(XLBookPoint point) => AddLast(point, 0);
+        /// <inheritdoc cref="AddLast(SheetPoint,int)"/>
+        internal void AddLast(SheetPoint point) => AddLast(point, 0);
 
         /// <summary>
         /// Add all cells from the area to the end of the chain.
@@ -120,7 +120,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Append formula at the end of the chain.
         /// </summary>
-        private void AddLast(XLBookPoint point, int lastPosition)
+        private void AddLast(SheetPoint point, int lastPosition)
         {
             if (_head is null || _tail is null)
             {
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Initialize empty chain with a single link chain.
         /// </summary>
-        private void Init(XLBookPoint point)
+        private void Init(SheetPoint point)
         {
             Debug.Assert(_nodeMap.Count == 0 && _head is null && _tail is null);
             _nodeMap.Add(point, new Link(point, point, 0));
@@ -147,7 +147,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <paramref name="prev"/> and <paramref name="next"/>.
         /// Don't update head or tail.
         /// </summary>
-        private void Insert(XLBookPoint point, int lastPosition, XLBookPoint prev, XLBookPoint next)
+        private void Insert(SheetPoint point, int lastPosition, SheetPoint prev, SheetPoint next)
         {
             _nodeMap.Add(point, new Link(prev, next, lastPosition));
 
@@ -167,7 +167,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </param>
         /// <param name="point">Point to add to the chain.</param>
         /// <param name="lastPosition">The last position of the point in the chain.</param>
-        internal void AddAfter(XLBookPoint anchor, XLBookPoint point, int lastPosition)
+        internal void AddAfter(SheetPoint anchor, SheetPoint point, int lastPosition)
         {
             var prevLink = _nodeMap[anchor];
             var next = prevLink.Next;
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="point">Link to remove.</param>
         /// <returns>Last position of the removed link.</returns>
         /// <exception cref="InvalidOperationException">Point is not a part of the chain.</exception>
-        internal int Remove(XLBookPoint point)
+        internal int Remove(SheetPoint point)
         {
             if (!_nodeMap.TryGetValue(point, out var pointLink))
                 throw PointNotInChain(point);
@@ -226,7 +226,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Enumerate all links in the chain.
         /// </summary>
-        internal IEnumerable<(XLBookPoint Point, int LastPosition)> GetLinks()
+        internal IEnumerable<(SheetPoint Point, int LastPosition)> GetLinks()
         {
             if (_head is null)
                 yield break;
@@ -235,7 +235,7 @@ namespace ClosedXML.Excel.CalcEngine
             do
             {
                 var link = _nodeMap[current];
-                yield return new ValueTuple<XLBookPoint, int>(current, link.LastPosition);
+                yield return new ValueTuple<SheetPoint, int>(current, link.LastPosition);
                 current = link.Next;
             } while (current != _head.Value);
         }
@@ -313,7 +313,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// The point of a chain to moved to the current. Should always be in
         /// the chain after the current.
         /// </param>
-        internal void MoveToCurrent(XLBookPoint pointToMove)
+        internal void MoveToCurrent(SheetPoint pointToMove)
         {
             if (_current is null)
                 throw new InvalidOperationException("Enumerator not at a link.");
@@ -351,7 +351,7 @@ namespace ClosedXML.Excel.CalcEngine
             _current = pointToMove;
         }
 
-        private InvalidOperationException PointNotInChain(XLBookPoint point)
+        private InvalidOperationException PointNotInChain(SheetPoint point)
         {
             var exception = new InvalidOperationException($"Book point {point} is not in the chain.");
             exception.Data.Add("Chain", string.Join(", ", _nodeMap.Select(n => $"{n.Key}(prev:{n.Value.Previous},next:{n.Value.Next})")));
@@ -360,9 +360,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private readonly struct Link
         {
-            internal readonly XLBookPoint Previous;
+            internal readonly SheetPoint Previous;
 
-            internal readonly XLBookPoint Next;
+            internal readonly SheetPoint Next;
 
             /// <summary>
             /// <para>
@@ -394,7 +394,7 @@ namespace ClosedXML.Excel.CalcEngine
             /// <remarks>Used for cycle detection.</remarks>
             internal readonly int LastPosition;
 
-            public Link(XLBookPoint previous, XLBookPoint next, int lastPosition)
+            public Link(SheetPoint previous, SheetPoint next, int lastPosition)
             {
                 Previous = previous;
                 Next = next;
