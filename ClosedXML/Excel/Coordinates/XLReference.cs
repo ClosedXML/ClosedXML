@@ -28,7 +28,7 @@ internal readonly record struct XLReference
 
     internal XLRangeAddress ToRangeAddress(XLWorksheet? sheet, Point anchor)
     {
-        var area = _reference.ToSheetRange(anchor);
+        var area = _reference.ToArea(anchor);
         var firstColAbs = _reference.First.ColumnType == ReferenceAxisType.Absolute;
         var firstRowAbs = _reference.First.RowType == ReferenceAxisType.Absolute;
         var secondColAbs = _reference.Second.ColumnType == ReferenceAxisType.Absolute;

@@ -13,16 +13,16 @@ namespace ClosedXML.Tests.Extensions
     {
         [Test]
         [TestCaseSource(nameof(A1TestCases))]
-        public void ToSheetPoint_converts_a1_reference_to_sheet_range(ReferenceArea tokenArea, Area expectedRange)
+        public void ToArea_converts_a1_reference_to_area(ReferenceArea tokenArea, Area expectedArea)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(default));
+            Assert.AreEqual(expectedArea, tokenArea.ToArea(default));
         }
 
         [Test]
         [TestCaseSource(nameof(R1C1TestCases))]
-        public void ToSheetPoint_converts_r1c1_reference_to_sheet_range(Point anchor, ReferenceArea tokenArea, Area expectedRange)
+        public void ToArea_converts_r1c1_reference_to_area(Point anchor, ReferenceArea tokenArea, Area expectedArea)
         {
-            Assert.AreEqual(expectedRange, tokenArea.ToSheetRange(anchor));
+            Assert.AreEqual(expectedArea, tokenArea.ToArea(anchor));
         }
 
         [TestCase("C2", "C2", "C3")]

@@ -33,14 +33,14 @@ namespace ClosedXML.Extensions
         /// <param name="area">Area to convert</param>
         /// <param name="anchor">An anchor address that is the center of R1C1 relative address.</param>
         /// <returns>Converted absolute range.</returns>
-        public static Area ToSheetRange(this ReferenceArea area, Point anchor)
+        public static Area ToArea(this ReferenceArea area, Point anchor)
         {
             return area.First.IsA1
-                ? ToSheetRangeA1(area)
-                : ToSheetRangeR1C1(area, anchor);
+                ? ToAreaFromA1(area)
+                : ToAreaFromR1C1(area, anchor);
         }
 
-        public static Area ToSheetRangeA1(this ReferenceArea area)
+        public static Area ToAreaFromA1(this ReferenceArea area)
         {
             if (area.Style != ReferenceStyle.A1)
                 throw new ArgumentException(nameof(area));
@@ -49,10 +49,10 @@ namespace ClosedXML.Extensions
             var col1 = A1ToPosition(area.First.ColumnType, area.First.ColumnValue, XLHelper.MinColumnNumber);
             var row2 = A1ToPosition(area.Second.RowType, area.Second.RowValue, XLHelper.MaxRowNumber);
             var col2 = A1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, XLHelper.MaxColumnNumber);
-            return ToSheetRange(row1, row2, col1, col2);
+            return ToArea(row1, row2, col1, col2);
         }
 
-        public static Area ToSheetRangeR1C1(this ReferenceArea area, Point anchor)
+        public static Area ToAreaFromR1C1(this ReferenceArea area, Point anchor)
         {
             if (area.Style != ReferenceStyle.R1C1)
                 throw new ArgumentException(nameof(area));
@@ -61,7 +61,7 @@ namespace ClosedXML.Extensions
             var col1 = R1C1ToPosition(area.First.ColumnType, area.First.ColumnValue, anchor.Column, XLHelper.MinColumnNumber, XLHelper.MaxColumnNumber);
             var row2 = R1C1ToPosition(area.Second.RowType, area.Second.RowValue, anchor.Row, XLHelper.MaxRowNumber, XLHelper.MaxRowNumber);
             var col2 = R1C1ToPosition(area.Second.ColumnType, area.Second.ColumnValue, anchor.Column, XLHelper.MaxColumnNumber, XLHelper.MaxColumnNumber);
-            return ToSheetRange(row1, row2, col1, col2);
+            return ToArea(row1, row2, col1, col2);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace ClosedXML.Extensions
                 return true;
             }
 
-            var referenceArea = reference.ToSheetRangeA1();
+            var referenceArea = reference.ToAreaFromA1();
             if (!referenceArea.TryInsertAreaAndShiftDown(insertedArea, out var shifted))
             {
                 shiftedReference = null;
@@ -116,7 +116,7 @@ namespace ClosedXML.Extensions
                 return true;
             }
 
-            var referenceArea = reference.ToSheetRangeA1();
+            var referenceArea = reference.ToAreaFromA1();
             if (!referenceArea.TryInsertAreaAndShiftRight(insertedArea, out var shifted))
             {
                 shiftedReference = null;
@@ -145,7 +145,7 @@ namespace ClosedXML.Extensions
                 return true;
             }
 
-            var referenceArea = reference.ToSheetRangeA1();
+            var referenceArea = reference.ToAreaFromA1();
             if (!referenceArea.TryDeleteAreaAndShiftUp(deletedArea, out var shifted))
             {
                 shiftedReference = null;
@@ -174,7 +174,7 @@ namespace ClosedXML.Extensions
                 return true;
             }
 
-            var referenceArea = reference.ToSheetRangeA1();
+            var referenceArea = reference.ToAreaFromA1();
             if (!referenceArea.TryDeleteAreaAndShiftLeft(deletedArea, out var shifted))
             {
                 shiftedReference = null;
@@ -205,7 +205,7 @@ namespace ClosedXML.Extensions
             return escapedSheetName + '!' + refA1;
         }
 
-        private static Area ToSheetRange(int row1, int row2, int col1, int col2)
+        private static Area ToArea(int row1, int row2, int col1, int col2)
         {
             // Points in the token `area` don't have to be in top left and bottom right corners,
             // e.g. D4:A1 or D1:A4. Normalize coordinates, so the sheet range has expected corners.
