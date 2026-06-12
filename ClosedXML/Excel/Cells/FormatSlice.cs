@@ -17,34 +17,34 @@ internal class FormatSlice : ISlice
 
     public IEnumerable<int> UsedRows => _slice.UsedRows;
 
-    public void Clear(XLSheetRange range)
+    public void Clear(Area area)
     {
-        _slice.Clear(range);
+        _slice.Clear(area);
     }
 
-    public void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete)
+    public void DeleteAreaAndShiftLeft(Area areaToDelete)
     {
-        _slice.DeleteAreaAndShiftLeft(rangeToDelete);
+        _slice.DeleteAreaAndShiftLeft(areaToDelete);
     }
 
-    public void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete)
+    public void DeleteAreaAndShiftUp(Area areaToDelete)
     {
-        _slice.DeleteAreaAndShiftUp(rangeToDelete);
+        _slice.DeleteAreaAndShiftUp(areaToDelete);
     }
 
-    public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false)
+    public IEnumerator<Point> GetEnumerator(Area area, bool reverse = false)
     {
-        return _slice.GetEnumerator(range, reverse);
+        return _slice.GetEnumerator(area, reverse);
     }
 
-    public void InsertAreaAndShiftDown(XLSheetRange range)
+    public void InsertAreaAndShiftDown(Area areaToInsert)
     {
-        _slice.InsertAreaAndShiftDown(range);
+        _slice.InsertAreaAndShiftDown(areaToInsert);
     }
 
-    public void InsertAreaAndShiftRight(XLSheetRange range)
+    public void InsertAreaAndShiftRight(Area areaToInsert)
     {
-        _slice.InsertAreaAndShiftRight(range);
+        _slice.InsertAreaAndShiftRight(areaToInsert);
     }
 
     public bool IsUsed(Point address)
@@ -63,7 +63,7 @@ internal class FormatSlice : ISlice
         _slice.Set(point, modified);
     }
 
-    internal void SetAll(XLSheetRange area, XLCellFormatValue? value)
+    internal void SetAll(Area area, XLCellFormatValue? value)
     {
         _slice.SetAll(area, new SliceValue { Format = value });
     }
@@ -76,7 +76,7 @@ internal class FormatSlice : ISlice
     // TODO Styles: FormatSlice should keep track of used format values so we don't have to go over all of them.
     internal void AddUsedFormat(HashSet<XLCellFormatValue> usedCellFormats)
     {
-        var enumerator = GetEnumerator(XLSheetRange.Full);
+        var enumerator = GetEnumerator(Area.Full);
         while (enumerator.MoveNext())
         {
             if (_slice[enumerator.Current].Format is { } format)

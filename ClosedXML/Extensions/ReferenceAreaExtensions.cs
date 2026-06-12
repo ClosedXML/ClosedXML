@@ -33,14 +33,14 @@ namespace ClosedXML.Extensions
         /// <param name="area">Area to convert</param>
         /// <param name="anchor">An anchor address that is the center of R1C1 relative address.</param>
         /// <returns>Converted absolute range.</returns>
-        public static XLSheetRange ToSheetRange(this ReferenceArea area, Point anchor)
+        public static Area ToSheetRange(this ReferenceArea area, Point anchor)
         {
             return area.First.IsA1
                 ? ToSheetRangeA1(area)
                 : ToSheetRangeR1C1(area, anchor);
         }
 
-        public static XLSheetRange ToSheetRangeA1(this ReferenceArea area)
+        public static Area ToSheetRangeA1(this ReferenceArea area)
         {
             if (area.Style != ReferenceStyle.A1)
                 throw new ArgumentException(nameof(area));
@@ -52,7 +52,7 @@ namespace ClosedXML.Extensions
             return ToSheetRange(row1, row2, col1, col2);
         }
 
-        public static XLSheetRange ToSheetRangeR1C1(this ReferenceArea area, Point anchor)
+        public static Area ToSheetRangeR1C1(this ReferenceArea area, Point anchor)
         {
             if (area.Style != ReferenceStyle.R1C1)
                 throw new ArgumentException(nameof(area));
@@ -71,7 +71,7 @@ namespace ClosedXML.Extensions
         /// <param name="insertedArea">An area inserted into a sheet.</param>
         /// <param name="shiftedReference">The shifted reference. Can be <c>null</c>, if the reference is shifted out of sheet.</param>
         /// <returns><c>false</c> if split, <c>true</c> when shift has a rectangular reference.</returns>
-        public static bool TryInsertAndShiftDown(this ReferenceArea reference, XLSheetRange insertedArea, out ReferenceArea? shiftedReference)
+        public static bool TryInsertAndShiftDown(this ReferenceArea reference, Area insertedArea, out ReferenceArea? shiftedReference)
         {
             // Column span is never shifted
             if (reference.IsColumnSpan())
@@ -107,7 +107,7 @@ namespace ClosedXML.Extensions
         /// <param name="insertedArea">An area inserted into a sheet.</param>
         /// <param name="shiftedReference">The shifted reference. Can be <c>null</c>, if the reference is shifted out of sheet.</param>
         /// <returns><c>false</c> if split, <c>true</c> when shift has a rectangular reference.</returns>
-        public static bool TryInsertAndShiftRight(this ReferenceArea reference, XLSheetRange insertedArea, out ReferenceArea? shiftedReference)
+        public static bool TryInsertAndShiftRight(this ReferenceArea reference, Area insertedArea, out ReferenceArea? shiftedReference)
         {
             // Row span is never shifted
             if (reference.IsRowSpan())
@@ -136,7 +136,7 @@ namespace ClosedXML.Extensions
             return true;
         }
 
-        public static bool TryDeleteAndShiftUp(this ReferenceArea reference, XLSheetRange deletedArea, out ReferenceArea? shiftedReference)
+        public static bool TryDeleteAndShiftUp(this ReferenceArea reference, Area deletedArea, out ReferenceArea? shiftedReference)
         {
             // Column span is never shifted
             if (reference.IsColumnSpan())
@@ -165,7 +165,7 @@ namespace ClosedXML.Extensions
             return true;
         }
 
-        public static bool TryDeleteAndShiftLeft(this ReferenceArea reference, XLSheetRange deletedArea, out ReferenceArea? shiftedReference)
+        public static bool TryDeleteAndShiftLeft(this ReferenceArea reference, Area deletedArea, out ReferenceArea? shiftedReference)
         {
             // Row span is never shifted
             if (reference.IsRowSpan())
@@ -205,7 +205,7 @@ namespace ClosedXML.Extensions
             return escapedSheetName + '!' + refA1;
         }
 
-        private static XLSheetRange ToSheetRange(int row1, int row2, int col1, int col2)
+        private static Area ToSheetRange(int row1, int row2, int col1, int col2)
         {
             // Points in the token `area` don't have to be in top left and bottom right corners,
             // e.g. D4:A1 or D1:A4. Normalize coordinates, so the sheet range has expected corners.
@@ -213,7 +213,7 @@ namespace ClosedXML.Extensions
             var colEnd = Math.Max(col1, col2);
             var rowStart = Math.Min(row1, row2);
             var rowEnd = Math.Max(row1, row2);
-            return new XLSheetRange(rowStart, colStart, rowEnd, colEnd);
+            return new Area(rowStart, colStart, rowEnd, colEnd);
         }
 
         private static int A1ToPosition(ReferenceAxisType axisType, int position, int defaultPosition)

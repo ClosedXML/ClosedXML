@@ -13,5 +13,5 @@ internal interface IXLPivotSource : IEquatable<IXLPivotSource>
     /// workbook. Source reference might not be valid in the workbook, some might
     /// not be supported.
     /// </summary>
-    bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea);
+    bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out Area? sheetArea);
 }

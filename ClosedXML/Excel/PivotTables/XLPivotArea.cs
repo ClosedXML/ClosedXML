@@ -66,7 +66,7 @@ internal class XLPivotArea
     /// A reference that specifies a subset of the selection area. Points are relative to the top
     /// left of the selection area.
     /// </summary>
-    internal XLSheetRange? Offset { get; init; }
+    internal Area? Offset { get; init; }
 
     /// <summary>
     /// Flag indicating if collapsed levels/dimensions are considered subtotals.

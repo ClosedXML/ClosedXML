@@ -101,7 +101,7 @@ internal partial class XLCellFormat
         var formatValue = new Hierarchy(workbook, sheetName, cellPoint.Column, cellPoint.Row, cellPoint);
         return new XLCellFormat(workbook, formatValue)
         {
-            Areas = new[] { new XLBookArea(sheetName, new XLSheetRange(cellPoint)) }
+            Areas = new[] { new XLBookArea(sheetName, new Area(cellPoint)) }
         };
     }
 
@@ -681,7 +681,7 @@ internal partial class XLCellFormat
         foreach (var row in rows)
             ApplyColRowFormat(row, modifyFormat, worksheet);
 
-        ApplyToUsed(XLSheetRange.Full, modifyFormat, worksheet);
+        ApplyToUsed(Area.Full, modifyFormat, worksheet);
     }
 
     private static void ApplyColRowFormat(IXLFormatContainer rowOrCol, Func<XLCellFormatValue, XLCellFormatValue> modifyFormat, XLWorksheet worksheet)
@@ -692,14 +692,14 @@ internal partial class XLCellFormat
         rowOrCol.FormatValue = modifyFormat(originalFormat);
     }
 
-    private static void ApplyToUsed(XLSheetRange area, Func<XLCellFormatValue, XLCellFormatValue> modifyFormat, XLWorksheet worksheet)
+    private static void ApplyToUsed(Area area, Func<XLCellFormatValue, XLCellFormatValue> modifyFormat, XLWorksheet worksheet)
     {
         var formatResolver = new FormatResolver(worksheet);
         var cellsCollection = worksheet.Internals.CellsCollection;
         cellsCollection.ApplyFormatOnUsed(area, modifyFormat, formatResolver.Resolve);
     }
 
-    private static void ApplyToAll(XLSheetRange area, Func<XLCellFormatValue, XLCellFormatValue> modifyFormat, XLWorksheet worksheet)
+    private static void ApplyToAll(Area area, Func<XLCellFormatValue, XLCellFormatValue> modifyFormat, XLWorksheet worksheet)
     {
         var formatResolver = new FormatResolver(worksheet);
         var cellsCollection = worksheet.Internals.CellsCollection;

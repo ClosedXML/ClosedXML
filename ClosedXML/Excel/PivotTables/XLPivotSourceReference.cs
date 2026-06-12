@@ -69,7 +69,7 @@ namespace ClosedXML.Excel
         /// Try to determine actual area of the source reference in the
         /// workbook. Source reference might not be valid in the workbook.
         /// </summary>
-        public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
+        public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out Area? sheetArea)
         {
             if (Name is not null)
             {

@@ -196,7 +196,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 return;
             }
 
-            var expected = XLSheetRange.Parse(expectedArea);
+            var expected = Area.Parse(expectedArea);
             Assert.AreEqual(expected.LeftColumn, ws.Evaluate($"COLUMN({structureReference})", formulaAddress));
             Assert.AreEqual(expected.TopRow, ws.Evaluate($"ROW({structureReference})", formulaAddress));
             Assert.AreEqual(expected.Height, ws.Evaluate($"ROWS({structureReference})", formulaAddress));

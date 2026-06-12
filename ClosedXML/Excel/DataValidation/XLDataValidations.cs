@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
             if (rangeAddress.Worksheet != _worksheet)
                 yield break;
 
-            var intersectingArea = XLSheetRange.FromRangeAddress(rangeAddress);
+            var intersectingArea = Area.FromRangeAddress(rangeAddress);
             foreach (var dataValidation in _dataValidations)
             {
                 foreach (var area in dataValidation.Areas)
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            var coveredArea = XLSheetRange.FromRangeAddress(rangeAddress);
+            var coveredArea = Area.FromRangeAddress(rangeAddress);
             foreach (var dataValidation in _dataValidations)
             {
                 foreach (var area in dataValidation.Areas)
@@ -144,7 +144,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Create a new DV with an initial area.
         /// </summary>
-        internal XLDataValidation Create(XLSheetRange area)
+        internal XLDataValidation Create(Area area)
         {
             var dv = new XLDataValidation(_worksheet);
             _dataValidations.Add(dv);
@@ -163,7 +163,7 @@ namespace ClosedXML.Excel
             return dv;
         }
 
-        internal void Delete(XLSheetRange areaToDelete)
+        internal void Delete(Area areaToDelete)
         {
             for (var i = _dataValidations.Count - 1; i >= 0; --i)
             {
@@ -226,7 +226,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void AddArea(XLDataValidation modifiedDataValidation, XLSheetRange addedArea)
+        internal void AddArea(XLDataValidation modifiedDataValidation, Area addedArea)
         {
             // Add an area to modifiedDV. This must be done carefully, because there can be only
             // one DV per cell. Due to this problem, the correspondence area-DV should be managed
@@ -260,27 +260,27 @@ namespace ClosedXML.Excel
             modifiedDataValidation.Areas = modifiedDataValidation.Areas.DeleteWithoutShift(addedArea).With(addedArea);
         }
 
-        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange area)
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area area)
         {
             AdjustDataValidationAreas(sheet, area, static (sqref, insertedArea) => sqref.InsertAndShiftDown(insertedArea));
         }
 
-        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange area)
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area area)
         {
             AdjustDataValidationAreas(sheet, area, static (sqref, insertedArea) => sqref.InsertAndShiftRight(insertedArea));
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedRange)
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedRange)
         {
             AdjustDataValidationAreas(sheet, deletedRange, static (sqref, deletedArea) => sqref.DeleteAndShiftLeft(deletedArea));
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedRange)
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedRange)
         {
             AdjustDataValidationAreas(sheet, deletedRange, static (sqref, deletedArea) => sqref.DeleteAndShiftUp(deletedArea));
         }
 
-        private void AdjustDataValidationAreas(XLWorksheet sheet, XLSheetRange affectedRange, Func<XLAreaList, XLSheetRange, XLAreaList> adjustAreas)
+        private void AdjustDataValidationAreas(XLWorksheet sheet, Area affectedRange, Func<XLAreaList, Area, XLAreaList> adjustAreas)
         {
             if (sheet != _worksheet)
                 return;

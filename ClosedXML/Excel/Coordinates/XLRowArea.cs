@@ -34,7 +34,7 @@ internal readonly record struct XLRowArea
     /// <summary>
     /// Get the area of the row.
     /// </summary>
-    public XLBookArea Area => new(Name, new XLSheetRange(RowNumber, XLHelper.MinColumnNumber, RowNumber, XLHelper.MaxColumnNumber));
+    public XLBookArea Area => new(Name, new Area(RowNumber, XLHelper.MinColumnNumber, RowNumber, XLHelper.MaxColumnNumber));
 
     public bool Equals(XLRowArea other)
     {

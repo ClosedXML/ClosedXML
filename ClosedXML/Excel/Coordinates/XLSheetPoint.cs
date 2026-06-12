@@ -26,9 +26,9 @@ namespace ClosedXML.Excel
         /// </summary>
         public readonly Int32 Column;
 
-        public static implicit operator XLSheetRange(Point point)
+        public static implicit operator Area(Point point)
         {
-            return new XLSheetRange(point);
+            return new Area(point);
         }
 
         public override bool Equals(object? obj)
@@ -203,7 +203,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Is the point within the range or below the range?
         /// </summary>
-        internal bool InRangeOrBelow(in XLSheetRange range)
+        internal bool InRangeOrBelow(in Area range)
         {
             return Row >= range.FirstPoint.Row &&
                    Column >= range.FirstPoint.Column &&
@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Is the point within the range or to the right of the range?
         /// </summary>
-        internal bool InRangeOrToRight(in XLSheetRange range)
+        internal bool InRangeOrToRight(in Area range)
         {
             return Column >= range.FirstPoint.Column &&
                    Row >= range.FirstPoint.Row &&

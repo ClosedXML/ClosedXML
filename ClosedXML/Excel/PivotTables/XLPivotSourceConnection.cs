@@ -37,7 +37,7 @@ internal sealed class XLPivotSourceConnection : IXLPivotSource
         return HashCode.Combine(ConnectionId).GetHashCode();
     }
 
-    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
+    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out Area? sheetArea)
     {
         throw new NotImplementedException("Pivot cache source using a connection is not supported.");
     }

@@ -232,28 +232,28 @@ namespace ClosedXML.Excel
 
         #region ISheetListner
 
-        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, true);
             ShiftReferences(refMod);
         }
 
-        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(insertedBookArea, false);
             ShiftReferences(refMod);
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsLeft);
             ShiftReferences(refMod);
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deletedBookArea, XLShiftDeletedCells.ShiftCellsUp);

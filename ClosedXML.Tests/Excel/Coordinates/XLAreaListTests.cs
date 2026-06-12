@@ -31,8 +31,8 @@ internal class XLAreaListTests
     [TestCase("A1:A1048576", "A1", "A1:A1048576")] // Columns are not changed
     public void InsertAndShiftDown(string areaList, string insertedArea, string expected)
     {
-        var list = new XLAreaList(new List<XLSheetRange> { XLSheetRange.Parse(areaList) });
-        var result = list.InsertAndShiftDown(XLSheetRange.Parse(insertedArea));
+        var list = new XLAreaList(new List<Area> { Area.Parse(areaList) });
+        var result = list.InsertAndShiftDown(Area.Parse(insertedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
     }
@@ -59,8 +59,8 @@ internal class XLAreaListTests
     [TestCase("A1:XFD1", "A1", "A1:XFD1")] // Rows are not changed
     public void InsertAndShiftRight(string areaList, string insertedArea, string expected)
     {
-        var list = new XLAreaList(new List<XLSheetRange> { XLSheetRange.Parse(areaList) });
-        var result = list.InsertAndShiftRight(XLSheetRange.Parse(insertedArea));
+        var list = new XLAreaList(new List<Area> { Area.Parse(areaList) });
+        var result = list.InsertAndShiftRight(Area.Parse(insertedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
     }
@@ -84,8 +84,8 @@ internal class XLAreaListTests
     [TestCase("A1:A1048576", "A1", "A1:A1048576")] // Columns are not changed
     public void DeleteAndShiftUp(string areaList, string deletedArea, string expected)
     {
-        var list = new XLAreaList(new List<XLSheetRange> { XLSheetRange.Parse(areaList) });
-        var result = list.DeleteAndShiftUp(XLSheetRange.Parse(deletedArea));
+        var list = new XLAreaList(new List<Area> { Area.Parse(areaList) });
+        var result = list.DeleteAndShiftUp(Area.Parse(deletedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
     }
@@ -109,8 +109,8 @@ internal class XLAreaListTests
     [TestCase("A1:XFD1", "A1", "A1:XFD1")] // Rows are not changed
     public void DeleteAndShiftLeft(string areaList, string deletedArea, string expected)
     {
-        var list = new XLAreaList(new List<XLSheetRange> { XLSheetRange.Parse(areaList) });
-        var result = list.DeleteAndShiftLeft(XLSheetRange.Parse(deletedArea));
+        var list = new XLAreaList(new List<Area> { Area.Parse(areaList) });
+        var result = list.DeleteAndShiftLeft(Area.Parse(deletedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
     }
@@ -122,7 +122,7 @@ internal class XLAreaListTests
     public bool IntersectsWith_determines_intersection_with_any_area(string areaListText, string areaText)
     {
         var areaList = Parse(areaListText);
-        var area = XLSheetRange.Parse(areaText);
+        var area = Area.Parse(areaText);
         return areaList.IntersectsWith(area);
     }
 
@@ -135,7 +135,7 @@ internal class XLAreaListTests
     public string IntersectingWith_returns_areas_intersecting_with_the_other_area(string areaListText, string areaText)
     {
         var areaList = Parse(areaListText);
-        var area = XLSheetRange.Parse(areaText);
+        var area = Area.Parse(areaText);
         return areaList.IntersectingWith(area).ToSpaceList();
     }
 
@@ -145,7 +145,7 @@ internal class XLAreaListTests
     public string Excluding_returns_area_list_without_excluded(string areaListText, string excludedAreaText)
     {
         var areaList = Parse(areaListText);
-        var excludedArea = XLSheetRange.Parse(excludedAreaText);
+        var excludedArea = Area.Parse(excludedAreaText);
         return areaList.Excluding(excludedArea).ToSpaceList();
     }
 
@@ -158,15 +158,15 @@ internal class XLAreaListTests
     {
         var areaList = Parse(areaListText);
         var targetPoint = Point.Parse(targetPointText);
-        var areaToCopy = XLSheetRange.Parse(areaToCopyText);
+        var areaToCopy = Area.Parse(areaToCopyText);
         return areaList.TryCopyAreaTo(targetPoint, areaToCopy, out var result) ? result.ToSpaceList() : null;
     }
 
     private static XLAreaList Parse(string spaceList)
     {
-        var list = new List<XLSheetRange>();
+        var list = new List<Area>();
         foreach (var reference in spaceList.Split(' '))
-            list.Add(XLSheetRange.Parse(reference));
+            list.Add(Area.Parse(reference));
 
         return new XLAreaList(list);
     }

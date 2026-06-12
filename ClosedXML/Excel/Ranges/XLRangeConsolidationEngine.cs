@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
             /// <summary>
             /// Get consolidated ranges equivalent to the input ones.
             /// </summary>
-            public IEnumerable<XLSheetRange> GetConsolidatedRanges()
+            public IEnumerable<Area> GetConsolidatedRanges()
             {
                 var rowNumbers = _bitMatrix.Keys.OrderBy(k => k).ToArray();
                 for (int i = 0; i < rowNumbers.Length; i++)
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
                         var startColumn = starting.Item1 + _minColumn - 1;
                         var endColumn = starting.Item2 + _minColumn - 1;
 
-                        yield return new XLSheetRange(startRow, startColumn, endRow, endColumn);
+                        yield return new Area(startRow, startColumn, endRow, endColumn);
 
                         while (j > i)
                         {
@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private void AddToBitMatrix(XLSheetRange area)
+            private void AddToBitMatrix(Area area)
             {
                 var rows = _bitMatrix.Keys
                     .Where(k => k >= area.TopRow &&
@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            private void FillBitMatrix(IEnumerable<XLSheetRange> areas)
+            private void FillBitMatrix(IEnumerable<Area> areas)
             {
                 foreach (var area in areas)
                 {

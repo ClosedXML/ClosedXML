@@ -25,34 +25,34 @@ namespace ClosedXML.Excel
 
         public IEnumerable<int> UsedRows => _formulas.UsedRows;
 
-        public void Clear(XLSheetRange range)
+        public void Clear(Area area)
         {
-            _formulas.Clear(range);
+            _formulas.Clear(area);
         }
 
-        public void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete)
+        public void DeleteAreaAndShiftLeft(Area areaToDelete)
         {
-            _formulas.DeleteAreaAndShiftLeft(rangeToDelete);
+            _formulas.DeleteAreaAndShiftLeft(areaToDelete);
         }
 
-        public void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete)
+        public void DeleteAreaAndShiftUp(Area areaToDelete)
         {
-            _formulas.DeleteAreaAndShiftUp(rangeToDelete);
+            _formulas.DeleteAreaAndShiftUp(areaToDelete);
         }
 
-        public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false)
+        public IEnumerator<Point> GetEnumerator(Area area, bool reverse = false)
         {
-            return _formulas.GetEnumerator(range, reverse);
+            return _formulas.GetEnumerator(area, reverse);
         }
 
-        public void InsertAreaAndShiftDown(XLSheetRange range)
+        public void InsertAreaAndShiftDown(Area areaToInsert)
         {
-            _formulas.InsertAreaAndShiftDown(range);
+            _formulas.InsertAreaAndShiftDown(areaToInsert);
         }
 
-        public void InsertAreaAndShiftRight(XLSheetRange range)
+        public void InsertAreaAndShiftRight(Area areaToInsert)
         {
-            _formulas.InsertAreaAndShiftRight(range);
+            _formulas.InsertAreaAndShiftRight(areaToInsert);
         }
 
         public bool IsUsed(Point address)
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
         /// <remarks>
         /// This method doesn't check that formula doesn't damage other array formulas.
         /// </remarks>
-        internal void SetArray(XLSheetRange range, XLCellFormula? arrayFormula)
+        internal void SetArray(Area range, XLCellFormula? arrayFormula)
         {
             for (var row = range.TopRow; row <= range.BottomRow; ++row)
             {
@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
                 _engine.AddArrayFormula(range, arrayFormula, _sheet);
         }
 
-        internal Slice<XLCellFormula>.Enumerator GetForwardEnumerator(XLSheetRange range)
+        internal Slice<XLCellFormula>.Enumerator GetForwardEnumerator(Area range)
         {
             return new Slice<XLCellFormula>.Enumerator(_formulas!, range);
         }
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Mark all formulas in a range as dirty.
         /// </summary>
-        internal void MarkDirty(XLSheetRange range)
+        internal void MarkDirty(Area range)
         {
             using var enumerator = GetForwardEnumerator(range);
             while (enumerator.MoveNext())

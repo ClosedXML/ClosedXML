@@ -108,7 +108,7 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
         if (sheet is null)
             throw new InvalidOperationException("Cannot copy workbook scoped defined name.");
 
-        var targetTables = targetSheet.Tables.ToDictionary<XLTable, XLSheetRange>(x => x.SheetRange);
+        var targetTables = targetSheet.Tables.ToDictionary<XLTable, Area>(x => x.SheetRange);
         var tableRenames = new Dictionary<string, string>();
         foreach (var table in sheet.Tables)
         {

@@ -8,20 +8,20 @@ namespace ClosedXML.Excel
     /// <summary>
     /// A representation of a <c>ST_Ref</c>, i.e. an area in a sheet (no reference to the sheet).
     /// </summary>
-    internal readonly struct XLSheetRange : IEquatable<XLSheetRange>, IEnumerable<Point>
+    internal readonly struct Area : IEquatable<Area>, IEnumerable<Point>
     {
-        internal XLSheetRange(Point point)
+        internal Area(Point point)
             : this(point, point)
         {
         }
 
-        internal XLSheetRange(Point firstPoint, Point lastPoint)
+        internal Area(Point firstPoint, Point lastPoint)
         {
             FirstPoint = firstPoint;
             LastPoint = lastPoint;
         }
 
-        public XLSheetRange(Int32 rowStart, Int32 columnStart, Int32 rowEnd, Int32 columnEnd)
+        public Area(Int32 rowStart, Int32 columnStart, Int32 rowEnd, Int32 columnEnd)
             : this(new Point(rowStart, columnStart), new Point(rowEnd, columnEnd))
         {
         }
@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// A range that covers whole worksheet.
         /// </summary>
-        public static readonly XLSheetRange Full = new(
+        public static readonly Area Full = new(
             new Point(XLHelper.MinRowNumber, XLHelper.MinColumnNumber),
             new Point(XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber));
 
@@ -81,10 +81,10 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object? obj)
         {
-            return obj is XLSheetRange range && Equals(range);
+            return obj is Area range && Equals(range);
         }
 
-        public bool Equals(XLSheetRange other)
+        public bool Equals(Area other)
         {
             return FirstPoint.Equals(other.FirstPoint) && LastPoint.Equals(other.LastPoint);
         }
@@ -94,13 +94,13 @@ namespace ClosedXML.Excel
             return FirstPoint.GetHashCode() ^ LastPoint.GetHashCode();
         }
 
-        public static bool operator ==(XLSheetRange left, XLSheetRange right) => left.Equals(right);
+        public static bool operator ==(Area left, Area right) => left.Equals(right);
 
-        public static bool operator !=(XLSheetRange left, XLSheetRange right) => !(left == right);
+        public static bool operator !=(Area left, Area right) => !(left == right);
 
 
         /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
-        public static XLSheetRange Parse(String input) => Parse(input.AsSpan());
+        public static Area Parse(String input) => Parse(input.AsSpan());
 
         /// <summary>
         /// Parse point per type <c>ST_Ref</c> from
@@ -109,7 +109,7 @@ namespace ClosedXML.Excel
         /// <remarks>Can be one cell reference (A1) or two separated by a colon (A1:B2). First reference is always in top left corner</remarks>
         /// <param name="input">Input text</param>
         /// <exception cref="FormatException">If the input doesn't match expected grammar.</exception>
-        public static XLSheetRange Parse(ReadOnlySpan<char> input)
+        public static Area Parse(ReadOnlySpan<char> input)
         {
             if (!TryParse(input, out var area))
                 throw new FormatException($"Area reference doesn't have correct format: '{input.ToString()}'.");
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
         /// Try to parse area. Doesn't accept any extra whitespace anywhere in the input. Letters
         /// must be upper case. Area can specify one corner (<c>A1</c>) or both corners (<c>A1:B3</c>).
         /// </summary>
-        public static bool TryParse(ReadOnlySpan<char> input, out XLSheetRange area)
+        public static bool TryParse(ReadOnlySpan<char> input, out Area area)
         {
             var separatorIndex = input.IndexOf(':');
             if (separatorIndex == -1)
@@ -132,7 +132,7 @@ namespace ClosedXML.Excel
                     return false;
                 }
 
-                area = new XLSheetRange(sheetPoint, sheetPoint);
+                area = new Area(sheetPoint, sheetPoint);
                 return true;
             }
 
@@ -144,7 +144,7 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            area = new XLSheetRange(first, second);
+            area = new Area(first, second);
             return true;
         }
 
@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
         /// Return a range that contains all cells below the current range.
         /// </summary>
         /// <exception cref="InvalidOperationException">The range touches the bottom border of the sheet.</exception>
-        internal XLSheetRange BelowRange()
+        internal Area BelowRange()
         {
             return BelowRange(XLHelper.MaxRowNumber);
         }
@@ -185,13 +185,13 @@ namespace ClosedXML.Excel
         /// If there isn't enough rows, use as many as possible.
         /// </summary>
         /// <exception cref="InvalidOperationException">The range touches the bottom border of the sheet.</exception>
-        internal XLSheetRange BelowRange(int rows)
+        internal Area BelowRange(int rows)
         {
             if (LastPoint.Row >= XLHelper.MaxRowNumber)
                 throw new InvalidOperationException("No cells below.");
 
             rows = Math.Min(rows, XLHelper.MaxRowNumber - LastPoint.Row);
-            return new XLSheetRange(
+            return new Area(
                 new Point(LastPoint.Row + 1, FirstPoint.Column),
                 new Point(LastPoint.Row + rows, LastPoint.Column));
         }
@@ -200,12 +200,12 @@ namespace ClosedXML.Excel
         /// Return a range that contains all cells to the right of the range.
         /// </summary>
         /// <exception cref="InvalidOperationException">The range touches the right border of the sheet.</exception>
-        internal XLSheetRange RightRange()
+        internal Area RightRange()
         {
             if (LastPoint.Column == XLHelper.MaxColumnNumber)
                 throw new InvalidOperationException("No cells to the left.");
 
-            return new XLSheetRange(
+            return new Area(
                 new Point(FirstPoint.Row, LastPoint.Column + 1),
                 new Point(LastPoint.Row, XLHelper.MaxColumnNumber));
         }
@@ -213,32 +213,32 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Return a range that contains additional number of rows below.
         /// </summary>
-        internal XLSheetRange ExtendBelow(int rows)
+        internal Area ExtendBelow(int rows)
         {
             Debug.Assert(rows >= 0);
             var row = Math.Min(LastPoint.Row + rows, XLHelper.MaxRowNumber);
-            return new XLSheetRange(FirstPoint, new Point(row, LastPoint.Column));
+            return new Area(FirstPoint, new Point(row, LastPoint.Column));
         }
 
         /// <summary>
         /// Return a range that contains additional number of columns to the right.
         /// </summary>
-        internal XLSheetRange ExtendRight(int columns)
+        internal Area ExtendRight(int columns)
         {
             Debug.Assert(columns >= 0);
             var column = Math.Min(LastPoint.Column + columns, XLHelper.MaxColumnNumber);
-            return new XLSheetRange(FirstPoint, new Point(LastPoint.Row, column));
+            return new Area(FirstPoint, new Point(LastPoint.Row, column));
         }
 
-        internal static XLSheetRange FromRangeAddress<T>(T address)
+        internal static Area FromRangeAddress<T>(T address)
             where T : IXLRangeAddress
         {
             var firstPoint = Point.FromAddress(address.FirstAddress);
             var lastPoint = Point.FromAddress(address.LastAddress);
             if (firstPoint.Row > lastPoint.Row || firstPoint.Column > lastPoint.Column)
-                return new XLSheetRange(lastPoint, firstPoint);
+                return new Area(lastPoint, firstPoint);
 
-            return new XLSheetRange(firstPoint, lastPoint);
+            return new Area(firstPoint, lastPoint);
         }
 
         public bool Contains(Point point)
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
                 point.Column >= FirstPoint.Column && point.Column <= LastPoint.Column;
         }
 
-        internal bool Covers(XLSheetRange otherArea)
+        internal bool Covers(Area otherArea)
         {
             return LeftColumn <= otherArea.LeftColumn &&
                    TopRow <= otherArea.TopRow &&
@@ -260,48 +260,48 @@ namespace ClosedXML.Excel
         /// Create a new range from this one by taking a number of rows from the bottom row up.
         /// </summary>
         /// <param name="rows">How many rows to take, must be at least one.</param>
-        public XLSheetRange SliceFromBottom(int rows)
+        public Area SliceFromBottom(int rows)
         {
             if (rows < 1)
                 throw new ArgumentOutOfRangeException();
 
-            return new XLSheetRange(new Point(BottomRow - rows + 1, FirstPoint.Column), LastPoint);
+            return new Area(new Point(BottomRow - rows + 1, FirstPoint.Column), LastPoint);
         }
 
         /// <summary>
         /// Create a new range from this one by taking a number of rows from the top row down.
         /// </summary>
         /// <param name="rows">How many rows to take, must be at least one.</param>
-        public XLSheetRange SliceFromTop(int rows)
+        public Area SliceFromTop(int rows)
         {
             if (rows < 1)
                 throw new ArgumentOutOfRangeException();
 
-            return new XLSheetRange(FirstPoint, new Point(TopRow + rows - 1, LastPoint.Column));
+            return new Area(FirstPoint, new Point(TopRow + rows - 1, LastPoint.Column));
         }
 
         /// <summary>
         /// Create a new range from this one by taking a number of rows from the left column to the right.
         /// </summary>
         /// <param name="columns">How many columns to take, must be at least one.</param>
-        public XLSheetRange SliceFromLeft(int columns)
+        public Area SliceFromLeft(int columns)
         {
             if (columns < 1)
                 throw new ArgumentOutOfRangeException();
 
-            return new XLSheetRange(FirstPoint, new Point(LastPoint.Row, LeftColumn + columns - 1));
+            return new Area(FirstPoint, new Point(LastPoint.Row, LeftColumn + columns - 1));
         }
 
         /// <summary>
         /// Create a new range from this one by taking a number of rows from the bottom row up.
         /// </summary>
         /// <param name="columns">How many columns to take, must be at least one.</param>
-        public XLSheetRange SliceFromRight(int columns)
+        public Area SliceFromRight(int columns)
         {
             if (columns < 1)
                 throw new ArgumentOutOfRangeException();
 
-            return new XLSheetRange(new Point(FirstPoint.Row, RightColumn - columns + 1), LastPoint);
+            return new Area(new Point(FirstPoint.Row, RightColumn - columns + 1), LastPoint);
         }
 
         /// <summary>
@@ -310,20 +310,20 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="otherRange">The other range.</param>
         /// <returns>A range that contains both this range and <paramref name="otherRange"/>.</returns>
-        public XLSheetRange Range(XLSheetRange otherRange)
+        public Area Range(Area otherRange)
         {
             var topRow = Math.Min(TopRow, otherRange.TopRow);
             var leftColumn = Math.Min(LeftColumn, otherRange.LeftColumn);
             var bottomRow = Math.Max(BottomRow, otherRange.BottomRow);
             var rightColumn = Math.Max(RightColumn, otherRange.RightColumn);
-            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+            return new Area(topRow, leftColumn, bottomRow, rightColumn);
         }
 
         /// <summary>
         /// Does this range intersects with <paramref name="other"/>.
         /// </summary>
         /// <returns><c>true</c> if intersects, <c>false</c> otherwise.</returns>
-        internal bool Intersects(XLSheetRange other)
+        internal bool Intersects(Area other)
         {
             return Intersect(other) is not null;
         }
@@ -333,7 +333,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="other">Other range.</param>
         /// <returns>The intersection range if it exists and is non-empty or null, if intersection doesn't exist.</returns>
-        internal XLSheetRange? Intersect(XLSheetRange other)
+        internal Area? Intersect(Area other)
         {
             var leftColumn = Math.Max(LeftColumn, other.LeftColumn);
             var rightColumn = Math.Min(RightColumn, other.RightColumn);
@@ -343,13 +343,13 @@ namespace ClosedXML.Excel
             if (bottomRow < topRow || rightColumn < leftColumn)
                 return null;
 
-            return new XLSheetRange(topRow, leftColumn, bottomRow, rightColumn);
+            return new Area(topRow, leftColumn, bottomRow, rightColumn);
         }
 
         /// <summary>
         /// Does this range overlaps the <paramref name="otherRange"/>?
         /// </summary>
-        internal bool Overlaps(XLSheetRange otherRange)
+        internal bool Overlaps(Area otherRange)
         {
             return TopRow <= otherRange.TopRow &&
                 RightColumn >= otherRange.RightColumn &&
@@ -378,10 +378,10 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="topLeftCorner">New top left coordinate of returned range.</param>
         /// <returns>New range.</returns>
-        internal XLSheetRange At(Point topLeftCorner)
+        internal Area At(Point topLeftCorner)
         {
             var bottomRightCorner = topLeftCorner.ShiftColumn(Width - 1).ShiftRow(Height - 1);
-            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+            return new Area(topLeftCorner, bottomRightCorner);
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace ClosedXML.Excel
         /// <param name="rowShift">By how much to shift the range.</param>
         /// <param name="columnShift">By how many columns to shift the range.</param>
         /// <returns>Newly created area.</returns>
-        internal XLSheetRange? ShiftAndClip(int rowShift, int columnShift)
+        internal Area? ShiftAndClip(int rowShift, int columnShift)
         {
             if (ShiftRowsAndClip(rowShift) is not { } rowShifted)
                 return null;
@@ -406,11 +406,11 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowShift">By how much to shift the range, positive - downwards, negative - upwards.</param>
         /// <returns>Newly created area.</returns>
-        internal XLSheetRange ShiftRows(int rowShift)
+        internal Area ShiftRows(int rowShift)
         {
             var topLeftCorner = FirstPoint.ShiftRow(rowShift);
             var bottomRightCorner = LastPoint.ShiftRow(rowShift);
-            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+            return new Area(topLeftCorner, bottomRightCorner);
         }
 
         /// <summary>
@@ -419,7 +419,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowShift">How many rows to shift.</param>
         /// <returns>Shifted clipped area or <c>null</c> if area was shifted completely out of a sheet.</returns>
-        internal XLSheetRange? ShiftRowsAndClip(int rowShift)
+        internal Area? ShiftRowsAndClip(int rowShift)
         {
             var shiftedTop = TopRow + rowShift;
             if (shiftedTop > XLHelper.MaxRowNumber)
@@ -432,7 +432,7 @@ namespace ClosedXML.Excel
             var clippedTop = Math.Max(shiftedTop, XLHelper.MinRowNumber);
             var clippedBottom = Math.Min(shiftedBottom, XLHelper.MaxRowNumber);
 
-            return new XLSheetRange(clippedTop, LeftColumn, clippedBottom, RightColumn);
+            return new Area(clippedTop, LeftColumn, clippedBottom, RightColumn);
         }
 
         /// <summary>
@@ -440,11 +440,11 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="columnShift">By how much to shift the range, positive - rightward, negative - leftward.</param>
         /// <returns>Newly created area.</returns>
-        internal XLSheetRange ShiftColumns(int columnShift)
+        internal Area ShiftColumns(int columnShift)
         {
             var topLeftCorner = FirstPoint.ShiftColumn(columnShift);
             var bottomRightCorner = LastPoint.ShiftColumn(columnShift);
-            return new XLSheetRange(topLeftCorner, bottomRightCorner);
+            return new Area(topLeftCorner, bottomRightCorner);
         }
 
         /// <summary>
@@ -453,7 +453,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="columnShift">How many columns to shift.</param>
         /// <returns>Shifted clipped area or <c>null</c> if area was shifted completely out of a sheet.</returns>
-        internal XLSheetRange? ShiftColumnsAndClip(int columnShift)
+        internal Area? ShiftColumnsAndClip(int columnShift)
         {
             var shiftedLeft = LeftColumn + columnShift;
             if (shiftedLeft > XLHelper.MaxColumnNumber)
@@ -466,7 +466,7 @@ namespace ClosedXML.Excel
             var clippedLeft = Math.Max(shiftedLeft, XLHelper.MinColumnNumber);
             var clippedRight = Math.Min(shiftedRight, XLHelper.MaxColumnNumber);
 
-            return new XLSheetRange(TopRow, clippedLeft, BottomRow, clippedRight);
+            return new Area(TopRow, clippedLeft, BottomRow, clippedRight);
         }
 
         public IEnumerator<Point> GetEnumerator()
@@ -491,7 +491,7 @@ namespace ClosedXML.Excel
         /// <param name="insertedArea">Inserted area.</param>
         /// <param name="result">The result, might be <c>null</c> as a valid result if area is pushed out.</param>
         /// <returns><c>true</c> if results wasn't partially shifted.</returns>
-        internal bool TryInsertAreaAndShiftRight(XLSheetRange insertedArea, out XLSheetRange? result)
+        internal bool TryInsertAreaAndShiftRight(Area insertedArea, out Area? result)
         {
             // Inserted fully upward, downward or to the right
             if (insertedArea.BottomRow < TopRow ||
@@ -545,7 +545,7 @@ namespace ClosedXML.Excel
         /// <param name="insertedArea">Inserted area.</param>
         /// <param name="result">The result, might be <c>null</c> as a valid result if area is pushed out.</param>
         /// <returns><c>true</c> if results wasn't partially shifted.</returns>
-        internal bool TryInsertAreaAndShiftDown(XLSheetRange insertedArea, out XLSheetRange? result)
+        internal bool TryInsertAreaAndShiftDown(Area insertedArea, out Area? result)
         {
             // Inserted fully to the left, to the right or below
             if (insertedArea.RightColumn < LeftColumn ||
@@ -606,7 +606,7 @@ namespace ClosedXML.Excel
         /// The <paramref name="result"/> has a value <c>null</c> if the range was completely
         /// removed by <paramref name="deletedArea"/>.
         /// </returns>
-        internal bool TryDeleteAreaAndShiftLeft(XLSheetRange deletedArea, out XLSheetRange? result)
+        internal bool TryDeleteAreaAndShiftLeft(Area deletedArea, out Area? result)
         {
             // Deleted area is fully upwards, downwards or to the right of this area.
             if (deletedArea.BottomRow < TopRow ||
@@ -704,7 +704,7 @@ namespace ClosedXML.Excel
         /// The <paramref name="result"/> has a value <c>null</c> if the range was completely
         /// removed by <paramref name="deletedArea"/>.
         /// </returns>
-        internal bool TryDeleteAreaAndShiftUp(XLSheetRange deletedArea, out XLSheetRange? result)
+        internal bool TryDeleteAreaAndShiftUp(Area deletedArea, out Area? result)
         {
             // Deleted area is fully on left, right or bottom side of this area.
             if (deletedArea.RightColumn < LeftColumn ||
@@ -798,7 +798,7 @@ namespace ClosedXML.Excel
         /// <param name="range">Range to exclude from this one.</param>
         /// <param name="nonExcludedAreas">A list to which add remaining (non-excluded) areas.</param>
         /// <returns>If an area was excluded, the excluded area.</returns>
-        internal XLSheetRange? Exclude(XLSheetRange range, List<XLSheetRange> nonExcludedAreas)
+        internal Area? Exclude(Area range, List<Area> nonExcludedAreas)
         {
             if (Intersect(range) is not { } intersection)
             {
@@ -808,19 +808,19 @@ namespace ClosedXML.Excel
 
             // top
             if (TopRow < intersection.TopRow)
-                nonExcludedAreas.Add(new XLSheetRange(TopRow, LeftColumn, intersection.TopRow - 1, RightColumn));
+                nonExcludedAreas.Add(new Area(TopRow, LeftColumn, intersection.TopRow - 1, RightColumn));
 
             // bottom
             if (BottomRow > intersection.BottomRow)
-                nonExcludedAreas.Add(new XLSheetRange(intersection.BottomRow + 1, LeftColumn, BottomRow, RightColumn));
+                nonExcludedAreas.Add(new Area(intersection.BottomRow + 1, LeftColumn, BottomRow, RightColumn));
 
             // left
             if (LeftColumn < intersection.LeftColumn)
-                nonExcludedAreas.Add(new XLSheetRange(intersection.TopRow, LeftColumn, intersection.BottomRow, intersection.LeftColumn - 1));
+                nonExcludedAreas.Add(new Area(intersection.TopRow, LeftColumn, intersection.BottomRow, intersection.LeftColumn - 1));
 
             // right
             if (RightColumn > intersection.RightColumn)
-                nonExcludedAreas.Add(new XLSheetRange(intersection.TopRow, intersection.RightColumn + 1, intersection.BottomRow, RightColumn));
+                nonExcludedAreas.Add(new Area(intersection.TopRow, intersection.RightColumn + 1, intersection.BottomRow, RightColumn));
 
             return intersection;
         }
@@ -831,7 +831,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="insertedLeftColumn">A position where columns are inserted.</param>
         /// <param name="insertedWidth">How many columns were inserted.</param>
-        internal XLSheetRange? ShiftOrExtendRight(int insertedLeftColumn, int insertedWidth)
+        internal Area? ShiftOrExtendRight(int insertedLeftColumn, int insertedWidth)
         {
             Debug.Assert(insertedWidth >= 0);
 
@@ -858,7 +858,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="insertedTopRow">A position where rows are inserted.</param>
         /// <param name="insertedHeight">How many rows were inserted.</param>
-        internal XLSheetRange? ShiftOrExtendDown(int insertedTopRow, int insertedHeight)
+        internal Area? ShiftOrExtendDown(int insertedTopRow, int insertedHeight)
         {
             Debug.Assert(insertedHeight >= 0);
 
@@ -885,7 +885,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="deletedTopRow">A position from which where rows are deleted.</param>
         /// <param name="deletedHeight">How many rows were deleted.</param>
-        internal XLSheetRange? ShiftOrShrinkUp(int deletedTopRow, int deletedHeight)
+        internal Area? ShiftOrShrinkUp(int deletedTopRow, int deletedHeight)
         {
             Debug.Assert(deletedHeight >= 0);
             if (BottomRow < deletedTopRow || deletedHeight == 0)
@@ -908,7 +908,7 @@ namespace ClosedXML.Excel
 
             var shift = Math.Max(TopRow - deletedTopRow, 0);
             var shifted = ShiftRows(-shift);
-            return new XLSheetRange(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow - shrink, shifted.RightColumn);
+            return new Area(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow - shrink, shifted.RightColumn);
         }
 
         /// <summary>
@@ -917,7 +917,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="deletedLeftColumn">A position from which where columns are deleted.</param>
         /// <param name="deletedWidth">How many columns were deleted.</param>
-        internal XLSheetRange? ShiftOrShrinkLeft(int deletedLeftColumn, int deletedWidth)
+        internal Area? ShiftOrShrinkLeft(int deletedLeftColumn, int deletedWidth)
         {
             Debug.Assert(deletedWidth >= 0);
             if (RightColumn < deletedLeftColumn || deletedWidth == 0)
@@ -940,7 +940,7 @@ namespace ClosedXML.Excel
 
             var shift = Math.Max(LeftColumn - deletedLeftColumn, 0);
             var shifted = ShiftColumns(-shift);
-            return new XLSheetRange(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow, shifted.RightColumn - shrink);
+            return new Area(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow, shifted.RightColumn - shrink);
         }
 
         internal XLAreaList ToAreaList()

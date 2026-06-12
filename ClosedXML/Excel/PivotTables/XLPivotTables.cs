@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             var pivotTable = new XLPivotTable(Worksheet, (XLPivotCache)pivotCache)
             {
                 Name = name,
-                Area = new XLSheetRange(Point.FromAddress(targetCell.Address)),
+                Area = new Area(Point.FromAddress(targetCell.Address)),
             };
             Add(pivotTable);
             pivotTable.UpdateCacheFields(Array.Empty<string>());

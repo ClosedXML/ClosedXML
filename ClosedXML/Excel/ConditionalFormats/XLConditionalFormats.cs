@@ -79,7 +79,7 @@ namespace ClosedXML.Excel
         /// Clear conditional formats in the <paramref name="area"/>. Split if necessary, remove if
         /// conditional format has no area left.
         /// </summary>
-        internal void Clear(XLSheetRange area)
+        internal void Clear(Area area)
         {
             for (var i = _conditionalFormats.Count - 1; i >= 0; --i)
             {
@@ -99,7 +99,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void CopyFrom(XLWorksheet sourceSheet, XLSheetRange sourceArea, Point targetPoint, bool mergeUncoveredInSameSheet = false)
+        internal void CopyFrom(XLWorksheet sourceSheet, Area sourceArea, Point targetPoint, bool mergeUncoveredInSameSheet = false)
         {
             // If source and target sheets are same, do not go over the end
             var sourceCfCount = sourceSheet.ConditionalFormats._conditionalFormats.Count;
@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
         {
             var rule = conditionalFormats[0];
             var sameFormatAreas = rule.Areas.ToList();
-            var differentFormatAreas = new List<XLSheetRange>();
+            var differentFormatAreas = new List<Area>();
 
             // The ids to the list must be in the ascending order
             var rulesToConsolidate = new List<int>();
@@ -211,7 +211,7 @@ namespace ClosedXML.Excel
 
         #region ISheetListener
 
-        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
             var inserted = new XLBookArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, true);
@@ -220,7 +220,7 @@ namespace ClosedXML.Excel
             AdjustConditionalFormatAreas(sheet, inserted.Area, static (sqref, insertedArea) => sqref.InsertAndShiftDown(insertedArea));
         }
 
-        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
             var inserted = new XLBookArea(sheet.Name, insertedArea);
             var refMod = new ReferenceShiftOnInsertRefModVisitor(inserted, false);
@@ -229,7 +229,7 @@ namespace ClosedXML.Excel
             AdjustConditionalFormatAreas(sheet, inserted.Area, static (sqref, insertedArea) => sqref.InsertAndShiftRight(insertedArea));
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
             var deleted = new XLBookArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsLeft);
@@ -238,7 +238,7 @@ namespace ClosedXML.Excel
             AdjustConditionalFormatAreas(sheet, deleted.Area, static (sqref, deletedArea) => sqref.DeleteAndShiftLeft(deletedArea));
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
             var deleted = new XLBookArea(sheet.Name, deletedArea);
             var refMod = new ReferenceShiftOnDeleteRefModVisitor(deleted, XLShiftDeletedCells.ShiftCellsUp);
@@ -262,7 +262,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void AdjustConditionalFormatAreas(XLWorksheet sheet, XLSheetRange affectedRange, Func<XLAreaList, XLSheetRange, XLAreaList> adjustAreas)
+        private void AdjustConditionalFormatAreas(XLWorksheet sheet, Area affectedRange, Func<XLAreaList, Area, XLAreaList> adjustAreas)
         {
             if (sheet != _worksheet)
                 return;

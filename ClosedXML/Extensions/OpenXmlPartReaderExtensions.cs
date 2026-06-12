@@ -105,11 +105,11 @@ namespace ClosedXML.Extensions
         /// <summary>
         /// Get value of attribute with type <c>ST_Ref</c>.
         /// </summary>
-        internal static XLSheetRange? GetRefAttribute(this ReadOnlyCollection<OpenXmlAttribute> attributes, string name)
+        internal static Area? GetRefAttribute(this ReadOnlyCollection<OpenXmlAttribute> attributes, string name)
         {
             var attribute = attributes.GetAttribute(name);
             if (!string.IsNullOrEmpty(attribute))
-                return XLSheetRange.Parse(attribute);
+                return Area.Parse(attribute);
 
             return null;
         }

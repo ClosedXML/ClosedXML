@@ -132,7 +132,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var lastCorner = new Point(60, 30);
             slice.Set(lastCorner, 1);
 
-            slice.Clear(new XLSheetRange(firstCorner, lastCorner));
+            slice.Clear(new Area(firstCorner, lastCorner));
             Assert.AreEqual(1, slice[outsideAddress]);
             Assert.AreEqual(0, slice[firstCorner]);
             Assert.AreEqual(0, slice[insideAddress]);
@@ -151,7 +151,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var outsideAddress = new Point(1, 3);
             slice.Set(outsideAddress, 4);
 
-            slice.InsertAreaAndShiftDown(new XLSheetRange(new Point(1, 1), new Point(2, 2)));
+            slice.InsertAreaAndShiftDown(new Area(new Point(1, 1), new Point(2, 2)));
 
             Assert.AreEqual(1, slice[3, 1]);
             Assert.AreEqual(2, slice[5, 1]);
@@ -171,7 +171,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var outsideAddress = new Point(3, 1);
             slice.Set(outsideAddress, 4);
 
-            slice.InsertAreaAndShiftRight(new XLSheetRange(new Point(1, 1), new Point(2, 2)));
+            slice.InsertAreaAndShiftRight(new Area(new Point(1, 1), new Point(2, 2)));
 
             Assert.AreEqual(1, slice[1, 3]);
             Assert.AreEqual(2, slice[1, 5]);
@@ -196,7 +196,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var leftAddress = new Point(3, 1);
             slice.Set(leftAddress, 6);
 
-            var deleteArea = new XLSheetRange(firstCorner, secondCorner);
+            var deleteArea = new Area(firstCorner, secondCorner);
             slice.DeleteAreaAndShiftUp(deleteArea);
             Assert.AreEqual(0, slice[firstCorner]);
             Assert.AreEqual(0, slice[secondCorner]);
@@ -223,7 +223,7 @@ namespace ClosedXML.Tests.Excel.Cells
             var aboveAddress = new Point(1, 3);
             slice.Set(aboveAddress, 6);
 
-            var deleteArea = new XLSheetRange(firstCorner, secondCorner);
+            var deleteArea = new Area(firstCorner, secondCorner);
             slice.DeleteAreaAndShiftLeft(deleteArea);
             Assert.AreEqual(0, slice[firstCorner]);
             Assert.AreEqual(0, slice[secondCorner]);
@@ -267,7 +267,7 @@ namespace ClosedXML.Tests.Excel.Cells
 
             void DeleteTopRow(int maxColumn, int[] columnUsage)
             {
-                var fullFirstRow = XLSheetRange.Full.SliceFromTop(1);
+                var fullFirstRow = Area.Full.SliceFromTop(1);
                 slice.DeleteAreaAndShiftUp(fullFirstRow);
 
                 Assert.That(slice.MaxColumn, Is.EqualTo(maxColumn));

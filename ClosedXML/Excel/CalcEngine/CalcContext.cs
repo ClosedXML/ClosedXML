@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var area in reference.Areas)
             {
                 var sheet = area.Worksheet ?? Worksheet;
-                var range = XLSheetRange.FromRangeAddress(area);
+                var range = Area.FromRangeAddress(area);
 
                 // A value can be either in a non-empty value slice or a empty cell with a formula.
                 var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel.CalcEngine
         internal IEnumerable<Point> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
         {
             var sheet = areaReference.Worksheet ?? Worksheet;
-            var area = XLSheetRange.FromRangeAddress(areaReference);
+            var area = Area.FromRangeAddress(areaReference);
 
             // This is a performance optimization when user specifies a whole column
             // in the tally function (e.g. SUMIF(A:B, "5", C:D)).
@@ -192,7 +192,7 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var area in reference.Areas)
             {
                 var sheet = area.Worksheet ?? Worksheet;
-                var range = XLSheetRange.FromRangeAddress(area);
+                var range = Area.FromRangeAddress(area);
                 var currentRow = 0;
                 var rowIsHidden = true;
 
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var area in reference.Areas)
             {
                 var sheet = area.Worksheet;
-                foreach (var point in XLSheetRange.FromRangeAddress(area))
+                foreach (var point in Area.FromRangeAddress(area))
                 {
                     yield return GetCellValue(sheet, point.Row, point.Column);
                 }

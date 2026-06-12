@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
             if (searchRange.Worksheet != _worksheet)
                 yield break;
 
-            var searchArea = XLSheetRange.FromRangeAddress(searchRange.RangeAddress);
+            var searchArea = Area.FromRangeAddress(searchRange.RangeAddress);
             foreach (var location in _sparklines.Keys.Where(searchArea.Contains))
             {
                 yield return new XLSparkline(this, location);
@@ -428,7 +428,7 @@ namespace ClosedXML.Excel
         // TODO: Sparklines locations should use ST_Sqref semantic for shifting, despite constraint "This sqref element MUST contain exactly one ref element". The code assumes it just shifts individual locations points.
         #region ISheetListner
 
-        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
             ShiftLocation(insertedBookArea, static (location, insertedArea) =>
@@ -447,7 +447,7 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+        void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
         {
             var insertedBookArea = new XLBookArea(sheet.Name, insertedArea);
             ShiftLocation(insertedBookArea, static (location, insertedArea) =>
@@ -466,7 +466,7 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
             ShiftLocation(deletedBookArea, static (location, deletedArea) =>
@@ -485,7 +485,7 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
             var deletedBookArea = new XLBookArea(sheet.Name, deletedArea);
             ShiftLocation(deletedBookArea, static (location, deletedArea) =>
@@ -504,7 +504,7 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        private void ShiftLocation(XLBookArea shiftedRange, Func<Point, XLSheetRange, Point?> shiftLocation)
+        private void ShiftLocation(XLBookArea shiftedRange, Func<Point, Area, Point?> shiftLocation)
         {
             // If shift was on another worksheet, there is no way to affect sparklines for this worksheet of this group
             if (!XLHelper.SheetComparer.Equals(shiftedRange.Name, _worksheet.Name))

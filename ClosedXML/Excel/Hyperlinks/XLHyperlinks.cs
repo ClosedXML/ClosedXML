@@ -14,11 +14,11 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
     /// <summary>
     /// XLHyperlink doesn't contain range, it is user created and only then it is associated with an area in a sheet.
     /// </summary>
-    private readonly List<(XLHyperlink Link, XLSheetRange Area)> _hyperlinks = new();
+    private readonly List<(XLHyperlink Link, Area Area)> _hyperlinks = new();
     private readonly RTree<XLHyperlink> _areaIndex = new();
-    private readonly Dictionary<XLHyperlink, XLSheetRange> _linkIndex = new();
+    private readonly Dictionary<XLHyperlink, Area> _linkIndex = new();
 
-    private delegate (bool Success, XLSheetRange? RepositionedArea) RepositionFunc(XLSheetRange hyperlinkArea);
+    private delegate (bool Success, Area? RepositionedArea) RepositionFunc(Area hyperlinkArea);
 
     internal XLHyperlinks(XLWorksheet worksheet)
     {
@@ -29,7 +29,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
 
     #region ISheetListener
 
-    void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange insertedArea)
+    void ISheetListener.OnInsertAreaAndShiftDown(XLWorksheet sheet, Area insertedArea)
     {
         RepositionOnChange(sheet, hyperlinkArea =>
         {
@@ -38,7 +38,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         });
     }
 
-    void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange insertedArea)
+    void ISheetListener.OnInsertAreaAndShiftRight(XLWorksheet sheet, Area insertedArea)
     {
         RepositionOnChange(sheet, hyperlinkArea =>
         {
@@ -47,7 +47,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         });
     }
 
-    void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+    void ISheetListener.OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
     {
         RepositionOnChange(sheet, hyperlinkArea =>
         {
@@ -56,7 +56,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         });
     }
 
-    void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+    void ISheetListener.OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
     {
         RepositionOnChange(sheet, hyperlinkArea =>
         {
@@ -176,7 +176,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
 
     internal bool TryGet(Point point, [NotNullWhen(true)] out XLHyperlink? hyperlink)
     {
-        var cellArea = new XLSheetRange(point);
+        var cellArea = new Area(point);
         var areaNodes = new List<RTree<XLHyperlink>.Node>();
         _areaIndex.GetNodes(cellArea, areaNodes);
 
@@ -208,7 +208,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         return new XLCell(_worksheet, area.FirstPoint);
     }
 
-    private void Add(XLSheetRange linkArea, XLHyperlink link)
+    private void Add(Area linkArea, XLHyperlink link)
     {
         if (link.Container is not null && link.Container != this)
             throw new InvalidOperationException("Hyperlink is attached to a different worksheet. Either remove it from the original worksheet or create a new hyperlink.");
@@ -229,7 +229,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         Remove(link, out _);
     }
 
-    private bool Remove(XLHyperlink link, out XLSheetRange area)
+    private bool Remove(XLHyperlink link, out Area area)
     {
         if (!_linkIndex.Remove(link, out area))
             return false;
@@ -242,7 +242,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         return true;
     }
 
-    private void ClearHyperlinkStyle(XLSheetRange range)
+    private void ClearHyperlinkStyle(Area range)
     {
         var worksheetFont = _worksheet.GetFormat().Font;
         var sheetColor = worksheetFont.Color;

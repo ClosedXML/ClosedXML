@@ -36,9 +36,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
-                new("Sheet", XLSheetRange.Parse("D2")),
-                new("Sheet", XLSheetRange.Parse("B4")),
-                new("Sheet", XLSheetRange.Parse("C6"))
+                new("Sheet", Area.Parse("D2")),
+                new("Sheet", Area.Parse("B4")),
+                new("Sheet", Area.Parse("C6"))
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
         }
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
-                new("Sheet", XLSheetRange.Parse("B3:D7")),
+                new("Sheet", Area.Parse("B3:D7")),
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
         }
@@ -67,8 +67,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
-                new("Sheet", XLSheetRange.Parse("D7")),
-                new("Sheet", XLSheetRange.Parse("B1")),
+                new("Sheet", Area.Parse("D7")),
+                new("Sheet", Area.Parse("B1")),
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("outer"), new XLName("inner") }, dependencies.Names);
         }
@@ -97,7 +97,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
-                new("Sheet", XLSheetRange.Parse("A1"))
+                new("Sheet", Area.Parse("A1"))
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
         }
@@ -112,7 +112,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             });
             CollectionAssert.AreEquivalent(new XLBookArea[]
             {
-                new("Sheet", XLSheetRange.Parse("F7")), // D4 (formula cell) + R[3]C[2] (name relative reference) = F7
+                new("Sheet", Area.Parse("F7")), // D4 (formula cell) + R[3]C[2] (name relative reference) = F7
             }, dependencies.Areas);
             CollectionAssert.AreEquivalent(new[] { new XLName("name") }, dependencies.Names);
         }
@@ -371,14 +371,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Set directly, so the cell is not marked as a dirty.
             var cell = (XLCell)sheet.Cell(address);
             cell.Formula = XLCellFormula.NormalA1(formula);
-            var cellArea = new XLBookArea(sheet.Name, new XLSheetRange(cell.Point, cell.Point));
+            var cellArea = new XLBookArea(sheet.Name, new Area(cell.Point, cell.Point));
             tree.AddFormula(cellArea, cell.Formula, sheet.Workbook);
             return cell.Formula;
         }
 
         private static void MarkDirty(DependencyTree tree, IXLWorksheet sheet, string range)
         {
-            var area = new XLBookArea(sheet.Name, XLSheetRange.Parse(range));
+            var area = new XLBookArea(sheet.Name, Area.Parse(range));
             tree.MarkDirty(area);
         }
 
@@ -431,7 +431,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "A1",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1"))
+                        new XLBookArea("Sheet", Area.Parse("A1"))
                     }
                 };
 
@@ -442,9 +442,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "7+A1/(B1+C1)",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("C1"))
+                        new XLBookArea("Sheet", Area.Parse("A1")),
+                        new XLBookArea("Sheet", Area.Parse("B1")),
+                        new XLBookArea("Sheet", Area.Parse("C1"))
                     }
                 };
 
@@ -457,7 +457,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     new[]
                     {
                         // Implicit intersection 
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:A4")),
+                        new XLBookArea("Sheet", Area.Parse("A1:A4")),
                     }
                 };
 
@@ -469,7 +469,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     {
                         // This is not correct, but until spill operator works,
                         // but for now it provides best approximate for now.
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A2:F7")),
+                        new XLBookArea("Sheet", Area.Parse("A2:F7")),
                     }
                 };
 
@@ -479,7 +479,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "4+A4%",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A4")),
+                        new XLBookArea("Sheet", Area.Parse("A4")),
                     }
                 };
 
@@ -489,7 +489,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "(A1:B2,C1:D2):E3",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:E3"))
+                        new XLBookArea("Sheet", Area.Parse("A1:E3"))
                     }
                 };
 
@@ -500,7 +500,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "A1:C4:D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:D4")),
+                        new XLBookArea("Sheet", Area.Parse("A1:D4")),
                     }
                 };
 
@@ -511,9 +511,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     new[]
                     {
                         // E10 is a value argument, thus isn't propagated, only added
-                        new XLBookArea("Sheet", XLSheetRange.Parse("E10")),
+                        new XLBookArea("Sheet", Area.Parse("E10")),
                         // Areas from same sheet are unified into a single larger area
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:D10"))
+                        new XLBookArea("Sheet", Area.Parse("A1:D10"))
                     }
                 };
 
@@ -524,12 +524,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     new[]
                     {
                         // G4 and H3 are not propagated to range operation, only added
-                        new XLBookArea("Sheet", XLSheetRange.Parse("G4")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("H3")),
+                        new XLBookArea("Sheet", Area.Parse("G4")),
+                        new XLBookArea("Sheet", Area.Parse("H3")),
 
                         // Largest possible area in each sheet, based on references in the sheet
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:C5")),
-                        new XLBookArea("Other", XLSheetRange.Parse("A2:C4"))
+                        new XLBookArea("Sheet", Area.Parse("A1:C5")),
+                        new XLBookArea("Other", Area.Parse("A2:C4"))
                     }
                 };
 
@@ -540,7 +540,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "INDEX({1},1,1):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("D2")),
+                        new XLBookArea("Sheet", Area.Parse("D2")),
                     }
                 };
 
@@ -551,7 +551,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     new[]
                     {
                         // In this special case, intersection is evaluated
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B2:C2")),
+                        new XLBookArea("Sheet", Area.Parse("B2:C2")),
                     }
                 };
 
@@ -562,9 +562,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "A1:E10 IF(TRUE,A1:C3,B2:D2)",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:C3")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B2:D2")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:E10")),
+                        new XLBookArea("Sheet", Area.Parse("A1:C3")),
+                        new XLBookArea("Sheet", Area.Parse("B2:D2")),
+                        new XLBookArea("Sheet", Area.Parse("A1:E10")),
                     }
                 };
 
@@ -574,8 +574,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "A1:B2 + A1:C4",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:B2")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:C4")),
+                        new XLBookArea("Sheet", Area.Parse("A1:B2")),
+                        new XLBookArea("Sheet", Area.Parse("A1:C4")),
                     }
                 };
 
@@ -585,8 +585,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "IF(A1,B1,C1):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B1:D2")),
+                        new XLBookArea("Sheet", Area.Parse("A1")),
+                        new XLBookArea("Sheet", Area.Parse("B1:D2")),
                     }
                 };
 
@@ -596,8 +596,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "IF(A1,5,B1):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B1:D2")),
+                        new XLBookArea("Sheet", Area.Parse("A1")),
+                        new XLBookArea("Sheet", Area.Parse("B1:D2")),
                     }
                 };
 
@@ -607,8 +607,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "IF(A1,B1):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B1:D2")),
+                        new XLBookArea("Sheet", Area.Parse("A1")),
+                        new XLBookArea("Sheet", Area.Parse("B1:D2")),
                     }
                 };
 
@@ -618,7 +618,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "INDEX(A1:C4,2,5):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1:D4")),
+                        new XLBookArea("Sheet", Area.Parse("A1:D4")),
                     }
                 };
 
@@ -628,8 +628,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "CHOOSE(A1,B1,5,C1):D2",
                     new[]
                     {
-                        new XLBookArea("Sheet", XLSheetRange.Parse("A1")),
-                        new XLBookArea("Sheet", XLSheetRange.Parse("B1:D2")),
+                        new XLBookArea("Sheet", Area.Parse("A1")),
+                        new XLBookArea("Sheet", Area.Parse("B1:D2")),
                     }
                 };
 
@@ -639,8 +639,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     "POWER(SomeSheet!C4,Other!B1)",
                     new[]
                     {
-                        new XLBookArea("SomeSheet", XLSheetRange.Parse("C4")),
-                        new XLBookArea("Other", XLSheetRange.Parse("B1")),
+                        new XLBookArea("SomeSheet", Area.Parse("C4")),
+                        new XLBookArea("Other", Area.Parse("B1")),
                     }
                 };
             }

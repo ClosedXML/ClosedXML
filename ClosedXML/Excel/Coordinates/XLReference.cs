@@ -8,7 +8,7 @@ namespace ClosedXML.Excel;
 /// (<c>B$4:$D$10</c>), row span (<c>4:10</c>) and col span (<c>G:H</c>).
 /// </summary>
 /// <remarks>
-/// This is an actual representation of a reference, while the <see cref="XLSheetRange"/> is for
+/// This is an actual representation of a reference, while the <see cref="Area"/> is for
 /// an absolute are of a sheet and <see cref="XLAddress"/> is only for a cell reference and
 /// <see cref="XLRangeAddress"/> only for area reference.
 /// </remarks>

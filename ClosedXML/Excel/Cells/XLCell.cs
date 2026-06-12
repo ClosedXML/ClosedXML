@@ -281,7 +281,7 @@ namespace ClosedXML.Excel
 
             if (setTableHeader)
             {
-                var cellRange = new XLSheetRange(Point, Point);
+                var cellRange = new Area(Point, Point);
                 foreach (var table in Worksheet.Tables)
                     table.RefreshFieldsFromCells(cellRange);
             }
@@ -1048,7 +1048,7 @@ namespace ClosedXML.Excel
 
         internal XLDataValidation CreateDataValidation()
         {
-            return Worksheet.DataValidations.Create(new XLSheetRange(Point));
+            return Worksheet.DataValidations.Create(new Area(Point));
         }
 
         public void Select()
@@ -1356,7 +1356,7 @@ namespace ClosedXML.Excel
                 CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
-                Worksheet.DataValidations.Delete(new XLSheetRange(Point));
+                Worksheet.DataValidations.Delete(new Area(Point));
             }
         }
 
@@ -1813,7 +1813,7 @@ namespace ClosedXML.Excel
                 if (value.Worksheet is not null && Worksheet != value.Worksheet)
                     throw new ArgumentException("The reference worksheet must be same as worksheet of the cell or null.");
 
-                Formula.Range = XLSheetRange.FromRangeAddress(value);
+                Formula.Range = Area.FromRangeAddress(value);
             }
         }
 

@@ -417,7 +417,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
-                    XLSheetRange.FromRangeAddress(RangeAddress),
+                    Area.FromRangeAddress(RangeAddress),
                     options);
 
                 return firstColumnUsed == 0 ? null : Column(firstColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
@@ -454,7 +454,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
-                    XLSheetRange.FromRangeAddress(RangeAddress),
+                    Area.FromRangeAddress(RangeAddress),
                     options);
 
                 return lastColumnUsed == 0 ? null : Column(lastColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
@@ -531,7 +531,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 rowFromCells = Worksheet.Internals.CellsCollection.FirstRowUsed(
-                    XLSheetRange.FromRangeAddress(RangeAddress), options);
+                    Area.FromRangeAddress(RangeAddress), options);
 
                 return rowFromCells == 0 ? null : Row(rowFromCells - RangeAddress.FirstAddress.RowNumber + 1);
             }
@@ -567,7 +567,7 @@ namespace ClosedXML.Excel
             if (predicate == null)
             {
                 Int32 lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
-                    XLSheetRange.FromRangeAddress(RangeAddress), options);
+                    Area.FromRangeAddress(RangeAddress), options);
 
                 return lastRowUsed == 0 ? null : Row(lastRowUsed - RangeAddress.FirstAddress.RowNumber + 1);
             }

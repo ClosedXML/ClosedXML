@@ -6,7 +6,7 @@ using RBush;
 namespace ClosedXML.Utils;
 
 /// <summary>
-/// R-Tree for <see cref="XLSheetRange"/> areas and some data associated with the area. The R-Tree
+/// R-Tree for <see cref="Area"/> areas and some data associated with the area. The R-Tree
 /// allows multiple occurrences per area.
 /// </summary>
 /// <typeparam name="TData">Data associated with each area.</typeparam>
@@ -34,7 +34,7 @@ internal sealed class RTree<TData>
         _rBush.Delete(new AreaData(node.Area, node.Data));
     }
 
-    internal List<Node> GetNodes(XLSheetRange area, List<Node> buffer)
+    internal List<Node> GetNodes(Area area, List<Node> buffer)
     {
         var envelope = ToEnvelope(area);
         GetNodes(_rBush.Root, in envelope, buffer);
@@ -46,14 +46,14 @@ internal sealed class RTree<TData>
     /// </summary>
     /// <param name="Area">Area of a sheet.</param>
     /// <param name="Data">Data associated with the <paramref name="Area"/> (e.g. color or hyperlink).</param>
-    internal readonly record struct Node(XLSheetRange Area, TData Data);
+    internal readonly record struct Node(Area Area, TData Data);
 
     // AreaData must implement Equals for RBush.Delete operation to properly work
     private sealed class AreaData : ISpatialData, IEquatable<AreaData>
     {
         private readonly Envelope _area;
 
-        public AreaData(XLSheetRange area, TData data)
+        public AreaData(Area area, TData data)
         {
             _area = ToEnvelope(area);
             Data = data;
@@ -63,7 +63,7 @@ internal sealed class RTree<TData>
 
         internal TData Data { get; }
 
-        internal XLSheetRange Area => ToArea(in _area);
+        internal Area Area => ToArea(in _area);
 
         public override int GetHashCode()
         {
@@ -90,14 +90,14 @@ internal sealed class RTree<TData>
         }
     }
 
-    private static Envelope ToEnvelope(XLSheetRange range)
+    private static Envelope ToEnvelope(Area range)
     {
         return new Envelope(range.LeftColumn, range.TopRow, range.RightColumn, range.BottomRow);
     }
 
-    private static XLSheetRange ToArea(in Envelope envelope)
+    private static Area ToArea(in Envelope envelope)
     {
-        return new XLSheetRange((int)envelope.MinX, (int)envelope.MinY, (int)envelope.MaxX, (int)envelope.MaxY);
+        return new Area((int)envelope.MinX, (int)envelope.MinY, (int)envelope.MaxX, (int)envelope.MaxY);
     }
 
     private static void GetNodes(RBush<AreaData>.Node node, in Envelope boundingBox, List<Node> coveringNodes)

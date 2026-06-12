@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("C2").Value = "Single referenced text";
 
             Assert.AreEqual(2, sst.Count);
-            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.Clear(new XLSheetRange(2, 2, 2, 3));
+            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.Clear(new Area(2, 2, 2, 3));
             Assert.AreEqual(1, sst.Count);
             Assert.AreEqual("Double referenced text", ws.Cell("A1").Value);
         }
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("B1").Value = "Kept Double Reference"; // id 2
             ws.Cell("C3").Value = "Kept Double Reference"; // id 2
 
-            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new XLSheetRange(2, 2, 3, 3));
+            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new Area(2, 2, 3, 3));
 
             Assert.AreEqual(2, sst.Count);
             Assert.AreEqual("Kept Single Reference", sst[1]);
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("A2").Value = "Kept Double Reference"; // id 2
             ws.Cell("C3").Value = "Kept Double Reference"; // id 2
 
-            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new XLSheetRange(2, 2, 3, 3));
+            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.DeleteAreaAndShiftLeft(new Area(2, 2, 3, 3));
 
             Assert.AreEqual(2, sst.Count);
             Assert.AreEqual("Kept Single Reference", sst[1]);
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("C1048576").Value = "Deleted Single Reference"; // id 1
             ws.Cell("B1048574").Value = "Kept Double Reference"; // id 2
             ws.Cell("B1048576").Value = "Kept Double Reference"; // id 2
-            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftDown(new XLSheetRange(3, 2, 4, 3));
+            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftDown(new Area(3, 2, 4, 3));
 
             Assert.AreEqual(2, sst.Count);
             Assert.AreEqual("Kept Single Reference", sst[0]);
@@ -106,7 +106,7 @@ namespace ClosedXML.Tests.Excel.Cells
             ws.Cell("XFD2").Value = "Deleted Single Reference"; // id 1
             ws.Cell("XFD3").Value = "Kept Double Reference"; // id 2
             ws.Cell("XFB3").Value = "Kept Double Reference"; // id 2
-            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftRight(new XLSheetRange(2, 3, 3, 4));
+            ((XLWorksheet)ws).Internals.CellsCollection.ValueSlice.InsertAreaAndShiftRight(new Area(2, 3, 3, 4));
 
             Assert.AreEqual(2, sst.Count);
             Assert.AreEqual("Kept Single Reference", sst[0]);

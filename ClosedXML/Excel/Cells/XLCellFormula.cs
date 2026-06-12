@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <remarks>Doesn't contain sheet, so it doesn't have to deal with
         /// sheet renames and moving formula around.</remarks>
-        internal XLSheetRange Range { get; set; }
+        internal Area Range { get; set; }
 
         /// <summary>
         /// True, if 1D data table formula is the row (the displayed formula in Excel is missing the second argument <c>{=TABLE(A1;)}</c>).
@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
         /// <param name="arrayFormulaA1">Isn't wrapped in <c>{}</c> and doesn't start with <c>=</c>.</param>
         /// <param name="range">A range of cells that are calculated through the array formula.</param>
         /// <param name="aca">A flag for always calculate array.</param>
-        internal static XLCellFormula Array(string arrayFormulaA1, XLSheetRange range, bool aca)
+        internal static XLCellFormula Array(string arrayFormulaA1, Area range, bool aca)
         {
             return new XLCellFormula(arrayFormulaA1)
             {
@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
         /// <param name="input1Deleted">Was the original address deleted?</param>
         /// <param name="isRowDataTable">Is data table in row (<c>true</c>) or columns (<c>false</c>)?</param>
         internal static XLCellFormula DataTable1D(
-            XLSheetRange range,
+            Area range,
             Point input1Address,
             bool input1Deleted,
             bool isRowDataTable)
@@ -225,7 +225,7 @@ namespace ClosedXML.Excel
         /// <param name="input2Address">Address of the input cell that will be replaced in the data table. If input deleted, ignored and value can be anything.</param>
         /// <param name="input2Deleted">Was the original address deleted?</param>
         internal static XLCellFormula DataTable2D(
-            XLSheetRange range,
+            Area range,
             Point input1Address,
             bool input1Deleted,
             Point input2Address,

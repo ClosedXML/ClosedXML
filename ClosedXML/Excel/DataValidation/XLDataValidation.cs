@@ -179,7 +179,7 @@ namespace ClosedXML.Excel
                 return;
 
             // Ignore sheet of a range
-            var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+            var area = Area.FromRangeAddress(range.RangeAddress);
             _worksheet.DataValidations.AddArea(this, area);
         }
 

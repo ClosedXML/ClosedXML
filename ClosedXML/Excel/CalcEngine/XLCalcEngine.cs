@@ -45,7 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Add an array formula to the calc engine to manage dirty tracking and evaluation.
         /// </summary>
-        internal void AddArrayFormula(XLSheetRange range, XLCellFormula arrayFormula, XLWorksheet sheet)
+        internal void AddArrayFormula(Area range, XLCellFormula arrayFormula, XLWorksheet sheet)
         {
             if (_chain is not null && _dependencyTree is not null)
             {
@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_chain is not null && _dependencyTree is not null)
             {
-                var pointArea = new XLBookArea(sheetName, new XLSheetRange(point.Point, point.Point));
+                var pointArea = new XLBookArea(sheetName, new Area(point.Point, point.Point));
                 _dependencyTree.AddFormula(pointArea, formula, workbook);
                 _chain.AddLast(point);
             }
@@ -94,22 +94,22 @@ namespace ClosedXML.Excel.CalcEngine
             Purge(sheet.Workbook.WorksheetsInternal);
         }
 
-        public void OnInsertAreaAndShiftDown(XLWorksheet sheet, XLSheetRange area)
+        public void OnInsertAreaAndShiftDown(XLWorksheet sheet, Area area)
         {
             Purge(sheet.Workbook.WorksheetsInternal);
         }
 
-        public void OnInsertAreaAndShiftRight(XLWorksheet sheet, XLSheetRange area)
+        public void OnInsertAreaAndShiftRight(XLWorksheet sheet, Area area)
         {
             Purge(sheet.Workbook.WorksheetsInternal);
         }
 
-        public void OnDeleteAreaAndShiftLeft(XLWorksheet sheet, XLSheetRange deletedArea)
+        public void OnDeleteAreaAndShiftLeft(XLWorksheet sheet, Area deletedArea)
         {
             Purge(sheet.Workbook.WorksheetsInternal);
         }
 
-        public void OnDeleteAreaAndShiftUp(XLWorksheet sheet, XLSheetRange deletedArea)
+        public void OnDeleteAreaAndShiftUp(XLWorksheet sheet, Area deletedArea)
         {
             Purge(sheet.Workbook.WorksheetsInternal);
         }
@@ -122,16 +122,16 @@ namespace ClosedXML.Excel.CalcEngine
             // Mark everything as dirty, because there can be stale values
             foreach (var sheet in sheets)
             {
-                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(Area.Full);
             }
         }
 
         internal void MarkDirty(XLWorksheet sheet, Point point)
         {
-            MarkDirty(sheet, new XLSheetRange(point, point));
+            MarkDirty(sheet, new Area(point, point));
         }
 
-        internal void MarkDirty(XLWorksheet sheet, XLSheetRange area)
+        internal void MarkDirty(XLWorksheet sheet, Area area)
         {
             if (_dependencyTree is not null)
             {

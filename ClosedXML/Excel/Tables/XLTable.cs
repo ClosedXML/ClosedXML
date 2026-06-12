@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Area of the range, including headings and totals, if table has them.
         /// </summary>
-        internal XLSheetRange Area => XLSheetRange.FromRangeAddress(RangeAddress);
+        internal Area Area => Area.FromRangeAddress(RangeAddress);
 
         private void RescanFieldNames()
         {
@@ -1033,7 +1033,7 @@ namespace ClosedXML.Excel
         /// Update headers fields and totals fields by data from the cells. Do not add a new fields or names.
         /// </summary>
         /// <param name="refreshArea">Area that contains cells with changed values that might affect header and totals fields.</param>
-        internal void RefreshFieldsFromCells(XLSheetRange refreshArea)
+        internal void RefreshFieldsFromCells(Area refreshArea)
         {
             var tableArea = Area;
             if (ShowTotalsRow)

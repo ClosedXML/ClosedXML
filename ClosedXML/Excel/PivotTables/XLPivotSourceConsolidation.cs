@@ -50,7 +50,7 @@ internal sealed class XLPivotSourceConsolidation : IXLPivotSource
         return false;
     }
 
-    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
+    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out Area? sheetArea)
     {
         throw new NotImplementedException("Consolidation pivot cache data source is not supported.");
     }

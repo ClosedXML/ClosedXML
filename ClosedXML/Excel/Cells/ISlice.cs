@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -35,38 +35,38 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Clear all values in the range and mark them as unused.
         /// </summary>
-        void Clear(XLSheetRange range);
+        void Clear(Area area);
 
         /// <summary>
-        /// Clear all values in the <paramref name="rangeToDelete"/> and shift all values right of the deleted area to the deleted place.
+        /// Clear all values in the <paramref name="areaToDelete"/> and shift all values right of the deleted area to the deleted place.
         /// </summary>
-        void DeleteAreaAndShiftLeft(XLSheetRange rangeToDelete);
+        void DeleteAreaAndShiftLeft(Area areaToDelete);
 
         /// <summary>
-        /// Clear all values in the <paramref name="rangeToDelete"/> and shift all values below the deleted area to the deleted place.
+        /// Clear all values in the <paramref name="areaToDelete"/> and shift all values below the deleted area to the deleted place.
         /// </summary>
-        void DeleteAreaAndShiftUp(XLSheetRange rangeToDelete);
+        void DeleteAreaAndShiftUp(Area areaToDelete);
 
         /// <summary>
         /// Get all used points in a slice.
         /// </summary>
-        /// <param name="range">Range to iterate over.</param>
+        /// <param name="area">Area to iterate over.</param>
         /// <param name="reverse"><c>false</c> = left to right, top to bottom. <c>true</c> = right to left, bottom to top.</param>
-        IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false);
+        IEnumerator<Point> GetEnumerator(Area area, bool reverse = false);
 
         /// <summary>
-        /// Shift all values at the <paramref name="range"/> and all cells below it
-        /// down by <see cref="XLSheetRange.Height"/> of the <paramref name="range"/>.
+        /// Shift all values at the <paramref name="areaToInsert"/> and all cells below it
+        /// down by <see cref="Area.Height"/> of the <paramref name="areaToInsert"/>.
         /// The insert area is cleared.
         /// </summary>
-        void InsertAreaAndShiftDown(XLSheetRange range);
+        void InsertAreaAndShiftDown(Area areaToInsert);
 
         /// <summary>
-        /// Shift all values at the <paramref name="range"/> and all cells right of it
-        /// to the right by <see cref="XLSheetRange.Width"/> of the <paramref name="range"/>.
+        /// Shift all values at the <paramref name="areaToInsert"/> and all cells right of it
+        /// to the right by <see cref="Area.Width"/> of the <paramref name="areaToInsert"/>.
         /// The insert area is cleared.
         /// </summary>
-        void InsertAreaAndShiftRight(XLSheetRange range);
+        void InsertAreaAndShiftRight(Area areaToInsert);
 
         /// <summary>
         /// Does slice contains a non-default value at specified point?

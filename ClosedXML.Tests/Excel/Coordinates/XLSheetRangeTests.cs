@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ClosedXML.Tests.Excel.Coordinates
 {
     [TestFixture]
-    public class XLSheetRangeTests
+    public class AreaTests
     {
         [TestCase("A1", 1, 1, 1, 1)]
         [TestCase("A1:Z100", 1, 1, 100, 26)]
@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFD1048576:XFD1048576", 1048576, 16384, 1048576, 16384)]
         public void ParseCellRefsAccordingToGrammar(string refText, int firstRow, int firstCol, int lastRow, int lastCol)
         {
-            var reference = XLSheetRange.Parse(refText);
+            var reference = Area.Parse(refText);
             Assert.AreEqual(firstRow, reference.FirstPoint.Row);
             Assert.AreEqual(firstCol, reference.FirstPoint.Column);
             Assert.AreEqual(lastRow, reference.LastPoint.Row);
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A2:A1")]
         public void InvalidInputsAreNotParsed(string invalidRef)
         {
-            Assert.Throws<FormatException>(() => XLSheetRange.Parse(invalidRef));
+            Assert.Throws<FormatException>(() => Area.Parse(invalidRef));
         }
 
         [TestCase("A1:A1", "A1")]
@@ -42,7 +42,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFD1048575:XFD1048576", "XFD1048575:XFD1048576")]
         public void CanFormatToString(string cellRef, string expected)
         {
-            var r = XLSheetRange.Parse(cellRef);
+            var r = Area.Parse(cellRef);
             Assert.AreEqual(expected, r.ToString());
         }
 
@@ -54,9 +54,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("B2:C3", "E5:F6", "B2:F6")]
         public void RangeOperation(string leftOperand, string rightOperand, string expectedRange)
         {
-            var left = XLSheetRange.Parse(leftOperand);
-            var right = XLSheetRange.Parse(rightOperand);
-            var expected = XLSheetRange.Parse(expectedRange);
+            var left = Area.Parse(leftOperand);
+            var right = Area.Parse(rightOperand);
+            var expected = Area.Parse(expectedRange);
 
             Assert.AreEqual(expected, left.Range(right));
         }
@@ -69,9 +69,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A1:C6", "B4:E10", "B4:C6")]
         public void IntersectOperation(string leftOperand, string rightOperand, string expectedRange)
         {
-            var left = XLSheetRange.Parse(leftOperand);
-            var right = XLSheetRange.Parse(rightOperand);
-            var expected = expectedRange is null ? (XLSheetRange?)null : XLSheetRange.Parse(expectedRange);
+            var left = Area.Parse(leftOperand);
+            var right = Area.Parse(rightOperand);
+            var expected = expectedRange is null ? (Area?)null : Area.Parse(expectedRange);
 
             Assert.AreEqual(expected, left.Intersect(right));
         }
@@ -84,8 +84,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A1:C6", "B4:E10", true)]
         public void Intersects_checks_whether_the_range_has_intersection_with_another(string leftOperand, string rightOperand, bool expected)
         {
-            var left = XLSheetRange.Parse(leftOperand);
-            var right = XLSheetRange.Parse(rightOperand);
+            var left = Area.Parse(leftOperand);
+            var right = Area.Parse(rightOperand);
 
             Assert.AreEqual(expected, left.Intersects(right));
         }
@@ -97,8 +97,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A2:C2", "B2:C3", false)]
         public void Overlaps_checks_whether_left_fully_overlaps_right(string leftOperand, string rightOperand, bool expected)
         {
-            var left = XLSheetRange.Parse(leftOperand);
-            var right = XLSheetRange.Parse(rightOperand);
+            var left = Area.Parse(leftOperand);
+            var right = Area.Parse(rightOperand);
 
             Assert.AreEqual(expected, left.Overlaps(right));
         }
@@ -116,9 +116,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFA1:XFD1", "XFB1:XFC1", "XFA1:XFD1")] // Extend below last row
         public void TryInsertAreaAndShiftRight_without_partial_cover(string original, string inserted, string repositioned)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var insertedArea = XLSheetRange.Parse(inserted);
-            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+            var originalArea = Area.Parse(original);
+            var insertedArea = Area.Parse(inserted);
+            var repositionedArea = repositioned is not null ? Area.Parse(repositioned) : (Area?)null;
 
             var success = originalArea.TryInsertAreaAndShiftRight(insertedArea, out var result);
 
@@ -131,8 +131,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("C4:F8", "A5:B9")] // Partially below
         public void TryInsertAreaAndShiftRight_with_partial_cover(string original, string inserted)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var insertedArea = XLSheetRange.Parse(inserted);
+            var originalArea = Area.Parse(original);
+            var insertedArea = Area.Parse(inserted);
 
             Assert.False(originalArea.TryInsertAreaAndShiftRight(insertedArea, out _));
         }
@@ -150,9 +150,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A1048570:A1048572", "A1048571:A1048576", "A1048570:A1048576")] // Extend below last row
         public void TryInsertAreaAndShiftDown_without_partial_cover(string original, string inserted, string repositioned)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var insertedArea = XLSheetRange.Parse(inserted);
-            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+            var originalArea = Area.Parse(original);
+            var insertedArea = Area.Parse(inserted);
+            var repositionedArea = repositioned is not null ? Area.Parse(repositioned) : (Area?)null;
 
             var success = originalArea.TryInsertAreaAndShiftDown(insertedArea, out var result);
 
@@ -165,8 +165,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("D6:G10", "E7:H15")] // Right
         public void TryInsertAreaAndShiftDown_with_partial_cover(string original, string inserted)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var insertedArea = XLSheetRange.Parse(inserted);
+            var originalArea = Area.Parse(original);
+            var insertedArea = Area.Parse(inserted);
 
             Assert.False(originalArea.TryInsertAreaAndShiftDown(insertedArea, out _));
         }
@@ -187,9 +187,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("D4:F8", "B6:I15", "D4:F5")] // Delete bottom slice
         public void TryDeleteAreaAndShiftLeft_without_partial_cover(string original, string deleted, string repositioned)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var deletedArea = XLSheetRange.Parse(deleted);
-            var repositionedArea = repositioned is not null ? XLSheetRange.Parse(repositioned) : (XLSheetRange?)null;
+            var originalArea = Area.Parse(original);
+            var deletedArea = Area.Parse(deleted);
+            var repositionedArea = repositioned is not null ? Area.Parse(repositioned) : (Area?)null;
 
             var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
 
@@ -202,8 +202,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("D4:E8", "C4:D6")] // Partial left and inside
         public void TryDeleteAreaAndShiftLeft_with_partial_cover(string original, string deleted)
         {
-            var originalArea = XLSheetRange.Parse(original);
-            var deletedArea = XLSheetRange.Parse(deleted);
+            var originalArea = Area.Parse(original);
+            var deletedArea = Area.Parse(deleted);
             var success = originalArea.TryDeleteAreaAndShiftLeft(deletedArea, out var result);
 
             Assert.False(success);
@@ -226,9 +226,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("D4:H8", "G1:I9", "D4:F8")] // Delete right slice
         public void TryDeleteAreaAndShiftUp_without_partial_cover(string leftOperand, string deleted, string expected)
         {
-            var originalArea = XLSheetRange.Parse(leftOperand);
-            var deletedArea = XLSheetRange.Parse(deleted);
-            var expectedResult = expected is not null ? XLSheetRange.Parse(expected) : (XLSheetRange?)null;
+            var originalArea = Area.Parse(leftOperand);
+            var deletedArea = Area.Parse(deleted);
+            var expectedResult = expected is not null ? Area.Parse(expected) : (Area?)null;
 
             var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
 
@@ -241,8 +241,8 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("B5:D8", "B1:B6")] // Partial above and inside
         public void TryDeleteAreaAndShiftUp_with_partial_cover(string leftOperand, string deleted)
         {
-            var originalArea = XLSheetRange.Parse(leftOperand);
-            var deletedArea = XLSheetRange.Parse(deleted);
+            var originalArea = Area.Parse(leftOperand);
+            var deletedArea = Area.Parse(deleted);
             var success = originalArea.TryDeleteAreaAndShiftUp(deletedArea, out var result);
 
             Assert.False(success);
@@ -272,10 +272,10 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("B2:D4", "C1:C5", "C2:C4", ExpectedResult = "B2:B4 D2:D4")]
         public string Exclude_splits_original_area_when_excluded_area_intersects(string originalAreaText, string excludingAreaText, string excludedAreaText)
         {
-            var originalArea = XLSheetRange.Parse(originalAreaText);
-            var excludedArea = XLSheetRange.Parse(excludedAreaText);
-            var excludingArea = XLSheetRange.Parse(excludingAreaText);
-            var list = new List<XLSheetRange>();
+            var originalArea = Area.Parse(originalAreaText);
+            var excludedArea = Area.Parse(excludedAreaText);
+            var excludingArea = Area.Parse(excludingAreaText);
+            var list = new List<Area>();
             Assert.AreEqual(excludedArea, originalArea.Exclude(excludingArea, list));
             return list.ToSpaceList();
         }
@@ -285,9 +285,9 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A1", "A2:C5")]
         public void Exclude_keeps_original_area_when_excluded_area_doesnt_intersects(string originalAreaText, string excludedAreaText)
         {
-            var originalArea = XLSheetRange.Parse(originalAreaText);
-            var excludedArea = XLSheetRange.Parse(excludedAreaText);
-            var list = new List<XLSheetRange>();
+            var originalArea = Area.Parse(originalAreaText);
+            var excludedArea = Area.Parse(excludedAreaText);
+            var list = new List<Area>();
             Assert.IsNull(originalArea.Exclude(excludedArea, list));
             Assert.AreEqual(originalAreaText, list.ToSpaceList());
         }
@@ -303,7 +303,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFA1048574:XFC1048575", 2, 3, ExpectedResult = "XFD1048576")]
         public string ShiftAndClip_shifts_and_clips_area(string areaText, int rowShift, int columnShift)
         {
-            var area = XLSheetRange.Parse(areaText);
+            var area = Area.Parse(areaText);
             var shifted = area.ShiftAndClip(rowShift, columnShift);
             return shifted is not null ? shifted.ToString() : null;
         }

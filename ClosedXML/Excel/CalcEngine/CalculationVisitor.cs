@@ -127,7 +127,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!TryGetRows(context, table, node.Area, out var rowStart, out var rowEnd, out var error))
                 return error;
 
-            var range = new XLSheetRange(rowStart, colStart, rowEnd, colEnd);
+            var range = new Area(rowStart, colStart, rowEnd, colEnd);
             return new Reference(XLRangeAddress.FromSheetRange(context.Worksheet, range));
 
             static bool TryGetTable(CalcContext context, string? tableName, [NotNullWhen(true)] out XLTable? table)

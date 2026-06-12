@@ -953,7 +953,7 @@ namespace ClosedXML.Excel
         public void RecalculateAllFormulas()
         {
             foreach (var sheet in WorksheetsInternal)
-                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+                sheet.Internals.CellsCollection.FormulaSlice.MarkDirty(Area.Full);
 
             CalcEngine.Recalculate(this, null);
         }

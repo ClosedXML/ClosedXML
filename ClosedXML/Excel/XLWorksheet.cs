@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        internal XLBookArea Area => new(Name, XLSheetRange.Full);
+        internal XLBookArea Area => new(Name, Excel.Area.Full);
 
         [Obsolete($"Use {nameof(DefinedNames)} instead.")]
         IXLDefinedNames IXLWorksheet.NamedRanges => DefinedNames;
@@ -1240,7 +1240,7 @@ namespace ClosedXML.Excel
 
             if (columnsShifted > 0)
             {
-                var insertedArea = XLSheetRange
+                var insertedArea = Excel.Area
                     .FromRangeAddress(range.RangeAddress)
                     .SliceFromLeft(1)
                     .ExtendRight(columnsShifted - 1);
@@ -1249,7 +1249,7 @@ namespace ClosedXML.Excel
             }
             else if (columnsShifted < 0)
             {
-                var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+                var area = Excel.Area.FromRangeAddress(range.RangeAddress);
                 foreach (var listener in sheetListeners)
                     listener.OnDeleteAreaAndShiftLeft(range.Worksheet, area);
             }
@@ -1291,7 +1291,7 @@ namespace ClosedXML.Excel
 
             if (rowsShifted > 0)
             {
-                var insertedArea = XLSheetRange
+                var insertedArea = Excel.Area
                     .FromRangeAddress(range.RangeAddress)
                     .SliceFromTop(1)
                     .ExtendBelow(rowsShifted - 1);
@@ -1300,7 +1300,7 @@ namespace ClosedXML.Excel
             }
             else if (rowsShifted < 0)
             {
-                var area = XLSheetRange.FromRangeAddress(range.RangeAddress);
+                var area = Excel.Area.FromRangeAddress(range.RangeAddress);
                 foreach (var listener in sheetListeners)
                     listener.OnDeleteAreaAndShiftUp(range.Worksheet, area);
             }
@@ -1573,7 +1573,7 @@ namespace ClosedXML.Excel
 
         public void RecalculateAllFormulas()
         {
-            Internals.CellsCollection.FormulaSlice.MarkDirty(XLSheetRange.Full);
+            Internals.CellsCollection.FormulaSlice.MarkDirty(Excel.Area.Full);
             Workbook.CalcEngine.Recalculate(Workbook, Name);
         }
 
@@ -1721,7 +1721,7 @@ namespace ClosedXML.Excel
 
             // If there is no row, rowNumber is kept at origin instead of last row + 1 .
             var lastRow = Math.Max(rowNumber - 1, origin.Row);
-            var insertedArea = new XLSheetRange(origin, new Point(lastRow, maximumColumn));
+            var insertedArea = new Area(origin, new Point(lastRow, maximumColumn));
 
             // If inserted area affected a table, we must fix headings and totals, because these values
             // are duplicated. Basically the table values are the truth and cells are a reflection of the

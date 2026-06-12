@@ -17,9 +17,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// An area in the sheet.
         /// </summary>
-        public readonly XLSheetRange Area;
+        public readonly Area Area;
 
-        public XLBookArea(String name, XLSheetRange area)
+        public XLBookArea(String name, Area area)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException(nameof(name));
@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
             if (range.Worksheet is null)
                 throw new ArgumentException("Range doesn't contain sheet.", nameof(range));
 
-            return new XLBookArea(range.Worksheet.Name, XLSheetRange.FromRangeAddress(range.RangeAddress));
+            return new XLBookArea(range.Worksheet.Name, Area.FromRangeAddress(range.RangeAddress));
         }
 
         internal static XLBookArea From(XLRangeAddress address)
@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
             if (address.Worksheet is null)
                 throw new ArgumentException("Range doesn't contain sheet.", nameof(address));
 
-            return new XLBookArea(address.Worksheet.Name, XLSheetRange.FromRangeAddress(address));
+            return new XLBookArea(address.Worksheet.Name, Area.FromRangeAddress(address));
         }
 
         public bool Equals(XLBookArea other)
@@ -99,7 +99,7 @@ namespace ClosedXML.Excel
             return new XLBookArea(Name, intersectionRange.Value);
         }
 
-        public void Deconstruct(out string sheetName, out XLSheetRange area)
+        public void Deconstruct(out string sheetName, out Area area)
         {
             sheetName = Name;
             area = Area;

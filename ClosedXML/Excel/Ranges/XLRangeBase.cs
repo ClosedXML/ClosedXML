@@ -66,14 +66,14 @@ namespace ClosedXML.Excel
             get { return RangeAddress.Worksheet; }
         }
 
-        internal XLSheetRange SheetRange
+        internal Area SheetRange
         {
             get
             {
                 if (!RangeAddress.IsValid)
                     throw new InvalidOperationException("Range address is invalid.");
 
-                return XLSheetRange.FromRangeAddress(RangeAddress);
+                return Area.FromRangeAddress(RangeAddress);
             }
         }
 
@@ -129,7 +129,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                var range = XLSheetRange.FromRangeAddress(RangeAddress);
+                var range = Area.FromRangeAddress(RangeAddress);
                 if (Worksheet.MergedRanges.Any(mr => mr.Intersects(this)))
                     throw new InvalidOperationException("Can't create array function over a merged range.");
 
@@ -429,7 +429,7 @@ namespace ClosedXML.Excel
 
             if (clearOptions == XLClearOptions.All)
             {
-                Worksheet.Internals.CellsCollection.Clear(XLSheetRange.FromRangeAddress(RangeAddress));
+                Worksheet.Internals.CellsCollection.Clear(Area.FromRangeAddress(RangeAddress));
             }
             return this;
         }
@@ -826,7 +826,7 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
-        internal XLRange Range(XLSheetRange area)
+        internal XLRange Range(Area area)
         {
             return Range(area.TopRow, area.LeftColumn, area.BottomRow, area.RightColumn);
         }
@@ -1065,7 +1065,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var insertedRange = new XLSheetRange(
+            var insertedRange = new Area(
                 Point.FromAddress(RangeAddress.FirstAddress),
                 new Point(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1));
 
@@ -1248,7 +1248,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var insertedRange = new XLSheetRange(
+            var insertedRange = new Area(
                 Point.FromAddress(RangeAddress.FirstAddress),
                 new Point(RangeAddress.FirstAddress.RowNumber + numberOfRows - 1, RangeAddress.LastAddress.ColumnNumber));
             Worksheet.Internals.CellsCollection.InsertAreaAndShiftDown(insertedRange);
@@ -1365,7 +1365,7 @@ namespace ClosedXML.Excel
             // Range to shift...
             Int32 columnModifier = 0;
             Int32 rowModifier = 0;
-            var range = XLSheetRange.FromRangeAddress(RangeAddress);
+            var range = Area.FromRangeAddress(RangeAddress);
             switch (shiftDeleteCells)
             {
                 case XLShiftDeletedCells.ShiftCellsLeft:
@@ -1655,8 +1655,8 @@ namespace ClosedXML.Excel
             if (sortRange.IsEntireColumn())
             {
                 // If we're dealing with the entire column, we're not interested in the unused cells
-                var lastRowUsed = cellsCollection.LastRowUsed(XLSheetRange.Full, XLCellsUsedOptions.Contents);
-                sortRange = new XLSheetRange(sortRange.FirstPoint, new Point(lastRowUsed, sortRange.RightColumn));
+                var lastRowUsed = cellsCollection.LastRowUsed(Area.Full, XLCellsUsedOptions.Contents);
+                sortRange = new Area(sortRange.FirstPoint, new Point(lastRowUsed, sortRange.RightColumn));
             }
 
             var comparer = new XLRangeRowsSortComparer(Worksheet, sortRange, SortColumns);
@@ -1676,8 +1676,8 @@ namespace ClosedXML.Excel
             if (sortRange.IsEntireRow())
             {
                 // If we're dealing with the entire row, we're not interested in the unused cells
-                var lastColumnCell = cellsCollection.LastColumnUsed(XLSheetRange.Full, XLCellsUsedOptions.Contents);
-                sortRange = new XLSheetRange(sortRange.FirstPoint, new Point(sortRange.BottomRow, lastColumnCell));
+                var lastColumnCell = cellsCollection.LastColumnUsed(Area.Full, XLCellsUsedOptions.Contents);
+                sortRange = new Area(sortRange.FirstPoint, new Point(sortRange.BottomRow, lastColumnCell));
             }
 
             var comparer = new XLRangeColumnsSortComparer(Worksheet, sortRange, SortRows);
@@ -1880,7 +1880,7 @@ namespace ClosedXML.Excel
                 var area = SheetRange;
                 cellsUsed = cellsUsed.Union(
                     Worksheet.ConditionalFormats
-                        .SelectMany<XLConditionalFormat, XLSheetRange>(cf => cf.Areas.IntersectingWith(area))
+                        .SelectMany<XLConditionalFormat, Area>(cf => cf.Areas.IntersectingWith(area))
                         .Select(cfArea => Worksheet.Range(cfArea))
                         .Select(selector)
                         .Where(predicate)

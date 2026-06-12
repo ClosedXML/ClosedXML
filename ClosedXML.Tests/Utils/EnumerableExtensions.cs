@@ -11,7 +11,7 @@ internal static class EnumerableExtensions
         return string.Join(" ", ranges.Select(r => r.RangeAddress.ToString(XLReferenceStyle.A1, includeSheet)));
     }
 
-    public static string ToSpaceList(this IEnumerable<XLSheetRange> areas)
+    public static string ToSpaceList(this IEnumerable<Area> areas)
     {
         return string.Join(" ", areas);
     }

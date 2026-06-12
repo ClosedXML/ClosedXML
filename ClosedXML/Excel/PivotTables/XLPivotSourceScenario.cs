@@ -23,7 +23,7 @@ internal sealed class XLPivotSourceScenario : IXLPivotSource
         return 0;
     }
 
-    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out XLSheetRange? sheetArea)
+    public bool TryGetSource(XLWorkbook workbook, out XLWorksheet? sheet, out Area? sheetArea)
     {
         throw new NotImplementedException("Scenario pivot cache data source is not supported.");
     }
