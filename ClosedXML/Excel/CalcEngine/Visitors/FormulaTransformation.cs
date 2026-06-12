@@ -16,7 +16,7 @@ internal static class FormulaTransformation
     /// Add necessary prefixes to a user-supplied future functions without a prefix (e.g.
     /// <c>acot(A5)/2</c> to <c>_xlfn.ACOT(A5)/2</c>).
     /// </summary>
-    internal static string FixFutureFunctions(string formula, string sheetName, XLSheetPoint origin)
+    internal static string FixFutureFunctions(string formula, string sheetName, Point origin)
     {
         // A preliminary check that formula might contain future function. There are two reasons to do this first:
         // * Although parsing is relatively cheap, it's not free. Checking for string is far cheaper.

@@ -33,7 +33,7 @@ namespace ClosedXML.Extensions
         /// <param name="area">Area to convert</param>
         /// <param name="anchor">An anchor address that is the center of R1C1 relative address.</param>
         /// <returns>Converted absolute range.</returns>
-        public static XLSheetRange ToSheetRange(this ReferenceArea area, XLSheetPoint anchor)
+        public static XLSheetRange ToSheetRange(this ReferenceArea area, Point anchor)
         {
             return area.First.IsA1
                 ? ToSheetRangeA1(area)
@@ -52,7 +52,7 @@ namespace ClosedXML.Extensions
             return ToSheetRange(row1, row2, col1, col2);
         }
 
-        public static XLSheetRange ToSheetRangeR1C1(this ReferenceArea area, XLSheetPoint anchor)
+        public static XLSheetRange ToSheetRangeR1C1(this ReferenceArea area, Point anchor)
         {
             if (area.Style != ReferenceStyle.R1C1)
                 throw new ArgumentException(nameof(area));

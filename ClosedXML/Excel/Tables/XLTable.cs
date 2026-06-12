@@ -1048,7 +1048,7 @@ namespace ClosedXML.Excel
                     {
                         var fieldIndex = column - totalsRow.LeftColumn;
                         var field = Field(fieldIndex);
-                        var value = valueSlice.GetCellValue(new XLSheetPoint(totalsRowNumber, column));
+                        var value = valueSlice.GetCellValue(new Point(totalsRowNumber, column));
 
                         // Convert value to text, because Excel always converts values to text when replacing totals row.
                         field.TotalsRowLabel = value.ToString(CultureInfo.CurrentCulture);
@@ -1068,7 +1068,7 @@ namespace ClosedXML.Excel
                     {
                         var fieldIndex = column - headersRow.LeftColumn;
                         var field = Field(fieldIndex);
-                        var value = valueSlice.GetCellValue(new XLSheetPoint(headersRowNumber, column));
+                        var value = valueSlice.GetCellValue(new Point(headersRowNumber, column));
 
                         // Convert to text, because headers row of a table can be only
                         // string in OOXML and Excel converts it to string as well.

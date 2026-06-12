@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Point = System.Drawing.Point;
 
 namespace ClosedXML.Tests
 {

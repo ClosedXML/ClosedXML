@@ -93,11 +93,11 @@ namespace ClosedXML.Extensions
         /// <summary>
         /// Get value of attribute with type <c>ST_CellRef</c>.
         /// </summary>
-        internal static XLSheetPoint? GetCellRefAttribute(this ReadOnlyCollection<OpenXmlAttribute> attributes, string name)
+        internal static Point? GetCellRefAttribute(this ReadOnlyCollection<OpenXmlAttribute> attributes, string name)
         {
             var attribute = attributes.GetAttribute(name);
             if (!string.IsNullOrEmpty(attribute))
-                return XLSheetPoint.Parse(attribute);
+                return Point.Parse(attribute);
 
             return null;
         }

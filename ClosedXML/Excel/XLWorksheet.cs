@@ -1555,13 +1555,13 @@ namespace ClosedXML.Excel
         IXLCell? IXLWorksheet.ActiveCell
         {
             get => ActiveCell is not null ? new XLCell(this, ActiveCell.Value) : null;
-            set => ActiveCell = value is not null ? XLSheetPoint.FromAddress(value.Address) : null;
+            set => ActiveCell = value is not null ? Point.FromAddress(value.Address) : null;
         }
 
         /// <summary>
         /// Address of active cell/cursor in the worksheet.
         /// </summary>
-        internal XLSheetPoint? ActiveCell { get; set; }
+        internal Point? ActiveCell { get; set; }
 
         private XLCalcEngine CalcEngine => Workbook.CalcEngine;
 
@@ -1640,7 +1640,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        internal IXLTable InsertTable(XLSheetPoint origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
+        internal IXLTable InsertTable(Point origin, IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             if (createTable && Tables.Any<XLTable>(t => t.Area.Contains(origin)))
                 throw new InvalidOperationException($"This cell '{origin}' is already part of a table.");
@@ -1655,7 +1655,7 @@ namespace ClosedXML.Excel
                 return tableName == null ? range.AsTable() : range.AsTable(tableName);
         }
 
-        internal XLRange InsertData(XLSheetPoint origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
+        internal XLRange InsertData(Point origin, IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
             // Prepare data. Heading is basically just another row of data, so unify it.
             var rows = reader.GetRecords();
@@ -1701,7 +1701,7 @@ namespace ClosedXML.Excel
                 for (var i = 0; i < rowBuffer.Count; ++i)
                 {
                     var value = rowBuffer[i];
-                    var point = new XLSheetPoint(rowNumber, column);
+                    var point = new Point(rowNumber, column);
                     var modifiedStyle = GetStyleForValue(value, point);
                     if (modifiedStyle is not null)
                     {
@@ -1721,7 +1721,7 @@ namespace ClosedXML.Excel
 
             // If there is no row, rowNumber is kept at origin instead of last row + 1 .
             var lastRow = Math.Max(rowNumber - 1, origin.Row);
-            var insertedArea = new XLSheetRange(origin, new XLSheetPoint(lastRow, maximumColumn));
+            var insertedArea = new XLSheetRange(origin, new Point(lastRow, maximumColumn));
 
             // If inserted area affected a table, we must fix headings and totals, because these values
             // are duplicated. Basically the table values are the truth and cells are a reflection of the
@@ -1775,7 +1775,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get cell or null, if cell doesn't exist.
         /// </summary>
-        internal XLCell? GetCell(XLSheetPoint point)
+        internal XLCell? GetCell(Point point)
         {
             return Worksheet.Internals.CellsCollection.GetUsedCell(point);
         }
@@ -1873,7 +1873,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get the actual style for a point in the sheet.
         /// </summary>
-        internal XLCellFormatValue GetStyleValue(XLSheetPoint point)
+        internal XLCellFormatValue GetStyleValue(Point point)
         {
             // TODO Styles: This is basically a duplication of Hierarchy.Resolve(). Investigate deduplication.
             var cellFormat = Internals.CellsCollection.FormatSlice.GetFormat(point);
@@ -1903,7 +1903,7 @@ namespace ClosedXML.Excel
         /// Get a style that should be used for a <paramref name="value"/>,
         /// if the value is set to the <paramref name="point"/>.
         /// </summary>
-        internal XLCellFormatValue? GetStyleForValue(XLCellValue value, XLSheetPoint point)
+        internal XLCellFormatValue? GetStyleForValue(XLCellValue value, Point point)
         {
             // Because StyleValue property retrieves value from a slice,
             // access it only if necessary. This happens during ever cell

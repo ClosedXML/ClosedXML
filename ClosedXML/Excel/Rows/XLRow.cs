@@ -291,7 +291,7 @@ namespace ClosedXML.Excel
                 if (cell.IsMerged())
                     continue;
 
-                var cellFormat = Worksheet.GetStyleValue(cell.SheetPoint);
+                var cellFormat = Worksheet.GetStyleValue(cell.Point);
 
                 cell.GetGlyphBoxes(engine, dpi, glyphs);
                 var cellHeightPx = (int)Math.Ceiling(GetContentHeight(cellFormat.Alignment.TextRotation.Value, glyphs));

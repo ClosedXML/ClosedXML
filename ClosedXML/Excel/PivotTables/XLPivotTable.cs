@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
             set
             {
                 var filterRows = Filters.GetSizeWithGap().Height;
-                var valuePoint = ((XLCell)value).SheetPoint;
+                var valuePoint = ((XLCell)value).Point;
                 var tableCorner = valuePoint.ShiftRow(filterRows);
                 Area = Area.At(tableCorner);
             }

@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
             _columnNumber = column;
         }
 
-        internal XLCell(XLWorksheet worksheet, XLSheetPoint point) : this(worksheet, point.Row, point.Column)
+        internal XLCell(XLWorksheet worksheet, Point point) : this(worksheet, point.Row, point.Column)
         {
         }
 
@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
 
         public XLAddress Address => new(Worksheet, _rowNumber, _columnNumber, false, false);
 
-        internal XLSheetPoint SheetPoint => new(_rowNumber, _columnNumber);
+        internal Point Point => new(_rowNumber, _columnNumber);
 
         private XLWorkbookStyles Styles => Worksheet.Workbook.Styles;
 
@@ -89,28 +89,28 @@ namespace ClosedXML.Excel
         /// </summary>
         public bool ShareString
         {
-            get => _cellsCollection.ValueSlice.GetShareString(SheetPoint);
-            set => _cellsCollection.ValueSlice.SetShareString(SheetPoint, value);
+            get => _cellsCollection.ValueSlice.GetShareString(Point);
+            set => _cellsCollection.ValueSlice.SetShareString(Point, value);
         }
 
-        internal int MemorySstId => _cellsCollection.ValueSlice.GetShareStringId(SheetPoint);
+        internal int MemorySstId => _cellsCollection.ValueSlice.GetShareStringId(Point);
 
         internal XLImmutableRichText RichText => SliceRichText;
 
         private XLCellValue SliceCellValue
         {
-            get => _cellsCollection.ValueSlice.GetCellValue(SheetPoint);
+            get => _cellsCollection.ValueSlice.GetCellValue(Point);
             set
             {
-                _cellsCollection.ValueSlice.SetCellValue(SheetPoint, value);
-                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
+                _cellsCollection.ValueSlice.SetCellValue(Point, value);
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, Point);
             }
         }
 
         private XLImmutableRichText SliceRichText
         {
-            get => _cellsCollection.ValueSlice.GetRichText(SheetPoint);
-            set => _cellsCollection.ValueSlice.SetRichText(SheetPoint, value);
+            get => _cellsCollection.ValueSlice.GetRichText(Point);
+            set => _cellsCollection.ValueSlice.SetRichText(Point, value);
         }
 
         private XLComment SliceComment
@@ -163,17 +163,17 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLCellFormula Formula
         {
-            get => _cellsCollection.FormulaSlice.Get(SheetPoint);
+            get => _cellsCollection.FormulaSlice.Get(Point);
             set
             {
-                _cellsCollection.FormulaSlice.Set(SheetPoint, value);
+                _cellsCollection.FormulaSlice.Set(Point, value);
 
                 // Because text values of evaluated formulas are stored in a worksheet part, mark it as inlined string and store in sst.
                 // If we are clearing formula, we should enable shareString back on, because it is a default position.
                 // If we are setting formula, we should disable shareString (=inline), because it must be written to the worksheet part
                 var clearFormula = value is null;
                 ShareString = clearFormula;
-                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, SheetPoint);
+                Worksheet.Workbook.CalcEngine.MarkDirty(Worksheet, Point);
             }
         }
 
@@ -187,8 +187,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCellFormatValue? FormatValue
         {
-            get => _cellsCollection.FormatSlice.GetFormat(SheetPoint);
-            set => _cellsCollection.FormatSlice.Set(SheetPoint, value);
+            get => _cellsCollection.FormatSlice.GetFormat(Point);
+            set => _cellsCollection.FormatSlice.Set(Point, value);
         }
 #nullable disable
         #endregion
@@ -261,7 +261,7 @@ namespace ClosedXML.Excel
 
             // Mimic Excel behavior: When a value is set to a a certain types (e.g. timespan or
             // a date), the format of a cell is changed.
-            var valueRequiredFormat = Worksheet.GetStyleForValue(value, SheetPoint);
+            var valueRequiredFormat = Worksheet.GetStyleForValue(value, Point);
             if (valueRequiredFormat is not null)
                 FormatValue = valueRequiredFormat;
 
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel
 
             if (setTableHeader)
             {
-                var cellRange = new XLSheetRange(SheetPoint, SheetPoint);
+                var cellRange = new XLSheetRange(Point, Point);
                 foreach (var table in Worksheet.Tables)
                     table.RefreshFieldsFromCells(cellRange);
             }
@@ -609,7 +609,7 @@ namespace ClosedXML.Excel
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings, transpose);
+            return Worksheet.InsertTable(Point, reader, tableName, createTable, addHeadings, transpose);
         }
 
         public IXLTable InsertTable(DataTable data)
@@ -639,7 +639,7 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertTable(SheetPoint, reader, tableName, createTable, addHeadings: true, transpose: false);
+            return Worksheet.InsertTable(Point, reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
         public XLTableCellType TableCellType()
@@ -667,7 +667,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
-            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: transpose);
+            return Worksheet.InsertData(Point, reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -676,7 +676,7 @@ namespace ClosedXML.Excel
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
-            return Worksheet.InsertData(SheetPoint, reader, addHeadings: false, transpose: false);
+            return Worksheet.InsertData(Point, reader, addHeadings: false, transpose: false);
         }
 
         public XLDataType DataType => SliceCellValue.Type;
@@ -710,7 +710,7 @@ namespace ClosedXML.Excel
 
                 if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
                 {
-                    Worksheet.ConditionalFormats.Clear(SheetPoint);
+                    Worksheet.ConditionalFormats.Clear(Point);
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.Comments))
@@ -753,7 +753,7 @@ namespace ClosedXML.Excel
                 var formula = value?.TrimFormulaEqual();
                 if (!String.IsNullOrWhiteSpace(formula))
                 {
-                    var fixedFunctionsFormula = FormulaTransformation.FixFutureFunctions(formula, Worksheet.Name, SheetPoint);
+                    var fixedFunctionsFormula = FormulaTransformation.FixFutureFunctions(formula, Worksheet.Name, Point);
                     Formula = XLCellFormula.NormalA1(fixedFunctionsFormula);
                 }
                 else
@@ -767,7 +767,7 @@ namespace ClosedXML.Excel
 
         public string FormulaR1C1
         {
-            get => Formula?.GetFormulaR1C1(SheetPoint) ?? String.Empty;
+            get => Formula?.GetFormulaR1C1(Point) ?? String.Empty;
 
             set
             {
@@ -778,7 +778,7 @@ namespace ClosedXML.Excel
                 if (!String.IsNullOrWhiteSpace(formula))
                 {
                     var formulaA1 = FormulaConverter.ToA1(formula, _rowNumber, _columnNumber);
-                    var fixedFunctionsFormulaA1 = FormulaTransformation.FixFutureFunctions(formulaA1, Worksheet.Name, SheetPoint);
+                    var fixedFunctionsFormulaA1 = FormulaTransformation.FixFutureFunctions(formulaA1, Worksheet.Name, Point);
                     Formula = XLCellFormula.NormalA1(fixedFunctionsFormulaA1);
                 }
                 else
@@ -792,7 +792,7 @@ namespace ClosedXML.Excel
 
         public XLHyperlink GetHyperlink()
         {
-            if (Worksheet.Hyperlinks.TryGet(SheetPoint, out var hyperlink))
+            if (Worksheet.Hyperlinks.TryGet(Point, out var hyperlink))
                 return hyperlink;
 
             return CreateHyperlink();
@@ -802,7 +802,7 @@ namespace ClosedXML.Excel
         /// <inheritdoc />
         public void SetHyperlink(XLHyperlink? hyperlink)
         {
-            Worksheet.Hyperlinks.SetCellHyperlink(SheetPoint, hyperlink);
+            Worksheet.Hyperlinks.SetCellHyperlink(Point, hyperlink);
             if (hyperlink is null)
                 return;
 
@@ -820,7 +820,7 @@ namespace ClosedXML.Excel
 
         internal void SetCellHyperlink(XLHyperlink hyperlink)
         {
-            Worksheet.Hyperlinks.SetCellHyperlink(SheetPoint, hyperlink);
+            Worksheet.Hyperlinks.SetCellHyperlink(Point, hyperlink);
         }
 #nullable disable
 
@@ -1048,7 +1048,7 @@ namespace ClosedXML.Excel
 
         internal XLDataValidation CreateDataValidation()
         {
-            return Worksheet.DataValidations.Create(new XLSheetRange(SheetPoint));
+            return Worksheet.DataValidations.Create(new XLSheetRange(Point));
         }
 
         public void Select()
@@ -1063,11 +1063,11 @@ namespace ClosedXML.Excel
 
         public Boolean Active
         {
-            get => Worksheet.ActiveCell == SheetPoint;
+            get => Worksheet.ActiveCell == Point;
             set
             {
                 if (value)
-                    Worksheet.ActiveCell = SheetPoint;
+                    Worksheet.ActiveCell = Point;
                 else if (Active)
                     Worksheet.ActiveCell = null;
             }
@@ -1079,7 +1079,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean HasHyperlink => Worksheet.Hyperlinks.HasHyperlink(SheetPoint);
+        public Boolean HasHyperlink => Worksheet.Hyperlinks.HasHyperlink(Point);
 
         /// <inheritdoc />
         public Boolean ShowPhonetic
@@ -1146,7 +1146,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal XLCellFormatValue GetFormat()
         {
-            return Worksheet.GetStyleValue(SheetPoint);
+            return Worksheet.GetStyleValue(Point);
         }
 
         #endregion Styles
@@ -1236,7 +1236,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            Worksheet.ConditionalFormats.CopyFrom(asRange.Worksheet, asRange.SheetRange, SheetPoint);
+            Worksheet.ConditionalFormats.CopyFrom(asRange.Worksheet, asRange.SheetRange, Point);
             return this;
         }
 
@@ -1249,12 +1249,12 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return XLCellFormula.GetFormula(value, FormulaConversionType.A1ToR1C1, new XLSheetPoint(_rowNumber, _columnNumber));
+            return XLCellFormula.GetFormula(value, FormulaConversionType.A1ToR1C1, new Point(_rowNumber, _columnNumber));
         }
 
         internal string GetFormulaA1(string value)
         {
-            return XLCellFormula.GetFormula(value, FormulaConversionType.R1C1ToA1, new XLSheetPoint(_rowNumber, _columnNumber));
+            return XLCellFormula.GetFormula(value, FormulaConversionType.R1C1ToA1, new Point(_rowNumber, _columnNumber));
         }
 
         internal void CopyValuesFrom(XLCell source)
@@ -1269,7 +1269,7 @@ namespace ClosedXML.Excel
             FormulaR1C1 = source.FormulaR1C1;
             SliceComment = source.SliceComment == null ? null : XLComment.CreateAsCopy(this, source, source.SliceComment);
 
-            if (source.Worksheet.Hyperlinks.TryGet(source.SheetPoint, out var sourceHyperlink))
+            if (source.Worksheet.Hyperlinks.TryGet(source.Point, out var sourceHyperlink))
             {
                 SetCellHyperlink(new XLHyperlink(sourceHyperlink));
             }
@@ -1300,7 +1300,7 @@ namespace ClosedXML.Excel
                 CopySparklineFrom(otherCell);
 
             if (options.HasFlag(XLCellCopyOptions.ConditionalFormats))
-                Worksheet.ConditionalFormats.CopyFrom(otherCell.Worksheet, otherCell.SheetPoint, SheetPoint, true);
+                Worksheet.ConditionalFormats.CopyFrom(otherCell.Worksheet, otherCell.Point, Point, true);
 
             if (options.HasFlag(XLCellCopyOptions.DataValidations))
                 CopyDataValidationFrom(otherCell);
@@ -1356,7 +1356,7 @@ namespace ClosedXML.Excel
                 CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
-                Worksheet.DataValidations.Delete(new XLSheetRange(SheetPoint));
+                Worksheet.DataValidations.Delete(new XLSheetRange(Point));
             }
         }
 
@@ -1980,13 +1980,13 @@ namespace ClosedXML.Excel
         {
             unchecked
             {
-                return (SheetPoint.GetHashCode() * 397) ^ Worksheet.GetHashCode();
+                return (Point.GetHashCode() * 397) ^ Worksheet.GetHashCode();
             }
         }
 
         public override bool Equals(object obj)
         {
-            return obj is XLCell cell && cell.Worksheet == Worksheet && cell.SheetPoint == SheetPoint;
+            return obj is XLCell cell && cell.Worksheet == Worksheet && cell.Point == Point;
         }
     }
 }

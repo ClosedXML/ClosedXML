@@ -55,7 +55,7 @@ internal class XLCells :
         }
     }
 
-    private IEnumerable<XLSheetPoint> GetAllCellsInRange(IXLRangeAddress rangeAddress)
+    private IEnumerable<Point> GetAllCellsInRange(IXLRangeAddress rangeAddress)
     {
         if (!rangeAddress.IsValid)
             yield break;
@@ -70,7 +70,7 @@ internal class XLCells :
         {
             for (var co = minColumn; co <= maxColumn; co++)
             {
-                yield return new XLSheetPoint(ro, co);
+                yield return new Point(ro, co);
             }
         }
     }
@@ -100,7 +100,7 @@ internal class XLCells :
         }
     }
 
-    private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, IEnumerable<XLSheetPoint> usedCellsCandidates)
+    private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, IEnumerable<Point> usedCellsCandidates)
     {
         if (!rangeAddress.IsValid)
             yield break;
@@ -132,9 +132,9 @@ internal class XLCells :
         }
     }
 
-    private IEnumerable<XLSheetPoint> GetUsedCellsCandidates(XLWorksheet worksheet)
+    private IEnumerable<Point> GetUsedCellsCandidates(XLWorksheet worksheet)
     {
-        var candidates = Enumerable.Empty<XLSheetPoint>();
+        var candidates = Enumerable.Empty<Point>();
 
         if (_options == XLCellsUsedOptions.AllContents)
         {
@@ -143,19 +143,19 @@ internal class XLCells :
 
         if (_options.HasFlag(XLCellsUsedOptions.MergedRanges))
             candidates = candidates.Union(
-                worksheet.Internals.MergedRanges.SelectMany<XLRange, XLSheetPoint>(r => GetAllCellsInRange(r.RangeAddress)));
+                worksheet.Internals.MergedRanges.SelectMany<XLRange, Point>(r => GetAllCellsInRange(r.RangeAddress)));
 
         if (_options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
             candidates = candidates.Union(
-                worksheet.ConditionalFormats.SelectMany<XLConditionalFormat, XLSheetPoint>(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+                worksheet.ConditionalFormats.SelectMany<XLConditionalFormat, Point>(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
 
         if (_options.HasFlag(XLCellsUsedOptions.DataValidation))
             candidates = candidates.Union(
-                worksheet.DataValidations.SelectMany<XLDataValidation, XLSheetPoint>(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+                worksheet.DataValidations.SelectMany<XLDataValidation, Point>(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
 
         if (_options.HasFlag(XLCellsUsedOptions.Sparklines))
             candidates = candidates.Union(
-                worksheet.SparklineGroups.SelectMany(sg => sg).Select(sl => XLSheetPoint.FromAddress(sl.Location.Address)));
+                worksheet.SparklineGroups.SelectMany(sg => sg).Select(sl => Point.FromAddress(sl.Location.Address)));
 
         return candidates.Distinct();
     }

@@ -157,7 +157,7 @@ internal class XLAreaListTests
     public string TryCopyAreaTo_return_list_of_intersecting_areas_shifted_to_target(string areaListText, string targetPointText, string areaToCopyText)
     {
         var areaList = Parse(areaListText);
-        var targetPoint = XLSheetPoint.Parse(targetPointText);
+        var targetPoint = Point.Parse(targetPointText);
         var areaToCopy = XLSheetRange.Parse(areaToCopyText);
         return areaList.TryCopyAreaTo(targetPoint, areaToCopy, out var result) ? result.ToSpaceList() : null;
     }

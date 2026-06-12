@@ -52,7 +52,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="range">Range to iterate over.</param>
         /// <param name="reverse"><c>false</c> = left to right, top to bottom. <c>true</c> = right to left, bottom to top.</param>
-        IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false);
+        IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false);
 
         /// <summary>
         /// Shift all values at the <paramref name="range"/> and all cells below it
@@ -71,11 +71,11 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Does slice contains a non-default value at specified point?
         /// </summary>
-        bool IsUsed(XLSheetPoint address);
+        bool IsUsed(Point address);
 
         /// <summary>
         /// Swap content of two points.
         /// </summary>
-        void Swap(XLSheetPoint sp1, XLSheetPoint sp2);
+        void Swap(Point sp1, Point sp2);
     }
 }

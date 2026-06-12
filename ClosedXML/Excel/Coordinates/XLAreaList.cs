@@ -266,7 +266,7 @@ internal class XLAreaList : IEnumerable<XLSheetRange>
     /// intersects them with the <paramref name="areaToCopy"/> and shifts it to the <paramref name="target"/>.
     /// If there are areas, return it in the <paramref name="result"/>.
     /// </summary>
-    internal bool TryCopyAreaTo(XLSheetPoint target, XLSheetRange areaToCopy, [NotNullWhen(true)] out XLAreaList? result)
+    internal bool TryCopyAreaTo(Point target, XLSheetRange areaToCopy, [NotNullWhen(true)] out XLAreaList? result)
     {
         var rowShift = target.Row - areaToCopy.FirstPoint.Row;
         var columnShift = target.Column - areaToCopy.FirstPoint.Column;

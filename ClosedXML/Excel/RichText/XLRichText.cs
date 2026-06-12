@@ -77,7 +77,7 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException("The rich text isn't a content of a cell.");
 
             _cell.SetOnlyValue(Text);
-            var point = _cell.SheetPoint;
+            var point = _cell.Point;
             var richText = XLImmutableRichText.Create(this);
             _cell.Worksheet.Internals.CellsCollection.ValueSlice.SetRichText(point, richText);
         }

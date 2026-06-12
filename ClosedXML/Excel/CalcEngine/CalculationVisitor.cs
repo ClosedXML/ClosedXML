@@ -140,7 +140,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
 
                 // Avoid LINQ allocation.
-                var formulaPoint = context.FormulaSheetPoint;
+                var formulaPoint = context.FormulaPoint;
                 foreach (var sheetTable in context.Worksheet.Tables)
                 {
                     if (sheetTable.Area.Contains(formulaPoint))
@@ -213,7 +213,7 @@ namespace ClosedXML.Excel.CalcEngine
                         rowEndNo = area.BottomRow;
                         break;
                     case StructuredReferenceArea.ThisRow:
-                        var thisRow = context.FormulaSheetPoint.Row;
+                        var thisRow = context.FormulaPoint.Row;
                         if (area.TopRow >= thisRow || dataEndRowNo < thisRow)
                         {
                             rowStartNo = rowEndNo = default;

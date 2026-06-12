@@ -54,7 +54,7 @@ internal class XLDefinedName : IXLDefinedName, IWorkbookListener
         }
     }
 
-    public IXLRanges Ranges => _references.GetExternalRanges(_container.Workbook, new XLSheetPoint(1, 1));
+    public IXLRanges Ranges => _references.GetExternalRanges(_container.Workbook, new Point(1, 1));
 
     public String? Comment { get; set; }
 

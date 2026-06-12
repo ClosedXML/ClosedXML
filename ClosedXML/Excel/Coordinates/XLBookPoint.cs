@@ -11,11 +11,11 @@ namespace ClosedXML.Excel
     internal readonly struct XLBookPoint : IEquatable<XLBookPoint>
     {
         internal XLBookPoint(string sheetName, int row, int col)
-            : this(sheetName, new XLSheetPoint(row, col))
+            : this(sheetName, new Point(row, col))
         {
         }
 
-        internal XLBookPoint(string sheetName, XLSheetPoint point)
+        internal XLBookPoint(string sheetName, Point point)
         {
             if (string.IsNullOrEmpty(sheetName))
                 throw new ArgumentException(nameof(sheetName));
@@ -29,16 +29,16 @@ namespace ClosedXML.Excel
         /// </summary>
         public string SheetName { get; }
 
-        /// <inheritdoc cref="XLSheetPoint.Row"/>
+        /// <inheritdoc cref="Excel.Point.Row"/>
         public int Row => Point.Column;
 
-        /// <inheritdoc cref="XLSheetPoint.Column"/>
+        /// <inheritdoc cref="Excel.Point.Column"/>
         public int Column => Point.Column;
 
         /// <summary>
         /// A point in the sheet.
         /// </summary>
-        public XLSheetPoint Point { get; }
+        public Point Point { get; }
 
         public static bool operator ==(XLBookPoint lhs, XLBookPoint rhs) => lhs.Equals(rhs);
 

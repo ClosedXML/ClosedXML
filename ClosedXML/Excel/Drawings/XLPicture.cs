@@ -105,7 +105,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(value, this.Top));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new System.Drawing.Point(value, this.Top));
             }
         }
 
@@ -137,7 +137,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(this.Left, value));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new System.Drawing.Point(this.Left, value));
             }
         }
 
@@ -213,7 +213,7 @@ namespace ClosedXML.Excel.Drawings
             return CopyTo(Worksheet);
         }
 
-        public Point GetOffset(XLMarkerPosition position)
+        public System.Drawing.Point GetOffset(XLMarkerPosition position)
         {
             return Markers[position].Offset;
         }
@@ -233,10 +233,10 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset)
         {
-            return MoveTo(cell, new Point(xOffset, yOffset));
+            return MoveTo(cell, new System.Drawing.Point(xOffset, yOffset));
         }
 
-        public IXLPicture MoveTo(IXLCell cell, Point offset)
+        public IXLPicture MoveTo(IXLCell cell, System.Drawing.Point offset)
         {
             if (cell == null) throw new ArgumentNullException(nameof(cell));
             this.Placement = XLPicturePlacement.Move;
@@ -252,10 +252,10 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)
         {
-            return MoveTo(fromCell, new Point(fromCellXOffset, fromCellYOffset), toCell, new Point(toCellXOffset, toCellYOffset));
+            return MoveTo(fromCell, new System.Drawing.Point(fromCellXOffset, fromCellYOffset), toCell, new System.Drawing.Point(toCellXOffset, toCellYOffset));
         }
 
-        public IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset)
+        public IXLPicture MoveTo(IXLCell fromCell, System.Drawing.Point fromOffset, IXLCell toCell, System.Drawing.Point toOffset)
         {
             if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
             if (toCell == null) throw new ArgumentNullException(nameof(toCell));

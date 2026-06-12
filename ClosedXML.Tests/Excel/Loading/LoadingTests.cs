@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Point = System.Drawing.Point;
 
 namespace ClosedXML.Tests.Excel
 {

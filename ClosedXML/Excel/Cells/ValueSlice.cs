@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
             _values.DeleteAreaAndShiftUp(rangeToDelete);
         }
 
-        public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false) => _values.GetEnumerator(range, reverse);
+        public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false) => _values.GetEnumerator(range, reverse);
 
         public void InsertAreaAndShiftDown(XLSheetRange range)
         {
@@ -74,11 +74,11 @@ namespace ClosedXML.Excel
             _values.InsertAreaAndShiftRight(range);
         }
 
-        public bool IsUsed(XLSheetPoint address) => _values.IsUsed(address);
+        public bool IsUsed(Point address) => _values.IsUsed(address);
 
-        public void Swap(XLSheetPoint sp1, XLSheetPoint sp2) => _values.Swap(sp1, sp2);
+        public void Swap(Point sp1, Point sp2) => _values.Swap(sp1, sp2);
 
-        internal XLCellValue GetCellValue(XLSheetPoint point)
+        internal XLCellValue GetCellValue(Point point)
         {
             ref readonly var cellValue = ref _values[point];
             var type = cellValue.Type;
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal void SetCellValue(XLSheetPoint point, XLCellValue cellValue)
+        internal void SetCellValue(Point point, XLCellValue cellValue)
         {
             ref readonly var original = ref _values[point];
 
@@ -140,7 +140,7 @@ namespace ClosedXML.Excel
             _values.Set(point, in modified);
         }
 
-        internal XLImmutableRichText? GetRichText(XLSheetPoint point)
+        internal XLImmutableRichText? GetRichText(Point point)
         {
             ref readonly var cellValue = ref _values[point];
             if (cellValue.Type != XLDataType.Text)
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel
             return _sst.GetRichText((int)value);
         }
 
-        internal void SetRichText(XLSheetPoint point, XLImmutableRichText richText)
+        internal void SetRichText(Point point, XLImmutableRichText richText)
         {
             if (richText is null)
                 throw new ArgumentNullException(nameof(richText));
@@ -170,12 +170,12 @@ namespace ClosedXML.Excel
             _values.Set(point, modified);
         }
 
-        internal bool GetShareString(XLSheetPoint point)
+        internal bool GetShareString(Point point)
         {
             return !_values[point].Inline;
         }
 
-        internal void SetShareString(XLSheetPoint point, bool shareString)
+        internal void SetShareString(Point point, bool shareString)
         {
             var inlineString = !shareString;
             ref readonly var original = ref _values[point];
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             _values.Set(point, in modified);
         }
 
-        internal int GetShareStringId(XLSheetPoint point)
+        internal int GetShareStringId(Point point)
         {
             ref readonly var value = ref _values[point];
             if (value.Type != XLDataType.Text)

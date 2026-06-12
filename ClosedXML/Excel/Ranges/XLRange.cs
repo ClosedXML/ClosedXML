@@ -746,8 +746,8 @@ namespace ClosedXML.Excel
             {
                 for (var col = row + 1; col <= squareSide; ++col)
                 {
-                    var oldAddress = new XLSheetPoint(row + rowOffset, col + colOffset);
-                    var newAddress = new XLSheetPoint(col + colOffset, row + rowOffset);
+                    var oldAddress = new Point(row + rowOffset, col + colOffset);
+                    var newAddress = new Point(col + colOffset, row + rowOffset);
                     Worksheet.Internals.CellsCollection.SwapCellsContent(oldAddress, newAddress);
                 }
             }

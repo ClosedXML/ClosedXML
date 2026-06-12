@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.Drawings
         /// <returns>A created copy of the picture.</returns>
         IXLPicture Duplicate();
 
-        Point GetOffset(XLMarkerPosition position);
+        System.Drawing.Point GetOffset(XLMarkerPosition position);
 
         IXLPicture MoveTo(Int32 left, Int32 top);
 
@@ -83,13 +83,13 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset);
 
-        IXLPicture MoveTo(IXLCell cell, Point offset);
+        IXLPicture MoveTo(IXLCell cell, System.Drawing.Point offset);
 
         IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell);
 
         IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset);
 
-        IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset);
+        IXLPicture MoveTo(IXLCell fromCell, System.Drawing.Point fromOffset, IXLCell toCell, System.Drawing.Point toOffset);
 
         IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
 

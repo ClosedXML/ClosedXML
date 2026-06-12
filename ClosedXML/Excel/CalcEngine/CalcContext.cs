@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public string? RecalculateSheetName { get; set; }
 
-        internal XLSheetPoint FormulaSheetPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
+        internal Point FormulaPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
 
         /// <summary>
         /// What date system should be used in calculation. Either 1900 or 1904.
@@ -100,7 +100,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             sheet ??= Worksheet;
             var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
-            var point = new XLSheetPoint(rowNumber, columnNumber);
+            var point = new Point(rowNumber, columnNumber);
             var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
 
             if (formula is null)
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return cell?.Value ?? Blank.Value;
             }
 
-            throw new GettingDataException(new XLBookPoint(sheet.Name, new XLSheetPoint(rowNumber, columnNumber)));
+            throw new GettingDataException(new XLBookPoint(sheet.Name, new Point(rowNumber, columnNumber)));
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Return all points in the <paramref name="areaReference" /> that satisfy the <paramref name="criteria" />.
         /// </summary>
-        internal IEnumerable<XLSheetPoint> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
+        internal IEnumerable<Point> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
         {
             var sheet = areaReference.Worksheet ?? Worksheet;
             var area = XLSheetRange.FromRangeAddress(areaReference);

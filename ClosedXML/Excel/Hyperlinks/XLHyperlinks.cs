@@ -115,7 +115,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         if (address.Worksheet is not null && address.Worksheet != _worksheet)
             return false;
 
-        var cellPoint = XLSheetPoint.FromAddress(address);
+        var cellPoint = Point.FromAddress(address);
         if (!TryGet(cellPoint, out var cellLink))
             return false;
 
@@ -130,7 +130,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         if (address.Worksheet is not null && address.Worksheet != _worksheet)
             throw new KeyNotFoundException("Address is for a different sheet.");
 
-        var point = XLSheetPoint.FromAddress(address);
+        var point = Point.FromAddress(address);
         if (!TryGet(point, out var link))
             throw new KeyNotFoundException($"No hyperlink is defined for cell {point}.");
 
@@ -146,11 +146,11 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
             return false;
         }
 
-        var point = XLSheetPoint.FromAddress(address);
+        var point = Point.FromAddress(address);
         return TryGet(point, out hyperlink);
     }
 
-    internal bool HasHyperlink(XLSheetPoint point)
+    internal bool HasHyperlink(Point point)
     {
         var areaNodes = new List<RTree<XLHyperlink>.Node>();
         return _areaIndex.GetNodes(point, areaNodes).Count > 0;
@@ -160,7 +160,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
     /// Set a hyperlink of a single cell. Doesn't modify style, ignores hyperlinks with areas that
     /// cover the cell.
     /// </summary>
-    internal void SetCellHyperlink(XLSheetPoint point, XLHyperlink? link)
+    internal void SetCellHyperlink(Point point, XLHyperlink? link)
     {
         // We only care about links defined for individual cell, not any link that covers the cell
         var pointNodes = new List<RTree<XLHyperlink>.Node>();
@@ -174,7 +174,7 @@ internal class XLHyperlinks : IXLHyperlinks, ISheetListener
         Add(point, link);
     }
 
-    internal bool TryGet(XLSheetPoint point, [NotNullWhen(true)] out XLHyperlink? hyperlink)
+    internal bool TryGet(Point point, [NotNullWhen(true)] out XLHyperlink? hyperlink)
     {
         var cellArea = new XLSheetRange(point);
         var areaNodes = new List<RTree<XLHyperlink>.Node>();

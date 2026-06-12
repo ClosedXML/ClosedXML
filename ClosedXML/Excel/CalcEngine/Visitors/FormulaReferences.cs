@@ -47,7 +47,7 @@ internal class FormulaReferences
         return SheetReferences.Any(x => XLHelper.SheetComparer.Equals(x.Sheet, worksheetName));
     }
 
-    internal XLRanges GetExternalRanges(XLWorkbook workbook, XLSheetPoint anchor)
+    internal XLRanges GetExternalRanges(XLWorkbook workbook, Point anchor)
     {
         var list = new XLRanges(workbook);
         foreach (var reference in SheetReferences)

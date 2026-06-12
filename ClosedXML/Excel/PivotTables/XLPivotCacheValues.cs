@@ -235,7 +235,7 @@ namespace ClosedXML.Excel
             var uniqueItems = new HashSet<XLCellValue>(XLCellValueComparer.OrdinalIgnoreCase);
             for (var row = area.TopRow + 1; row <= area.BottomRow; ++row)
             {
-                var value = valueSlice.GetCellValue(new XLSheetPoint(row, column));
+                var value = valueSlice.GetCellValue(new Point(row, column));
 
                 // Add to shared items first, because value can be an index to shared items.
                 if (uniqueItems.Add(value))

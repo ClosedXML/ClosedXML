@@ -214,7 +214,7 @@ namespace ClosedXML.Excel
                 if (cell.IsMerged())
                     continue;
 
-                var cellStyle = Worksheet.GetStyleValue(cell.SheetPoint);
+                var cellStyle = Worksheet.GetStyleValue(cell.Point);
 
                 cell.GetGlyphBoxes(engine, dpi, glyphs);
                 var textWidthPx = (int)Math.Ceiling(GetContentWidth(cellStyle.Alignment.TextRotation.Value, glyphs));

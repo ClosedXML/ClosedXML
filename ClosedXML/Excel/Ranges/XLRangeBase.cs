@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
                 {
                     for (var col = range.LeftColumn; col <= range.RightColumn; ++col)
                     {
-                        valueSlice.SetShareString(new XLSheetPoint(row, col), false);
+                        valueSlice.SetShareString(new Point(row, col), false);
                     }
                 }
 
@@ -320,7 +320,7 @@ namespace ClosedXML.Excel
 
                 var firstCell = FirstCell();
                 var cellsUsed =
-                    CellsUsedInternal(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c.SheetPoint != firstCell.SheetPoint).ToList<XLCell>();
+                    CellsUsedInternal(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c.Point != firstCell.Point).ToList<XLCell>();
                 cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
                                                & ~XLClearOptions.MergedRanges
                                                & ~XLClearOptions.NormalFormats));
@@ -363,10 +363,10 @@ namespace ClosedXML.Excel
 
         private XLBorderLine? GetHorizontalBorder(int row, int minColumn, int maxColumn, Func<XLBorderFormatValue, XLBorderLine> borderSide)
         {
-            var initialSide = borderSide(Worksheet.GetStyleValue(new XLSheetPoint(row, minColumn)).Border);
+            var initialSide = borderSide(Worksheet.GetStyleValue(new Point(row, minColumn)).Border);
             for (var column = minColumn + 1; column <= maxColumn; ++column)
             {
-                var currentSide = borderSide(Worksheet.GetStyleValue(new XLSheetPoint(row, column)).Border);
+                var currentSide = borderSide(Worksheet.GetStyleValue(new Point(row, column)).Border);
                 if (currentSide != initialSide)
                     return null;
             }
@@ -376,10 +376,10 @@ namespace ClosedXML.Excel
 
         private XLBorderLine? GetVerticalBorder(int column, int minRow, int maxRow, Func<XLBorderFormatValue, XLBorderLine> borderSide)
         {
-            var initialSide = borderSide(Worksheet.GetStyleValue(new XLSheetPoint(minRow, column)).Border);
+            var initialSide = borderSide(Worksheet.GetStyleValue(new Point(minRow, column)).Border);
             for (var row = minRow + 1; row <= maxRow; ++row)
             {
-                var currentSide = borderSide(Worksheet.GetStyleValue(new XLSheetPoint(row, column)).Border);
+                var currentSide = borderSide(Worksheet.GetStyleValue(new Point(row, column)).Border);
                 if (currentSide != initialSide)
                     return null;
             }
@@ -665,10 +665,10 @@ namespace ClosedXML.Excel
 
         internal XLCell Cell(Int32 row, Int32 column)
         {
-            return Cell(new XLSheetPoint(row, column));
+            return Cell(new Point(row, column));
         }
 
-        internal XLCell Cell(XLSheetPoint point)
+        internal XLCell Cell(Point point)
         {
             return Cell(new XLAddress(Worksheet, point.Row, point.Column, false, false));
         }
@@ -715,7 +715,7 @@ namespace ClosedXML.Excel
                 );
             }
 
-            var cell = Worksheet.Internals.CellsCollection.GetCell(new XLSheetPoint(absRow, absColumn));
+            var cell = Worksheet.Internals.CellsCollection.GetCell(new Point(absRow, absColumn));
             return cell;
         }
 
@@ -1066,8 +1066,8 @@ namespace ClosedXML.Excel
             }
 
             var insertedRange = new XLSheetRange(
-                XLSheetPoint.FromAddress(RangeAddress.FirstAddress),
-                new XLSheetPoint(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1));
+                Point.FromAddress(RangeAddress.FirstAddress),
+                new Point(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1));
 
             Worksheet.Internals.CellsCollection.InsertAreaAndShiftRight(insertedRange);
 
@@ -1249,8 +1249,8 @@ namespace ClosedXML.Excel
             }
 
             var insertedRange = new XLSheetRange(
-                XLSheetPoint.FromAddress(RangeAddress.FirstAddress),
-                new XLSheetPoint(RangeAddress.FirstAddress.RowNumber + numberOfRows - 1, RangeAddress.LastAddress.ColumnNumber));
+                Point.FromAddress(RangeAddress.FirstAddress),
+                new Point(RangeAddress.FirstAddress.RowNumber + numberOfRows - 1, RangeAddress.LastAddress.ColumnNumber));
             Worksheet.Internals.CellsCollection.InsertAreaAndShiftDown(insertedRange);
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
@@ -1656,7 +1656,7 @@ namespace ClosedXML.Excel
             {
                 // If we're dealing with the entire column, we're not interested in the unused cells
                 var lastRowUsed = cellsCollection.LastRowUsed(XLSheetRange.Full, XLCellsUsedOptions.Contents);
-                sortRange = new XLSheetRange(sortRange.FirstPoint, new XLSheetPoint(lastRowUsed, sortRange.RightColumn));
+                sortRange = new XLSheetRange(sortRange.FirstPoint, new Point(lastRowUsed, sortRange.RightColumn));
             }
 
             var comparer = new XLRangeRowsSortComparer(Worksheet, sortRange, SortColumns);
@@ -1677,7 +1677,7 @@ namespace ClosedXML.Excel
             {
                 // If we're dealing with the entire row, we're not interested in the unused cells
                 var lastColumnCell = cellsCollection.LastColumnUsed(XLSheetRange.Full, XLCellsUsedOptions.Contents);
-                sortRange = new XLSheetRange(sortRange.FirstPoint, new XLSheetPoint(sortRange.BottomRow, lastColumnCell));
+                sortRange = new XLSheetRange(sortRange.FirstPoint, new Point(sortRange.BottomRow, lastColumnCell));
             }
 
             var comparer = new XLRangeColumnsSortComparer(Worksheet, sortRange, SortRows);

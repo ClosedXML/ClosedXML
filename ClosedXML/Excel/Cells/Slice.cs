@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get the slice value at the specified point of the sheet.
         /// </summary>
-        internal ref readonly TElement this[XLSheetPoint point] => ref this[point.Row, point.Column];
+        internal ref readonly TElement this[Point point] => ref this[point.Row, point.Column];
 
         /// <summary>
         /// Get the slice value at the specified point of the sheet.
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             while (cellEnumerator.MoveNext())
             {
                 var srcPoint = cellEnumerator.Point;
-                var dstPoint = new XLSheetPoint(srcPoint.Row, srcPoint.Column - shiftDistance);
+                var dstPoint = new Point(srcPoint.Row, srcPoint.Column - shiftDistance);
                 Set(dstPoint, in cellEnumerator.Current);
                 Set(srcPoint, in _defaultValue);
             }
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel
             while (cellEnumerator.MoveNext())
             {
                 var srcPoint = cellEnumerator.Point;
-                var dstPoint = new XLSheetPoint(srcPoint.Row - shiftDistance, srcPoint.Column);
+                var dstPoint = new Point(srcPoint.Row - shiftDistance, srcPoint.Column);
                 Set(dstPoint, in cellEnumerator.Current);
                 Set(srcPoint, in _defaultValue);
             }
@@ -159,7 +159,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get enumerator over used values of the range.
         /// </summary>
-        public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false)
+        public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false)
         {
             return !reverse ? new Enumerator(this, range) : new ReverseEnumerator(this, range);
         }
@@ -178,18 +178,18 @@ namespace ClosedXML.Excel
 
             // Purged range might contain some cells that wouldn't be overwritten during shift => clear.
             var purgedRange = new XLSheetRange(
-                new XLSheetPoint(XLHelper.MaxRowNumber - shiftDistance + 1, range.FirstPoint.Column),
-                new XLSheetPoint(XLHelper.MaxRowNumber, range.LastPoint.Column));
+                new Point(XLHelper.MaxRowNumber - shiftDistance + 1, range.FirstPoint.Column),
+                new Point(XLHelper.MaxRowNumber, range.LastPoint.Column));
             Clear(purgedRange);
 
             var shiftedRange = new XLSheetRange(
                 range.FirstPoint,
-                new XLSheetPoint(XLHelper.MaxRowNumber - shiftDistance, range.LastPoint.Column));
+                new Point(XLHelper.MaxRowNumber - shiftDistance, range.LastPoint.Column));
             var cellEnumerator = new ReverseEnumerator(this, shiftedRange);
             while (cellEnumerator.MoveNext())
             {
                 var srcPoint = cellEnumerator.Point;
-                var dstPoint = new XLSheetPoint(srcPoint.Row + shiftDistance, srcPoint.Column);
+                var dstPoint = new Point(srcPoint.Row + shiftDistance, srcPoint.Column);
                 Set(dstPoint, in cellEnumerator.Current);
                 Set(srcPoint, in _defaultValue);
             }
@@ -209,24 +209,24 @@ namespace ClosedXML.Excel
 
             // Purged range might contain some cells that wouldn't be overwritten during shift => clear.
             var purgedRange = new XLSheetRange(
-                new XLSheetPoint(range.FirstPoint.Row, XLHelper.MaxColumnNumber - shiftDistance + 1),
-                new XLSheetPoint(range.LastPoint.Row, XLHelper.MaxColumnNumber));
+                new Point(range.FirstPoint.Row, XLHelper.MaxColumnNumber - shiftDistance + 1),
+                new Point(range.LastPoint.Row, XLHelper.MaxColumnNumber));
             Clear(purgedRange);
 
             var shiftedRange = new XLSheetRange(
                 range.FirstPoint,
-                new XLSheetPoint(range.LastPoint.Row, XLHelper.MaxColumnNumber - shiftDistance));
+                new Point(range.LastPoint.Row, XLHelper.MaxColumnNumber - shiftDistance));
             var enumerator = new ReverseEnumerator(this, shiftedRange);
             while (enumerator.MoveNext())
             {
                 var srcPoint = enumerator.Point;
-                var dstPoint = new XLSheetPoint(srcPoint.Row, srcPoint.Column + shiftDistance);
+                var dstPoint = new Point(srcPoint.Row, srcPoint.Column + shiftDistance);
                 Set(dstPoint, in enumerator.Current);
                 Set(srcPoint, in _defaultValue);
             }
         }
 
-        public bool IsUsed(XLSheetPoint address)
+        public bool IsUsed(Point address)
         {
             var rowLut = _data.Get(address.Row - 1);
             if (rowLut is null)
@@ -235,7 +235,7 @@ namespace ClosedXML.Excel
             return rowLut.IsUsed(address.Column - 1);
         }
 
-        public void Swap(XLSheetPoint sp1, XLSheetPoint sp2)
+        public void Swap(Point sp1, Point sp2)
         {
             var value1 = this[sp1];
             var value2 = this[sp2];
@@ -251,7 +251,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void Set(XLSheetPoint point, in TElement value)
+        internal void Set(Point point, in TElement value)
             => Set(point.Row, point.Column, in value);
 
         internal void Set(int row, int column, in TElement value)
@@ -321,7 +321,7 @@ namespace ClosedXML.Excel
         /// Enumerator that returns used values from a specified range.
         /// </summary>
         [DebuggerDisplay("{Point}:{Current}")]
-        internal class Enumerator : IEnumerator<XLSheetPoint>
+        internal class Enumerator : IEnumerator<Point>
         {
             private readonly XLSheetRange _range;
             private Lut<TElement>.LutEnumerator _columnsEnumerator;
@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
 
             public ref readonly TElement Current => ref _columnsEnumerator.Current;
 
-            public XLSheetPoint Point => new(_rowsEnumerator.Index + 1, _columnsEnumerator.Index + 1);
+            public Point Point => new(_rowsEnumerator.Index + 1, _columnsEnumerator.Index + 1);
 
             /// <summary>
             /// The movement is columns first, then rows.
@@ -363,7 +363,7 @@ namespace ClosedXML.Excel
 
             void IEnumerator.Reset() => throw new NotSupportedException();
 
-            XLSheetPoint IEnumerator<XLSheetPoint>.Current => Point;
+            Point IEnumerator<Point>.Current => Point;
 
             object IEnumerator.Current => Point;
 
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel
         }
 
         [DebuggerDisplay("{Point}:{Current}")]
-        private class ReverseEnumerator : IEnumerator<XLSheetPoint>
+        private class ReverseEnumerator : IEnumerator<Point>
         {
             private readonly XLSheetRange _range;
             private Lut<TElement>.ReverseLutEnumerator _columnsEnumerator;
@@ -389,7 +389,7 @@ namespace ClosedXML.Excel
 
             public ref TElement Current => ref _columnsEnumerator.Current;
 
-            public XLSheetPoint Point => new(_rowsEnumerator.Index + 1, _columnsEnumerator.Index + 1);
+            public Point Point => new(_rowsEnumerator.Index + 1, _columnsEnumerator.Index + 1);
 
             public bool MoveNext()
             {
@@ -409,7 +409,7 @@ namespace ClosedXML.Excel
 
             void IEnumerator.Reset() => throw new NotSupportedException();
 
-            XLSheetPoint IEnumerator<XLSheetPoint>.Current => Point;
+            Point IEnumerator<Point>.Current => Point;
 
             object IEnumerator.Current => Point;
 

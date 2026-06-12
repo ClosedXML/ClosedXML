@@ -2016,7 +2016,7 @@ namespace ClosedXML.Excel.IO
             uint rowStyleId = 0;
             foreach (var xlCell in xlWorksheet.Internals.CellsCollection.GetCells())
             {
-                var currentRowNumber = xlCell.SheetPoint.Row;
+                var currentRowNumber = xlCell.Point.Row;
 
                 // A space between cells can have several rows that don't contain cells,
                 // but have custom properties (e.g. height). Write them out.
@@ -2202,7 +2202,7 @@ namespace ClosedXML.Excel.IO
                 var styleId = context.GetStyleId(xlCell.GetFormat());
 
                 Span<Char> cellRefSpan = cellRef;
-                var cellRefLen = xlCell.SheetPoint.Format(cellRefSpan);
+                var cellRefLen = xlCell.Point.Format(cellRefSpan);
 
                 if (xlCell.HasFormula)
                 {
@@ -2260,7 +2260,7 @@ namespace ClosedXML.Excel.IO
                     }
                     else if (xlCell.HasArrayFormula)
                     {
-                        var isMasterCell = xlCell.Formula.Range.FirstPoint == xlCell.SheetPoint;
+                        var isMasterCell = xlCell.Formula.Range.FirstPoint == xlCell.Point;
                         if (isMasterCell)
                         {
                             xml.WriteStartElement("f", Main2006SsNs);

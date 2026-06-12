@@ -126,7 +126,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        internal void MarkDirty(XLWorksheet sheet, XLSheetPoint point)
+        internal void MarkDirty(XLWorksheet sheet, Point point)
         {
             MarkDirty(sheet, new XLSheetRange(point, point));
         }
@@ -218,7 +218,7 @@ namespace ClosedXML.Excel.CalcEngine
             _chain.Reset();
         }
 
-        private void ApplyFormula(XLCellFormula formula, XLSheetPoint appliedPoint, XLWorksheet sheet, ValueSlice valueSlice, string? recalculateSheetName)
+        private void ApplyFormula(XLCellFormula formula, Point appliedPoint, XLWorksheet sheet, ValueSlice valueSlice, string? recalculateSheetName)
         {
             var formulaText = formula.A1;
             if (formula.Type == FormulaType.Normal)
@@ -251,7 +251,7 @@ namespace ClosedXML.Excel.CalcEngine
                         var cellValue = result[rowIdx, colIdx];
                         var row = range.FirstPoint.Row + rowIdx;
                         var column = range.FirstPoint.Column + colIdx;
-                        valueSlice.SetCellValue(new XLSheetPoint(row, column), cellValue.ToCellValue());
+                        valueSlice.SetCellValue(new Point(row, column), cellValue.ToCellValue());
                     }
                 }
             }

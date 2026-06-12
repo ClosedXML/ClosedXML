@@ -5,7 +5,7 @@ using System;
 namespace ClosedXML.Tests.Excel.Coordinates
 {
     [TestFixture]
-    public class XLSheetPointTests
+    public class PointTests
     {
         [TestCase("A1", 1, 1)]
         [TestCase("AA1", 27, 1)]
@@ -18,7 +18,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFD1048576", 16384, 1048576)]
         public void ParseCellRefsAccordingToGrammar(string cellRef, int columnNumber, int rowNumber)
         {
-            var sheetPoint = XLSheetPoint.Parse(cellRef.AsSpan());
+            var sheetPoint = Point.Parse(cellRef.AsSpan());
             Assert.AreEqual(columnNumber, sheetPoint.Column);
             Assert.AreEqual(rowNumber, sheetPoint.Row);
         }
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("A-1")]
         public void InvalidInputsAreNotParsed(string cellRef)
         {
-            Assert.Throws<FormatException>(() => XLSheetPoint.Parse(cellRef.AsSpan()));
+            Assert.Throws<FormatException>(() => Point.Parse(cellRef.AsSpan()));
         }
 
         [TestCase("A1")]
@@ -57,7 +57,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         [TestCase("XFD1048576")]
         public void CanFormatToString(string cellRef)
         {
-            var r = XLSheetPoint.Parse(cellRef);
+            var r = Point.Parse(cellRef);
             Assert.AreEqual(cellRef, r.ToString());
         }
     }

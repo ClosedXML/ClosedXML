@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     /// </summary>
     public class LoadOptions
     {
-        private Point _dpi = new(96, 96);
+        private System.Drawing.Point _dpi = new(96, 96);
 
         /// <summary>
         /// A graphics engine that will be used for workbooks without explicitly set engine.
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
         /// DPI for the workbook. Default is 96.
         /// </summary>
         /// <remarks>Used in various places, e.g. determining a physical size of an image without a DPI or to determine a size of a text in a cell.</remarks>
-        public Point Dpi
+        public System.Drawing.Point Dpi
         {
             get => _dpi;
             set => _dpi = value.X > 0 && value.Y > 0 ? value : throw new ArgumentException("DPI must be positive");

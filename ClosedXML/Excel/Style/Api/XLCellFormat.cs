@@ -97,7 +97,7 @@ internal partial class XLCellFormat
     {
         var workbook = cell.Worksheet.Workbook;
         var sheetName = cell.Worksheet.Name;
-        var cellPoint = cell.SheetPoint;
+        var cellPoint = cell.Point;
         var formatValue = new Hierarchy(workbook, sheetName, cellPoint.Column, cellPoint.Row, cellPoint);
         return new XLCellFormat(workbook, formatValue)
         {
@@ -716,9 +716,9 @@ internal partial class XLCellFormat
         private readonly string? _sheetName;
         private readonly int? _columnNumber;
         private readonly int? _rowNumber;
-        private readonly XLSheetPoint? _point;
+        private readonly Point? _point;
 
-        public Hierarchy(XLWorkbook workbook, string? sheetName, int? columnNumber, int? rowNumber, XLSheetPoint? point)
+        public Hierarchy(XLWorkbook workbook, string? sheetName, int? columnNumber, int? rowNumber, Point? point)
         {
             _workbook = workbook;
             _sheetName = sheetName;

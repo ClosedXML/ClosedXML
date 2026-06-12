@@ -33,8 +33,8 @@ namespace ClosedXML.Excel
         /// </summary>
         private const string DataTableFormulaFormat = "{{TABLE({0},{1}}}";
 
-        private XLSheetPoint _input1;
-        private XLSheetPoint _input2;
+        private Point _input1;
+        private Point _input2;
         private FormulaFlags _flags;
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
         /// and as row for 2D data table. Must be present, even if input marked as deleted.
         /// This property is meaningless, if called for non-data-table formula.
         /// </summary>
-        internal XLSheetPoint Input1 => _input1;
+        internal Point Input1 => _input1;
 
         /// <summary>
         /// Returns a cell that 2D data table formula uses as a variable to replace with values
@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
         /// Must be present for 2D, even if input marked as deleted.
         /// This property is meaningless, if called for non-data-table formula.
         /// </summary>
-        internal XLSheetPoint Input2 => _input2;
+        internal Point Input2 => _input2;
 
         /// <summary>
         /// Returns true, if data table formula has its input1 deleted.
@@ -120,12 +120,12 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get stored formula in R1C1 notation. Returned formula doesn't contain equal sign.
         /// </summary>
-        public string GetFormulaR1C1(XLSheetPoint cellAddress)
+        public string GetFormulaR1C1(Point cellAddress)
         {
             return GetFormula(A1, FormulaConversionType.A1ToR1C1, cellAddress);
         }
 
-        internal static string GetFormula(string strValue, FormulaConversionType conversionType, XLSheetPoint cellAddress)
+        internal static string GetFormula(string strValue, FormulaConversionType conversionType, Point cellAddress)
         {
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
@@ -187,7 +187,7 @@ namespace ClosedXML.Excel
         /// <param name="isRowDataTable">Is data table in row (<c>true</c>) or columns (<c>false</c>)?</param>
         internal static XLCellFormula DataTable1D(
             XLSheetRange range,
-            XLSheetPoint input1Address,
+            Point input1Address,
             bool input1Deleted,
             bool isRowDataTable)
         {
@@ -226,9 +226,9 @@ namespace ClosedXML.Excel
         /// <param name="input2Deleted">Was the original address deleted?</param>
         internal static XLCellFormula DataTable2D(
             XLSheetRange range,
-            XLSheetPoint input1Address,
+            Point input1Address,
             bool input1Deleted,
-            XLSheetPoint input2Address,
+            Point input2Address,
             bool input2Deleted)
         {
             var colInput = input1Deleted ? "#REF!" : input1Address.ToString();
@@ -300,7 +300,7 @@ namespace ClosedXML.Excel
             return A1;
         }
 
-        public void RenameSheet(XLSheetPoint origin, string oldSheetName, string newSheetName)
+        public void RenameSheet(Point origin, string oldSheetName, string newSheetName)
         {
             var a1 = A1;
             var res = FormulaConverter.ModifyA1(a1, newSheetName, origin.Row, origin.Column, new RenameRefModVisitor
@@ -315,7 +315,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal XLCellFormula GetMovedTo(XLSheetPoint origin, XLSheetPoint destination)
+        internal XLCellFormula GetMovedTo(Point origin, Point destination)
         {
             // I could in theory swap 1x1 array or dataTable, but not worth it in this path.
             if (Type != FormulaType.Normal)

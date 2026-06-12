@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
                 var sharedStringId = SstMap[xlCell.MemorySstId];
                 if (sharedStringId < 0)
                 {
-                    throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.SheetPoint}. " +
+                    throw new UnreachableException($"Unable to find text '{text}' in shared string table for cell {xlCell.Point}. " +
                                                    "That likely means reference counting is broken. As a stop-gap, try to set the " +
                                                    "text value to an unused cell to increase number of references for the text.");
                 }

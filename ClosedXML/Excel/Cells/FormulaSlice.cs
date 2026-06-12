@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
             _formulas.DeleteAreaAndShiftUp(rangeToDelete);
         }
 
-        public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false)
+        public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false)
         {
             return _formulas.GetEnumerator(range, reverse);
         }
@@ -55,12 +55,12 @@ namespace ClosedXML.Excel
             _formulas.InsertAreaAndShiftRight(range);
         }
 
-        public bool IsUsed(XLSheetPoint address)
+        public bool IsUsed(Point address)
         {
             return _formulas.IsUsed(address);
         }
 
-        public void Swap(XLSheetPoint sp1, XLSheetPoint sp2)
+        public void Swap(Point sp1, Point sp2)
         {
             var value1 = _formulas[sp1];
             var value2 = _formulas[sp2];
@@ -72,12 +72,12 @@ namespace ClosedXML.Excel
             Set(sp2, value1);
         }
 
-        internal XLCellFormula? Get(XLSheetPoint point)
+        internal XLCellFormula? Get(Point point)
         {
             return _formulas[point];
         }
 
-        internal void Set(XLSheetPoint point, XLCellFormula? formula)
+        internal void Set(Point point, XLCellFormula? formula)
         {
             // Can't ref, because it is an alias for a memory and thus wouldn't hold old formula.
             var original = _formulas[point];
@@ -108,7 +108,7 @@ namespace ClosedXML.Excel
             {
                 for (var col = range.LeftColumn; col <= range.RightColumn; ++col)
                 {
-                    var point = new XLSheetPoint(row, col);
+                    var point = new Point(row, col);
                     var original = _formulas[point];
 
                     _formulas.Set(point, arrayFormula);

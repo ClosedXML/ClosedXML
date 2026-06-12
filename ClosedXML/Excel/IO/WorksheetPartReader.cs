@@ -280,7 +280,7 @@ internal class WorksheetPartReader
 
         var attributes = reader.Attributes;
 
-        var cellAddress = attributes.GetCellRefAttribute("r") ?? new XLSheetPoint(rowIndex, _lastColumnNumber + 1);
+        var cellAddress = attributes.GetCellRefAttribute("r") ?? new Point(rowIndex, _lastColumnNumber + 1);
         _lastColumnNumber = cellAddress.Column;
 
         var dataType = attributes.GetAttribute("t") switch
@@ -390,7 +390,7 @@ internal class WorksheetPartReader
         }
     }
 
-    private XLCellFormula SetCellFormula(XLWorksheet ws, XLSheetPoint cellAddress, OpenXmlPartReader reader)
+    private XLCellFormula SetCellFormula(XLWorksheet ws, Point cellAddress, OpenXmlPartReader reader)
     {
         var attributes = reader.Attributes;
         var formulaSlice = ws.Internals.CellsCollection.FormulaSlice;
@@ -1235,7 +1235,7 @@ internal class WorksheetPartReader
             {
                 // The sqlref must contain exactly one ref [MS-XLSX]. Excel ignores everything after the first one.
                 var refText = (sparkline.ReferenceSequence?.Text ?? string.Empty).Trim().Split(' ')[0];
-                var location = XLSheetPoint.Parse(refText);
+                var location = Point.Parse(refText);
 
                 // Technically, there could be more than one sparkline per cell, so use Set instead of Add.
                 xlSparklineGroup.SetSparkline(location, sparkline.Formula?.Text);

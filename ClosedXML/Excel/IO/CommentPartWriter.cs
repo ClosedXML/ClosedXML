@@ -52,7 +52,7 @@ namespace ClosedXML.Excel.IO
                 var comment = commentCell.GetComment();
                 xml.WriteStartElement("comment", Main2006SsNs);
 
-                var refLen = commentCell.SheetPoint.Format(refBuffer);
+                var refLen = commentCell.Point.Format(refBuffer);
                 xml.WriteStartAttribute("ref");
                 xml.WriteRaw(refBuffer, 0, refLen);
                 xml.WriteEndAttribute(); // ref

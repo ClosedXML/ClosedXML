@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
             if (cell.Worksheet != _worksheet)
                 return null;
 
-            var location = XLSheetPoint.FromCell(cell);
+            var location = Point.FromCell(cell);
             foreach (var sparklineGroup in _sparklineGroups)
             {
                 if (sparklineGroup.TryGetSparkline(location, out var sparkline))
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
             _sparklineGroups.Remove((XLSparklineGroup)sparklineGroup);
         }
 
-        internal void Remove(XLSheetPoint location)
+        internal void Remove(Point location)
         {
             _sparklineGroups.ForEach(g => g.Remove(location));
         }

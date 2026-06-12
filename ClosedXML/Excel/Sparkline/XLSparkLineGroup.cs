@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
     internal class XLSparklineGroup : IXLSparklineGroup, ISheetListener
     {
         private readonly XLWorksheet _worksheet;
-        private readonly Dictionary<XLSheetPoint, SparklineFormula?> _sparklines = new();
+        private readonly Dictionary<Point, SparklineFormula?> _sparklines = new();
         private IXLRange? _dateRange;
         private IXLSparklineStyle _style;
 
@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// A collection of sparkline locations and their formulas.
         /// </summary>
-        internal IEnumerable<(XLSheetPoint Location, string? SourceDataFormula)> Sparklines
+        internal IEnumerable<(Point Location, string? SourceDataFormula)> Sparklines
         {
             get => _sparklines.Select(static sl => (sl.Key, sl.Value?.Text));
         }
@@ -157,7 +157,7 @@ namespace ClosedXML.Excel
 
             // Keep invariant that each cell can have at most one sparkline
             _worksheet.SparklineGroupsInternal.Remove(location);
-            var point = XLSheetPoint.FromCell(location);
+            var point = Point.FromCell(location);
             AddSparkline(point, sourceData);
             return new XLSparkline(this, point);
         }
@@ -236,7 +236,7 @@ namespace ClosedXML.Excel
             if (cell.Worksheet != _worksheet)
                 return null;
 
-            var location = XLSheetPoint.FromCell(cell);
+            var location = Point.FromCell(cell);
             if (!_sparklines.ContainsKey(location))
                 return null;
 
@@ -264,7 +264,7 @@ namespace ClosedXML.Excel
             if (cell.Worksheet != _worksheet)
                 return;
 
-            Remove(XLSheetPoint.FromCell(cell));
+            Remove(Point.FromCell(cell));
         }
 
         /// <summary>
@@ -337,17 +337,17 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Set sparkline at the location to the specified formula.
         /// </summary>
-        internal void SetSparkline(XLSheetPoint location, string? sourceDataFormula)
+        internal void SetSparkline(Point location, string? sourceDataFormula)
         {
             _sparklines[location] = !string.IsNullOrWhiteSpace(sourceDataFormula) ? new SparklineFormula(sourceDataFormula) : null;
         }
 
-        internal void Remove(XLSheetPoint location)
+        internal void Remove(Point location)
         {
             _sparklines.Remove(location);
         }
 
-        internal void MoveSparkline(XLSheetPoint originalLocation, XLSheetPoint sparklineDestination)
+        internal void MoveSparkline(Point originalLocation, Point sparklineDestination)
         {
             if (!_sparklines.TryGetValue(originalLocation, out var sourceData))
                 throw new InvalidOperationException($"No sparkline at the source cell {originalLocation}.");
@@ -358,7 +358,7 @@ namespace ClosedXML.Excel
             _sparklines[sparklineDestination] = sourceData;
         }
 
-        internal bool TryGetSparkline(XLSheetPoint location, [NotNullWhen(true)] out XLSparkline? sparkline)
+        internal bool TryGetSparkline(Point location, [NotNullWhen(true)] out XLSparkline? sparkline)
         {
             if (!_sparklines.ContainsKey(location))
             {
@@ -370,7 +370,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        internal IXLRange? GetSparklineSourceData(XLSheetPoint sparklineLocation)
+        internal IXLRange? GetSparklineSourceData(Point sparklineLocation)
         {
             if (!_sparklines.TryGetValue(sparklineLocation, out var sourceData))
                 throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
@@ -379,7 +379,7 @@ namespace ClosedXML.Excel
             return sourceData is not null ? _worksheet.Workbook.Range(sourceData.Value.Text) : null;
         }
 
-        internal void SetSparklineSourceData(XLSheetPoint sparklineLocation, IXLRange? sourceDataRange)
+        internal void SetSparklineSourceData(Point sparklineLocation, IXLRange? sourceDataRange)
         {
             if (!_sparklines.Remove(sparklineLocation))
                 throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
@@ -387,7 +387,7 @@ namespace ClosedXML.Excel
             AddSparkline(sparklineLocation, sourceDataRange);
         }
 
-        internal IXLCell GetLocation(XLSheetPoint sparklineLocation)
+        internal IXLCell GetLocation(Point sparklineLocation)
         {
             if (!_sparklines.ContainsKey(sparklineLocation))
                 throw new InvalidOperationException($"No sparkline at the source cell {sparklineLocation}.");
@@ -395,7 +395,7 @@ namespace ClosedXML.Excel
             return _worksheet.Cell(sparklineLocation);
         }
 
-        private void AddSparkline(XLSheetPoint location, IXLRange? sourceData)
+        private void AddSparkline(Point location, IXLRange? sourceData)
         {
             if (sourceData is not null && sourceData.Worksheet.Workbook != _worksheet.Workbook)
                 throw new ArgumentException("Range is from different workbook.");
@@ -438,7 +438,7 @@ namespace ClosedXML.Excel
 
                 var shiftedRow = location.Row + insertedArea.Height;
                 if (shiftedRow <= XLHelper.MaxRowNumber)
-                    return new XLSheetPoint(shiftedRow, location.Column);
+                    return new Point(shiftedRow, location.Column);
 
                 return null;
             });
@@ -457,7 +457,7 @@ namespace ClosedXML.Excel
 
                 var shiftedColumn = location.Column + insertedArea.Width;
                 if (shiftedColumn <= XLHelper.MaxColumnNumber)
-                    return new XLSheetPoint(location.Row, shiftedColumn);
+                    return new Point(location.Row, shiftedColumn);
 
                 return null;
             });
@@ -476,7 +476,7 @@ namespace ClosedXML.Excel
 
                 var shiftedColumn = location.Column - deletedArea.Width;
                 if (shiftedColumn >= XLHelper.MinColumnNumber)
-                    return new XLSheetPoint(location.Row, shiftedColumn);
+                    return new Point(location.Row, shiftedColumn);
 
                 return null;
             });
@@ -495,7 +495,7 @@ namespace ClosedXML.Excel
 
                 var shiftedRow = location.Row - deletedArea.Height;
                 if (shiftedRow is >= XLHelper.MinRowNumber)
-                    return new XLSheetPoint(shiftedRow, location.Column);
+                    return new Point(shiftedRow, location.Column);
 
                 return null;
             });
@@ -504,13 +504,13 @@ namespace ClosedXML.Excel
             AdjustSourceData(refMod);
         }
 
-        private void ShiftLocation(XLBookArea shiftedRange, Func<XLSheetPoint, XLSheetRange, XLSheetPoint?> shiftLocation)
+        private void ShiftLocation(XLBookArea shiftedRange, Func<Point, XLSheetRange, Point?> shiftLocation)
         {
             // If shift was on another worksheet, there is no way to affect sparklines for this worksheet of this group
             if (!XLHelper.SheetComparer.Equals(shiftedRange.Name, _worksheet.Name))
                 return;
 
-            var sparklinesCopy = new Dictionary<XLSheetPoint, SparklineFormula?>(_sparklines);
+            var sparklinesCopy = new Dictionary<Point, SparklineFormula?>(_sparklines);
 
             // Clear to avoid problems during shifting (e.g. A1 and A2 have sparklines, A1 is
             // shifted to A2, but A2 hasn't yet been shifted). Just reinsert everything.
@@ -526,7 +526,7 @@ namespace ClosedXML.Excel
         private void AdjustSourceData(CopyVisitor refMod)
         {
             // Can't modify dictionary while iterating over it, make a copy.
-            var locationsCopy = new List<XLSheetPoint>(_sparklines.Keys);
+            var locationsCopy = new List<Point>(_sparklines.Keys);
             foreach (var location in locationsCopy)
             {
                 var originalSourceData = _sparklines[location];

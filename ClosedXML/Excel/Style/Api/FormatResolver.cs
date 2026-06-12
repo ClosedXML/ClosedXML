@@ -27,7 +27,7 @@ internal class FormatResolver
     /// </summary>
     /// <param name="point">Point for which to resolve the style.</param>
     /// <returns>A format that is already registered in the styles.</returns>
-    public XLCellFormatValue Resolve(XLSheetPoint point)
+    public XLCellFormatValue Resolve(Point point)
     {
         if (_rows.TryGetValue(point.Row, out var row) &&
             row.FormatValue is { } rowFormat)

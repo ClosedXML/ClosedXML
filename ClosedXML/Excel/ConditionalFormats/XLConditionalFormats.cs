@@ -99,7 +99,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void CopyFrom(XLWorksheet sourceSheet, XLSheetRange sourceArea, XLSheetPoint targetPoint, bool mergeUncoveredInSameSheet = false)
+        internal void CopyFrom(XLWorksheet sourceSheet, XLSheetRange sourceArea, Point targetPoint, bool mergeUncoveredInSameSheet = false)
         {
             // If source and target sheets are same, do not go over the end
             var sourceCfCount = sourceSheet.ConditionalFormats._conditionalFormats.Count;

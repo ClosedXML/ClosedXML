@@ -15,14 +15,14 @@ namespace ClosedXML.Excel.Drawings
         private readonly IXLRange rangeCell;
 
         internal XLMarker(IXLCell cell)
-                    : this(cell.AsRange(), new Point(0, 0))
+                    : this(cell.AsRange(), new System.Drawing.Point(0, 0))
         { }
 
-        internal XLMarker(IXLCell cell, Point offset)
+        internal XLMarker(IXLCell cell, System.Drawing.Point offset)
             : this(cell.AsRange(), offset)
         { }
 
-        private XLMarker(IXLRange rangeCell, Point offset)
+        private XLMarker(IXLRange rangeCell, System.Drawing.Point offset)
         {
             if (rangeCell.RowCount() != 1 || rangeCell.ColumnCount() != 1)
                 throw new ArgumentException("Range should contain only one cell.", nameof(rangeCell));
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLCell Cell { get => rangeCell.FirstCell(); }
         public Int32 ColumnNumber { get => rangeCell.RangeAddress.FirstAddress.ColumnNumber; }
-        public Point Offset { get; set; }
+        public System.Drawing.Point Offset { get; set; }
         public Int32 RowNumber { get => rangeCell.RangeAddress.FirstAddress.RowNumber; }
     }
 }

@@ -11,7 +11,7 @@ internal class XLBookPointTests
     public void Ctor_sheet_must_be_valid(string invalidSheetName)
     {
         Assert.That(
-            () => new XLBookPoint(invalidSheetName, new XLSheetPoint(1, 1)),
+            () => new XLBookPoint(invalidSheetName, new Point(1, 1)),
             Throws.Exception.TypeOf<ArgumentException>());
     }
 

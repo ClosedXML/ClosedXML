@@ -8,9 +8,9 @@ namespace ClosedXML.Excel
     /// </summary>
     /// <remarks>Unlike the XLAddress, sheet can never be invalid.</remarks>
     [DebuggerDisplay("{XLHelper.GetColumnLetterFromNumber(Column)+Row}")]
-    internal readonly struct XLSheetPoint : IEquatable<XLSheetPoint>, IComparable<XLSheetPoint>
+    internal readonly struct Point : IEquatable<Point>, IComparable<Point>
     {
-        public XLSheetPoint(Int32 row, Int32 column)
+        public Point(Int32 row, Int32 column)
         {
             Row = row;
             Column = column;
@@ -26,17 +26,17 @@ namespace ClosedXML.Excel
         /// </summary>
         public readonly Int32 Column;
 
-        public static implicit operator XLSheetRange(XLSheetPoint point)
+        public static implicit operator XLSheetRange(Point point)
         {
             return new XLSheetRange(point);
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is XLSheetPoint point && Equals(point);
+            return obj is Point point && Equals(point);
         }
 
-        public bool Equals(XLSheetPoint other)
+        public bool Equals(Point other)
         {
             return Row == other.Row && Column == other.Column;
         }
@@ -46,12 +46,12 @@ namespace ClosedXML.Excel
             return (Row * -1) ^ Column;
         }
 
-        public static bool operator ==(XLSheetPoint a, XLSheetPoint b)
+        public static bool operator ==(Point a, Point b)
         {
             return a.Row == b.Row && a.Column == b.Column;
         }
 
-        public static bool operator !=(XLSheetPoint a, XLSheetPoint b)
+        public static bool operator !=(Point a, Point b)
         {
             return a.Row != b.Row || a.Column != b.Column;
         }
@@ -59,13 +59,13 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get offset that must be added to <paramref name="origin"/> so we can get <paramref name="target"/>.
         /// </summary>
-        public static XLSheetOffset operator -(XLSheetPoint target, XLSheetPoint origin)
+        public static XLSheetOffset operator -(Point target, Point origin)
         {
             return new XLSheetOffset(target.Row - origin.Row, target.Column - origin.Column);
         }
 
         /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
-        public static XLSheetPoint Parse(String text) => Parse(text.AsSpan());
+        public static Point Parse(String text) => Parse(text.AsSpan());
 
         /// <summary>
         /// Parse point per type <c>ST_CellRef</c> from
@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="input">Input text</param>
         /// <exception cref="FormatException">If the input doesn't match expected grammar.</exception>
-        public static XLSheetPoint Parse(ReadOnlySpan<char> input)
+        public static Point Parse(ReadOnlySpan<char> input)
         {
             if (!TryParse(input, out var point))
                 throw new FormatException($"Sheet point doesn't have correct format: '{input.ToString()}'.");
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
         /// Try to parse sheet point. Doesn't accept any extra whitespace anywhere in the input.
         /// Letters must be upper case.
         /// </summary>
-        public static bool TryParse(ReadOnlySpan<char> input, out XLSheetPoint point)
+        public static bool TryParse(ReadOnlySpan<char> input, out Point point)
         {
             point = default;
 
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
             if (rowIndex > XLHelper.MaxRowNumber || columnIndex > XLHelper.MaxColumnNumber)
                 return false;
 
-            point = new XLSheetPoint(rowIndex, columnIndex);
+            point = new Point(rowIndex, columnIndex);
             return true;
 
             static bool IsLetter(char c) => c is >= 'A' and <= 'Z';
@@ -183,15 +183,15 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Create a sheet point from the address. Workbook is ignored.
         /// </summary>
-        internal static XLSheetPoint FromAddress(IXLAddress address)
+        internal static Point FromAddress(IXLAddress address)
             => new(address.RowNumber, address.ColumnNumber);
 
-        internal static XLSheetPoint FromCell(IXLCell cell)
+        internal static Point FromCell(IXLCell cell)
         {
-            return ((XLCell)cell).SheetPoint;
+            return ((XLCell)cell).Point;
         }
 
-        public int CompareTo(XLSheetPoint other)
+        public int CompareTo(Point other)
         {
             var rowComparison = Row.CompareTo(other.Row);
             if (rowComparison != 0)
@@ -226,9 +226,9 @@ namespace ClosedXML.Excel
         /// <param name="rowShift">How many rows will new point be shifted. Positive - new point
         ///     is downwards, negative - new point is upwards relative to the current point.</param>
         /// <returns>Shifted point.</returns>
-        internal XLSheetPoint ShiftRow(int rowShift)
+        internal Point ShiftRow(int rowShift)
         {
-            return new XLSheetPoint(Row + rowShift, Column);
+            return new Point(Row + rowShift, Column);
         }
 
         /// <summary>
@@ -237,9 +237,9 @@ namespace ClosedXML.Excel
         /// <param name="columnShift">How many columns will new point be shifted. Positive - new
         ///     point is to the right, negative - new point is to the left.</param>
         /// <returns>Shifted point.</returns>
-        internal XLSheetPoint ShiftColumn(int columnShift)
+        internal Point ShiftColumn(int columnShift)
         {
-            return new XLSheetPoint(Row, Column + columnShift);
+            return new Point(Row, Column + columnShift);
         }
     }
 }

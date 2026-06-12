@@ -10,9 +10,9 @@ namespace ClosedXML.Excel
     internal class XLSparkline : IXLSparkline
     {
         private readonly XLSparklineGroup _sparklineGroup;
-        private XLSheetPoint _location;
+        private Point _location;
 
-        internal XLSparkline(XLSparklineGroup sparklineGroup, XLSheetPoint location)
+        internal XLSparkline(XLSparklineGroup sparklineGroup, Point location)
         {
             _sparklineGroup = sparklineGroup;
             _location = location;
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
             if (newLocation.Worksheet != SparklineGroup.Worksheet)
                 throw new ArgumentException("Cannot move the sparkline to a different worksheet");
 
-            var destination = XLSheetPoint.FromCell(newLocation);
+            var destination = Point.FromCell(newLocation);
             _sparklineGroup.MoveSparkline(_location, destination);
             _location = destination;
             return this;

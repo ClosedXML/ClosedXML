@@ -32,7 +32,7 @@ internal class FormatSlice : ISlice
         _slice.DeleteAreaAndShiftUp(rangeToDelete);
     }
 
-    public IEnumerator<XLSheetPoint> GetEnumerator(XLSheetRange range, bool reverse = false)
+    public IEnumerator<Point> GetEnumerator(XLSheetRange range, bool reverse = false)
     {
         return _slice.GetEnumerator(range, reverse);
     }
@@ -47,17 +47,17 @@ internal class FormatSlice : ISlice
         _slice.InsertAreaAndShiftRight(range);
     }
 
-    public bool IsUsed(XLSheetPoint address)
+    public bool IsUsed(Point address)
     {
         return _slice.IsUsed(address);
     }
 
-    public void Swap(XLSheetPoint sp1, XLSheetPoint sp2)
+    public void Swap(Point sp1, Point sp2)
     {
         _slice.Swap(sp1, sp2);
     }
 
-    public void Set(XLSheetPoint point, XLCellFormatValue? value)
+    public void Set(Point point, XLCellFormatValue? value)
     {
         var modified = _slice[point] with { Format = value };
         _slice.Set(point, modified);
@@ -68,7 +68,7 @@ internal class FormatSlice : ISlice
         _slice.SetAll(area, new SliceValue { Format = value });
     }
 
-    internal XLCellFormatValue? GetFormat(XLSheetPoint point)
+    internal XLCellFormatValue? GetFormat(Point point)
     {
         return _slice[point].Format;
     }
