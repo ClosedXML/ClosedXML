@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using ClosedXML.Excel;
@@ -67,7 +68,7 @@ public class AreaTests
     [TestCase("A1:A3", "B2:C2", null)]
     [TestCase("A1:D6", "B2:C3", "B2:C3")]
     [TestCase("A1:C6", "B4:E10", "B4:C6")]
-    public void IntersectOperation(string leftOperand, string rightOperand, string expectedRange)
+    public void IntersectOperation(string leftOperand, string rightOperand, string? expectedRange)
     {
         var left = Area.Parse(leftOperand);
         var right = Area.Parse(rightOperand);
@@ -114,7 +115,7 @@ public class AreaTests
     [TestCase("XFD1", "XFB1", null)] // Completely pushed out of the range
     [TestCase("XFA1:XFD1", "XEZ1:XFA1", "XFC1:XFD1")] // Partially pushed out of the range
     [TestCase("XFA1:XFD1", "XFB1:XFC1", "XFA1:XFD1")] // Extend below last row
-    public void TryInsertAreaAndShiftRight_without_partial_cover(string original, string inserted, string repositioned)
+    public void TryInsertAreaAndShiftRight_without_partial_cover(string original, string inserted, string? repositioned)
     {
         var originalArea = Area.Parse(original);
         var insertedArea = Area.Parse(inserted);
@@ -148,7 +149,7 @@ public class AreaTests
     [TestCase("A1048576", "A1048575", null)] // Completely pushed out of the range
     [TestCase("A1048574:A1048576", "A1048570:A1048571", "A1048576")] // Partially pushed out of the range
     [TestCase("A1048570:A1048572", "A1048571:A1048576", "A1048570:A1048576")] // Extend below last row
-    public void TryInsertAreaAndShiftDown_without_partial_cover(string original, string inserted, string repositioned)
+    public void TryInsertAreaAndShiftDown_without_partial_cover(string original, string inserted, string? repositioned)
     {
         var originalArea = Area.Parse(original);
         var insertedArea = Area.Parse(inserted);
@@ -185,7 +186,7 @@ public class AreaTests
     [TestCase("D4:F8", "B1:H6", "D7:F8")] // Delete top slice
     [TestCase("D4:F8", "D6:F8", "D4:F5")] // Delete bottom slice
     [TestCase("D4:F8", "B6:I15", "D4:F5")] // Delete bottom slice
-    public void TryDeleteAreaAndShiftLeft_without_partial_cover(string original, string deleted, string repositioned)
+    public void TryDeleteAreaAndShiftLeft_without_partial_cover(string original, string deleted, string? repositioned)
     {
         var originalArea = Area.Parse(original);
         var deletedArea = Area.Parse(deleted);
@@ -224,7 +225,7 @@ public class AreaTests
     [TestCase("D4:H8", "C1:F9", "G4:H8")] // Delete left slice
     [TestCase("D4:H8", "G4:H8", "D4:F8")] // Delete right slice
     [TestCase("D4:H8", "G1:I9", "D4:F8")] // Delete right slice
-    public void TryDeleteAreaAndShiftUp_without_partial_cover(string leftOperand, string deleted, string expected)
+    public void TryDeleteAreaAndShiftUp_without_partial_cover(string leftOperand, string deleted, string? expected)
     {
         var originalArea = Area.Parse(leftOperand);
         var deletedArea = Area.Parse(deleted);
@@ -301,10 +302,43 @@ public class AreaTests
     [TestCase("B2:D3", 2, 3, ExpectedResult = "E4:G5")]
     [TestCase("B2:D3", -2, -3, ExpectedResult = "A1")]
     [TestCase("XFA1048574:XFC1048575", 2, 3, ExpectedResult = "XFD1048576")]
-    public string ShiftAndClip_shifts_and_clips_area(string areaText, int rowShift, int columnShift)
+    public string? ShiftAndClip_shifts_and_clips_area(string areaText, int rowShift, int columnShift)
     {
         var area = Area.Parse(areaText);
         var shifted = area.ShiftAndClip(rowShift, columnShift);
         return shifted is not null ? shifted.ToString() : null;
+    }
+
+    [TestCase("A1:A2", 2, true, "A1", "A2")]
+    [TestCase("A1", 2, true, "A1", null)]
+    [TestCase("A1", 1, false, null, "A1")]
+    public void SplitAbove_splits_area_into_area_above_and_below_the_row(string areaText, int row, bool isAbove, string? expectedAbove, string? expectedBelow)
+    {
+        var area = Area.Parse(areaText);
+        Assert.AreEqual(isAbove, area.SplitAbove(row, out var above, out var below));
+        Assert.AreEqual(expectedAbove, above?.ToString());
+        Assert.AreEqual(expectedBelow, below?.ToString());
+    }
+
+    [TestCase("A1:B1", 2, true, "A1", "B1")]
+    [TestCase("A1", 2, true, "A1", null)]
+    [TestCase("A1:C3", 1, false, null, "A1:C3")]
+    public void SplitBefore_splits_area_into_area_to_left_and_right_of_column(string areaText, int column, bool isToLeft, string? expectedLeft, string? expectedRight)
+    {
+        var area = Area.Parse(areaText);
+        Assert.AreEqual(isToLeft, area.SplitBefore(column, out var left, out var right));
+        Assert.AreEqual(expectedLeft, left?.ToString());
+        Assert.AreEqual(expectedRight, right?.ToString());
+    }
+
+    [TestCase("A1:B1", 1, true, "B1", "A1")]
+    [TestCase("B2:C3", 1, true, "B2:C3", null)]
+    [TestCase("A1", 1, false, null, "A1")]
+    public void SplitAfter_splits_area_into_area_to_right_and_left_of_column(string areaText, int column, bool isToRight, string? expectedRight, string? expectedLeft)
+    {
+        var area = Area.Parse(areaText);
+        Assert.AreEqual(isToRight, area.SplitAfter(column, out var right, out var left));
+        Assert.AreEqual(expectedRight, right?.ToString());
+        Assert.AreEqual(expectedLeft, left?.ToString());
     }
 }

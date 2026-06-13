@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel;
@@ -69,9 +70,11 @@ internal class XLAreaList : IEnumerable<Area>
         return new XLAreaList(newList);
     }
 
+    /// <summary>
+    /// Insert and shift functionality as used in CF or DV.
+    /// </summary>
     internal XLAreaList InsertAndShiftDown(Area insertedArea)
     {
-        var groove = insertedArea.ExtendBelow(XLHelper.MaxRowNumber);
         var result = new List<Area>(_areas.Count);
         foreach (var originalArea in _areas)
         {
@@ -81,30 +84,66 @@ internal class XLAreaList : IEnumerable<Area>
                 continue;
             }
 
-            var insertWontSplitOriginalArea = insertedArea.LeftColumn <= originalArea.LeftColumn && insertedArea.RightColumn >= originalArea.RightColumn;
-            if (insertWontSplitOriginalArea)
-            {
-                var shiftedArea = originalArea.ShiftOrExtendDown(insertedArea.TopRow, insertedArea.Height);
-                if (shiftedArea is not null)
-                    result.Add(shiftedArea.Value);
-            }
-            else if (insertedArea.TopRow == originalArea.BottomRow + 1)
+            // Skip all cases that don't shift or extend the area in some way.
+            if (insertedArea.RightColumn < originalArea.LeftColumn ||
+                insertedArea.LeftColumn > originalArea.RightColumn ||
+                insertedArea.TopRow > originalArea.BottomRow + 1)
             {
                 result.Add(originalArea);
-                var touchingArea = insertedArea.Intersect(new Area(XLHelper.MinRowNumber, originalArea.LeftColumn, XLHelper.MaxRowNumber, originalArea.RightColumn));
-                if (touchingArea is not null)
-                    result.Add(touchingArea.Value);
+                continue;
+            }
+
+            if (originalArea.SplitAbove(insertedArea.TopRow, out var above, out var remaining) &&
+                above.Value.LeftColumn >= insertedArea.LeftColumn &&
+                above.Value.RightColumn <= insertedArea.RightColumn)
+            {
+                // Special case: If inserted area is to the full width of original area and there is something above,
+                // the whole area is just extended downwards. The optional null check is there if inserted area
+                // attaches to the bottom of the original area.
+                var mergedAndExtended = above.Value.ExtendBelow(insertedArea.Height + (remaining?.Height ?? 0));
+                result.Add(mergedAndExtended);
+                continue;
+            }
+
+            Area? left = null, right = null;
+            if (remaining is not null)
+                remaining.Value.SplitBefore(insertedArea.LeftColumn, out left, out remaining);
+
+            if (remaining is not null)
+                remaining.Value.SplitAfter(insertedArea.RightColumn, out right, out remaining);
+
+            if (above is not null)
+                result.Add(above.Value);
+
+            if (left is not null)
+                result.Add(left.Value);
+
+            if (right is not null)
+                result.Add(right.Value);
+
+            if (above is not null)
+            {
+                // There was something above the inserted area so extend
+                if (remaining is not null)
+                {
+                    var extended = remaining.Value.ExtendBelow(insertedArea.Height);
+                    result.Add(extended);
+                }
+                else if (insertedArea.TopRow == originalArea.BottomRow + 1)
+                {
+                    // Attaches partial cover at the bottom of original area, e.g. insert to B2 with original A1:C1
+                    var cutToWidth = new Area(insertedArea.TopRow, Math.Max(insertedArea.LeftColumn, originalArea.LeftColumn), insertedArea.BottomRow, Math.Min(insertedArea.RightColumn, originalArea.RightColumn));
+                    result.Add(cutToWidth);
+                }
             }
             else
             {
-                var inGrooveArea = originalArea.Exclude(groove, result);
-                if (inGrooveArea is null)
-                    continue;
+                // There was nothing above the inserted area, so shift.
+                if (remaining is null)
+                    throw new UnreachableException();
 
-                // There is something to shift, so shift it downwards
-                var shiftedArea = inGrooveArea.Value.ShiftOrExtendDown(insertedArea.TopRow, insertedArea.Height);
-                if (shiftedArea is not null)
-                    result.Add(shiftedArea.Value);
+                if (remaining.Value.ShiftRowsAndClip(insertedArea.Height) is { } shifted)
+                    result.Add(shifted);
             }
         }
 

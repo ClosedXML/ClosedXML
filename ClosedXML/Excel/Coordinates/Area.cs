@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.Excel;
 
@@ -941,6 +942,93 @@ internal readonly struct Area : IEquatable<Area>, IEnumerable<Point>
         var shift = Math.Max(LeftColumn - deletedLeftColumn, 0);
         var shifted = ShiftColumns(-shift);
         return new Area(shifted.TopRow, shifted.LeftColumn, shifted.BottomRow, shifted.RightColumn - shrink);
+    }
+
+    /// <summary>
+    /// Split the area above the <paramref name="row"/> and put result into the <paramref name="above"/> and
+    /// <paramref name="below"/>.
+    /// </summary>
+    /// <returns><c>true</c> if <paramref name="above"/> is not null.</returns>
+    internal bool SplitAbove(int row, [NotNullWhen(true)] out Area? above, out Area? below)
+    {
+        if (row is < XLHelper.MinRowNumber or > XLHelper.MaxRowNumber)
+            throw new ArgumentOutOfRangeException(nameof(row));
+
+        if (BottomRow < row)
+        {
+            above = this;
+            below = null;
+            return true;
+        }
+
+        if (TopRow >= row)
+        {
+            above = null;
+            below = this;
+            return false;
+        }
+
+        above = new Area(TopRow, LeftColumn, row - 1, RightColumn);
+        below = new Area(row, LeftColumn, BottomRow, RightColumn);
+        return true;
+    }
+
+    /// <summary>
+    /// Split the area before the <paramref name="column"/> and put result into the <paramref name="left"/> and
+    /// <paramref name="right"/>.
+    /// </summary>
+    /// <returns><c>true</c> if <paramref name="left"/> is not null.</returns>
+    internal bool SplitBefore(int column, [NotNullWhen(true)] out Area? left, out Area? right)
+    {
+        if (column is < XLHelper.MinColumnNumber or > XLHelper.MaxColumnNumber)
+            throw new ArgumentOutOfRangeException(nameof(column));
+
+        if (RightColumn < column)
+        {
+            left = this;
+            right = null;
+            return true;
+        }
+
+        if (LeftColumn >= column)
+        {
+            left = null;
+            right = this;
+            return false;
+        }
+
+        left = new Area(TopRow, LeftColumn, BottomRow, column - 1);
+        right = new Area(TopRow, column, BottomRow, RightColumn);
+        return true;
+    }
+
+    /// <summary>
+    /// Split the area after the <paramref name="column"/> and put result into the <paramref name="right"/> and
+    /// <paramref name="left"/>.
+    /// </summary>
+    /// <returns><c>true</c> if <paramref name="right"/> is not null.</returns>
+    internal bool SplitAfter(int column, [NotNullWhen(true)] out Area? right, out Area? left)
+    {
+        if (column is < XLHelper.MinColumnNumber or > XLHelper.MaxColumnNumber)
+            throw new ArgumentOutOfRangeException(nameof(column));
+
+        if (LeftColumn > column)
+        {
+            right = this;
+            left = null;
+            return true;
+        }
+
+        if (RightColumn <= column)
+        {
+            right = null;
+            left = this;
+            return false;
+        }
+
+        right = new Area(TopRow, column + 1, BottomRow, RightColumn);
+        left = new Area(TopRow, LeftColumn, BottomRow, column);
+        return true;
     }
 
     internal XLAreaList ToAreaList()

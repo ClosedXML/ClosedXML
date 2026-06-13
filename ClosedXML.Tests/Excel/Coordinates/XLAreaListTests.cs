@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -10,12 +11,12 @@ internal class XLAreaListTests
     [TestCase("A1:C3", "A1", "B1:C3 A2:A4")]
     [TestCase("A1:C3", "B1", "A1:A3 C1:C3 B2:B4")]
     [TestCase("A1:C3", "C1", "A1:B3 C2:C4")]
-    [TestCase("A1:C3", "A2", "A1:C1 B2:C3 A3:A4")]
-    [TestCase("A1:C3", "B2", "A1:C1 A2:A3 C2:C3 B3:B4")]
-    [TestCase("A1:C3", "C2", "A1:C1 A2:B3 C3:C4")]
-    [TestCase("A1:C3", "A3", "A1:C2 B3:C3 A4")]
-    [TestCase("A1:C3", "B3", "A1:C2 A3 C3 B4")]
-    [TestCase("A1:C3", "C3", "A1:C2 A3:B3 C4")]
+    [TestCase("A1:C3", "A2", "A1:C1 B2:C3 A2:A4")]
+    [TestCase("A1:C3", "B2", "A1:C1 A2:A3 C2:C3 B2:B4")]
+    [TestCase("A1:C3", "C2", "A1:C1 A2:B3 C2:C4")]
+    [TestCase("A1:C3", "A3", "A1:C2 B3:C3 A3:A4")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3 C3 B3:B4")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:B3 C3:C4")]
 
     [TestCase("B1:D3", "A1:A3", "B1:D3")] // Insert to left side - don't move
     [TestCase("A2:C4", "A1:C1", "A3:C5")] // Insert to top side - shift
@@ -31,10 +32,21 @@ internal class XLAreaListTests
     [TestCase("A1:A1048576", "A1", "A1:A1048576")] // Columns are not changed
     public void InsertAndShiftDown(string areaList, string insertedArea, string expected)
     {
-        var list = new XLAreaList(new List<Area> { Area.Parse(areaList) });
+        var list = new XLAreaList(Area.Parse(areaList));
         var result = list.InsertAndShiftDown(Area.Parse(insertedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
+    }
+
+    [Test]
+    public void InsertAndShiftDown_baseline_comparison()
+    {
+        // Compare the result of the method with the behavior of CFs Applied To field collected from Excel
+        foreach (var (original, insertArea, expectedResult) in GetBaselineData("Other.ConditionalFormats.insert-and-shift-down-cf-baseline.txt"))
+        {
+            var result = original.InsertAndShiftDown(insertArea);
+            Assert.AreEqual(expectedResult.ToSpaceList(), result.ToSpaceList());
+        }
     }
 
     [TestCase("A1:C3", "A1", "A2:C3 B1:D1")]
@@ -169,5 +181,19 @@ internal class XLAreaListTests
             list.Add(Area.Parse(reference));
 
         return new XLAreaList(list);
+    }
+
+    private static IEnumerable<(XLAreaList, Area, XLAreaList)> GetBaselineData(string resourcePath)
+    {
+        using var stream = TestHelper.GetStreamFromResource(resourcePath);
+        using var streamReader = new StreamReader(stream);
+        while (streamReader.ReadLine() is { } line)
+        {
+            var fields = line.Split(',');
+            var original = Parse(fields[0]);
+            var area = Area.Parse(fields[1]);
+            var expectedResult = Parse(fields[2]);
+            yield return (original, area, expectedResult);
+        }
     }
 }
