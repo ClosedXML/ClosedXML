@@ -75,6 +75,9 @@ internal class XLAreaList : IEnumerable<Area>
     /// </summary>
     internal XLAreaList InsertAndShiftDown(Area insertedArea)
     {
+        // Method is not symmetrical with InsertAndShiftRight, because the Excel doesn't produce
+        // symmetrical results (e.g. original C3:E5 and insert down at C3 produces asymmetrical
+        // results from insert right at E3).
         var result = new List<Area>(_areas.Count);
         foreach (var originalArea in _areas)
         {
@@ -150,11 +153,14 @@ internal class XLAreaList : IEnumerable<Area>
         return new XLAreaList(result);
     }
 
+    /// <summary>
+    /// Insert and shift functionality as used in CF or DV.
+    /// </summary>
     internal XLAreaList InsertAndShiftRight(Area insertedArea)
     {
-        // Find an area that will be shifted (if there is any). It must be in a groove
-        // from insertedArea to the right end of a sheet
-        var groove = insertedArea.ExtendRight(XLHelper.MaxColumnNumber);
+        // Method is not symmetrical with InsertAndShiftDown, because the Excel doesn't produce
+        // symmetrical results (e.g. original C3:E5 and insert down at C3 produces asymmetrical
+        // results from insert right at E3).
         var result = new List<Area>(_areas.Count);
         foreach (var originalArea in _areas)
         {
@@ -164,30 +170,66 @@ internal class XLAreaList : IEnumerable<Area>
                 continue;
             }
 
-            var insertWontSplitOriginalArea = insertedArea.TopRow <= originalArea.TopRow && insertedArea.BottomRow >= originalArea.BottomRow;
-            if (insertWontSplitOriginalArea)
-            {
-                var shiftedArea = originalArea.ShiftOrExtendRight(insertedArea.LeftColumn, insertedArea.Width);
-                if (shiftedArea is not null)
-                    result.Add(shiftedArea.Value);
-            }
-            else if (insertedArea.LeftColumn == originalArea.RightColumn + 1)
+            // Skip all cases that don't shift or extend the area in some way.
+            if (insertedArea.BottomRow < originalArea.TopRow ||
+                insertedArea.TopRow > originalArea.BottomRow ||
+                insertedArea.LeftColumn > originalArea.RightColumn + 1)
             {
                 result.Add(originalArea);
-                var touchingArea = insertedArea.Intersect(new Area(originalArea.TopRow, XLHelper.MinColumnNumber, originalArea.BottomRow, XLHelper.MaxColumnNumber));
-                if (touchingArea is not null)
-                    result.Add(touchingArea.Value);
+                continue;
+            }
+
+            // Deal with special case of attachment at the right side
+            if (insertedArea.LeftColumn == originalArea.RightColumn + 1)
+            {
+                if (originalArea.TopRow >= insertedArea.TopRow &&
+                    originalArea.BottomRow <= insertedArea.BottomRow)
+                {
+                    result.Add(originalArea.ExtendRight(insertedArea.Width));
+                }
+                else
+                {
+                    // Attaches at the right of original area, e.g. insert to B2 with original A1:C1
+                    var cutToHeight = new Area(Math.Max(insertedArea.TopRow, originalArea.TopRow), insertedArea.LeftColumn, Math.Min(insertedArea.BottomRow, originalArea.BottomRow), insertedArea.RightColumn);
+                    result.Add(originalArea);
+                    result.Add(cutToHeight);
+                }
+
+                continue;
+            }
+
+            Area? below = null, left = null;
+            originalArea.SplitAbove(insertedArea.TopRow, out var above, out var remaining);
+
+            if (remaining is not null)
+                remaining.Value.SplitBelow(insertedArea.BottomRow, out below, out remaining);
+
+            if (remaining is not null)
+                remaining.Value.SplitBefore(insertedArea.LeftColumn, out left, out remaining);
+
+            // There must be something. We know that inserted area intersects original area (we took care of special
+            // case of right side attachment in an if above) and we only cut three times on each side of
+            // the intersection, so something must be left.
+            if (remaining is null)
+                throw new UnreachableException();
+
+            if (above is not null)
+                result.Add(above.Value);
+
+            if (below is not null)
+                result.Add(below.Value);
+
+            if (left is not null)
+            {
+                // There was something on the left of the inserted area so extend
+                var mergedAndExtended = left.Value.ExtendRight(insertedArea.Width + remaining.Value.Width);
+                result.Add(mergedAndExtended);
             }
             else
             {
-                var inGrooveArea = originalArea.Exclude(groove, result);
-                if (inGrooveArea is null)
-                    continue;
-
-                // There is something to shift, so shift it rightwards
-                var shiftedArea = inGrooveArea.Value.ShiftOrExtendRight(insertedArea.LeftColumn, insertedArea.Width);
-                if (shiftedArea is not null)
-                    result.Add(shiftedArea.Value);
+                // There is nothing on the left side, so shift
+                if (remaining.Value.ShiftColumnsAndClip(insertedArea.Width) is { } shifted)
+                    result.Add(shifted);
             }
         }
 

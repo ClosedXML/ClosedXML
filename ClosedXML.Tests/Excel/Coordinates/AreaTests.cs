@@ -320,6 +320,17 @@ public class AreaTests
         Assert.AreEqual(expectedBelow, below?.ToString());
     }
 
+    [TestCase("A1:A2", 1, true, "A2", "A1")]
+    [TestCase("A1", 2, false, null, "A1")]
+    [TestCase("A2", 1, true, "A2", null)]
+    public void SplitBelow_splits_area_into_area_below_and_above_the_row(string areaText, int row, bool isBelow, string? expectedBelow, string? expectedAbove)
+    {
+        var area = Area.Parse(areaText);
+        Assert.AreEqual(isBelow, area.SplitBelow(row, out var below, out var above));
+        Assert.AreEqual(expectedBelow, below?.ToString());
+        Assert.AreEqual(expectedAbove, above?.ToString());
+    }
+
     [TestCase("A1:B1", 2, true, "A1", "B1")]
     [TestCase("A1", 2, true, "A1", null)]
     [TestCase("A1:C3", 1, false, null, "A1:C3")]

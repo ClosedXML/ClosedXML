@@ -974,6 +974,35 @@ internal readonly struct Area : IEquatable<Area>, IEnumerable<Point>
     }
 
     /// <summary>
+    /// Split the area below the <paramref name="row"/> and put result into the <paramref name="below"/> and
+    /// <paramref name="above"/>.
+    /// </summary>
+    /// <returns><c>true</c> if <paramref name="below"/> is not null.</returns>
+    internal bool SplitBelow(int row, [NotNullWhen(true)] out Area? below, out Area? above)
+    {
+        if (row is < XLHelper.MinRowNumber or > XLHelper.MaxRowNumber)
+            throw new ArgumentOutOfRangeException(nameof(row));
+
+        if (TopRow > row)
+        {
+            below = this;
+            above = null;
+            return true;
+        }
+
+        if (BottomRow <= row)
+        {
+            below = null;
+            above = this;
+            return false;
+        }
+
+        below = new Area(row + 1, LeftColumn, BottomRow, RightColumn);
+        above = new Area(TopRow, LeftColumn, row, RightColumn);
+        return true;
+    }
+
+    /// <summary>
     /// Split the area before the <paramref name="column"/> and put result into the <paramref name="left"/> and
     /// <paramref name="right"/>.
     /// </summary>

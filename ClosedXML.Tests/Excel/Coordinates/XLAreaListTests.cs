@@ -50,14 +50,14 @@ internal class XLAreaListTests
     }
 
     [TestCase("A1:C3", "A1", "A2:C3 B1:D1")]
-    [TestCase("A1:C3", "B1", "A2:C3 A1 C1:D1")]
-    [TestCase("A1:C3", "C1", "A2:C3 A1:B1 D1")]
+    [TestCase("A1:C3", "B1", "A2:C3 A1:D1")]
+    [TestCase("A1:C3", "C1", "A2:C3 A1:D1")]
     [TestCase("A1:C3", "A2", "A1:C1 A3:C3 B2:D2")]
-    [TestCase("A1:C3", "B2", "A1:C1 A3:C3 A2 C2:D2")]
-    [TestCase("A1:C3", "C2", "A1:C1 A3:C3 A2:B2 D2")]
+    [TestCase("A1:C3", "B2", "A1:C1 A3:C3 A2:D2")]
+    [TestCase("A1:C3", "C2", "A1:C1 A3:C3 A2:D2")]
     [TestCase("A1:C3", "A3", "A1:C2 B3:D3")]
-    [TestCase("A1:C3", "B3", "A1:C2 A3 C3:D3")]
-    [TestCase("A1:C3", "C3", "A1:C2 A3:B3 D3")]
+    [TestCase("A1:C3", "B3", "A1:C2 A3:D3")]
+    [TestCase("A1:C3", "C3", "A1:C2 A3:D3")]
 
     [TestCase("A1:C3", "A1:A3", "B1:D3")] // Insert to left edge - shift, don't extend
     [TestCase("A2:C4", "A1", "A2:C4")] // Insert to top side - don't move
@@ -75,6 +75,17 @@ internal class XLAreaListTests
         var result = list.InsertAndShiftRight(Area.Parse(insertedArea));
 
         Assert.AreEqual(expected, result.ToSpaceList());
+    }
+
+    [Test]
+    public void InsertAndShiftRight_baseline_comparison()
+    {
+        // Compare the result of the method with the behavior of CFs Applied To field collected from Excel
+        foreach (var (original, insertArea, expectedResult) in GetBaselineData("Other.ConditionalFormats.insert-and-shift-right-cf-baseline.txt"))
+        {
+            var result = original.InsertAndShiftRight(insertArea);
+            Assert.AreEqual(expectedResult.ToSpaceList(), result.ToSpaceList());
+        }
     }
 
     [TestCase("A1:C3", "A1", "B1:C3 A1:A2")]
