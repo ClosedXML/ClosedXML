@@ -96,19 +96,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void AdjustFormulas(XLCell baseCell, XLCell targetCell)
-        {
-            var keys = Values.Keys.ToList();
-            foreach (var key in keys)
-            {
-                if (Values[key] == null || !Values[key].IsFormula)
-                    continue;
-
-                var r1c1 = baseCell.GetFormulaR1C1(Values[key].Value);
-                Values[key] = new XLFormula { _value = targetCell.GetFormulaA1(r1c1), IsFormula = true };
-            }
-        }
-
         internal static IEqualityComparer<XLConditionalFormat> NoRangeComparer { get; } = new NoRangeCfComparer();
 
         #region Constructors
@@ -127,14 +114,35 @@ namespace ClosedXML.Excel
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
 
-        internal XLConditionalFormat(XLWorksheet worksheet, XLConditionalFormat conditionalFormat, XLAreaList areaList)
+        /// <summary>
+        /// Copy ctor.
+        /// </summary>
+        internal XLConditionalFormat(XLWorksheet worksheet, XLConditionalFormat other, XLAreaList areaList)
             : this(worksheet, areaList)
         {
-            CopyFrom(conditionalFormat);
+            var otherDxf = other.FormatValue;
+            FormatValue = otherDxf is not null
+                ? _worksheet.Workbook.Styles.GetRegisteredDxFormat(otherDxf, static x => x)
+                : null;
+            ConditionalFormatType = other.ConditionalFormatType;
+            TimePeriod = other.TimePeriod;
+            IconSetStyle = other.IconSetStyle;
+            Operator = other.Operator;
+            Bottom = other.Bottom;
+            Percent = other.Percent;
+            ReverseIconOrder = other.ReverseIconOrder;
+            ShowIconOnly = other.ShowIconOnly;
+            ShowBarOnly = other.ShowBarOnly;
+            StopIfTrue = other.StopIfTrue;
 
-            var sourceAnchor = _worksheet.Cell(conditionalFormat.Areas[0].FirstPoint);
-            var targetAnchor = _worksheet.Cell(areaList[0].FirstPoint);
-            AdjustFormulas(sourceAnchor, targetAnchor);
+            var sourceAnchor = other.Areas[0].FirstPoint;
+            var targetAnchor = Areas[0].FirstPoint;
+            foreach (var (key, originalValue) in other.Values)
+                Values.Add(key, originalValue.GetAdjustedCopy(sourceAnchor, targetAnchor));
+
+            Colors = other.Colors.CopyDictionary();
+            ContentTypes = other.ContentTypes.CopyDictionary();
+            IconSetOperators = other.IconSetOperators.CopyDictionary();
         }
 
         #endregion Constructors
@@ -157,13 +165,13 @@ namespace ClosedXML.Excel
             set => Format.SetValue(value);
         }
 
-        public XLDictionary<XLFormula> Values { get; private set; }
+        public XLDictionary<XLFormula> Values { get; }
 
-        public XLDictionary<XLColor> Colors { get; private set; }
+        public XLDictionary<XLColor> Colors { get; }
 
-        public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
+        public XLDictionary<XLCFContentType> ContentTypes { get; }
 
-        public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
+        public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }
 
         public IXLRange Range
         {
@@ -224,41 +232,6 @@ namespace ClosedXML.Excel
             var newCf = new XLConditionalFormat((XLWorksheet)targetSheet, this, Areas);
             targetSheet.ConditionalFormats.Add(newCf);
             return newCf;
-        }
-
-        public void CopyFrom(IXLConditionalFormat other)
-        {
-#if STYLES_REWORK
-            var otherDxf = ((XLConditionalFormat)other).FormatValue;
-            FormatValue = otherDxf is not null
-                ? _worksheet.Workbook.Styles.GetRegisteredDxFormat(otherDxf, static x => x)
-                : null;
-#else
-            InnerStyle = other.Style;
-#endif
-            ConditionalFormatType = other.ConditionalFormatType;
-            TimePeriod = other.TimePeriod;
-            IconSetStyle = other.IconSetStyle;
-            Operator = other.Operator;
-            Bottom = other.Bottom;
-            Percent = other.Percent;
-            ReverseIconOrder = other.ReverseIconOrder;
-            ShowIconOnly = other.ShowIconOnly;
-            ShowBarOnly = other.ShowBarOnly;
-            StopIfTrue = other.StopIfTrue;
-
-            Values.Clear();
-            other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));
-            //CopyDictionary(Values, other.Values);
-            CopyDictionary(Colors, other.Colors);
-            CopyDictionary(ContentTypes, other.ContentTypes);
-            CopyDictionary(IconSetOperators, other.IconSetOperators);
-        }
-
-        private void CopyDictionary<T>(XLDictionary<T> target, XLDictionary<T> source)
-        {
-            target.Clear();
-            source.ForEach(kp => target.Add(kp.Key, kp.Value));
         }
 
         public IXLStyle WhenIsBlank()

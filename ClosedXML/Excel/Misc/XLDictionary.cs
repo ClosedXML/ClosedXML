@@ -28,5 +28,14 @@ namespace ClosedXML.Excel
         {
             Add(Count + 1, value);
         }
+
+        internal XLDictionary<T> CopyDictionary()
+        {
+            var copy = new XLDictionary<T>();
+            foreach (var (key, value) in this)
+                copy.Add(key, value);
+
+            return copy;
+        }
     }
 }

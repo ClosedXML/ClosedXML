@@ -1,5 +1,6 @@
 #nullable disable
 
+using ClosedXML.Parser;
 using System;
 
 namespace ClosedXML.Excel
@@ -53,5 +54,15 @@ namespace ClosedXML.Excel
         }
 
         public Boolean IsFormula { get; internal set; }
+
+        internal XLFormula GetAdjustedCopy(Point sourceAnchor, Point targetAnchor)
+        {
+            if (!IsFormula)
+                return new XLFormula(this);
+
+            var formulaR1C1 = FormulaConverter.ToR1C1(Value, sourceAnchor.Row, sourceAnchor.Column);
+            var formulaA1 = FormulaConverter.ToA1(formulaR1C1, targetAnchor.Row, targetAnchor.Column);
+            return new XLFormula { _value = formulaA1, IsFormula = true };
+        }
     }
 }
