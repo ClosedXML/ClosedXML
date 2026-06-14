@@ -867,11 +867,15 @@ internal class WorksheetPartReader
 
                 conditionalFormat.Values.Add(GetFormula(formula.Text));
             }
-
-            if (!String.IsNullOrWhiteSpace(fr.Text))
-                conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
-
-            if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
+            else if (conditionalFormat.ConditionalFormatType is
+                     XLConditionalFormatType.ContainsText or
+                     XLConditionalFormatType.NotContainsText or
+                     XLConditionalFormatType.StartsWith or
+                     XLConditionalFormatType.EndsWith)
+            {
+                conditionalFormat.Values.Add(new XLFormula(fr.Text?.Value ?? string.Empty) { IsFormula = false });
+            }
+            else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
             {
                 if (fr.Percent != null)
                     conditionalFormat.Percent = fr.Percent.Value;

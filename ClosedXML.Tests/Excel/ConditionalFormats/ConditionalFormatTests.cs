@@ -192,5 +192,42 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
 
             Assert.That(() => cf.Ranges = emptyRanges, Throws.TypeOf<ArgumentException>().With.Message.Contains("empty"));
         }
+
+        [Test]
+        public void Text_formats_are_loaded_as_value()
+        {
+            // Issue #2690: Ensure that CF for text are loaded as a value and not as a formula.
+            TestHelper.CreateSaveLoadAssert(
+                (_, ws) =>
+                {
+                    ws.AddConditionalFormat().WhenContains("Contains")
+                        .Fill.SetBackgroundColor(XLColor.Red);
+
+                    ws.AddConditionalFormat().WhenNotContains("Not Contains")
+                        .Fill.SetBackgroundColor(XLColor.Green);
+
+                    ws.AddConditionalFormat().WhenStartsWith("Starts With")
+                        .Fill.SetBackgroundColor(XLColor.Blue);
+
+                    ws.AddConditionalFormat().WhenEndsWith("Ends With")
+                        .Fill.SetBackgroundColor(XLColor.Black);
+                },
+                (_, ws) =>
+                {
+                    AssertTextCfValue(ws, XLConditionalFormatType.ContainsText, "Contains");
+                    AssertTextCfValue(ws, XLConditionalFormatType.NotContainsText, "Not Contains");
+                    AssertTextCfValue(ws, XLConditionalFormatType.StartsWith, "Starts With");
+                    AssertTextCfValue(ws, XLConditionalFormatType.EndsWith, "Ends With");
+                });
+            return;
+
+            static void AssertTextCfValue(IXLWorksheet ws, XLConditionalFormatType type, string text)
+            {
+                var cf = ws.ConditionalFormats.Single(x => x.ConditionalFormatType == type);
+                Assert.AreEqual(1, cf.Values.Count);
+                Assert.AreEqual(text, cf.Values[1].Value);
+                Assert.IsFalse(cf.Values[1].IsFormula);
+            }
+        }
     }
 }
