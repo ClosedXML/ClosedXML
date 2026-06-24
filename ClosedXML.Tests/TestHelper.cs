@@ -4,9 +4,12 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Xml.Linq;
+using LoadOptions = ClosedXML.Excel.LoadOptions;
 using Path = System.IO.Path;
 
 namespace ClosedXML.Tests
@@ -295,6 +298,37 @@ namespace ClosedXML.Tests
             using (var wb = new XLWorkbook(ms))
             {
                 assertLoadedWorkbook(wb);
+            }
+        }
+
+        /// <summary>
+        /// A method for testing the saving of a workbook. It loads and saves the workbook and uses
+        /// assert methods for individual parts to check that the relevant parts were saved correctly.
+        /// Unlike the <see cref="LoadSaveAndCompare"/>, this method is more resistant to changes
+        /// in the saving code that are not directly related to the tested parts.
+        /// </summary>
+        internal static void LoadSaveAndAssert(string referenceResource, string part1, Action<XDocument> part1Assert, string part2, Action<XDocument> part2Assert)
+        {
+            LoadSaveAndAssert(referenceResource, [(part1, part1Assert), (part2, part2Assert)]);
+        }
+
+        private static void LoadSaveAndAssert(string loadResourcePath, (string PartPath, Action<XDocument> PartAssert)[] parts)
+        {
+            using var ms = new MemoryStream();
+            using (var stream = GetStreamFromResource(GetResourcePath(loadResourcePath)))
+            {
+                using var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+            }
+
+            ms.Position = 0;
+            using var package = Package.Open(ms, FileMode.Open, FileAccess.Read);
+            foreach (var (partPath, partAssert) in parts)
+            {
+                var part = package.GetPart(new Uri(partPath, UriKind.Relative));
+                using var partStream = part.GetStream();
+                var partXml = XDocument.Load(partStream);
+                partAssert(partXml);
             }
         }
     }
