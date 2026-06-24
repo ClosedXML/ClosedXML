@@ -1,15 +1,18 @@
-using ClosedXML.Excel;
-using ClosedXML.Excel.Drawings;
-using ClosedXML.Tests.Utils;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Xml.Linq;
+using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.IO;
+using ClosedXML.Tests.Utils;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using NUnit.Framework;
+using SaveOptions = ClosedXML.Excel.SaveOptions;
 
 namespace ClosedXML.Tests.Excel.Saving
 {
@@ -579,17 +582,17 @@ namespace ClosedXML.Tests.Excel.Saving
                 wb =>
                 {
                     var ws = wb.Worksheet(1);
-                
+
                     var numericCells = ws.CellsUsed(c => double.TryParse(c.GetString(), out double _));
                     var textCells = ws.CellsUsed(c => !double.TryParse(c.GetString(), out double _));
-                
+
                     foreach (var cell in numericCells)
                     {
                         cell.Clear(XLClearOptions.AllFormats);
                         Assert.True(cell.Value.TryConvert(out double val, CultureInfo.CurrentCulture));
                         cell.Value = val;
                     }
-                
+
                     foreach (var cell in textCells)
                     {
                         cell.ShareString = true;
@@ -644,6 +647,49 @@ namespace ClosedXML.Tests.Excel.Saving
 
                 return wb;
             }, @"Other\PivotTableReferenceFiles\LongText\outputfile.xlsx");
+        }
+
+        [Test]
+        public void Pivot_table_cf_dxf_is_saved()
+        {
+            // Issue #2075: Pivot table conditional format wasn't saved.
+            TestHelper.LoadSaveAndAssert(
+                @"Other\PivotTable\Save\Pivot_table_conditional_format.xlsx",
+                "/xl/worksheets/sheet1.xml",
+                sheet =>
+                {
+                    var conditionalFormatting = sheet.Descendants(XName.Get("conditionalFormatting", OpenXmlConst.Main2006SsNs));
+                    Assert.That(conditionalFormatting, new MatchesXmlConstraint(
+                        $"""
+                         <conditionalFormatting xmlns="{OpenXmlConst.Main2006SsNs}"
+                                                pivot="1"
+                                                sqref="G2:G3">
+                           <cfRule type="cellIs"
+                                    dxfId="0"
+                                    priority="1"
+                                    operator="greaterThan">
+                             <formula>10</formula>
+                           </cfRule>
+                         </conditionalFormatting>
+                         """));
+                },
+                "/xl/styles.xml",
+                styles =>
+                {
+                    var dxfs = styles.Descendants(XName.Get("dxfs", OpenXmlConst.Main2006SsNs));
+                    Assert.That(dxfs, new MatchesXmlConstraint(
+                        $"""
+                         <dxfs count="1" xmlns="{OpenXmlConst.Main2006SsNs}">
+                           <dxf>
+                             <fill>
+                               <patternFill patternType="solid">
+                                 <bgColor rgb="FF000000"/>
+                               </patternFill>
+                             </fill>
+                           </dxf>
+                         </dxfs>
+                         """));
+                });
         }
 
         [Test]

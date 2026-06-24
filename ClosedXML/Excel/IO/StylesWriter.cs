@@ -159,6 +159,12 @@ internal class StylesWriter
                         usedDxf.Add(dxFormat);
                 }
 
+                foreach (var cf in pt.ConditionalFormats)
+                {
+                    if (cf.Format.FormatValue is { } cfDxf)
+                        usedDxf.Add(cfDxf);
+                }
+
                 foreach (var field in pt.PivotFields)
                 {
                     if (field.NumberFormatValue is { } fieldNumFmt)
