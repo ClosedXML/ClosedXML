@@ -128,7 +128,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return error;
 
             var range = new Area(rowStart, colStart, rowEnd, colEnd);
-            return new Reference(XLRangeAddress.FromSheetRange(context.Worksheet, range));
+            return new Reference(XLRangeAddress.FromSheetRange(table.Worksheet, range));
 
             static bool TryGetTable(CalcContext context, string? tableName, [NotNullWhen(true)] out XLTable? table)
             {
