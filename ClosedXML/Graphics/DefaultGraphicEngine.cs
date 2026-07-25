@@ -146,10 +146,19 @@ namespace ClosedXML.Graphics
                 if (imageReader.TryGetInfo(stream, out var dimensions))
                     return dimensions;
             }
-
             throw new ArgumentException("Unable to determine the format of the image.");
         }
+        public void SaveStreamToFile(Stream stream, string filePath)
+        {
+            // 确保流的位置在开头
+            if (stream.CanSeek)
+                stream.Seek(0, SeekOrigin.Begin);
 
+            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                stream.CopyTo(fileStream);
+            }
+        }
         public double GetDescent(IXLFontBase font, double dpiY)
         {
             var metrics = GetMetrics(font);
