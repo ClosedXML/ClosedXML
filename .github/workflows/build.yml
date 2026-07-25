@@ -47,11 +47,11 @@ jobs:
           Write-Host "Determined ProductVersion: $productVersion"
 
       - name: Restore dependencies
-        run: dotnet restore ClosedXML.sln
+        run: dotnet restore ClosedXML.slnx
 
       - name: Build
         run: |
-          dotnet build ClosedXML.sln --configuration Release --no-restore `
+          dotnet build ClosedXML.slnx --configuration Release --no-restore `
             -p:AssemblyVersion="${{ env.fileVersion }}" `
             -p:FileVersion="${{ env.fileVersion }}" `
             -p:Version="${{ env.productVersion }}" `
@@ -59,7 +59,7 @@ jobs:
 
       - name: Test
         # GitHub build image doesn't have installed Access OLEDB driver
-        run: dotnet test ClosedXML.sln --configuration Release --no-build `
+        run: dotnet test ClosedXML.slnx --configuration Release --no-build `
                --filter "TestCategory!=OLEDB"
 
       - name: Upload NuGet Packages

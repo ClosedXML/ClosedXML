@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/.github/">
+    <File Path=".github/ISSUE_TEMPLATE.md" />
+    <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="ClosedXML.Examples/ClosedXML.Examples.csproj" />
+  <Project Path="ClosedXML.IO.CodeGen/ClosedXML.IO.CodeGen.csproj" />
+  <Project Path="ClosedXML.IO/ClosedXML.IO.csproj" />
+  <Project Path="ClosedXML.Sandbox/ClosedXML.Sandbox.csproj" />
+  <Project Path="ClosedXML.Tests/ClosedXML.Tests.csproj" />
+  <Project Path="ClosedXML/ClosedXML.csproj" />
+</Solution>
