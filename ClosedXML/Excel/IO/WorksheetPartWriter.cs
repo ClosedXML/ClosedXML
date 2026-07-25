@@ -1328,11 +1328,11 @@ namespace ClosedXML.Excel.IO
                 AddPictureAnchor(worksheetPart, pic, context);
             }
 
-            if (xlWorksheet.Pictures.Any())
+            if (xlWorksheet.Pictures.Count > 0)
                 RebaseNonVisualDrawingPropertiesIds(worksheetPart);
 
             var tableParts = worksheet.Elements<TableParts>().First();
-            if (xlWorksheet.Pictures.Any() && !worksheet.OfType<Drawing>().Any())
+            if (xlWorksheet.Pictures.Count > 0 && !worksheet.OfType<Drawing>().Any())
             {
                 var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
@@ -1344,7 +1344,7 @@ namespace ClosedXML.Excel.IO
             var hasCharts = worksheetPart.DrawingsPart is not null && worksheetPart.DrawingsPart.Parts.Any();
             if (worksheetPart.DrawingsPart is not null && // There is a drawing part for the sheet that could be deleted
                 xlWorksheet.LegacyDrawingId is null && // and sheet doesn't contain any form controls or comments or other shapes
-                !xlWorksheet.Pictures.Any() && // and also no pictures.
+                xlWorksheet.Pictures.Count == 0 && // and also no pictures.
                 !hasCharts) // and no charts
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);

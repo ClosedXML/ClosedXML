@@ -71,8 +71,13 @@ namespace ClosedXML.Excel
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats(this);
             SparklineGroupsInternal = new XLSparklineGroups(this);
-            Internals = new XLWorksheetInternals(new XLCellsCollection(this), new XLColumnsCollection(),
-                                                 new XLRowsCollection(), new XLRanges(this));
+            Internals = new XLWorksheetInternals
+            {
+                CellsCollection = new XLCellsCollection(this),
+                ColumnsCollection = new XLColumnsCollection(),
+                RowsCollection = new XLRowsCollection(),
+                MergedRanges = new XLRanges(this)
+            };
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             _columnWidth = workbook.ColumnWidth;
@@ -635,7 +640,9 @@ namespace ClosedXML.Excel
             targetSheet.SheetView = new XLSheetView(targetSheet, SheetView);
             targetSheet.SelectedRanges.RemoveAll();
 
-            Pictures.ForEach(picture => picture.CopyTo(targetSheet));
+            foreach (var picture in Pictures)
+                picture.CopyTo(targetSheet);
+
             Tables.ForEach<XLTable>(t => t.CopyTo(targetSheet, false));
             DefinedNames.ForEach<XLDefinedName>(nr => nr.CopyTo(targetSheet)); // Names must modify table references, so keep the order.
             PivotTables.ForEach<XLPivotTable>(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
@@ -1024,7 +1031,9 @@ namespace ClosedXML.Excel
         internal void Cleanup()
         {
             Internals.Dispose();
-            Pictures.ForEach(p => p.Dispose());
+            foreach (var picture in Pictures)
+                picture.Dispose();
+
             _rangeRepository.Clear();
             _rangeIndices.Clear();
         }
@@ -1555,11 +1564,13 @@ namespace ClosedXML.Excel
             return this.Name;
         }
 
-        public IXLPictures Pictures { get; private set; }
+        IXLPictures IXLWorksheet.Pictures => Pictures;
 
         public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
 
         public bool IsProtected => Protection.IsProtected;
+
+        internal XLPictures Pictures { get; }
 
         public IXLPicture Picture(string pictureName)
         {

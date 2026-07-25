@@ -2,12 +2,11 @@
 
 // Keep this file CodeMaid organised and cleaned
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public interface IXLPicture : IDisposable
+    public interface IXLPicture
     {
         IXLCell BottomRightCell { get; }
 

@@ -5,11 +5,11 @@ using ClosedXML.IO;
 
 namespace ClosedXML.Excel.IO;
 
-[Janitor.SkipWeaving]
-internal class XmlTreeWriter : IDisposable
+internal sealed class XmlTreeWriter : IDisposable
 {
     private readonly XmlWriter _xml;
     private readonly IEnumMapper _enumMapper;
+    private bool _disposed;
 
     internal XmlTreeWriter(XmlWriter xml, IEnumMapper enumMapper)
     {
@@ -19,6 +19,8 @@ internal class XmlTreeWriter : IDisposable
 
     public void WriteStartDocument(string rootElementName, string ns)
     {
+        ThrowIfDisposed();
+
         // No part should rely on external DTD, plus Excel also writes standalone="yes"
         _xml.WriteStartDocument(standalone: true);
 
@@ -29,11 +31,13 @@ internal class XmlTreeWriter : IDisposable
 
     public void WriteStartElement(string localName, string ns)
     {
+        ThrowIfDisposed();
         _xml.WriteStartElement(localName, ns);
     }
 
     public void WriteStartExtension(string extUri, string defaultNs, string nsPrefix, string extNs)
     {
+        ThrowIfDisposed();
         WriteStartElement("ext", defaultNs);
         WriteAttribute("uri", extUri);
         WriteNsPrefix(nsPrefix, extNs);
@@ -41,32 +45,38 @@ internal class XmlTreeWriter : IDisposable
 
     public void WriteNsPrefix(string prefix, string ns)
     {
+        ThrowIfDisposed();
         _xml.WriteAttributeString("xmlns", prefix, null, ns);
     }
 
     public void WriteAttribute(string attributeName, int value)
     {
+        ThrowIfDisposed();
         _xml.WriteAttribute(attributeName, value);
     }
 
     public void WriteAttribute(string attributeName, bool value)
     {
+        ThrowIfDisposed();
         _xml.WriteAttribute(attributeName, value);
     }
 
     public void WriteAttribute(string attributeName, string value)
     {
+        ThrowIfDisposed();
         _xml.WriteAttribute(attributeName, value);
     }
 
     public void WriteAttribute(string attributeName, double value)
     {
+        ThrowIfDisposed();
         _xml.WriteAttribute(attributeName, value);
     }
 
     public void WriteAttribute<TEnum>(string attributeName, TEnum value)
         where TEnum : struct, Enum
     {
+        ThrowIfDisposed();
         if (!_enumMapper.TryGetText(value, out var text))
             throw new InvalidOperationException($"Missing mapping for enum {value} ({typeof(TEnum).Name}).");
 
@@ -75,11 +85,13 @@ internal class XmlTreeWriter : IDisposable
 
     public void WriteEndElement()
     {
+        ThrowIfDisposed();
         _xml.WriteEndElement();
     }
 
     public void WriteEndDocument()
     {
+        ThrowIfDisposed();
         _xml.WriteEndElement();
         _xml.WriteEndDocument();
     }
@@ -87,5 +99,12 @@ internal class XmlTreeWriter : IDisposable
     public void Dispose()
     {
         _xml.Dispose();
+        _disposed = true;
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(XmlTreeWriter));
     }
 }

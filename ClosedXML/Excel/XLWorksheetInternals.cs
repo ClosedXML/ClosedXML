@@ -1,42 +1,67 @@
-#nullable disable
-
 using System;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel;
+
+internal sealed class XLWorksheetInternals : IDisposable
 {
-    internal class XLWorksheetInternals : IDisposable
+    private bool _disposed;
+
+    internal required XLCellsCollection CellsCollection
     {
-        public XLWorksheetInternals(
-            XLCellsCollection cellsCollection,
-            XLColumnsCollection columnsCollection,
-            XLRowsCollection rowsCollection,
-            XLRanges mergedRanges
-            )
+        get
         {
-            CellsCollection = cellsCollection;
-            ColumnsCollection = columnsCollection;
-            RowsCollection = rowsCollection;
-            MergedRanges = mergedRanges;
+            ThrowIfDisposed();
+            return field;
         }
+        init;
+    }
 
-        public XLCellsCollection CellsCollection { get; }
-        public XLColumnsCollection ColumnsCollection { get; }
-        public XLRowsCollection RowsCollection { get; }
-        public XLRanges MergedRanges { get; internal set; }
-
-        // Used by Janitor.Fody
-        private void DisposeManaged()
+    internal required XLColumnsCollection ColumnsCollection
+    {
+        get
         {
-            CellsCollection.ValueSlice.DereferenceSlice();
-            CellsCollection.Clear();
-            ColumnsCollection.Clear();
-            RowsCollection.Clear();
-            MergedRanges.RemoveAll();
+            ThrowIfDisposed();
+            return field;
         }
+        init;
+    }
 
-        public void Dispose()
+    internal required XLRowsCollection RowsCollection
+    {
+        get
         {
-            // Leave this empty so that Janitor.Fody can do its work
+            ThrowIfDisposed();
+            return field;
         }
+        init;
+    }
+
+    internal required XLRanges MergedRanges
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return field;
+        }
+        init;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        CellsCollection.ValueSlice.DereferenceSlice();
+        CellsCollection.Clear();
+        ColumnsCollection.Clear();
+        RowsCollection.Clear();
+        MergedRanges.RemoveAll();
+        _disposed = true;
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(XLWorksheetInternals));
     }
 }
