@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ClosedXML.IO.CodeGen.Model.TopLevel;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;
@@ -22,9 +22,4 @@ public class AttributeGroupReference : ILeafElement
     /// Name of referenced attribute group (<see cref="AttributeGroupDefinition.Name"/>).
     /// </summary>
     public required string RefName { get; init; }
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 }

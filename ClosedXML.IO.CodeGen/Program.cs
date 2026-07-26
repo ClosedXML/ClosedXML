@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using ClosedXML.IO.CodeGen.Model;
 using ClosedXML.IO.CodeGen.XsdParser;
 
@@ -11,41 +10,30 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        if (args.Length != 2)
+        if (args.Length != 3)
         {
             Console.Error.WriteLine("Usage:");
-            Console.Error.WriteLine($"    {Process.GetCurrentProcess().ProcessName}.exe name-of-ooxml.xsd command");
+            Console.Error.WriteLine($"    {Process.GetCurrentProcess().ProcessName}.exe command name-of-ooxml.xsd output.cs");
             Console.Error.WriteLine();
             return;
         }
 
-        var schemaPath = args[0];
+        var command = args[0];
+        var schemaPath = args[1];
+        var target = args[2];
         using var fileStream = File.OpenRead(schemaPath);
         using var reader = new XmlTreeReader(fileStream, new XsdEnumMapper(), true);
         var parser = new XsdSchemaParser();
 
         var schema = parser.ParseSchema(reader);
-
-        Console.Out.WriteLine($"Schema {schemaPath} successfully parsed.");
-
-        var command = args[1];
         switch (command)
         {
-            case "copy":
-                var sb = new StringBuilder();
-                var visitor = new XsdCopyVisitor(sb);
-                visitor.Visit(schema);
-                var outputFile = Path.ChangeExtension(schemaPath, "copy");
-                File.WriteAllText(outputFile, sb.ToString());
-                Console.WriteLine($"Wrote copy to {outputFile}");
-                break;
-
             case "styles":
-                GenerateStylesReader(schema);
+                GenerateStylesReader(schema, target);
                 break;
 
             case "cache-records":
-                GenerateCacheRecords(schema);
+                GenerateCacheRecords(schema, target);
                 break;
 
             default:
@@ -56,7 +44,7 @@ public class Program
         Console.ReadKey();
     }
 
-    private static void GenerateStylesReader(Schema schema)
+    private static void GenerateStylesReader(Schema schema, string target)
     {
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes()
@@ -113,7 +101,7 @@ public class Program
             .AddSimpleTypeEnum("ST_GradientType", "XLGradientType", "linear", "XLGradientType.Linear")
             .AddSimpleTypeEnum("ST_BorderStyle", "XLBorderStyleValues", "none", "XLBorderStyleValues.None")
             .AddSimpleTypeEnum("ST_HorizontalAlignment", "XLAlignmentHorizontalValues")
-            .AddSimpleTypeEnum("ST_VerticalAlignment", "XLAlignmentVerticalValues", "bottom", "XLAlignmentFormatValue.Default.Vertical")
+            .AddSimpleTypeEnum("ST_VerticalAlignment", "XLAlignmentVerticalValues", "bottom", "XLAlignmentVerticalValues.Bottom")
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_TableStyleType",
@@ -130,7 +118,7 @@ public class Program
             .AddComplexTypeMapping("CT_GradientFill", "XLFillFormatValue")
             .AddComplexTypeMapping("CT_NumFmt", "(int NumFmtId, XLNumberFormat Format)")
             .AddComplexTypeMapping("CT_CellAlignment", "XLDifferentialAlignmentValue")
-            .AddComplexTypeMapping("CT_CellProtection", "XLProtectionFormatValue")
+            .AddComplexTypeMapping("CT_CellProtection", "XLDifferentialProtectionValue")
             .AddComplexTypeMapping("CT_Xf", "(XLCellFormatValue Format, int? CellStyleXfId)")
             .AddComplexTypeMapping("CT_CellXfs", "List<(XLCellFormatValue Format, int? CellStyleXfId)>")
             .AddComplexTypeMapping("CT_CellStyle", "(int CellStyleXfId, XLCellStyleValue Style)")
@@ -138,7 +126,7 @@ public class Program
             .AddComplexTypeMapping("CT_RgbColor", "uint")
             ;
 
-        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader", "_ns")
+        var stylesReaderGenerator = new ParserGenerator(schema, typeMap, "StylesReader")
             .AddUsing("System.Collections.Generic")
             .AddUsing("ClosedXML.IO")
             .AddUsing("ClosedXML.Excel.Formatting")
@@ -174,15 +162,16 @@ public class Program
             ;
 
         var stylesReaderSource = stylesReaderGenerator.Generate();
+        File.WriteAllText(target, stylesReaderSource);
         Console.WriteLine(stylesReaderSource);
     }
 
-    private static void GenerateCacheRecords(Schema schema)
+    private static void GenerateCacheRecords(Schema schema, string target)
     {
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes();
 
-        var cacheRecordsGenerator = new ParserGenerator(schema, typeMap, "PivotCacheRecordsReader", "_ns")
+        var cacheRecordsGenerator = new ParserGenerator(schema, typeMap, "PivotCacheRecordsReader")
             .WithNamespace("ClosedXML.Excel.IO")
             .AddUsing("System.Collections.Generic")
             .AddUsing("ClosedXML.IO")
@@ -202,6 +191,7 @@ public class Program
             ;
 
         var cacheRecordsSource = cacheRecordsGenerator.Generate();
+        File.WriteAllText(target, cacheRecordsSource);
         Console.WriteLine(cacheRecordsSource);
     }
 }

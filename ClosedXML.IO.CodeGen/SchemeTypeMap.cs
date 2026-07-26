@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ClosedXML.IO.CodeGen;
 
-internal class SchemeTypeMap
+public class SchemeTypeMap
 {
     /// <summary>
     /// Simple type map. The key is an XML simple name, the value is info about how to work with it in the C# code.
@@ -16,32 +16,46 @@ internal class SchemeTypeMap
     /// Map of XML complex type or element group name to C# type (as a text). If there isn't a record in the map,
     /// there is no mapping codegen will use <c>void</c>.
     /// </summary>
-    private readonly Dictionary<ParsletName, string> _parsletMap = new();
+    private readonly Dictionary<ParsletName, (string FinalType, string ItemType)> _parsletMap = new();
 
-    internal SchemeTypeMap AddComplexTypeMapping(ParsletName complexTypeName, string cSharpType)
+    /// <summary>
+    /// A dictionary of parse calls, i.e. a code used to call a parslet. Under normal circumstance,
+    /// they are are automatically generated for TLE (<c>CT_Shape</c> - <c>ParseShape</c>), but
+    /// there are two useful scenarios for manual specification:
+    /// <list type="bullet">
+    ///   <item>Different schema - That is likely specified in a separate reader that is a field of
+    ///     current reader. So it should generate something like `_colorReader.ParseColor()`</item>
+    ///   <item>Method name collision - all parslets are private, but reusable readers need
+    ///     to expose internal methods. Since they often have same name, it could be useful to avoid
+    ///     collision.</item>
+    /// </list>
+    /// </summary>
+    private readonly Dictionary<ParsletName, string> _manualParseCall = new();
+
+    public SchemeTypeMap AddComplexTypeMapping(ParsletName complexTypeName, string cSharpType)
     {
-        _parsletMap.Add(complexTypeName, cSharpType);
+        _parsletMap.Add(complexTypeName, (cSharpType, cSharpType));
         return this;
     }
 
-    internal SchemeTypeMap AddElementGroupMapping(ParsletName elementGroup, string cSharpType)
+    public SchemeTypeMap AddComplexTypeMapping(ParsletName complexTypeName, string cSharpType, string csItemType)
     {
-        _parsletMap.Add(elementGroup, cSharpType);
+        _parsletMap.Add(complexTypeName, (cSharpType, csItemType));
         return this;
     }
 
-    internal SchemeTypeMap AddSimpleType(SimpleTypeMapping simpleType)
+    public SchemeTypeMap AddSimpleType(SimpleTypeMapping simpleType)
     {
         _simpleTypeMap.Add(simpleType.Name, simpleType);
         return this;
     }
 
-    internal SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, string xmlValue, string csValue)
+    public SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, string xmlValue, string csValue)
     {
         return AddSimpleTypeEnum(simpleType, csTypeName, new() { { xmlValue, csValue } });
     }
 
-    internal SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, Dictionary<string, string>? valuesMap = null)
+    public SchemeTypeMap AddSimpleTypeEnum(string simpleType, string csTypeName, Dictionary<string, string>? valuesMap = null)
     {
         return AddSimpleType(new SimpleTypeMapping
         {
@@ -51,6 +65,19 @@ internal class SchemeTypeMap
             OptionalTemplate = $"_reader.GetOptionalEnum<{csTypeName}>(\"{{0}}\")",
             MapValue = xmlName => valuesMap?[xmlName] ?? throw new InvalidOperationException($"The XML value {xmlName} is not mapped to {csTypeName}.")
         });
+    }
+
+    /// <summary>
+    /// Specify a piece of code that will be used to parse <paramref name="name"/> type.  It must
+    /// return the correct type that was specified by the <see cref="AddComplexTypeMapping(ParsletName,string)"/>
+    /// </summary>
+    /// <param name="name">Parslet for which the call is defined.</param>
+    /// <param name="parseCall">A name of method or a call of another field without parenthesis, e.g. <c>_reader.ParsePoint</c>.</param>
+    /// <returns></returns>
+    public SchemeTypeMap AddParseCall(ParsletName name, string parseCall)
+    {
+        _manualParseCall.Add(name, parseCall);
+        return this;
     }
 
     internal SimpleTypeMapping GetSimpleType(string typeName)
@@ -68,7 +95,37 @@ internal class SchemeTypeMap
 
     internal bool TryGetParsletCsType(ParsletName name, [NotNullWhen(true)] out string? csType)
     {
-        return _parsletMap.TryGetValue(name, out csType);
+        if (_parsletMap.TryGetValue(name, out var map))
+        {
+            csType = map.FinalType;
+            return true;
+        }
+
+        csType = null;
+        return false;
+    }
+
+    internal bool TryItemGetValue(ParsletName parsletName, [NotNullWhen(true)] out string? csItemType)
+    {
+        if (_parsletMap.TryGetValue(parsletName, out var map))
+        {
+            csItemType = map.ItemType;
+            return true;
+        }
+
+        csItemType = null;
+        return false;
+    }
+
+    internal string GetParseCall(ParsletName name)
+    {
+        if (_manualParseCall.TryGetValue(name, out var manualParseCall))
+            return manualParseCall;
+
+        if (name.HasNamespace)
+            throw new InvalidOperationException($"Parslet '{name}' uses a namespace. Specify the parseCall manually through the '{nameof(SchemeTypeMap)}.{nameof(AddParseCall)}()' method");
+
+        return $"Parse{name.WithoutPrefix()}";
     }
 
     public SchemeTypeMap AddPrimitiveTypes()
@@ -79,6 +136,13 @@ internal class SchemeTypeMap
             CsTypeName = "bool",
             RequiredTemplate = "_reader.GetBool(\"{0}\")",
             OptionalTemplate = "_reader.GetOptionalBool(\"{0}\")"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "xsd:byte",
+            CsTypeName = "byte",
+            RequiredTemplate = "_reader.GetByte(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalByte(\"{0}\")"
         });
         AddSimpleType(new SimpleTypeMapping
         {
@@ -113,7 +177,8 @@ internal class SchemeTypeMap
             Name = "xsd:string",
             CsTypeName = "string",
             RequiredTemplate = "_reader.GetString(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalString(\"{0}\")"
+            OptionalTemplate = "_reader.GetOptionalString(\"{0}\")",
+            MapValue = x => x.Length == 0 ? "string.Empty" : $"\"{x.Replace("\"", "\\\"")}\""
         });
         AddSimpleType(new SimpleTypeMapping
         {

@@ -10,7 +10,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ElementDefinition : INode
+public class ElementDefinition
 {
     /// <summary>
     /// Name of the element. Referenced by <see cref="ElementReference.RefName"/>.
@@ -21,9 +21,4 @@ public class ElementDefinition : INode
     /// The type name of the element.
     /// </summary>
     public required string TypeName { get; init; }
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 }

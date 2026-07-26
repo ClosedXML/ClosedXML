@@ -14,7 +14,7 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class AttributeGroupDefinition : INode
+public class AttributeGroupDefinition
 {
     /// <summary>
     /// Name of the the attribute group type.
@@ -22,9 +22,4 @@ public class AttributeGroupDefinition : INode
     public required string Name { get; init; }
 
     public required List<AttributeElement> Attributes { get; init; } = [];
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 }

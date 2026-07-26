@@ -5,22 +5,20 @@ using ClosedXML.IO.CodeGen.Model;
 
 namespace ClosedXML.IO.CodeGen;
 
-internal class ParserGenerator
+public class ParserGenerator
 {
     private readonly Schema _schema;
     private readonly string _readerName;
-    private readonly string _namespaceField;
     private readonly List<ParsletName> _parseMethods = new();
     private readonly SchemeTypeMap _typeMap;
     private readonly List<string> _usings = new();
     private string _targetNamespace = "ClosedXML.Excel.IO";
 
-    internal ParserGenerator(Schema schema, SchemeTypeMap typeMap, string readerField, string nsVariable)
+    public ParserGenerator(Schema schema, SchemeTypeMap typeMap, string readerField)
     {
         _schema = schema;
         _typeMap = typeMap;
         _readerName = readerField;
-        _namespaceField = nsVariable;
     }
 
     public ParserGenerator WithNamespace(string targetNamespace)
@@ -41,6 +39,9 @@ internal class ParserGenerator
     /// <param name="name">Name of a complex type or element group.</param>
     public ParserGenerator AddParseMethod(ParsletName name)
     {
+        if (_parseMethods.Contains(name))
+            throw new InvalidOperationException($"Parse method for {name} was already added.");
+
         _parseMethods.Add(name);
         return this;
     }
@@ -81,6 +82,6 @@ internal class ParserGenerator
         if (!_schema.TryGetParslet(parsletName, out var parslet))
             throw new InvalidOperationException($"Unable to find definition for '{parsletName.Value}'. Was it part of the XSD file?");
 
-        parslet.GenerateParseMethod(code, _namespaceField);
+        parslet.GenerateParseMethod(code);
     }
 }

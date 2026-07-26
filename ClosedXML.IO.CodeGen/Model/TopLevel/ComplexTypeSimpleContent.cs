@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.TopLevel;
@@ -15,17 +16,12 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 ///   <xsd:simpleContent>
 /// ]]>
 /// </summary>
-public class ComplexTypeSimpleContent : ComplexType, INode
+public class ComplexTypeSimpleContent : ComplexType
 {
     public required string BaseTypeName { get; init; }
 
-    public T Accept<T>(IXsdVisitor<T> visitor)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code)
     {
-        return visitor.Visit(this);
-    }
-
-    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
-    {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

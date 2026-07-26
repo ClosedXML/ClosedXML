@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
@@ -10,9 +10,4 @@ public class Sequence : IElementGroup
     public required List<IElementGroup> Children { get; init; } = [];
 
     public required Occurrences Occurrences { get; init; }
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 }

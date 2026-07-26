@@ -30,3 +30,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 /packages
 .idea/
+/ClosedXML.IO.CodeGen/Properties/launchSettings.json

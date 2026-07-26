@@ -2,11 +2,8 @@ using System;
 
 namespace ClosedXML.IO.CodeGen;
 
-internal record SimpleTypeMapping
+public record SimpleTypeMapping
 {
-    private readonly string? _requiredTemplate;
-    private readonly string? _optionalTemplate;
-
     /// <summary>
     /// Name of the simple type in the XML.
     /// </summary>
@@ -22,8 +19,8 @@ internal record SimpleTypeMapping
     /// </summary>
     public string RequiredTemplate
     {
-        get => _requiredTemplate ?? throw new InvalidOperationException($"Required template not defined for {Name}.");
-        init => _requiredTemplate = value;
+        get => field ?? throw new InvalidOperationException($"Required template not defined for {Name}.");
+        init;
     }
 
     /// <summary>
@@ -31,8 +28,8 @@ internal record SimpleTypeMapping
     /// </summary>
     public string OptionalTemplate
     {
-        get => _optionalTemplate ?? throw new InvalidOperationException($"Optional template not defined for {Name}.");
-        init => _optionalTemplate = value;
+        get => field ?? throw new InvalidOperationException($"Optional template not defined for {Name}.");
+        init;
     }
 
     /// <summary>

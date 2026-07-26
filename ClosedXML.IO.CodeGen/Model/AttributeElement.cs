@@ -10,7 +10,7 @@ namespace ClosedXML.IO.CodeGen.Model;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class AttributeElement : INode
+public class AttributeElement
 {
     /// <summary>
     /// Name is technically optional in ref attribute:
@@ -31,11 +31,6 @@ public class AttributeElement : INode
     internal bool IsOptional => Use is AttributeUseType.Default or AttributeUseType.Optional;
 
     private bool CanBeNull => IsOptional && DefaultValue is null;
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 
     internal Variable Generate(CodeBuilder code)
     {

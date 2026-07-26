@@ -19,48 +19,35 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ComplexTypeSequence : ComplexType, INode
+public class ComplexTypeSequence : ComplexType
 {
     public required Sequence Sequence { get; init; }
 
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code)
     {
         var dataVariables = new List<Variable>();
-        var min = Sequence.Occurrences.Min ?? 1;
-        var max = Sequence.Occurrences.Max ?? 1;
-        if (min == 1 && max == 1)
+        if (Sequence.Occurrences.Elements != ElementsCount.OneToOne)
+            throw new NotSupportedException("Only simple sequence is supported. Change XSD structure.");
+
+        // The only sane sequence
+        foreach (var element in Sequence.Children)
         {
-            foreach (var element in Sequence.Children)
+            if (element is ElementType elementType)
             {
-                if (element is ElementType elementType)
-                {
-                    var variable = elementType.Generate(code, namespaceField);
-                    if (variable is not null)
-                        dataVariables.Add(variable);
-                }
-                else if (element is GroupReference groupReference)
-                {
-                    var variable = groupReference.GenerateParseCall(code, namespaceField);
-                    if (variable is not null)
-                        dataVariables.Add(variable);
-                }
-                else
-                {
-                    throw new NotImplementedException("Only element type is implemented for a sequence.");
-                }
+                var variables = elementType.GenerateSequenceParseCode(code);
+                dataVariables.AddRange(variables);
+            }
+            else if (element is GroupReference groupReference)
+            {
+                var variables = groupReference.GenerateSequenceParseCall(code);
+                dataVariables.AddRange(variables);
+            }
+            else
+            {
+                throw new NotImplementedException("Only element type is implemented for a sequence.");
             }
         }
-        else
-        {
-            throw new NotImplementedException("Only simple sequence is implemented.");
-        }
 
-        code.AddLine($"_reader.Close(elementName, {namespaceField});");
         return dataVariables;
     }
 }

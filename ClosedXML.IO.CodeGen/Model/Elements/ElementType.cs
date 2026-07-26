@@ -29,93 +29,148 @@ public class ElementType : IElementGroup
 
     public required Occurrences Occurrences { get; init; }
 
-    public T Accept<T>(IXsdVisitor<T> visitor)
+    internal List<Variable> GenerateSequenceParseCode(CodeBuilder code)
     {
-        return visitor.Visit(this);
-    }
-
-    internal Variable? Generate(CodeBuilder code, string namespaceField)
-    {
-        Variable? variable = null;
-        var openArgs = $"\"{Name}\", {namespaceField}";
-        var min = Occurrences.Min ?? 1;
-        var max = Occurrences.Max ?? 1;
-        var parseCallArgs = new[] { $"\"{Name}\"" };
+        var min = Occurrences.ActualMin;
+        var max = Occurrences.ActualMax;
 
         if (min == 1 && max == 1)
         {
-            code.AddLine($"_reader.Open({openArgs});");
-            variable = code.AddParseCall(TypeName, Name, parseCallArgs);
+            // If element is not found here, it's a hard fail. Don't return error, throw.
+            if (code.TryGetCsType(TypeName, out var csType))
+            {
+                var variable = new Variable(csType, Name);
+                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append(" = ").AppendCtParseCall(TypeName, Name).Append(".Value;").EndLine();
+                return [variable];
+            }
+            else
+            {
+                code.WriteIndent().Append("if (").AppendCtParseCall(TypeName, Name).Append(" is { IsFail: true })").EndLine();
+                code.OpenBrace();
+                code.AddLine($"throw PartStructureException.ExpectedElementNotFound(\"{Name}\", _reader);");
+                code.CloseBrace();
+                return [];
+            }
         }
         else if (min == 0 && max == 1)
         {
             if (code.TryGetCsType(TypeName, out var csType))
             {
                 csType += "?";
-                variable = new Variable(csType, Name);
-                code.WriteIndent().Append(csType).Append(" ").AppendVariable(Name).Append(" = default;").EndLine();
-                code.AddLine($"if (_reader.TryOpen({openArgs}))");
-                code.OpenBrace();
-                code.WriteIndent().AppendVariable(Name).Append(" = ").AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
-                code.CloseBrace();
+                var variable = new Variable(csType, Name);
+
+                var resultVariableName = Name + "Result";
+                code.WriteIndent().Append("var ").AppendVariable(resultVariableName).Append(" = ").AppendCtParseCall(TypeName, Name).Append(";").EndLine();
+
+                // The default must explicitly specify a type. Ternary operator have slightly
+                // unintuitive behavior for nullable types. E.g. `int? v = flag ? 1 : default`
+                // would be interpreted as `int? v = flag ? 1 : 0`.
+                // Interface doesn't have a default value, let's got with class. Struct doesn't really make sense.
+                var defaultValue = csType.StartsWith('I') ? "null" : $"default({csType})";
+                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append(" = ").AppendVariable(resultVariableName).Append(".IsSuccess ? ").AppendVariable(resultVariableName).Append($".Value : {defaultValue};").EndLine();
+                return [variable];
             }
             else
             {
-                code.AddLine($"if (_reader.TryOpen({openArgs}))");
+                code.WriteIndent().Append("if (").AppendCtParseCall(TypeName, Name).Append(" is { IsSuccess: true })").EndLine();
                 code.OpenBrace();
-                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
+                code.WriteIndent().Append("// Optional element '").Append(Name).Append("' was present").EndLine();
                 code.CloseBrace();
+                return [];
             }
-        }
-        else if (min == 0 && max == int.MaxValue)
-        {
-            if (code.TryGetCsType(TypeName, out var csType))
-            {
-                csType = $"List<{csType}>";
-                variable = new Variable(csType, Name);
-                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append($" = new {csType}();").EndLine();
-                code.AddLine($"while (_reader.TryOpen({openArgs}))");
-                code.OpenBrace();
-                code.WriteIndent().AppendVariable(variable.Name).Append(".Add(").AppendParseCall(TypeName, parseCallArgs).Append(");").EndLine();
-                code.CloseBrace();
-            }
-            else
-            {
-                code.AddLine($"while (_reader.TryOpen({openArgs}))");
-                code.OpenBrace();
-                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
-                code.CloseBrace();
-            }
-        }
-        else if (min == 1 && max == int.MaxValue)
-        {
-            if (code.TryGetCsType(TypeName, out var csType))
-            {
-                csType = $"List<{csType}>";
-                variable = new Variable(csType, Name);
-                code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append($" = new {csType}();").EndLine();
-                code.AddLine($"_reader.Open({openArgs});");
-                code.AddLine("do");
-                code.OpenBrace();
-                code.WriteIndent().AppendVariable(variable.Name).Append(".Add(").AppendParseCall(TypeName, parseCallArgs).Append(");").EndLine();
-                code.CloseBrace();
-                code.AddLine($"while (_reader.TryOpen({openArgs}));");
-            }
-            else
-            {
-                code.AddLine($"_reader.Open({openArgs});");
-                code.AddLine("do");
-                code.OpenBrace();
-                code.WriteIndent().AppendParseCall(TypeName, parseCallArgs).Append(";").EndLine();
-                code.CloseBrace();
-                code.AddLine($"while (_reader.TryOpen({openArgs}));");
-            }
-        }
-        else
-        {
-            throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
         }
 
-        return variable;
+        if (min == max && min > 1 && max < int.MaxValue)
+        {
+            // Finite amount, but each is separate
+            var variables = new List<Variable>();
+            for (var i = 0; i < max; i++)
+            {
+                if (code.TryGetCsType(TypeName, out var csType))
+                {
+                    var variable = new Variable(csType, Name + i);
+                    code.WriteIndent().Append("var ").AppendVariable(variable.Name).Append(" = ").AppendCtParseCall(TypeName, Name).Append(".Value;").EndLine();
+
+                    variables.Add(variable);
+                }
+                else
+                {
+                    code.WriteIndent().Append("if (").AppendCtParseCall(TypeName, Name)
+                        .Append(" is { IsFail: true })").EndLine();
+                    code.OpenBrace();
+                    code.AddLine($"throw PartStructureException.ExpectedElementNotFound(\"{Name}\", _reader);");
+                    code.CloseBrace();
+                }
+            }
+
+            return variables;
+        }
+
+        // I am fine with few (~4) as individual elements, but more? That is just bad idea. 3 is max in Bezier and similar places
+        const int threshold = 5;
+        if (min < threshold && max >= threshold)
+        {
+            var needsCountCheck = min > 0 || max < int.MaxValue;
+
+            if (code.TryGetCsType(TypeName, out var csType))
+            {
+                var listVariable = new Variable($"List<{csType}>", Name);
+                code.WriteIndent().Append("var ").AppendVariable(listVariable.Name).Append($" = new {listVariable.Type}();").EndLine();
+
+                var itemVariable = new Variable(csType, Name + "Item");
+                code.WriteIndent().Append("while (").AppendCtParseCall(TypeName, Name).Append(" is { IsSuccess: true} ").AppendVariable(itemVariable.Name).Append(")").EndLine();
+                code.OpenBrace();
+                code.WriteIndent().AppendVariable(listVariable.Name).Append(".Add(").AppendVariable(itemVariable.Name).Append(".Value);").EndLine();
+                code.CloseBrace();
+
+                if (needsCountCheck)
+                    CountInRange(code, min, max, $"{listVariable.Name}.Count");
+
+                return [listVariable];
+            }
+            else
+            {
+                var countVariable = Name + "Count";
+                if (needsCountCheck)
+                {
+                    code.AddLine($"var {countVariable} = 0;");
+                }
+
+                code.WriteIndent().Append("while (").AppendCtParseCall(TypeName, Name).Append(" is { IsSuccess: true })").EndLine();
+                code.OpenBrace();
+                code.AddLine($"// Parsed another element '{Name}' with cardinality {min}-{max}");
+                if (needsCountCheck)
+                    code.AddLine($"{countVariable}++;");
+
+                code.CloseBrace();
+
+                if (needsCountCheck)
+                    CountInRange(code, min, max, countVariable);
+
+                return [];
+            }
+        }
+        throw new NotSupportedException($"Unexpected occurence range {min}-{max}.");
+    }
+
+    private static void CountInRange(CodeBuilder code, int min, int max, string countVariable)
+    {
+        code.EndLine();
+        if (min > 0 && max < int.MaxValue)
+        {
+            code.AddLine($"if ({countVariable} is < {min} or > {max})");
+        }
+        else if (min > 0)
+        {
+            code.AddLine($"if ({countVariable} < {min})");
+
+        }
+        else if (max < int.MaxValue)
+        {
+            code.AddLine($"if ({countVariable} > {max})");
+        }
+        code.OpenBrace();
+        code.AddLine("throw PartStructureException.IncorrectElementsCount();");
+        code.CloseBrace();
     }
 }

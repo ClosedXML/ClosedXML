@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.Elements;
 
 /// <summary>
 /// A node in a complex type element tree.
 /// </summary>
-public interface IElementGroup: INode
+public interface IElementGroup
 {
     /// <summary>
     /// Children elements.

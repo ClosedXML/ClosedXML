@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ClosedXML.IO.CodeGen.Model.SimpleTypes;
 
@@ -26,9 +26,4 @@ public class SimpleType : ISimpleType
     /// Conditions the value must satisfy.
     /// </summary>
     public required List<IValueRestriction> Restrictions { get; init; }
-
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 }

@@ -19,33 +19,33 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class ComplexTypeChoice : ComplexType, INode
+public class ComplexTypeChoice : ComplexType
 {
     public required Choice Choice { get; init; }
 
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code)
     {
         var choicesCount = Choice.DetermineChoicesCount();
         switch (choicesCount)
         {
             case ElementsCount.ZeroToOne:
             {
-                var variables = Choice.GenerateParseContent(choicesCount, code, namespaceField);
-                code.AddLine($"_reader.Close(elementName, {namespaceField});");
+                var variables = Choice.GenerateParseContent(Name, choicesCount, code, true);
+                return variables;
+            }
+            case ElementsCount.ZeroToMany:
+            {
+                var variables = Choice.GenerateParseContent(Name, choicesCount, code, true);
+                return variables;
+            }
+            case ElementsCount.OneToOne:
+            {
+                var variables = Choice.GenerateParseContent(Name, choicesCount, code, true);
                 return variables;
             }
             case ElementsCount.OneToMany:
             {
-                code.AddLine("do");
-                code.OpenBrace();
-                var variables = Choice.GenerateParseContent(choicesCount, code, namespaceField);
-                code.CloseBrace();
-                code.AddLine($"while (!_reader.TryClose(elementName, {namespaceField}));");
+                var variables = Choice.GenerateParseContent(Name, choicesCount, code, true);
                 return variables;
             }
             default:

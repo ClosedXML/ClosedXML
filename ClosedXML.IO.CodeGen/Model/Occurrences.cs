@@ -4,6 +4,12 @@ namespace ClosedXML.IO.CodeGen.Model;
 
 public readonly record struct Occurrences(int? Min, int? Max)
 {
+    public int ActualMin => Min ?? 1;
+
+    public int ActualMax => Max ?? 1;
+
+    internal bool HasFixedCount => ActualMin == ActualMax;
+
     internal ElementsCount Elements
     {
         get

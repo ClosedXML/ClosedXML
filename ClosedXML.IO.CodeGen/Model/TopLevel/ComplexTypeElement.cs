@@ -6,16 +6,11 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// <c><![CDATA[<xsd:complexType/>]]></c> inside <c><![CDATA[<xsd:schema/>]]></c>. It doesn't have
 /// any elements, only attributes.
 /// </summary>
-public class ComplexTypeElement : ComplexType, INode
+public class ComplexTypeElement : ComplexType
 {
-    public T Accept<T>(IXsdVisitor<T> visitor)
+    internal override List<Variable> GenerateParseMethod(CodeBuilder code)
     {
-        return visitor.Visit(this);
-    }
-
-    internal override List<Variable> GenerateParseMethod(CodeBuilder code, string namespaceField)
-    {
-        code.AddLine($"_reader.Close(elementName, {namespaceField});");
+        // Attributes are already parsed by the ComplexType.GenerateParseMethod
         return [];
     }
 }

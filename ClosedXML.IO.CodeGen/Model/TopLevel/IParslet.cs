@@ -13,5 +13,5 @@ internal interface IParslet
     /// <summary>
     /// Generate a <c>Parse*()</c> method that parses the referencable element.
     /// </summary>
-    void GenerateParseMethod(CodeBuilder code, string namespaceField);
+    void GenerateParseMethod(CodeBuilder code);
 }

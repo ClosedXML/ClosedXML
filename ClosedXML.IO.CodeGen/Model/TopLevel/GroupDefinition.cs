@@ -15,18 +15,13 @@ namespace ClosedXML.IO.CodeGen.Model.TopLevel;
 /// ]]></code>
 /// </example>
 /// </summary>
-public class GroupDefinition : IParslet, INode
+public class GroupDefinition : IParslet
 {
     public required ParsletName Name { get; init; }
 
     public required IElementGroup Content { get; init; }
 
-    public T Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    void IParslet.GenerateParseMethod(CodeBuilder code, string namespaceField)
+    void IParslet.GenerateParseMethod(CodeBuilder code)
     {
         if (Content is Choice choice)
         {
@@ -36,17 +31,19 @@ public class GroupDefinition : IParslet, INode
 
             var returnCsType = code.StartParseMethod(Name);
             code.OpenBrace();
-            var variables = choice.GenerateParseContent(choicesCount, code, namespaceField);
-            if (returnCsType == "void")
+            var variables = choice.GenerateParseContent(Name, choicesCount, code, throwOnFail: false);
+            if (returnCsType is null)
             {
+                code.EndLine();
                 code.WriteIndent().AppendCallHook(Name, variables).Append(";").EndLine();
+                code.AddLine("return Xpr.Success();");
                 code.CloseBrace();
                 code.EndLine();
                 code.AddHookSignature(Name, variables);
             }
             else
             {
-                code.WriteIndent().Append("return ").AppendCallHook(Name, variables).Append(";").EndLine();
+                code.WriteIndent().Append("return Xpr.From(").AppendCallHook(Name, variables).Append(");").EndLine();
                 code.CloseBrace();
             }
         }

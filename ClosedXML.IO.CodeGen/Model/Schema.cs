@@ -8,7 +8,7 @@ namespace ClosedXML.IO.CodeGen.Model;
 /// <summary>
 /// A representation of a one XSD file.
 /// </summary>
-public class Schema : INode
+public class Schema
 {
     /// <summary>
     /// Imports in the file.
@@ -19,11 +19,6 @@ public class Schema : INode
     /// One of <c>xsd:attributeGroup</c>, <c>xsd:complexType</c>, <c>xsd:element</c>, <c>xsd:group</c> or <c>xsd:simpleType</c>.
     /// </summary>
     public List<object> Entries { get; } = [];
-
-    T INode.Accept<T>(IXsdVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
 
     internal bool TryGetParslet(ParsletName parsletName, [NotNullWhen(true)] out IParslet? parslet)
     {

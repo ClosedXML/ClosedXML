@@ -11,7 +11,7 @@ internal class CodeBuilder
     /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be
     /// <c>@in</c>.
     /// </summary>
-    private static readonly HashSet<string> Keywords = ["in", "out", "ref"];
+    private static readonly HashSet<string> Keywords = ["in", "out", "ref", "char"];
 
     private readonly SchemeTypeMap _typeMap;
     private readonly StringBuilder _sb;
@@ -67,12 +67,20 @@ internal class CodeBuilder
         return this;
     }
 
-    internal string StartParseMethod(ParsletName name, params string[] parameters)
+    internal string? StartParseMethod(ParsletName name, params string[] parameters)
     {
+        string parseMethodReturnType;
         if (!TryGetCsType(name, out var csReturnType))
-            csReturnType = "void";
+        {
+            csReturnType = null;
+            parseMethodReturnType = "Xpr";
+        }
+        else
+        {
+            parseMethodReturnType = "Xpr<" + csReturnType + ">";
+        }
 
-        AddIndentedLine($"private {csReturnType} Parse{name.WithoutPrefix()}({string.Join(", ", parameters)})");
+        AddIndentedLine($"private {parseMethodReturnType} Parse{name.WithoutPrefix()}({string.Join(", ", parameters)})");
         return csReturnType;
     }
 
@@ -93,21 +101,41 @@ internal class CodeBuilder
         return _typeMap.TryGetParsletCsType(name, out csType);
     }
 
-    internal Variable? AddParseCall(ParsletName name, string variableName, string[] arguments)
+    internal string GetCsItemType(ParsletName parsletName)
+    {
+        if (_typeMap.TryItemGetValue(parsletName, out var code))
+            return code;
+
+        throw new KeyNotFoundException($"Missing parslet '{parsletName.Value}'");
+    }
+
+    internal CodeBuilder AppendCtParseCall(ParsletName name, string elementName)
+    {
+        return AppendParseCall(name, ["\"" + elementName + "\"", "_ns"]);
+    }
+
+    internal CodeBuilder AppendGroupParseCall(ParsletName name)
+    {
+        var parseCall = _typeMap.GetParseCall(name);
+        return Append($"{parseCall}()");
+    }
+
+    internal Variable? AddGroupParseCall(ParsletName name, string storeVariableName)
     {
         if (!TryGetCsType(name, out var csType))
         {
-            WriteIndent().AppendParseCall(name, arguments).Append(";").EndLine();
+            WriteIndent().AppendParseCall(name, []).Append(";").EndLine();
             return null;
         }
 
-        WriteIndent().Append("var ").AppendVariable(variableName).Append(" = ").AppendParseCall(name, arguments).Append(";").EndLine();
-        return new Variable(csType, variableName);
+        WriteIndent().Append("var ").AppendVariable(storeVariableName).Append(" = ").AppendParseCall(name, []).Append(";").EndLine();
+        return new Variable(csType, storeVariableName);
     }
 
-    internal CodeBuilder AppendParseCall(ParsletName name, string[] arguments)
+    private CodeBuilder AppendParseCall(ParsletName name, string[] arguments)
     {
-        return Append($"Parse{name.WithoutPrefix()}({string.Join(", ", arguments)})");
+        var parseCall = _typeMap.GetParseCall(name);
+        return Append($"{parseCall}({string.Join(", ", arguments)})");
     }
 
     internal CodeBuilder AppendCallHook(ParsletName name, IReadOnlyList<Variable> arguments)
