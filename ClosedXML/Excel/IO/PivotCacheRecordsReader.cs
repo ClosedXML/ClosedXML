@@ -30,10 +30,8 @@ internal partial class PivotCacheRecordsReader
         var recordCount = _reader.GetCount();
         _pivotCache.AllocateRecordCapacity(recordCount);
 
-        while (_reader.TryOpen("r", _ns))
-        {
-            ParseRecord("r");
-        }
+        while (ParseRecord("r", _ns) is { IsSuccess: true })
+            ;
 
         if (_reader.TryOpen("extLst", _ns))
         {
