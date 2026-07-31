@@ -79,9 +79,9 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        public IXLComment SetVisible(Boolean hidden)
+        public IXLComment SetVisible(Boolean visible)
         {
-            Visible = hidden;
+            Visible = visible;
             return Container;
         }
 
