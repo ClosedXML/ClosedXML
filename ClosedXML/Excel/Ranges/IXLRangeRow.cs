@@ -118,6 +118,21 @@ namespace ClosedXML.Excel
         IXLRow WorksheetRow();
 
         /// <summary>
+        /// Adjusts the height of the worksheet row based on the contents of cells in this range row.
+        /// </summary>
+        IXLRangeRow AdjustToContents();
+
+        IXLRangeRow AdjustToContents(Int32 startColumn);
+
+        IXLRangeRow AdjustToContents(Int32 startColumn, Int32 endColumn);
+
+        IXLRangeRow AdjustToContents(Double minHeight, Double maxHeight);
+
+        IXLRangeRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight);
+
+        IXLRangeRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
+
+        /// <summary>
         /// Clears the contents of this row.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>

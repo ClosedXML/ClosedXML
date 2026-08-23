@@ -174,6 +174,38 @@ namespace ClosedXML.Excel
             return Worksheet.Column(RangeAddress.FirstAddress.ColumnNumber);
         }
 
+        public IXLRangeColumn AdjustToContents()
+        {
+            return AdjustToContents(RangeAddress.FirstAddress.RowNumber, RangeAddress.LastAddress.RowNumber);
+        }
+
+        public IXLRangeColumn AdjustToContents(Int32 startRow)
+        {
+            return AdjustToContents(startRow, RangeAddress.LastAddress.RowNumber);
+        }
+
+        public IXLRangeColumn AdjustToContents(Int32 startRow, Int32 endRow)
+        {
+            WorksheetColumn().AdjustToContents(startRow, endRow);
+            return this;
+        }
+
+        public IXLRangeColumn AdjustToContents(Double minWidth, Double maxWidth)
+        {
+            return AdjustToContents(RangeAddress.FirstAddress.RowNumber, RangeAddress.LastAddress.RowNumber, minWidth, maxWidth);
+        }
+
+        public IXLRangeColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
+        {
+            return AdjustToContents(startRow, RangeAddress.LastAddress.RowNumber, minWidth, maxWidth);
+        }
+
+        public IXLRangeColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
+        {
+            WorksheetColumn().AdjustToContents(startRow, endRow, minWidth, maxWidth);
+            return this;
+        }
+
         #endregion IXLRangeColumn Members
 
         public override XLRangeType RangeType

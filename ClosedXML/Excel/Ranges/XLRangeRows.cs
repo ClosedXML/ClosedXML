@@ -1,5 +1,6 @@
 #nullable disable
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,60 @@ namespace ClosedXML.Excel
         {
             _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
             _ranges.Clear();
+        }
+
+        public IXLRangeRows AdjustToContents()
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents());
+            return this;
+        }
+
+        public IXLRangeRows AdjustToContents(Int32 startColumn)
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents(startColumn));
+            return this;
+        }
+
+        public IXLRangeRows AdjustToContents(Int32 startColumn, Int32 endColumn)
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
+            return this;
+        }
+
+        public IXLRangeRows AdjustToContents(Double minHeight, Double maxHeight)
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents(minHeight, maxHeight));
+            return this;
+        }
+
+        public IXLRangeRows AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents(startColumn, minHeight, maxHeight));
+            return this;
+        }
+
+        public IXLRangeRows AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
+        {
+            OrderedRows.ForEach(r => r.AdjustToContents(startColumn, endColumn, minHeight, maxHeight));
+            return this;
+        }
+
+        public IXLRangeRows Where(Func<IXLRangeRow, Boolean> predicate)
+        {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return FromOrdered(OrderedRows.Where(r => predicate(r)));
+        }
+
+        public IXLRangeRows Skip(Int32 count)
+        {
+            return FromOrdered(OrderedRows.Skip(count));
+        }
+
+        public IXLRangeRows Take(Int32 count)
+        {
+            return FromOrdered(OrderedRows.Take(count));
         }
 
         public void Add(IXLRangeRow range)
@@ -95,5 +150,16 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRangeRows Members
+
+        private IEnumerable<XLRangeRow> OrderedRows =>
+            _ranges.OrderBy(r => r.Worksheet.Position).ThenBy(r => r.RowNumber());
+
+        private IXLRangeRows FromOrdered(IEnumerable<XLRangeRow> rows)
+        {
+            var result = new XLRangeRows(_worksheet);
+            foreach (var row in rows)
+                result.Add(row);
+            return result;
+        }
     }
 }
