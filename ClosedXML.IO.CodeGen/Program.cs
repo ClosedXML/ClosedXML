@@ -1,12 +1,15 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using ClosedXML.IO.CodeGen.Model;
+using ClosedXML.IO.CodeGen.Model.Elements;
+using ClosedXML.IO.CodeGen.Model.TopLevel;
 using ClosedXML.IO.CodeGen.XsdParser;
 
 namespace ClosedXML.IO.CodeGen;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -36,6 +39,10 @@ public class Program
                 GenerateCacheRecords(schema, target);
                 break;
 
+            case "partial-rst":
+                GeneratePartialRstReader(schema, target);
+                break;
+
             default:
                 Console.WriteLine($"Unknown command '{command}'");
                 break;
@@ -55,13 +62,7 @@ public class Program
                 RequiredTemplate = "_reader.GetUInt(\"{0}\")",
                 OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
             })
-            .AddSimpleType(new SimpleTypeMapping
-            {
-                Name = "ST_FontId",
-                CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
-            })
+            .AddStFontId()
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_FillId",
@@ -193,5 +194,110 @@ public class Program
         var cacheRecordsSource = cacheRecordsGenerator.Generate();
         File.WriteAllText(target, cacheRecordsSource);
         Console.WriteLine(cacheRecordsSource);
+    }
+
+    /// <summary>
+    /// Generate a reader to read <c>CT_Rst</c>. It is a partial reader used in other readers.
+    /// </summary>
+    private static void GeneratePartialRstReader(Schema schema, string target)
+    {
+        NormalizeChoicesZeroToOne(schema, "CT_RPrElt");
+
+        var typeMap = new SchemeTypeMap()
+            .AddPrimitiveTypes()
+            .AddStFontId()
+            .AddSimpleTypeEnum("ST_PhoneticType", "XLPhoneticType", "fullwidthKatakana", "XLPhoneticType.FullWidthKatakana")
+            .AddSimpleTypeEnum("ST_PhoneticAlignment", "XLPhoneticAlignment", "left", "XLPhoneticAlignment.Left")
+            .AddSimpleTypeEnum("s:ST_VerticalAlignRun", "XLFontVerticalTextAlignmentValues")
+            .AddSimpleTypeEnum("ST_FontScheme", "XLFontScheme")
+            .AddSimpleTypeEnum("ST_UnderlineValues", "XLFontUnderlineValues", "single", "XLFontUnderlineValues.Single")
+
+            .AddComplexTypeMapping("CT_Color", "XLColor")
+            .AddComplexTypeMapping("CT_BooleanProperty", "bool")
+            .AddComplexTypeMapping("CT_IntProperty", "int")
+            .AddComplexTypeMapping("CT_FontSize", "XLFontSize")
+            .AddComplexTypeMapping("CT_UnderlineProperty", "XLFontUnderlineValues")
+            .AddComplexTypeMapping("CT_VerticalAlignFontProperty", "XLFontVerticalTextAlignmentValues")
+            .AddComplexTypeMapping("CT_FontScheme", "XLFontScheme")
+            .AddComplexTypeMapping("CT_FontName", "XLFontName")
+
+            .AddComplexTypeMapping("s:ST_Xstring", "string")
+            .AddComplexTypeMapping("CT_RPrElt", "XLDifferentialFontValue", "Unit")
+            .AddComplexTypeMapping("CT_RElt", "(string Text, XLDifferentialFontValue Font)")
+            .AddComplexTypeMapping("CT_PhoneticRun", "PhoneticRunDto")
+            .AddComplexTypeMapping("CT_PhoneticPr", "PhoneticProperties")
+            .AddComplexTypeMapping("CT_Rst", "OneOf<string, XLImmutableRichText>")
+
+            .AddParseCall("s:ST_Xstring", "_reader.ParseXString")
+            ;
+
+        var rstGenerator = new ParserGenerator(schema, typeMap, "RstReader")
+            .WithNamespace("ClosedXML.Excel.IO")
+            .AddUsing("System.Collections.Generic")
+            .AddUsing("ClosedXML.Excel.Formatting")
+            .AddUsing("ClosedXML.Excel.CalcEngine")
+            .AddUsing("ClosedXML.IO")
+            .AddUsing("PhoneticProperties = ClosedXML.Excel.XLImmutableRichText.PhoneticProperties")
+            .AddUsing("PhoneticRunDto = (string Text, int StartIndex, int EndIndex)")
+
+            .AddParseMethod("CT_PhoneticRun") // 1816
+            .AddParseMethod("CT_RElt") // 1823
+            .AddParseMethod("CT_RPrElt") // 1829
+            .AddParseMethod("CT_Rst") // 1849
+            .AddParseMethod("CT_PhoneticPr") // 1857
+            .AddParseMethod("CT_BooleanProperty") // 3751
+            .AddParseMethod("CT_FontSize") // 3754
+            .AddParseMethod("CT_IntProperty") // 3757
+            .AddParseMethod("CT_FontName") // 3760
+            .AddParseMethod("CT_VerticalAlignFontProperty") // 3763
+            .AddParseMethod("CT_FontScheme") // 3766
+            .AddParseMethod("CT_UnderlineProperty") // 3776
+            ;
+
+        var rstSource = rstGenerator.Generate();
+        File.WriteAllText(target, rstSource);
+        Console.WriteLine(rstSource);
+    }
+
+    /// <summary>
+    /// Normalize a choice that has multiple elements with 0..1 cardinality into the 1..1
+    /// cardinality. Semantically, it's identical.
+    /// </summary>
+    private static void NormalizeChoicesZeroToOne(Schema schema, ParsletName name)
+    {
+        foreach (var choice in schema.Entries.OfType<ComplexTypeChoice>().Where(x => name == x.Name))
+        {
+            var choiceChildren = choice.Choice.Children;
+            var exhibitsProblem = choiceChildren.All(x => x is ElementType
+            {
+                Occurrences: { ActualMin: 0, ActualMax: 1 }
+            });
+            if (!exhibitsProblem)
+            {
+                throw new InvalidOperationException($"Type {name} does not exhibit expected problem.");
+            }
+
+            var fixedChildren = choiceChildren.Cast<ElementType>().Select(x => new ElementType
+            {
+                Name = x.Name,
+                Occurrences = new Occurrences(1, 1),
+                TypeName = x.TypeName
+            }).ToList();
+
+            // Replace the original children with new ones
+            choice.Choice.Children.Clear();
+            choice.Choice.Children.AddRange(fixedChildren);
+        }
+    }
+
+    public static SchemeTypeMap AddStFontId(this SchemeTypeMap schemeTypeMap)
+    {
+        return schemeTypeMap.AddSimpleType(new SimpleTypeMapping
+        {
+            Name = "ST_FontId",
+            CsTypeName = "uint",
+            RequiredTemplate = "_reader.GetUInt(\"{0}\")",
+            OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+        });
     }
 }

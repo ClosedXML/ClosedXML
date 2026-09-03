@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         private readonly RichTextRun[] _runs;
         private readonly PhoneticRun[] _phoneticRuns;
 
-        private XLImmutableRichText(string text, RichTextRun[] runs, PhoneticRun[] phoneticRuns, PhoneticProperties? phoneticsProps)
+        internal XLImmutableRichText(string text, RichTextRun[] runs, PhoneticRun[] phoneticRuns, PhoneticProperties? phoneticsProps)
         {
             Text = text;
             _runs = runs;
@@ -131,15 +131,54 @@ namespace ClosedXML.Excel
             return new XLImmutableRichText(text, runs, phoneticRuns, phoneticProps);
         }
 
+        /// <summary>
+        /// Make a new rich text with runs that use the <paramref name="font"/> as base font and
+        /// use the <see cref="RichTextRun.Dxf"/> to create the final run font. This is a temporary
+        /// method because rich text should store only the dxf. The API object should use the dxf
+        /// and the cell format.
+        /// </summary>
+        internal XLImmutableRichText WithBaseFont(XLFontFormatValue font)
+        {
+            var adjustedRuns = new RichTextRun[_runs.Length];
+            for (var i = 0; i < _runs.Length; ++i)
+            {
+                var run = _runs[i];
+                var adjustedFont = font.AdjustWith(run.Dxf);
+                adjustedRuns[i] = new RichTextRun(adjustedFont, run.StartIndex, run.Length);
+            }
+
+            return new XLImmutableRichText(Text, adjustedRuns.ToArray(), _phoneticRuns, PhoneticsProperties);
+        }
+
         internal readonly struct RichTextRun : IEquatable<RichTextRun>
         {
             internal readonly int StartIndex;
             internal readonly int Length;
             internal readonly XLFontFormatValue Font;
 
+            // TODO: Refactor rich text run to use only dxf
+            /// <summary>
+            /// The Dxf member is used only during sheet load to resolve, otherwise it's completely
+            /// ignored (no equals or hash code). The mutable rich text API should use the format of
+            /// a cell and combine it with the Dxf. The text run shouldn't contain full font value,
+            /// it takes the font of a cell and combines it with the dxf of the run.
+            /// </summary>
+            internal readonly XLDifferentialFontValue Dxf;
+
             internal RichTextRun(XLFontFormatValue font, int startIndex, int length)
+                : this(font, XLDifferentialFontValue.Empty, startIndex, length)
+            {
+            }
+
+            internal RichTextRun(XLDifferentialFontValue dxf, int startIndex, int length)
+                : this(XLFontFormatValue.Default, dxf, startIndex, length)
+            {
+            }
+
+            internal RichTextRun(XLFontFormatValue font, XLDifferentialFontValue dxf, int startIndex, int length)
             {
                 Font = font;
+                Dxf = dxf;
                 StartIndex = startIndex;
                 Length = length;
             }
@@ -246,10 +285,15 @@ namespace ClosedXML.Excel
             public readonly XLPhoneticAlignment Alignment;
 
             internal PhoneticProperties(XLPhonetics rtPhonetics)
+                : this(rtPhonetics.Font, rtPhonetics.Type, rtPhonetics.Alignment)
             {
-                Font = rtPhonetics.Font;
-                Type = rtPhonetics.Type;
-                Alignment = rtPhonetics.Alignment;
+            }
+
+            internal PhoneticProperties(XLFontFormatValue font, XLPhoneticType type, XLPhoneticAlignment alignment)
+            {
+                Font = font;
+                Type = type;
+                Alignment = alignment;
             }
 
             public bool Equals(PhoneticProperties other)

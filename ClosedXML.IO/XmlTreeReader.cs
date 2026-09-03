@@ -361,6 +361,36 @@ public sealed class XmlTreeReader : IDisposable
         return enumValue;
     }
 
+    /// <summary>
+    /// Get the content of current element. Once it ends, it should be on
+    /// the <see cref="XmlTreeNodeType.CloseElement"/> of the tree.
+    /// </summary>
+    /// <exception cref="PartStructureException">If another element is found inside the current element.</exception>>
+    public string GetContent()
+    {
+        ThrowOnNonStartElement();
+
+        var content = string.Empty;
+        while (_reader.Read())
+        {
+            switch (_reader.NodeType)
+            {
+                case OpenElement:
+                    throw PartStructureException.UnexpectedElementFound(_reader.LocalName);
+                case CloseElement:
+                    _inLookup = true;
+                    return content;
+                case Text:
+                    content += _reader.Value;
+                    break;
+                default:
+                    throw new UnreachableException();
+            }
+        }
+
+        throw InvalidXml();
+    }
+
     public void Dispose()
     {
         _reader.Dispose();

@@ -112,6 +112,63 @@ internal record XLFontFormatValue
         return new FontBaseAdapter(this);
     }
 
+    /// <summary>
+    /// Return a font that will have its values taken from the dxf where the dxf does have value.
+    /// </summary>
+    internal XLFontFormatValue AdjustWith(XLDifferentialFontValue dxf)
+    {
+        if (dxf.IsEmpty())
+            return this;
+
+        var result = this;
+        if (dxf.Name is { } name)
+            result = result with { Name = name };
+
+        if (dxf.Charset is { } charset)
+            result = result with { Charset = charset };
+
+        if (dxf.Family is { } family)
+            result = result with { Family = family };
+
+        if (dxf.Bold is { } bold)
+            result = result with { Bold = bold };
+
+        if (dxf.Italic is { } italic)
+            result = result with { Italic = italic };
+
+        if (dxf.Strikethrough is { } strikethrough)
+            result = result with { Strikethrough = strikethrough };
+
+        if (dxf.Outline is { } outline)
+            result = result with { Outline = outline };
+
+        if (dxf.Shadow is { } shadow)
+            result = result with { Shadow = shadow };
+
+        if (dxf.Condense is { } condense)
+            result = result with { Condense = condense };
+
+        if (dxf.Extend is { } extend)
+            result = result with { Extend = extend };
+
+        if (dxf.Color is { } color)
+            result = result with { Color = color };
+
+        if (dxf.Size is { } size)
+            result = result with { Size = size };
+
+        if (dxf.Underline is { } underline)
+            result = result with { Underline = underline };
+
+        if (dxf.VerticalAlignment is { } verticalAlignment)
+            result = result with { VerticalAlignment = verticalAlignment };
+
+        if (dxf.Scheme is { } scheme)
+            result = result with { Scheme = scheme };
+
+        return result;
+    }
+
     private class FontBaseAdapter : IXLFontBase
     {
         private readonly XLFontFormatValue _font;

@@ -182,7 +182,7 @@ namespace ClosedXML.Excel
                 Inline = inline;
             }
 
-            public override bool Equals(object obj) => obj is Text other && Equals(other);
+            public override bool Equals(object? obj) => obj is Text other && Equals(other);
 
             public bool Equals(Text other) => Equals(Value, other.Value) && Inline == other.Inline;
 

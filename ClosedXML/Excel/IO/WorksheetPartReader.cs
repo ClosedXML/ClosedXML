@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
+using StringItem = ClosedXML.Excel.CalcEngine.OneOf<string, ClosedXML.Excel.XLImmutableRichText>;
 
 namespace ClosedXML.Excel.IO;
 
@@ -33,7 +34,7 @@ internal class WorksheetPartReader
     private Int32 _lastRow;
     private Int32 _lastColumnNumber;
 
-    internal void LoadWorksheet(XLWorksheet ws, WorksheetPart worksheetPart, SharedStringItem[] sharedStrings, LoadContext context)
+    internal void LoadWorksheet(XLWorksheet ws, WorksheetPart worksheetPart, List<StringItem> sst, LoadContext context)
     {
         PageSetupProperties pageSetupProperties = null;
 
@@ -82,7 +83,7 @@ internal class WorksheetPartReader
                 else if (reader.ElementType == typeof(Columns))
                     LoadColumns(ws, (Columns)reader.LoadCurrentElement());
                 else if (reader.ElementType == typeof(Row))
-                    LoadRow(ws, sharedStrings, reader);
+                    LoadRow(ws, sst, reader);
                 else if (reader.ElementType == typeof(AutoFilter))
                     AutoFilterReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(SheetProtection))
@@ -200,7 +201,7 @@ internal class WorksheetPartReader
         }
     }
 
-    private void LoadRow(XLWorksheet ws, SharedStringItem[] sharedStrings, OpenXmlPartReader reader)
+    private void LoadRow(XLWorksheet ws, List<StringItem> sst, OpenXmlPartReader reader)
     {
         Debug.Assert(reader.LocalName == "row");
 
@@ -262,7 +263,7 @@ internal class WorksheetPartReader
 
         while (reader.IsStartElement("c"))
         {
-            LoadCell(sharedStrings, ws, reader, rowIndex);
+            LoadCell(sst, ws, reader, rowIndex);
 
             // Move from end element of 'cell' either to next cell, extList start or end of row.
             reader.MoveAhead();
@@ -273,7 +274,7 @@ internal class WorksheetPartReader
             reader.Skip();
     }
 
-    private void LoadCell(SharedStringItem[] sharedStrings, XLWorksheet ws, OpenXmlPartReader reader, Int32 rowIndex)
+    private void LoadCell(List<StringItem> sst, XLWorksheet ws, OpenXmlPartReader reader, int rowIndex)
     {
         Debug.Assert(reader.LocalName == "c" && reader.IsStartElement);
 
@@ -331,7 +332,7 @@ internal class WorksheetPartReader
         var cellHasValue = reader.IsStartElement("v");
         if (cellHasValue)
         {
-            SetCellValue(dataType, reader.GetText(), xlCell, cellFormat, sharedStrings);
+            SetCellValue(dataType, reader.GetText(), xlCell, cellFormat, sst, ws);
 
             // Skips all nodes of the 'v' element (has no child nodes) and moves to the first element after.
             reader.Skip();
@@ -490,7 +491,7 @@ internal class WorksheetPartReader
         return formula;
     }
 
-    private void SetCellValue(CellValues dataType, string cellValue, XLCell xlCell, XLCellFormatValue format, SharedStringItem[] sharedStrings)
+    private void SetCellValue(CellValues dataType, string cellValue, XLCell xlCell, XLCellFormatValue format, List<StringItem> sst, XLWorksheet ws)
     {
         if (dataType == CellValues.Number)
         {
@@ -511,11 +512,20 @@ internal class WorksheetPartReader
         {
             if (cellValue is not null
                 && Int32.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
-                && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
+                && sharedStringId >= 0 && sharedStringId < sst.Count)
             {
-                var sharedString = sharedStrings[sharedStringId];
-
-                SetCellText(xlCell, sharedString);
+                var valueSlice = ws.Internals.CellsCollection.ValueSlice;
+                var sharedString = sst[sharedStringId];
+                if (sharedString.TryPickT0(out var plainText, out var richText))
+                {
+                    valueSlice.SetCellValue(xlCell.Point, plainText);
+                }
+                else
+                {
+                    var cellFormat = ws.GetStyleValue(xlCell.Point);
+                    var adjustedRichText = richText.WithBaseFont(cellFormat.Font);
+                    valueSlice.SetRichText(xlCell.Point, adjustedRichText);
+                }
             }
             else
                 xlCell.SetOnlyValue(String.Empty);
