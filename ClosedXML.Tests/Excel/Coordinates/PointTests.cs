@@ -63,6 +63,7 @@ namespace ClosedXML.Tests.Excel.Coordinates
         }
 
         [Test]
+        [Issue("2881")]
         public void Hash_codes_of_points_in_area_have_few_collisions()
         {
             // Points are used in sets or dictionaries. Make sure the hash function doesn't produce

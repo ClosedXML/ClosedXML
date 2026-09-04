@@ -354,6 +354,7 @@ public class AreaTests
     }
 
     [Test]
+    [Issue("2881")]
     public void Single_cell_areas_hash_codes_have_few_collisions()
     {
         // Areas are used in many dictionaries, such as formula dependency tree. Make sure the hash
