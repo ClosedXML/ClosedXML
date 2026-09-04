@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            return (Row * -1) ^ Column;
+            return HashCode.Combine(Row, Column);
         }
 
         public static bool operator ==(Point a, Point b)

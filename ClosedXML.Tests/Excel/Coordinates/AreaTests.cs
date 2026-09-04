@@ -352,4 +352,22 @@ public class AreaTests
         Assert.AreEqual(expectedRight, right?.ToString());
         Assert.AreEqual(expectedLeft, left?.ToString());
     }
+
+    [Test]
+    public void Single_cell_areas_hash_codes_have_few_collisions()
+    {
+        // Areas are used in many dictionaries, such as formula dependency tree. Make sure the hash
+        // function doesn't produce too many collision. The hash function originally always
+        // produced hash code 0 for all one-cell areas, which caused a terrible set/dictionary
+        // performance.
+        var hashes = new HashSet<int>();
+        for (var row = 1; row <= 100; ++row)
+        {
+            for (var column = 1; column <= 100; ++column)
+                hashes.Add(new Area(new Point(row, column)).GetHashCode());
+        }
+
+        // Some collisions are inevitable, but the vast majority of areas must be distinguishable.
+        Assert.That(hashes.Count, Is.GreaterThan(9900));
+    }
 }

@@ -92,7 +92,7 @@ internal readonly struct Area : IEquatable<Area>, IEnumerable<Point>
 
     public override int GetHashCode()
     {
-        return FirstPoint.GetHashCode() ^ LastPoint.GetHashCode();
+        return HashCode.Combine(FirstPoint, LastPoint);
     }
 
     public static bool operator ==(Area left, Area right) => left.Equals(right);
