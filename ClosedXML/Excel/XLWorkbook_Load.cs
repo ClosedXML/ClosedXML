@@ -1,9 +1,5 @@
 #nullable disable
 
-using ClosedXML.Utils;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.IO;
+using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
@@ -23,7 +24,6 @@ namespace ClosedXML.Excel
     using ClosedXML.IO;
     using Drawings;
     using Op;
-    using System.Drawing;
 
     public partial class XLWorkbook
     {
@@ -92,13 +92,7 @@ namespace ClosedXML.Excel
             ShapeIdManager = new XLIdManager();
             SetProperties(dSpreadsheet);
 
-            SharedStringItem[] sharedStrings = null;
             var workbookPart = dSpreadsheet.WorkbookPart;
-            if (workbookPart.GetPartsOfType<SharedStringTablePart>().Any())
-            {
-                var shareStringPart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-                sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
-            }
 
             LoadWorkbookTheme(workbookPart?.ThemePart, this);
 
@@ -185,6 +179,16 @@ namespace ClosedXML.Excel
                 stylesReader.Load();
             }
 
+            // Spec says each package must have exactly one SST part, but some packages don't have that.
+            List<OneOf<string, XLImmutableRichText>> sst = [];
+            var sstPart = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            if (sstPart is not null)
+            {
+                using var sstXmlReader = CreateTreeReader(sstPart);
+                var sstReader = new SstReader(sstXmlReader, Styles);
+                sst = sstReader.ParseSst();
+            }
+
             // TODO Styles: Verify the column width is same as DefaultColumnWidth even if normal style is missing
             ColumnWidth = XLHelper.CalculateColumnWidth(8, Format.Font, this);
 
@@ -256,7 +260,7 @@ namespace ClosedXML.Excel
                 }
 
                 var worksheetPartReader = new WorksheetPartReader();
-                worksheetPartReader.LoadWorksheet(ws, worksheetPart, sharedStrings, context);
+                worksheetPartReader.LoadWorksheet(ws, worksheetPart, sst, context);
 
                 ws.ConditionalFormats.ReorderAccordingToOriginalPriority();
 

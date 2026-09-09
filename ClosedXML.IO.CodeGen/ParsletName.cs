@@ -5,13 +5,21 @@ using ClosedXML.IO.CodeGen.Model.TopLevel;
 namespace ClosedXML.IO.CodeGen;
 
 /// <summary>
-/// A name for a top-level elements: <see cref="ComplexType"/>, <see cref="GroupDefinition"/> and <see cref="AttributeGroupDefinition"/>.
+/// A name for a elements with a type that can be converted to <c>Parse*</c> calls.
 /// </summary>
 public readonly record struct ParsletName
 {
-    public const string CtPrefix = "CT_";
-    public const string EgPrefix = "EG_";
-    public const string AgPrefix = "AG_";
+    /// <summary>Element has type of <see cref="ComplexType"/></summary>
+    private const string CtPrefix = "CT_";
+
+    /// <summary>Element has type of <see cref="GroupDefinition"/></summary>
+    private const string EgPrefix = "EG_";
+
+    /// <summary>Element has type of <see cref="AttributeGroupDefinition"/></summary>
+    private const string AgPrefix = "AG_";
+
+    /// <summary>Element with a content that should be converted to some type (mostly string).</summary>
+    private const string StPrefix = "ST_";
 
     private static readonly HashSet<string> Special = ["xsd:string"];
 
@@ -52,6 +60,7 @@ public readonly record struct ParsletName
 
         return name.StartsWith(CtPrefix) ||
                name.StartsWith(EgPrefix) ||
-               name.StartsWith(AgPrefix);
+               name.StartsWith(AgPrefix) ||
+               name.StartsWith(StPrefix);
     }
 }

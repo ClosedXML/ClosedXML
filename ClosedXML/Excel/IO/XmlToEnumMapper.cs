@@ -148,6 +148,24 @@ internal sealed class XmlToEnumMapper : IEnumMapper
             { "path", XLGradientType.Path }
         });
 
+        // ST_PhoneticType
+        builder.Add(new BiDictionary<string, XLPhoneticType>
+        {
+            { "halfwidthKatakana", XLPhoneticType.HalfWidthKatakana },
+            { "fullwidthKatakana", XLPhoneticType.FullWidthKatakana },
+            { "Hiragana", XLPhoneticType.Hiragana },
+            { "noConversion", XLPhoneticType.NoConversion },
+        });
+
+        // ST_PhoneticAlignment
+        builder.Add(new BiDictionary<string, XLPhoneticAlignment>
+        {
+            { "noControl", XLPhoneticAlignment.NoControl },
+            { "left", XLPhoneticAlignment.Left },
+            { "center", XLPhoneticAlignment.Center },
+            { "distributed", XLPhoneticAlignment.Distributed },
+        });
+
         return builder.Build();
     }
 

@@ -146,4 +146,19 @@ internal static class XmlTreeReaderExtensions
         enumValue = null;
         return false;
     }
+
+    /// <summary>
+    /// Parse elements that have value in the content, not in the attributes (e.g., formulas).
+    /// </summary>
+    public static Xpr<string> ParseXString(this XmlTreeReader reader, string elementName, string ns)
+    {
+        if (!reader.TryOpen(elementName, ns))
+        {
+            return Xpr.Fail<string>();
+        }
+
+        var content = XStringConvert.Decode(reader.GetContent());
+        reader.Close(elementName, ns);
+        return Xpr.From(content);
+    }
 }
