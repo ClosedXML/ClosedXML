@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.InsertData
 
         public IEnumerable<IEnumerable<XLCellValue>> GetRecords()
         {
-            return _dataRows.Select(r => r.ItemArray.Select(XLCellValue.FromInsertedObject));
+            return _dataRows.Select(GetRow);
         }
 
         public int GetPropertiesCount()
@@ -50,6 +50,15 @@ namespace ClosedXML.Excel.InsertData
                 throw new ArgumentOutOfRangeException($"{propertyIndex} exceeds the number of the table columns");
 
             return _dataTable.Columns[propertyIndex].Caption;
+        }
+
+        private IEnumerable<XLCellValue> GetRow(DataRow row)
+        {
+            for(var i=0; i < row.ItemArray.Length; i++)
+            {
+                var value = row.IsNull(i) ? Blank.Value : row.ItemArray[i];
+                yield return XLCellValue.FromInsertedObject(value);
+            }
         }
     }
 }
