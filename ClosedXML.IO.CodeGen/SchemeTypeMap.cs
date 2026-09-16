@@ -149,6 +149,12 @@ public class SchemeTypeMap
         });
         AddSimpleType(new SimpleTypeMapping
         {
+            Name = "xsd:unsignedByte",
+            CsTypeName = "byte",
+            OptionalTemplate = "_reader.GetOptionalUByte"
+        });
+        AddSimpleType(new SimpleTypeMapping
+        {
             Name = "xsd:int",
             CsTypeName = "int",
             RequiredTemplate = "_reader.GetInt",

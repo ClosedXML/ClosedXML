@@ -32,6 +32,23 @@ internal class XmlTreeReaderAttributesTests
         Assert.That(readValue, Is.EqualTo(expectedValue));
     }
 
+    [TestCase("0", (byte)0)]
+    [TestCase("17", (byte)17)]
+    [TestCase("255", (byte)255)]
+    [TestCase("05", (byte)5)]
+    [TestCase("", null)]
+    [TestCase("3.0", null)]
+    [TestCase("256", null)]
+    [TestCase("-1", null)]
+    [TestCase("one", null)]
+    public void GetOptionalUByte_reads_xsd_compliant_unsignedByte_values(string xmlText, byte? expectedValue)
+    {
+        using var reader = CreateReader(xmlText);
+        var readValue = reader.GetOptionalUByte(AttributeName);
+
+        Assert.That(readValue, Is.EqualTo(expectedValue));
+    }
+
     [TestCase("0", 0)]
     [TestCase("17", 17)]
     [TestCase("2147483647", 2147483647)]
@@ -140,6 +157,7 @@ internal class XmlTreeReaderAttributesTests
         const string xml = $"""
                             <element xmlns:q="{ns}"
                                      q:bool="true"
+                                     q:byte="7"
                                      q:int="-3"
                                      q:uint="9"
                                      q:double="1.5"
@@ -152,6 +170,7 @@ internal class XmlTreeReaderAttributesTests
         using var reader = CreateReaderFromXml(xml, mapper);
 
         Assert.That(reader.GetOptionalBool("bool", ns), Is.True);
+        Assert.That(reader.GetOptionalUByte("byte", ns), Is.EqualTo((byte)7));
         Assert.That(reader.GetOptionalInt("int", ns), Is.EqualTo(-3));
         Assert.That(reader.GetOptionalUInt("uint", ns), Is.EqualTo(9u));
         Assert.That(reader.GetOptionalDouble("double", ns), Is.EqualTo(1.5));

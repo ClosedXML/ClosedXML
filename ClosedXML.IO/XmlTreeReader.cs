@@ -244,6 +244,31 @@ public sealed class XmlTreeReader : IDisposable
         return result;
     }
 
+    public byte? GetOptionalUByte(string attributeName, string? ns = null)
+    {
+        ThrowOnNonStartElement();
+        byte? number = null;
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
+        {
+            try
+            {
+                number = XmlConvert.ToByte(value);
+            }
+            catch (OverflowException e)
+            {
+                if (StrictAttributeParsing)
+                    ThrowAttributeFormatException(attributeName, value, e);
+            }
+            catch (FormatException e)
+            {
+                if (StrictAttributeParsing)
+                    ThrowAttributeFormatException(attributeName, value, e);
+            }
+        }
+
+        return number;
+    }
+
     public int? GetOptionalInt(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
