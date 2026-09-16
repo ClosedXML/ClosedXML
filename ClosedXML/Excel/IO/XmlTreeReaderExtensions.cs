@@ -23,7 +23,7 @@ internal static class XmlTreeReaderExtensions
             return true;
         }
 
-        color = default;
+        color = null;
         return false;
     }
 
@@ -77,7 +77,7 @@ internal static class XmlTreeReaderExtensions
     {
         if (!reader.TryOpen(boolElementName, ns))
         {
-            value = default;
+            value = false;
             return false;
         }
 
@@ -160,5 +160,45 @@ internal static class XmlTreeReaderExtensions
         var content = XStringConvert.Decode(reader.GetContent());
         reader.Close(elementName, ns);
         return Xpr.From(content);
+    }
+
+    /// <summary>
+    /// Return optional <c>ST_CellRef</c>.
+    /// </summary>
+    public static Point? GetOptionalPoint(this XmlTreeReader reader, string attributeName)
+    {
+        var attributeValue = reader.GetOptionalString(attributeName);
+        if (attributeValue is null)
+            return null;
+
+        if (!Point.TryParse(attributeValue, out var point))
+        {
+            if (reader.StrictAttributeParsing)
+                throw PartStructureException.InvalidAttributeFormat(attributeName, attributeValue, reader);
+
+            return null;
+        }
+
+        return point;
+    }
+
+    /// <summary>
+    /// Return optional <c>ST_Ref</c>.
+    /// </summary>
+    public static Area? GetOptionalArea(this XmlTreeReader reader, string attributeName)
+    {
+        var attributeValue = reader.GetOptionalString(attributeName);
+        if (attributeValue is null)
+            return null;
+
+        if (!Area.TryParse(attributeValue, out var area))
+        {
+            if (reader.StrictAttributeParsing)
+                throw PartStructureException.InvalidAttributeFormat(attributeName, attributeValue, reader);
+
+            return null;
+        }
+
+        return area;
     }
 }

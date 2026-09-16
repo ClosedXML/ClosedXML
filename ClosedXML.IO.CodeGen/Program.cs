@@ -43,6 +43,10 @@ public static class Program
                 GeneratePartialRstReader(schema, target);
                 break;
 
+            case "partial-sheet-data":
+                GeneratePartialSheetDataReader(schema, target);
+                break;
+
             default:
                 Console.WriteLine($"Unknown command '{command}'");
                 break;
@@ -257,6 +261,83 @@ public static class Program
         var rstSource = rstGenerator.Generate();
         File.WriteAllText(target, rstSource);
         Console.WriteLine(rstSource);
+    }
+
+    /// <summary>
+    /// Generate a partial reader to read <c>CT_SheetData</c>.
+    /// </summary>
+    private static void GeneratePartialSheetDataReader(Schema schema, string target)
+    {
+        // Add <row> ac:dyDescent attribute. It's one of few MCE attribute
+        var row = schema.Entries.OfType<ComplexTypeSequence>().Single(x => x.Name == "CT_Row");
+        row.Attributes.Add(new AttributeElement
+        {
+            Name = "dyDescent",
+            NsName = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac",
+            Type = "xsd:double",
+            RefName = null,
+        });
+
+        var typeMap = new SchemeTypeMap()
+            .AddPrimitiveTypes()
+            .AddSimpleType(new SimpleTypeMapping 
+            {
+                // ST_CellSpans is a list of spans the cell uses in the row, but is unreliable thus discarded. Just use string.
+                Name = "ST_CellSpans",
+                CsTypeName = "string",
+                OptionalTemplate = "_reader.GetOptionalString"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_CellRef",
+                CsTypeName = "Point",
+                OptionalTemplate = "_reader.GetOptionalPoint"
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_CellType",
+                CsTypeName = "string",
+                RequiredTemplate = "_reader.GetString",
+                OptionalTemplate = "_reader.GetOptionalString",
+                MapValue = x => x == "n" ? "\"n\"" : throw new NotSupportedException()
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                // Keep "" for default value of ST_CellFormulaType so normal type can be checked by a empty string check
+                Name = "ST_CellFormulaType",
+                CsTypeName = "string",
+                OptionalTemplate = "_reader.GetOptionalString",
+                MapValue = x => x == "normal" ? "string.Empty" : throw new NotSupportedException()
+            })
+            .AddSimpleType(new SimpleTypeMapping
+            {
+                Name = "ST_Ref",
+                CsTypeName = "Area",
+                OptionalTemplate = "_reader.GetOptionalArea"
+            })
+
+            .AddComplexTypeMapping("s:ST_Xstring", "string")
+            .AddComplexTypeMapping("CT_Rst", "StringItem")
+
+            .AddParseCall("s:ST_Xstring", "_reader.ParseXString")
+            .AddParseCall("CT_Rst", "_rstReader.ParseCtRst")
+            ;
+
+        var sheetDataGenerator = new ParserGenerator(schema, typeMap, "SheetDataReader")
+            .WithNamespace("ClosedXML.Excel.IO")
+            .AddUsing("System.Collections.Generic")
+            .AddUsing("ClosedXML.IO")
+            .AddUsing("StringItem = ClosedXML.Excel.CalcEngine.OneOf<string, ClosedXML.Excel.XLImmutableRichText>")
+
+            .AddParseMethod("CT_SheetData") // 2232
+            .AddParseMethod("CT_Row") // 2274
+            .AddParseMethod("CT_Cell") // 2292
+            .AddParseMethod("CT_CellFormula") // 2772
+            ;
+
+        var sheetDataSource = sheetDataGenerator.Generate();
+        File.WriteAllText(target, sheetDataSource);
+        Console.WriteLine(sheetDataSource);
     }
 
     /// <summary>

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using ClosedXML.Excel.Formatting;
+using System.Reflection;
+using System.Xml;
 using ClosedXML.Extensions;
 using ClosedXML.IO;
-using ClosedXML.Parser;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -20,25 +18,17 @@ namespace ClosedXML.Excel.IO;
 
 internal class WorksheetPartReader
 {
-    private static readonly string[] DateCellFormats =
-    {
-        "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff", // Format accepted by OpenXML SDK
-        "yyyy-MM-ddTHH:mm", "yyyy-MM-dd" // Formats accepted by Excel.
-    };
+    private static readonly FieldInfo OpenXmlPartXmlReaderField = typeof(OpenXmlPartReader).GetField("_xmlReader", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new InvalidOperationException("OpenXmlPartReader._xmlReader was not found.");
 
-    private readonly Dictionary<UInt32, String> _sharedFormulasR1C1 = new();
+    private static readonly FieldInfo OpenXmlPartElementStateField = typeof(OpenXmlPartReader).GetField("_elementState", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new InvalidOperationException("OpenXmlPartReader._elementState was not found.");
 
-    /// <summary>
-    /// Row number of last read <c>row</c> element.
-    /// </summary>
-    private Int32 _lastRow;
-    private Int32 _lastColumnNumber;
+    private static readonly object OpenXmlLoadEndState = Enum.Parse(OpenXmlPartElementStateField.FieldType, "LoadEnd");
 
     internal void LoadWorksheet(XLWorksheet ws, WorksheetPart worksheetPart, List<StringItem> sst, LoadContext context)
     {
         PageSetupProperties pageSetupProperties = null;
-
-        _lastRow = 0;
 
         using (var reader = new OpenXmlPartReader(worksheetPart))
         {
@@ -82,8 +72,8 @@ internal class WorksheetPartReader
                 }
                 else if (reader.ElementType == typeof(Columns))
                     LoadColumns(ws, (Columns)reader.LoadCurrentElement());
-                else if (reader.ElementType == typeof(Row))
-                    LoadRow(ws, sst, reader);
+                else if (reader.ElementType == typeof(SheetData))
+                    LoadSheetData(ws, sst, reader);
                 else if (reader.ElementType == typeof(AutoFilter))
                     AutoFilterReader.LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
                 else if (reader.ElementType == typeof(SheetProtection))
@@ -115,6 +105,27 @@ internal class WorksheetPartReader
             }
             reader.Close();
         }
+    }
+
+    // TODO: Replace temporary method to read <SheetData>, so it doesn't have to touch the OpenXmlPartReader internals
+    private static void LoadSheetData(XLWorksheet ws, List<StringItem> sst, OpenXmlPartReader reader)
+    {
+        var xmlReader = (XmlReader)OpenXmlPartXmlReaderField.GetValue(reader);
+
+        // Empty <sheetData/> is already consumed by OpenXmlPartReader (LeafStart).
+        if (xmlReader.NodeType != XmlNodeType.Element || xmlReader.IsEmptyElement)
+            return;
+
+        using (var treeReader = new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance, ws.Workbook.StrictAttributeParsing, leaveOpen: true))
+        {
+            var sheetDataReader = new SheetDataReader(treeReader, ws, ws.Workbook.Styles, sst);
+            sheetDataReader.ParseCtSheetData("sheetData", OpenXmlConst.Main2006SsNs);
+        }
+
+        if (xmlReader.NodeType == XmlNodeType.EndElement)
+            xmlReader.Read();
+
+        OpenXmlPartElementStateField.SetValue(reader, OpenXmlLoadEndState);
     }
 
     private static void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
@@ -198,439 +209,6 @@ internal class WorksheetPartReader
             {
                 ApplyStyle(xlColumns, checked((int)styleIndex), ws.Workbook.Styles);
             }
-        }
-    }
-
-    private void LoadRow(XLWorksheet ws, List<StringItem> sst, OpenXmlPartReader reader)
-    {
-        Debug.Assert(reader.LocalName == "row");
-
-        var attributes = reader.Attributes;
-        var rowIndexAttr = attributes.GetAttribute("r");
-
-        // Row number is an optional attribute. If not specified, it should be a next row from the last read row.
-        var rowIndex = string.IsNullOrEmpty(rowIndexAttr) ? ++_lastRow : int.Parse(rowIndexAttr);
-        _lastRow = rowIndex;
-
-        var xlRow = ws.Row(rowIndex, false);
-
-        var height = attributes.GetDoubleAttribute("ht");
-        if (height is not null)
-        {
-            xlRow.Height = height.Value;
-        }
-        else
-        {
-            xlRow.Loading = true;
-            xlRow.Height = ws.RowHeight;
-            xlRow.Loading = false;
-        }
-
-        var dyDescent = attributes.GetDoubleAttribute("dyDescent", OpenXmlConst.X14Ac2009SsNs);
-        if (dyDescent is not null)
-            xlRow.DyDescent = dyDescent.Value;
-
-        var hidden = attributes.GetBoolAttribute("hidden", false);
-        if (hidden)
-            xlRow.Hide();
-
-        var collapsed = attributes.GetBoolAttribute("collapsed", false);
-        if (collapsed)
-            xlRow.Collapsed = true;
-
-        var outlineLevel = attributes.GetIntAttribute("outlineLevel");
-        if (outlineLevel is not null && outlineLevel.Value > 0)
-            xlRow.OutlineLevel = outlineLevel.Value;
-
-        var showPhonetic = attributes.GetBoolAttribute("ph", false);
-        if (showPhonetic)
-            xlRow.ShowPhonetic = true;
-
-        var customFormat = attributes.GetBoolAttribute("customFormat", false);
-        if (customFormat)
-        {
-            var styleIndex = attributes.GetIntAttribute("s");
-            if (styleIndex is not null)
-            {
-                ApplyStyle(xlRow, styleIndex.Value, ws.Workbook.Styles);
-            }
-        }
-
-        _lastColumnNumber = 0;
-
-        // Move from the start element of 'row' forward. We can get cell, extList or end of row.
-        reader.MoveAhead();
-
-        while (reader.IsStartElement("c"))
-        {
-            LoadCell(sst, ws, reader, rowIndex);
-
-            // Move from end element of 'cell' either to next cell, extList start or end of row.
-            reader.MoveAhead();
-        }
-
-        // In theory, row can also contain extList, just skip them.
-        while (reader.IsStartElement("extLst"))
-            reader.Skip();
-    }
-
-    private void LoadCell(List<StringItem> sst, XLWorksheet ws, OpenXmlPartReader reader, int rowIndex)
-    {
-        Debug.Assert(reader.LocalName == "c" && reader.IsStartElement);
-
-        var attributes = reader.Attributes;
-
-        var cellAddress = attributes.GetCellRefAttribute("r") ?? new Point(rowIndex, _lastColumnNumber + 1);
-        _lastColumnNumber = cellAddress.Column;
-
-        var dataType = attributes.GetAttribute("t") switch
-        {
-            "b" => CellValues.Boolean,
-            "n" => CellValues.Number,
-            "e" => CellValues.Error,
-            "s" => CellValues.SharedString,
-            "str" => CellValues.String,
-            "inlineStr" => CellValues.InlineString,
-            "d" => CellValues.Date,
-            null => CellValues.Number,
-            _ => throw new FormatException($"Unknown cell type.")
-        };
-
-        var xlCell = ws.Cell(cellAddress.Row, cellAddress.Column);
-
-        var xfId = attributes.GetIntAttribute("s") ?? 0;
-        var cellFormat = ws.Workbook.Styles.CellFormats[xfId];
-        xlCell.FormatValue = cellFormat;
-
-        var showPhonetic = attributes.GetBoolAttribute("ph", false);
-        if (showPhonetic)
-            xlCell.ShowPhonetic = true;
-
-        var cellMetaIndex = attributes.GetUintAttribute("cm");
-        if (cellMetaIndex is not null)
-            xlCell.CellMetaIndex = cellMetaIndex.Value;
-
-        var valueMetaIndex = attributes.GetUintAttribute("vm");
-        if (valueMetaIndex is not null)
-            xlCell.ValueMetaIndex = valueMetaIndex.Value;
-
-        // Move from cell start element onwards.
-        reader.MoveAhead();
-
-        var cellHasFormula = reader.IsStartElement("f");
-        XLCellFormula formula = null;
-        if (cellHasFormula)
-        {
-            formula = SetCellFormula(ws, cellAddress, reader);
-
-            // Move from end of 'f' element.
-            reader.MoveAhead();
-        }
-
-        // Unified code to load value. Value can be empty and only type specified (e.g. when formula doesn't save values)
-        // String type is only for formulas, while shared string/inline string/date is only for pure cell values.
-        var cellHasValue = reader.IsStartElement("v");
-        if (cellHasValue)
-        {
-            SetCellValue(dataType, reader.GetText(), xlCell, cellFormat, sst, ws);
-
-            // Skips all nodes of the 'v' element (has no child nodes) and moves to the first element after.
-            reader.Skip();
-        }
-        else
-        {
-            // A string cell must contain at least empty string.
-            if (dataType.Equals(CellValues.SharedString) || dataType.Equals(CellValues.String))
-                xlCell.SetOnlyValue(string.Empty);
-        }
-
-        // If the cell doesn't contain value, we should invalidate it, otherwise rely on the stored value.
-        // The value is likely more reliable. It should be set when cellFormula.CalculateCell is set or
-        // when value is missing. Formula can be null in some cases, e.g. slave cells of array formula.
-        if (formula is not null && !cellHasValue)
-        {
-            formula.IsDirty = true;
-        }
-
-        // Inline text is dealt separately, because it is in a separate element.
-        var cellHasInlineString = reader.IsStartElement("is");
-        if (cellHasInlineString)
-        {
-            if (dataType == CellValues.InlineString)
-            {
-                xlCell.ShareString = false;
-                var inlineString = (RstType)reader.LoadCurrentElement();
-                if (inlineString is not null)
-                {
-                    if (inlineString.Text is not null)
-                        xlCell.SetOnlyValue(inlineString.Text.Text.FixNewLines());
-                    else
-                        SetCellText(xlCell, inlineString);
-                }
-                else
-                {
-                    xlCell.SetOnlyValue(String.Empty);
-                }
-
-                // Move from end 'is' element to the end of a 'c' element.
-                reader.MoveAhead();
-            }
-            else
-            {
-                // Move to the first node after end of 'is' element, which should be end of cell.
-                reader.Skip();
-            }
-        }
-
-        if (ws.Workbook.Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
-        {
-            // Internally ClosedXML stores cells as standard 1900-based style
-            // so if a workbook is in 1904-format, we do that adjustment here and when saving.
-            xlCell.SetOnlyValue(xlCell.GetDateTime().AddDays(1462));
-        }
-    }
-
-    private XLCellFormula SetCellFormula(XLWorksheet ws, Point cellAddress, OpenXmlPartReader reader)
-    {
-        var attributes = reader.Attributes;
-        var formulaSlice = ws.Internals.CellsCollection.FormulaSlice;
-        var valueSlice = ws.Internals.CellsCollection.ValueSlice;
-
-        // bx attribute of cell formula is not ever used, per MS-OI29500 2.1.620
-        var formulaText = reader.GetText();
-        var formulaType = attributes.GetAttribute("t") switch
-        {
-            "normal" => CellFormulaValues.Normal,
-            "array" => CellFormulaValues.Array,
-            "dataTable" => CellFormulaValues.DataTable,
-            "shared" => CellFormulaValues.Shared,
-            null => CellFormulaValues.Normal,
-            _ => throw new NotSupportedException("Unknown formula type.")
-        };
-
-        // Always set shareString flag to `false`, because the text result of
-        // formula is stored directly in the sheet, not shared string table.
-        XLCellFormula formula = null;
-        if (formulaType == CellFormulaValues.Normal)
-        {
-            formula = XLCellFormula.NormalA1(formulaText);
-            formulaSlice.Set(cellAddress, formula);
-            valueSlice.SetShareString(cellAddress, false);
-        }
-        else if (formulaType == CellFormulaValues.Array && attributes.GetRefAttribute("ref") is { } arrayArea) // Child cells of an array may have array type, but not ref, that is reserved for master cell
-        {
-            var aca = attributes.GetBoolAttribute("aca", false);
-
-            // Because cells are read from top-to-bottom, from left-to-right, none of child cells have
-            // a formula yet. Also, Excel doesn't allow change of array data, only through parent formula.
-            formula = XLCellFormula.Array(formulaText, arrayArea, aca);
-            formulaSlice.SetArray(arrayArea, formula);
-
-            for (var col = arrayArea.FirstPoint.Column; col <= arrayArea.LastPoint.Column; ++col)
-            {
-                for (var row = arrayArea.FirstPoint.Row; row <= arrayArea.LastPoint.Row; ++row)
-                {
-                    valueSlice.SetShareString(cellAddress, false);
-                }
-            }
-        }
-        else if (formulaType == CellFormulaValues.Shared && attributes.GetUintAttribute("si") is { } sharedIndex)
-        {
-            // Shared formulas are rather limited in use and parsing, even by Excel
-            // https://stackoverflow.com/questions/54654993. Therefore we accept them,
-            // but don't output them. Shared formula is created, when user in Excel
-            // takes a supported formula and drags it to more cells.
-            if (!_sharedFormulasR1C1.TryGetValue(sharedIndex, out var sharedR1C1Formula))
-            {
-                // Spec: The first formula in a group of shared formulas is saved
-                // in the f element. This is considered the 'master' formula cell.
-                formula = XLCellFormula.NormalA1(formulaText);
-                formulaSlice.Set(cellAddress, formula);
-
-                // The key reason why Excel hates shared formulas is likely relative addressing and the messy situation it creates
-                var formulaR1C1 = FormulaConverter.ToR1C1(formulaText, cellAddress.Row, cellAddress.Column);
-                _sharedFormulasR1C1.Add(sharedIndex, formulaR1C1);
-            }
-            else
-            {
-                // Spec: The formula expression for a cell that is specified to be part of a shared formula
-                // (and is not the master) shall be ignored, and the master formula shall override.
-                var sharedFormulaA1 = FormulaConverter.ToA1(sharedR1C1Formula, cellAddress.Row, cellAddress.Column);
-                formula = XLCellFormula.NormalA1(sharedFormulaA1);
-                formulaSlice.Set(cellAddress, formula);
-            }
-
-            valueSlice.SetShareString(cellAddress, false);
-        }
-        else if (formulaType == CellFormulaValues.DataTable && attributes.GetRefAttribute("ref") is { } dataTableArea)
-        {
-            var is2D = attributes.GetBoolAttribute("dt2D", false);
-            var input1Deleted = attributes.GetBoolAttribute("del1", false);
-            var input1 = attributes.GetCellRefAttribute("r1") ?? throw PartStructureException.MissingAttribute("r1");
-            if (is2D)
-            {
-                // Input 2 is only used for 2D tables
-                var input2Deleted = attributes.GetBoolAttribute("del2", false);
-                var input2 = attributes.GetCellRefAttribute("r2") ?? throw PartStructureException.MissingAttribute("r2");
-                formula = XLCellFormula.DataTable2D(dataTableArea, input1, input1Deleted, input2, input2Deleted);
-                formulaSlice.Set(cellAddress, formula);
-            }
-            else
-            {
-                var isRowDataTable = attributes.GetBoolAttribute("dtr", false);
-                formula = XLCellFormula.DataTable1D(dataTableArea, input1, input1Deleted, isRowDataTable);
-                formulaSlice.Set(cellAddress, formula);
-            }
-
-            valueSlice.SetShareString(cellAddress, false);
-        }
-
-        // Go from start of 'f' element to the end of 'f' element.
-        reader.MoveAhead();
-
-        return formula;
-    }
-
-    private void SetCellValue(CellValues dataType, string cellValue, XLCell xlCell, XLCellFormatValue format, List<StringItem> sst, XLWorksheet ws)
-    {
-        if (dataType == CellValues.Number)
-        {
-            // XLCell is by default blank, so no need to set it.
-            if (cellValue is not null && double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var number))
-            {
-                var numberDataType = format.NumberFormat.GetNumberDataType();
-                var cellNumber = numberDataType switch
-                {
-                    XLDataType.DateTime => XLCellValue.FromSerialDateTime(number),
-                    XLDataType.TimeSpan => XLCellValue.FromSerialTimeSpan(number),
-                    _ => number // Normal number
-                };
-                xlCell.SetOnlyValue(cellNumber);
-            }
-        }
-        else if (dataType == CellValues.SharedString)
-        {
-            if (cellValue is not null
-                && Int32.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
-                && sharedStringId >= 0 && sharedStringId < sst.Count)
-            {
-                var valueSlice = ws.Internals.CellsCollection.ValueSlice;
-                var sharedString = sst[sharedStringId];
-                if (sharedString.TryPickT0(out var plainText, out var richText))
-                {
-                    valueSlice.SetCellValue(xlCell.Point, plainText);
-                }
-                else
-                {
-                    var cellFormat = ws.GetStyleValue(xlCell.Point);
-                    var adjustedRichText = richText.WithBaseFont(cellFormat.Font);
-                    valueSlice.SetRichText(xlCell.Point, adjustedRichText);
-                }
-            }
-            else
-                xlCell.SetOnlyValue(String.Empty);
-        }
-        else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
-        {
-            xlCell.SetOnlyValue(cellValue ?? String.Empty);
-        }
-        else if (dataType == CellValues.Boolean)
-        {
-            if (cellValue is not null)
-            {
-                var isTrue = string.Equals(cellValue, "1", StringComparison.Ordinal) ||
-                             string.Equals(cellValue, "TRUE", StringComparison.OrdinalIgnoreCase);
-                xlCell.SetOnlyValue(isTrue);
-            }
-        }
-        else if (dataType == CellValues.Error)
-        {
-            if (cellValue is not null && XLErrorParser.TryParseError(cellValue, out var error))
-                xlCell.SetOnlyValue(error);
-        }
-        else if (dataType == CellValues.Date)
-        {
-            // Technically, cell can contain date as ISO8601 string, but not rarely used due
-            // to inconsistencies between ISO and serial date time representation.
-            if (cellValue is not null)
-            {
-                var date = DateTime.ParseExact(cellValue, DateCellFormats,
-                    XLHelper.ParseCulture,
-                    DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
-                xlCell.SetOnlyValue(date);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Parses the cell value for normal or rich text
-    /// Input element should either be a shared string or inline string
-    /// </summary>
-    /// <param name="xlCell">The cell.</param>
-    /// <param name="element">The element (either a shared string or inline string)</param>
-    private void SetCellText(XLCell xlCell, RstType element)
-    {
-        // TODO Styles: Create XLImmutableRichText and assign directly instead of using the API.
-        var runs = element.Elements<Run>();
-        var hasRuns = false;
-        foreach (Run run in runs)
-        {
-            hasRuns = true;
-            var runProperties = run.RunProperties;
-            String text = run.Text.InnerText.FixNewLines();
-
-            if (runProperties == null)
-                xlCell.GetRichText().AddText(text, xlCell.Style.Font);
-            else
-            {
-                var rt = xlCell.GetRichText().AddText(text);
-                var fontScheme = runProperties.Elements<FontScheme>().FirstOrDefault();
-                if (fontScheme != null && fontScheme.Val is not null)
-                    rt.SetFontScheme(fontScheme.Val.Value.ToClosedXml());
-
-                OpenXmlHelper.LoadFont(runProperties, rt);
-            }
-        }
-
-        if (!hasRuns)
-            xlCell.SetOnlyValue(XStringConvert.Decode(element.Text?.InnerText) ?? string.Empty);
-
-        // Load phonetic properties
-        var phoneticProperties = element.Elements<PhoneticProperties>();
-        var pp = phoneticProperties.FirstOrDefault();
-        if (pp != null)
-        {
-            var xlPhoneticPr = xlCell.GetRichText().Phonetics;
-
-            if (pp.Alignment != null)
-                xlPhoneticPr.Alignment = pp.Alignment.Value.ToClosedXml();
-            if (pp.Type != null)
-                xlPhoneticPr.Type = pp.Type.Value.ToClosedXml();
-            if (pp.FontId?.Value is { } fontId)
-            {
-                var phoneticsFont = xlCell.Worksheet.Workbook.Styles.Fonts[checked((int)fontId)];
-
-                xlPhoneticPr.Bold = phoneticsFont.Bold;
-                xlPhoneticPr.Italic = phoneticsFont.Italic;
-                xlPhoneticPr.Underline = phoneticsFont.Underline;
-                xlPhoneticPr.Strikethrough = phoneticsFont.Strikethrough;
-                xlPhoneticPr.VerticalAlignment = phoneticsFont.VerticalAlignment;
-                xlPhoneticPr.Shadow = phoneticsFont.Shadow;
-                xlPhoneticPr.FontSize = phoneticsFont.Size.Points;
-                xlPhoneticPr.FontColor = phoneticsFont.Color;
-                xlPhoneticPr.FontName = phoneticsFont.Name.Text;
-                xlPhoneticPr.FontFamilyNumbering = phoneticsFont.Family;
-                xlPhoneticPr.FontCharSet = phoneticsFont.Charset;
-                xlPhoneticPr.FontScheme = phoneticsFont.Scheme;
-            }
-        }
-
-        // Load phonetic runs
-        var phoneticRuns = element.Elements<PhoneticRun>();
-        foreach (PhoneticRun pr in phoneticRuns)
-        {
-            xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
-                                          (Int32)pr.EndingBaseIndex.Value);
         }
     }
 
