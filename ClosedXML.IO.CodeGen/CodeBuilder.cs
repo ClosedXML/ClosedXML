@@ -11,7 +11,7 @@ internal class CodeBuilder
     /// C# keywords. The variables with that name must be escaped, e.g. <c>in</c> must be
     /// <c>@in</c>.
     /// </summary>
-    private static readonly HashSet<string> Keywords = ["in", "out", "ref", "char"];
+    private static readonly HashSet<string> Keywords = ["in", "out", "ref", "char", "is"];
 
     private readonly SchemeTypeMap _typeMap;
     private readonly StringBuilder _sb;
