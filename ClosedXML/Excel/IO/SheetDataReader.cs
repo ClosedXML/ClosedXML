@@ -337,7 +337,7 @@ internal partial class SheetDataReader
         if (dataType == CellValues.Number)
         {
             // XLCell is by default blank, so no need to set it.
-            if (cellValue is not null && double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var number))
+            if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var number))
             {
                 var numberDataType = format.NumberFormat.GetNumberDataType();
                 var cellNumber = numberDataType switch
@@ -351,8 +351,7 @@ internal partial class SheetDataReader
         }
         else if (dataType == CellValues.SharedString)
         {
-            if (cellValue is not null
-                && int.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out int sharedStringId)
+            if (int.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var sharedStringId)
                 && sharedStringId >= 0 && sharedStringId < _sst.Count)
             {
                 var sharedString = _sst[sharedStringId];
@@ -363,33 +362,27 @@ internal partial class SheetDataReader
         }
         else if (dataType == CellValues.String) // A plain string that is a result of a formula calculation
         {
-            xlCell.SetOnlyValue(cellValue ?? string.Empty);
+            xlCell.SetOnlyValue(cellValue);
         }
         else if (dataType == CellValues.Boolean)
         {
-            if (cellValue is not null)
-            {
-                var isTrue = string.Equals(cellValue, "1", StringComparison.Ordinal) ||
-                             string.Equals(cellValue, "TRUE", StringComparison.OrdinalIgnoreCase);
-                xlCell.SetOnlyValue(isTrue);
-            }
+            var isTrue = string.Equals(cellValue, "1", StringComparison.Ordinal) ||
+                         string.Equals(cellValue, "TRUE", StringComparison.OrdinalIgnoreCase);
+            xlCell.SetOnlyValue(isTrue);
         }
         else if (dataType == CellValues.Error)
         {
-            if (cellValue is not null && XLErrorParser.TryParseError(cellValue, out var error))
+            if (XLErrorParser.TryParseError(cellValue, out var error))
                 xlCell.SetOnlyValue(error);
         }
         else if (dataType == CellValues.Date)
         {
             // Technically, cell can contain date as ISO8601 string, but not rarely used due
             // to inconsistencies between ISO and serial date time representation.
-            if (cellValue is not null)
-            {
-                var date = DateTime.ParseExact(cellValue, DateCellFormats,
-                    XLHelper.ParseCulture,
-                    DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
-                xlCell.SetOnlyValue(date);
-            }
+            var date = DateTime.ParseExact(cellValue, DateCellFormats,
+                XLHelper.ParseCulture,
+                DateTimeStyles.AllowLeadingWhite | DateTimeStyles.AllowTrailingWhite);
+            xlCell.SetOnlyValue(date);
         }
     }
 
