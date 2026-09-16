@@ -45,6 +45,23 @@ namespace ClosedXML.Excel
         IXLColumns AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
 
         /// <summary>
+        /// Returns a collection of the same type containing the columns that match the predicate.
+        /// </summary>
+        IXLColumns Where(Func<IXLColumn, Boolean> predicate);
+
+        /// <summary>
+        /// Returns a collection of the same type containing all columns after the first
+        /// <paramref name="count"/> columns, in column-number order.
+        /// </summary>
+        IXLColumns Skip(Int32 count);
+
+        /// <summary>
+        /// Returns a collection of the same type containing the first <paramref name="count"/>
+        /// columns, in column-number order.
+        /// </summary>
+        IXLColumns Take(Int32 count);
+
+        /// <summary>
         /// Hides all columns.
         /// </summary>
         void Hide();
