@@ -147,7 +147,6 @@ public class SchemeTypeMap
             RequiredTemplate = "_reader.GetByte",
             OptionalTemplate = "_reader.GetOptionalByte"
         });
-        });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:int",

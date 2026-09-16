@@ -129,6 +129,50 @@ internal class XmlTreeReaderAttributesTests
         Assert.That(readValue, Is.EqualTo(enumValue));
     }
 
+    [Test]
+    public void Attribute_readers_read_qualified_attribute_values()
+    {
+        const string ns = "http://example.com/attributes";
+        var mapper = new XmlToEnumMapper.Builder().Add(new BiDictionary<string, BindingFlags>
+        {
+            { "ci", BindingFlags.IgnoreCase },
+        }).Build();
+        const string xml = $"""
+                            <element xmlns:q="{ns}"
+                                     q:bool="true"
+                                     q:int="-3"
+                                     q:uint="9"
+                                     q:double="1.5"
+                                     q:date="2020-01-02"
+                                     q:str="hello"
+                                     q:enum="ci"
+                                     bool="false"
+                                     str="unqualified"/>
+                            """;
+        using var reader = CreateReaderFromXml(xml, mapper);
+
+        Assert.That(reader.GetOptionalBool("bool", ns), Is.True);
+        Assert.That(reader.GetOptionalInt("int", ns), Is.EqualTo(-3));
+        Assert.That(reader.GetOptionalUInt("uint", ns), Is.EqualTo(9u));
+        Assert.That(reader.GetOptionalDouble("double", ns), Is.EqualTo(1.5));
+        Assert.That(reader.GetOptionalDateTime("date", ns), Is.EqualTo(new DateTime(2020, 1, 2)));
+        Assert.That(reader.GetOptionalString("str", ns), Is.EqualTo("hello"));
+        Assert.That(reader.GetOptionalEnum<BindingFlags>("enum", ns), Is.EqualTo(BindingFlags.IgnoreCase));
+
+        Assert.That(reader.GetOptionalBool("bool"), Is.False);
+        Assert.That(reader.GetOptionalString("str"), Is.EqualTo("unqualified"));
+        Assert.That(reader.GetOptionalInt("int"), Is.Null);
+        Assert.That(reader.GetOptionalString("missing", ns), Is.Null);
+    }
+
+    private static XmlTreeReader CreateReaderFromXml(string xml, XmlToEnumMapper mapper)
+    {
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+        var reader = new XmlTreeReader(stream, mapper, false);
+        reader.Open("element", string.Empty);
+        return reader;
+    }
+
     private static XmlTreeReader CreateReader(string attributeValue, XmlToEnumMapper mapper = null)
     {
         var xmlContext = $"<element {AttributeName}=\"{attributeValue}\"/>";

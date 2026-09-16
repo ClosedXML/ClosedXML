@@ -62,7 +62,14 @@ public class MceXmlReader : IXmlReader
     /// </summary>
     private int? _inAdee;
 
+    private readonly bool _leaveOpen;
+
     public MceXmlReader(XmlReader reader, MceSettings settings)
+        : this(reader, settings, leaveOpen: false)
+    {
+    }
+
+    public MceXmlReader(XmlReader reader, MceSettings settings, bool leaveOpen)
     {
         const string mceNs = "http://schemas.openxmlformats.org/markup-compatibility/2006";
 
@@ -89,6 +96,13 @@ public class MceXmlReader : IXmlReader
         }
 
         _signalMismatch = settings.SignalMismatch;
+        _leaveOpen = leaveOpen;
+
+        if (reader.NodeType == XmlNodeType.Element)
+        {
+            TrackMceAttributes();
+            NodeType = XmlTreeNodeType.OpenElement;
+        }
     }
 
     /// <inheritdoc/>
@@ -176,7 +190,8 @@ public class MceXmlReader : IXmlReader
     /// <inheritdoc/>
     public void Dispose()
     {
-        _reader.Dispose();
+        if (!_leaveOpen)
+            _reader.Dispose();
     }
 
     private bool IsIgnored()

@@ -93,13 +93,40 @@ public sealed class XmlTreeReader : IDisposable
     private readonly List<string> _context = new();
 
     public XmlTreeReader(Stream stream, IEnumMapper enumMapper, bool strictAttributeParsing)
+        : this(XmlReader.Create(stream, Settings), enumMapper, strictAttributeParsing, leaveOpen: false)
     {
-        _reader = new MceXmlReader(XmlReader.Create(stream, Settings), new MceSettings
+    }
+
+    /// <summary>
+    /// Create a new instance MCE-aware reader that wraps around the <see cref="XmlReader"/>. The reader will throw
+    /// on malformed attributes and will close the underlaying stream when disposed.
+    /// </summary>
+    /// <param name="xmlReader">Wrapped XML reader.</param>
+    /// <param name="enumMapper">A mapper for converting enum values to </param>
+    public XmlTreeReader(XmlReader xmlReader, IEnumMapper enumMapper)
+        : this(xmlReader, enumMapper, true, false)
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance MCE-aware reader that wraps around the <see cref="XmlReader"/>.
+    /// </summary>
+    /// <param name="xmlReader">Wrapped XML reader.</param>
+    /// <param name="enumMapper">A mapper for converting enum values to </param>
+    /// <param name="strictAttributeParsing">Should malformed attributes throw an exception (<c>false</c>) or be treated as missing attributes (<c>false</c>)?</param>
+    /// <param name="leaveOpen">Should the <paramref name="xmlReader"/> be closed and disposed when this instance is disposed of?</param>
+    public XmlTreeReader(XmlReader xmlReader, IEnumMapper enumMapper, bool strictAttributeParsing, bool leaveOpen)
+    {
+        _reader = new MceXmlReader(xmlReader, new MceSettings
         {
             SignalMismatch = info => throw PartStructureException.MceError(info.LineInfo, "Mismatch between consuming application capability and document requirements.")
-        });
+        }, leaveOpen);
         _enumMapper = enumMapper;
         StrictAttributeParsing = strictAttributeParsing;
+
+        // The usage pattern of XmlTreeReader expects to call TryOpen as the first call. Set the lookup state so it
+        // tries to open the current or closest next element.
+        _inLookup = xmlReader.NodeType is XmlNodeType.Element;
     }
 
     /// <summary>
@@ -197,11 +224,11 @@ public sealed class XmlTreeReader : IDisposable
         _inLookup = false;
     }
 
-    public bool? GetOptionalBool(string attributeName)
+    public bool? GetOptionalBool(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
         bool? result = null;
-        if (_reader.GetAttribute(attributeName, null) is { } value)
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
         {
             try
             {
@@ -217,11 +244,11 @@ public sealed class XmlTreeReader : IDisposable
         return result;
     }
 
-    public int? GetOptionalInt(string attributeName)
+    public int? GetOptionalInt(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
         int? number = null;
-        if (_reader.GetAttribute(attributeName, null) is { } value)
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
         {
             try
             {
@@ -242,11 +269,11 @@ public sealed class XmlTreeReader : IDisposable
         return number;
     }
 
-    public uint? GetOptionalUInt(string attributeName)
+    public uint? GetOptionalUInt(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
         long? number = null;
-        if (_reader.GetAttribute(attributeName, null) is { } value)
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
         {
             try
             {
@@ -275,11 +302,11 @@ public sealed class XmlTreeReader : IDisposable
         return number is not null ? (uint)number : null;
     }
 
-    public double? GetOptionalDouble(string attributeName)
+    public double? GetOptionalDouble(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
         double? number = null;
-        if (_reader.GetAttribute(attributeName, null) is { } value)
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
         {
             try
             {
@@ -311,13 +338,12 @@ public sealed class XmlTreeReader : IDisposable
     /// <summary>
     /// Try to read <c>xsd:dateTime</c> from an attribute of current element.
     /// </summary>
-    /// <param name="attributeName">Name of the attribute.</param>
     /// <returns>Read datetime or null if attribute is not present.</returns>
-    public DateTime? GetOptionalDateTime(string attributeName)
+    public DateTime? GetOptionalDateTime(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
         DateTime? dateTime = null;
-        if (_reader.GetAttribute(attributeName, null) is { } value)
+        if (_reader.GetAttribute(attributeName, ns) is { } value)
         {
             try
             {
@@ -333,17 +359,17 @@ public sealed class XmlTreeReader : IDisposable
         return dateTime;
     }
 
-    public string? GetOptionalString(string attributeName)
+    public string? GetOptionalString(string attributeName, string? ns = null)
     {
         ThrowOnNonStartElement();
-        return _reader.GetAttribute(attributeName, null);
+        return _reader.GetAttribute(attributeName, ns);
     }
 
-    public TEnum? GetOptionalEnum<TEnum>(string attributeName)
+    public TEnum? GetOptionalEnum<TEnum>(string attributeName, string? ns = null)
         where TEnum : struct, Enum
     {
         ThrowOnNonStartElement();
-        var enumString = _reader.GetAttribute(attributeName, null);
+        var enumString = _reader.GetAttribute(attributeName, ns);
 
         if (enumString is null)
         {

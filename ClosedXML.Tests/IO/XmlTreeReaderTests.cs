@@ -1,8 +1,9 @@
+using System.IO;
+using System.Text;
+using System.Xml;
 using ClosedXML.Excel.IO;
 using ClosedXML.IO;
 using NUnit.Framework;
-using System.IO;
-using System.Text;
 
 namespace ClosedXML.Tests.IO;
 
@@ -48,6 +49,77 @@ internal class XmlTreeReaderTests
         reader.Close("root", string.Empty);
 
         Assert.That(content, Is.EqualTo("\n  Hello world\n  ! \n"));
+    }
+
+    [Test]
+    public void LeaveOpen_true_does_not_close_wrapped_XmlReader()
+    {
+        using var xmlReader = CreateXmlReader("<root/>");
+        using (new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance, true, leaveOpen: true))
+        {
+        }
+
+        Assert.That(xmlReader.ReadState, Is.Not.EqualTo(ReadState.Closed));
+    }
+
+    [Test]
+    public void LeaveOpen_false_closes_wrapped_XmlReader()
+    {
+        var xmlReader = CreateXmlReader("<root/>");
+        using (new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance, true, leaveOpen: false))
+        {
+        }
+
+        Assert.That(xmlReader.ReadState, Is.EqualTo(ReadState.Closed));
+    }
+
+    [Test]
+    public void TryOpen_opens_current_element_of_already_positioned_XmlReader()
+    {
+        using var xmlReader = CreateXmlReader("""
+                                              <root>
+                                                <child/>
+                                              </root>
+                                              """);
+        xmlReader.Read();
+        xmlReader.Read();
+        Assert.That(xmlReader.NodeType, Is.EqualTo(XmlNodeType.Element));
+        Assert.That(xmlReader.LocalName, Is.EqualTo("child"));
+
+        using var treeReader = new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance);
+
+        Assert.That(treeReader.TryOpen("root", string.Empty), Is.False);
+        Assert.That(treeReader.TryOpen("child", string.Empty), Is.True);
+    }
+
+    [Test]
+    public void TryOpen_opens_next_element_when_wrapped_XmlReader_is_not_on_element()
+    {
+        using var xmlReader = CreateXmlReader("""
+                                              <root>
+                                                text
+                                                <child/>
+                                              </root>
+                                              """);
+        xmlReader.Read();
+        xmlReader.Read();
+        Assert.That(xmlReader.NodeType, Is.Not.EqualTo(XmlNodeType.Element));
+        Assert.That(xmlReader.NodeType, Is.EqualTo(XmlNodeType.Text));
+
+        using var treeReader = new XmlTreeReader(xmlReader, XmlToEnumMapper.Instance);
+
+        Assert.That(treeReader.TryOpen("root", string.Empty), Is.False);
+        Assert.That(treeReader.TryOpen("child", string.Empty), Is.True);
+    }
+
+    private static XmlReader CreateXmlReader(string xml)
+    {
+        return XmlReader.Create(new StringReader(xml), new XmlReaderSettings
+        {
+            IgnoreWhitespace = true,
+            IgnoreComments = true,
+            DtdProcessing = DtdProcessing.Prohibit,
+        });
     }
 
     private static XmlTreeReader CreateReader(string xml)
