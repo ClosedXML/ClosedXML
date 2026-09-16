@@ -138,16 +138,36 @@ internal class CodeBuilder
         return Append($"{parseCall}({string.Join(", ", arguments)})");
     }
 
-    internal CodeBuilder AppendCallHook(ParsletName name, IReadOnlyList<Variable> arguments)
+    internal CodeBuilder AppendCallPreHook(ParsletName name, IReadOnlyList<Variable> arguments)
     {
-        Append("On").Append(name.WithoutPrefix()).Append("Parsed(");
+        return AppendCallHook(name, "Parsing", arguments);
+    }
+
+    internal CodeBuilder AddPreHookSignature(ParsletName name, IReadOnlyList<Variable> arguments)
+    {
+        return AddHookSignature(name, "Parsing", arguments);
+    }
+
+    internal CodeBuilder AppendCallPostHook(ParsletName name, IReadOnlyList<Variable> arguments)
+    {
+        return AppendCallHook(name, "Parsed", arguments);
+    }
+
+    internal CodeBuilder AddPostHookSignature(ParsletName name, IReadOnlyList<Variable> arguments)
+    {
+        return AddHookSignature(name, "Parsed", arguments);
+    }
+
+    private CodeBuilder AppendCallHook(ParsletName name, string suffix, IReadOnlyList<Variable> arguments)
+    {
+        Append("On").Append(name.WithoutPrefix()).Append(suffix).Append("(");
         var isFirst = true;
-        foreach (var variable in arguments)
+        foreach (var argument in arguments)
         {
             if (!isFirst)
                 Append(", ");
 
-            AppendVariable(variable.Name);
+            AppendVariable(argument.Name);
             isFirst = false;
         }
 
@@ -155,17 +175,17 @@ internal class CodeBuilder
         return this;
     }
 
-    internal CodeBuilder AddHookSignature(ParsletName name, IReadOnlyList<Variable> parameters)
+    private CodeBuilder AddHookSignature(ParsletName name, string suffix, IReadOnlyList<Variable> arguments)
     {
-        WriteIndent().Append("partial void On").Append(name.WithoutPrefix()).Append("Parsed(");
+        WriteIndent().Append("partial void On").Append(name.WithoutPrefix()).Append(suffix).Append("(");
 
         var isFirst = true;
-        foreach (var parameter in parameters)
+        foreach (var argument in arguments)
         {
             if (!isFirst)
                 Append(", ");
 
-            Append(parameter.Type).Append(" ").AppendVariable(parameter.Name);
+            Append(argument.Type).Append(" ").AppendVariable(argument.Name);
             isFirst = false;
         }
 

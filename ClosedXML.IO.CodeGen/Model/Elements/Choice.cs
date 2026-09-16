@@ -175,7 +175,7 @@ public class Choice : IElementGroup
                     var elementVariable = new Variable(elementCsType, elementChild.Name);
                     code.WriteIndent().Append(isFirst ? string.Empty : "else ").Append("if (").AppendCtParseCall(elementChild.TypeName, elementChild.Name).Append(" is { IsSuccess: true } ").AppendVariable(elementVariable.Name).Append(")").EndLine(); 
                     code.OpenBrace();
-                    code.WriteIndent().Append(resultVariableName).Append(" = ").AppendCallHook(choiceHookName, [elementVariable with { Name = elementVariable.Name + ".Value" }]).Append(";").EndLine();
+                    code.WriteIndent().Append(resultVariableName).Append(" = ").AppendCallPostHook(choiceHookName, [elementVariable with { Name = elementVariable.Name + ".Value" }]).Append(";").EndLine();
                     code.CloseBrace();
                 }
                 else

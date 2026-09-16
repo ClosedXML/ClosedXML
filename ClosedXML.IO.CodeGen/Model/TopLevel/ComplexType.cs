@@ -68,6 +68,9 @@ public abstract class ComplexType : IParslet
         if (Attributes.Count > 0)
             code.EndLine();
 
+        code.WriteIndent().AppendCallPreHook(Name, attributeVariables).Append(";").EndLine();
+        code.EndLine();
+
         var elementVariables = GenerateParseMethod(code);
         List<Variable> dataVariables = [.. elementVariables, .. attributeVariables];
 
@@ -76,19 +79,23 @@ public abstract class ComplexType : IParslet
 
         if (csReturnType is null)
         {
-            code.WriteIndent().AppendCallHook(Name, dataVariables).Append(";").EndLine();
+            code.WriteIndent().AppendCallPostHook(Name, dataVariables).Append(";").EndLine();
             code.AddLine("return Xpr.Success();");
             code.CloseBrace();
             code.EndLine();
-            code.AddHookSignature(Name, dataVariables);
+            code.AddPreHookSignature(Name, attributeVariables);
+            code.EndLine();
+            code.AddPostHookSignature(Name, dataVariables);
         }
         else
         {
             // If the Parse* method should map to a value, it's not possible to use partial hook.
             // Partial methods can't return value. The method will be displayed as uncompilable,
             // which is desirable, so it is implemented in the partial reader class by the developer.
-            code.WriteIndent().Append("return Xpr.From(").AppendCallHook(Name, dataVariables).Append(");").EndLine();
+            code.WriteIndent().Append("return Xpr.From(").AppendCallPostHook(Name, dataVariables).Append(");").EndLine();
             code.CloseBrace();
+            code.EndLine();
+            code.AddPreHookSignature(Name, attributeVariables);
         }
     }
 

@@ -22,6 +22,11 @@ public class ComplexTypeSimpleContent : ComplexType
 
     internal override List<Variable> GenerateParseMethod(CodeBuilder code)
     {
-        throw new NotImplementedException();
+        if (BaseTypeName != "ST_Formula")
+            throw new NotImplementedException();
+
+        var name = char.ToLowerInvariant(BaseTypeName[3]) + BaseTypeName[4..];
+        code.AddLine($"var {name} = _reader.GetContent();");
+        return [new Variable("string", name)];
     }
 }

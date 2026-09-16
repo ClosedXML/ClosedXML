@@ -35,15 +35,15 @@ public class GroupDefinition : IParslet
             if (returnCsType is null)
             {
                 code.EndLine();
-                code.WriteIndent().AppendCallHook(Name, variables).Append(";").EndLine();
+                code.WriteIndent().AppendCallPostHook(Name, variables).Append(";").EndLine();
                 code.AddLine("return Xpr.Success();");
                 code.CloseBrace();
                 code.EndLine();
-                code.AddHookSignature(Name, variables);
+                code.AddPostHookSignature(Name, variables);
             }
             else
             {
-                code.WriteIndent().Append("return Xpr.From(").AppendCallHook(Name, variables).Append(");").EndLine();
+                code.WriteIndent().Append("return Xpr.From(").AppendCallPostHook(Name, variables).Append(");").EndLine();
                 code.CloseBrace();
             }
         }
