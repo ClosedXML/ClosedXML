@@ -15,7 +15,9 @@ public record SimpleTypeMapping
     public required string CsTypeName { get; init; }
 
     /// <summary>
-    /// C# code template for getting a value from a required attribute. The name of attribute is in the string as <c>{0}</c>.
+    /// C# code template for calling a method that gets the value of a required attribute. The template method call is
+    /// appended by <c>("attributeName")</c> for unqualified attribute or <c>("attributeName", "namespace")</c>
+    /// for qualified attribute.
     /// </summary>
     public string RequiredTemplate
     {
@@ -24,7 +26,9 @@ public record SimpleTypeMapping
     }
 
     /// <summary>
-    /// C# code template for getting a value from an optional attribute. The name of attribute is in the string as <c>{0}</c>.
+    /// C# code template for calling a method that gets the value of an optional  attribute. The template method call
+    /// is appended by <c>("attributeName")</c> for unqualified attribute or <c>("attributeName", "namespace")</c>
+    /// for qualified attribute.
     /// </summary>
     public string OptionalTemplate
     {

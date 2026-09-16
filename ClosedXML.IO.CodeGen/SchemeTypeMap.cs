@@ -61,8 +61,8 @@ public class SchemeTypeMap
         {
             Name = simpleType,
             CsTypeName = csTypeName,
-            RequiredTemplate = $"_reader.GetEnum<{csTypeName}>(\"{{0}}\")",
-            OptionalTemplate = $"_reader.GetOptionalEnum<{csTypeName}>(\"{{0}}\")",
+            RequiredTemplate = $"_reader.GetEnum<{csTypeName}>",
+            OptionalTemplate = $"_reader.GetOptionalEnum<{csTypeName}>",
             MapValue = xmlName => valuesMap?[xmlName] ?? throw new InvalidOperationException($"The XML value {xmlName} is not mapped to {csTypeName}.")
         });
     }
@@ -90,7 +90,10 @@ public class SchemeTypeMap
         var simpleTypeName = attribute.Type ?? throw new InvalidOperationException();
         var simpleType = _simpleTypeMap[simpleTypeName];
         var expressionTemplate = attribute.IsOptional ? simpleType.OptionalTemplate : simpleType.RequiredTemplate;
-        return string.Format(expressionTemplate, attribute.Name);
+
+        return attribute.NsName is null
+            ? $"""{expressionTemplate}("{attribute.Name}")"""
+            : $"""{expressionTemplate}("{attribute.Name}", "{attribute.NsName}")""";
     }
 
     internal bool TryGetParsletCsType(ParsletName name, [NotNullWhen(true)] out string? csType)
@@ -134,64 +137,65 @@ public class SchemeTypeMap
         {
             Name = "xsd:boolean",
             CsTypeName = "bool",
-            RequiredTemplate = "_reader.GetBool(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalBool(\"{0}\")"
+            RequiredTemplate = "_reader.GetBool",
+            OptionalTemplate = "_reader.GetOptionalBool"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:byte",
             CsTypeName = "byte",
-            RequiredTemplate = "_reader.GetByte(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalByte(\"{0}\")"
+            RequiredTemplate = "_reader.GetByte",
+            OptionalTemplate = "_reader.GetOptionalByte"
+        });
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:int",
             CsTypeName = "int",
-            RequiredTemplate = "_reader.GetInt(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalInt(\"{0}\")"
+            RequiredTemplate = "_reader.GetInt",
+            OptionalTemplate = "_reader.GetOptionalInt"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:unsignedInt",
             CsTypeName = "uint",
-            RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            RequiredTemplate = "_reader.GetUInt",
+            OptionalTemplate = "_reader.GetOptionalUInt"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:double",
             CsTypeName = "double",
-            RequiredTemplate = "_reader.GetDouble(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalDouble(\"{0}\")"
+            RequiredTemplate = "_reader.GetDouble",
+            OptionalTemplate = "_reader.GetOptionalDouble"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "s:ST_Xstring",
             CsTypeName = "string",
-            RequiredTemplate = "_reader.GetXString(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalXString(\"{0}\")"
+            RequiredTemplate = "_reader.GetXString",
+            OptionalTemplate = "_reader.GetOptionalXString"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:string",
             CsTypeName = "string",
-            RequiredTemplate = "_reader.GetString(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalString(\"{0}\")",
+            RequiredTemplate = "_reader.GetString",
+            OptionalTemplate = "_reader.GetOptionalString",
             MapValue = x => x.Length == 0 ? "string.Empty" : $"\"{x.Replace("\"", "\\\"")}\""
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "xsd:dateTime",
             CsTypeName = "System.DateTime",
-            RequiredTemplate = "_reader.GetDateTime(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalDateTime(\"{0}\")"
+            RequiredTemplate = "_reader.GetDateTime",
+            OptionalTemplate = "_reader.GetOptionalDateTime"
         });
         AddSimpleType(new SimpleTypeMapping
         {
             Name = "ST_UnsignedIntHex",
             CsTypeName = "uint",
-            OptionalTemplate = "_reader.GetOptionalUIntHex(\"{0}\")"
+            OptionalTemplate = "_reader.GetOptionalUIntHex"
         });
         return this;
     }

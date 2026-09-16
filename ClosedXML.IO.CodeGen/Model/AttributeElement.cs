@@ -20,6 +20,11 @@ public class AttributeElement
     /// </summary>
     public required string? Name { get; set; }
 
+    /// <summary>
+    /// A namespace of the attribute. The <c>null</c> indicates it is from the default namespace.
+    /// </summary>
+    public string? NsName { get; set; }
+
     public required string? RefName { get; set; }
 
     public required string? Type { get; set; }

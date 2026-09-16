@@ -77,8 +77,8 @@ var typeMap = new SchemeTypeMap()
     {
         Name = "ST_NumFmtId",
         CsTypeName = "uint",
-        RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-        OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+        RequiredTemplate = "_reader.GetUInt",
+        OptionalTemplate = "_reader.GetOptionalUInt"
     })
 ```
 

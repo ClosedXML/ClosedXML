@@ -59,44 +59,44 @@ public static class Program
             {
                 Name = "ST_NumFmtId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddStFontId()
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_FillId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_BorderId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_CellStyleXfId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_TextRotation",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_DxfId",
                 CsTypeName = "uint",
-                RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-                OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+                RequiredTemplate = "_reader.GetUInt",
+                OptionalTemplate = "_reader.GetOptionalUInt"
             })
             .AddSimpleTypeEnum("ST_PatternType", "XLFillPatternValues")
             .AddSimpleTypeEnum("ST_GradientType", "XLGradientType", "linear", "XLGradientType.Linear")
@@ -296,8 +296,8 @@ public static class Program
         {
             Name = "ST_FontId",
             CsTypeName = "uint",
-            RequiredTemplate = "_reader.GetUInt(\"{0}\")",
-            OptionalTemplate = "_reader.GetOptionalUInt(\"{0}\")"
+            RequiredTemplate = "_reader.GetUInt",
+            OptionalTemplate = "_reader.GetOptionalUInt"
         });
     }
 }
