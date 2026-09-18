@@ -76,12 +76,11 @@ internal partial class SheetDataReader
         return Xpr.Success();
     }
 
-    partial void OnRowParsing(uint? r, string? spans, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent)
+    partial void OnRowParsing(uint? r, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent)
     {
         // Row number is an optional attribute. If not specified, it should be a next row from the last read row.
         _row = r is null ? _row + 1 : checked((int)r.Value);
         _column = 1;
-        _ = spans;
         _ = s;
         _ = customFormat;
         _ = ht;
@@ -95,12 +94,10 @@ internal partial class SheetDataReader
         _ = dyDescent;
     }
 
-    partial void OnRowParsed(uint? r, string? spans, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent)
+    partial void OnRowParsed(uint? r, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent)
     {
         var rowIndex = r is null ? _row : checked((int)r.Value);
         var xlRow = _ws.Row(rowIndex, false);
-
-        _ = spans; // Spans is unreliable, ignore it.
 
         if (ht is not null)
         {

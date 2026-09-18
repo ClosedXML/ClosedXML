@@ -278,15 +278,11 @@ public static class Program
             RefName = null,
         });
 
+        // ST_CellSpans is a list of spans the cell uses in the row, but is unreliable and can be just omitted
+        row.Attributes.RemoveAll(x => x.TryPickT1(out var attr, out _) && attr.Name == "spans");
+
         var typeMap = new SchemeTypeMap()
             .AddPrimitiveTypes()
-            .AddSimpleType(new SimpleTypeMapping 
-            {
-                // ST_CellSpans is a list of spans the cell uses in the row, but is unreliable thus discarded. Just use string.
-                Name = "ST_CellSpans",
-                CsTypeName = "string",
-                OptionalTemplate = "_reader.GetOptionalString"
-            })
             .AddSimpleType(new SimpleTypeMapping
             {
                 Name = "ST_CellRef",

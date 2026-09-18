@@ -39,7 +39,6 @@ internal partial class SheetDataReader
         }
 
         var r = _reader.GetOptionalUInt("r");
-        var spans = _reader.GetOptionalString("spans");
         var s = _reader.GetOptionalUInt("s") ?? 0;
         var customFormat = _reader.GetOptionalBool("customFormat") ?? false;
         var ht = _reader.GetOptionalDouble("ht");
@@ -52,7 +51,7 @@ internal partial class SheetDataReader
         var ph = _reader.GetOptionalBool("ph") ?? false;
         var dyDescent = _reader.GetOptionalDouble("dyDescent", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac");
 
-        OnRowParsing(r, spans, s, customFormat, ht, hidden, customHeight, outlineLevel, collapsed, thickTop, thickBot, ph, dyDescent);
+        OnRowParsing(r, s, customFormat, ht, hidden, customHeight, outlineLevel, collapsed, thickTop, thickBot, ph, dyDescent);
 
         while (ParseCell("c", _ns) is { IsSuccess: true })
         {
@@ -64,13 +63,13 @@ internal partial class SheetDataReader
         }
         _reader.Close(elementName, ns);
 
-        OnRowParsed(r, spans, s, customFormat, ht, hidden, customHeight, outlineLevel, collapsed, thickTop, thickBot, ph, dyDescent);
+        OnRowParsed(r, s, customFormat, ht, hidden, customHeight, outlineLevel, collapsed, thickTop, thickBot, ph, dyDescent);
         return Xpr.Success();
     }
 
-    partial void OnRowParsing(uint? r, string? spans, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent);
+    partial void OnRowParsing(uint? r, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent);
 
-    partial void OnRowParsed(uint? r, string? spans, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent);
+    partial void OnRowParsed(uint? r, uint s, bool customFormat, double? ht, bool hidden, bool customHeight, byte outlineLevel, bool collapsed, bool thickTop, bool thickBot, bool ph, double? dyDescent);
 
     private Xpr ParseCell(string elementName, string ns)
     {
