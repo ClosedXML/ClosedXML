@@ -8,6 +8,48 @@ namespace ClosedXML.Tests.Excel.Coordinates;
 [TestFixture]
 public class PointTests
 {
+    [Test]
+    public void Default_point_is_A1()
+    {
+        var point = default(Point);
+
+        Assert.AreEqual(1, point.Row);
+        Assert.AreEqual(1, point.Column);
+        Assert.AreEqual("A1", point.ToString());
+    }
+
+    [TestCase(1, 1)]
+    [TestCase(XLHelper.MaxRowNumber, 1)]
+    [TestCase(1, XLHelper.MaxColumnNumber)]
+    [TestCase(XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber)]
+    public void Ctor_accepts_valid_sheet_coordinates(int row, int column)
+    {
+        var point = new Point(row, column);
+
+        Assert.AreEqual(row, point.Row);
+        Assert.AreEqual(column, point.Column);
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    [TestCase(int.MinValue)]
+    [TestCase(XLHelper.MaxRowNumber + 1)]
+    [TestCase(int.MaxValue)]
+    public void Ctor_row_must_be_valid(int invalidRow)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Point(invalidRow, 1));
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    [TestCase(int.MinValue)]
+    [TestCase(XLHelper.MaxColumnNumber + 1)]
+    [TestCase(int.MaxValue)]
+    public void Ctor_column_must_be_valid(int invalidColumn)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Point(1, invalidColumn));
+    }
+
     [TestCase("A1", 1, 1)]
     [TestCase("AA1", 27, 1)]
     [TestCase("AAA1", 703, 1)]
@@ -47,6 +89,8 @@ public class PointTests
     [TestCase("A01")]
     [TestCase("A0")]
     [TestCase("A-1")]
+    [TestCase("A999999999")]
+    [TestCase("A4294967297"), Issue("2885")] // Too long row number would overflow to A1
     public void InvalidInputsAreNotParsed(string cellRef)
     {
         Assert.Throws<FormatException>(() => Point.Parse(cellRef.AsSpan()));

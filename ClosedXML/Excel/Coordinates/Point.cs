@@ -6,25 +6,32 @@ namespace ClosedXML.Excel;
 /// <summary>
 /// An point (address) in a worksheet, an equivalent of <c>ST_CellRef</c>.
 /// </summary>
-/// <remarks>Unlike the XLAddress, sheet can never be invalid.</remarks>
+/// <remarks>Unlike the XLAddress, point can never be invalid. To ensure that, the stored coordinate values are
+/// off-by-one, so the <c>default(Point)</c> is a valid <c>A1</c>.</remarks>
 [DebuggerDisplay("{XLHelper.GetColumnLetterFromNumber(Column)+Row}")]
 internal readonly struct Point : IEquatable<Point>, IComparable<Point>
 {
-    public Point(Int32 row, Int32 column)
+    internal Point(int row, int column)
     {
-        Row = row;
-        Column = column;
+        if (row is < XLHelper.MinRowNumber or > XLHelper.MaxRowNumber)
+            throw new ArgumentOutOfRangeException(nameof(row));
+
+        if (column is < XLHelper.MinColumnNumber or > XLHelper.MaxColumnNumber)
+            throw new ArgumentOutOfRangeException(nameof(column));
+
+        Row = row - 1;
+        Column = column - 1;
     }
 
     /// <summary>
     /// 1-based row number in a sheet.
     /// </summary>
-    public readonly Int32 Row;
+    internal int Row => field + 1;
 
     /// <summary>
     /// 1-based column number in a sheet.
     /// </summary>
-    public readonly Int32 Column;
+    internal int Column => field + 1;
 
     public static implicit operator Area(Point point)
     {
@@ -65,7 +72,7 @@ internal readonly struct Point : IEquatable<Point>, IComparable<Point>
     }
 
     /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
-    public static Point Parse(String text) => Parse(text.AsSpan());
+    public static Point Parse(string text) => Parse(text.AsSpan());
 
     /// <summary>
     /// Parse point per type <c>ST_CellRef</c> from
@@ -89,8 +96,8 @@ internal readonly struct Point : IEquatable<Point>, IComparable<Point>
     {
         point = default;
 
-        // Don't reuse inefficient logic from XLAddress
-        if (input.Length < 2)
+        // If we get some text that is either too short or long, bail out. Also protects against overflow.
+        if (input.Length < 2 || input.Length > XLHelper.LastSheetAddress.Length)
             return false;
 
         var i = 0;
@@ -162,7 +169,7 @@ internal readonly struct Point : IEquatable<Point>, IComparable<Point>
         return formattedLength;
     }
 
-    public override String ToString()
+    public override string ToString()
     {
         Span<char> text = stackalloc char[10];
         var len = Format(text);
