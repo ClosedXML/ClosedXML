@@ -26,7 +26,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var chain = new XLCalculationChain();
             var expectedPoints = new List<SheetPoint>();
-            for (var i = 0; i < chainLength; ++i)
+            for (var i = 1; i <= chainLength; ++i)
             {
                 var point = new SheetPoint("sheet", new Point(1, i));
                 chain.AddLast(point);
