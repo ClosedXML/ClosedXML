@@ -476,29 +476,24 @@ internal class XLWorkbookStyles
     }
 
     /// <summary>
-    /// Create a workbook styles component suitable for a new workbook.
+    /// Initialize styles component so it does contain styles suitable for a new workbook.
     /// </summary>
-    internal static XLWorkbookStyles CreateInitialized()
+    internal void Initialize()
     {
-        var styles = new XLWorkbookStyles
-        {
-            DefaultTableStyle = XLTableTheme.TableStyleMedium2.ToString(),
-            DefaultPivotStyle = nameof(XLPivotTableTheme.PivotStyleLight16)
-        };
+        DefaultTableStyle = XLTableTheme.TableStyleMedium2.ToString();
+        DefaultPivotStyle = nameof(XLPivotTableTheme.PivotStyleLight16);
 
         foreach (var (numFmtId, formatCode) in XLPredefinedFormat.FormatCodes)
-            styles.AddNumberFormat(numFmtId, formatCode);
+            AddNumberFormat(numFmtId, formatCode);
 
-        var normalStyle = styles.DefaultNormalStyle;
-        styles.AddFontFormat(normalStyle.Font);
-        styles.AddFillFormat(XLFillFormatValue.None);
-        styles.AddFillFormat(XLFillFormatValue.Gray125);
-        styles.AddBorderFormat(XLBorderFormatValue.None);
-        styles.AddCellStyle(0, normalStyle);
+        var normalStyle = DefaultNormalStyle;
+        AddFontFormat(normalStyle.Font);
+        AddFillFormat(XLFillFormatValue.None);
+        AddFillFormat(XLFillFormatValue.Gray125);
+        AddBorderFormat(XLBorderFormatValue.None);
+        AddCellStyle(0, normalStyle);
 
         var defaultFormat = XLCellFormatValue.FromStyle(0, normalStyle);
-        styles.DefaultFormat = styles.GetRegisteredCellFormat(defaultFormat);
-
-        return styles;
+        DefaultFormat = GetRegisteredCellFormat(defaultFormat);
     }
 }

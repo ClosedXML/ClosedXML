@@ -918,7 +918,8 @@ namespace ClosedXML.Excel
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
-            Styles = XLWorkbookStyles.CreateInitialized();
+            Styles = new XLWorkbookStyles();
+            Styles.Initialize();
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
             PageOptions = DefaultPageOptions;

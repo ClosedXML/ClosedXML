@@ -738,6 +738,18 @@ public class LoadingTests
     }
 
     [Test]
+    public void Workbook_without_styles_part()
+    {
+        // Can load workbook without styles part and modify a style
+        TestHelper.LoadAndAssert((wb, ws) =>
+        {
+            Assert.AreEqual(1, wb.Styles.CellFormats.Count);
+            ws.Cell("A1").Style.Font.FontSize = 25;
+            Assert.AreEqual(2, wb.Styles.CellFormats.Count);
+        }, @"TryToLoad\NoStylesPart.xlsx");
+    }
+
+    [Test]
     public void CanLoadInvalidColors()
     {
         // The styles.xml contains two invalid colors: '0' and 'FED+'. Both
