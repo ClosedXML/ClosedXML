@@ -171,12 +171,17 @@ namespace ClosedXML.Excel
                     Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
             }
 
+            // Styles part is optional and each workbook must have a default style
             var stylesPart = workbookPart.WorkbookStylesPart;
             if (stylesPart is not null)
             {
                 using var xmlReader = CreateTreeReader(stylesPart);
                 var stylesReader = new StylesReader(xmlReader, Styles);
                 stylesReader.Load();
+            }
+            else
+            {
+                Styles.Initialize();
             }
 
             // Spec says each package must have exactly one SST part, but some packages don't have that.
