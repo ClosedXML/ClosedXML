@@ -1234,6 +1234,31 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
+        [TestCase(typeof(string))]
+        [TestCase(typeof(object))]
+        public void InsertData_WhenValuesAreDbNull_WritesBlanks(Type columnType)
+        {
+            //arrange
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+            var data = new DataTable();
+            data.Columns.Add("Name", columnType);
+            data.Rows.Add("Mario");
+            data.Rows.Add(DBNull.Value); // This should be written as blank
+            data.Rows.Add("Carlo");
+
+            //act
+            var cell = ws.FirstCell();
+            var table = cell.InsertTable(data);
+
+            //assert
+            Assert.AreEqual("Name", table.Cell(1,1).Value);
+            Assert.AreEqual("Mario", table.Cell(2,1).Value);
+            Assert.IsTrue(table.Cell(3, 1).Value.IsBlank);
+            Assert.AreEqual("Carlo", table.Cell(4,1).Value);
+        }
+
         [Test]
         public void TableNotFound()
         {
