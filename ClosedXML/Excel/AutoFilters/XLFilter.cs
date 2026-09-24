@@ -1,9 +1,11 @@
 #nullable disable
 
 // Keep this file CodeMaid organised and cleaned
-using System;
-using System.Globalization;
 using ClosedXML.Excel.CalcEngine;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
 
 namespace ClosedXML.Excel
 {
@@ -227,6 +229,29 @@ namespace ClosedXML.Excel
                 Operator = XLFilterOperator.Equal,
                 Connector = XLConnector.Or,
                 Condition = aboveAverage ? AboveAverage : BelowAverage,
+            };
+        }
+
+        internal static XLFilter CreateColorFilter(bool fill, XLColor color)
+        {
+            bool FontFilter(IXLCell cell, XLFilterColumn filterColumn)
+            {
+                var fontColor = cell.Style.Font.FontColor;
+                return color == fontColor;
+            }
+
+            bool FillFilter(IXLCell cell, XLFilterColumn filterColumn)
+            {
+                var bgColor = cell.Style.Fill.BackgroundColor;
+                return bgColor == color;
+            }
+
+            return new XLFilter
+            {
+                Value = color,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or,
+                Condition = fill ? FillFilter : FontFilter,
             };
         }
     }

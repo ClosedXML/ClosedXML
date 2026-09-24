@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +32,24 @@ namespace ClosedXML.Excel
         {
             SwitchFilter(XLFilterType.Regular);
             AddFilter(XLFilter.CreateRegularFilter(value.ToString()), reapply);
+            return this;
+        }
+
+        public IXLFilterColumn AddFontColorFilter(XLColor color, bool reapply)
+        {
+            ColorFilterType = XLColorFilterType.FontColor;
+
+            SwitchFilter(XLFilterType.ColorFilter);
+            AddFilter(XLFilter.CreateColorFilter(false, color), reapply);
+            return this;
+        }
+
+        public IXLFilterColumn AddBackgroundColorFilter(XLColor color, bool reapply)
+        {
+            ColorFilterType = XLColorFilterType.CellColor;
+
+            SwitchFilter(XLFilterType.ColorFilter);
+            AddFilter(XLFilter.CreateColorFilter(true, color), reapply);
             return this;
         }
 
@@ -144,6 +163,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public Double DynamicValue { get; set; } = double.NaN;
 
+        public XLColorFilterType ColorFilterType { get; set; }
+
         #endregion IXLFilterColumn Members
 
         /// <summary>
@@ -256,6 +277,7 @@ namespace ClosedXML.Excel
                 XLFilterType.Custom => 2,
                 XLFilterType.TopBottom => 1,
                 XLFilterType.Dynamic => 1,
+                XLFilterType.ColorFilter => int.MaxValue,
                 _ => throw new NotSupportedException()
             };
             if (_filters.Count >= maxFilters)
