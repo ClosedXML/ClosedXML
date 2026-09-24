@@ -51,7 +51,11 @@ namespace ClosedXML.Excel.IO
                     xml.WriteStartElement("si", Main2006SsNs);
                     xml.WriteStartElement("t", Main2006SsNs);
                     var sharedString = sst[sharedStringId];
-                    if (!sharedString.Trim().Equals(sharedString))
+                    if (
+                        (!sharedString.Trim().Equals(sharedString)) ||
+
+                         (sharedString.Contains("\r") || sharedString.Contains("\n")) //also preserve whitespace in case of line breaks
+                        )
                         xml.WritePreserveSpaceAttr();
 
                     xml.WriteString(XmlEncoder.EncodeString(sharedString));
