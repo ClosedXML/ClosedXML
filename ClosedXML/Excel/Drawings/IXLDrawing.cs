@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
 
         Boolean Visible { get; set; }
         T SetVisible();
-        T SetVisible(Boolean hidden);
+        T SetVisible(Boolean visible);
                 
         ////String Name { get; set; }
         ////T SetName(String name);

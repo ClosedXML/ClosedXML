@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
             Visible = true;
             return Container;
         }
-        public T SetVisible(Boolean hidden)
+        public T SetVisible(Boolean visible)
         {
-            Visible = hidden;
+            Visible = visible;
             return Container;
         }
 
