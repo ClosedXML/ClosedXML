@@ -11,10 +11,10 @@ A workbook in Excel is a basically a 2D array of input/output cells. Each cell c
 
 In the future, we will call a union of these types a **scalar value**.
 
-Workbook also contains formulas, a receipies that take a values and calculate a new values. Formulas are used in
+Workbook also contains formulas, recipes that take a value and calculate new values. Formulas are used in
 
 * cells formula - in that case, the output of the formula is written into the cell
-* names - although names are mostly used to refere to a range of cells, they are formulas and thus can contain any formula expression (e.g. `1+2`)
+* names - although names are mostly used to refer to a range of cells, they are formulas and thus can contain any formula expression (e.g. `1+2`)
 * array formulas - formula changes value of 2D array of cells.
 
 Values used during formula evaluation can have the types that are in cell, but in addition can have also following types:
