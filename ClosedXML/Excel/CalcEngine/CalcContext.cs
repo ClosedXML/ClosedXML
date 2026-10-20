@@ -10,377 +10,376 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using ClosedXML.Excel.CalcEngine.Functions;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine;
+
+internal sealed class CalcContext
 {
-    internal sealed class CalcContext
+    private readonly bool _recursive;
+    private long _allocatedBytes;
+
+    public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLCell cell)
+        : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
     {
-        private readonly bool _recursive;
-        private long _allocatedBytes;
+    }
 
-        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLCell cell)
-            : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
-        {
-        }
+    public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress, bool recursive = false)
+    {
+        CalcEngine = calcEngine;
+        Workbook = workbook;
+        Worksheet = worksheet;
+        FormulaAddress = formulaAddress;
+        _recursive = recursive;
+        Culture = culture;
 
-        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress, bool recursive = false)
-        {
-            CalcEngine = calcEngine;
-            Workbook = workbook;
-            Worksheet = worksheet;
-            FormulaAddress = formulaAddress;
-            _recursive = recursive;
-            Culture = culture;
+        // If workbook is null, the context is from XLWorkbook.EvaluateExpr. Ignore limits in such case.
+        CancellationToken = workbook?.CancellationToken ?? CancellationToken.None;
+        MaxCalculationMemoryBytes = workbook?.MaxCalculationMemoryBytes ?? 0;
+    }
 
-            // If workbook is null, the context is from XLWorkbook.EvaluateExpr. Ignore limits in such case.
-            CancellationToken = workbook?.CancellationToken ?? CancellationToken.None;
-            MaxCalculationMemoryBytes = workbook?.MaxCalculationMemoryBytes ?? 0;
-        }
+    // LEGACY: Remove once legacy functions are migrated
+    internal XLCalcEngine CalcEngine => field ?? throw new MissingContextException();
 
-        // LEGACY: Remove once legacy functions are migrated
-        internal XLCalcEngine CalcEngine => field ?? throw new MissingContextException();
+    /// <summary>
+    /// Worksheet of the cell the formula is calculating.
+    /// </summary>
+    public XLWorkbook Workbook => field ?? throw new MissingContextException();
 
-        /// <summary>
-        /// Worksheet of the cell the formula is calculating.
-        /// </summary>
-        public XLWorkbook Workbook => field ?? throw new MissingContextException();
+    /// <summary>
+    /// Worksheet of the cell the formula is calculating.
+    /// </summary>
+    public XLWorksheet Worksheet => field ?? throw new MissingContextException();
 
-        /// <summary>
-        /// Worksheet of the cell the formula is calculating.
-        /// </summary>
-        public XLWorksheet Worksheet => field ?? throw new MissingContextException();
+    /// <summary>
+    /// Address of the calculated formula.
+    /// </summary>
+    public IXLAddress FormulaAddress => field ?? throw new MissingContextException();
 
-        /// <summary>
-        /// Address of the calculated formula.
-        /// </summary>
-        public IXLAddress FormulaAddress => field ?? throw new MissingContextException();
+    /// <summary>
+    /// A culture used for comparisons and conversions (e.g. text to number).
+    /// </summary>
+    public CultureInfo Culture { get; }
 
-        /// <summary>
-        /// A culture used for comparisons and conversions (e.g. text to number).
-        /// </summary>
-        public CultureInfo Culture { get; }
+    /// <summary>
+    /// Excel 2016 and earlier doesn't support dynamic array formulas (it used an array formulas instead). As a consequence,
+    /// all arguments for scalar functions where passed through implicit intersection before calling the function.
+    /// </summary>
+    public bool UseImplicitIntersection => true;
 
-        /// <summary>
-        /// Excel 2016 and earlier doesn't support dynamic array formulas (it used an array formulas instead). As a consequence,
-        /// all arguments for scalar functions where passed through implicit intersection before calling the function.
-        /// </summary>
-        public bool UseImplicitIntersection => true;
+    /// <summary>
+    /// Should functions be calculated per item of multi-values argument in the scalar parameters.
+    /// </summary>
+    public bool IsArrayCalculation { get; set; }
 
-        /// <summary>
-        /// Should functions be calculated per item of multi-values argument in the scalar parameters.
-        /// </summary>
-        public bool IsArrayCalculation { get; set; }
+    /// <summary>
+    /// Sheet that is being recalculated. If set, formula can read dirty
+    /// values from other sheets, but not from this sheet.
+    /// </summary>
+    public string? RecalculateSheetName { get; set; }
 
-        /// <summary>
-        /// Sheet that is being recalculated. If set, formula can read dirty
-        /// values from other sheets, but not from this sheet.
-        /// </summary>
-        public string? RecalculateSheetName { get; set; }
+    internal Point FormulaPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
 
-        internal Point FormulaPoint => new(FormulaAddress.RowNumber, FormulaAddress.ColumnNumber);
+    /// <summary>
+    /// What date system should be used in calculation. Either 1900 or 1904.
+    /// </summary>
+    internal bool Use1904DateSystem { get; init; } = false;
 
-        /// <summary>
-        /// What date system should be used in calculation. Either 1900 or 1904.
-        /// </summary>
-        internal bool Use1904DateSystem { get; init; } = false;
+    /// <summary>
+    /// An upper limit (exclusive) of used calendar system.
+    /// </summary>
+    internal double DateSystemUpperLimit => Use1904DateSystem ? XLHelper.Calendar1904UpperLimit : XLHelper.Calendar1900UpperLimit;
 
-        /// <summary>
-        /// An upper limit (exclusive) of used calendar system.
-        /// </summary>
-        internal double DateSystemUpperLimit => Use1904DateSystem ? XLHelper.Calendar1904UpperLimit : XLHelper.Calendar1900UpperLimit;
+    internal CancellationToken CancellationToken { get; }
 
-        internal CancellationToken CancellationToken { get; }
+    internal long MaxCalculationMemoryBytes { get; }
 
-        internal long MaxCalculationMemoryBytes { get; }
+    /// <summary>
+    /// A helper method to check is user cancelled the calculation in function loops.
+    /// </summary>
+    internal void ThrowIfCancelled()
+    {
+        CancellationToken.ThrowIfCancellationRequested();
+    }
 
-        /// <summary>
-        /// A helper method to check is user cancelled the calculation in function loops.
-        /// </summary>
-        internal void ThrowIfCancelled()
-        {
-            CancellationToken.ThrowIfCancellationRequested();
-        }
+    internal T[] AllocateArray<T>(int length)
+        where T : struct
+    {
+        if (length < 0)
+            throw new ArgumentOutOfRangeException(nameof(length));
+        if (length == 0)
+            return [];
 
-        internal T[] AllocateArray<T>(int length)
-            where T : struct
-        {
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
-            if (length == 0)
-                return [];
-
-            // 0 means unlimited
-            if (MaxCalculationMemoryBytes == 0)
-                return new T[length];
-
-            var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
-            if (!TryGetByteCount<T>(length, out var bytes) || bytes > remainingBytesUntilLimit)
-                throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
-
-            _allocatedBytes += bytes;
+        // 0 means unlimited
+        if (MaxCalculationMemoryBytes == 0)
             return new T[length];
-        }
 
-        internal T[,] AllocateArray<T>(int rows, int columns)
-            where T : struct
-        {
-            if (rows <= 0)
-                throw new ArgumentOutOfRangeException(nameof(rows));
-            if (columns <= 0)
-                throw new ArgumentOutOfRangeException(nameof(columns));
+        var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
+        if (!TryGetByteCount<T>(length, out var bytes) || bytes > remainingBytesUntilLimit)
+            throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
 
-            // 0 means unlimited
-            if (MaxCalculationMemoryBytes == 0)
-                return new T[rows, columns];
+        _allocatedBytes += bytes;
+        return new T[length];
+    }
 
-            var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
-            if (!TryGetByteCount<T>(rows, columns, out var bytes) || bytes > remainingBytesUntilLimit)
-                throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
+    internal T[,] AllocateArray<T>(int rows, int columns)
+        where T : struct
+    {
+        if (rows <= 0)
+            throw new ArgumentOutOfRangeException(nameof(rows));
+        if (columns <= 0)
+            throw new ArgumentOutOfRangeException(nameof(columns));
 
-            _allocatedBytes += bytes;
+        // 0 means unlimited
+        if (MaxCalculationMemoryBytes == 0)
             return new T[rows, columns];
+
+        var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
+        if (!TryGetByteCount<T>(rows, columns, out var bytes) || bytes > remainingBytesUntilLimit)
+            throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
+
+        _allocatedBytes += bytes;
+        return new T[rows, columns];
+    }
+
+    private static bool TryGetByteCount<T>(int length, out long bytes)
+        where T : struct
+    {
+        var elementSize = (long)Unsafe.SizeOf<T>();
+        var maxLength = long.MaxValue / elementSize;
+        if (length > maxLength)
+        {
+            bytes = 0;
+            return false;
         }
 
-        private static bool TryGetByteCount<T>(int length, out long bytes)
-            where T : struct
+        bytes = length * elementSize;
+        return true;
+    }
+
+    private static bool TryGetByteCount<T>(int rows, int columns, out long bytes)
+        where T : struct
+    {
+        var elementSize = (long)Unsafe.SizeOf<T>();
+        var maxWidth = long.MaxValue / elementSize;
+        var maxHeight = long.MaxValue / (columns * elementSize);
+        if (columns > maxWidth || rows > maxHeight)
         {
-            var elementSize = (long)Unsafe.SizeOf<T>();
-            var maxLength = long.MaxValue / elementSize;
-            if (length > maxLength)
+            bytes = 0;
+            return false;
+        }
+
+        bytes = checked((long)rows * (long)columns * elementSize);
+        return true;
+    }
+
+    internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
+    {
+        sheet ??= Worksheet;
+        var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
+        var point = new Point(rowNumber, columnNumber);
+        var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
+
+        if (formula is null)
+            return valueSlice.GetCellValue(point);
+
+        if (!formula.IsDirty)
+            return valueSlice.GetCellValue(point);
+
+        // Used when only one sheet should be recalculated, leaving other sheets with their data.
+        if (RecalculateSheetName is not null && !XLHelper.SheetComparer.Equals(sheet.Name, RecalculateSheetName))
+            return valueSlice.GetCellValue(point);
+
+        // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
+        // These functions are not a part of calculation chain and thus reordering a chain
+        // for them doesn't make sense.
+        if (_recursive)
+        {
+            var cell = sheet.GetCell(point);
+            return cell?.Value ?? Blank.Value;
+        }
+
+        throw new GettingDataException(new SheetPoint(sheet.Name, new Point(rowNumber, columnNumber)));
+    }
+
+    /// <summary>
+    /// This method goes over slices and returns a value for each non-blank cell. Because it is using
+    /// slice iterators, it scales with number of cells, not a size of area in reference (i.e. it works
+    /// fine even if reference is <c>A1:XFD1048576</c>). It also works for 3D references.  
+    /// </summary>
+    internal IEnumerable<ScalarValue> GetNonBlankValues(Reference reference)
+    {
+        foreach (var area in reference.Areas)
+        {
+            var sheet = area.Worksheet ?? Worksheet;
+            var range = Area.FromRangeAddress(area);
+
+            // A value can be either in a non-empty value slice or a empty cell with a formula.
+            var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
+            while (enumerator.MoveNext())
             {
-                bytes = 0;
-                return false;
+                var point = enumerator.Current;
+                var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                if (!scalarValue.IsBlank)
+                    yield return scalarValue;
             }
-
-            bytes = length * elementSize;
-            return true;
         }
+    }
 
-        private static bool TryGetByteCount<T>(int rows, int columns, out long bytes)
-            where T : struct
+    /// <summary>
+    /// Return all points in the <paramref name="areaReference" /> that satisfy the <paramref name="criteria" />.
+    /// </summary>
+    internal IEnumerable<Point> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
+    {
+        var sheet = areaReference.Worksheet ?? Worksheet;
+        var area = Area.FromRangeAddress(areaReference);
+
+        // This is a performance optimization when user specifies a whole column
+        // in the tally function (e.g. SUMIF(A:B, "5", C:D)).
+        if (criteria.CanBlankValueMatch)
         {
-            var elementSize = (long)Unsafe.SizeOf<T>();
-            var maxWidth = long.MaxValue / elementSize;
-            var maxHeight = long.MaxValue / (columns * elementSize);
-            if (columns > maxWidth || rows > maxHeight)
+            // Criteria can match blank cells, thus it's not possible to use optimized
+            // used enumerators and we have to check value of each cell.
+            foreach (var point in area)
             {
-                bytes = 0;
-                return false;
+                var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                if (criteria.Match(scalarValue))
+                    yield return point;
             }
-
-            bytes = checked((long)rows * (long)columns * elementSize);
-            return true;
         }
-
-        internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)
+        else
         {
-            sheet ??= Worksheet;
-            var valueSlice = sheet.Internals.CellsCollection.ValueSlice;
-            var point = new Point(rowNumber, columnNumber);
-            var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
-
-            if (formula is null)
-                return valueSlice.GetCellValue(point);
-
-            if (!formula.IsDirty)
-                return valueSlice.GetCellValue(point);
-
-            // Used when only one sheet should be recalculated, leaving other sheets with their data.
-            if (RecalculateSheetName is not null && !XLHelper.SheetComparer.Equals(sheet.Name, RecalculateSheetName))
-                return valueSlice.GetCellValue(point);
-
-            // A special branch for functions out of cells (e.g. worksheet.Evaluate("A1+2")).
-            // These functions are not a part of calculation chain and thus reordering a chain
-            // for them doesn't make sense.
-            if (_recursive)
+            // The criteria can never match blank cells. That means we can skip all blank
+            // cells entirely and use optimized used enumerators.
+            var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(area);
+            while (enumerator.MoveNext())
             {
-                var cell = sheet.GetCell(point);
-                return cell?.Value ?? Blank.Value;
+                var point = enumerator.Current;
+                var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                if (criteria.Match(scalarValue))
+                    yield return point;
             }
-
-            throw new GettingDataException(new SheetPoint(sheet.Name, new Point(rowNumber, columnNumber)));
         }
+    }
 
-        /// <summary>
-        /// This method goes over slices and returns a value for each non-blank cell. Because it is using
-        /// slice iterators, it scales with number of cells, not a size of area in reference (i.e. it works
-        /// fine even if reference is <c>A1:XFD1048576</c>). It also works for 3D references.  
-        /// </summary>
-        internal IEnumerable<ScalarValue> GetNonBlankValues(Reference reference)
+    internal IEnumerable<ScalarValue> GetFilteredNonBlankValues(Reference reference, string function, bool skipHiddenRows = false)
+    {
+        // Allocate one per call, because visitor holds info whether function was found in a formula.
+        var visitor = new FunctionVisitor(function);
+        foreach (var area in reference.Areas)
         {
-            foreach (var area in reference.Areas)
-            {
-                var sheet = area.Worksheet ?? Worksheet;
-                var range = Area.FromRangeAddress(area);
+            var sheet = area.Worksheet ?? Worksheet;
+            var range = Area.FromRangeAddress(area);
+            var currentRow = 0;
+            var rowIsHidden = true;
 
-                // A value can be either in a non-empty value slice or a empty cell with a formula.
-                var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
-                while (enumerator.MoveNext())
+            // A value can be either in a non-empty value slice or a empty cell with a formula.
+            var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
+            while (enumerator.MoveNext())
+            {
+                var point = enumerator.Current;
+
+                if (skipHiddenRows)
                 {
-                    var point = enumerator.Current;
-                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
-                    if (!scalarValue.IsBlank)
-                        yield return scalarValue;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Return all points in the <paramref name="areaReference" /> that satisfy the <paramref name="criteria" />.
-        /// </summary>
-        internal IEnumerable<Point> GetCriteriaPoints(XLRangeAddress areaReference, Criteria criteria)
-        {
-            var sheet = areaReference.Worksheet ?? Worksheet;
-            var area = Area.FromRangeAddress(areaReference);
-
-            // This is a performance optimization when user specifies a whole column
-            // in the tally function (e.g. SUMIF(A:B, "5", C:D)).
-            if (criteria.CanBlankValueMatch)
-            {
-                // Criteria can match blank cells, thus it's not possible to use optimized
-                // used enumerators and we have to check value of each cell.
-                foreach (var point in area)
-                {
-                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
-                    if (criteria.Match(scalarValue))
-                        yield return point;
-                }
-            }
-            else
-            {
-                // The criteria can never match blank cells. That means we can skip all blank
-                // cells entirely and use optimized used enumerators.
-                var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(area);
-                while (enumerator.MoveNext())
-                {
-                    var point = enumerator.Current;
-                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
-                    if (criteria.Match(scalarValue))
-                        yield return point;
-                }
-            }
-        }
-
-        internal IEnumerable<ScalarValue> GetFilteredNonBlankValues(Reference reference, string function, bool skipHiddenRows = false)
-        {
-            // Allocate one per call, because visitor holds info whether function was found in a formula.
-            var visitor = new FunctionVisitor(function);
-            foreach (var area in reference.Areas)
-            {
-                var sheet = area.Worksheet ?? Worksheet;
-                var range = Area.FromRangeAddress(area);
-                var currentRow = 0;
-                var rowIsHidden = true;
-
-                // A value can be either in a non-empty value slice or a empty cell with a formula.
-                var enumerator = sheet.Internals.CellsCollection.ForValuesAndFormulas(range);
-                while (enumerator.MoveNext())
-                {
-                    var point = enumerator.Current;
-
-                    if (skipHiddenRows)
+                    // If row changed, update hidden info about current row
+                    if (currentRow != point.Row)
                     {
-                        // If row changed, update hidden info about current row
-                        if (currentRow != point.Row)
-                        {
-                            currentRow = point.Row;
-                            rowIsHidden = sheet.Internals.RowsCollection.TryGetValue(currentRow, out var row) && row.IsHidden;
-                        }
-
-                        if (rowIsHidden)
-                            continue;
+                        currentRow = point.Row;
+                        rowIsHidden = sheet.Internals.RowsCollection.TryGetValue(currentRow, out var row) && row.IsHidden;
                     }
 
-                    var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
-                    if (CallsFunction(formula, visitor))
+                    if (rowIsHidden)
                         continue;
-
-                    var scalarValue = GetCellValue(sheet, point.Row, point.Column);
-                    if (!scalarValue.IsBlank)
-                        yield return scalarValue;
                 }
-            }
 
-            yield break;
+                var formula = sheet.Internals.CellsCollection.FormulaSlice.Get(point);
+                if (CallsFunction(formula, visitor))
+                    continue;
 
-            static bool CallsFunction(XLCellFormula? formula, FunctionVisitor visitor)
-            {
-                if (formula is null)
-                    return false;
-
-                if (!formula.A1.Contains(visitor.FunctionName, StringComparison.OrdinalIgnoreCase))
-                    return false;
-
-                FormulaParser<object?, object?, FunctionVisitor>.CellFormulaA1(formula.A1, visitor, visitor);
-                if (!visitor.Found)
-                    return false;
-
-                // In order to reuse same visitor without allocation, clear the found flag.
-                visitor.Clear();
-                return true;
+                var scalarValue = GetCellValue(sheet, point.Row, point.Column);
+                if (!scalarValue.IsBlank)
+                    yield return scalarValue;
             }
         }
 
-        /// <summary>
-        /// This method should be used mostly for range arguments. If a value is scalar,
-        /// return a single value enumerable.
-        /// </summary>
-        internal IEnumerable<ScalarValue> GetNonBlankValues(AnyValue value)
+        yield break;
+
+        static bool CallsFunction(XLCellFormula? formula, FunctionVisitor visitor)
         {
-            if (value.TryPickScalar(out var scalar, out var collection))
-            {
-                if (scalar.IsBlank)
-                    return System.Array.Empty<ScalarValue>();
+            if (formula is null)
+                return false;
 
-                return new ScalarArray(scalar, 1, 1);
-            }
+            if (!formula.A1.Contains(visitor.FunctionName, StringComparison.OrdinalIgnoreCase))
+                return false;
 
-            if (collection.TryPickT0(out var array, out var reference))
-                return array.Where(x => !x.IsBlank);
+            FormulaParser<object?, object?, FunctionVisitor>.CellFormulaA1(formula.A1, visitor, visitor);
+            if (!visitor.Found)
+                return false;
 
-            return GetNonBlankValues(reference);
+            // In order to reuse same visitor without allocation, clear the found flag.
+            visitor.Clear();
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// This method should be used mostly for range arguments. If a value is scalar,
+    /// return a single value enumerable.
+    /// </summary>
+    internal IEnumerable<ScalarValue> GetNonBlankValues(AnyValue value)
+    {
+        if (value.TryPickScalar(out var scalar, out var collection))
+        {
+            if (scalar.IsBlank)
+                return System.Array.Empty<ScalarValue>();
+
+            return new ScalarArray(scalar, 1, 1);
         }
 
-        internal IEnumerable<ScalarValue> GetAllValues(AnyValue value)
+        if (collection.TryPickT0(out var array, out var reference))
+            return array.Where(x => !x.IsBlank);
+
+        return GetNonBlankValues(reference);
+    }
+
+    internal IEnumerable<ScalarValue> GetAllValues(AnyValue value)
+    {
+        if (value.TryPickScalar(out var scalar, out var collection))
+            return new ScalarArray(scalar, 1, 1);
+
+        if (collection.TryPickT0(out var array, out var reference))
+            return array;
+
+        return GetAllCellValues(reference);
+    }
+
+    internal IEnumerable<ScalarValue> GetAllCellValues(Reference reference)
+    {
+        foreach (var area in reference.Areas)
         {
-            if (value.TryPickScalar(out var scalar, out var collection))
-                return new ScalarArray(scalar, 1, 1);
-
-            if (collection.TryPickT0(out var array, out var reference))
-                return array;
-
-            return GetAllCellValues(reference);
-        }
-
-        internal IEnumerable<ScalarValue> GetAllCellValues(Reference reference)
-        {
-            foreach (var area in reference.Areas)
+            var sheet = area.Worksheet;
+            foreach (var point in Area.FromRangeAddress(area))
             {
-                var sheet = area.Worksheet;
-                foreach (var point in Area.FromRangeAddress(area))
-                {
-                    yield return GetCellValue(sheet, point.Row, point.Column);
-                }
+                yield return GetCellValue(sheet, point.Row, point.Column);
             }
         }
+    }
 
-        private class FunctionVisitor : CollectVisitor<FunctionVisitor>
+    private class FunctionVisitor : CollectVisitor<FunctionVisitor>
+    {
+        public FunctionVisitor(string function)
         {
-            public FunctionVisitor(string function)
-            {
-                FunctionName = function;
-            }
+            FunctionName = function;
+        }
 
-            internal string FunctionName { get; }
+        internal string FunctionName { get; }
 
-            public bool Found { get; private set; }
+        public bool Found { get; private set; }
 
-            public void Clear() => Found = false;
+        public void Clear() => Found = false;
 
-            public override object? Function(FunctionVisitor context, SymbolRange range, ReadOnlySpan<char> functionName, IReadOnlyList<object?> arguments)
-            {
-                Found = Found || functionName.Equals(FunctionName.AsSpan(), StringComparison.OrdinalIgnoreCase);
-                return default;
-            }
+        public override object? Function(FunctionVisitor context, SymbolRange range, ReadOnlySpan<char> functionName, IReadOnlyList<object?> arguments)
+        {
+            Found = Found || functionName.Equals(FunctionName.AsSpan(), StringComparison.OrdinalIgnoreCase);
+            return default;
         }
     }
 }
