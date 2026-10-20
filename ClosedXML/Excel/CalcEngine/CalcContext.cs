@@ -14,10 +14,6 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal sealed class CalcContext
     {
-        private readonly XLCalcEngine _calcEngine;
-        private readonly XLWorkbook? _workbook;
-        private readonly XLWorksheet? _worksheet;
-        private readonly IXLAddress? _formulaAddress;
         private readonly bool _recursive;
         private long _allocatedBytes;
 
@@ -28,10 +24,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook? workbook, XLWorksheet? worksheet, IXLAddress? formulaAddress, bool recursive = false)
         {
-            _calcEngine = calcEngine;
-            _workbook = workbook;
-            _worksheet = worksheet;
-            _formulaAddress = formulaAddress;
+            CalcEngine = calcEngine;
+            Workbook = workbook;
+            Worksheet = worksheet;
+            FormulaAddress = formulaAddress;
             _recursive = recursive;
             Culture = culture;
 
@@ -41,22 +37,22 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // LEGACY: Remove once legacy functions are migrated
-        internal XLCalcEngine CalcEngine => _calcEngine ?? throw new MissingContextException();
+        internal XLCalcEngine CalcEngine => field ?? throw new MissingContextException();
 
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
         /// </summary>
-        public XLWorkbook Workbook => _workbook ?? throw new MissingContextException();
+        public XLWorkbook Workbook => field ?? throw new MissingContextException();
 
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
         /// </summary>
-        public XLWorksheet Worksheet => _worksheet ?? throw new MissingContextException();
+        public XLWorksheet Worksheet => field ?? throw new MissingContextException();
 
         /// <summary>
         /// Address of the calculated formula.
         /// </summary>
-        public IXLAddress FormulaAddress => _formulaAddress ?? throw new MissingContextException();
+        public IXLAddress FormulaAddress => field ?? throw new MissingContextException();
 
         /// <summary>
         /// A culture used for comparisons and conversions (e.g. text to number).
