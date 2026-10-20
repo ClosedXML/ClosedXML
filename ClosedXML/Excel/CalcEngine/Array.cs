@@ -50,11 +50,11 @@ internal abstract class Array : IEnumerable<ScalarValue>
     /// <summary>
     /// Return a new array that was created by applying a function to each element of the array.
     /// </summary>
-    public Array Apply(Func<ScalarValue, ScalarValue> op)
+    public Array Apply(Func<ScalarValue, ScalarValue> op, CalcContext ctx)
     {
-        var data = new ScalarValue[Height, Width];
-        for (int y = 0; y < Height; ++y)
-            for (int x = 0; x < Width; ++x)
+        var data = ctx.AllocateArray<ScalarValue>(Height, Width);
+        for (var y = 0; y < Height; ++y)
+            for (var x = 0; x < Width; ++x)
                 data[y, x] = op(this[y, x]);
 
         return new ConstArray(data);
@@ -69,10 +69,10 @@ internal abstract class Array : IEnumerable<ScalarValue>
         var leftArray = this;
         var width = Math.Max(leftArray.Width, rightArray.Width);
         var height = Math.Max(leftArray.Height, rightArray.Height);
-        var data = new ScalarValue[height, width];
-        for (int y = 0; y < height; ++y)
+        var data = ctx.AllocateArray<ScalarValue>(height, width);
+        for (var y = 0; y < height; ++y)
         {
-            for (int x = 0; x < width; ++x)
+            for (var x = 0; x < width; ++x)
             {
                 var leftItem = x < leftArray.Width && y < leftArray.Height ? leftArray[y, x] : XLError.NoValueAvailable;
                 var rightItem = x < rightArray.Width && y < rightArray.Height ? rightArray[y, x] : XLError.NoValueAvailable;

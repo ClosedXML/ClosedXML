@@ -1,10 +1,12 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.Exceptions;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using ClosedXML.Excel.CalcEngine.Visitors;
 using ClosedXML.Parser;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using ClosedXML.Excel.CalcEngine.Functions;
 
@@ -17,6 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly XLWorksheet? _worksheet;
         private readonly IXLAddress? _formulaAddress;
         private readonly bool _recursive;
+        private long _allocatedBytes;
 
         public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLCell cell)
             : this(calcEngine, culture, cell.Worksheet.Workbook, cell.Worksheet, cell.Address)
@@ -31,7 +34,10 @@ namespace ClosedXML.Excel.CalcEngine
             _formulaAddress = formulaAddress;
             _recursive = recursive;
             Culture = culture;
+
+            // If workbook is null, the context is from XLWorkbook.EvaluateExpr. Ignore limits in such case.
             CancellationToken = workbook?.CancellationToken ?? CancellationToken.None;
+            MaxCalculationMemoryBytes = workbook?.MaxCalculationMemoryBytes ?? 0;
         }
 
         // LEGACY: Remove once legacy functions are migrated
@@ -88,12 +94,50 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal CancellationToken CancellationToken { get; }
 
+        internal long MaxCalculationMemoryBytes { get; }
+
         /// <summary>
         /// A helper method to check is user cancelled the calculation in function loops.
         /// </summary>
         internal void ThrowIfCancelled()
         {
             CancellationToken.ThrowIfCancellationRequested();
+        }
+
+        internal T[,] AllocateArray<T>(int rows, int columns)
+            where T : struct
+        {
+            if (rows <= 0)
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            if (columns <= 0)
+                throw new ArgumentOutOfRangeException(nameof(columns));
+
+            // 0 means unlimited
+            if (MaxCalculationMemoryBytes == 0)
+                return new T[rows, columns];
+
+            var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
+            if (!TryGetByteCount<T>(rows, columns, out var bytes) || bytes > remainingBytesUntilLimit)
+                throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
+
+            _allocatedBytes += bytes;
+            return new T[rows, columns];
+        }
+
+        private static bool TryGetByteCount<T>(int rows, int columns, out long bytes)
+            where T : struct
+        {
+            var elementSize = (long)Unsafe.SizeOf<T>();
+            var maxWidth = long.MaxValue / elementSize;
+            var maxHeight = long.MaxValue / (columns * elementSize);
+            if (columns > maxWidth || rows > maxHeight)
+            {
+                bytes = 0;
+                return false;
+            }
+
+            bytes = checked((long)rows * (long)columns * elementSize);
+            return true;
         }
 
         internal ScalarValue GetCellValue(XLWorksheet? sheet, int rowNumber, int columnNumber)

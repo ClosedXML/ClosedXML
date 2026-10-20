@@ -565,7 +565,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             var rows = array.Height;
             var cols = array.Width;
-            var arr = new double[rows, cols];
+            var arr = ctx.AllocateArray<double>(rows, cols);
 
             for (var row = 0; row < rows; row++)
             {
@@ -684,7 +684,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (matrixA.GetLength(1) != matrixB.GetLength(0))
                 return XLError.IncompatibleValue;
 
-            var matrixC = new double[matrixA.GetLength(0), matrixB.GetLength(1)];
+            var matrixC = ctx.AllocateArray<double>(matrixA.GetLength(0), matrixB.GetLength(1));
             for (var i = 0; i < matrixA.GetLength(0); i++)
             {
                 for (var j = 0; j < matrixB.GetLength(1); j++)

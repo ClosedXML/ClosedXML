@@ -48,7 +48,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return firstColumn;
 
             var span = lastColumn - firstColumn + 1;
-            var array = new ScalarValue[1, span];
+            var array = ctx.AllocateArray<ScalarValue>(1, span);
             for (var col = firstColumn; col <= lastColumn; col++)
             {
                 ctx.ThrowIfCancelled();
@@ -399,7 +399,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return firstRow;
 
             var span = lastRow - firstRow + 1;
-            var array = new ScalarValue[span, 1];
+            var array = ctx.AllocateArray<ScalarValue>(span, 1);
             for (var row = firstRow; row <= lastRow; row++)
             {
                 ctx.ThrowIfCancelled();

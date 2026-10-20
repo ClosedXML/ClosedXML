@@ -116,7 +116,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return ToNumber(scalar).ToAnyValue();
 
             if (collection.TryPickT0(out var array, out var reference))
-                return array.Apply(static v => ToNumber(v));
+                return array.Apply(static v => ToNumber(v), ctx);
 
             var area = reference.Areas.First();
             var referenceValue = ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.RowNumber);
@@ -179,7 +179,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (coll.TryPickT0(out var array, out var reference))
-                return array.Apply(x => f(x, ctx));
+                return array.Apply(x => f(x, ctx), ctx);
 
             if (!reference.TryGetSingleCellValue(out var cellValue, ctx))
                 return XLError.IncompatibleValue;

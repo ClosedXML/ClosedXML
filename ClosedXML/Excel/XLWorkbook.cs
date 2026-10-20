@@ -117,6 +117,8 @@ namespace ClosedXML.Excel
 
         internal CancellationToken CancellationToken { get; }
 
+        internal long MaxCalculationMemoryBytes { get; }
+
         internal XLPivotCaches PivotCachesInternal
         {
             get
@@ -915,6 +917,7 @@ namespace ClosedXML.Excel
             StrictAttributeParsing = loadOptions.StrictAttributeParsing;
             GraphicEngine = loadOptions.GraphicEngine ?? LoadOptions.DefaultGraphicEngine ?? DefaultGraphicEngine.Instance.Value;
             CancellationToken = loadOptions.CancellationToken;
+            MaxCalculationMemoryBytes = loadOptions.MaxCalculationMemoryBytes;
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;

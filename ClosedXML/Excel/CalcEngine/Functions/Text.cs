@@ -482,7 +482,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (collection.TryPickT0(out var array, out var reference))
             {
-                var arrayResult = new ScalarValue[array.Height, array.Width];
+                var arrayResult = ctx.AllocateArray<ScalarValue>(array.Height, array.Width);
                 for (var row = 0; row < array.Height; ++row)
                 {
                     for (var col = 0; col < array.Width; ++col)

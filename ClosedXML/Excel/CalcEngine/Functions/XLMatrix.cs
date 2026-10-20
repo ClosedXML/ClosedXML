@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             rows = iRows;
             cols = iCols;
             _ctx = ctx;
-            mat = new double[rows, cols];
+            mat = ctx.AllocateArray<double>(iRows, iCols);
         }
 
         public XLMatrix(Double[,] arr, CalcContext ctx)

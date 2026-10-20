@@ -228,7 +228,7 @@ namespace ClosedXML.Excel.CalcEngine
             var height = area.RowSpan;
             var startColumn = area.FirstAddress.ColumnNumber;
             var startRow = area.FirstAddress.RowNumber;
-            var data = new ScalarValue[height, width];
+            var data = context.AllocateArray<ScalarValue>(height, width);
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)

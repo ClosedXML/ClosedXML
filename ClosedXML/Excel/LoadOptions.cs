@@ -75,5 +75,21 @@ namespace ClosedXML.Excel
         /// doesn't have a way to pass token.
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
+
+        /// <summary>
+        /// A limit of how many bytes can be at most used by the calculation engine at any time
+        /// during one calculation. Calculation means one run of calculation engine, it can be
+        /// one cell or whole workbook. This is not a precise memory limit. It is used to check
+        /// during allocation of memory buffers and other similar objects. It doesn't ensure that
+        /// GC will collect buffers that are no longer used before new ones are allocated.
+        /// The default is 0, which means no limit.
+        /// </summary>
+        public long MaxCalculationMemoryBytes
+        {
+            get;
+            set => field = value >= 0
+                ? value
+                : throw new ArgumentOutOfRangeException(nameof(value), "Calculation memory limit must be non-negative.");
+        } = 0;
     }
 }

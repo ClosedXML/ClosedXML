@@ -85,7 +85,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // Step 3: For each item in total array, calculate function
-            var result = new ScalarValue[totalRows, totalColumns];
+            var result = ctx.AllocateArray<ScalarValue>(totalRows, totalColumns);
             for (var row = 0; row < totalRows; ++row)
             {
                 for (var column = 0; column < totalColumns; ++column)

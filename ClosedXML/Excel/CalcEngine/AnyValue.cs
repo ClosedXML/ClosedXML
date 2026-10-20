@@ -363,7 +363,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (isSingle)
                 return UnaryArithmeticOp(single, operatorFn, context).ToAnyValue();
 
-            return array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context));
+            return array.Apply(arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context), context);
         }
 
         private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, CalcContext ctx)
