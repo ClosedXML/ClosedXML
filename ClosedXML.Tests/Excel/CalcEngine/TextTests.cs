@@ -720,6 +720,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Replace_result_is_limited_to_32767_characters()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""REPLACE(REPT("A",32767),1,0,"B")"""));
+        }
+
+        [Test]
         public void Rept_returns_empty_string_when_text_is_empty_string()
         {
             var actual = XLWorkbook.EvaluateExpr("""REPT("",3)""");
@@ -728,8 +734,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase(-1)]
         [TestCase(-0.1)]
-        [TestCase(2147483648)]
-        public void Rept_returns_error_when_count_is_negative_or_greater_than_max_int(double count)
+        [TestCase(XLHelper.CellTextLimit + 1)]
+        public void Rept_returns_error_when_count_is_negative_or_greater_than_max_text_length(double count)
         {
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"""REPT("",{count})"""));
         }
@@ -956,6 +962,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // AA is matches at every character, it doesn't skip
             var actual = XLWorkbook.EvaluateExpr("""SUBSTITUTE("AAAAAAAA","AA","ZZ",3)""");
             Assert.AreEqual(@"AAZZAAAA", actual);
+        }
+
+        [Test]
+        public void Substitute_result_is_limited_to_32767_characters()
+        {
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",32767),"A","BB")"""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",32767),"A","BB",1)"""));
         }
 
         [Test]

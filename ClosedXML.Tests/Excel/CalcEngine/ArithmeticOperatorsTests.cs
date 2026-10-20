@@ -55,6 +55,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedError, XLWorkbook.EvaluateExpr(formula));
         }
 
+        [Test]
+        public void Concat_result_is_limited_to_32767_characters()
+        {
+            Assert.AreEqual(new string('A', 32766) + "B", XLWorkbook.EvaluateExpr("REPT(\"A\",32766)&\"B\""));
+            Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("REPT(\"A\",32767)&\"B\""));
+        }
+
         #endregion
 
         #region Unary plus

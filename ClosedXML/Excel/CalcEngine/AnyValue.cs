@@ -497,6 +497,9 @@ namespace ClosedXML.Excel.CalcEngine
                 if (!rightTextResult.TryPickT0(out var rightText, out var rightError))
                     return rightError;
 
+                if ((long)leftText.Length + rightText.Length > XLHelper.CellTextLimit)
+                    return XLError.IncompatibleValue;
+
                 return leftText + rightText;
             }, context);
         }

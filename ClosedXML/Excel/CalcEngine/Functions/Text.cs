@@ -1,10 +1,10 @@
-using ExcelNumberFormat;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel.CalcEngine.Functions;
+using ExcelNumberFormat;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -366,8 +366,12 @@ namespace ClosedXML.Excel.CalcEngine
             if (prefixLength + deletedLength > oldText.Length)
                 deletedLength = oldText.Length - prefixLength;
 
+            var resultLength = (long)oldText.Length - deletedLength + replacement.Length;
+            if (resultLength > XLHelper.CellTextLimit)
+                return XLError.IncompatibleValue;
+
             // Excel does everything is in code units, produces invalid surrogate pairs and everything.
-            var sb = new StringBuilder(oldText.Length - deletedLength + replacement.Length);
+            var sb = new StringBuilder((int)resultLength);
             var text = oldText.AsSpan();
             sb.Append(text[..prefixLength]);
             sb.Append(replacement);
@@ -378,7 +382,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue Rept(CalcContext ctx, string text, double replicationCount)
         {
-            if (replicationCount is < 0 or >= int.MaxValue + 1d)
+            if (replicationCount is < 0 or >= XLHelper.CellTextLimit + 1d)
                 return XLError.IncompatibleValue;
 
             // If text is empty, loop could run too many times
@@ -386,11 +390,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return string.Empty;
 
             var count = checked((int)replicationCount);
-            var resultLength = text.Length * count;
+            var resultLength = (long)text.Length * count;
             if (resultLength > XLHelper.CellTextLimit)
                 return XLError.IncompatibleValue;
 
-            var sb = new StringBuilder(resultLength);
+            var sb = new StringBuilder((int)resultLength);
             for (var i = 0; i < count; ++i)
             {
                 ctx.ThrowIfCancelled();
@@ -450,7 +454,12 @@ namespace ClosedXML.Excel.CalcEngine
                 return text;
 
             if (occurrenceOrMissing is null)
+            {
+                if (SubstituteLength(text, oldText, newText) > XLHelper.CellTextLimit)
+                    return XLError.IncompatibleValue;
+
                 return text.Replace(oldText, newText);
+            }
 
             // There must be at least one loop (>=1), so `pos` will be set to an index or returned as not found
             var pos = -1;
@@ -463,11 +472,33 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var textSpan = text.AsSpan();
-            var sb = new StringBuilder(text.Length - oldText.Length + newText.Length);
+            var resultLength = (long)text.Length - oldText.Length + newText.Length;
+            if (resultLength > XLHelper.CellTextLimit)
+                return XLError.IncompatibleValue;
+
+            var sb = new StringBuilder((int)resultLength);
             sb.Append(textSpan[..pos]);
             sb.Append(newText);
             sb.Append(textSpan[(pos + oldText.Length)..]);
             return sb.ToString();
+        }
+
+        // Calculate length of result of SUBSTITUTE with all occurrences replaced
+        private static long SubstituteLength(string input, string oldValue, string newValue)
+        {
+            if (oldValue.Length == 0)
+                return input.Length;
+
+            int index;
+            var count = 0;
+            var span = input.AsSpan();
+            while ((index = span.IndexOf(oldValue.AsSpan(), StringComparison.Ordinal)) != -1)
+            {
+                count++;
+                span = span[(index + oldValue.Length)..];
+            }
+
+            return input.Length + count * ((long)newValue.Length - oldValue.Length);
         }
 
         private static AnyValue T(CalcContext ctx, AnyValue value)
