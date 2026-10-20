@@ -462,7 +462,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (!scalar.ToNumber(ctx.Culture).TryPickT0(out var number, out var error))
                     return error;
 
-                values = new ScalarValue[] { number };
+                values = [number];
                 size = 1;
             }
             else if (collection.TryPickT0(out var array, out var reference))
@@ -477,7 +477,8 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // Pre-allocate array to reduce allocations during doubling of buffer.
-            var total = new List<double>(size);
+            var total = ctx.AllocateArray<double>(size);
+            var count = 0;
             foreach (var value in values)
             {
                 ctx.ThrowIfCancelled();
@@ -485,15 +486,15 @@ namespace ClosedXML.Excel.CalcEngine
                     return value.GetError();
 
                 if (value.IsNumber)
-                    total.Add(value.GetNumber());
+                    total[count++] = value.GetNumber();
             }
 
-            if (k > total.Count)
+            if (k > count)
                 return XLError.NumberInvalid;
 
-            total.Sort();
+            System.Array.Sort(total, 0, count);
 
-            return total[^k];
+            return total[count - k];
         }
 
         /// <summary>

@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             L = IdentityMatrix(rows, cols);
             U = Duplicate();
 
-            pi = new int[rows];
+            pi = _ctx.AllocateArray<int>(rows);
             for (var i = 0; i < rows; i++)
             {
                 _ctx.ThrowIfCancelled();

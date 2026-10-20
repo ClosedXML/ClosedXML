@@ -104,6 +104,26 @@ namespace ClosedXML.Excel.CalcEngine
             CancellationToken.ThrowIfCancellationRequested();
         }
 
+        internal T[] AllocateArray<T>(int length)
+            where T : struct
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (length == 0)
+                return [];
+
+            // 0 means unlimited
+            if (MaxCalculationMemoryBytes == 0)
+                return new T[length];
+
+            var remainingBytesUntilLimit = MaxCalculationMemoryBytes - _allocatedBytes;
+            if (!TryGetByteCount<T>(length, out var bytes) || bytes > remainingBytesUntilLimit)
+                throw new LimitExceededException($"Calculation exceeded the memory limit of {MaxCalculationMemoryBytes} bytes.");
+
+            _allocatedBytes += bytes;
+            return new T[length];
+        }
+
         internal T[,] AllocateArray<T>(int rows, int columns)
             where T : struct
         {
@@ -122,6 +142,21 @@ namespace ClosedXML.Excel.CalcEngine
 
             _allocatedBytes += bytes;
             return new T[rows, columns];
+        }
+
+        private static bool TryGetByteCount<T>(int length, out long bytes)
+            where T : struct
+        {
+            var elementSize = (long)Unsafe.SizeOf<T>();
+            var maxLength = long.MaxValue / elementSize;
+            if (length > maxLength)
+            {
+                bytes = 0;
+                return false;
+            }
+
+            bytes = length * elementSize;
+            return true;
         }
 
         private static bool TryGetByteCount<T>(int rows, int columns, out long bytes)
