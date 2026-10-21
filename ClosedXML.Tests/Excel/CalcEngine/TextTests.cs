@@ -734,9 +734,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase(-1)]
         [TestCase(-0.1)]
-        [TestCase(XLHelper.CellTextLimit + 1)]
-        public void Rept_returns_error_when_count_is_negative_or_greater_than_max_text_length(double count)
+        [TestCase(2147483648)]
+        public void Rept_returns_error_when_count_is_negative_or_greater_than_max_int(double count)
         {
+            // The REPT repeats empty string to check limits of allowed values for *count*
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr($"""REPT("",{count})"""));
         }
 

@@ -382,7 +382,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue Rept(CalcContext ctx, string text, double replicationCount)
         {
-            if (replicationCount is < 0 or >= XLHelper.CellTextLimit + 1d)
+            if (replicationCount is < 0 or >= int.MaxValue + 1d)
                 return XLError.IncompatibleValue;
 
             // If text is empty, loop could run too many times
