@@ -968,6 +968,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Substitute_result_is_limited_to_32767_characters()
         {
+            Assert.AreEqual(new string('B', 32766) + "C", XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",16383) & "C","A","BB")"""));
+            Assert.AreEqual("BB" + new string('A', 32765), XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",32766),"A","BB",1)"""));
+
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",32767),"A","BB")"""));
             Assert.AreEqual(XLError.IncompatibleValue, XLWorkbook.EvaluateExpr("""SUBSTITUTE(REPT("A",32767),"A","BB",1)"""));
         }

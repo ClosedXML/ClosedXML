@@ -15,7 +15,7 @@ public class CalculationMemoryLimitTests
         const int cells = 4;
         using var wb = new XLWorkbook(new LoadOptions { MaxCalculationMemoryBytes = cells * Unsafe.SizeOf<ScalarValue>() });
         var ws = wb.AddWorksheet();
-        ws.Cells("A1").Value = 10;
+        ws.Cell("A1").Value = 10;
         ws.Cell("A2").Value = 20;
 
         ws.Cell("C1").SetFormulaA1($"A1:A{cells}+1");
@@ -46,10 +46,9 @@ public class CalculationMemoryLimitTests
         var ws = wb.AddWorksheet();
         ws.Cell("A1").Value = 3;
         ws.Cell("A2").Value = 4;
-        ws.Cell("B1").SetFormulaA1("SUM(A1 * 2)");
-        ws.Cell("B2").SetFormulaA1("SUM(A1:A2 * 2)");
+        ws.Cell("B1").SetFormulaA1("SUM(A1:A2 * 2)");
 
-        Assert.Throws<LimitExceededException>(() => _ = ws.Cell("B2").Value);
+        Assert.Throws<LimitExceededException>(() => _ = ws.Cell("B1").Value);
     }
 
     [Test]
