@@ -45,6 +45,23 @@ namespace ClosedXML.Excel
         IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
 
         /// <summary>
+        /// Returns a collection of the same type containing the rows that match the predicate.
+        /// </summary>
+        IXLRows Where(Func<IXLRow, Boolean> predicate);
+
+        /// <summary>
+        /// Returns a collection of the same type containing all rows after the first
+        /// <paramref name="count"/> rows, in row-number order.
+        /// </summary>
+        IXLRows Skip(Int32 count);
+
+        /// <summary>
+        /// Returns a collection of the same type containing the first <paramref name="count"/>
+        /// rows, in row-number order.
+        /// </summary>
+        IXLRows Take(Int32 count);
+
+        /// <summary>
         /// Hides all rows.
         /// </summary>
         void Hide();

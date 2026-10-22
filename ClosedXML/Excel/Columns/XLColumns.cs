@@ -132,6 +132,24 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLColumns Where(Func<IXLColumn, Boolean> predicate)
+        {
+            if (predicate is null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return FromOrdered(OrderedColumns.Where(c => predicate(c)));
+        }
+
+        public IXLColumns Skip(Int32 count)
+        {
+            return FromOrdered(OrderedColumns.Skip(count));
+        }
+
+        public IXLColumns Take(Int32 count)
+        {
+            return FromOrdered(OrderedColumns.Take(count));
+        }
+
         public void Hide()
         {
             Columns.ForEach(c => c.Hide());
@@ -265,6 +283,16 @@ namespace ClosedXML.Excel
         {
             foreach (var range in this)
                 range.Select();
+        }
+
+        private IEnumerable<XLColumn> OrderedColumns => Columns.OrderBy(c => c.ColumnNumber());
+
+        private XLColumns FromOrdered(IEnumerable<XLColumn> columns)
+        {
+            var result = new XLColumns(_workbook, worksheet: null, defaultStyleSheet: _defaultStyleSheet);
+            foreach (var column in columns)
+                result.Add(column);
+            return result;
         }
 
         private void Materialize()

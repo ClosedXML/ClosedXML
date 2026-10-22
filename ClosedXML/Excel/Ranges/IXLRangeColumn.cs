@@ -107,6 +107,21 @@ namespace ClosedXML.Excel
 
         IXLColumn WorksheetColumn();
 
+        /// <summary>
+        /// Adjusts the width of the worksheet column based on the contents of cells in this range column.
+        /// </summary>
+        IXLRangeColumn AdjustToContents();
+
+        IXLRangeColumn AdjustToContents(Int32 startRow);
+
+        IXLRangeColumn AdjustToContents(Int32 startRow, Int32 endRow);
+
+        IXLRangeColumn AdjustToContents(Double minWidth, Double maxWidth);
+
+        IXLRangeColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth);
+
+        IXLRangeColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
+
         IXLTable AsTable();
 
         IXLTable AsTable(String name);
