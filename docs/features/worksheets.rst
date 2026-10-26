@@ -18,7 +18,7 @@ For name, a new name `Sheet{number}` will be used. If a position is missing, she
    // Add a worksheet with a name 'Export' as the last sheet of a workbook
    wb.AddWorksheet("Export");
 
-   // Add a worksheet Export at position 2, moving all other sheets to the right
+   // Add a worksheet Import at position 2, moving all other sheets to the right
    // 'Export' will be in the last position, the end result will be 'Sheet1', 'Import', 'Export'
    wb.AddWorksheet("Import", 2);
 
