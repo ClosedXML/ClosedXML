@@ -1,0 +1,54 @@
+name: CI (Windows Build & Test)
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - documentpartner/main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build and Test on Windows
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          # Adjust if your repo requires a different SDK.
+          dotnet-version: '8.0.x'
+
+      - name: Dotnet info
+        run: dotnet --info
+
+      - name: Restore
+        run: dotnet restore ClosedXML.sln
+
+      - name: Build
+        run: dotnet build ClosedXML.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test ClosedXML.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: |
+            **/*.trx
+          if-no-files-found: ignore

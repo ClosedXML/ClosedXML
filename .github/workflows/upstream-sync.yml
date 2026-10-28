@@ -1,0 +1,232 @@
+name: Upstream Sync (ClosedXML Release -> PR)
+
+on:
+  schedule:
+    - cron: '17 */6 * * *' # every 6 hours
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional upstream tag to force (e.g. 0.105.1)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      TARGET_REPO: rubicon-oss/DocumentPartner.ClosedXML
+      TARGET_BRANCH: documentpartner/main
+      UPSTREAM_REPO: ClosedXML/ClosedXML
+      CI_WORKFLOW_FILE: ci.yml
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote and fetch refs
+        run: |
+          git remote add upstream https://github.com/${UPSTREAM_REPO}.git || true
+          git fetch --tags origin
+          git fetch --tags upstream
+
+      - name: Resolve release to integrate
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "${INPUT_RELEASE_TAG:-}" ]; then
+            TAG="${INPUT_RELEASE_TAG}"
+            # Verify the tag exists upstream.
+            gh release view "$TAG" --repo "${UPSTREAM_REPO}" >/dev/null
+            URL=$(gh release view "$TAG" --repo "${UPSTREAM_REPO}" --json url -q .url)
+          else
+            # Find newest stable (not draft, not prerelease) release whose commit is not yet contained.
+            mapfile -t RELEASE_ROWS < <(gh release list --repo "${UPSTREAM_REPO}" --limit 100 --json tagName,isDraft,isPrerelease,url,publishedAt --jq '.[] | select(.isDraft==false and .isPrerelease==false) | [.tagName,.url] | @tsv')
+
+            TAG=""
+            URL=""
+
+            for ROW in "${RELEASE_ROWS[@]}"; do
+              CANDIDATE_TAG=$(echo "$ROW" | cut -f1)
+              CANDIDATE_URL=$(echo "$ROW" | cut -f2)
+
+              # Fetch tag explicitly (safe if already present)
+              git fetch upstream "refs/tags/${CANDIDATE_TAG}:refs/tags/upstream-${CANDIDATE_TAG}" || true
+
+              # Resolve upstream tag commit
+              if ! COMMIT=$(git rev-parse "upstream-${CANDIDATE_TAG}^{commit}" 2>/dev/null); then
+                continue
+              fi
+
+              # If commit already ancestor of target branch, it's integrated.
+              if git merge-base --is-ancestor "$COMMIT" "origin/${TARGET_BRANCH}"; then
+                continue
+              fi
+
+              TAG="$CANDIDATE_TAG"
+              URL="$CANDIDATE_URL"
+              break
+            done
+          fi
+
+          if [ -z "${TAG:-}" ]; then
+            echo "No missing stable upstream release found."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Ensure we have the tag commit locally as upstream-<tag>
+          git fetch upstream "refs/tags/${TAG}:refs/tags/upstream-${TAG}" || true
+          COMMIT=$(git rev-parse "upstream-${TAG}^{commit}")
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "release_url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "commit=${COMMIT}" >> "$GITHUB_OUTPUT"
+          echo "branch=upstream-sync/${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Stop if nothing to sync
+        if: steps.resolve.outputs.found != 'true'
+        run: echo "Nothing to sync."
+
+      - name: Create/update integration branch
+        if: steps.resolve.outputs.found == 'true'
+        run: |
+          set -euo pipefail
+          BRANCH="${{ steps.resolve.outputs.branch }}"
+          TAG="${{ steps.resolve.outputs.tag }}"
+
+          git checkout -B "$BRANCH" "origin/${TARGET_BRANCH}"
+
+          # Keep branch deterministic per run.
+          # Remove prior merge attempt on branch by resetting to target branch first.
+          git reset --hard "origin/${TARGET_BRANCH}"
+
+          # Attempt merge of upstream tag commit.
+          if ! git merge --no-ff --no-edit "upstream-${TAG}"; then
+            echo "merge_conflict=true" >> "$GITHUB_ENV"
+            echo "merge_conflict_files<<EOF" >> "$GITHUB_ENV"
+            git diff --name-only --diff-filter=U >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+
+            # Abort conflicted merge so branch remains clean if needed.
+            git merge --abort || true
+          else
+            echo "merge_conflict=false" >> "$GITHUB_ENV"
+            git push --force-with-lease origin "$BRANCH"
+          fi
+
+      - name: Open or update conflict issue
+        if: steps.resolve.outputs.found == 'true' && env.merge_conflict == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TITLE="Upstream sync conflict: ${{ steps.resolve.outputs.tag }}"
+          BODY=$(cat <<EOF
+          Upstream sync for \`${{ steps.resolve.outputs.tag }}\` could not be merged automatically into \`${TARGET_BRANCH}\`.
+
+          Upstream release: ${{ steps.resolve.outputs.release_url }}
+          Upstream commit: \`${{ steps.resolve.outputs.commit }}\`
+
+          Conflicting files:
+          \`\`\`
+          ${merge_conflict_files}
+          \`\`\`
+
+          Please resolve manually by creating/updating branch \`${{ steps.resolve.outputs.branch }}\`, then open a PR to \`${TARGET_BRANCH}\`.
+          EOF
+          )
+
+          ISSUE_NUMBER=$(gh issue list --repo "${TARGET_REPO}" --state open --search "in:title ${TITLE}" --json number -q '.[0].number')
+          if [ -n "${ISSUE_NUMBER:-}" ] && [ "${ISSUE_NUMBER}" != "null" ]; then
+            gh issue comment "${ISSUE_NUMBER}" --repo "${TARGET_REPO}" --body "$BODY"
+          else
+            gh issue create --repo "${TARGET_REPO}" --title "$TITLE" --body "$BODY"
+          fi
+
+      - name: Create or update PR
+        if: steps.resolve.outputs.found == 'true' && env.merge_conflict == 'false'
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ steps.resolve.outputs.branch }}"
+          TAG="${{ steps.resolve.outputs.tag }}"
+
+          TITLE="chore: sync upstream release ${TAG}"
+          BODY=$(cat <<EOF
+          Automated upstream sync PR.
+
+          - Upstream repo: \`${UPSTREAM_REPO}\`
+          - Upstream release: ${{ steps.resolve.outputs.release_url }}
+          - Upstream tag: \`${TAG}\`
+          - Upstream commit: \`${{ steps.resolve.outputs.commit }}\`
+          - Target branch: \`${TARGET_BRANCH}\`
+
+          Notes:
+          - Merge strategy is regular merge commit (no squash/rebase).
+          - CI is explicitly dispatched for this branch.
+          - Version remains sourced from \`Directory.Build.props\`.
+          EOF
+          )
+
+          PR_URL=$(gh pr list --repo "${TARGET_REPO}" --head "$BRANCH" --base "${TARGET_BRANCH}" --state open --json url -q '.[0].url')
+
+          if [ -n "${PR_URL:-}" ] && [ "${PR_URL}" != "null" ]; then
+            gh pr edit "$PR_URL" --repo "${TARGET_REPO}" --title "$TITLE" --body "$BODY"
+            echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+          else
+            PR_URL=$(gh pr create --repo "${TARGET_REPO}" --base "${TARGET_BRANCH}" --head "$BRANCH" --title "$TITLE" --body "$BODY")
+            echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Dispatch CI workflow for integration branch
+        if: steps.resolve.outputs.found == 'true' && env.merge_conflict == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ steps.resolve.outputs.branch }}"
+          gh workflow run "${CI_WORKFLOW_FILE}" --repo "${TARGET_REPO}" --ref "$BRANCH"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Upstream Sync Summary"
+            echo "- Found release: ${{ steps.resolve.outputs.found }}"
+            if [ "${{ steps.resolve.outputs.found }}" = "true" ]; then
+              echo "- Tag: ${{ steps.resolve.outputs.tag }}"
+              echo "- Commit: ${{ steps.resolve.outputs.commit }}"
+              echo "- Branch: ${{ steps.resolve.outputs.branch }}"
+              echo "- Merge conflict: ${merge_conflict:-unknown}"
+              if [ "${merge_conflict:-}" = "false" ]; then
+                echo "- PR: ${{ steps.pr.outputs.pr_url }}"
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
