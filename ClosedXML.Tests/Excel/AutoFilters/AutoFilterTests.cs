@@ -373,5 +373,19 @@ namespace ClosedXML.Tests
                 }
             }
         }
+
+        [Test]
+        public void AutoFilterReapplyShouldNotThrowNullReferenceError()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var sheet = wb.Worksheets.Add("Test");
+
+                Assert.DoesNotThrow(() =>
+                {
+                    sheet.AutoFilter.Reapply();
+                });
+            }
+        }
     }
 }
