@@ -21,6 +21,8 @@ namespace ClosedXML.Excel
 
     public enum XLDateTimeGrouping { Year, Month, Day, Hour, Minute, Second }
 
+    public enum XLColorFilterType { CellColor, FontColor }
+
     /// <summary>
     /// <para>
     /// AutoFilter filter configuration for one column in an autofilter <see cref="IXLAutoFilter.Range">area</see>.
@@ -82,6 +84,22 @@ namespace ClosedXML.Excel
         /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
         /// <returns>Fluent API allowing to add additional filter value.</returns>
         IXLFilteredColumn AddFilter(XLCellValue value, bool reapply = true);
+
+        /// <summary>
+        /// Add font color filter
+        /// </summary>
+        /// <param name="color">Value of the filter</param>
+        /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
+        /// <returns>Fluent API allowing to add additional filter value.</returns>
+        IXLFilterColumn AddFontColorFilter(XLColor color, bool reapply = true);
+
+        /// <summary>
+        /// Add background color filter
+        /// </summary>
+        /// <param name="color">Value of the filter</param>
+        /// <param name="reapply">Should the autofilter be immediately reapplied?</param>
+        /// <returns>Fluent API allowing to add additional filter value.</returns>
+        IXLFilterColumn AddBackgroundColorFilter(XLColor color, bool reapply = true);
 
         /// <summary>
         /// <para>
@@ -214,5 +232,7 @@ namespace ClosedXML.Excel
         /// Returns undefined value, if <see cref="FilterType"/> is not <see cref="XLFilterType.Dynamic"/>.
         /// </remarks>
         Double DynamicValue { get; }
+
+        XLColorFilterType ColorFilterType { get; }
     }
 }
