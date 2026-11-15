@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
             if (length > 3)
                 return false;
 
-            var theColumn = column.ToUpper();
+            var theColumn = column.ToUpperInvariant();
 
             var isValid = theColumn[0] >= 'A' && theColumn[0] <= 'Z';
             if (length == 1)

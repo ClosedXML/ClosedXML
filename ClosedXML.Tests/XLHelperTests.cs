@@ -157,5 +157,19 @@ namespace ClosedXML.Tests
         {
             Assert.Throws<ArgumentException>(() => XLHelper.CreateSafeSheetName("abc\\def", replaceChar: ':'));
         }
+
+        [Test]
+        [SetCulture("tr-TR")]
+        public void IsValidColumn_And_Range_AreCultureInvariant_UnderTurkishCulture()
+        {
+            Assert.IsTrue(XLHelper.IsValidColumn("i"));
+            Assert.IsTrue(XLHelper.IsValidColumn("ia"));
+            Assert.IsTrue(XLHelper.IsValidColumn("xfa"));
+            Assert.IsTrue(XLHelper.IsValidA1Address("i5"));
+
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            Assert.AreEqual("I5:J6", ws.Range("i5:j6").RangeAddress.ToString());
+        }
     }
 }
