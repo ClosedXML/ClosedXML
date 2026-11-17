@@ -167,6 +167,11 @@ namespace ClosedXML.Tests
             Assert.IsTrue(XLHelper.IsValidColumn("xfa"));
             Assert.IsTrue(XLHelper.IsValidA1Address("i5"));
 
+            Assert.IsFalse(XLHelper.IsValidColumn("ı"));
+            Assert.IsFalse(XLHelper.IsValidColumn("İ"));
+            Assert.IsFalse(XLHelper.IsValidColumn("xfe"));
+            Assert.IsFalse(XLHelper.IsValidA1Address("ı5"));
+
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             Assert.AreEqual("I5:J6", ws.Range("i5:j6").RangeAddress.ToString());
