@@ -264,6 +264,22 @@ namespace ClosedXML.Tests.Excel.Ranges
             }
         }
 
+        [Test]
+        public void XLRangesContainsCell()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                var ws2 = wb.Worksheets.Add("Sheet2");
+                var ranges = new XLRanges(wb) { ws.Range("B2:D4") };
+
+                Assert.IsTrue(ranges.Contains(ws.Cell("B2")));
+                Assert.IsTrue(ranges.Contains(ws.Cell("C3")));
+                Assert.IsFalse(ranges.Contains(ws.Cell("A1")));
+                Assert.IsFalse(ranges.Contains(ws2.Cell("C3")));
+            }
+        }
+
         private IXLRangeIndex CreateRangeIndex(IXLWorksheet worksheet)
         {
             return new XLRangeIndex<IXLRangeBase>((XLWorksheet)worksheet);
