@@ -663,5 +663,34 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 };
             }
         }
+
+        [Test]
+        public void Save_with_cyclic_defined_names_does_not_stack_overflow()
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet1");
+            workbook.DefinedNames.Add("NameA", "NameB+1");
+            workbook.DefinedNames.Add("NameB", "NameA+1");
+            worksheet.Cell("A1").FormulaA1 = "NameA";
+
+            using var stream = new System.IO.MemoryStream();
+            Assert.DoesNotThrow(() =>
+                workbook.SaveAs(stream, new SaveOptions { EvaluateFormulasBeforeSaving = true }));
+        }
+
+        [Test]
+        public void Save_with_long_chain_of_defined_names_does_not_stack_overflow()
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet1");
+            for (var index = 1; index < 2000; index++)
+                workbook.DefinedNames.Add($"Link_{index}", $"Link_{index + 1}+0");
+            workbook.DefinedNames.Add("Link_2000", "Sheet1!$B$1");
+            worksheet.Cell("A1").FormulaA1 = "Link_1";
+
+            using var stream = new System.IO.MemoryStream();
+            Assert.DoesNotThrow(() =>
+                workbook.SaveAs(stream, new SaveOptions { EvaluateFormulasBeforeSaving = true }));
+        }
     }
 }

@@ -339,7 +339,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Parser needs an equal sign for a union of ranges (or braces around formula)
             var nameFormula = definedName.RefersTo;
             nameFormula = nameFormula.StartsWith("=") ? nameFormula : "=" + nameFormula;
-            return engine.EvaluateName(nameFormula, ctxWs);
+            return engine.EvaluateName(definedName, nameFormula, ctxWs);
         }
 
         internal bool TryGetNameRange(IXLWorksheet ws, [NotNullWhen(true)] out IXLDefinedName? definedName)
