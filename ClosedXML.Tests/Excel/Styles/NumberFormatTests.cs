@@ -182,5 +182,22 @@ namespace ClosedXML.Tests.Excel.Styles
 
             Assert.AreEqual(ws.Cell("A2").Style.NumberFormat, ws.Cell("A1").Style.NumberFormat);
         }
+
+        [Test]
+        public void Unclosed_quote_in_number_format_does_not_hang_when_loading()
+        {
+            using var stream = new System.IO.MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Value = 1;
+                ws.Cell("A1").Style.NumberFormat.Format = "x\"";
+                wb.SaveAs(stream);
+            }
+
+            stream.Position = 0;
+            using var loaded = new XLWorkbook(stream);
+            Assert.AreEqual(1, loaded.Worksheet("Sheet1").Cell("A1").GetDouble());
+        }
     }
 }

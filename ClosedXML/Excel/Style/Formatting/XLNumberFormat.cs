@@ -90,7 +90,11 @@ internal readonly record struct XLNumberFormat : IEquatable<string>
         {
             var c = f[i];
             if (c == '"')
+            {
                 i = f.IndexOf('"', i + 1);
+                if (i == -1)
+                    return null;
+            }
             else if (c == '[')
             {
                 // #1742 We need to skip locale prefixes in DateTime formats [...]
