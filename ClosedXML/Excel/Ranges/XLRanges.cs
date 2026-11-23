@@ -129,7 +129,8 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
-            return GetIntersectedRanges((XLAddress)cell.Address).Any();
+            var addr = (XLAddress)cell.Address;
+            return GetRangeIndex(addr.Worksheet).Contains(in addr);
         }
 
         public Boolean Contains(IXLRange range)
