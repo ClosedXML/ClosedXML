@@ -8,6 +8,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class DependenciesContext
     {
+        private const int MaxNameDepth = 256;
+        private readonly HashSet<XLDefinedName> _activeNames = new();
+
         internal DependenciesContext(SheetArea formulaArea, XLWorkbook workbook)
         {
             FormulaArea = formulaArea;
@@ -35,5 +38,18 @@ namespace ClosedXML.Excel.CalcEngine
         /// Add name to a list of names the formula depends on. Disregards duplicate entries.
         /// </summary>
         internal void AddName(XLName name) => Dependencies.AddName(name);
+
+        internal bool TryEnterName(XLDefinedName definedName)
+        {
+            if (_activeNames.Count >= MaxNameDepth)
+                return false;
+
+            return _activeNames.Add(definedName);
+        }
+
+        internal void ExitName(XLDefinedName definedName)
+        {
+            _activeNames.Remove(definedName);
+        }
     }
 }

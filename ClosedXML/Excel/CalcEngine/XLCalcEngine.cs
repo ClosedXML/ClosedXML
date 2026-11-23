@@ -316,10 +316,26 @@ namespace ClosedXML.Excel.CalcEngine
             return multi;
         }
 
-        internal AnyValue EvaluateName(string nameFormula, XLWorksheet ws)
+        private const int MaxNameRecursionDepth = 256;
+        private readonly System.Collections.Generic.HashSet<IXLDefinedName> _activeNames = new();
+
+        internal AnyValue EvaluateName(IXLDefinedName definedName, string nameFormula, XLWorksheet ws)
         {
-            var ctx = new CalcContext(this, _culture, ws.Workbook, ws, null);
-            return EvaluateFormula(nameFormula, ctx);
+            if (_activeNames.Count >= MaxNameRecursionDepth)
+                throw new InvalidOperationException("Defined name recursion limit exceeded.");
+
+            if (!_activeNames.Add(definedName))
+                throw new InvalidOperationException($"Circular reference detected in defined name '{definedName.Name}'.");
+
+            try
+            {
+                var ctx = new CalcContext(this, _culture, ws.Workbook, ws, null);
+                return EvaluateFormula(nameFormula, ctx);
+            }
+            finally
+            {
+                _activeNames.Remove(definedName);
+            }
         }
 
         private AnyValue EvaluateFormula(string expression, CalcContext ctx)

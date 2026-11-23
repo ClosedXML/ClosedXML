@@ -305,14 +305,24 @@ namespace ClosedXML.Excel.CalcEngine
 
             List<SheetArea>? VisitName(XLDefinedName definedName)
             {
-                // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
-                var namedFormula = definedName.RefersTo;
-                var ast = context.Workbook.CalcEngine.Parse(namedFormula);
-                var nameReferences = ast.AstRoot.Accept(context, this);
+                if (!context.TryEnterName(definedName))
+                    return null;
 
-                // If the formula returned a reference, propagate it, rather
-                // than add to the context (required for `A1:name` ).
-                return nameReferences;
+                try
+                {
+                    // The named range is stored as A1 and thus parsed as A1, but should be interpreted as R1C1
+                    var namedFormula = definedName.RefersTo;
+                    var ast = context.Workbook.CalcEngine.Parse(namedFormula);
+                    var nameReferences = ast.AstRoot.Accept(context, this);
+
+                    // If the formula returned a reference, propagate it, rather
+                    // than add to the context (required for `A1:name` ).
+                    return nameReferences;
+                }
+                finally
+                {
+                    context.ExitName(definedName);
+                }
             }
         }
 
