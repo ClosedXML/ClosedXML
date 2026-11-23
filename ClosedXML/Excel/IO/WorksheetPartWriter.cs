@@ -2218,6 +2218,11 @@ namespace ClosedXML.Excel.IO
                         {
                             // Do nothing, cell will be left blank. Unimplemented features or functions would stop trying to save a file.
                         }
+
+                        if (dataType is null && xlCell.CachedValue.Type != XLDataType.Blank && !xlCell.NeedsRecalculation)
+                        {
+                            dataType = FormulaDataType[(int)xlCell.CachedValue.Type];
+                        }
                     }
 
                     WriteStartCell(xml, xlCell, cellRef, cellRefLen, dataType, styleId);
