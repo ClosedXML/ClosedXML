@@ -185,6 +185,33 @@ namespace ClosedXML.Tests.Excel.Saving
         }
 
         [Test]
+        public void SaveCachedValueTypeWhenCircularReferencePreventsRecalculation()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var book1 = new XLWorkbook())
+                {
+                    var sheet = book1.AddWorksheet("Sheet1");
+                    sheet.Cell("B2").Value = 5;
+                    sheet.Cell("A1").FormulaA1 = "B2>0";
+                    sheet.Cell("D1").FormulaA1 = "D2+1";
+                    sheet.Cell("D2").FormulaA1 = "INDEX(D1:D1,1)*2";
+
+                    book1.SaveAs(ms, new SaveOptions { EvaluateFormulasBeforeSaving = true });
+                }
+
+                ms.Position = 0;
+
+                using (var book2 = new XLWorkbook(ms))
+                {
+                    var ws = book2.Worksheet(1);
+                    Assert.AreEqual(XLDataType.Boolean, ws.Cell("A1").CachedValue.Type);
+                    Assert.AreEqual(true, ws.Cell("A1").CachedValue);
+                }
+            }
+        }
+
+        [Test]
         public void CanSaveAsCopyReadOnlyFile()
         {
             using (var original = new TemporaryFile())
