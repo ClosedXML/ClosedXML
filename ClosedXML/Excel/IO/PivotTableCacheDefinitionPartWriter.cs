@@ -23,11 +23,13 @@ namespace ClosedXML.Excel.IO
 
             if (pivotCacheDefinition == null)
             {
-                pivotCacheDefinition = new PivotCacheDefinition { Id = "rId1" };
+                pivotCacheDefinition = new PivotCacheDefinition();
 
                 pivotCacheDefinition.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
             }
+
+            pivotCacheDefinition.Id = pivotCache.SaveSourceData ? (pivotCacheDefinition.Id ?? "rId1") : null;
 
             #region CreatedVersion
 

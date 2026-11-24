@@ -90,5 +90,36 @@ namespace ClosedXML.Tests.Excel.PivotTables
                 @"Other\PivotTableReferenceFiles\PivotCacheWithoutSourceData-input.xlsx",
                 @"Other\PivotTableReferenceFiles\PivotCacheWithoutSourceData-output.xlsx");
         }
+
+        [Test]
+        public void SaveSourceData_False_OmitsPivotCacheRecordsPart()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            var range = ws.FirstCell().InsertData(new object[]
+            {
+                ("Group", "Amount"),
+                ("A", 10),
+                ("B", 20),
+            });
+            var table = range.CreateTable("Data");
+            var pivotSheet = wb.AddWorksheet("Pivot");
+            var pivot = pivotSheet.PivotTables.Add("Pivot", pivotSheet.Cell(1, 1), table);
+            pivot.RowLabels.Add("Group");
+            pivot.Values.Add("Amount");
+            pivot.PivotCache.SaveSourceData = false;
+
+            using var ms = new System.IO.MemoryStream();
+            wb.SaveAs(ms);
+
+            ms.Position = 0;
+            using var zip = new System.IO.Compression.ZipArchive(ms, System.IO.Compression.ZipArchiveMode.Read);
+            Assert.IsFalse(System.Linq.Enumerable.Any(zip.Entries, e => e.FullName.Contains("pivotCacheRecords")));
+            var defEntry = System.Linq.Enumerable.Single(zip.Entries, e => e.FullName.Contains("pivotCacheDefinition"));
+            using var reader = new System.IO.StreamReader(defEntry.Open());
+            var definition = reader.ReadToEnd();
+            Assert.That(definition, Does.Contain("saveData=\"0\""));
+            Assert.That(definition, Does.Not.Contain("r:id=\"rId1\""));
+        }
     }
 }
