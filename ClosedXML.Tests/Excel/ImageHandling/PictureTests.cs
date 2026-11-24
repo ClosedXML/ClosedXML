@@ -538,5 +538,47 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(testedName, wb.Worksheet("Setter").Pictures.Single().Name);
                 });
         }
+
+        [TestCase("oneCell", XLPicturePlacement.Move)]
+        [TestCase("absolute", XLPicturePlacement.FreeFloating)]
+        public void TwoCellAnchorEditAsIsPreservedOnLoadSave(string editAs, XLPicturePlacement expectedPlacement)
+        {
+            using var src = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            using (var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var pic = ws.AddPicture(imageStream, "Logo");
+                pic.MoveTo(ws.Cell("B8"), ws.Cell("D12"));
+                wb.SaveAs(src);
+            }
+
+            src.Position = 0;
+            using (var zip = new System.IO.Compression.ZipArchive(src, System.IO.Compression.ZipArchiveMode.Update, leaveOpen: true))
+            {
+                var entry = zip.GetEntry("xl/drawings/drawing1.xml")!;
+                string xml;
+                using (var reader = new StreamReader(entry.Open()))
+                    xml = reader.ReadToEnd();
+                entry.Delete();
+                using var writer = new StreamWriter(zip.CreateEntry("xl/drawings/drawing1.xml").Open());
+                writer.Write(xml.Replace("<xdr:twoCellAnchor>", $"<xdr:twoCellAnchor editAs=\"{editAs}\">"));
+            }
+
+            src.Position = 0;
+            using var dst = new MemoryStream();
+            using (var wb = new XLWorkbook(src))
+            {
+                Assert.AreEqual(expectedPlacement, wb.Worksheet("Sheet1").Picture("Logo").Placement);
+                wb.SaveAs(dst);
+            }
+
+            dst.Position = 0;
+            using var outZip = new System.IO.Compression.ZipArchive(dst, System.IO.Compression.ZipArchiveMode.Read);
+            using var outReader = new StreamReader(outZip.GetEntry("xl/drawings/drawing1.xml")!.Open());
+            var outXml = outReader.ReadToEnd();
+            Assert.That(outXml, Does.Contain($"<xdr:twoCellAnchor editAs=\"{editAs}\">"));
+            Assert.That(outXml, Does.Contain("<xdr:to>"));
+        }
     }
 }
