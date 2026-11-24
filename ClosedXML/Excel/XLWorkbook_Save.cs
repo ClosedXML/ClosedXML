@@ -523,11 +523,18 @@ namespace ClosedXML.Excel
 
                 PivotTableCacheDefinitionPartWriter.GenerateContent(pivotTableCacheDefinitionPart, xlPivotCache, context);
 
-                var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any()
-                    ? pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Single()
-                    : pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
+                var existingRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().SingleOrDefault();
+                if (xlPivotCache.SaveSourceData)
+                {
+                    var pivotTableCacheRecordsPart = existingRecordsPart
+                        ?? pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
 
-                PivotCacheRecordsWriter.WriteContent(pivotTableCacheRecordsPart, xlPivotCache);
+                    PivotCacheRecordsWriter.WriteContent(pivotTableCacheRecordsPart, xlPivotCache);
+                }
+                else if (existingRecordsPart is not null)
+                {
+                    pivotTableCacheDefinitionPart.DeletePart(existingRecordsPart);
+                }
             }
         }
 
