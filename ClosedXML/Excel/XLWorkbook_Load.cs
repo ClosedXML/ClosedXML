@@ -547,24 +547,14 @@ namespace ClosedXML.Excel
                             var from = LoadMarker(ws, twoCellAnchor.FromMarker);
                             var to = LoadMarker(ws, twoCellAnchor.ToMarker);
 
-                            if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
+                            picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
+
+                            if (twoCellAnchor.EditAs != null && twoCellAnchor.EditAs.HasValue)
                             {
-                                picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
-                            }
-                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
-                            {
-                                var shapeProperties = twoCellAnchor.Descendants<Xdr.ShapeProperties>().FirstOrDefault();
-                                if (shapeProperties != null)
-                                {
-                                    picture.MoveTo(
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, ws.Workbook.DpiX),
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, ws.Workbook.DpiY)
-                                    );
-                                }
-                            }
-                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
-                            {
-                                picture.MoveTo(from.Cell, from.Offset);
+                                if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
+                                    picture.Placement = XLPicturePlacement.FreeFloating;
+                                else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
+                                    picture.Placement = XLPicturePlacement.Move;
                             }
                         }
                     }

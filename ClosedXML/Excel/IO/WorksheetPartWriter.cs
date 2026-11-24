@@ -1766,130 +1766,136 @@ namespace ClosedXML.Excel.IO
 
             Xdr.FromMarker fMark;
             Xdr.ToMarker tMark;
-            switch (pic.Placement)
+            if (pic.Placement == Drawings.XLPicturePlacement.MoveAndSize || existingAnchor is Xdr.TwoCellAnchor)
             {
-                case Drawings.XLPicturePlacement.FreeFloating:
-                    var absoluteAnchor = new Xdr.AbsoluteAnchor(
-                        new Xdr.Position
+                var moveAndSizeFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
+                if (moveAndSizeFromMarker == null) moveAndSizeFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"));
+                fMark = new Xdr.FromMarker
+                {
+                    ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnNumber - 1).ToInvariantString()),
+                    RowId = new Xdr.RowId((moveAndSizeFromMarker.RowNumber - 1).ToInvariantString()),
+                    ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, wb.DpiX).ToInvariantString()),
+                    RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, wb.DpiY).ToInvariantString())
+                };
+
+                var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
+                if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new System.Drawing.Point(picture.Width, picture.Height));
+                tMark = new Xdr.ToMarker
+                {
+                    ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnNumber - 1).ToInvariantString()),
+                    RowId = new Xdr.RowId((moveAndSizeToMarker.RowNumber - 1).ToInvariantString()),
+                    ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, wb.DpiX).ToInvariantString()),
+                    RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, wb.DpiY).ToInvariantString())
+                };
+
+                var twoCellAnchor = new Xdr.TwoCellAnchor(
+                    fMark,
+                    tMark,
+                    new Xdr.Picture(
+                        new Xdr.NonVisualPictureProperties(
+                            new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
+                            new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
+                        ),
+                        new Xdr.BlipFill(
+                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                            new Stretch(new FillRectangle())
+                        ),
+                        new Xdr.ShapeProperties(
+                            new Transform2D(
+                                new Offset { X = 0, Y = 0 },
+                                new Extents { Cx = extentsCx, Cy = extentsCy }
+                            ),
+                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                        )
+                    ),
+                    new Xdr.ClientData()
+                );
+
+                if (pic.Placement != Drawings.XLPicturePlacement.MoveAndSize)
+                    twoCellAnchor.EditAs = pic.Placement.ToOpenXml();
+
+                AttachAnchor(twoCellAnchor, existingAnchor);
+            }
+            else
+            {
+                switch (pic.Placement)
+                {
+                    case Drawings.XLPicturePlacement.FreeFloating:
+                        var absoluteAnchor = new Xdr.AbsoluteAnchor(
+                            new Xdr.Position
+                            {
+                                X = ConvertToEnglishMetricUnits(pic.Left, wb.DpiX),
+                                Y = ConvertToEnglishMetricUnits(pic.Top, wb.DpiY)
+                            },
+                            new Xdr.Extent
+                            {
+                                Cx = extentsCx,
+                                Cy = extentsCy
+                            },
+                            new Xdr.Picture(
+                                new Xdr.NonVisualPictureProperties(
+                                        new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
+                                        new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
+                                ),
+                                new Xdr.BlipFill(
+                                    new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                    new Stretch(new FillRectangle())
+                                ),
+                                new Xdr.ShapeProperties(
+                                    new Transform2D(
+                                        new Offset { X = 0, Y = 0 },
+                                        new Extents { Cx = extentsCx, Cy = extentsCy }
+                                    ),
+                                    new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                                )
+                            ),
+                            new Xdr.ClientData()
+                        );
+
+                        AttachAnchor(absoluteAnchor, existingAnchor);
+                        break;
+
+                    case Drawings.XLPicturePlacement.Move:
+                        var moveFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
+                        if (moveFromMarker == null) moveFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"));
+                        fMark = new Xdr.FromMarker
                         {
-                            X = ConvertToEnglishMetricUnits(pic.Left, wb.DpiX),
-                            Y = ConvertToEnglishMetricUnits(pic.Top, wb.DpiY)
-                        },
-                        new Xdr.Extent
-                        {
-                            Cx = extentsCx,
-                            Cy = extentsCy
-                        },
-                        new Xdr.Picture(
-                            new Xdr.NonVisualPictureProperties(
+                            ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnNumber - 1).ToInvariantString()),
+                            RowId = new Xdr.RowId((moveFromMarker.RowNumber - 1).ToInvariantString()),
+                            ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, wb.DpiX).ToInvariantString()),
+                            RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, wb.DpiY).ToInvariantString())
+                        };
+
+                        var oneCellAnchor = new Xdr.OneCellAnchor(
+                            fMark,
+                            new Xdr.Extent
+                            {
+                                Cx = extentsCx,
+                                Cy = extentsCy
+                            },
+                            new Xdr.Picture(
+                                new Xdr.NonVisualPictureProperties(
                                     new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
                                     new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
-                            ),
-                            new Xdr.BlipFill(
-                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                                new Stretch(new FillRectangle())
-                            ),
-                            new Xdr.ShapeProperties(
-                                new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
-                                    new Extents { Cx = extentsCx, Cy = extentsCy }
                                 ),
-                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                            )
-                        ),
-                        new Xdr.ClientData()
-                    );
-
-                    AttachAnchor(absoluteAnchor, existingAnchor);
-                    break;
-
-                case Drawings.XLPicturePlacement.MoveAndSize:
-                    var moveAndSizeFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
-                    if (moveAndSizeFromMarker == null) moveAndSizeFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"));
-                    fMark = new Xdr.FromMarker
-                    {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnNumber - 1).ToInvariantString()),
-                        RowId = new Xdr.RowId((moveAndSizeFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, wb.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, wb.DpiY).ToInvariantString())
-                    };
-
-                    var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
-                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new System.Drawing.Point(picture.Width, picture.Height));
-                    tMark = new Xdr.ToMarker
-                    {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnNumber - 1).ToInvariantString()),
-                        RowId = new Xdr.RowId((moveAndSizeToMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, wb.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, wb.DpiY).ToInvariantString())
-                    };
-
-                    var twoCellAnchor = new Xdr.TwoCellAnchor(
-                        fMark,
-                        tMark,
-                        new Xdr.Picture(
-                            new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
-                            ),
-                            new Xdr.BlipFill(
-                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                                new Stretch(new FillRectangle())
-                            ),
-                            new Xdr.ShapeProperties(
-                                new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
-                                    new Extents { Cx = extentsCx, Cy = extentsCy }
+                                new Xdr.BlipFill(
+                                    new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                    new Stretch(new FillRectangle())
                                 ),
-                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                            )
-                        ),
-                        new Xdr.ClientData()
-                    );
-
-                    AttachAnchor(twoCellAnchor, existingAnchor);
-                    break;
-
-                case Drawings.XLPicturePlacement.Move:
-                    var moveFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
-                    if (moveFromMarker == null) moveFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"));
-                    fMark = new Xdr.FromMarker
-                    {
-                        ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnNumber - 1).ToInvariantString()),
-                        RowId = new Xdr.RowId((moveFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, wb.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, wb.DpiY).ToInvariantString())
-                    };
-
-                    var oneCellAnchor = new Xdr.OneCellAnchor(
-                        fMark,
-                        new Xdr.Extent
-                        {
-                            Cx = extentsCx,
-                            Cy = extentsCy
-                        },
-                        new Xdr.Picture(
-                            new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
+                                new Xdr.ShapeProperties(
+                                    new Transform2D(
+                                        new Offset { X = 0, Y = 0 },
+                                        new Extents { Cx = extentsCx, Cy = extentsCy }
+                                    ),
+                                    new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                                )
                             ),
-                            new Xdr.BlipFill(
-                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                                new Stretch(new FillRectangle())
-                            ),
-                            new Xdr.ShapeProperties(
-                                new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
-                                    new Extents { Cx = extentsCx, Cy = extentsCy }
-                                ),
-                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                            )
-                        ),
-                        new Xdr.ClientData()
-                    );
+                            new Xdr.ClientData()
+                        );
 
-                    AttachAnchor(oneCellAnchor, existingAnchor);
-                    break;
+                        AttachAnchor(oneCellAnchor, existingAnchor);
+                        break;
+                }
             }
 
             void AttachAnchor(OpenXmlElement pictureAnchor, OpenXmlElement existingAnchor)
