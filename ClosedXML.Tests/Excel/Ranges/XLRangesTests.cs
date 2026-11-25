@@ -5,6 +5,22 @@ namespace ClosedXML.Tests.Excel.Ranges;
 
 internal class XLRangesTests
 {
+    [TestCase(XLScope.Workbook)]
+    [TestCase(XLScope.Worksheet)]
+    public void AddToNamed_uses_requested_scope(XLScope scope)
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.AddWorksheet();
+        var ranges = ws.Ranges("B3:C4,C7:D7");
+
+        var result = ranges.AddToNamed("SelectedRanges", scope);
+
+        Assert.That(result, Is.SameAs(ranges));
+        Assert.That(wb.DefinedNames.Contains("SelectedRanges"), Is.EqualTo(scope == XLScope.Workbook));
+        var names = scope == XLScope.Workbook ? wb.DefinedNames : ws.DefinedNames;
+        Assert.That(names.DefinedName("SelectedRanges").Ranges, Has.Count.EqualTo(2));
+    }
+
     [Test]
     public void Style_sets_format_of_ranges()
     {

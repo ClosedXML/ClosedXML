@@ -187,7 +187,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges AddToNamed(String rangeName, XLScope scope)
         {
-            return AddToNamed(rangeName, XLScope.Workbook, null);
+            return AddToNamed(rangeName, scope, null);
         }
 
         public IXLRanges AddToNamed(String rangeName, XLScope scope, String? comment)
