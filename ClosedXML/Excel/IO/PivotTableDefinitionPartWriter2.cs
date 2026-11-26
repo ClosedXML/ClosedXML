@@ -18,7 +18,8 @@ internal class PivotTableDefinitionPartWriter2
     {
         var settings = new XmlWriterSettings
         {
-            Encoding = XLHelper.NoBomUTF8
+            Encoding = XLHelper.NoBomUTF8,
+            NewLineChars = "\r\n"
         };
 
         using var partStream = pivotTablePart.GetStream(FileMode.Create);

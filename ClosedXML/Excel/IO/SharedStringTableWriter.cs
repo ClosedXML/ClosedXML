@@ -19,7 +19,8 @@ namespace ClosedXML.Excel.IO
             var settings = new XmlWriterSettings
             {
                 CloseOutput = true,
-                Encoding = XLHelper.NoBomUTF8
+                Encoding = XLHelper.NoBomUTF8,
+                NewLineChars = "\r\n"
             };
             var partStream = sharedStringTablePart.GetStream(FileMode.Create);
             using var xml = XmlWriter.Create(partStream, settings);

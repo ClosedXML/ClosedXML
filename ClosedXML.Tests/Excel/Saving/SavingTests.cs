@@ -884,5 +884,29 @@ namespace ClosedXML.Tests.Excel.Saving
                 @"Other\Shapes\sheet-with-form-controls-input.xlsx",
                 @"Other\Shapes\sheet-with-form-controls-output.xlsx");
         }
+
+        [Test]
+        public void SharedStringsAndCommentsUseCrlfNewLineChars()
+        {
+            using var stream = new MemoryStream();
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet("Sheet1");
+                ws.Cell("A1").Value = "a\r\nb";
+                ws.Cell("A1").GetComment().AddText("c\r\nd");
+                workbook.SaveAs(stream);
+            }
+
+            stream.Position = 0;
+            using var zip = new System.IO.Compression.ZipArchive(stream, System.IO.Compression.ZipArchiveMode.Read);
+            foreach (var entryPath in new[] { "xl/sharedStrings.xml", "xl/comments1.xml" })
+            {
+                using var entry = zip.GetEntry(entryPath)!.Open();
+                using var buffer = new MemoryStream();
+                entry.CopyTo(buffer);
+                var xmlText = System.Text.Encoding.UTF8.GetString(buffer.ToArray());
+                Assert.That(xmlText, Does.Contain("\r\n"));
+            }
+        }
     }
 }

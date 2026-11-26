@@ -13,7 +13,8 @@ namespace ClosedXML.Excel.IO
         {
             var settings = new XmlWriterSettings
             {
-                Encoding = XLHelper.NoBomUTF8
+                Encoding = XLHelper.NoBomUTF8,
+                NewLineChars = "\r\n"
             };
 
             using var partStream = recordsPart.GetStream(FileMode.Create);
