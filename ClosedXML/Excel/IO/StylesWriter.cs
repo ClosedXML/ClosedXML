@@ -175,7 +175,8 @@ internal class StylesWriter
 
         var settings = new XmlWriterSettings
         {
-            Encoding = XLHelper.NoBomUTF8
+            Encoding = XLHelper.NoBomUTF8,
+            NewLineChars = "\r\n"
         };
 
         using var partStream = stylesPart.GetStream(FileMode.Create);
