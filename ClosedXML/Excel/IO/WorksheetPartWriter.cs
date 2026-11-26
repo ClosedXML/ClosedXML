@@ -1318,14 +1318,18 @@ namespace ClosedXML.Excel.IO
                 var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
                 foreach (var removedPicture in xlPictures.Deleted)
                 {
-                    worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                    if (!((IEnumerable<Drawings.XLPicture>)xlPictures).Any(p => p.RelId == removedPicture))
+                    {
+                        worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                    }
                 }
                 xlPictures.Deleted.Clear();
             }
 
+            var assignedAnchors = new HashSet<OpenXmlElement>();
             foreach (var pic in xlWorksheet.Pictures)
             {
-                AddPictureAnchor(worksheetPart, pic, context);
+                AddPictureAnchor(worksheetPart, pic, context, assignedAnchors);
             }
 
             if (xlWorksheet.Pictures.Count > 0)
@@ -1714,7 +1718,7 @@ namespace ClosedXML.Excel.IO
             return Convert.ToInt64(914400L * pixels / resolution);
         }
 
-        private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
+        private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context, HashSet<OpenXmlElement> assignedAnchors)
         {
             var pic = picture as Drawings.XLPicture;
             var drawingsPart = worksheetPart.DrawingsPart ??
@@ -1753,7 +1757,9 @@ namespace ClosedXML.Excel.IO
             /////////
 
             // Clear current anchors
-            var existingAnchor = GetAnchorFromImageId(drawingsPart, pic.RelId);
+            var existingAnchor = worksheetDrawing.ChildElements
+                .FirstOrDefault(wsdr => !assignedAnchors.Contains(wsdr) &&
+                    wsdr.Descendants<Xdr.BlipFill>().Any(x => x?.Blip?.Embed?.Value.Equals(pic.RelId) ?? false));
 
             var wb = pic.Worksheet.Workbook;
             var extentsCx = ConvertToEnglishMetricUnits(pic.Width, wb.DpiX);
@@ -1902,6 +1908,7 @@ namespace ClosedXML.Excel.IO
                 {
                     worksheetDrawing.Append(pictureAnchor);
                 }
+                assignedAnchors.Add(pictureAnchor);
             }
         }
 

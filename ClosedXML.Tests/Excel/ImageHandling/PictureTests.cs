@@ -538,5 +538,52 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(testedName, wb.Worksheet("Setter").Pictures.Single().Name);
                 });
         }
+
+        [Test]
+        public void SavePreservesDistinctAnchorsWhenMultiplePicturesShareSameRelId()
+        {
+            using var initialStream = new MemoryStream();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                using var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png");
+                ws.AddPicture(imageStream, "Pic1").MoveTo(ws.Cell("B1"), ws.Cell("H6"));
+                imageStream.Position = 0;
+                ws.AddPicture(imageStream, "Pic2").MoveTo(ws.Cell("C55"), ws.Cell("H59"));
+                wb.SaveAs(initialStream);
+            }
+
+            initialStream.Position = 0;
+            using (var doc = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(initialStream, true))
+            {
+                var wsPart = doc.WorkbookPart.WorksheetParts.First();
+                var drawingsPart = wsPart.DrawingsPart;
+                var blips = drawingsPart.WorksheetDrawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().ToList();
+                var sharedRelId = blips[0].Embed.Value;
+                var obsoleteRelId = blips[1].Embed.Value;
+                blips[1].Embed.Value = sharedRelId;
+                drawingsPart.DeletePart(obsoleteRelId);
+            }
+
+            initialStream.Position = 0;
+            using var savedStream = new MemoryStream();
+            using (var wb = new XLWorkbook(initialStream))
+            {
+                wb.SaveAs(savedStream);
+            }
+
+            savedStream.Position = 0;
+            using (var wb = new XLWorkbook(savedStream))
+            {
+                var ws = wb.Worksheet("Sheet1");
+                Assert.AreEqual(2, ws.Pictures.Count);
+                var pic1 = ws.Picture("Pic1");
+                var pic2 = ws.Picture("Pic2");
+                Assert.AreEqual("B1", pic1.TopLeftCell.Address.ToString());
+                Assert.AreEqual("H6", pic1.BottomRightCell.Address.ToString());
+                Assert.AreEqual("C55", pic2.TopLeftCell.Address.ToString());
+                Assert.AreEqual("H59", pic2.BottomRightCell.Address.ToString());
+            }
+        }
     }
 }
